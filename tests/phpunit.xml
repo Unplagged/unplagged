@@ -1,3 +1,29 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<phpunit bootstrap="./application/bootstrap.php" colors="true">
+    <testsuite name="Unplagged">
+        <directory>./</directory>               
+    </testsuite>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../application/models</directory>
+            <directory suffix=".php">../application/controllers</directory>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-html" target="../docs/report" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="80" />
+        <log type="testdox-html" target="./log/testdox.html" />
+    </logging>
+=======
+=======
+>>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
+=======
+>>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
+=======
+>>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
 <phpunit colors="true">
   <testsuite name="Unplagged">
     <directory>./application/</directory>               
@@ -13,4 +39,14 @@
          yui="true" highlight="true" lowUpperBound="50" highLowerBound="80" />
     <log type="testdox-html" target="./log/testdox.html" />
   </logging>
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
+=======
+>>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
+=======
+>>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
+=======
+>>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
 </phpunit>
