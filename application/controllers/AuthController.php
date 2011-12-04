@@ -34,27 +34,11 @@ class AuthController extends Zend_Controller_Action
             $this->_helper->redirector('index', 'index');
         }
         
-<<<<<<< HEAD
-<<<<<<< HEAD
-        /*$form = new Application_Form_Login();
-=======
->>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
-=======
->>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
         $loginForm = new Application_Form_Auth_Login();
         $request = $this->getRequest();
         if ($request->isPost()) {
             $formData = $this->_request->getPost();
             
-<<<<<<< HEAD
-<<<<<<< HEAD
-            if ($form->isValid($formData)) {*/
-                $username = "username";
-                $password = Unplagged_Helper::hashString("password");
-=======
->>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
-=======
->>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
             if ($loginForm->isValid($formData)) {
                 $username = $this->getRequest()->getParam('username');
                 $password = $this->getRequest()->getParam(Unplagged_Helper::hashString("password"));
@@ -72,16 +56,6 @@ class AuthController extends Zend_Controller_Action
                     $this->_helper->flashMessenger->addMessage('Login failed.');
                     $this->_helper->redirector('index', 'index');
                 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-           /*}
-        }*/
-        
-      //  $this->view->loginForm = $loginForm;
-=======
->>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
-=======
->>>>>>> 8fce2c565a0bbb9352e4ea4fd648581107b1146c
 			}
         }
         
