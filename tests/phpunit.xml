@@ -1,4 +1,4 @@
-<phpunit colors="true">
+<phpunit bootstrap="bootstrap.php" colors="true">
   <testsuite name="Unplagged">
     <directory>./application/</directory>               
   </testsuite>
