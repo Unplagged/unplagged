@@ -14,80 +14,79 @@
     /**
      * The userId is an unique identifier for each user.
      * @var string The userId.
-     * $access protected
      * 
      * @Id @GeneratedValue @Column(type="integer")
      */
-    protected $id;
+    private $id;
     /** 
      * The date when the user registered.
      * @var string The registration date.
-     * @access protected
+     * @access private
      * 
      * @Column(type="datetime")
      */
-    protected $created;
+    private $created;
     /** 
      * The username, the user account was modified.
      * @var string The latest modification date.
-     * @access protected
+     * @access private
      * 
      * @Column(type="datetime")
      */
-    protected $updated;
+    private $updated;
     /** 
      * The username, the user defined as an alias for the account.
      * @var string The usernamee.
-     * @access protected
+     * @access private
      * 
      * @Column(type="string", length=32, unique=true)
      */
-    protected $username;
+    private $username;
     /** 
-     * The password the user set up to login to the protected area.
+     * The password the user set up to login to the private area.
      * @var string The password.
-     * @access protected
+     * @access private
      * 
      * @Column(type="string", length=32)
      */
-    protected $password;
+    private $password;
     /** 
-     * The email the user set up to login to the protected area.
+     * The email the user set up to login to the private area.
      * @var string The email address.
-     * @access protected
+     * @access private
      * 
      * @Column(type="string", length=32, unique=true)
      */
-    protected $email;
+    private $email;
     /** 
      * The users firstname.
      * @var string The firstname.
-     * @access protected
+     * @access private
      * 
      * @Column(type="string", length=64, nullable=true)
      */
-    protected $firstname;
+    private $firstname;
     /** 
      * The users lastname.
      * @var string The lastname.
-     * @access protected
+     * @access private
      * 
      * @Column(type="string", length=64, nullable=true)
      */
-    protected $lastname;
+    private $lastname;
     /** 
      * The users registration hash, used to verify the account.
      * @var string The registration hash.
-     * @access protected
+     * @access private
      * 
      * @Column(type="string", length=32, unique=true)
      */
-    protected $verificationHash;
+    private $verificationHash;
     /**
      * @ManyToOne(targetEntity="Application_Model_User_State")
      * @JoinColumn(name="user_state_id", referencedColumnName="id")
      */
-    protected $state;
+    private $state;
     
     /**
      * Method auto-called when object is persisted to database for the first time.
