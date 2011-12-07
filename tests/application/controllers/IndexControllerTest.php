@@ -2,16 +2,15 @@
 
 class IndexControllerTest extends ControllerTestCase {
 
-    public function setUp()
+  /*  public function setUp()
     {
-        parent::setUp();                
+        parent::setUp();
     }
-
-    public function testCanDoUnitTest() {
-        $this->assertTrue(true);
-    }
-    
-    public function testCan2DoUnitTest() {
-        $this->assertTrue(true);
-    }
+ 
+    public function testCallWithoutActionShouldPullFromIndexAction()
+    {
+        $this->dispatch('/index/index');
+       // $this->assertController('index');
+       // $this->assertAction('index');
+    }*/
 }
