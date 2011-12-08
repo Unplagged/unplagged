@@ -41,7 +41,7 @@ class AuthController extends Zend_Controller_Action
             
             if ($loginForm->isValid($formData)) {
                 $username = $this->getRequest()->getParam('username');
-                $password = $this->getRequest()->getParam(Unplagged_Helper::hashString("password"));
+                $password = Unplagged_Helper::hashString($this->getRequest()->getParam("password"));
                 
                 $adapter = new Unplagged_Auth_Adapter_Doctrine($this->_em, "Application_Model_User", "username", "password", $username, $password);
                 $result  = $auth->authenticate($adapter);

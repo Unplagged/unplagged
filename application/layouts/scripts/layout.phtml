@@ -23,7 +23,7 @@ if(Zend_Auth::getInstance()->hasIdentity()) {
     echo $this->translate("You are not logged in."); 
     ?>
     <a href="/user/register"><?php echo $this->translate("Register now"); ?></a> 
-    or <a href="/auth"><?php echo $this->translate("Login"); ?></a>
+    or <a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
     <?php
 }
 ?>
