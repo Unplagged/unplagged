@@ -1,0 +1,26 @@
+<?php
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+?>
+<h1>Liste der hochgeladenen Dateien</h1>
+<li>
+<?php foreach($this->listFiles as $file) { 
+    if ($file != "." && $file != "..") {
+    ?>
+    
+        <form method="POST" action="/uploadlist/uploadlist">
+            <?php $this->file=$file?>
+            <ul>
+                <?= $file?> &nbsp;
+                <input type="hidden" value="<?= $file?>" name="file"/>
+                [&nbsp; Target: <input type="checkbox" value="id"/>]
+                <input type="submit" value="delete" />                
+            </ul>
+        </form>
+    
+<?php }} ?>
+    <a href="/upload/upload">hochladen</a>
+</li>
