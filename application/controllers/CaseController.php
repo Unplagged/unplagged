@@ -31,20 +31,32 @@ class CaseController extends Zend_Controller_Action{
   }
 
   public function createAction(){
-    $request = $this->getRequest();
+    $createForm = new Application_Form_Case_Create();
     
-    if ($request->isPost()) {
-      $this->handleCreationData($request);
+    if($this->_request->isPost()){
+      $this->handleCreationData($createForm);
     }else{
-      $createForm = new Application_Form_Case_Create();      
       $this->view->createForm = $createForm;
     }
-    
   }
-  
-  private function handleCreationData($request){
-    
+
+  private function handleCreationData(Application_Form_Case_Create $createForm){
+    $formData = $this->_request->getPost();
+
+    if($createForm->isValid($formData)){
+      $case = new Application_Model_InvestigationCase($formData['name'], $formData['alias']);
+
+      // write back to persistence manager and flush it
+      $this->_em->persist($case);
+      $this->_em->flush();
+
+      $this->_helper->flashMessenger->addMessage('The case was successfully created.');
+      $this->_helper->redirector('index', 'case');
+    }else{
+      //@todo error message here
+    }
   }
+
 }
 
 ?>

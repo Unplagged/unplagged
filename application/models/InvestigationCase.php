@@ -33,19 +33,14 @@ class Application_Model_InvestigationCase{
   private $alias = '';
 
   /**
-   *
    * @var string  
    */
   private $state = '';
 
-  /**
-   * @Column(type="datetime")
-   */
+
   private $created;
 
-  /**
-   * @Column(type="datetime")
-   */
+
   private $updated;
 
   public function __construct($name, $alias){
@@ -53,6 +48,24 @@ class Application_Model_InvestigationCase{
     $this->alias = $alias;
   }
 
+  /**
+   * Method auto-called when object is persisted to database for the first time.
+   * 
+   * @PrePersist
+   */
+  public function created(){
+    $this->created = new DateTime("now");
+  }
+
+  /**
+   * Method auto-called when object is updated in database.
+   * 
+   * @PrePersist
+   */
+  public function updated(){
+    $this->updated = new DateTime("now");
+  }
+  
   /**
    * @return string 
    */
