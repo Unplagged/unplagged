@@ -1,13 +1,18 @@
-<h1>Liste der hochgeladenen Dateien</h1>
-
-<table cellpadding="0" cellspacing="0"> 
+<?php
+    $this->title = $this->translate("List of uploaded files");
+    $this->headTitle($this->title);
+?>
+<table cellpadding="0" cellspacing="0" class="default"> 
   <tr>
     <th>Filename</th>
-    <th>Size</th>
-    <th>Actions</th>
+    <th style="width: 80px;">Size</th>
+    <th style="width: 200px;">Actions</th>
   </tr>
-  <?php foreach($this->listFiles as $file): ?>
-  <tr>
+  <?php 
+  $i = 0;
+  foreach($this->listFiles as $file): 
+    ?>
+  <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
     <td><?php echo $file->getFilename(); ?></td>
     <td><?php echo $file->getSize(); ?></td>
     <td>[ <a href="<?php echo "/file/download/id/" . $file->getId(); ?>">download</a> | 
@@ -20,4 +25,4 @@
   </tr>
   <?php endforeach; ?>
 </table>
-  <a href="/file/upload">hochladen</a>
+  <a href="/file/upload"><?php echo $this->translate("Upload a file"); ?></a>

@@ -1,4 +1,7 @@
-This is the default content of /views/scripts/auth/login.phtml
 <?php
+    $this->title = $this->translate("Login");
+    $this->headTitle($this->title);
+?>
+    <?php
 	echo $this->loginForm;
 ?>

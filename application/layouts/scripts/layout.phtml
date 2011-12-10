@@ -9,42 +9,85 @@
   $currentController = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
   $currentAction = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
   ?>
+  <?php echo $this->headLink()
+				->prependStylesheet($this->baseUrl().'/css/styles.css');
+			//	->appendStylesheet($this->baseUrl().'/css/navi_de.css')
+      
+      $defaultNamespace = new Zend_Session_Namespace('Default');
+?>
+
 </head>
 <body>
-  <div style="width: 800px">
-  <?php 
-  $defaultNamespace = new Zend_Session_Namespace('Default');
+  <div id="page">
+    <div id="header">
+      <div id="settings-panel">
+        <?php if(Zend_Auth::getInstance()->hasIdentity()) { ?>
+          <div id="avatar"><img src="/images/tmp_avatar.png" /></div>
+          <div id="login-actions">
+          <?php 
+                echo $this->translate("Welcome") ." " .  $defaultNamespace->user->getUsername() . "!";
+                ?>
+                <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
+                <?php
+          ?></div>
+          <div id="settings">
+            <img src="/images/tmp_top_icons.png" />
+          </div>
+        <?php } else { ?>
+          <div id="login-actions">
+              <?php echo $this->translate("You are not logged in."); ?>
+              <a href="/user/register"><?php echo $this->translate("Register now"); ?></a> 
+              or <a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
+          </div>
+        <?php } ?>
+      </div>
+        <div id="top-menu">
+          <ul>
+          <li class="button">
+            <a href="/index/index"><span class="left">&nbsp;</span><span class="home">&nbsp;</span><span class="right">&nbsp;</span></a>
+          </li>
+          <li class="button">
+            <a href="/case/create"><span class="left">&nbsp;</span>Cases<span class="right">&nbsp;</span></a>
+          </li>
+          <li class="button">
+            <a href="/file/list"><span class="left">&nbsp;</span>Files<span class="right"nbsp;</span></a>
+          </li>
+          <?php 
+          if(Zend_Auth::getInstance()->hasIdentity()) { ?>
+          <li class="button">
+            <a href="user/edit/id/<?php echo $defaultNamespace->user->getId(); ?>"><span class="left">&nbsp;</span><?php echo $this->translate("Edit profile"); ?><span class="right"nbsp;</span></a>
+          </li>
+          <?php
+        } ?>
+        </ul>
+        </div>
+    </div>
+    <div id="content">
+      <div id="sub-menu">
+        <img src="/images/tmp_submenu.png" alt="" />
+      </div>
+      <h1><?php echo $this->escape($this->title); ?></h1>
+      <div id="main">
+        <?php 
+        if(!empty($this->flashMessages)) {
+            echo '<div class="flash-messages">';
 
-  // different navigation if user is logged in or not
-  if(Zend_Auth::getInstance()->hasIdentity()) {
-      echo $this->translate("You are logged in.");
-      ?>
-      <a href="/user/edit/id/<?php echo $defaultNamespace->user->getId(); ?>"><?php echo $this->translate("Edit profile"); ?></a>
-      or <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
-      <?php
-  } else {
-      echo $this->translate("You are not logged in."); 
-      ?>
-      <a href="/user/register"><?php echo $this->translate("Register now"); ?></a> 
-      or <a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
-      <?php
-  }
-  ?>
-  <?php 
-  if(!empty($this->flashMessages)) {
-      echo '<div class="flash-messages">';
-
-      foreach($this->flashMessages as $key => $value) {
-          echo $this->translate($value)."<br />";
-      }
-      echo '</div>';
-  }
-
-  // content from each view, the rest of this page is global to all views
-  echo "<br /><br />" . $this->layout()->content;
-  ?>
+            foreach($this->flashMessages as $key => $value) {
+                echo $this->translate($value)."<br />";
+            }
+            echo '</div>';
+        }
+        
+        // content from each view, the rest of this page is global to all views
+        echo $this->layout()->content;
+        ?>
+      </div>
+      
+     
+      </div>
+    </div>
   </div>
-  
+  <div>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script>
   <script defer src="js/plugins.js"></script>

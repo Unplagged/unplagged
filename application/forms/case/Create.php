@@ -35,11 +35,11 @@ class Application_Form_Case_Create extends Zend_Form{
     $submitElement->setLabel('Create');
     $submitElement->setIgnore(true);
     $submitElement->setAttrib('class', 'submit');
+    $submitElement->removeDecorator('DtDdWrapper');
 
     $this->addElements(array(
       $nameElement
-      , $aliasElement
-      , $submitElement
+      , $aliasElement 
     ));
 
     $this->addDisplayGroup(array('name', 'alias')
@@ -47,12 +47,10 @@ class Application_Form_Case_Create extends Zend_Form{
       , array('legend'=>'Case creation')
     );
 
-    $this->addDisplayGroup(array(
-      'submit'
-        )
-        , 'submitGroup'
-        , array()
-    );
+    $this->addElements(array(
+      $submitElement
+      )
+        );
   }
 
 }
