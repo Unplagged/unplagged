@@ -36,7 +36,7 @@ class Application_Form_User_Profile extends Zend_Form
 		
     	$user = $em->getRepository('Application_Model_User')->findOneById($this->userId);       
     	$this->setMethod('post');
-	$this->setAction("/user/edit/id/" . $this->userId);
+      $this->setAction("/user/edit/id/" . $this->userId);
 
         $usernameElement = new Zend_Form_Element_Text('username');
         $usernameElement->setLabel("Username");
@@ -68,6 +68,7 @@ class Application_Form_User_Profile extends Zend_Form
         $submitElement->setLabel('Save');
         $submitElement->setIgnore(true);
         $submitElement->setAttrib('class', 'submit');
+        $submitElement->removeDecorator('DtDdWrapper');
 	
         $this->addElements(array(
              $emailElement
