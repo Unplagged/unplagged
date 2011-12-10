@@ -1,4 +1,22 @@
 <?php
-    $this->title = $this->translate("List cases");
+    $this->title = $this->translate("List of cases");
     $this->headTitle($this->title);
 ?>
+<table cellpadding="0" cellspacing="0" class="default"> 
+  <tr>
+    <th>Name</th>
+    <th style="width: 80px;">Alias</th>
+    <th style="width: 200px;">Actions</th>
+  </tr>
+  <?php 
+  $i = 0;
+  foreach($this->listCases as $case): 
+    ?>
+  <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
+    <td><?php echo $case->getName(); ?></td>
+    <td><?php echo $case->getAlias(); ?></td>
+    <td>[ ]</td>
+  </tr>
+  <?php endforeach; ?>
+</table>
+  <a href="/case/create"><?php echo $this->translate("Create a case"); ?></a>

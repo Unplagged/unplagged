@@ -21,13 +21,7 @@ class CaseController extends Zend_Controller_Action{
   }
 
   public function indexAction(){
-    $auth = Zend_Auth::getInstance();
-
-    if($auth->hasIdentity()){
-      $this->_helper->redirector('index', 'index');
-    }
-
-    $this->_forward("login");
+     $this->_helper->redirector('list', 'case');
   }
 
   public function createAction(){
@@ -35,9 +29,15 @@ class CaseController extends Zend_Controller_Action{
     
     if($this->_request->isPost()){
       $this->handleCreationData($createForm);
-    }else{
-      $this->view->createForm = $createForm;
     }
+    $this->view->createForm = $createForm;
+  }
+  
+  public function listAction(){
+    $query = $this->_em->createQuery('SELECT c FROM Application_Model_InvestigationCase c');
+    $cases = $query->getResult();
+
+    $this->view->listCases = $cases;
   }
 
   private function handleCreationData(Application_Form_Case_Create $createForm){

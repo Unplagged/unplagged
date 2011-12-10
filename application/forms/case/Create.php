@@ -1,15 +1,5 @@
 <?php
 
-/**
- * 
- */
-
-/**
- * The form class generates a form for registering a new user.
- * 
- * @author Benjamin Oertel <mail@benjaminoertel.com>
- * @version 1.0
- */
 class Application_Form_Case_Create extends Zend_Form{
 
   /**
@@ -22,6 +12,8 @@ class Application_Form_Case_Create extends Zend_Form{
 
     $nameElement = new Zend_Form_Element_Text('name');
     $nameElement->setLabel("Name");
+    $nameElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
+    $nameElement->addValidator('stringLength', false, array(2, 64));
     $nameElement->setRequired(true);
 
     $aliasElement = new Zend_Form_Element_Text('alias');
