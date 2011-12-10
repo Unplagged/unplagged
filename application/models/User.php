@@ -113,64 +113,85 @@ class Application_Model_User{
     $this->updated = new DateTime("now");
   }
 
+  public function __construct($data = array()){
+    if(isset($data["username"])){
+      $this->username = $data["username"];
+    }
+
+    if(isset($data["password"])){
+      $this->password = $data["password"];
+    }
+
+    if(isset($data["email"])){
+      $this->email = $data["email"];
+    }
+
+    if(isset($data["firstname"])){
+      $this->firstname = $data["firstname"];
+    }
+
+    if(isset($data["lastname"])){
+      $this->lastname = $data["lastname"];
+    }
+
+    if(isset($data["verificationHash"])){
+      $this->verificationHash = $data["verificationHash"];
+    }
+
+    if(isset($data["state"])){
+      $this->state = $data["state"];
+    }
+  }
+
   public function getId(){
     return $this->id;
+  }
+
+  public function getCreated(){
+    return $this->created;
+  }
+
+  public function getUpdated(){
+    return $this->updated;
   }
 
   public function getUsername(){
     return $this->username;
   }
 
-  public function setUsername($username){
-    $this->username = $username;
-  }
-
   public function getPassword(){
     return $this->password;
-  }
-
-  public function setPassword($password){
-    $this->password = $password;
   }
 
   public function getEmail(){
     return $this->email;
   }
 
-  public function setEmail($email){
-    $this->email = $email;
-  }
-
   public function getFirstname(){
     return $this->firstname;
-  }
-
-  public function setFirstname($firstname){
-    $this->firstname = $firstname;
   }
 
   public function getLastname(){
     return $this->lastname;
   }
 
-  public function setLastname($lastname){
-    $this->lastname = $lastname;
-  }
-
   public function getVerificationHash(){
     return $this->verificationHash;
-  }
-
-  public function setVerificationHash($verificationHash){
-    $this->verificationHash = $verificationHash;
   }
 
   public function getState(){
     return $this->state;
   }
-
+  
   public function setState($state){
     $this->state = $state;
   }
+  
+  public function setFirstname($firstname){
+    $this->firstname = $firstname;
+  }
 
+  public function setLastname($lastname){
+    $this->lastname = $lastname;
+  }
 }

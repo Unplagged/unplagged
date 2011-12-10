@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_UploadForm extends Zend_Form
+class Application_Form_File_Upload extends Zend_Form
 {
          public function init()
 	 {
