@@ -1,5 +1,10 @@
 <?php
-/** 
+
+/**
+ * File for class {@link Application_Model_Log_Action}.
+ */
+
+/**
  * The class represents a log action.
  * It defines also the structure of the database table for the ORM.
  *
@@ -9,71 +14,67 @@
  * @Entity 
  * @Table(name="log_actions")
  */
- class Application_Model_Log_Action {
-    /**
-     * The logActionId is an unique identifier for each log action.
-     * @var string The log action id.
-     * $access protected
-     * 
-     * @Id @GeneratedValue @Column(type="integer")
-     */
-    protected $id;
-    /** 
-     * The module for the log acction.
-     * @var string The module.
-     * @access protected
-     * 
-     * @Column(type="string", length=32)
-     */
-    protected $module;
-    /** 
-     * A title for the log acction.
-     * @var string The usernamee.
-     * @access protected
-     * 
-     * @Column(type="string", unique="true", length=32)
-     */
-    protected $title;
-    /** 
-     * A description for the log action.
-     * @var string The description.
-     * @access protected
-     * 
-     * @Column(type="string", length=256)
-     */
-    protected $description;
-    
-    public function getId() {
-        return $this->id;
+class Application_Model_Log_Action{
+
+  /**
+   * The logActionId is an unique identifier for each log action.
+   * @var string The log action id.
+   * 
+   * @Id @GeneratedValue @Column(type="integer")
+   */
+  private $id;
+
+  /**
+   * The module for the log acction.
+   * @var string The module.
+   * 
+   * @Column(type="string", length=32)
+   */
+  private $module;
+
+  /**
+   * A title for the log acction.
+   * @var string The usernamee.
+   * 
+   * @Column(type="string", unique="true", length=32)
+   */
+  private $title;
+
+  /**
+   * A description for the log action.
+   * @var string The description.
+   * 
+   * @Column(type="string", length=256)
+   */
+  private $description;
+
+  public function __construct($data = array()){
+    if(isset($data["module"])){
+      $this->module = $data["module"];
     }
 
-    public function setId($id) {
-        $this->id = $id;
+    if(isset($data["title"])){
+      $this->title = $data["title"];
     }
-    
-    public function getModule() {
-        return $this->module;
+    if(isset($data["description"])){
+      $this->description = $data["description"];
     }
+  }
 
-    public function setModule($module) {
-        $this->module = $module;
-    }
+  public function getId(){
+    return $this->id;
+  }
 
-    public function getTitle() {
-        return $this->title;
-    }
+  public function getModule(){
+    return $this->module;
+  }
 
-    public function setTitle($title) {
-        $this->title = $title;
-    }
+  public function getTitle(){
+    return $this->title;
+  }
 
-    public function getDescription() {
-        return $this->description;
-    }
-
-    public function setDescription($description) {
-        $this->description = $description;
-    }
-
+  public function getDescription(){
+    return $this->description;
+  }
 
 }

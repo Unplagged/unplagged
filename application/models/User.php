@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 
+ * File for class {@link Application_Model_User}.
  */
 
 /**
