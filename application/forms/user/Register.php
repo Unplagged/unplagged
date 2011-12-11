@@ -1,8 +1,12 @@
 <?php
 
+/*
+ * Form for user registration.
+ */
+
 /**
  * The form class generates a form for registering a new user.
- * 
+ *
  * @author Benjamin Oertel <mail@benjaminoertel.com>
  * @version 1.0
  */
@@ -21,6 +25,7 @@ class Application_Form_User_Register extends Zend_Form{
     $emailElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
     $emailElement->addValidator('stringLength', false, array(2, 64));
     $emailElement->addValidator('EmailAddress', true);
+    $emailElement->addValidator(new Unplagged_Validate_NoRecordExists('Application_Model_User','email'));
     $emailElement->setAttrib('maxLength', 64);
     $emailElement->setRequired(true);
 
@@ -28,6 +33,7 @@ class Application_Form_User_Register extends Zend_Form{
     $usernameElement->setLabel("Shown username");
     $usernameElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
     $usernameElement->addValidator('stringLength', false, array(2, 64));
+    $usernameElement->addValidator(new Unplagged_Validate_NoRecordExists('Application_Model_User','username'));
     $usernameElement->setAttrib('maxLength', 64);
     $usernameElement->setRequired(true);
 

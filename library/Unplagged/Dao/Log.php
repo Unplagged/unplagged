@@ -1,4 +1,9 @@
 <?php
+
+/*
+ * Data Access Object for logging actions.
+ */
+
 /** 
  * The class represents a log entry.
  * It defines also the structure of the database table for the ORM.

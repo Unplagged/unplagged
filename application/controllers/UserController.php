@@ -1,9 +1,13 @@
 <?php
 
+/*
+ * Controller for user management.
+ */
+
 /**
  * The controller class handles all the user transactions as rights requests and user management.
  *
- * @author Benjamin Oertel <benjamin.oertel@student.htw-berlin.de>
+ * @author Benjamin Oertel <mail@benjaminoertel.com>
  * @version 1.0
  */
 class UserController extends Zend_Controller_Action{
@@ -64,6 +68,9 @@ class UserController extends Zend_Controller_Action{
     $this->view->registerForm = $registerForm;
   }
 
+  /**
+   * Verifies a user by a given hash in database.
+   */
   public function verifyAction(){
     $verificationHash = preg_replace('/[^0-9a-z]/i', '', $this->getRequest()->getParam('hash'));
 

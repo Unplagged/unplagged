@@ -10,7 +10,7 @@
   $currentAction = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
   ?>
   <?php echo $this->headLink()
-				->prependStylesheet($this->baseUrl().'/css/styles.css');
+				->prependStylesheet($this->baseUrl().'/resources/css/styles.css');
 			//	->appendStylesheet($this->baseUrl().'/css/navi_de.css')
       
       $defaultNamespace = new Zend_Session_Namespace('Default');
@@ -22,7 +22,7 @@
     <div id="header">
       <div id="settings-panel">
         <?php if(Zend_Auth::getInstance()->hasIdentity()) { ?>
-          <div id="avatar"><img src="/images/tmp_avatar.png" /></div>
+          <div id="avatar"><img src="/resources/images/tmp_avatar.png" /></div>
           <div id="login-actions">
           <?php 
                 echo $this->translate("Welcome") ." " .  $defaultNamespace->user->getUsername() . "!";
@@ -31,7 +31,7 @@
                 <?php
           ?></div>
           <div id="settings">
-            <img src="/images/tmp_top_icons.png" />
+            <img src="/resources/images/tmp_top_icons.png" />
           </div>
         <?php } else { ?>
           <div id="login-actions">
@@ -55,7 +55,7 @@
           <?php 
           if(Zend_Auth::getInstance()->hasIdentity()) { ?>
           <li class="button">
-            <a href="user/edit/id/<?php echo $defaultNamespace->user->getId(); ?>"><span class="left">&nbsp;</span><?php echo $this->translate("Edit profile"); ?><span class="right"nbsp;</span></a>
+            <a href="/user/edit/id/<?php echo $defaultNamespace->user->getId(); ?>"><span class="left">&nbsp;</span><?php echo $this->translate("Edit profile"); ?><span class="right"nbsp;</span></a>
           </li>
           <?php
         } ?>
@@ -64,7 +64,7 @@
     </div>
     <div id="content">
       <div id="sub-menu">
-        <img src="/images/tmp_submenu.png" alt="" />
+        <img src="/resources/images/tmp_submenu.png" alt="" />
       </div>
       <h1><?php echo $this->escape($this->title); ?></h1>
       <div id="main">
@@ -89,9 +89,9 @@
   </div>
   <div>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script>
-  <script defer src="js/plugins.js"></script>
-  <script defer src="js/script.js"></script>
+  <script>window.jQuery || document.write('<script src="/resources/js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+  <script defer src="/resources/js/plugins.js"></script>
+  <script defer src="/resources/js/script.js"></script>
   <!--[if lt IE 7 ]>
   <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
   <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
