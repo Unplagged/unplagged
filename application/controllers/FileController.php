@@ -17,8 +17,8 @@ class FileController extends Zend_Controller_Action{
     if($this->_request->isPost()){
       if($uploadform->isValid(($this->_request->getPost()))){
         $adapter = new Zend_File_Transfer_Adapter_Http();
-        // Maximal 20MB
-        $adapter->addValidator('Size', false, 20480000);
+        // Maximal 20MB = 20480000
+        $adapter->setMaxFileSize(20480000);
         // Nur JPEG, PNG, und GIFs
         $adapter->addValidator('Extension', false, 'gif');
         //muss mit der gruppe geklärt werden
@@ -53,7 +53,6 @@ class FileController extends Zend_Controller_Action{
 
         // prepare file for uploading
         $adapter->setDestination(APPLICATION_PATH . DIRECTORY_SEPARATOR . $fileDirectory);
-        echo $data["location"];
         $adapter->addFilter('Rename', array('target'=>APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation()));
         $adapter->setOptions(array('useByteString'=>false));
 
