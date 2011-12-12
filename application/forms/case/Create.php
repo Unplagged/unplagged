@@ -36,7 +36,7 @@ class Application_Form_Case_Create extends Zend_Form{
 
     $this->addDisplayGroup(array('name', 'alias')
       , 'credentialGroup'
-      , array('legend'=>'Case creation')
+      , array('legend'=>'Case Information')
     );
 
     $this->addElements(array(

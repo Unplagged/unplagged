@@ -43,6 +43,12 @@ class Application_Form_User_Register extends Zend_Form{
     $passwordElement->addValidator('stringLength', false, array(8, 32));
     $passwordElement->setAttrib('maxLength', 32);
     $passwordElement->setRequired(true);
+    
+    $reenterPasswordElement = new Zend_Form_Element_Password('confirmedPassword');
+    $reenterPasswordElement->setLabel("Re-enter Password");
+    $reenterPasswordElement->setAttrib('maxLength', 32);
+    $reenterPasswordElement->addValidator('Identical', false, array('token' => 'password'));
+    $reenterPasswordElement->setRequired(true);
 
 
     $submitElement = new Zend_Form_Element_Submit('submit');
@@ -53,14 +59,16 @@ class Application_Form_User_Register extends Zend_Form{
 
     $this->addElements(array(
       $emailElement
-      , $usernameElement
-      , $passwordElement
+      ,$usernameElement
+      ,$passwordElement
+      ,$reenterPasswordElement
     ));
 
     $this->addDisplayGroup(array(
-      'email'
+       'username'
+      ,'email'
       , 'password'
-      , 'username'
+      ,'confirmedPassword'
         )
         , 'credentialGroup'
         , array('legend'=>'Credential Information')

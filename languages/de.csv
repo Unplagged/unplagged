@@ -4,3 +4,33 @@ Login;Einloggen
 You are not logged in;Sie sind nicht eingeloggt.
 or;oder
 Edit profile;Profil bearbeiten
+List of cases;List von Fällen
+Actions;Aktionen
+Alias;Synonym
+Create a case;Fall anlegen
+Files;Dateien
+Upload a file;Datei hochladen
+Size;Größe
+List of uploaded files;Liste hochgeladener Dateien
+You are not logged in.;Sie sind nicht eingeloggt.
+Credential Information;Zugangsdaten
+Username;Benutzername
+Password;Passwort
+Log in;Einloggen
+Registration;Registrierung
+Shown username;Angezeigter Benutzername
+Re-enter Password;Passwort nochmal eingeben
+Filename;Dateiname
+download;herunterladen
+set target;set target
+unset target;unset target
+Welcome;Willkommen
+Cases;Fälle
+File Information;Datei Informationen
+Filepath;Dateipfad
+New filename;Neuer Dateiname
+Upload file;Datei hochladen
+Create case;Fall anlegen
+Create;Anlegen
+Name;Name
+Case Information;Fall Informationen

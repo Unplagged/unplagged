@@ -80,16 +80,19 @@ body {
     padding: 11px 0 9px 10px;
 }
 
-#header #top-menu li a:hover {
+#header #top-menu li a:hover,
+#header #top-menu li.active a{
   background-image: url('/resources/images/topmenu-btn_center_hover.png');
   color: #666666;
 }
 
-#header #top-menu li a:hover .left {
+#header #top-menu li a:hover .left,
+#header #top-menu li.active a .left{
   background-image: url('/resources/images/topmenu-btn_left_hover.png');
 }
 
-#header #top-menu li a:hover .right {
+#header #top-menu li a:hover .right,
+#header #top-menu li.active a .right{
   background-image: url('/resources/images/topmenu-btn_right_hover.png');
 }
 
@@ -98,7 +101,8 @@ body {
   padding: 3px 6px 1px 6px;
 }
 
-#header #top-menu li a:hover .home {
+#header #top-menu li a:hover .home,
+#header #top-menu li.active a .home{
   background-image: url('/resources/images/home_icon_hover.png');
 }
 
@@ -121,7 +125,7 @@ p {
 }
 
 #content #main {
-  width: 725px;
+  width: 705px;
   padding-left: 25px;
 }
 
@@ -131,7 +135,7 @@ p {
 }
 
 table.default {
-  width: 655px;
+  width: 100%;
   background-color: #fbfbfb;
   border: 1px #d2d5d7 solid;
   margin: 20px 0;
@@ -276,3 +280,10 @@ a:hover {
   background-color: #111; color: #fff;
 }
 .zend_form input[type='submit']:active							{ top: 1px; }
+
+
+.flash-messages {
+  background: #fefabf;
+  padding: 3px;
+  margin: 5px 10px 5px 0;
+}
