@@ -9,14 +9,14 @@ class Application_Form_File_Upload extends Zend_Form{
 
     //Zend_Form_Element_File & SubmitButton
     $elementfile = new Zend_Form_Element_File('filepath');
-    $elementfile->setLabel('Dateipfad:')->setRequired(true);
+    $elementfile->setLabel('Filepath')->setRequired(true);
 
     $elementnewname = new Zend_Form_Element_Text('newName');
-    $elementnewname->setLabel('Neuer Dateiname:');
+    $elementnewname->setLabel('New filename');
 
     $elementsubmit = new Zend_Form_Element_Submit('submit');
     
-    $elementsubmit->setLabel('Datei hochladen');
+    $elementsubmit->setLabel('Upload file');
     $elementsubmit->removeDecorator('DtDdWrapper');
 
     $this->addElements(array(

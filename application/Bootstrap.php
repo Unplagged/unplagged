@@ -42,10 +42,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      * @return Zend_Registry
      */
     protected function _initTranslate(){
-        $registry = Zend_Registry::getInstance();
+    /*    $registry = Zend_Registry::getInstance();
         $locale = new Zend_Locale('de_DE');
         $translate = new Zend_Translate('csv', APPLICATION_PATH . '/../languages/de.csv', 'de');
-		//$translate->addTranslation(APPLICATION_PATH . '/../languages/de.csv', 'de'); //TODO: add automatically lang support
+      //$translate->addTranslation(APPLICATION_PATH . '/../languages/de.csv', 'de'); //TODO: add automatically lang support
         
         $registry->set('Zend_Locale', $locale);
         $registry->set('Zend_Translate', $translate);
@@ -57,11 +57,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		        'content' => APPLICATION_PATH . '/../resources/languages',
 		        'locale'  => $locale,
 		        'scan'    => Zend_Translate::LOCALE_DIRECTORY
-		    )
+		    
 		);
         Zend_Validate_Abstract::setDefaultTranslator($translator);
 
-        return $registry;
+        return $registry;)*/
     }
  
     /**

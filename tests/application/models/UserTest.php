@@ -25,14 +25,7 @@ class Application_Model_UserTest extends ControllerTestCase {
 
         $this->assertEquals($this->user->getLastname(), $testLastname);
     }
-    
-    public function testSetUsername() {
-        $testUsername = "benjamino";
-        $this->user->setUsername($testUsername);
 
-        $this->assertEquals($this->user->getUsername(), $testUsername);
-    }
-    
     public function testSetPassword() {
         $testPassword = "Passwort";
         $this->user->setPassword($testPassword);
