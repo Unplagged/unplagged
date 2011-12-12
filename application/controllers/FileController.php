@@ -18,9 +18,16 @@ class FileController extends Zend_Controller_Action{
       if($uploadform->isValid(($this->_request->getPost()))){
         $adapter = new Zend_File_Transfer_Adapter_Http();
         // Maximal 20MB = 20480000
-        $adapter->setMaxFileSize(20480000);
+       // $adapter->setMaxFileSize(20480000);
+        //$adapter->addValidator('NotEmpty');
         // Nur JPEG, PNG, und GIFs
-        $adapter->addValidator('Extension', false, 'gif');
+         $adapter->addValidator( 'Extension', true, array( 'png,gif', 'messages' => '<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.' ) );
+         $adapter->addValidator( 'Size', true, array( 
+                'max'      => 102400, 
+                'messages' => array(
+                    Zend_Validate_File_Size::TOO_BIG => 'The maximum permitted image file size is <b>%max%</b> - selected image file size is <b>%size%</b>.'
+                )
+             ) );
         //muss mit der gruppe geklärt werden
         //Neither APC nor uploadprogress extension installed 
         /* $adapterprogressbar = new Zend_ProgressBar_Adapter_Console();
@@ -107,6 +114,12 @@ class FileController extends Zend_Controller_Action{
     // disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
+  }
+  
+   public function deleteAction(){
+    //$fileId = $this->_getParam('id');
+
+    //$this->targetAction($fileId, true);
   }
 
   public function setTargetAction(){
