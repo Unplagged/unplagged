@@ -17,6 +17,10 @@ class FileController extends Zend_Controller_Action{
     if($this->_request->isPost()){
       if($uploadform->isValid(($this->_request->getPost()))){
         $adapter = new Zend_File_Transfer_Adapter_Http();
+        // Maximal 20MB
+        $adapter->addValidator('Size', false, 20480000);
+        // Nur JPEG, PNG, und GIFs
+        $adapter->addValidator('Extension', false, 'gif');
         //muss mit der gruppe geklärt werden
         //Neither APC nor uploadprogress extension installed 
         /* $adapterprogressbar = new Zend_ProgressBar_Adapter_Console();
@@ -49,6 +53,7 @@ class FileController extends Zend_Controller_Action{
 
         // prepare file for uploading
         $adapter->setDestination(APPLICATION_PATH . DIRECTORY_SEPARATOR . $fileDirectory);
+        echo $data["location"];
         $adapter->addFilter('Rename', array('target'=>APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation()));
         $adapter->setOptions(array('useByteString'=>false));
 
