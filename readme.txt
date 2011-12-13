@@ -15,5 +15,5 @@ Elsa Mahari
 
 #####
 
-Just a change for to test if the post-checkout hook is working.
+Another test now with a change to the redmine github plugin.
 
