@@ -15,5 +15,5 @@ Elsa Mahari
 
 #####
 
-Another check now with a change to the redmine github plugin.
+Another check now with a change to the redmine github plugin and the permissions.
 
