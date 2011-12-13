@@ -15,5 +15,5 @@ Elsa Mahari
 
 #####
 
-Just a change for to see if the post-checkout hook is working.
+Just a change for to check if the post-checkout hook is working.
 
