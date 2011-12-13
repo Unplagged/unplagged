@@ -1,7 +1,7 @@
 <?php
 
 require_once('../application/models/Log.php');
-require_once('../application/models/log/Action.php');
+require_once('../application/models/Log/Action.php');
 require_once('../application/models/User.php');
 
 class Application_Model_LogTest extends ControllerTestCase {
