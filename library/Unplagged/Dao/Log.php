@@ -23,11 +23,12 @@
     public static function log($module, $title, &$user, $comment = null) {
         $em = Zend_Registry::getInstance()->entitymanager;
         
-        $log = new Application_Model_Log();
-        $action = $em->getRepository('Application_Model_Log_Action')->findOneBy(array('title' => $title, 'module' => $module));
-        $log->setAction($action);
-        $log->setUser($user);
-        $log->setComment($comment);
+        $data = array();
+        $data["action"] = $em->getRepository('Application_Model_Log_Action')->findOneBy(array('title' => $title, 'module' => $module));
+        $data["user"] = $user;
+        $data["comment"] = $comment;
+        
+        $log = new Application_Model_Log($data);
         
         $em->persist($log);
         $em->flush();

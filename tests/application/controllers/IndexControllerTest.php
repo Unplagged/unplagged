@@ -2,7 +2,7 @@
 
 class IndexControllerTest extends ControllerTestCase {
 
-  /*  public function setUp()
+    public function setUp()
     {
         parent::setUp();
     }
@@ -10,7 +10,7 @@ class IndexControllerTest extends ControllerTestCase {
     public function testCallWithoutActionShouldPullFromIndexAction()
     {
         $this->dispatch('/index/index');
-       // $this->assertController('index');
-       // $this->assertAction('index');
-    }*/
+        $this->assertController('index');
+        $this->assertAction('index');
+    }
 }

@@ -54,7 +54,7 @@ class AuthController extends Zend_Controller_Action
                     $this->_helper->redirector('index', 'index');
                 } else {
                     $this->_helper->flashMessenger->addMessage('Login failed.');
-                    $this->_helper->redirector('index', 'index');
+                    $this->_helper->redirector('login', 'auth');
                 }
 			}
         }

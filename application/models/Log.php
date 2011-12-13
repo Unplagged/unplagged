@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * File for class {@link Application_Model_Log}.
+ */
+
+/**
  * The class represents a log entry.
  * It defines also the structure of the database table for the ORM.
  *
@@ -16,7 +20,6 @@ class Application_Model_Log{
   /**
    * The logId is an unique identifier for each log entry.
    * @var string The userId.
-   * $access protected
    *
    * @Id @GeneratedValue @Column(type="integer")
    */
@@ -25,7 +28,6 @@ class Application_Model_Log{
   /**
    * The date when the log entry was created.
    * @var string The creation date.
-   * @access protected
    *
    * @Column(type="datetime")
    */
@@ -61,44 +63,38 @@ class Application_Model_Log{
     $this->created = new DateTime("now");
   }
 
+  public function __construct($data = array()){
+    if(isset($data["action"])){
+      $this->action = $data["action"];
+    }
+
+    if(isset($data["user"])){
+      $this->user = $data["user"];
+    }
+
+    if(isset($data["comment"])){
+      $this->comment = $data["comment"];
+    }
+  }
+  
   public function getId(){
     return $this->id;
-  }
-
-  public function setId($id){
-    $this->id = $id;
   }
 
   public function getCreated(){
     return $this->created;
   }
 
-  public function setCreated($created){
-    $this->created = $created;
-  }
-
   public function getAction(){
     return $this->action;
-  }
-
-  public function setAction($action){
-    $this->action = $action;
   }
 
   public function getUser(){
     return $this->user;
   }
 
-  public function setUser($user){
-    $this->user = $user;
-  }
-
   public function getComment(){
     return $this->comment;
-  }
-
-  public function setComment($comment) {
-    $this->comment = $comment;
   }
 
 }

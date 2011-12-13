@@ -20,46 +20,53 @@ $application->getBootstrap()->bootstrap('doctrine');
 $em = $application->getBootstrap()->getResource('doctrine');
 
 // init log actions
-$logAction = new Application_Model_Log_Action();
-$logAction->setModule("user");
-$logAction->setTitle("registration");
-$logAction->setDescription("A user registers on the plattform.");
+$data["module"] = "user";
+$data["title"] = "registration";
+$data["description"] = "A user registers on the plattform.";
+$logAction = new Application_Model_Log_Action($data);
 $em->persist($logAction);
 
-$logAction = new Application_Model_Log_Action();
-$logAction->setModule("user");
-$logAction->setTitle("profile_update");
-$logAction->setDescription("A user updates the own account.");
+unset($data);
+$data["module"] = "user";
+$data["title"] = "profile_update";
+$data["description"] = "A user updates the own account.";
+$logAction = new Application_Model_Log_Action($data);
 $em->persist($logAction);
 
-$logAction = new Application_Model_Log_Action();
-$logAction->setModule("user");
-$logAction->setTitle("verification");
-$logAction->setDescription("A user verifies the own account.");
+unset($data);
+$data["module"] = "user";
+$data["title"] = "verification";
+$data["description"] = "A user verifies the own account.";
+$logAction = new Application_Model_Log_Action($data);
 $em->persist($logAction);
 
-$logAction = new Application_Model_Log_Action();
-$logAction->setModule("mailer");
-$logAction->setTitle("registraion");
-$logAction->setDescription("A mail was sent to the user asking for verifying the account.");
+unset($data);
+$data["module"] = "mailer";
+$data["title"] = "registraion";
+$data["description"] = "A mail was sent to the user asking for verifying the account.";
+$logAction = new Application_Model_Log_Action($data);
 $em->persist($logAction);
 
 $em->flush();
 
+
 // init user states
-$userState = new Application_Model_User_State();
-$userState->setTitle("registered");
-$userState->setDescription("A user registered on the page and did not finish the verification process yet.");
+unset($data);
+$data["title"] = "registered";
+$data["description"] = "A user registered on the page and did not finish the verification process yet.";
+$userState = new Application_Model_User_State($data);
 $em->persist($userState);
 
-$userState = new Application_Model_User_State();
-$userState->setTitle("activated");
-$userState->setDescription("A user that can actually use the web page.");
+unset($data);
+$data["title"] = "activated";
+$data["description"] = "A user that can actually use the web page.";
+$userState = new Application_Model_User_State($data);
 $em->persist($userState);
 
-$userState = new Application_Model_User_State();
-$userState->setTitle("locked");
-$userState->setDescription("A user that was locked.");
+unset($data);
+$data["title"] = "locked";
+$data["description"] = "A user that was locked.";
+$userState = new Application_Model_User_State($data);
 $em->persist($userState);
 
 $em->flush();

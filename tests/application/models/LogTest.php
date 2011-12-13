@@ -6,7 +6,7 @@ require_once('../application/models/User.php');
 
 class Application_Model_LogTest extends ControllerTestCase {
     
-    protected $log;
+    private $log;
         
     public function setUp()
     {
@@ -14,39 +14,16 @@ class Application_Model_LogTest extends ControllerTestCase {
         $this->log = new Application_Model_Log();
     }
 
-    public function testSetId() {
-        $testId = "1";
-        $this->log->setId($testId);
-
-        $this->assertEquals($this->log->getId(), $testId);
-    }
-    
-    public function testSetAction() {
-        $testAction = new Application_Model_Log_Action();
-        $this->log->setAction($testAction);
-
-        $this->assertEquals($this->log->getAction(), $testAction);
-    }
-    
-    public function testSetUser() {
-        $testUser = new Application_Model_User();
-        $this->log->setUser($testUser);
-
-        $this->assertEquals($this->log->getUser(), $testUser);
-    }
-    
-    public function testSetComment() {
-        $testComment = "Passwort";
-        $this->log->setComment($testComment);
-
-        $this->assertEquals($this->log->getComment(), $testComment);
-    }
+    public function testConstructor() {
+      
+        $data["action"] = new Application_Model_Log_Action();
+        $data["user"] = new Application_Model_User();
+        $data["comment"] = "Hello World";
         
-    public function testCreated() {
-        $this->log->created();
-    }
-    
-    public function testgetCreated() {
-        $this->log->getCreated();
+        $log = new Application_Model_Log($data);
+
+        $this->assertEquals($log->getAction(), $data["action"]);
+        $this->assertEquals($log->getUser(), $data["user"]);
+        $this->assertEquals($log->getComment(), $data["comment"]);
     }
 }

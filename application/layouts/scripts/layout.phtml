@@ -43,18 +43,18 @@
       </div>
         <div id="top-menu">
           <ul>
-          <li class="button">
+          <li class="button<?php if($currentController == "index") { echo " active"; } ?>">
             <a href="/index/index"><span class="left">&nbsp;</span><span class="home">&nbsp;</span><span class="right">&nbsp;</span></a>
           </li>
-          <li class="button">
-            <a href="/case/list"><span class="left">&nbsp;</span>Cases<span class="right">&nbsp;</span></a>
+          <li class="button<?php if($currentController == "case") { echo " active"; } ?>">
+            <a href="/case/list"><span class="left">&nbsp;</span><?php echo $this->translate("Cases"); ?><span class="right">&nbsp;</span></a>
           </li>
-          <li class="button">
-            <a href="/file/list"><span class="left">&nbsp;</span>Files<span class="right"nbsp;</span></a>
+          <li class="button<?php if($currentController == "file") { echo " active"; } ?>">
+            <a href="/file/list"><span class="left">&nbsp;</span><?php echo $this->translate("Files"); ?><span class="right"nbsp;</span></a>
           </li>
           <?php 
           if(Zend_Auth::getInstance()->hasIdentity()) { ?>
-          <li class="button">
+          <li class="button<?php if($currentController == "user" && $currentAction == "edit") { echo " active"; } ?>">
             <a href="/user/edit/id/<?php echo $defaultNamespace->user->getId(); ?>"><span class="left">&nbsp;</span><?php echo $this->translate("Edit profile"); ?><span class="right"nbsp;</span></a>
           </li>
           <?php
