@@ -4,7 +4,7 @@ require_once('../application/models/user/State.php');
 
 class Application_Model_User_StateTest extends ControllerTestCase {
     
-    protected $state;
+    /*protected $state;
         
     public function setUp()
     {
@@ -31,5 +31,5 @@ class Application_Model_User_StateTest extends ControllerTestCase {
         $this->state->setDescription($testDescription);
 
         $this->assertEquals($this->state->getDescription(), $testDescription);
-    }
+    }*/
 }

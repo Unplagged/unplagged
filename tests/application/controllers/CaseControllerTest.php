@@ -8,10 +8,12 @@
  *
  * @author Dominik Horb <dominik.horb@googlemail.com>
  */
-class CaseControllerTest extends Zend_Test_PHPUnit_ControllerTestCase{
+class CaseControllerTest extends ControllerTestCase{
   
-  public function testRedirectWithoutValidUser(){
-    
+  public function testCaseCreateDispatchesCorrectly(){
+    $this->dispatch('/case/create');
+    $this->assertController('case');
+    $this->assertAction('create'); 
   }
 }
 

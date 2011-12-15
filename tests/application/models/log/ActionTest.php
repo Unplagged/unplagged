@@ -9,33 +9,27 @@ class Application_Model_Log_ActionTest extends ControllerTestCase {
     public function setUp()
     {
         parent::setUp();                
-        $this->action = new Application_Model_Log_Action();
-    }
-
-    public function testSetId() {
-        $testId = "1";
-        $this->action->setId($testId);
-
-        $this->assertEquals($this->action->getId(), $testId);
+        $this->action = new Application_Model_Log_Action(array(
+          'module'=>'registration'
+          , 'title'=>'Titel'
+          , 'description'=>'Beschreibung'
+        ));
     }
     
-    public function testSetTitle() {
+    public function testTitleWasSet() {
         $testTitle = "Titel";
-        $this->action->setTitle($testTitle);
 
         $this->assertEquals($this->action->getTitle(), $testTitle);
     }
         
     public function testSetDescription() {
         $testDescription = "Beschreibung";
-        $this->action->setDescription($testDescription);
 
         $this->assertEquals($this->action->getDescription(), $testDescription);
     }
     
-    public function testSetModule() {
+    public function testModuleWasSet() {
         $testModule = "registration";
-        $this->action->setModule($testModule);
 
         $this->assertEquals($this->action->getModule(), $testModule);
     }

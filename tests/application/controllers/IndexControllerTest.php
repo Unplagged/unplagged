@@ -7,9 +7,15 @@ class IndexControllerTest extends ControllerTestCase {
         parent::setUp();
     }
  
+    public function testHomepage()
+    {
+      $this->dispatch('/');
+      
+    }
+    
     public function testCallWithoutActionShouldPullFromIndexAction()
     {
-        $this->dispatch('/index/index');
+        $this->dispatch('/index');
         $this->assertController('index');
         $this->assertAction('index');
     }
