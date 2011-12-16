@@ -15,5 +15,5 @@ Elsa Mahari
 
 #####
 
-Another test for the preview area.
+And another test for the preview area.
 
