@@ -15,6 +15,20 @@ class CaseControllerTest extends ControllerTestCase{
     $this->assertController('case');
     $this->assertAction('create'); 
   }
+  
+  public function testIndexRedirectsToLisView()
+  {
+    $this->dispatch('/case');
+    $this->assertRedirectTo('/case/list');
+  }
+  
+  public function testCaseListDispatchesCorrectly()
+  {
+    $this->dispatch('/case/list');
+    $this->assertController('case');
+    $this->assertAction('list');
+  }
+  
 }
 
 ?>
