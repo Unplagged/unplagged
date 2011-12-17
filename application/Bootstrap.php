@@ -1,4 +1,7 @@
 <?php
+/**
+ * File for class {@link Bootstrap}.
+ */
 
 /**
  * The class is the starting point for the application and initalizes base components.

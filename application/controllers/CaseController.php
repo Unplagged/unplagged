@@ -1,5 +1,4 @@
 <?php
-
 /**
  * File for class {@link CaseController}.
  */
