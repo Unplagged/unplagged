@@ -7,13 +7,25 @@ include APPLICATION_PATH . DIRECTORY_SEPARATOR . 'ocr/TesseractAdapter.php';
 
 /**
  *
- * @author Dominik Horb <dominik.horb@googlemail.com>
  */
 class TesseractAdapterTest extends PHPUnit_Framework_TestCase{
   
-  public function testArgumentsMustBeValid(){
+  public function testCheckTesseractCallIsWorking(){
+    $this->assertTrue(TesseractAdapter::checkTesseract());
+  }
+  
+  public function testCheckTesseractWithWrongCommand(){
+    $this->assertFalse(TesseractAdapter::checkTesseract('WrongCommand'));
+  }
+  
+  public function testInputFileMustExist(){
     $this->setExpectedException('InvalidArgumentException');
     $tesseractAdapter = new TesseractAdapter('', '', '');
+  }
+  
+  public function testOutputFileNameMustBeSpecified(){
+    $this->setExpectedException('InvalidArgumentException');
+    new TesseractAdapter(realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'resources') . DIRECTORY_SEPARATOR, 'p13a.tif', '');
   }
   
   public function testTxtFileGetsCreated(){
@@ -30,9 +42,10 @@ class TesseractAdapterTest extends PHPUnit_Framework_TestCase{
     $tesseractAdapter = new TesseractAdapter($resourcesPath, $testFileName . '.tif', $testFileName);
     $tesseractAdapter->execute();
     
-    $this->assertFileExists($resourcesPath . $testFileName . '.txt');
+    $this->assertFileExists($resourcesPath . $testFileName . '.txt', 'Please make sure Tesseract is installed and on the include path.');
     
-    //delete the newly created file
+    
+    //delete the newly created txt file
     unlink($resourcesPath . $testFileName . '.txt');
   }
 }
