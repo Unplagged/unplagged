@@ -1,4 +1,5 @@
 <?php
+//@todo this file was moved to scripts/build can be removed after a brief period of overlap
 
 define('APPLICATION_ENV', 'development');
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../'));

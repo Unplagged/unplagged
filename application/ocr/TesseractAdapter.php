@@ -26,7 +26,9 @@ class TesseractAdapter{
    * @param string $language The language which tesseract should use for it's parsing.
    */
   public function __construct($folderPath, $inputFileName, $outputFileName, $tesseractPath = 'tesseract', $language = 'deu'){
-    if(is_dir($folderPath) && file_exists($inputFileName) && is_string($outputFileName)){
+    $message = $this->checkConstructorArguments($folderPath, $inputFileName, $outputFileName);
+    
+    if($message === ''){
       $this->folderPath = $folderPath;
       $this->tesseractCall = $tesseractPath;
       $this->outputFileName = $outputFileName;
@@ -34,8 +36,39 @@ class TesseractAdapter{
       $this->inputFileName = $inputFileName;
     }
     else{
-      throw new InvalidArgumentException(); 
+      throw new InvalidArgumentException($message); 
     }
+  }
+  
+  /**
+   *
+   * @param string $folderPath
+   * @param string $inputFileName
+   * @param string $outputFileName
+   * @return string 
+   */
+  private function checkConstructorArguments($folderPath, $inputFileName, $outputFileName){
+    $message = '';
+    
+    if(!file_exists($folderPath . $inputFileName)){
+      $message = 'The input file doesn\'t exist.';
+    }elseif(!is_string($outputFileName) && !empty($outputFileName)){
+      $message = 'The output file name needs to be specified as a string';
+    }
+
+    return $message;
+  }
+  
+  /**
+   * This function executes the command line call.
+   * 
+   * The result should be a .txt file with the name that was provided to the constructor as the $outputFileName.
+   */
+  public function execute(){
+    $output = array();
+    $command = $this->tesseractCall . ' ' . $this->folderPath . $this->inputFileName . ' ' . $this->folderPath . $this->outputFileName . ' -l ' . $this->language;
+    
+    exec($command, $output);
   }
   
 }
