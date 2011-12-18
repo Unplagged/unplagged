@@ -1,6 +1,8 @@
 <?php
+//set only as development environment, when nothing was defined before
+defined('APPLICATION_ENV')
+    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'development'));
 
-define('APPLICATION_ENV', 'development');
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../application'));
  echo APPLICATION_PATH;
 set_include_path(implode(PATH_SEPARATOR, array(

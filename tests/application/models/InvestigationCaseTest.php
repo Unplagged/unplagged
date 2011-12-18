@@ -3,7 +3,7 @@
 /**
  * File for class {@link CaseTest}.
  */
-require_once ('../application/models/InvestigationCase.php');
+require_once '../application/models/InvestigationCase.php';
 
 /**
  *
