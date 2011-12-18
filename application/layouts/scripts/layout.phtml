@@ -1,98 +1,104 @@
+<?php
+$currentController = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+$currentAction = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+
+$defaultNamespace = new Zend_Session_Namespace('Default');
+?>
 <!doctype html>
 <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-<head>
-  <?php echo $this->headMeta(); ?>
-  <?php
-  $currentController = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
-  $currentAction = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
-  ?>
-  <?php echo $this->headLink()
-				->prependStylesheet($this->baseUrl().'/resources/css/styles.css');
-			//	->appendStylesheet($this->baseUrl().'/css/navi_de.css')
-      
-      $defaultNamespace = new Zend_Session_Namespace('Default');
-?>
-
-</head>
-<body>
-  <div id="page">
-    <div id="header">
-      <div id="settings-panel">
-        <?php if(Zend_Auth::getInstance()->hasIdentity()) { ?>
-          <div id="avatar"><img src="/resources/images/tmp_avatar.png" /></div>
-          <div id="login-actions">
-          <?php 
-                echo $this->translate("Welcome") ." " .  $defaultNamespace->user->getUsername() . "!";
-                ?>
-                <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
-                <?php
-          ?></div>
-          <div id="settings">
-            <img src="/resources/images/tmp_top_icons.png" />
-          </div>
-        <?php } else { ?>
-          <div id="login-actions">
+  <head>
+    <?php echo $this->headMeta(); ?>
+    <?php
+    echo $this->headLink()
+        ->prependStylesheet($this->baseUrl() . '/resources/css/styles.css');
+    //	->appendStylesheet($this->baseUrl().'/css/navi_de.css')
+    ?>
+    <script src="/resources/js/libs/modernizr-2.0.6.min.js"></script>
+  </head>
+  <body>
+    <div id="page">
+      <header id="header">
+        <div id="settings-panel">
+<?php if(Zend_Auth::getInstance()->hasIdentity()){ ?>
+            <div id="avatar"><img src="/resources/images/tmp_avatar.png" /></div>
+            <div id="login-actions">
+              <?php
+              echo $this->translate("Welcome") . " " . $defaultNamespace->user->getUsername() . "!";
+              ?>
+              <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
+              <?php ?></div>
+            <div id="settings">
+              <img src="/resources/images/tmp_top_icons.png" />
+            </div>
+          <?php }else{ ?>
+            <div id="login-actions">
               <?php echo $this->translate("You are not logged in."); ?>
               <a href="/user/register"><?php echo $this->translate("Register now"); ?></a> 
               or <a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
-          </div>
-        <?php } ?>
-      </div>
+            </div>
+          <?php } ?>
+        </div>
         <div id="top-menu">
           <ul>
-          <li class="button<?php if($currentController == "index") { echo " active"; } ?>">
-            <a href="/index/index"><span class="left">&nbsp;</span><span class="home">&nbsp;</span><span class="right">&nbsp;</span></a>
-          </li>
-          <li class="button<?php if($currentController == "case") { echo " active"; } ?>">
-            <a href="/case/list"><span class="left">&nbsp;</span><?php echo $this->translate("Cases"); ?><span class="right">&nbsp;</span></a>
-          </li>
-          <li class="button<?php if($currentController == "file") { echo " active"; } ?>">
-            <a href="/file/list"><span class="left">&nbsp;</span><?php echo $this->translate("Files"); ?><span class="right"nbsp;</span></a>
-          </li>
-          <?php 
-          if(Zend_Auth::getInstance()->hasIdentity()) { ?>
-          <li class="button<?php if($currentController == "user" && $currentAction == "edit") { echo " active"; } ?>">
-            <a href="/user/edit/id/<?php echo $defaultNamespace->user->getId(); ?>"><span class="left">&nbsp;</span><?php echo $this->translate("Edit profile"); ?><span class="right"nbsp;</span></a>
-          </li>
-          <?php
-        } ?>
-        </ul>
+            <li class="button<?php if($currentController == "index"){
+            echo " active";
+          } ?>">
+              <a href="/index/index"><span class="left">&nbsp;</span><span class="home">&nbsp;</span><span class="right">&nbsp;</span></a>
+            </li>
+            <li class="button<?php if($currentController == "case"){
+            echo " active";
+          } ?>">
+              <a href="/case/list"><span class="left">&nbsp;</span><?php echo $this->translate("Cases"); ?><span class="right">&nbsp;</span></a>
+            </li>
+            <li class="button<?php if($currentController == "file"){
+            echo " active";
+          } ?>">
+              <a href="/file/list"><span class="left">&nbsp;</span><?php echo $this->translate("Files"); ?><span class="right"nbsp;</span></a>
+            </li>
+            <?php if(Zend_Auth::getInstance()->hasIdentity()){ ?>
+              <li class="button<?php if($currentController == "user" && $currentAction == "edit"){
+              echo " active";
+            } ?>">
+                <a href="/user/edit/id/<?php echo $defaultNamespace->user->getId(); ?>"><span class="left">&nbsp;</span><?php echo $this->translate("Edit profile"); ?><span class="right"nbsp;</span></a>
+              </li>
+  <?php } ?>
+          </ul>
         </div>
-    </div>
-    <div id="content">
-      <div id="sub-menu">
-        <img src="/resources/images/tmp_submenu.png" alt="" />
-      </div>
-      <h1><?php echo $this->escape($this->title); ?></h1>
-      <div id="main">
-        <?php 
-        if(!empty($this->flashMessages)) {
+      </header>
+      <div id="content">
+        <div id="sub-menu">
+          <img src="/resources/images/tmp_submenu.png" alt="" />
+        </div>
+        <h1><?php echo $this->escape($this->title); ?></h1>
+        <div id="main">
+          <?php
+          if(!empty($this->flashMessages)){
             echo '<div class="flash-messages">';
 
-            foreach($this->flashMessages as $key => $value) {
-                echo $this->translate($value)."<br />";
+            foreach($this->flashMessages as $key=>$value){
+              echo $this->translate($value) . "<br />";
             }
             echo '</div>';
-        }
-        
-        // content from each view, the rest of this page is global to all views
-        echo $this->layout()->content;
-        ?>
+          }
+
+          // content from each view, the rest of this page is global to all views
+          echo $this->layout()->content;
+          ?>
+        </div>
+
+
       </div>
-      
-     
-      </div>
+    <footer>
+    </footer>
     </div>
-  </div>
-  <div>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="/resources/js/libs/jquery-1.6.2.min.js"><\/script>')</script>
   <script defer src="/resources/js/plugins.js"></script>
   <script defer src="/resources/js/script.js"></script>
-  <!--[if lt IE 7 ]>
+  <!--[if lt IE 7]>
   <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
   <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
   <![endif]-->
