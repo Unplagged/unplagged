@@ -1,38 +1,25 @@
-Benjamin Oertel Dec 1], 20]]
-s05 22 720
-HW9
-HW9-1
-Implement the Sequential and Binary Search algorithms. Note that there is a bug in the code,
-you may have to debug it to ﬁnd it.
-Due to the fact binary search works for sorted arrays only, I compared only sorted arrays for
-both, the sequential and the binary search.
-The code for sequential search:
-private Int32 sequentia1Search(Int32[] sortedNumbers, Int32 val)
-{
-for(int i=0; i<sortedNumbers.Length; i++) {
-if (sortedNumbers[i] == val) {
-return i;
-}
-}
-return -1;
-}
-The code for binary search:
-private Int32 binarySearch(Int32[] sortedNumbers, Int32 val)
-{
-Int32 inf = 0;
-Int32 sup = sortedNumbers.Length-1;
-whi1e(inf <= sup)
-{
-Int32 mid = (inf+suP) / 2;
-if (sortedNumbers[mid] > val) {
-sup = mid-1;
-} else if (sortedNumbers[mid] < val) {
-inf = mid + 1;
-} else {
-return mid;
-}
-}
-return -1;
-}
-1
+Benjamin Oertel Dec 11, 2011
+sU522 721]
+HW9—2
+Show that Sequential Search is O(n) and Binary Search is O(l0g n). For this, plot the CPU-
+time for different input size.
+To show this I generated sorted arrays with an increasing number of elements. The charts
+show the elapsed ticks on the y axis and the number of elements to search for a value on the x
+axis
+.5 Compallson .,1 BM,” Scqueuhai Sm gagif
+2011 — Elay
+0 11
+ass 111111 311111 511111 711111 sum
+1 211111 411111 511111 1111111 11111111
+Step size on X values is 1000.
+A; Compallson .,1 BM,” Scqueuhai Sm gagif
+25 _a-By
+I5
+111
+1 if
+5 i 4*‘ I . 1 A .
+O
+—9s 1901 39111 5901 7901 9901
+Step size on X values is 100
+2
 
