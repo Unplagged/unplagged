@@ -16,5 +16,9 @@ class Document{
   public function getId(){
     return $this->id;
   }
+  
+  public function getOriginalData(){
+    return 'originalData';
+  }
 }
 ?> 

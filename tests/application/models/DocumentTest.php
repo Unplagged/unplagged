@@ -15,5 +15,11 @@ class DocumentTest extends PHPUnit_Framework_TestCase{
     $this->assertNull($document->getId());
   }
   
+  public function testOriginalDataCanBeAccessed(){
+    $document = new Document('originalData');
+    
+    $this->assertEquals('originalData', $document->getOriginalData());
+  }
+  
 }
 ?>

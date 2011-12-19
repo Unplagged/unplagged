@@ -19,10 +19,9 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
     <script src="/resources/js/libs/modernizr-2.0.6.min.js"></script>
   </head>
   <body>
-    <div id="page">
-      <header id="header">
-        <div id="settings-panel">
-<?php if(Zend_Auth::getInstance()->hasIdentity()){ ?>
+    <header id="main-header">
+      <div id="settings-panel">
+        <?php if(Zend_Auth::getInstance()->hasIdentity()){ ?>
             <div id="avatar"><img src="/resources/images/tmp_avatar.png" /></div>
             <div id="login-actions">
               <?php
@@ -41,6 +40,11 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
             </div>
           <?php } ?>
         </div>
+    </header>
+    <div id="page">
+      
+      
+      <header id="header">
         <div id="top-menu">
           <ul>
             <li class="button<?php if($currentController == "index"){
