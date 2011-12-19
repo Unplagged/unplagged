@@ -21,25 +21,23 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
   <body>
     <header id="main-header">
       <div id="settings-panel">
-        <?php if(Zend_Auth::getInstance()->hasIdentity()){ ?>
-            <div id="avatar"><img src="/resources/images/tmp_avatar.png" /></div>
-            <div id="login-actions">
-              <?php
-              echo $this->translate("Welcome") . " " . $defaultNamespace->user->getUsername() . "!";
-              ?>
-              <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
-              <?php ?></div>
-            <div id="settings">
-              <img src="/resources/images/tmp_top_icons.png" />
-            </div>
-          <?php }else{ ?>
-            <div id="login-actions">
-              <?php echo $this->translate("You are not logged in."); ?>
-              <a href="/user/register"><?php echo $this->translate("Register now"); ?></a> 
-              or <a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
-            </div>
-          <?php } ?>
-        </div>
+        <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
+          <div id="avatar"><img src="/resources/images/tmp_avatar.png" /></div>
+          <div id="login-actions">
+            <?php echo $this->translate("Welcome") . " " . $defaultNamespace->user->getUsername() . "!"; ?>
+            <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
+          </div>
+          <div id="settings">
+            <img src="/resources/images/tmp_top_icons.png" />
+          </div>
+        <?php else: ?>
+          <div id="login-actions">
+            <?php echo $this->translate("You are not logged in."); ?>
+            <a href="/user/register"><?php echo $this->translate("Register now"); ?></a> 
+              <?php echo $this->translate('or'); ?> <a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
+          </div>
+        <?php endif; ?>
+      </div>
     </header>
     <div id="page">
       
