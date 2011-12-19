@@ -1,4 +1,4 @@
-######### Readme ##
+# Readme ##
 
 // Unplagged - Masters Project 2011-2012
 
