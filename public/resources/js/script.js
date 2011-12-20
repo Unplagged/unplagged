@@ -2,7 +2,8 @@ $(document).ready(function(){
   
   var dropdownButton = $('<span class="dropdown-button arrow-up"></span>');
   dropdownButton.toggle(function(){
-    $('#main-header').css('top', '-30px').css('margin-bottom', '5px');
+    //$('#main-header').slideUp();
+    $('#main-header').css('top', '-32px').css('margin-bottom', '5px');
     dropdownButton.removeClass('arrow-up');
     dropdownButton.addClass('arrow-down');
   }, function(){
