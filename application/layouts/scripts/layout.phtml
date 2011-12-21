@@ -39,11 +39,12 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
         <?php endif; ?>
       </div>
     </header>
+    
     <div id="page">
       
-      
-      <header id="header">
-        <div id="top-menu">
+      <header id="header" class="clearfix">
+        <h1 class="ir">Unplagged - Plagiarism Detection Cockpit</h1>
+        <div id="top-menu" class="clearfix">
           <ul>
             <li class="button<?php if($currentController == "index"){
             echo " active";
@@ -74,7 +75,7 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
         <div id="sub-menu">
           <img src="/resources/images/tmp_submenu.png" alt="" />
         </div>
-        <h1><?php echo $this->escape($this->title); ?></h1>
+        <h2><?php echo $this->escape($this->title); ?></h2>
         <div id="main">
           <?php
           if(!empty($this->flashMessages)){
