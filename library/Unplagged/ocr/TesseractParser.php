@@ -9,10 +9,10 @@ require_once 'DocumentParser.php';
  *
  * @author Dominik Horb <dominik.horb@googlemail.com>
  */
-class TesseractParser implements DocumentParser{
+class Unplagged_Ocr_TesseractParser implements Unplagged_Ocr_DocumentParser{
   
   public function parseDocument(){
-    return new Document();
+    return new Application_Model_Document();
   }
 }
 ?>

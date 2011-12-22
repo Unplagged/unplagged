@@ -9,7 +9,7 @@
  * 
  * @author Dominik Horb <dominik.horb@googlemail.com>
  */
-interface DocumentParser{
+interface Unplagged_Ocr_DocumentParser{
 
   /**
    * @return Document 

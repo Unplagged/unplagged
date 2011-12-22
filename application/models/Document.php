@@ -8,7 +8,7 @@ include_once APPLICATION_PATH . DIRECTORY_SEPARATOR . 'models/Document.php';
 /**
  * @Entity @Table(name="documents")
  */
-class Document{
+class Application_Model_Document{
 
   /** @Id @GeneratedValue @Column(type="integer")  */
   private $id;

@@ -3,9 +3,6 @@
  * File for class {@link TesseractParserTest}.
  */
 
-include_once APPLICATION_PATH . DIRECTORY_SEPARATOR . 'ocr/TesseractParser.php';
-include_once APPLICATION_PATH . DIRECTORY_SEPARATOR . 'models/Document.php';
-
 /**
  *
  * @author Dominik Horb <dominik.horb@googlemail.com>
@@ -13,10 +10,10 @@ include_once APPLICATION_PATH . DIRECTORY_SEPARATOR . 'models/Document.php';
 class TesseractParserTest extends PHPUnit_Framework_TestCase{
   
   public function testParseDocumentReturnsAlwaysDocument(){
-    $tesseractParser = new TesseractParser();
+    $tesseractParser = new Unplagged_Ocr_TesseractParser();
     $document = $tesseractParser->parseDocument();
     
-    $this->assertType('Document', $document);
+    $this->assertType('Application_Model_Document', $document);
   }  
 }
 ?>
