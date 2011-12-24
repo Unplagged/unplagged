@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File for class {@link InvestigationCase}.
  */
@@ -7,9 +8,11 @@
  *
  * @author Dominik Horb <dominik.horb@googlemail.com>
  * 
- * @Entity @Table(name="investigation_case")
+ * @Entity
+ * @Table(name="cases")
+ * @HasLifeCycleCallbacks
  */
-class Application_Model_InvestigationCase{
+class Application_Model_Case{
 
   /** @Id @GeneratedValue @Column(type="integer")  */
   private $id;
@@ -37,13 +40,43 @@ class Application_Model_InvestigationCase{
    */
   private $state = '';
 
-
+  /**
+   * The date when the document was created.
+   * @var string The creation date.
+   * 
+   * @Column(type="datetime")
+   */
   private $created;
 
-
+  /**
+   * The date when the document was updated the last time.
+   * @var string The update date.
+   * 
+   * @Column(type="datetime")
+   */
   private $updated;
 
+  /**
+   * @ManyToMany(targetEntity="Application_Model_Document")
+   * @JoinTable(name="case_has_document",
+   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="document_id", referencedColumnName="id")}
+   *      )
+   */
+  private $documents;
+
+  /**
+   * @ManyToMany(targetEntity="Application_Model_File")
+   * @JoinTable(name="case_has_file",
+   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="file_id", referencedColumnName="id")}
+   *      )
+   */
+  private $files;
+
   public function __construct($name, $alias){
+    $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->files = new \Doctrine\Common\Collections\ArrayCollection();
     $this->name = $name;
     $this->alias = $alias;
   }
@@ -60,12 +93,12 @@ class Application_Model_InvestigationCase{
   /**
    * Method auto-called when object is updated in database.
    * 
-   * @PrePersist
+   * @PreUpdate
    */
   public function updated(){
     $this->updated = new DateTime("now");
   }
-  
+
   /**
    * @return string 
    */

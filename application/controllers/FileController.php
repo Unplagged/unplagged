@@ -139,6 +139,37 @@ class FileController extends Zend_Controller_Action{
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
+  
+    public function parseAction(){
+    $fileId = $this->_getParam('id');
+
+    if(empty($fileId)){
+      // show error message
+      $this->_helper->flashMessenger->addMessage('The fileId has to be set.');
+    }else{
+      $fileId = preg_replace('/[^0-9]/', '', $fileId);
+
+      $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
+      $language = "eng";
+
+      if(empty($file)){
+        // show error message
+        $this->_helper->flashMessenger->addMessage('No file found by that id.');
+      }else{
+        $parser = Unplagged_Parser::factory($file->getMimeType());
+        $document = $parser->parseToDocument($file, $language);
+        
+        if(empty($document)) {
+           $this->_helper->flashMessenger->addMessage('The file could not be parsed.');
+        }else {
+          $this->_em->persist($document);
+          $this->_em->flush();
+          $this->_helper->flashMessenger->addMessage('The file was successfully parsed.');
+        }
+      }
+    }
+    $this->_helper->redirector('list', 'file');
+  }
 
 }
 
