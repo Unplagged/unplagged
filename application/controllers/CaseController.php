@@ -33,7 +33,7 @@ class CaseController extends Zend_Controller_Action{
   }
   
   public function listAction(){
-    $query = $this->_em->createQuery('SELECT c FROM Application_Model_InvestigationCase c');
+    $query = $this->_em->createQuery('SELECT c FROM Application_Model_Case c');
     $cases = $query->getResult();
 
     $this->view->listCases = $cases;
@@ -43,7 +43,7 @@ class CaseController extends Zend_Controller_Action{
     $formData = $this->_request->getPost();
 
     if($createForm->isValid($formData)){
-      $case = new Application_Model_InvestigationCase($formData['name'], $formData['alias']);
+      $case = new Application_Model_Case($formData['name'], $formData['alias']);
 
       // write back to persistence manager and flush it
       $this->_em->persist($case);

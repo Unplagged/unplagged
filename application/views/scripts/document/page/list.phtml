@@ -1,0 +1,21 @@
+<?php
+    $this->title = $this->translate("List of document pages");
+    $this->headTitle($this->title);
+?>
+<table cellpadding="0" cellspacing="0" class="default"> 
+  <tr>
+    <th><?php echo $this->translate("Title"); ?></th>
+    <th style="width: 110px;"><?php echo $this->translate("Size"); ?></th>
+    <th style="width: 200px;"><?php echo $this->translate("Actions"); ?></th>
+  </tr>
+  <?php 
+  $i = 0;
+  foreach($this->listPages as $page): 
+    ?>
+  <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
+    <td><a href="/document_page/show/id/<?php echo $page->getId(); ?>"><?php echo $page->getPageNumber(); ?></a></td>
+    <td><?php //echo $document->getSize(); ?></td>
+    <td>[ ]</td>
+  </tr>
+  <?php endforeach; ?>
+</table>

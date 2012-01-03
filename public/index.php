@@ -13,6 +13,12 @@ defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
 
 /**
+ * @const TEMP_PATH The path to the data directory.
+ */
+defined('TEMP_PATH')
+    || define('TEMP_PATH', realpath(dirname(__FILE__) . '/../temp'));
+
+/**
  * @const APPLICATION_ENV The application environment, from which the config values are taken. Defaults to the most 
  * secure environment 'production', but only if nothing has been set before, e. g. by defininig it in the vhost.conf or 
  * some similar meachanism.

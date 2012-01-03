@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File for class {@link InvestigationCase}.
  */
@@ -7,7 +8,9 @@
  *
  * @author Dominik Horb <dominik.horb@googlemail.com>
  * 
- * @Entity @Table(name="investigation_case")
+ * @Entity
+ * @Table(name="cases")
+ * @HasLifeCycleCallbacks
  */
 class Application_Model_Case{
 
@@ -37,29 +40,48 @@ class Application_Model_Case{
    */
   private $state = '';
 
-
   /**
-   * @var DateTime
+   * The date when the document was created.
+   * @var string The creation date.
    * 
-   * @Column(type="date")
+   * @Column(type="datetime")
    */
   private $created;
 
   /**
-   * @var DateTime
+   * The date when the document was updated the last time.
+   * @var string The update date.
    * 
-   * @Column(type="date")
+   * @Column(type="datetime")
    */
   private $updated;
 
+  /**
+   * @ManyToMany(targetEntity="Application_Model_Document")
+   * @JoinTable(name="case_has_document",
+   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="document_id", referencedColumnName="id")}
+   *      )
+   */
+  private $documents;
+
+  /**
+   * @ManyToMany(targetEntity="Application_Model_File")
+   * @JoinTable(name="case_has_file",
+   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="file_id", referencedColumnName="id")}
+   *      )
+   */
+  private $files;
+
   public function __construct($name, $alias){
+    $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->files = new \Doctrine\Common\Collections\ArrayCollection();
     $this->name = $name;
     $this->alias = $alias;
   }
 
   /**
-   * Sets the the updatedd field to the current time and date.
-   * 
    * Method auto-called when object is persisted to database for the first time.
    * 
    * @PrePersist
@@ -69,16 +91,14 @@ class Application_Model_Case{
   }
 
   /**
-   * Sets the the updatedd field to the current time and date.
+   * Method auto-called when object is updated in database.
    * 
-   * This method gets auto-called when the database object is updated.
-   * 
-   * @PrePersist @PreUpdate
+   * @PreUpdate
    */
   public function updated(){
     $this->updated = new DateTime("now");
   }
-  
+
   /**
    * @return string 
    */
@@ -100,19 +120,6 @@ class Application_Model_Case{
     return $this->state;
   }
 
-  /**
-   * @return DateTime
-   */
-  public function getUpdated(){
-    return $this->updated;
-  }
-  
-  /**
-   * @return DateTime
-   */
-  public function getCreated(){
-    return $this->created;
-  }
 }
 
 ?>
