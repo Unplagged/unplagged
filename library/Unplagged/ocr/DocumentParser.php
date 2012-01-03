@@ -1,8 +1,4 @@
 <?php
-
-
-
-
 /**
  * This interface is just a stub and will include the common parts to parse from
  * some input file to our internal Document representation.
@@ -12,8 +8,15 @@
 interface Unplagged_Ocr_DocumentParser{
 
   /**
-   * @return Document 
+   * 
    */
-  public function parseDocument();
+  public function __construct(array $data);
+  
+  /**
+   * This function
+   * 
+   * @return Application_Model_Document 
+   */
+  public function parseDocument(); 
 }
 ?>

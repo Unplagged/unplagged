@@ -21,5 +21,7 @@ class DocumentTest extends PHPUnit_Framework_TestCase{
     $this->assertEquals('originalData', $document->getOriginalData());
   }
   
+  //public function test
+  
 }
 ?>

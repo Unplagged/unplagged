@@ -9,7 +9,7 @@
  * 
  * @Entity @Table(name="investigation_case")
  */
-class Application_Model_InvestigationCase{
+class Application_Model_Case{
 
   /** @Id @GeneratedValue @Column(type="integer")  */
   private $id;
@@ -38,9 +38,18 @@ class Application_Model_InvestigationCase{
   private $state = '';
 
 
+  /**
+   * @var DateTime
+   * 
+   * @Column(type="date")
+   */
   private $created;
 
-
+  /**
+   * @var DateTime
+   * 
+   * @Column(type="date")
+   */
   private $updated;
 
   public function __construct($name, $alias){
@@ -49,6 +58,8 @@ class Application_Model_InvestigationCase{
   }
 
   /**
+   * Sets the the updatedd field to the current time and date.
+   * 
    * Method auto-called when object is persisted to database for the first time.
    * 
    * @PrePersist
@@ -58,9 +69,11 @@ class Application_Model_InvestigationCase{
   }
 
   /**
-   * Method auto-called when object is updated in database.
+   * Sets the the updatedd field to the current time and date.
    * 
-   * @PrePersist
+   * This method gets auto-called when the database object is updated.
+   * 
+   * @PrePersist @PreUpdate
    */
   public function updated(){
     $this->updated = new DateTime("now");
@@ -87,6 +100,19 @@ class Application_Model_InvestigationCase{
     return $this->state;
   }
 
+  /**
+   * @return DateTime
+   */
+  public function getUpdated(){
+    return $this->updated;
+  }
+  
+  /**
+   * @return DateTime
+   */
+  public function getCreated(){
+    return $this->created;
+  }
 }
 
 ?>

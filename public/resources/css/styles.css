@@ -163,7 +163,7 @@ body {
   position: relative;
   top: -80px;
   magin-bottom: -80px;
-  background: url('/resources/images/header.png') no-repeat right center #40C0E9;
+  background: url('../images/header.png') no-repeat right center #40C0E9;
   height: 142px;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -171,7 +171,7 @@ body {
 }
 
 #header h1 {
-  background: url('/resources/images/logo.png') no-repeat center center transparent;
+  background: url('../images/logo.png') no-repeat center center transparent;
   width: 182px;
   height: 53px;
   position: relative;
@@ -191,7 +191,7 @@ body {
 }
 
 #header #top-menu li a {
-  background-image: url('/resources/images/topmenu-btn_center.png');
+  background-image: url('../images/topmenu-btn_center.png');
   padding: 11px 0 9px 0;
   color: white;
   text-decoration: none;
@@ -199,13 +199,13 @@ body {
 }
 
 #header #top-menu li a .left {
-  background-image: url('/resources/images/topmenu-btn_left.png');
+  background-image: url('../images/topmenu-btn_left.png');
   background-repeat: no-repeat;
   padding: 11px 10px 9px 0;
 }
 
 #header #top-menu li a .right {
-  background-image: url('/resources/images/topmenu-btn_right.png');
+  background-image: url('../images/topmenu-btn_right.png');
   background-repeat: no-repeat;
   background-position: right;
   padding: 11px 0 9px 10px;
@@ -213,28 +213,28 @@ body {
 
 #header #top-menu li a:hover,
 #header #top-menu li.active a{
-  background-image: url('/resources/images/topmenu-btn_center_hover.png');
+  background-image: url('../images/topmenu-btn_center_hover.png');
   color: #666666;
 }
 
 #header #top-menu li a:hover .left,
 #header #top-menu li.active a .left{
-  background-image: url('/resources/images/topmenu-btn_left_hover.png');
+  background-image: url('../images/topmenu-btn_left_hover.png');
 }
 
 #header #top-menu li a:hover .right,
 #header #top-menu li.active a .right{
-  background-image: url('/resources/images/topmenu-btn_right_hover.png');
+  background-image: url('./images/topmenu-btn_right_hover.png');
 }
 
 #header #top-menu li a .home {
-  background-image: url('/resources/images/home_icon.png');
+  background-image: url('../images/home_icon.png');
   padding: 3px 6px 1px 6px;
 }
 
 #header #top-menu li a:hover .home,
 #header #top-menu li.active a .home{
-  background-image: url('/resources/images/home_icon_hover.png');
+  background-image: url('../images/home_icon_hover.png');
 }
 
 #content {
@@ -388,7 +388,7 @@ a:hover {
 
 .zend_form input[type='submit'],
 .zend_form input[type='submit']:visited {
-  background: #313438 url('/resources/images/alert-overlay.png') repeat-x; 
+  background: #313438 url('../images/alert-overlay.png') repeat-x; 
   display: inline-block; 
   padding: 5px 10px 6px;
   margin-left: 15px;

@@ -12,6 +12,9 @@ class Application_Model_Document{
 
   /** @Id @GeneratedValue @Column(type="integer")  */
   private $id;
+  
+  
+  private $mimeType;
 
   public function getId(){
     return $this->id;
