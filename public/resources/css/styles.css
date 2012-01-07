@@ -162,7 +162,7 @@ body {
 #header {
   position: relative;
   top: -80px;
-  magin-bottom: -80px;
+  margin-bottom: -60px;
   background: url('../images/header.png') no-repeat right center #40C0E9;
   height: 142px;
   -moz-border-radius: 2px;
@@ -239,7 +239,6 @@ body {
 
 #content {
   min-height: 500px;
-  margin-top: -60px;
 }
 
 h2 {
@@ -255,8 +254,9 @@ p {
 }
 
 #content #main {
-  width: 705px;
+  width: auto;
   padding-left: 25px;
+  margin-right: 350px;
 }
 
 #content #sub-menu {
@@ -279,7 +279,7 @@ table.default th {
   background-color: #ebeced;
   color: #666666;
   text-align: left;
-  padding: 3px 5px 3px 15px;
+  padding: 12px 5px 12px 15px;
   font-weight: bold;
 }
 
@@ -287,7 +287,7 @@ table.default td {
   background-color: #ebeced;
   color: #555555;
   text-align: left;
-  padding: 12px 5px 12px 15px;
+  padding: 6px 5px 6px 15px;
   font-weight: normal;
 }
 
@@ -418,6 +418,13 @@ a:hover {
   margin: 5px 10px 5px 0;
 }
 
+.document-page {
+  border: 1px #000000 solid;
+  padding: 5px;
+  margin: 10px 0;
+}
+
+
 /* ==|== non-semantic helper classes ======================================== */
 .ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; }
 .ir br { display: none; }
@@ -459,3 +466,4 @@ a:hover {
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3 { page-break-after: avoid; }
 }
+

@@ -6,5 +6,6 @@ $this->headTitle($this->title);
 Page number: <?php echo $this->page->getPageNumber(); ?><br />
 
 Content: <br />
-<?php echo $this->page->getContent();
-?>
+<div class="document-page">
+<?php echo nl2br($this->page->getContent()); ?>
+</div>

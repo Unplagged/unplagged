@@ -52,7 +52,7 @@ class Application_Model_Case{
    * The date when the document was updated the last time.
    * @var string The update date.
    * 
-   * @Column(type="datetime")
+   * @Column(type="datetime", nullable=true)
    */
   private $updated;
 

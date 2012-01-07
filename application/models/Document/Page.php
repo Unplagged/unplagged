@@ -74,10 +74,13 @@ class Application_Model_Document_Page{
   public function getDocument(){
     return $this->document;
   }
+  public function setPageNumber($pageNumber){
+    $this->pageNumber = $pageNumber;
+  }
 
-
-
-
+  public function setContent($content){
+    $this->content = $content;
+  }
 }
 
 ?> 

@@ -6,7 +6,7 @@
   <tr>
     <th><?php echo $this->translate("Name"); ?></th>
     <th style="width: 110px;"><?php echo $this->translate("Alias"); ?></th>
-    <th style="width: 200px;"><?php echo $this->translate("Actions"); ?></th>
+    <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
   </tr>
   <?php 
   $i = 0;
@@ -15,7 +15,7 @@
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
     <td><?php echo $case->getName(); ?></td>
     <td><?php echo $case->getAlias(); ?></td>
-    <td>[ ]</td>
+    <td></td>
   </tr>
   <?php endforeach; ?>
 </table>

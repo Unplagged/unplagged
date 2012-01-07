@@ -49,6 +49,37 @@ class Document_PageController extends Zend_Controller_Action{
       }
     }
   }
+  
+  public function editAction() {
+    $pageId = $this->getRequest()->getParam('id');
+    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($pageId);
+
+    $editForm = new Application_Form_Document_Page_Modify();
+    $editForm->setAction("/document_page/edit/id/" . $pageId);
+
+    $editForm->getElement("pageNumber")->setValue($page->getPageNumber());
+    $editForm->getElement("content")->setValue($page->getContent());
+
+    if($this->_request->isPost()){
+      $formData = $this->_request->getPost();
+
+      if($editForm->isValid($formData)){
+        $page->setPageNumber($formData["pageNumber"]);
+        $page->setContent($formData["content"]);
+        
+        // write back to persistence manager and flush it
+        $this->_em->persist($page);
+        $this->_em->flush();
+
+        $this->_helper->flashMessenger->addMessage('The document page was updated successfully.');
+        $params = array('id' => $page->getDocument()->getId());
+        $this->_helper->redirector('list', 'document_page', '', $params);
+      }
+    }
+
+    $this->view->editForm = $editForm;
+    $this->view->page = $page;
+  }
 
 }
 
