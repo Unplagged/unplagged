@@ -25,8 +25,20 @@ class Application_Model_Document{
    */
   private $id;
   
-  
-  private $mimeType;
+  /**
+   * The date when the document was created.
+   * @var string The creation date.
+   * 
+   * @Column(type="datetime")
+   */
+  private $created;
+    /**
+   * The title of the document.
+   * @var string The title.
+   * 
+   * @Column(type="string", length=64)
+   */
+  private $title;
   
   /**
    * @ManyToOne(targetEntity="Application_Model_File")
