@@ -181,13 +181,13 @@ body {
 
 #header #top-menu ul {
   list-style-type: none;
-  padding: 17px 0 0 10px;
-  float: left;
+  padding: 18px 0 0 10px;
 }
 
+
 #header #top-menu li {
-  float: left;
-  margin-right: 5px;
+  display: inline;
+  margin-right: 0;
 }
 
 #header #top-menu li a {
