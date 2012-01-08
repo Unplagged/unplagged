@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 
+ */
 class FileController extends Zend_Controller_Action{
 
   public function init(){
@@ -19,6 +22,12 @@ class FileController extends Zend_Controller_Action{
         $adapter = new Zend_File_Transfer_Adapter_Http();
         $adapter->setOptions(array('useByteString' => false));
 
+        // Maximal 20MB = 20480000
+       // $adapter->setMaxFileSize(20480000);
+        //$adapter->addValidator('NotEmpty');
+        // Nur JPEG, PNG, und GIFs
+         $adapter->addValidator( 'Extension', true, array( 'png,gif', 'messages' => '<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.' ) );
+        
         //muss mit der gruppe geklärt werden
         //Neither APC nor uploadprogress extension installed 
         /* $adapterprogressbar = new Zend_ProgressBar_Adapter_Console();
