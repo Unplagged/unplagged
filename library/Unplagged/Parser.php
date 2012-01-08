@@ -12,13 +12,20 @@
  */
 class Unplagged_Parser{
 
+  private static $mimeMappings = array(
+    'image/tif'=>'TesseractParser'
+    , 'image/tiff'=>'TesseractParser'
+    //@todo sprobably not the best idea to push all octet-stream through tesseract, but will work for now
+    , 'application/octet-stream'=>'TesseractParser'
+  );
+
   public static function factory($mimeType){
-    switch($mimeType){
-      case "image/tif":
-      case "image/tiff":
-        return new Unplagged_Parser_TesseractParser();
+
+    if(array_key_exists($mimeType, self::$mimeMappings)){
+      $parserName = 'Unplagged_Parser_' . self::$mimeMappings[$mimeType];
+      return new $parserName();
     }
   }
-}
 
+}
 ?>

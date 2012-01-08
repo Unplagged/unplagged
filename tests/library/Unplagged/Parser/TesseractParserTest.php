@@ -10,8 +10,8 @@
 class TesseractParserTest extends PHPUnit_Framework_TestCase{
   
   public function testParseDocumentReturnsAlwaysDocument(){
-    $tesseractParser = new Unplagged_Ocr_TesseractParser();
-    $document = $tesseractParser->parseDocument();
+    $tesseractParser = new Unplagged_Parser_TesseractParser();
+    $document = $tesseractParser->parseToDocument();
     
     $this->assertType('Application_Model_Document', $document);
   }  

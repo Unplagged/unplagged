@@ -27,7 +27,7 @@
             <h2>Class Coverage Distribution</h2>
             <canvas id="classCoverageDistribution" width="475" height="200"></canvas>
             <script>
-            var ccd = new RGraph.Bar('classCoverageDistribution', [11,0,0,0,1,0,1,0,1,1,1,5]);
+            var ccd = new RGraph.Bar('classCoverageDistribution', [15,0,1,0,0,1,1,0,1,1,2,3]);
             ccd.Set('chart.background.barcolor1', 'white');
             ccd.Set('chart.background.barcolor2', 'white');
             ccd.Set('chart.colors', ['blue']);
@@ -44,7 +44,7 @@
             <h2>Class Complexity</h2>
             <canvas id="classComplexity" width="475" height="200"></canvas>
             <script>
-            var cc = new RGraph.Scatter('classComplexity', [[0,9,"blue","AuthController"],[57.692307692308,7,"blue","CaseController"],[0,10,"blue","ErrorController"],[0,16,"blue","FileController"],[100,2,"blue","IndexController"],[0,16,"blue","UserController"],[100,2,"blue","Application_Model_Document"],[0,18,"blue","Application_Model_File"],[91.666666666667,8,"blue","Application_Model_InvestigationCase"],[76.470588235294,10,"blue","Application_Model_Log"],[0,0,"blue","Application_Model_Upload"],[83.333333333333,23,"blue","Application_Model_User"],[100,8,"blue","Application_Model_Log_Action"],[100,6,"blue","Application_Model_User_State"],[0,14,"blue","Unplagged_Auth_Adapter_Doctrine"],[0,1,"blue","Unplagged_Dao_Log"],[0,3,"blue","Unplagged_Helper"],[0,2,"blue","Unplagged_Mailer"],[0,3,"blue","Unplagged_Validate_NoRecordExists"],[100,9,"blue","Unplagged_Ocr_TesseractAdapter"],[33.333333333333,2,"blue","Unplagged_Ocr_TesseractParser"]]);
+            var cc = new RGraph.Scatter('classComplexity', [[0,9,"blue","AuthController"],[57.692307692308,7,"blue","CaseController"],[0,19,"blue","Document_PageController"],[0,6,"blue","DocumentController"],[0,10,"blue","ErrorController"],[0,27,"blue","FileController"],[100,2,"blue","IndexController"],[0,16,"blue","UserController"],[92.857142857143,8,"blue","Application_Model_Case"],[41.176470588235,9,"blue","Application_Model_Document"],[0,10,"blue","Application_Model_Document_Page"],[0,18,"blue","Application_Model_File"],[76.470588235294,10,"blue","Application_Model_Log"],[100,8,"blue","Application_Model_Log_Action"],[0,0,"blue","Application_Model_Upload"],[83.333333333333,23,"blue","Application_Model_User"],[100,6,"blue","Application_Model_User_State"],[0,14,"blue","Unplagged_Auth_Adapter_Doctrine"],[0,1,"blue","Unplagged_Dao_Log"],[0,3,"blue","Unplagged_Helper"],[0,2,"blue","Unplagged_Mailer"],[0,2,"blue","Unplagged_Parser"],[92,9,"blue","Unplagged_Parser_TesseractAdapter"],[12,2,"blue","Unplagged_Parser_TesseractParser"],[0,3,"blue","Unplagged_Validate_NoRecordExists"]]);
             cc.Set('chart.xmax', 100);
             cc.Set('chart.background.barcolor1', 'white');
             cc.Set('chart.background.barcolor2', 'white');
@@ -60,16 +60,16 @@
           <td valign="top">
             <h2>Top Project Risks</h2>
             <ul>
-              <li><a href="application_models_File.php.html#14">Application_Model_File</a> (342)</li>
-              <li><a href="application_controllers_FileController.php.html#3">FileController</a> (272)</li>
-              <li><a href="application_controllers_UserController.php.html#13">UserController</a> (272)</li>
-              <li><a href="library_Unplagged_Auth_Adapter_Doctrine.php.html#8">Unplagged_Auth_Adapter_Doctrine</a> (210)</li>
               <li><a href="application_controllers_ErrorController.php.html#3">ErrorController</a> (110)</li>
               <li><a href="application_controllers_AuthController.php.html#9">AuthController</a> (90)</li>
+              <li><a href="application_controllers_DocumentController.php.html#13">DocumentController</a> (42)</li>
+              <li><a href="application_models_Document.php.html#18">Application_Model_Document</a> (25)</li>
               <li><a href="application_models_User.php.html#18">Application_Model_User</a> (25)</li>
               <li><a href="library_Unplagged_Validate_NoRecordExists.php.html#13">Unplagged_Validate_NoRecordExists</a> (12)</li>
               <li><a href="application_models_Log.php.html#18">Application_Model_Log</a> (11)</li>
               <li><a href="application_controllers_CaseController.php.html#10">CaseController</a> (10)</li>
+              <li><a href="library_Unplagged_Parser_TesseractAdapter.php.html#15">Unplagged_Parser_TesseractAdapter</a> (9)</li>
+              <li><a href="library_Unplagged_Parser.php.html#13">Unplagged_Parser</a> (6)</li>
 
             </ul>
           </td>
@@ -77,16 +77,16 @@
           <td valign="top">
             <h2>Least Tested Methods</h2>
             <ul>
-              <li><a href="library_Unplagged_Auth_Adapter_Doctrine.php.html#64">Unplagged_Auth_Adapter_Doctrine::authenticate</a> (0%)</li>
-              <li><a href="library_Unplagged_Auth_Adapter_Doctrine.php.html#49">Unplagged_Auth_Adapter_Doctrine::__construct</a> (0%)</li>
+              <li><a href="application_models_Log.php.html#80">Application_Model_Log::getId</a> (0%)</li>
+              <li><a href="application_models_Log.php.html#62">Application_Model_Log::created</a> (0%)</li>
+              <li><a href="application_models_File.php.html#163">Application_Model_File::setIsTarget</a> (0%)</li>
+              <li><a href="application_models_File.php.html#159">Application_Model_File::getIsTarget</a> (0%)</li>
+              <li><a href="application_models_Log.php.html#84">Application_Model_Log::getCreated</a> (0%)</li>
+              <li><a href="application_models_User.php.html#103">Application_Model_User::created</a> (0%)</li>
               <li><a href="application_models_User.php.html#154">Application_Model_User::getUpdated</a> (0%)</li>
-              <li><a href="library_Unplagged_Auth_Adapter_Doctrine.php.html#82">Unplagged_Auth_Adapter_Doctrine::getAuthEntityName</a> (0%)</li>
-              <li><a href="library_Unplagged_Auth_Adapter_Doctrine.php.html#90">Unplagged_Auth_Adapter_Doctrine::getAuthIdentityField</a> (0%)</li>
-              <li><a href="library_Unplagged_Auth_Adapter_Doctrine.php.html#106">Unplagged_Auth_Adapter_Doctrine::getIdentity</a> (0%)</li>
-              <li><a href="library_Unplagged_Auth_Adapter_Doctrine.php.html#98">Unplagged_Auth_Adapter_Doctrine::getAuthCredentialField</a> (0%)</li>
               <li><a href="application_models_User.php.html#150">Application_Model_User::getCreated</a> (0%)</li>
               <li><a href="application_models_User.php.html#146">Application_Model_User::getId</a> (0%)</li>
-              <li><a href="application_models_Log.php.html#62">Application_Model_Log::created</a> (0%)</li>
+              <li><a href="application_models_User.php.html#112">Application_Model_User::updated</a> (0%)</li>
 
             </ul>
           </td>
@@ -98,7 +98,7 @@
 
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr><td class="ruler"><img src="glass.png" width="3" height="3" alt=""></td></tr>
-      <tr><td class="versionInfo">Generated by <a href="http://github.com/sebastianbergmann/php-code-coverage" target="_top">PHP_CodeCoverage 1.0.4</a> using <a href="http://www.php.net/" target="_top">PHP 5.3.8</a> and PHPUnit 3.5.14 at Fri Dec 23 1:59:51 CET 2011.</td></tr>
+      <tr><td class="versionInfo">Generated by <a href="http://github.com/sebastianbergmann/php-code-coverage" target="_top">PHP_CodeCoverage 1.0.4</a> using <a href="http://www.php.net/" target="_top">PHP 5.3.8</a> and PHPUnit 3.5.14 at Mon Jan 9 0:34:13 CET 2012.</td></tr>
     </table>
 
     <br/>

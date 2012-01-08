@@ -32,6 +32,18 @@ class FileController extends Zend_Controller_Action{
 
         $newName = $this->_request->getPost('newName');
 
+        //create directories if non existent
+        $storagePath = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'storage';
+        if(!is_dir($storagePath))
+        {
+          mkdir($storagePath);
+        }
+        
+        if(!is_dir($storagePath . DIRECTORY_SEPARATOR . 'files'))
+        {
+          mkdir($storagePath . DIRECTORY_SEPARATOR . 'files');
+        }
+        
         // collect file information
         $fileDirectory = "storage" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR;
         $fileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
@@ -40,6 +52,8 @@ class FileController extends Zend_Controller_Action{
         // store file in database to get an id
         $data = array();
         $data["size"] = $adapter->getFileSize('filepath');
+        //if the mime type is always application/octet-stream, then the 
+        //mime magic and fileinfo extensions are probably not installed
         $data["mimetype"] = $adapter->getMimeType('filepath');
         $data["filename"] = !empty($newName) ? $newName . "." . $fileExt : $fileName;
         $data["extension"] = $fileExt;

@@ -119,6 +119,15 @@ class Application_Model_Case{
   public function getState(){
     return $this->state;
   }
+  
+  public function getUpdated(){
+    return $this->updated;
+  }
+  
+  public function getCreated(){
+    return $this->created;
+  }
+  
 
 }
 

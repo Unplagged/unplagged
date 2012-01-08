@@ -44,7 +44,7 @@ class Application_Model_Document{
    * @ManyToOne(targetEntity="Application_Model_File")
    * @JoinColumn(name="original_file_id", referencedColumnName="id", onDelete="SET NULL")
    */
-  private $origionalFile;
+  private $originalFile;
 
   /**
    * The lines in the document.
@@ -54,9 +54,9 @@ class Application_Model_Document{
    */
   private $pages;
 
-  public function __construct($data){
+  public function __construct(array $data=null){
     if(isset($data["file"])){
-      $this->origionalFile = $data["file"];
+      $this->originalFile = $data["file"];
     }
 
     if(isset($data["title"])){

@@ -11,6 +11,7 @@ Document: <?php echo $this->document->getTitle(); ?>
   </tr>
   <?php 
   $i = 0;
+  //var_dump($this->document->getPages());
   foreach($this->document->getPages() as $page): 
     ?>
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>

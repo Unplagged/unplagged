@@ -3,35 +3,35 @@
 /**
  * File for class {@link CaseTest}.
  */
-require_once '../application/models/InvestigationCase.php';
+require_once '../application/models/Case.php';
 
 /**
  *
  * @author Dominik Horb <dominik.horb@googlemail.com>
  */
-class InvestigationCaseTest extends PHPUnit_Framework_TestCase{
+class CaseTest extends PHPUnit_Framework_TestCase{
 
   private $case;
   
   public function setUp(){
     parent::setUp();
     
-    $this->case = new Application_Model_InvestigationCase('SomeName', 'alias');
+    $this->case = new Application_Model_Case('SomeName', 'alias');
   }
   
   public function testCaseCanHaveName(){
-    $case = new Application_Model_InvestigationCase('AName', 'SomeLabel');
+    $case = new Application_Model_Case('AName', 'SomeLabel');
 
     $this->assertEquals('AName', $case->getName());
   }
 
   public function testCaseNameCanHaveWhitespace(){
-    $case = new Application_Model_InvestigationCase('Another Name', 'SomeLabel');
+    $case = new Application_Model_Case('Another Name', 'SomeLabel');
     $this->assertEquals('Another Name', $case->getName());
   }
 
   public function testCaseCanHaveAlias(){
-    $case = new Application_Model_InvestigationCase('SomeName', 'alias');
+    $case = new Application_Model_Case('SomeName', 'alias');
     $this->assertEquals('alias', $case->getAlias());
   }
 
