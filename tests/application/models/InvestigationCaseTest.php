@@ -3,7 +3,7 @@
 /**
  * File for class {@link CaseTest}.
  */
-require_once ('../application/models/InvestigationCase.php');
+require_once '../application/models/InvestigationCase.php';
 
 /**
  *
@@ -11,6 +11,14 @@ require_once ('../application/models/InvestigationCase.php');
  */
 class InvestigationCaseTest extends PHPUnit_Framework_TestCase{
 
+  private $case;
+  
+  public function setUp(){
+    parent::setUp();
+    
+    $this->case = new Application_Model_InvestigationCase('SomeName', 'alias');
+  }
+  
   public function testCaseCanHaveName(){
     $case = new Application_Model_InvestigationCase('AName', 'SomeLabel');
 
@@ -28,17 +36,28 @@ class InvestigationCaseTest extends PHPUnit_Framework_TestCase{
   }
 
   public function testCaseNameCanBeDifferentThanAlias(){
-    $case = new Application_Model_InvestigationCase('SomeName', 'alias');
-    
-    $this->assertNotEquals($case->getName(), $case->getAlias());
+    $this->assertNotEquals($this->case->getName(), $this->case->getAlias());
   }
   
-  public function testCaseCanHaveState()
+  public function testUpdatedIsDateTime(){
+    $this->case->updated();
+    
+    $this->assertType('DateTime', $this->case->getUpdated());
+  }
+  
+  public function testCreatedIsDateTime(){
+    $this->case->created();
+    
+    $this->assertType('DateTime', $this->case->getCreated());
+  }
+  
+  //not implemented yet
+  /*public function testCaseCanHaveState()
   {
     $case = new Application_Model_InvestigationCase('Name', 'alias', 'investigation');
     
     $this->assertEquals('investigation', $case->getState());
-  }
+  }*/
 }
 
 ?>

@@ -42,34 +42,16 @@ class Application_Model_User_StateProxy extends \Application_Model_User_State im
         return parent::getId();
     }
 
-    public function setId($id)
-    {
-        $this->__load();
-        return parent::setId($id);
-    }
-
     public function getTitle()
     {
         $this->__load();
         return parent::getTitle();
     }
 
-    public function setTitle($title)
-    {
-        $this->__load();
-        return parent::setTitle($title);
-    }
-
     public function getDescription()
     {
         $this->__load();
         return parent::getDescription();
-    }
-
-    public function setDescription($description)
-    {
-        $this->__load();
-        return parent::setDescription($description);
     }
 
 

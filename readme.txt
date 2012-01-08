@@ -1,4 +1,4 @@
-## Readme ##
+# Readme ##
 
 // Unplagged - Masters Project 2011-2012
 
@@ -15,5 +15,5 @@ Elsa Mahari
 
 #####
 
-Just a change for educational purposes.
+And another test for the preview area.
 

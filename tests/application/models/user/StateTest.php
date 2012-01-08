@@ -9,26 +9,25 @@ class Application_Model_User_StateTest extends ControllerTestCase {
     public function setUp()
     {
         parent::setUp();                
-        $this->state = new Application_Model_User_State();
-    }
-
-    public function testSetId() {
-        $testId = "1";
-        $this->state->setId($testId);
-
-        $this->assertEquals($this->state->getId(), $testId);
+        $this->state = new Application_Model_User_State(array(
+          'title'=>'Titel'
+          , 'description'=>'Beschreibung'
+        ));
     }
     
-    public function testSetTitle() {
+    public function testStandardIdIsNull()
+    {
+      $this->assertNull($this->state->getId());
+    }
+    
+    public function testTitleWasSet() {
         $testTitle = "Titel";
-        $this->state->setTitle($testTitle);
 
         $this->assertEquals($this->state->getTitle(), $testTitle);
     }
         
-    public function testSetDescription() {
+    public function testDescriptionWasSet() {
         $testDescription = "Beschreibung";
-        $this->state->setDescription($testDescription);
 
         $this->assertEquals($this->state->getDescription(), $testDescription);
     }

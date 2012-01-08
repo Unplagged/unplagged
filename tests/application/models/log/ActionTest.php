@@ -2,41 +2,39 @@
 
 require_once('../application/models/log/Action.php');
 
-class Application_Model_Log_ActionTest extends ControllerTestCase {
-    
-    protected $action;
-        
-    public function setUp()
-    {
-        parent::setUp();                
-        $this->action = new Application_Model_Log_Action();
-    }
+class Application_Model_Log_ActionTest extends ControllerTestCase{
 
-    public function testSetId() {
-        $testId = "1";
-        $this->action->setId($testId);
+  protected $action;
 
-        $this->assertEquals($this->action->getId(), $testId);
-    }
-    
-    public function testSetTitle() {
-        $testTitle = "Titel";
-        $this->action->setTitle($testTitle);
+  public function setUp(){
+    parent::setUp();
+    $this->action = new Application_Model_Log_Action(array(
+          'module'=>'registration'
+          , 'title'=>'Titel'
+          , 'description'=>'Beschreibung'
+        ));
+  }
 
-        $this->assertEquals($this->action->getTitle(), $testTitle);
-    }
-        
-    public function testSetDescription() {
-        $testDescription = "Beschreibung";
-        $this->action->setDescription($testDescription);
+  public function testStandardIdIsNull(){
+    $this->assertNull($this->action->getId());
+  }
 
-        $this->assertEquals($this->action->getDescription(), $testDescription);
-    }
-    
-    public function testSetModule() {
-        $testModule = "registration";
-        $this->action->setModule($testModule);
+  public function testTitleWasSet(){
+    $testTitle = "Titel";
 
-        $this->assertEquals($this->action->getModule(), $testModule);
-    }
+    $this->assertEquals($this->action->getTitle(), $testTitle);
+  }
+
+  public function testSetDescription(){
+    $testDescription = "Beschreibung";
+
+    $this->assertEquals($this->action->getDescription(), $testDescription);
+  }
+
+  public function testModuleWasSet(){
+    $testModule = "registration";
+
+    $this->assertEquals($this->action->getModule(), $testModule);
+  }
+
 }

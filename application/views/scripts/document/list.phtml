@@ -1,0 +1,19 @@
+<?php
+    $this->title = $this->translate("List of documents");
+    $this->headTitle($this->title);
+?>
+<table cellpadding="0" cellspacing="0" class="default"> 
+  <tr>
+    <th><?php echo $this->translate("Title"); ?></th>
+    <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
+  </tr>
+  <?php 
+  $i = 0;
+  foreach($this->listDocuments as $document): 
+    ?>
+  <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
+    <td><a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
+    <td><a href="<?php echo "/document/delete/id/" . $document->getId(); ?>"><img class="icon" src="/resources/icons/delete.png" title="<?php echo $this->translate("delete"); ?>" /></a></td>
+  </tr>
+  <?php endforeach; ?>
+</table>

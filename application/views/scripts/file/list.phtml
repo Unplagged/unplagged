@@ -6,7 +6,7 @@
   <tr>
     <th><?php echo $this->translate("Filename"); ?></th>
     <th style="width: 110px;"><?php echo $this->translate("Size"); ?></th>
-    <th style="width: 200px;"><?php echo $this->translate("Actions"); ?></th>
+    <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
   </tr>
   <?php 
   $i = 0;
@@ -15,13 +15,21 @@
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
     <td><?php echo $file->getFilename(); ?></td>
     <td><?php echo $file->getSize(); ?></td>
-    <td>[ <a href="<?php echo "/file/download/id/" . $file->getId(); ?>"><?php echo $this->translate("download"); ?></a> | 
-          <?php if($file->getIsTarget()) { ?>
-            <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>"><?php echo $this->translate("unset target"); ?></a>
+    <td><?php if($file->getIsTarget()) { ?>
+            <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>"><img class="icon" src="/resources/icons/page_find.png" title="<?php echo $this->translate("unset target"); ?>" /></a>
           <?php } else { ?>
+<<<<<<< HEAD
             <a href="<?php echo "/file/set-target/id/" . $file->getId(); ?>"><?php echo $this->translate("set target"); ?></a>
           <?php } ?> |
           <a href="<?php echo "/file/delete/id/" . $file->getId(); ?>"><?php echo $this->translate("delete"); ?></a> ]</td>
+=======
+            <a href="<?php echo "/file/set-target/id/" . $file->getId(); ?>"><img class="icon" src="/resources/icons/page.png" title="<?php echo $this->translate("set target"); ?>" /></a>
+          <?php } ?> 
+            <a href="<?php echo "/file/parse/id/" . $file->getId(); ?>"><img class="icon" src="/resources/icons/page_gear.png" title="<?php echo $this->translate("parse"); ?>" /></a>
+            <a href="<?php echo "/file/download/id/" . $file->getId(); ?>"><img class="icon" src="/resources/icons/disk.png" title="<?php echo $this->translate("download"); ?>" /></a>
+            <a href="<?php echo "/file/delete/id/" . $file->getId(); ?>"><img class="icon" src="/resources/icons/delete.png" title="<?php echo $this->translate("delete"); ?>" /></a>
+</td>
+>>>>>>> 33f8fa3c2eb68ee03b596a556eee5503ce137d6a
   </tr>
   <?php endforeach; ?>
 </table>

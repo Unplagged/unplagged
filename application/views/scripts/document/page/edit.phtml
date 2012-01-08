@@ -1,0 +1,7 @@
+<?php
+$this->title = $this->translate("Page details");
+$this->headTitle($this->title);
+?>
+Document: <?php echo $this->page->getDocument()->getTitle(); ?><br />
+
+<?php echo $this->editForm; ?>
