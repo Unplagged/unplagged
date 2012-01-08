@@ -39,6 +39,7 @@ class Unplagged_Parser_TesseractParser implements Unplagged_Parser_DocumentParse
 
     // tesseract adds .txt extension automatically, so filename is differently than previously specified
     $outputFileLocation .= '.txt';
+    echo $outputFileLocation;
 
     unset($data);
     $data["pageNumber"] = 1;
