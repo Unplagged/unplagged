@@ -42,8 +42,10 @@ class Unplagged_Parser_TesseractParser implements Unplagged_Parser_DocumentParse
 
     unset($data);
     $data["pageNumber"] = 1;
-    $data["content"] = file_get_contents($outputFileLocation);
-
+    $data["content"] = nl2br(file_get_contents($outputFileLocation));    
+    $data["content"] = str_replace("\r\n","", $data["content"]);
+    $data["content"] = str_replace("\n","", $data["content"]);
+    
     $page = new Application_Model_Document_Page($data);
 
     $this->_em->persist($page);

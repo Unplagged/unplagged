@@ -45,6 +45,30 @@ class Document_PageController extends Zend_Controller_Action{
       }
     }
   }
+  
+  public function deHyphenAction(){
+    $pageId = $this->_getParam('id');
+
+    if(!empty($pageId)){
+      $pageId = preg_replace('/[^0-9]/', '', $pageId);
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($pageId);
+      if($page){
+        $this->view->page = $page;
+        
+        $lines = explode("<br />", $page->getContent());
+        $pageLines = array();
+        foreach($lines as $line) {
+          $line = htmlspecialchars($line);
+          
+          $pageLine["content"] = empty($line) ? "&nbsp;" : $line;
+          $pageLine["hasHyphen"] = (substr($pageLine["content"], -1) == "-");
+          $pageLines[] = $pageLine;
+        }
+        $this->view->pageLines = $pageLines;
+        
+      }
+    }
+  }
 
   public function editAction(){
     $pageId = $this->getRequest()->getParam('id');
@@ -54,13 +78,17 @@ class Document_PageController extends Zend_Controller_Action{
     $editForm->setAction("/document_page/edit/id/" . $pageId);
 
     $editForm->getElement("pageNumber")->setValue($page->getPageNumber());
-    $editForm->getElement("content")->setValue($page->getContent());
+    $editForm->getElement("content")->setValue(str_replace("<br />", "\n", $page->getContent()));
 
     if($this->_request->isPost()){
       $formData = $this->_request->getPost();
 
       if($editForm->isValid($formData)){
         $page->setPageNumber($formData["pageNumber"]);
+        
+        $formData["content"] = nl2br($formData["content"]);    
+        $formData["content"] = str_replace("\r\n","", $formData["content"]);
+        $formData["content"] = str_replace("\n","", $formData["content"]);
         $page->setContent($formData["content"]);
 
         // write back to persistence manager and flush it

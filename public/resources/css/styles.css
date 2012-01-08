@@ -424,6 +424,16 @@ a:hover {
   margin: 10px 0;
 }
 
+.document-page .highlight {
+  background-color: #fefabf;
+}
+
+.document-page .checkbox-column {
+  width: 30px;
+  float: left;
+  text-align: center;
+}
+
 
 /* ==|== non-semantic helper classes ======================================== */
 .ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; }
