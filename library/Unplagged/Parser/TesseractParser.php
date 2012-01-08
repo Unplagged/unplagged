@@ -33,7 +33,10 @@ class Unplagged_Parser_TesseractParser implements Unplagged_Parser_DocumentParse
 
     $inputFileLocation = APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation();
     $outputFileLocation = TEMP_PATH . DIRECTORY_SEPARATOR . 'ocr' . DIRECTORY_SEPARATOR . $document->getId();
-
+    
+    echo $inputFileLocation . "<br />";
+    echo $outputFileLocation;
+    
     $adapter = new Unplagged_Parser_TesseractAdapter($inputFileLocation, $outputFileLocation, '/usr/bin/tesseract', $language);
     $adapter->execute();
 

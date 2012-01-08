@@ -17,6 +17,8 @@ class FileController extends Zend_Controller_Action{
     if($this->_request->isPost()){
       if($uploadform->isValid(($this->_request->getPost()))){
         $adapter = new Zend_File_Transfer_Adapter_Http();
+        $adapter->setOption(array('useByteString' => false));
+
         //muss mit der gruppe geklärt werden
         //Neither APC nor uploadprogress extension installed 
         /* $adapterprogressbar = new Zend_ProgressBar_Adapter_Console();
