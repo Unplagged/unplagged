@@ -52,9 +52,10 @@ class FileController extends Zend_Controller_Action{
         // prepare file for uploading
         $adapter->setDestination(APPLICATION_PATH . DIRECTORY_SEPARATOR . $fileDirectory);
         $adapter->addFilter('Rename', array('target'=>APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation()));
-        $adapter->setOptions(array('useByteString'=>false));
 
         if($adapter->receive()){
+          chmod(APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation(), 0777);
+          
           $this->_helper->flashMessenger->addMessage('File was uploaded successfully.');
           $this->_helper->redirector('list', 'file');
         }else{
