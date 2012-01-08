@@ -62,7 +62,7 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
           } ?>">
               <a href="/file/list"><span class="left">&nbsp;</span><?php echo $this->translate("Files"); ?><span class="right">&nbsp;</span></a>
             </li>
-             <li class="button<?php if($currentController == "document"){
+             <li class="button<?php if($currentController == "document" || $currentController == "document_page"){
             echo " active";
           } ?>">
               <a href="/document/list"><span class="left">&nbsp;</span><?php echo $this->translate("Documents"); ?><span class="right">&nbsp;</span></a>

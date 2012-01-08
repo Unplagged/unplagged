@@ -2,18 +2,21 @@
     $this->title = $this->translate("List of document pages");
     $this->headTitle($this->title);
 ?>
-<table cellpadding="0" cellspacing="0" class="default"> 
+Document: <?php echo $this->document->getTitle(); ?>
+
+    <table cellpadding="0" cellspacing="0" class="default"> 
   <tr>
     <th><?php echo $this->translate("Page number"); ?></th>
     <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
   </tr>
   <?php 
   $i = 0;
-  foreach($this->listPages as $page): 
+  foreach($this->document->getPages() as $page): 
     ?>
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
     <td><a href="/document_page/show/id/<?php echo $page->getId(); ?>"><?php echo $page->getPageNumber(); ?></a></td>
-    <td><a href="<?php echo "/document_page/edit/id/" . $page->getId(); ?>"><img class="icon" src="/resources/icons/page_edit.png" title="<?php echo $this->translate("edit"); ?>" /></a></td>
+    <td><a href="<?php echo "/document_page/edit/id/" . $page->getId(); ?>"><img class="icon" src="/resources/icons/pencil.png" title="<?php echo $this->translate("edit"); ?>" /></a>
+    <a href="<?php echo "/document_page/delete/id/" . $page->getId(); ?>"><img class="icon" src="/resources/icons/delete.png" title="<?php echo $this->translate("delete"); ?>" /></a></td>
   </tr>
   <?php endforeach; ?>
 </table>

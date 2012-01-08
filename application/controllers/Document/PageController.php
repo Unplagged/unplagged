@@ -24,17 +24,13 @@ class Document_PageController extends Zend_Controller_Action{
 
   public function listAction(){
     $documentId = $this->_getParam('id');
+
     if(!empty($documentId)){
       $documentId = preg_replace('/[^0-9]/', '', $documentId);
-
-      $qb = $this->_em->createQueryBuilder();
-      $qb->add('select', 'p')
-          ->add('from', 'Application_Model_Document_Page p')
-          ->add('where', 'p.document = ' . $documentId);
-      $query = $qb->getQuery();
-      $pages = $query->getResult();
-
-      $this->view->listPages = $pages;
+      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($documentId);
+      if($document){
+        $this->view->document = $document;
+      }
     }
   }
 
@@ -49,8 +45,8 @@ class Document_PageController extends Zend_Controller_Action{
       }
     }
   }
-  
-  public function editAction() {
+
+  public function editAction(){
     $pageId = $this->getRequest()->getParam('id');
     $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($pageId);
 
@@ -66,19 +62,42 @@ class Document_PageController extends Zend_Controller_Action{
       if($editForm->isValid($formData)){
         $page->setPageNumber($formData["pageNumber"]);
         $page->setContent($formData["content"]);
-        
+
         // write back to persistence manager and flush it
         $this->_em->persist($page);
         $this->_em->flush();
 
         $this->_helper->flashMessenger->addMessage('The document page was updated successfully.');
-        $params = array('id' => $page->getDocument()->getId());
+        $params = array('id'=>$page->getDocument()->getId());
         $this->_helper->redirector('list', 'document_page', '', $params);
       }
     }
 
     $this->view->editForm = $editForm;
     $this->view->page = $page;
+  }
+
+  public function deleteAction(){
+    $pageId = $this->_getParam('id');
+
+    if(!empty($pageId)){
+      $pageId = preg_replace('/[^0-9]/', '', $pageId);
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($pageId);
+      if($page){
+        $this->_em->remove($page);
+        $this->_em->flush();
+      }else{
+        $this->_helper->flashMessenger->addMessage('Page does not exist.');
+      }
+    }
+
+    $this->_helper->flashMessenger->addMessage('The document page was deleted successfully.');
+    $params = array('id'=>$page->getDocument()->getId());
+    $this->_helper->redirector('list', 'document_page', '', $params);
+
+    // disable view
+    $this->view->layout()->disableLayout();
+    $this->_helper->viewRenderer->setNoRender(true);
   }
 
 }

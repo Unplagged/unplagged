@@ -22,6 +22,7 @@
           <?php } ?> 
             <a href="<?php echo "/file/parse/id/" . $file->getId(); ?>"><img class="icon" src="/resources/icons/page_gear.png" title="<?php echo $this->translate("parse"); ?>" /></a>
             <a href="<?php echo "/file/download/id/" . $file->getId(); ?>"><img class="icon" src="/resources/icons/disk.png" title="<?php echo $this->translate("download"); ?>" /></a>
+            <a href="<?php echo "/file/delete/id/" . $file->getId(); ?>"><img class="icon" src="/resources/icons/delete.png" title="<?php echo $this->translate("delete"); ?>" /></a>
 </td>
   </tr>
   <?php endforeach; ?>

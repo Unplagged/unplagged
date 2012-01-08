@@ -42,7 +42,7 @@ class Application_Model_Document{
   
   /**
    * @ManyToOne(targetEntity="Application_Model_File")
-   * @JoinColumn(name="original_file_id", referencedColumnName="id")
+   * @JoinColumn(name="original_file_id", referencedColumnName="id", onDelete="SET NULL")
    */
   private $origionalFile;
 
@@ -88,6 +88,9 @@ class Application_Model_Document{
   public function addPage(Application_model_Document_Page $page){
     $page->setDocument($this);
     $this->pages->add($page);
+  }
+  public function getPages(){
+    return $this->pages;
   }
 }
 

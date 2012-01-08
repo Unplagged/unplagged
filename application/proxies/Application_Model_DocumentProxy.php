@@ -66,6 +66,12 @@ class Application_Model_DocumentProxy extends \Application_Model_Document implem
         return parent::addPage($page);
     }
 
+    public function getPages()
+    {
+        $this->__load();
+        return parent::getPages();
+    }
+
 
     public function __sleep()
     {

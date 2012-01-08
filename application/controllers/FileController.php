@@ -172,6 +172,37 @@ class FileController extends Zend_Controller_Action{
     }
     $this->_helper->redirector('list', 'file');
   }
+  
+  
+  public function deleteAction(){
+    $fileId = $this->_getParam('id');
+
+    if(!empty($fileId)){
+      $fileId = preg_replace('/[^0-9]/', '', $fileId);
+      $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
+      if($file){
+        
+        // remove file from file system
+        $deleted = unlink(APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation());
+        if($deleted || !file_exists(APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation())) {
+          // remove database record
+          $this->_em->remove($file);
+          $this->_em->flush();
+        } else {
+          $this->_helper->flashMessenger->addMessage('The file could not be deleted.');
+        }
+      }else{
+        $this->_helper->flashMessenger->addMessage('The file does not exist.');
+      }
+    }
+
+    $this->_helper->flashMessenger->addMessage('The file was deleted successfully.');
+    $this->_helper->redirector('list', 'file');
+
+    // disable view
+    $this->view->layout()->disableLayout();
+    $this->_helper->viewRenderer->setNoRender(true);
+  }
 
 }
 

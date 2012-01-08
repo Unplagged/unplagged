@@ -34,7 +34,7 @@ class Application_Model_Document_Page{
 
   /**
    * @ManyToOne(targetEntity="Application_Model_Document", inversedBy="pages")
-   * @JoinColumn(name="document_id", referencedColumnName="id")
+   * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $document;
 
