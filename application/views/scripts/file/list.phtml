@@ -20,8 +20,8 @@
             <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>"><?php echo $this->translate("unset target"); ?></a>
           <?php } else { ?>
             <a href="<?php echo "/file/set-target/id/" . $file->getId(); ?>"><?php echo $this->translate("set target"); ?></a>
-          <?php } ?> 
-            ]</td>
+          <?php } ?> |
+          <a href="<?php echo "/file/delete/id/" . $file->getId(); ?>"><?php echo $this->translate("delete"); ?></a> ]</td>
   </tr>
   <?php endforeach; ?>
 </table>

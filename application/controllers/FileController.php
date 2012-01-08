@@ -21,13 +21,15 @@ class FileController extends Zend_Controller_Action{
        // $adapter->setMaxFileSize(20480000);
         //$adapter->addValidator('NotEmpty');
         // Nur JPEG, PNG, und GIFs
-         $adapter->addValidator( 'Extension', true, array( 'png,gif', 'messages' => '<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.' ) );
-         $adapter->addValidator( 'Size', true, array( 
+         $adapter->addValidator( 'Extension', true, array( 'png,gif', 'messages' => '<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.' ) )
+       /*  ->addValidator( 'Size', true, array( 
                 'max'      => 102400, 
                 'messages' => array(
                     Zend_Validate_File_Size::TOO_BIG => 'The maximum permitted image file size is <b>%max%</b> - selected image file size is <b>%size%</b>.'
                 )
-             ) );
+             ) )*/
+          //->addValidator('Size', false, 102400) // limit to 100K
+          ->addValidator('Extension' ,true, 'gif'); // only JPEG, PNG, and GIFs;
         //muss mit der gruppe geklärt werden
         //Neither APC nor uploadprogress extension installed 
         /* $adapterprogressbar = new Zend_ProgressBar_Adapter_Console();
@@ -60,6 +62,7 @@ class FileController extends Zend_Controller_Action{
 
         // prepare file for uploading
         $adapter->setDestination(APPLICATION_PATH . DIRECTORY_SEPARATOR . $fileDirectory);
+        //$adapter->setDestination("./files");
         $adapter->addFilter('Rename', array('target'=>APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation()));
         $adapter->setOptions(array('useByteString'=>false));
 
