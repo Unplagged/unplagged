@@ -85,6 +85,7 @@ body {
   margin-bottom: 115px;
 }
 
+/* styling for the small arrow which collapses the the main header */
 .js #main-header .dropdown-button {
   position: absolute;
   float: right;
@@ -119,8 +120,8 @@ body {
 
 #page {
   width: 90%;
-  margin: 0 auto 0;
-  padding: 0 1.5625% 1.5625%;
+  margin: 0 auto 30px;;
+  padding: 0 1.5625% 1.5625%; /* 15px/960px */
   background-color: white;
   -moz-box-shadow: 0 0 5px 5px #BBB;
   -webkit-box-shadow: 0 0 5px 3px #BBB;
@@ -128,6 +129,12 @@ body {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
+}
+
+#page footer{
+  margin-top: 20px;
+  font-size: 11px;
+  text-align: right;
 }
 
 #settings-panel{ 
@@ -139,35 +146,15 @@ body {
   color: #8b8f91;
 }
 
-#header #settings-panel #avatar {
-  float: left;
-  width: 75px;
-}
-
-#header #settings-panel #login-actions {
-  float: left;
-  width: 580px;
-  color: white;
-  font-size: 9pt;
-  padding-top: 17px;
-}
-
-#header #settings-panel #settings {
-  float: left;
-  width: 350px;
-  text-align: right;
-
-}
-
 #header {
   position: relative;
   top: -80px;
   margin-bottom: -60px;
   background: url('../images/header.png') no-repeat right center #40C0E9;
   height: 142px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
 }
 
 #header h1 {
@@ -237,10 +224,6 @@ body {
   background-image: url('../images/home_icon_hover.png');
 }
 
-#content {
-  min-height: 500px;
-}
-
 h2 {
   color: #40c0e9;
   margin: 0;
@@ -253,15 +236,14 @@ p {
   font-size: 12pt;
 }
 
-#content #main {
-  width: auto;
-  padding-left: 11px;
-  margin-right: 350px;
+#main {
+  width: 61.875%; /* 594px/960px */
+  float: left;
 }
 
-#content #sub-menu {
+#sub {
   float: right;
-  width: 310px;
+  width: 36.5625%; /* 351px/960px */
 }
 
 table.default {
@@ -449,13 +431,21 @@ a:hover {
 
 /* ==|== media queries ====================================================== */
 
-@media only screen and (min-width: 480px) {
-
+@media screen and (max-width: 768px) {
+  #main{
+    float: none;
+    width: 100%;
+  }
+  
+  #sub {
+    float:none;
+    width: 100%;
+  }
 
 }
 
-@media only screen and (min-width: 768px) {
-
+@media only screen and (min-width: 480px) {
+  
 }
 
 
