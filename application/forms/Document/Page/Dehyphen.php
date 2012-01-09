@@ -28,7 +28,7 @@ class Application_Form_Document_Page_Dehyphen extends Zend_Form{
     }
 
     $submitElement = new Zend_Form_Element_Submit('submit');
-    $submitElement->setLabel('Save');
+    $submitElement->setLabel('De-hyphen');
     $submitElement->setIgnore(true);
     $submitElement->setAttrib('class', 'submit');
     $submitElement->removeDecorator('DtDdWrapper');
