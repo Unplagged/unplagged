@@ -45,37 +45,35 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
       
       <header id="header" class="clearfix">
         <h1 class="ir">Unplagged - Plagiarism Detection Cockpit</h1>
-        <div id="top-menu" class="clearfix">
-          <ul>
+          <ul id="top-menu">
             <li class="button<?php if($currentController == "index"){
             echo " active";
           } ?>">
-              <a href="/index/index"><span class="left">&nbsp;</span><span class="home">&nbsp;</span><span class="right">&nbsp;</span></a>
+              <a href="/index/index"><span class="home ir">Home</span></a>
             </li>
             <li class="button<?php if($currentController == "case"){
             echo " active";
           } ?>">
-              <a href="/case/list"><span class="left">&nbsp;</span><?php echo $this->translate("Cases"); ?><span class="right">&nbsp;</span></a>
+              <a href="/case/list"><?php echo $this->translate("Cases"); ?></a>
             </li>
             <li class="button<?php if($currentController == "file"){
             echo " active";
           } ?>">
-              <a href="/file/list"><span class="left">&nbsp;</span><?php echo $this->translate("Files"); ?><span class="right">&nbsp;</span></a>
+              <a href="/file/list"><?php echo $this->translate("Files"); ?></a>
             </li>
              <li class="button<?php if($currentController == "document" || $currentController == "document_page"){
             echo " active";
           } ?>">
-              <a href="/document/list"><span class="left">&nbsp;</span><?php echo $this->translate("Documents"); ?><span class="right">&nbsp;</span></a>
+              <a href="/document/list"><?php echo $this->translate("Documents"); ?></a>
             </li>
             <?php if(Zend_Auth::getInstance()->hasIdentity()){ ?>
               <li class="button<?php if($currentController == "user" && $currentAction == "edit"){
               echo " active";
             } ?>">
-                <a href="/user/edit/id/<?php echo $defaultNamespace->user->getId(); ?>"><span class="left">&nbsp;</span><?php echo $this->translate("Edit profile"); ?><span class="right"nbsp;</span></a>
+                <a href="/user/edit/id/<?php echo $defaultNamespace->user->getId(); ?>"><?php echo $this->translate("Edit profile"); ?></a>
               </li>
   <?php } ?>
           </ul>
-        </div>
       </header>
       
       <div id="content" class="clearfix">

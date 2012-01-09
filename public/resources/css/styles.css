@@ -150,8 +150,7 @@ body {
   position: relative;
   top: -80px;
   margin-bottom: -60px;
-  background: url('../images/header.png') no-repeat right center #40C0E9;
-  height: 142px;
+  background: url('../images/header.png') no-repeat right top #40C0E9;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -166,70 +165,65 @@ body {
   left: 20px;
 }
 
-#header #top-menu ul {
+ul#top-menu {
   list-style-type: none;
-  padding: 18px 0 0 10px;
+  margin: 35px 0 0 10px;
+  padding: 0;
 }
 
 
-#header #top-menu li {
-  display: inline;
-  margin-right: 0;
+#top-menu li {
+  background-color: #484C51;
+  display: inline-block;
+  margin-right: 2px;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-top-right-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-topright: 3px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  vertical-align: top;
 }
 
-#header #top-menu li a {
-  background-image: url('../images/topmenu-btn_center.png');
-  padding: 11px 0 9px 0;
+/* zoom: 1 to make the inline-block work */
+.ie7 #top-menu li {
+  zoom: 1;
+}
+
+#top-menu li:hover, #top-menu li.active {
+  background-color: white;
+  color: #484C51;
+}
+
+#top-menu li:hover a, #top-menu li.active a {
+  color: #484C51;
+}
+
+#top-menu li a {
+  display: inline-block;
+  padding: 11px 10px 9px 10px;
   color: white;
   text-decoration: none;
   font-size: 9pt;
 }
 
-#header #top-menu li a .left {
-  background-image: url('../images/topmenu-btn_left.png');
-  background-repeat: no-repeat;
-  padding: 11px 10px 9px 0;
+#top-menu li .home {
+  background: url(../images/home_icon.png) no-repeat 0 0;
+  width: 16px;
+  text-indent: -9999em;
 }
 
-#header #top-menu li a .right {
-  background-image: url('../images/topmenu-btn_right.png');
-  background-repeat: no-repeat;
-  background-position: right;
-  padding: 11px 0 9px 10px;
+#top-menu li:hover .home, #top-menu li.active .home {
+  background-position: 0 -16px;
 }
 
-#header #top-menu li a:hover,
-#header #top-menu li.active a{
-  background-image: url('../images/topmenu-btn_center_hover.png');
-  color: #666666;
-}
 
-#header #top-menu li a:hover .left,
-#header #top-menu li.active a .left{
-  background-image: url('../images/topmenu-btn_left_hover.png');
-}
-
-#header #top-menu li a:hover .right,
-#header #top-menu li.active a .right{
-  background-image: url('./images/topmenu-btn_right_hover.png');
-}
-
-#header #top-menu li a .home {
-  background-image: url('../images/home_icon.png');
-  padding: 3px 6px 1px 6px;
-}
-
-#header #top-menu li a:hover .home,
-#header #top-menu li.active a .home{
-  background-image: url('../images/home_icon_hover.png');
-}
 
 h2 {
   color: #40c0e9;
   margin: 0;
   font-weight: 100;
   font-size: 20pt;
-  padding: 0 0 0 11px;
 }
 
 p {
