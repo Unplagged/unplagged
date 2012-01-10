@@ -10,8 +10,25 @@
  */
 class Unplagged_Parser_ImageParser implements Unplagged_Parser_DocumentParser{
   
-  public function parseToDocument(){
-    
+  public function parseToDocument(Application_Model_File $file, $language){
+    try{
+      $inputFileLocation = APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation();
+      $outputFileLocation = TEMP_PATH . DIRECTORY_SEPARATOR . 'imagemagick' . DIRECTORY_SEPARATOR . $document->getId() . '.tif';
+
+      $adapter = new Unplagged_Parser_ImagemagickAdapter($inputFileLocation, $outputFileLocation);
+      $adapter->execute();
+
+      $parser = Unplagged_Parser::factory('image/tif');
+      $document = $parser->parseToDocument($file, $language);
+
+      // remove the converted imaged, because it should be in the database now
+      unset($outputFileLocation);
+
+      return $document;
+    }catch(InvalidArgumentException $e){
+      //parsing wasn't successful
+      return null;
+    }
   }
   
 }

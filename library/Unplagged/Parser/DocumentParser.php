@@ -14,7 +14,7 @@ interface Unplagged_Parser_DocumentParser{
    * 
    * @return Application_Model_Document
    */
-  public function parseToDocument(Application_Model_File $file, array $data = array());
+  public function parseToDocument(Application_Model_File $file, $language);
 }
 
 ?>

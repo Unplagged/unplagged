@@ -17,6 +17,8 @@ class Unplagged_Parser{
     , 'image/tiff'=>'TesseractParser'
     //@todo sprobably not the best idea to push all octet-stream through tesseract, but will work for now
     , 'application/octet-stream'=>'TesseractParser'
+    , 'image/jpeg'=>'ImageParser'
+    , 'image/gif'=>'ImageParser'
   );
 
   public static function factory($mimeType){
