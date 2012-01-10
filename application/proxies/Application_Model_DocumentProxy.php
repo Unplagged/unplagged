@@ -75,7 +75,7 @@ class Application_Model_DocumentProxy extends \Application_Model_Document implem
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'title', 'origionalFile', 'pages');
+        return array('__isInitialized__', 'id', 'created', 'title', 'originalFile', 'pages');
     }
 
     public function __clone()
