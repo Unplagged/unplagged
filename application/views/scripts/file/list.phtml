@@ -13,7 +13,7 @@
   foreach($this->listFiles as $file): 
     ?>
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
-    <td><?php echo $file->getFilename(); ?></td>
+    <td><a href="<?php echo $this->baseUrl('/image/index/id/' . $file->getId()); ?>"><?php echo $file->getFilename(); ?></a></td>
     <td><?php echo $file->getSize(); ?></td>
     <td><?php if($file->getIsTarget()) { ?>
             <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>"><img class="icon" src="/resources/icons/page_find.png" title="<?php echo $this->translate("unset target"); ?>" /></a>

@@ -26,7 +26,7 @@ class FileController extends Zend_Controller_Action{
         // $adapter->setMaxFileSize(20480000);
         //$adapter->addValidator('NotEmpty');
         // Nur JPEG, PNG, und GIFs
-        $adapter->addValidator('Extension', true, array('png,gif,tif,jpg', 'messages'=>'<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.'));
+        $adapter->addValidator('Extension', true, array('png,gif,tif,jpg, tiff', 'messages'=>'<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.'));
 
         //muss mit der gruppe geklärt werden
         //Neither APC nor uploadprogress extension installed 

@@ -1,5 +1,6 @@
 $(document).ready(function(){
   
+  //collapse header line
   var dropdownButton = $('<span class="dropdown-button arrow-up"></span>');
   dropdownButton.toggle(function(){
     //$('#main-header').slideUp();
@@ -12,6 +13,10 @@ $(document).ready(function(){
     dropdownButton.removeClass('arrow-down');
   });
   $('#settings-panel').append(dropdownButton);
+  
+  //wrap home menu button, so that icon gets shown
+  var homeButton = $('#header .navigation .home');
+  homeButton.wrapInner('<span class="ir"/>');
 });
 
 

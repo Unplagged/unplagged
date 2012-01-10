@@ -165,14 +165,14 @@ body {
   left: 20px;
 }
 
-ul#top-menu {
+#header .navigation {
   list-style-type: none;
   margin: 35px 0 0 10px;
   padding: 0;
 }
 
 
-#top-menu li {
+#header .navigation li {
   background-color: #484C51;
   display: inline-block;
   margin-right: 2px;
@@ -186,20 +186,20 @@ ul#top-menu {
 }
 
 /* zoom: 1 to make the inline-block work */
-.ie7 #top-menu li {
+.ie7 #header .navigation li {
   zoom: 1;
 }
 
-#top-menu li:hover, #top-menu li.active {
+#header .navigation li:hover, #header .navigation li.active {
   background-color: white;
   color: #484C51;
 }
 
-#top-menu li:hover a, #top-menu li.active a {
+#header .navigation li:hover a, #header .navigation li.active a {
   color: #484C51;
 }
 
-#top-menu li a {
+#header .navigation li a {
   display: inline-block;
   padding: 11px 10px 9px 10px;
   color: white;
@@ -207,13 +207,13 @@ ul#top-menu {
   font-size: 9pt;
 }
 
-#top-menu li .home {
+#header .navigation li .home span{
   background: url(../images/home_icon.png) no-repeat 0 0;
   width: 16px;
   text-indent: -9999em;
 }
 
-#top-menu li:hover .home, #top-menu li.active .home {
+#header .navigation li:hover .home span, #header .navigation li.active .home span {
   background-position: 0 -16px;
 }
 

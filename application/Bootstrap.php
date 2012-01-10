@@ -111,4 +111,53 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     return $em;
   }
+  
+  protected function _initNavigation(){
+    
+    $config = array(
+      array(
+        //home icon gets set via js, because I didn't find a simple way to do add a <span> here
+        'label' => 'Home',
+        'title' => 'Home',
+        'module' => 'default',
+        'controller' => 'index',
+        'action' => 'index',
+        'class' => 'home',     
+        'order' => -100 // make sure home is the first page
+      ), array(
+        'label' => 'Cases',
+        'title' => 'Cases',
+        'module' => 'default',
+        'controller' => 'case',
+        'action' => 'list',
+      ), array(
+        'label' => 'Files',
+        'title' => 'Files',
+        'module' => 'default',
+        'controller' => 'file',
+        'action' => 'list',
+      ), array(
+        'label' => 'Documents',
+        'title' => 'Documents',
+        'module' => 'default',
+        'controller' => 'document',
+        'action' => 'list',
+      )
+    );
+    
+    $container = new Zend_Navigation($config);
+    
+    //@todo doesn't work here for now still in layout.phtml
+    /*if(Zend_Auth::getInstance()->hasIdentity()){
+      $container->addPage(array(
+        'label' => 'Edit profile',
+        'title' => 'Edit profile',
+        'module' => 'default',
+        'controller' => 'user',
+        'action' => 'edit/id/' . $defaultNamespace->user->getId()
+      ));
+    }*/
+    
+    Zend_Registry::set('Zend_Navigation', $container);
+  }
 }
