@@ -21,7 +21,7 @@ class Unplagged_Parser_TesseractParser implements Unplagged_Parser_DocumentParse
    * 
    * @return Application_Model_Document
    */
-  public function parseToDocument(Application_Model_File $file, $language){
+  public function parseToDocument(Application_Model_File $file, array $data = array()){
 
     // init document
     $data["file"] = $file;
@@ -34,7 +34,7 @@ class Unplagged_Parser_TesseractParser implements Unplagged_Parser_DocumentParse
     $inputFileLocation = APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation();
     $outputFileLocation = TEMP_PATH . DIRECTORY_SEPARATOR . 'ocr' . DIRECTORY_SEPARATOR . $document->getId();
     
-    $adapter = new Unplagged_Parser_TesseractAdapter($inputFileLocation, $outputFileLocation, $language);
+    $adapter = new Unplagged_Parser_TesseractAdapter($inputFileLocation, $outputFileLocation, $data['language']);
     $adapter->execute();
 
     // tesseract adds .txt extension automatically, so filename is differently than previously specified

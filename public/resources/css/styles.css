@@ -121,7 +121,7 @@ body {
 #page {
   width: 90%;
   margin: 0 auto 30px;;
-  padding: 0 1.5625% 1.5625%; /* 15px/960px */
+  padding: 0 1.5625% 10px 1.5625%; /* 15px/960px */
   background-color: white;
   -moz-box-shadow: 0 0 5px 5px #BBB;
   -webkit-box-shadow: 0 0 5px 3px #BBB;
@@ -238,6 +238,7 @@ p {
 #sub {
   float: right;
   width: 36.5625%; /* 351px/960px */
+  max-width: 450px;
 }
 
 table.default {
