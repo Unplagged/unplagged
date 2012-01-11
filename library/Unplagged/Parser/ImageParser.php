@@ -25,7 +25,7 @@ class Unplagged_Parser_ImageParser implements Unplagged_Parser_DocumentParser{
       $adapter = new Unplagged_Parser_ImagemagickAdapter($inputFileLocation, $outputFileLocation);
       $adapter->execute();
 
-      $parser = Unplagged_Parser::factory('image/*');
+      $parser = Unplagged_Parser::factory('image/tif');
       $document = $parser->parseToDocument($file, $language);
 
       // remove the converted imaged, because it should be in the database now
