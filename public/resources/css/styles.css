@@ -183,6 +183,7 @@ body {
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   vertical-align: top;
+  position: relative;
 }
 
 /* zoom: 1 to make the inline-block work */
@@ -217,7 +218,16 @@ body {
   background-position: 0 -16px;
 }
 
-
+#header .navigation li > ul { 
+  display: none; 
+  position: absolute; 
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+#header .navigation li:hover > ul { 
+  display: block; 
+}
 
 h2 {
   color: #40c0e9;

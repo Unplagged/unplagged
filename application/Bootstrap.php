@@ -130,18 +130,27 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module' => 'default',
         'controller' => 'case',
         'action' => 'list',
+        'pages' => array(
+          array(
+            'label' => 'Create Case',
+            'title' => 'Create Case',
+            'module' => 'default',
+            'controller' => 'case',
+            'action' => 'create'
+          )
+        )
       ), array(
         'label' => 'Files',
         'title' => 'Files',
         'module' => 'default',
         'controller' => 'file',
-        'action' => 'list',
+        'action' => 'list'
       ), array(
         'label' => 'Documents',
         'title' => 'Documents',
         'module' => 'default',
         'controller' => 'document',
-        'action' => 'list',
+        'action' => 'list'
       )
     );
     
