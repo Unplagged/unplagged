@@ -21,6 +21,7 @@ class Unplagged_Parser{
     , 'image/gif' => 'ImageParser'
     , 'image/png' => 'ImageParser'
     , 'image/jpg' => 'ImageParser'
+    , 'image/*' => 'ImageParser'
   );
 
   public static function factory($mimeType){
