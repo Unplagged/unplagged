@@ -29,6 +29,7 @@ class Unplagged_Parser_ImagemagickAdapter{
     $command = $this->imagemagickCall . ' ' . $this->inputFilePath . ' ' . $this->outputFilePath;
 
     exec($command, $output);
+    chmod($this->outputFilePath, 0755);
   }
   
   private function checkForInvalidArguments($inputFileLocation, $outputFileLocation){
