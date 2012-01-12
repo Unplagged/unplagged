@@ -4,7 +4,7 @@
 * To change this template, choose Tools | Templates
 * and open the template in the editor.
 */
-class GoogleSearchController extends Zend_Controller_Action
+class GooglesearchController extends Zend_Controller_Action
 {
     
     public function indexAction()
