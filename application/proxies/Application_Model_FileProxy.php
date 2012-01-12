@@ -96,6 +96,12 @@ class Application_Model_FileProxy extends \Application_Model_File implements \Do
         return parent::getLocation();
     }
 
+    public function getAbsoluteLocation()
+    {
+        $this->__load();
+        return parent::getAbsoluteLocation();
+    }
+
     public function getIsTarget()
     {
         $this->__load();

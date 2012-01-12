@@ -160,6 +160,10 @@ class Application_Model_File {
     return $this->location;
   }
   
+  public function getAbsoluteLocation(){
+    return BASE_PATH . DIRECTORY_SEPARATOR . $this->location;
+  }
+  
   public function getIsTarget(){
     return $this->isTarget;
   }

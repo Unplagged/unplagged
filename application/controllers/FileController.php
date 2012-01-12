@@ -60,11 +60,11 @@ class FileController extends Zend_Controller_Action{
         $this->_em->flush();
 
         // prepare file for uploading
-        $adapter->setDestination(BASE_PATH . DIRECTORY_SEPARATOR . $file->getLocation());
-        $adapter->addFilter('Rename', array('target' => BASE_PATH . DIRECTORY_SEPARATOR . $file->getLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension()));
+        $adapter->setDestination($file->getAbsoluteLocation());
+        $adapter->addFilter('Rename', array('target' => $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension()));
 
         if($adapter->receive()){
-          chmod(BASE_PATH . DIRECTORY_SEPARATOR . $file->getLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension(), 0755);
+          chmod($file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension(), 0755);
 
           $this->_helper->flashMessenger->addMessage('File was uploaded successfully.');
           $this->_helper->redirector('list', 'file');
@@ -98,7 +98,7 @@ class FileController extends Zend_Controller_Action{
       $fileId = preg_replace('/[^0-9]/', '', $fileId);
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
       if($file){
-        $downloadPath = BASE_PATH . DIRECTORY_SEPARATOR . $file->getLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
+        $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
 
         // set headers
         header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
@@ -194,7 +194,7 @@ class FileController extends Zend_Controller_Action{
       if($file){
 
         // remove file from file system
-        $downloadPath = BASE_PATH . DIRECTORY_SEPARATOR . $file->getLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
+        $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
         $deleted = unlink($downloadPath);
         if($deleted || !file_exists($downloadPath)){
           // remove database record
