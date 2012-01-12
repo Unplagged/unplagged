@@ -1,10 +1,10 @@
 <?php
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-class GoogleSearchController extends Zend_Controller_Action
+* To change this template, choose Tools | Templates
+* and open the template in the editor.
+*/
+class GooglesearchController extends Zend_Controller_Action
 {
     
     public function indexAction()
@@ -12,7 +12,7 @@ class GoogleSearchController extends Zend_Controller_Action
         // action body
         $searchForm = new Application_Form_Google_Search;
        /* $searchForm->setAction('http://www.google.de/search');
-        $searchForm->setMethod('GET');*/
+$searchForm->setMethod('GET');*/
 
         $this->view->searchForm = $searchForm;
     }
