@@ -6,15 +6,15 @@
  * 
  * @author Dominik Horb <dominik.horb@googlemail.com>
  */
-interface Unplagged_Parser_DocumentParser{
+interface Unplagged_Parser_Page_Parser{
 
   /**
    * @param $file The previous uploaded file.
    * @param $language The language of the uploaded file.
    * 
-   * @return Application_Model_Document
+   * @return Application_Model_Document_Page
    */
-  public function parseToDocument(Application_Model_File $file, $language);
+  public function parseToPage(Application_Model_File $file, $language);
 }
 
 ?>

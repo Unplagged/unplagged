@@ -85,7 +85,7 @@ class Application_Model_Document{
     return $this->title;
   }
   
-  public function addPage(Application_model_Document_Page $page){
+  public function addPage(Application_Model_Document_Page $page){
     $page->setDocument($this);
     $this->pages->add($page);
   }

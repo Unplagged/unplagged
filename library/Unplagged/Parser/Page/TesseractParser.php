@@ -8,7 +8,7 @@
  *
  * @author Dominik Horb <dominik.horb@googlemail.com>
  */
-class Unplagged_Parser_TesseractParser implements Unplagged_Parser_DocumentParser{
+class Unplagged_Parser_Page_TesseractParser implements Unplagged_Parser_Page_Parser{
 
   public function __construct(){
     $this->_em = Zend_Registry::getInstance()->entitymanager;
@@ -21,45 +21,31 @@ class Unplagged_Parser_TesseractParser implements Unplagged_Parser_DocumentParse
    * 
    * @return Application_Model_Document
    */
-  public function parseToDocument(Application_Model_File $file, $language){
+  public function parseToPage(Application_Model_File $file, $language){
 
     try{
-      // init document
-      $data["file"] = $file;
-      $data["title"] = $file->getFilename();
+      $hash = Unplagged_Helper::generateRandomHash();
+      $inputFileLocation = BASE_PATH . DIRECTORY_SEPARATOR . $file->getLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
+      $outputFileLocation = TEMP_PATH . DIRECTORY_SEPARATOR . 'ocr' . DIRECTORY_SEPARATOR . $hash;
 
-      $document = new Application_Model_Document($data);
-      $this->_em->persist($document);
-      $this->_em->flush();
-
-      $inputFileLocation = APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation();
-      $outputFileLocation = TEMP_PATH . DIRECTORY_SEPARATOR . 'ocr' . DIRECTORY_SEPARATOR . $document->getId();
-
-      $adapter = new Unplagged_Parser_TesseractAdapter($inputFileLocation, $outputFileLocation, $language);
+      $adapter = new Unplagged_Parser_Page_TesseractAdapter($inputFileLocation, $outputFileLocation, $language);
       $adapter->execute();
 
       // tesseract adds .txt extension automatically, so filename is differently than previously specified
       $outputFileLocation .= '.txt';
 
       unset($data);
-      $data["pageNumber"] = 1;
       $data["content"] = nl2br(file_get_contents($outputFileLocation));
       $data["content"] = str_replace("\r\n", "", $data["content"]);
       $data["content"] = str_replace("\n", "", $data["content"]);
 
       $page = new Application_Model_Document_Page($data);
-
-      $this->_em->persist($page);
-      $document->addPage($page);
-
-      $this->_em->persist($document);
-      $this->_em->flush();
-
       // remove the ocr-scanned document, because it is stored in the database now
       unset($outputFileLocation);
 
-      return $document;
+      return $page;
     }catch(InvalidArgumentException $e){
+      print_r($e);
       //parsing wasn't successful
       return null;
     }

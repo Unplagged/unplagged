@@ -13,6 +13,12 @@ defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
 
 /**
+ * @const BASE_PATH The path to the application directory.
+ */
+defined('BASE_PATH')
+    || define('BASE_PATH', realpath(dirname(__FILE__) . '/../'));
+
+/**
  * @const TEMP_PATH The path to the data directory.
  */
 defined('TEMP_PATH')

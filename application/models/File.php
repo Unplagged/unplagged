@@ -157,7 +157,7 @@ class Application_Model_File {
   }
 
   public function getLocation(){
-    return $this->location . $this->getId() . "." . $this->getExtension();
+    return $this->location;
   }
   
   public function getIsTarget(){

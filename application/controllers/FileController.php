@@ -26,7 +26,7 @@ class FileController extends Zend_Controller_Action{
         // $adapter->setMaxFileSize(20480000);
         //$adapter->addValidator('NotEmpty');
         // Nur JPEG, PNG, und GIFs
-        $adapter->addValidator('Extension', true, array('png,gif,tif,jpg, tiff', 'messages'=>'<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.'));
+        //$adapter->addValidator('Extension', true, array('png,gif,tif,jpg, tiff', 'messages'=>'<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.'));
 
         //muss mit der gruppe geklärt werden
         //Neither APC nor uploadprogress extension installed 
@@ -41,18 +41,7 @@ class FileController extends Zend_Controller_Action{
 
         $newName = $this->_request->getPost('newName');
 
-        //create directories if non existent
-        $storagePath = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'storage';
-        if(!is_dir($storagePath)){
-          mkdir($storagePath);
-        }
-
-        if(!is_dir($storagePath . DIRECTORY_SEPARATOR . 'files')){
-          mkdir($storagePath . DIRECTORY_SEPARATOR . 'files');
-        }
-
         // collect file information
-        $fileDirectory = "storage" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR;
         $fileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
         $fileExt = pathinfo($adapter->getFileName(), PATHINFO_EXTENSION);
 
@@ -64,18 +53,18 @@ class FileController extends Zend_Controller_Action{
         $data["mimetype"] = $adapter->getMimeType('filepath');
         $data["filename"] = !empty($newName) ? $newName . "." . $fileExt : $fileName;
         $data["extension"] = $fileExt;
-        $data["location"] = $fileDirectory;
+        $data["location"] = "application" . DIRECTORY_SEPARATOR . "storage" . DIRECTORY_SEPARATOR . "files";
 
         $file = new Application_Model_File($data);
         $this->_em->persist($file);
         $this->_em->flush();
 
         // prepare file for uploading
-        $adapter->setDestination(APPLICATION_PATH . DIRECTORY_SEPARATOR . $fileDirectory);
-        $adapter->addFilter('Rename', array('target'=>APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation()));
+        $adapter->setDestination(BASE_PATH . DIRECTORY_SEPARATOR . $file->getLocation());
+        $adapter->addFilter('Rename', array('target' => BASE_PATH . DIRECTORY_SEPARATOR . $file->getLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension()));
 
         if($adapter->receive()){
-          chmod(APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation(), 0755);
+          chmod(BASE_PATH . DIRECTORY_SEPARATOR . $file->getLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension(), 0755);
 
           $this->_helper->flashMessenger->addMessage('File was uploaded successfully.');
           $this->_helper->redirector('list', 'file');
@@ -109,7 +98,7 @@ class FileController extends Zend_Controller_Action{
       $fileId = preg_replace('/[^0-9]/', '', $fileId);
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
       if($file){
-        $downloadPath = APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation();
+        $downloadPath = BASE_PATH . DIRECTORY_SEPARATOR . $file->getLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
 
         // set headers
         header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
@@ -118,6 +107,7 @@ class FileController extends Zend_Controller_Action{
         header("Content-Disposition: attachment; filename=\"" . $file->getFilename() . "\"");
         header("Content-type: " . $file->getMimeType());
         header("Content-Transfer-Encoding: binary");
+
         readfile($downloadPath);
       }else{
         $this->_helper->flashMessenger->addMessage('No file found.');
@@ -204,8 +194,9 @@ class FileController extends Zend_Controller_Action{
       if($file){
 
         // remove file from file system
-        $deleted = unlink(APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation());
-        if($deleted || !file_exists(APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation())){
+        $downloadPath = BASE_PATH . DIRECTORY_SEPARATOR . $file->getLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
+        $deleted = unlink($downloadPath);
+        if($deleted || !file_exists($downloadPath)){
           // remove database record
           $this->_em->remove($file);
           $this->_em->flush();

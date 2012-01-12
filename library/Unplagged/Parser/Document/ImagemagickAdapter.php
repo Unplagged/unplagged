@@ -6,7 +6,7 @@
  * 
  * @author Dominik Horb <dominik.horb@googlemail.com>
  */
-class Unplagged_Parser_ImagemagickAdapter{
+class Unplagged_Parser_Document_ImagemagickAdapter{
   
   private $imagemagickCall;
   private $inputFilePath;

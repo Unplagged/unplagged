@@ -7,7 +7,7 @@
  * @todo handing over the tesseract path from user input is a possible security issue, because this gets executed on the
  * command line, we should at least think about, whether we want to keep it that way
  */
-class Unplagged_Parser_TesseractAdapter{
+class Unplagged_Parser_Page_TesseractAdapter{
 
   private $tesseractCall;
   private $inputFileLocation;
