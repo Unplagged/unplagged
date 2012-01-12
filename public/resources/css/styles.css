@@ -121,7 +121,7 @@ body {
 #page {
   width: 90%;
   margin: 0 auto 30px;;
-  padding: 0 1.5625% 1.5625%; /* 15px/960px */
+  padding: 0 1.5625% 10px 1.5625%; /* 15px/960px */
   background-color: white;
   -moz-box-shadow: 0 0 5px 5px #BBB;
   -webkit-box-shadow: 0 0 5px 3px #BBB;
@@ -165,14 +165,14 @@ body {
   left: 20px;
 }
 
-ul#top-menu {
+#header .navigation {
   list-style-type: none;
   margin: 35px 0 0 10px;
   padding: 0;
 }
 
 
-#top-menu li {
+#header .navigation li {
   background-color: #484C51;
   display: inline-block;
   margin-right: 2px;
@@ -183,23 +183,24 @@ ul#top-menu {
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   vertical-align: top;
+  position: relative;
 }
 
 /* zoom: 1 to make the inline-block work */
-.ie7 #top-menu li {
+.ie7 #header .navigation li {
   zoom: 1;
 }
 
-#top-menu li:hover, #top-menu li.active {
+#header .navigation li:hover, #header .navigation li.active {
   background-color: white;
   color: #484C51;
 }
 
-#top-menu li:hover a, #top-menu li.active a {
+#header .navigation li:hover a, #header .navigation li.active a {
   color: #484C51;
 }
 
-#top-menu li a {
+#header .navigation li a {
   display: inline-block;
   padding: 11px 10px 9px 10px;
   color: white;
@@ -207,17 +208,26 @@ ul#top-menu {
   font-size: 9pt;
 }
 
-#top-menu li .home {
+#header .navigation li .home span{
   background: url(../images/home_icon.png) no-repeat 0 0;
   width: 16px;
   text-indent: -9999em;
 }
 
-#top-menu li:hover .home, #top-menu li.active .home {
+#header .navigation li:hover .home span, #header .navigation li.active .home span {
   background-position: 0 -16px;
 }
 
-
+#header .navigation li > ul { 
+  display: none; 
+  position: absolute; 
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+#header .navigation li:hover > ul { 
+  display: block; 
+}
 
 h2 {
   color: #40c0e9;
@@ -238,6 +248,7 @@ p {
 #sub {
   float: right;
   width: 36.5625%; /* 351px/960px */
+  max-width: 450px;
 }
 
 table.default {

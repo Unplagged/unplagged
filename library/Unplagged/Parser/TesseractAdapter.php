@@ -1,9 +1,4 @@
 <?php
-
-/**
- * File for class {@link TesseractAdapter}.
- */
-
 /**
  * This class wraps the command line calls to the tesseract ocr tool.
  * 
@@ -31,11 +26,13 @@ class Unplagged_Parser_TesseractAdapter{
    * @param string $language The language which tesseract should use for it's parsing.
    */
   public function __construct($inputFileLocation, $outputFileLocation, $language = 'deu'){
-    $message = $this->checkConstructorArguments($inputFileLocation, $outputFileLocation);
+    $message = $this->checkForInvalidArguments($inputFileLocation, $outputFileLocation);
 
-    if($message === ''){
+    if($message === false){
       $this->inputFileLocation = $inputFileLocation;
       $this->outputFileLocation = $outputFileLocation;
+      //@todo it would probably be better to supply this also via a constructor argument
+      //this would ensure the best independece from the rest of the application
       $this->tesseractCall = Zend_Registry::get('config')->parser->tesseractPath;
       $this->language = $language;
     }else{
@@ -62,9 +59,10 @@ class Unplagged_Parser_TesseractAdapter{
    * @todo See note in class doc about possible security issues with executing any given command.
    */
   public static function checkTesseract($command = 'tesseract'){
+    //we simply try to call tesseract without arguments
     //the 2>&1 bit is to supress output on stderr
     $output = shell_exec($command . ' 2>&1');
-
+    
     //the common bit of the ouput between windows and Linux seems to be 'Usage:tesseract'
     if(stripos($output, 'Usage:tesseract') !== false){
       return true;
@@ -76,15 +74,17 @@ class Unplagged_Parser_TesseractAdapter{
   /**
    * @param string $inputFileLocation
    * @param string $outputFileLocation
-   * @return string 
+   * @return string|bool  False if the arguments are correct or an error message, if something went wrong.
    */
-  private function checkConstructorArguments($inputFileLocation, $outputFileLocation){
-    $message = '';
+  private function checkForInvalidArguments($inputFileLocation, $outputFileLocation){
+    $message = false;
 
     if(!file_exists($inputFileLocation)){
       $message = 'The input file doesn\'t exist.';
-    }elseif(!is_string($outputFileLocation) || empty($outputFileLocation)){
+    }elseif(!is_string($outputFileLocation) || $outputFileLocation===''){
       $message = 'The output file name needs to be specified as a string';
+    } elseif(!is_writable(dirname($outputFileLocation))){
+      $message = 'The location for the output file is not writeable.';
     }
 
     return $message;

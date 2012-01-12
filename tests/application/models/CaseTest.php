@@ -42,13 +42,13 @@ class CaseTest extends PHPUnit_Framework_TestCase{
   public function testUpdatedIsDateTime(){
     $this->case->updated();
     
-    $this->assertType('DateTime', $this->case->getUpdated());
+    $this->assertInstanceOf('DateTime', $this->case->getUpdated());
   }
   
   public function testCreatedIsDateTime(){
     $this->case->created();
     
-    $this->assertType('DateTime', $this->case->getCreated());
+    $this->assertInstanceOf('DateTime', $this->case->getCreated());
   }
   
   //not implemented yet

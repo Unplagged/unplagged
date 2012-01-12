@@ -45,35 +45,27 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
       
       <header id="header" class="clearfix">
         <h1 class="ir">Unplagged - Plagiarism Detection Cockpit</h1>
-          <ul id="top-menu">
-            <li class="button<?php if($currentController == "index"){
-            echo " active";
-          } ?>">
-              <a href="/index/index"><span class="home ir">Home</span></a>
-            </li>
-            <li class="button<?php if($currentController == "case"){
-            echo " active";
-          } ?>">
-              <a href="/case/list"><?php echo $this->translate("Cases"); ?></a>
-            </li>
-            <li class="button<?php if($currentController == "file"){
-            echo " active";
-          } ?>">
-              <a href="/file/list"><?php echo $this->translate("Files"); ?></a>
-            </li>
-             <li class="button<?php if($currentController == "document" || $currentController == "document_page"){
-            echo " active";
-          } ?>">
-              <a href="/document/list"><?php echo $this->translate("Documents"); ?></a>
-            </li>
-            <?php if(Zend_Auth::getInstance()->hasIdentity()){ ?>
-              <li class="button<?php if($currentController == "user" && $currentAction == "edit"){
-              echo " active";
-            } ?>">
-                <a href="/user/edit/id/<?php echo $defaultNamespace->user->getId(); ?>"><?php echo $this->translate("Edit profile"); ?></a>
-              </li>
-  <?php } ?>
-          </ul>
+        
+        <?php
+//        var_dump($this->navigation());
+        $container = $this->navigation()->getContainer();
+        
+        
+        if(Zend_Auth::getInstance()->hasIdentity()){
+          $container->addPage(array(
+            'label' => 'Edit profile',
+            'title' => 'Edit profile',
+            'module' => 'default',
+            'controller' => 'user',
+            'action' => 'edit',
+            'params'     => array(
+              'id' => $defaultNamespace->user->getId()
+            )
+          ));
+        }
+        ?>
+        
+        <?php echo $this->navigation()->menu(); ?>
       </header>
       
       <div id="content" class="clearfix">

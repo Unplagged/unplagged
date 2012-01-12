@@ -13,10 +13,15 @@
 class Unplagged_Parser{
 
   private static $mimeMappings = array(
-    'image/tif'=>'TesseractParser'
-    , 'image/tiff'=>'TesseractParser'
+    'image/tif' => 'TesseractParser'
+    , 'image/tiff' => 'ImageParser'
     //@todo sprobably not the best idea to push all octet-stream through tesseract, but will work for now
-    , 'application/octet-stream'=>'TesseractParser'
+    , 'application/octet-stream' => 'TesseractParser'
+    , 'image/jpeg' => 'ImageParser'
+    , 'image/gif' => 'ImageParser'
+    , 'image/png' => 'ImageParser'
+    , 'image/jpg' => 'ImageParser'
+    , 'image/*' => 'ImageParser'
   );
 
   public static function factory($mimeType){

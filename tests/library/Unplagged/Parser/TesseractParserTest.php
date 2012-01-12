@@ -9,11 +9,11 @@
  */
 class TesseractParserTest extends PHPUnit_Framework_TestCase{
   
-  public function testParseDocumentReturnsAlwaysDocument(){
+  public function testParseDocumentReturnsNullOnEmptyFile(){
     $tesseractParser = new Unplagged_Parser_TesseractParser();
-    $document = $tesseractParser->parseToDocument();
+    $document = $tesseractParser->parseToDocument(new Application_Model_File(), 'eng');
     
-    $this->assertType('Application_Model_Document', $document);
+    $this->assertNull($document);
   }  
 }
 ?>

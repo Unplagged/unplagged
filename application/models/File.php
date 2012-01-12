@@ -69,7 +69,7 @@ class Application_Model_File {
    */
   private $location;
   
-    /**
+  /**
    * The extension of the file.
    * @var string The file extension.
    * 
@@ -81,6 +81,10 @@ class Application_Model_File {
    * @var string The file is a target.
    * 
    * @Column(type="boolean")
+   * 
+   * @todo maybe we should move this to the case? So that we would have an array of target files
+   * and then we could probably add here some associations to representations of this file, that were 
+   * already created
    */ 
   private $isTarget = false;
 

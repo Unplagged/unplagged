@@ -20,14 +20,14 @@ class FileController extends Zend_Controller_Action{
     if($this->_request->isPost()){
       if($uploadform->isValid(($this->_request->getPost()))){
         $adapter = new Zend_File_Transfer_Adapter_Http();
-        $adapter->setOptions(array('useByteString' => false));
+        $adapter->setOptions(array('useByteString'=>false));
 
         // Maximal 20MB = 20480000
-       // $adapter->setMaxFileSize(20480000);
+        // $adapter->setMaxFileSize(20480000);
         //$adapter->addValidator('NotEmpty');
         // Nur JPEG, PNG, und GIFs
-         $adapter->addValidator( 'Extension', true, array( 'png,gif', 'messages' => '<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.' ) );
-        
+        $adapter->addValidator('Extension', true, array('png,gif,tif,jpg, tiff', 'messages'=>'<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.'));
+
         //muss mit der gruppe geklärt werden
         //Neither APC nor uploadprogress extension installed 
         /* $adapterprogressbar = new Zend_ProgressBar_Adapter_Console();
@@ -43,16 +43,14 @@ class FileController extends Zend_Controller_Action{
 
         //create directories if non existent
         $storagePath = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'storage';
-        if(!is_dir($storagePath))
-        {
+        if(!is_dir($storagePath)){
           mkdir($storagePath);
         }
-        
-        if(!is_dir($storagePath . DIRECTORY_SEPARATOR . 'files'))
-        {
+
+        if(!is_dir($storagePath . DIRECTORY_SEPARATOR . 'files')){
           mkdir($storagePath . DIRECTORY_SEPARATOR . 'files');
         }
-        
+
         // collect file information
         $fileDirectory = "storage" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR;
         $fileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
@@ -78,7 +76,7 @@ class FileController extends Zend_Controller_Action{
 
         if($adapter->receive()){
           chmod(APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation(), 0755);
-          
+
           $this->_helper->flashMessenger->addMessage('File was uploaded successfully.');
           $this->_helper->redirector('list', 'file');
         }else{
@@ -151,22 +149,22 @@ class FileController extends Zend_Controller_Action{
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
       if($file){
         $file->setIsTarget($isTarget);
-        
+
         $this->_em->persist($file);
         $this->_em->flush();
       }else{
         $this->_helper->flashMessenger->addMessage('No file found.');
       }
     }
-    
+
     $this->_helper->redirector('list', 'file');
-    
-     // disable view
+
+    // disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
-  
-    public function parseAction(){
+
+  public function parseAction(){
     $fileId = $this->_getParam('id');
 
     if(empty($fileId)){
@@ -184,10 +182,10 @@ class FileController extends Zend_Controller_Action{
       }else{
         $parser = Unplagged_Parser::factory($file->getMimeType());
         $document = $parser->parseToDocument($file, $language);
-        
-        if(empty($document)) {
-           $this->_helper->flashMessenger->addMessage('The file could not be parsed.');
-        }else {
+
+        if(empty($document)){
+          $this->_helper->flashMessenger->addMessage('The file could not be parsed.');
+        }else{
           $this->_em->persist($document);
           $this->_em->flush();
           $this->_helper->flashMessenger->addMessage('The file was successfully parsed.');
@@ -196,8 +194,7 @@ class FileController extends Zend_Controller_Action{
     }
     $this->_helper->redirector('list', 'file');
   }
-  
-  
+
   public function deleteAction(){
     $fileId = $this->_getParam('id');
 
@@ -205,14 +202,14 @@ class FileController extends Zend_Controller_Action{
       $fileId = preg_replace('/[^0-9]/', '', $fileId);
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
       if($file){
-        
+
         // remove file from file system
         $deleted = unlink(APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation());
-        if($deleted || !file_exists(APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation())) {
+        if($deleted || !file_exists(APPLICATION_PATH . DIRECTORY_SEPARATOR . $file->getLocation())){
           // remove database record
           $this->_em->remove($file);
           $this->_em->flush();
-        } else {
+        }else{
           $this->_helper->flashMessenger->addMessage('The file could not be deleted.');
         }
       }else{
@@ -229,5 +226,4 @@ class FileController extends Zend_Controller_Action{
   }
 
 }
-
 ?>

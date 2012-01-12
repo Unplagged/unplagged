@@ -23,21 +23,31 @@ class TesseractAdapterTest extends PHPUnit_Framework_TestCase{
   
   public function testOutputFileNameMustBeSpecified(){
     $this->setExpectedException('InvalidArgumentException');
-    new Unplagged_Parser_TesseractAdapter(realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'resources') . DIRECTORY_SEPARATOR, 'p13a.tif', '');
+    new Unplagged_Parser_TesseractAdapter(realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'resources') . DIRECTORY_SEPARATOR, '');
+  }
+  
+  public function testOutputPathMustBeWriteable(){
+    $resourcesPath = realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'resources') . DIRECTORY_SEPARATOR;
+    $testFileName = 'p13a';
+    $unwriteableDir = 'unwriteableDir';
+    
+    $this->setExpectedException('InvalidArgumentException');
+    $tesseractAdapter = new Unplagged_Parser_TesseractAdapter($resourcesPath . $testFileName . '.tif', $unwriteableDir . DIRECTORY_SEPARATOR . $testFileName); 
   }
   
   public function testTxtFileGetsCreated(){
     $resourcesPath = realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'resources') . DIRECTORY_SEPARATOR;
-   
+
     $testFileName = 'p13a';
-    $outputFileName = $resourcesPath . $testFileName . '.txt';
+    $outputFile = $resourcesPath . $testFileName;
+    $outputFileName = $outputFile . '.txt';
     
     //make sure no old txt file is present
     if(file_exists($outputFileName)){
       unlink($outputFileName);
     }
     
-    $tesseractAdapter = new Unplagged_Parser_TesseractAdapter($resourcesPath, $testFileName . '.tif', $testFileName);
+    $tesseractAdapter = new Unplagged_Parser_TesseractAdapter($resourcesPath . $testFileName . '.tif', $outputFile);
     $tesseractAdapter->execute();
     
     $this->assertFileExists($resourcesPath . $testFileName . '.txt', 'Please make sure Tesseract is installed and on the include path.');
