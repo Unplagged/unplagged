@@ -223,10 +223,45 @@ body {
   position: absolute; 
   width: auto;
   margin: 0;
-  padding: 0;
+  padding: 10px 15px 10px 15px;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-top: none;
 }
+
 #header .navigation li:hover > ul { 
   display: block; 
+  min-width: 120px;
+  -webkit-border-radius: 5px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius: 5px;
+  -moz-border-radius-topleft: 0;
+  border-radius: 5px;
+  border-top-left-radius: 0;
+  -webkit-box-shadow: 2px 2px 3px #40c0e9;	
+  -moz-box-shadow: 2px 2px 3px #40c0e9;
+  box-shadow: 2px 2px 3px #40c0e9;
+}
+
+#header .navigation li > ul > li {
+  background-color: transparent;
+  display: block;
+  padding: 3px 0;
+  border-top: 1px solid #d9d9d9;
+}
+
+#header .navigation li > ul > li:hover {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+#header .navigation li > ul > li:hover a {
+  color: #40c0e9;
+}
+
+#header .navigation li > ul > li:first-child {
+  border-top: none;
 }
 
 h2 {
