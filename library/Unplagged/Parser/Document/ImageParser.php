@@ -26,14 +26,18 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
       // init document
       $data["file"] = $file;
       $data["title"] = $file->getFilename();
-      $file->setExtension("tif");
-      $file->setLocation("temp/imagemagick");
+      
+      
+      $fileData = array('filename'=>$file->getId() . '.tif', 'extension' => 'tif', 'mimeType' =>'image/tiff' , 'location'=>'temp/imagemagick');
+      $tempFile = new Application_Model_File($fileData);
+      $tempFile->setId($file->getId());
+      
       $document = new Application_Model_Document($data);
       
       $parser = new Unplagged_Parser_Page_TesseractParser();
       // for loop over pages
 
-        $page = $parser->parseToPage($file, $language);
+        $page = $parser->parseToPage($tempFile, $language);
         $page->setPageNumber(1);
         $document->addPage($page);
         $this->_em->persist($page);
