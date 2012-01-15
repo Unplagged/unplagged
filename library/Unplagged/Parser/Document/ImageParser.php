@@ -9,6 +9,10 @@
  * @author Dominik Horb <dominik.horb@googlemail.com>
  */
 class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document_Parser{
+
+  public function __construct(){
+    $this->_em = Zend_Registry::getInstance()->entitymanager;
+  }
   
   public function parseToDocument(Application_Model_File $file, $language){
     try{
@@ -22,12 +26,15 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
       // init document
       $data["file"] = $file;
       $data["title"] = $file->getFilename();
-
+      $file->setExtension("tif");
+      $file->setLocation("temp/imagemagick");
       $document = new Application_Model_Document($data);
       
       $parser = new Unplagged_Parser_Page_TesseractParser();
       // for loop over pages
+
         $page = $parser->parseToPage($file, $language);
+        $page->setPageNumber(1);
         $document->addPage($page);
         $this->_em->persist($page);
 

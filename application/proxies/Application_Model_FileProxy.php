@@ -114,6 +114,18 @@ class Application_Model_FileProxy extends \Application_Model_File implements \Do
         return parent::setIsTarget($isTarget);
     }
 
+    public function setLocation($location)
+    {
+        $this->__load();
+        return parent::setLocation($location);
+    }
+
+    public function setExtension($extension)
+    {
+        $this->__load();
+        return parent::setExtension($extension);
+    }
+
 
     public function __sleep()
     {
