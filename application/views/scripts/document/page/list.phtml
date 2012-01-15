@@ -17,9 +17,9 @@ Document: <?php echo $this->document->getTitle(); ?>
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
     <td><a href="/document_page/show/id/<?php echo $page->getId(); ?>"><?php echo $page->getPageNumber(); ?></a></td>
     <td>
-          <a href="<?php echo "/document_page/de-hyphen/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('icons/text_padding_right.png'); ?>" title="<?php echo $this->translate("de-hyphen"); ?>" /></a>
-  <a href="<?php echo "/document_page/edit/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('icons/pencil.png'); ?>" title="<?php echo $this->translate("edit"); ?>" /></a>
-    <a href="<?php echo "/document_page/delete/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('icons/delete.png'); ?>" title="<?php echo $this->translate("delete"); ?>" /></a></td>
+          <a href="<?php echo "/document_page/de-hyphen/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('icon/text_padding_right.png'); ?>" title="<?php echo $this->translate("de-hyphen"); ?>" /></a>
+  <a href="<?php echo "/document_page/edit/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('icon/pencil.png'); ?>" title="<?php echo $this->translate("edit"); ?>" /></a>
+    <a href="<?php echo "/document_page/delete/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('icon/delete.png'); ?>" title="<?php echo $this->translate("delete"); ?>" /></a></td>
   </tr>
   <?php endforeach; ?>
 </table>

@@ -13,7 +13,7 @@
     ?>
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
     <td><a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
-    <td><a href="<?php echo "/document/delete/id/" . $document->getId(); ?>"><img class="icon" src="/icons/delete.png" title="<?php echo $this->translate("delete"); ?>" /></a></td>
+    <td><a href="<?php echo "/document/delete/id/" . $document->getId(); ?>"><img class="icon" src="/icon/delete.png" title="<?php echo $this->translate("delete"); ?>" /></a></td>
   </tr>
   <?php endforeach; ?>
 </table>
