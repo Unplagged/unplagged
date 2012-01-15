@@ -4,7 +4,7 @@ defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'staging'));
 
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../application'));
- echo APPLICATION_PATH;
+ 
 set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library'),
     get_include_path(),
