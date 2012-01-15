@@ -156,21 +156,6 @@ body {
   border-radius: 3px;
 }
 
-.document-page ol {
-	background:#EBECED url(/img/gutter.gif) 2.3em 0 repeat-y;
-	overflow:auto;
-	font-family:"Courier New",Courier,mono;
-	margin:0;
-	padding:0 0 0 3.1em;
-	color: black;
-	width:90%;
-}
-.document-page ol li {
-	background: white;
-	font-size:small;
-  padding-left: 3px;
-}
-
 #header h1 {
   background: url('../images/logo.png') no-repeat center center transparent;
   width: 182px;
@@ -456,9 +441,11 @@ a:hover {
 }
 
 .document-page {
-  border: 1px #000000 solid;
-  padding: 5px;
+  border: 1px #bbbbbb solid;
   margin: 10px 0;
+  -moz-box-shadow: 3px;
+  -webkit-box-shadow: 3px;
+  box-shadow: 3px;
 }
 
 .document-page .highlight {
@@ -485,6 +472,20 @@ a:hover {
 
 .document-page .page-line.empty label {
   margin-left: 30px;
+}
+
+.document-page ol {
+	background:#EBECED;
+	overflow:auto;
+	font-family:"Courier New",Courier,mono;
+	margin:0;
+	padding:0 0 0 3.1em;
+	width:90%;
+}
+.document-page ol li {
+	background: white;
+	font-size:small;
+  padding-left: 3px;
 }
 
 /* ==|== non-semantic helper classes ======================================== */
