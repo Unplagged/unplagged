@@ -25,7 +25,7 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
 
       $document = new Application_Model_Document($data);
       
-      $parser = Unplagged_Parser::factory('image/tif');
+      $parser = new Unplagged_Parser_Page_TesseractParser();
       // for loop over pages
         $page = $parser->parseToPage($file, $language);
         $document->addPage($page);
