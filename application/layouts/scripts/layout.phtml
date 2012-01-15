@@ -13,23 +13,22 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
     <?php echo $this->headMeta(); ?>
     <?php
     echo $this->headLink()
-        ->prependStylesheet($this->baseUrl() . '/resources/css/styles.css');
-    //	->appendStylesheet($this->baseUrl().'/css/navi_de.css')
+        ->prependStylesheet($this->baseUrl() . '/style/styles.css');
     ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <script src="<?php echo $this->baseUrl('/resources/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
+    <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
   </head>
   <body>
     <header id="main-header">
       <div id="settings-panel">
         <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
-          <div id="avatar"><img src="/resources/images/tmp_avatar.png" /></div>
+          <div id="avatar"><img src="/images/tmp_avatar.png" /></div>
           <div id="login-actions">
             <?php echo $this->translate("Welcome") . " " . $defaultNamespace->user->getUsername() . "!"; ?>
             <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
           </div>
           <div id="settings">
-            <img src="/resources/images/tmp_top_icons.png" />
+            <img src="/images/tmp_top_icons.png" />
           </div>
         <?php else: ?>
           <div id="login-actions">
@@ -90,7 +89,7 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
           </div>
         </div>
         <div id="sub">
-          <img src="/resources/images/tmp_submenu.png" alt="" />
+          <img src="/images/tmp_submenu.png" alt="" />
         </div>
 
       </div>
@@ -99,9 +98,9 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
       </footer>
     </div>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="<?php echo $this->baseUrl('/resources/js/libs/jquery-1.6.2.min.js'); ?>"><\/script>')</script>
-  <script defer src="<?php echo $this->baseUrl('/resources/js/plugins.js'); ?>"></script>
-  <script defer src="<?php echo $this->baseUrl('/resources/js/script.js'); ?>"></script>
+  <script>window.jQuery || document.write('<script src="<?php echo $this->baseUrl('/js/libs/jquery-1.6.2.min.js'); ?>"><\/script>')</script>
+  <script defer src="<?php echo $this->baseUrl('/js/plugins.js'); ?>"></script>
+  <script defer src="<?php echo $this->baseUrl('/js/script.js'); ?>"></script>
   <!--[if lt IE 7]>
   <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
   <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>

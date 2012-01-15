@@ -1,9 +1,11 @@
 <?php
 define('BASE_PATH', realpath(dirname(__FILE__) . '/../../'));
 
+//add directories that should be created here
+//make sure to include them in the right order, so that dependencies occur beforehand
 $directories = array(
-  'application' . DIRECTORY_SEPARATOR . 'storage',
-  'application' . DIRECTORY_SEPARATOR . 'files',
+  'application' . DIRECTORY_SEPARATOR . 'storage', //@deprecated
+  'application' . DIRECTORY_SEPARATOR . 'files', //@deprecated
   'data',
   'data' . DIRECTORY_SEPARATOR . 'uploads', 
   'temp',
