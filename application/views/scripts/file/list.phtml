@@ -16,13 +16,13 @@
     <td><a href="<?php echo $this->baseUrl('/image/index/id/' . $file->getId()); ?>"><?php echo $file->getFilename(); ?></a></td>
     <td><?php echo $file->getSize(); ?></td>
     <td><?php if($file->getIsTarget()) { ?>
-            <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>"><img class="icon" src="/icon/page_find.png" title="<?php echo $this->translate("unset target"); ?>" /></a>
+            <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page_find.png'); ?>" title="<?php echo $this->translate("unset target"); ?>" /></a>
           <?php } else { ?>
-            <a href="<?php echo "/file/set-target/id/" . $file->getId(); ?>"><img class="icon" src="/icon/page.png" title="<?php echo $this->translate("set target"); ?>" /></a>
+            <a href="<?php echo "/file/set-target/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page.png'); ?>" title="<?php echo $this->translate("set target"); ?>" /></a>
           <?php } ?> 
-            <a href="<?php echo "/file/parse/id/" . $file->getId(); ?>"><img class="icon" src="/icon/page_gear.png" title="<?php echo $this->translate("parse"); ?>" /></a>
-            <a href="<?php echo "/file/download/id/" . $file->getId(); ?>"><img class="icon" src="/icon/disk.png" title="<?php echo $this->translate("download"); ?>" /></a>
-            <a href="<?php echo "/file/delete/id/" . $file->getId(); ?>"><img class="icon" src="/icon/delete.png" title="<?php echo $this->translate("delete"); ?>" /></a>
+            <a href="<?php echo "/file/parse/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page_gear.png'); ?>" title="<?php echo $this->translate("parse"); ?>" /></a>
+            <a href="<?php echo "/file/download/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/disk.png'); ?>" title="<?php echo $this->translate("download"); ?>" /></a>
+            <a href="<?php echo "/file/delete/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("delete"); ?>" /></a>
 </td>
   </tr>
   <?php endforeach; ?>
