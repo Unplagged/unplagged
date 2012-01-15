@@ -54,6 +54,12 @@ class Application_Model_FileProxy extends \Application_Model_File implements \Do
         return parent::getId();
     }
 
+    public function setId($id)
+    {
+        $this->__load();
+        return parent::setId($id);
+    }
+
     public function getCreated()
     {
         $this->__load();
