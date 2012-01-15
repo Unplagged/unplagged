@@ -76,6 +76,7 @@ class Application_Model_File {
    * @Column(type="string", length=16)
    */
   private $extension;
+  
   /**
    * If the file is target or not
    * @var string The file is a target.
