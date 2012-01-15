@@ -156,6 +156,21 @@ body {
   border-radius: 3px;
 }
 
+.document-page ol {
+	background:#EBECED url(/img/gutter.gif) 2.3em 0 repeat-y;
+	overflow:auto;
+	font-family:"Courier New",Courier,mono;
+	margin:0;
+	padding:0 0 0 3.1em;
+	color: black;
+	width:90%;
+}
+.document-page ol li {
+	background: white;
+	font-size:small;
+  padding-left: 3px;
+}
+
 #header h1 {
   background: url('../images/logo.png') no-repeat center center transparent;
   width: 182px;
