@@ -172,4 +172,14 @@ class Application_Model_File {
   public function setIsTarget($isTarget){
     $this->isTarget = $isTarget;
   }    
+  
+  public function setLocation($location){
+    $this->location = $location;
+  }
+
+  public function setExtension($extension){
+    $this->extension = $extension;
+  }
+
+
 }

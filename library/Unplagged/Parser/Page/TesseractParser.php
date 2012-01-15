@@ -45,7 +45,6 @@ class Unplagged_Parser_Page_TesseractParser implements Unplagged_Parser_Page_Par
 
       return $page;
     }catch(InvalidArgumentException $e){
-      print_r($e);
       //parsing wasn't successful
       return null;
     }

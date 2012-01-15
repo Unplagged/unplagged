@@ -12,13 +12,13 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
   private $inputFilePath;
   private $outputFilePath;
   
-  public function __construct($inputFilePath, $outputFilePath, $imagemagickCall = 'convert'){
+  public function __construct($inputFilePath, $outputFilePath){
     $message = $this->checkForInvalidArguments($inputFilePath, $outputFilePath);
     
     if($message === false){
       $this->inputFilePath = $inputFilePath;
       $this->outputFilePath = $outputFilePath;
-      $this->imagemagickCall = $imagemagickCall;
+      $this->imagemagickCall = Zend_Registry::get('config')->parser->imagemagickPath;
     } else {
       throw new InvalidArgumentException($message);
     }
@@ -27,7 +27,7 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
   public function execute(){
     $output = array();
     $command = $this->imagemagickCall . ' ' . $this->inputFilePath . ' ' . $this->outputFilePath;
-
+    
     exec($command, $output);
     chmod($this->outputFilePath, 0755);
   }
