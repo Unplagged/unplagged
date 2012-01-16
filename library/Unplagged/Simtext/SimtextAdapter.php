@@ -14,8 +14,8 @@ class Unplagged_Simtext_SimtextAdapter{
 
     if($message === false){
       $this->inputFileLocation1 = $inputFileLocation1;
-	  $this->inputFileLocation2 = $inputFileLocation2;
-	  $this->outputFileLocation = $outputFileLocation;
+	    $this->inputFileLocation2 = $inputFileLocation2;
+	    $this->outputFileLocation = $outputFileLocation;
       $this->outputFile = $outputFile;
       //@todo it would probably be better to supply this also via a constructor argument
       //this would ensure the best independece from the rest of the application
@@ -33,10 +33,12 @@ class Unplagged_Simtext_SimtextAdapter{
    * The result should be a .txt file with the name that was provided to the constructor as the $outputFileName.
    */
   public function execute(){
-    //$output = array();
+    $output = array();
     $command = $this->simtextCall . ' ' . $this->inputFileLocation1 . ' ' . $this->inputFileLocation2;// . ' ' .$this->outputFileLocation;
 
-    exec($command, $outputFile);
+    exec($command, $output);
+    
+    return $output;
   }
 
   
@@ -62,5 +64,4 @@ class Unplagged_Simtext_SimtextAdapter{
   }
 
 }
-
 ?>

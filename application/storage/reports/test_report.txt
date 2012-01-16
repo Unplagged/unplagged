@@ -1,0 +1,1 @@
+File C:\xampp\htdocs\unplagged\application\storage\files\a.txt: 54 tokensFile C:\xampp\htdocs\unplagged\application\storage\files\b.txt: 33 tokensTotal: 87 tokensC:\xampp\htdocs\unplagged\application\storage\files\a.txt: line 1-1|C:\xampp\htdocs\unplagged\application\storage\files\b.txt: line 1-1[33]Lorem ipsum dolor sit amet, consectetu |Lorem ipsum dolor sit amet, consectetu
