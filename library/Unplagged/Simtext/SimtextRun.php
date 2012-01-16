@@ -29,20 +29,19 @@ class Unplagged_Simtext_SimtextRun{
 	  $inputFileLocation2 = $text2_path;
 	  $outputFileLocation = $report_path;
 	  
-	  // output of simtext will be saved in an array
-      $output = array();
-
 	  // report is creating with simtext
       $adapter = new Unplagged_Simtext_SimtextAdapter($inputFileLocation1, $inputFileLocation2, $outputFileLocation, $output);
-      //$adapter->execute();
-	
+      $result = $adapter->execute();
+      
+      var_dump($result);
+      die('hier');
 	  // try to read content from output array and save to a file
-	  file_put_contents($outputFileLocation, $output);
+	  file_put_contents($outputFileLocation, $result);
 	  
 	  // init file
 	  // 
        $data["size"] = filesize($outputFileLocation); 
-	   $data["mimetype"] = 'application/octet-stream';
+	     $data["mimetype"] = 'application/octet-stream';
        $data["filename"] = 'test_report.txt';
        $data["extension"] = 'txt';
        $data["location"] = 'storage/reports/';
