@@ -34,7 +34,7 @@ class Unplagged_Simtext_SimtextRun{
 
 	  // report is creating with simtext
       $adapter = new Unplagged_Simtext_SimtextAdapter($inputFileLocation1, $inputFileLocation2, $outputFileLocation, $output);
-      //$adapter->execute();
+      $adapter->execute();
 	
 	  // try to read content from output array and save to a file
 	  file_put_contents($outputFileLocation, $output);
@@ -47,10 +47,7 @@ class Unplagged_Simtext_SimtextRun{
        $data["extension"] = 'txt';
        $data["location"] = 'storage/reports/';
       //$data["title"] = $file->getFilename();
-	  
-	  // only content can be read --> but how will this be created in files?
-	  //$content = nl2br(file_get_contents($outputFileLocation));
-
+	
       $file = new Application_Model_File($data);
       //$this->_em->persist($file);
       //$this->_em->flush();

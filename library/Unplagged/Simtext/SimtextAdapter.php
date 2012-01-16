@@ -45,7 +45,7 @@ class Unplagged_Simtext_SimtextAdapter{
    * @param string $outputFileLocation
    * @return string|bool  False if the arguments are correct or an error message, if something went wrong.
    */
-  private function checkForInvalidArguments($inputFileLocation1, inputFileLocation2, $outputFileLocation){
+  private function checkForInvalidArguments($inputFileLocation1, $inputFileLocation2, $outputFileLocation){
     $message = false;
 
     if(!file_exists($inputFileLocation1)){
