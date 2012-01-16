@@ -1,109 +1,53 @@
 <?php
-$currentController = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
-$currentAction = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
-
 $defaultNamespace = new Zend_Session_Namespace('Default');
 ?>
-<!doctype html>
-<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-  <head>
-    <?php echo $this->headMeta(); ?>
+<?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace)); ?>
+
+
+
+<div id="page">
+  <header id="header" class="clearfix">
+    <h1 class="ir">Unplagged - Plagiarism Detection Cockpit</h1>
     <?php
-    echo $this->headLink()
-        ->prependStylesheet($this->baseUrl() . '/style/styles.css');
+    $container = $this->navigation()->getContainer();
+
+    if(Zend_Auth::getInstance()->hasIdentity()){
+      $container->addPage(array(
+        'label'=>'Edit profile',
+        'title'=>'Edit profile',
+        'module'=>'default',
+        'controller'=>'user',
+        'action'=>'edit',
+        'params'=>array(
+          'id'=>$defaultNamespace->user->getId()
+        )
+      ));
+    }
     ?>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
-  </head>
-  <body>
-    <header id="main-header">
-      <div id="settings-panel">
-        <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
-          <div id="avatar"><img src="/images/tmp_avatar.png" /></div>
-          <div id="login-actions">
-            <?php echo $this->translate("Welcome") . " " . $defaultNamespace->user->getUsername() . "!"; ?>
-            <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
-          </div>
-          <div id="settings">
-            <img src="/images/tmp_top_icons.png" />
-          </div>
-        <?php else: ?>
-          <div id="login-actions">
-            <?php echo $this->translate("You are not logged in."); ?>
-            <a href="/user/register"><?php echo $this->translate("Register now"); ?></a> 
-              <?php echo $this->translate('or'); ?> <a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
-          </div>
-        <?php endif; ?>
-      </div>
-    </header>
-    
-    <div id="page">
-      
-      <header id="header" class="clearfix">
-        <h1 class="ir">Unplagged - Plagiarism Detection Cockpit</h1>
-        
+    <?php echo $this->navigation()->menu(); ?>
+  </header>
+  <div id="content" class="clearfix">
+    <div class="main">
+      <h2><?php echo $this->escape($this->title); ?></h2>
+      <div id="main">
         <?php
-//        var_dump($this->navigation());
-        $container = $this->navigation()->getContainer();
-        
-        
-        if(Zend_Auth::getInstance()->hasIdentity()){
-          $container->addPage(array(
-            'label' => 'Edit profile',
-            'title' => 'Edit profile',
-            'module' => 'default',
-            'controller' => 'user',
-            'action' => 'edit',
-            'params'     => array(
-              'id' => $defaultNamespace->user->getId()
-            )
-          ));
+        if(!empty($this->flashMessages)){
+          echo '<div class="flash-messages">';
+
+          //@todo maybe switch to ul?
+          foreach($this->flashMessages as $key=>$value){
+            echo $this->translate($value) . "<br />";
+          }
+          echo '</div>';
         }
+
+        // content from each view, the rest of this page is global to all views
+        echo $this->layout()->content;
         ?>
-        
-        <?php echo $this->navigation()->menu(); ?>
-      </header>
-      
-      <div id="content" class="clearfix">
-        
-        <div class="main">
-          <h2><?php echo $this->escape($this->title); ?></h2>
-          <div id="main">
-            <?php
-            if(!empty($this->flashMessages)){
-              echo '<div class="flash-messages">';
-
-              //@todo maybe switch to ul?
-              foreach($this->flashMessages as $key=>$value){
-                echo $this->translate($value) . "<br />";
-              }
-              echo '</div>';
-            }
-
-            // content from each view, the rest of this page is global to all views
-            echo $this->layout()->content;
-            ?>
-          </div>
-        </div>
-        <div id="sub">
-          <img src="/images/tmp_submenu.png" alt="" />
-        </div>
-
       </div>
-      <footer>
-        <a href="">Impressum</a>
-      </footer>
     </div>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="<?php echo $this->baseUrl('/js/libs/jquery-1.6.2.min.js'); ?>"><\/script>')</script>
-  <script defer src="<?php echo $this->baseUrl('/js/plugins.js'); ?>"></script>
-  <script defer src="<?php echo $this->baseUrl('/js/script.js'); ?>"></script>
-  <!--[if lt IE 7]>
-  <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-  <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
-  <![endif]-->
-</body>
-</html>
+    <div id="sub">
+      <img src="/images/tmp_submenu.png" alt="" />
+    </div>
+  </div>
+  <?php echo $this->partial('partials/footer.phtml'); ?>
