@@ -4,7 +4,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-class Application_Model_Simtext 
+/*class Application_Model_Simtext 
 {
 	$protected $sim_id;
 	$protected $first_doc_id;
@@ -26,5 +26,5 @@ class Application_Model_Simtext_Mapper
 	public function save(Application_Model_Simtext $simtext);
 	public function find($id);
 	public function fetchAll();
-}
+}*/
 ?>
