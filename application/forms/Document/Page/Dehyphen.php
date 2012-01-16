@@ -33,6 +33,7 @@ class Application_Form_Document_Page_Dehyphen extends Zend_Form{
     $submitElement->setAttrib('class', 'submit');
     $submitElement->removeDecorator('DtDdWrapper');
 
+
     $this->addElements(array(
       $submitElement
         )
