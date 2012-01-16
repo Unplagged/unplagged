@@ -45,7 +45,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   protected function _initTranslate(){
     $registry = Zend_Registry::getInstance();
     $locale = new Zend_Locale('de_DE');
-    $translate = new Zend_Translate('csv', APPLICATION_PATH . '/../languages/de.csv', 'de');
+    $translate = new Zend_Translate('csv', BASE_PATH . '/data/languages/de.csv', 'de');
     //$translate->addTranslation(APPLICATION_PATH . '/../languages/de.csv', 'de'); //TODO: add automatically lang support
 
     $registry->set('Zend_Locale', $locale);
@@ -55,7 +55,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $translator = new Zend_Translate(
             array(
               'adapter'=>'array',
-              'content'=>APPLICATION_PATH . '/../resources/languages',
+              'content'=>BASE_PATH . '/data/resources/languages',
               'locale'=>$locale,
               'scan'=>Zend_Translate::LOCALE_DIRECTORY
             )

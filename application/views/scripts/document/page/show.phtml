@@ -7,5 +7,13 @@ Page number: <?php echo $this->page->getPageNumber(); ?><br />
 
 Content: <br />
 <div class="document-page">
-<?php echo $this->page->getContent(); ?>
+  <?php 
+  $lines = explode('<br />', $this->page->getContent());
+  
+  ?>
+  <ol>
+  <?php foreach($lines as $line): ?>
+    <li><?php echo $line; ?></li>
+  <?php endforeach; ?>
+</ol>
 </div>

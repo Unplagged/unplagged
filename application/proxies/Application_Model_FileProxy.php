@@ -54,6 +54,12 @@ class Application_Model_FileProxy extends \Application_Model_File implements \Do
         return parent::getId();
     }
 
+    public function setId($id)
+    {
+        $this->__load();
+        return parent::setId($id);
+    }
+
     public function getCreated()
     {
         $this->__load();
@@ -96,6 +102,12 @@ class Application_Model_FileProxy extends \Application_Model_File implements \Do
         return parent::getLocation();
     }
 
+    public function getAbsoluteLocation()
+    {
+        $this->__load();
+        return parent::getAbsoluteLocation();
+    }
+
     public function getIsTarget()
     {
         $this->__load();
@@ -106,6 +118,18 @@ class Application_Model_FileProxy extends \Application_Model_File implements \Do
     {
         $this->__load();
         return parent::setIsTarget($isTarget);
+    }
+
+    public function setLocation($location)
+    {
+        $this->__load();
+        return parent::setLocation($location);
+    }
+
+    public function setExtension($extension)
+    {
+        $this->__load();
+        return parent::setExtension($extension);
     }
 
 

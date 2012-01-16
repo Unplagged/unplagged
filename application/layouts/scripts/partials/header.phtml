@@ -1,0 +1,56 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+  <head>
+    <?php echo $this->headMeta(); ?>
+    <?php
+    echo $this->headLink()
+        ->prependStylesheet($this->baseUrl() . '/style/styles.css');
+    ?>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
+  </head>
+  <body>
+    <header id="main-header">
+      <div id="settings-panel">
+        <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
+          <div id="avatar"><img src="/images/tmp_avatar.png" /></div>
+          <div id="login-actions">
+            <?php echo $this->translate("Welcome") . " " . $this->defaultNamespace->user->getUsername() . "!"; ?>
+            <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
+          </div>
+          <div id="settings">
+            <img src="/images/tmp_top_icons.png" />
+          </div>
+        <?php else: ?>
+          <div id="login-actions">
+            <?php echo $this->translate("You are not logged in."); ?>
+            <a href="/user/register"><?php echo $this->translate("Register now"); ?></a> 
+            <?php echo $this->translate('or'); ?> <a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
+          </div>
+        <?php endif; ?>
+      </div>
+    </header>
+    <div id="page">
+      <header id="header" class="clearfix">
+        <h1 class="ir">Unplagged - Plagiarism Detection Cockpit</h1>
+        <?php
+        $container = $this->navigation()->getContainer();
+
+        if(Zend_Auth::getInstance()->hasIdentity()){
+          $container->addPage(array(
+            'label'=>'Edit profile',
+            'title'=>'Edit profile',
+            'module'=>'default',
+            'controller'=>'user',
+            'action'=>'edit',
+            'params'=>array(
+              'id'=>$this->defaultNamespace->user->getId()
+            )
+          ));
+        }
+        ?>
+        <?php echo $this->navigation()->menu(); ?>
+      </header>
