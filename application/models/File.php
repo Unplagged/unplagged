@@ -41,17 +41,10 @@ class Application_Model_File {
    * The name of the file.
    * @var string The filename.
    * 
-   * @Column(type="string", length=255)
+   * @Column(type="string", length=64)
    */
   private $filename;
 
-  /**
-   * @var string The name that can be used for display purposes instead of the real file name.
-   * 
-   * @Column(type="string", length=255)
-   */
-  private $displayName;
-  
   /**
    * The mimetype of the file.
    * @var string The mimetype.
@@ -178,12 +171,8 @@ class Application_Model_File {
     return $this->location;
   }
   
-  public function getDisplayName(){
-    return $this->displayName;
-  }
-  
   public function getAbsoluteLocation(){
-    return BASE_PATH . $this->location;
+    return BASE_PATH . DIRECTORY_SEPARATOR . $this->location;
   }
   
   public function getIsTarget(){
@@ -201,4 +190,6 @@ class Application_Model_File {
   public function setExtension($extension){
     $this->extension = $extension;
   }
+
+
 }
