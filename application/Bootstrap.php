@@ -38,6 +38,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $view->headTitle($defaultConfig['portalName']);
   }
 
+  
+  
   /**
    * Generate registry and initalize language support
    * @return Zend_Registry
@@ -111,6 +113,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     return $em;
   }
+  
+  protected function _initLogger() {
+    $this->bootstrap('Log');
+
+    if (!$this->hasPluginResource('Log')) {
+      throw new Zend_Exception('Log not enabled in config.ini');
+    }
+
+    $logger = $this->getResource('Log');
+    assert($logger != null);
+    Zend_Registry::set('log', $logger);
+}
   
   protected function _initNavigation(){
     

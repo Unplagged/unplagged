@@ -8,6 +8,8 @@ $directories = array(
   'application' . DIRECTORY_SEPARATOR . 'files', //@deprecated
   'data',
   'data' . DIRECTORY_SEPARATOR . 'uploads', 
+  'data' . DIRECTORY_SEPARATOR . 'logs',
+  'data' . DIRECTORY_SEPARATOR . 'cache',
   'temp',
   'temp' . DIRECTORY_SEPARATOR . 'ocr',
   'temp' . DIRECTORY_SEPARATOR . 'imagemagick'

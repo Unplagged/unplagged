@@ -53,7 +53,7 @@ class FileController extends Zend_Controller_Action{
         $data["mimetype"] = $adapter->getMimeType('filepath');
         $data["filename"] = !empty($newName) ? $newName . "." . $fileExt : $fileName;
         $data["extension"] = $fileExt;
-        $data["location"] = "application" . DIRECTORY_SEPARATOR . "storage" . DIRECTORY_SEPARATOR . "files";
+        $data["location"] = DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'uploads';
 
         $file = new Application_Model_File($data);
         $this->_em->persist($file);
@@ -61,6 +61,7 @@ class FileController extends Zend_Controller_Action{
 
         // prepare file for uploading
         $adapter->setDestination($file->getAbsoluteLocation());
+        
         $adapter->addFilter('Rename', array('target' => $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension()));
 
         if($adapter->receive()){
