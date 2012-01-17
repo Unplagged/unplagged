@@ -131,6 +131,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     if (!$this->hasPluginResource('Zend_Log')) {
       throw new Zend_Exception('Log not enabled in config.ini');
     }
+
     
     $logger = $this->getResource('Zend_Log');
     assert($logger !== null);

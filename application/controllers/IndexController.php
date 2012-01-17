@@ -12,7 +12,7 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-      Zend_Registry::get('log')->debug('Index');
+      Zend_Registry::get('Log')->debug('Index');
     }
 
 
