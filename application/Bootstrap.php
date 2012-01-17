@@ -128,12 +128,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   protected function _initLogger() {
     $this->bootstrap('Zend_Log');
 
-    if (!$this->hasPluginResource('Zend_Log')) {
+    if (!$this->hasPluginResource('Log')) {
       throw new Zend_Exception('Log not enabled in config.ini');
     }
 
     
-    $logger = $this->getResource('Zend_Log');
+    $logger = $this->getResource('Log');
     assert($logger !== null);
     Zend_Registry::set('log', $logger);
   }
