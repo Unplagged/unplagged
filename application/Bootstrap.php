@@ -126,7 +126,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * @todo rotate logfiles 
    */
   protected function _initLogger() {
-    $this->bootstrap('Zend_Log');
+    $this->bootstrap('Log');
 
     if (!$this->hasPluginResource('Log')) {
       throw new Zend_Exception('Log not enabled in config.ini');
