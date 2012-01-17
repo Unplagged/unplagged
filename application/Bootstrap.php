@@ -114,16 +114,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     return $em;
   }
   
-  protected function _initLogger() {
-    $this->bootstrap('Log');
+  protected function _initLogger() {/*
+    $this->bootstrap('Zend_Log');
 
     if (!$this->hasPluginResource('Log')) {
       throw new Zend_Exception('Log not enabled in config.ini');
     }
-
-    $logger = $this->getResource('Log');
-    assert($logger != null);
-    Zend_Registry::set('log', $logger);
+*/$writer = new Zend_Log_Writer_Stream(BASE_PATH . "/data/logs/unplagged.log");
+    $logger = new Zend_Log($writer);
+ //   $logger = $this->getResource('Log');
+   // assert($logger != null);
+    Zend_Registry::set('Log', $logger);
 }
   
   protected function _initNavigation(){

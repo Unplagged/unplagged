@@ -27,7 +27,7 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
   public function execute(){
     $output = array();
     $command = $this->imagemagickCall . ' ' . $this->inputFilePath . ' ' . $this->outputFilePath;
-    
+    //@todo: escapeshellcmd
     exec($command, $output);
     chmod($this->outputFilePath, 0755);
   }
