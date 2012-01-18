@@ -8,11 +8,12 @@
 class GoogleresultsController extends Zend_Controller_Action
 {
     
-    public function indexAction()
+    public function resultsAction()
     {
         // action body
-        $resultForm = new Application_Form_Google_Results;
-        $this->view->resultForm = $resultForm;
+        //$resultForm = new Application_Form_Google_Results;
+        //$this->view->resultForm = $resultForm;
+        return "";
     }
      
  }
