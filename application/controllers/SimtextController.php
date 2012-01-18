@@ -44,7 +44,7 @@ class SimtextController extends Zend_Controller_Action
 				$report_path = APPLICATION_PATH . DIRECTORY_SEPARATOR . $reportDirectory. "$report_name";
 				
 				// create file in report directory
-				$reportfile = fopen($report_path, 'w') or die("can't open file");
+				//$reportfile = fopen($report_path, 'w') or die("can't open file");
 				//$reporter_name = "test.txt";
 				$this->_helper->flashMessenger->addMessage($file1_path);
 				$this->_helper->flashMessenger->addMessage($file2_path);
@@ -65,7 +65,7 @@ class SimtextController extends Zend_Controller_Action
 				  $this->_helper->redirector('compare', 'simtext');
 				  
 				  // close file stream
-				  fclose($reportfile);
+				  //fclose($reportfile);
 				}
 			}
 			else{
