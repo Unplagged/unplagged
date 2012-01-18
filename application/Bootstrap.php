@@ -38,6 +38,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $view->headTitle($defaultConfig['portalName']);
   }
 
+  
+  
   /**
    * Generate registry and initalize language support
    * @return Zend_Registry
@@ -45,7 +47,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   protected function _initTranslate(){
     $registry = Zend_Registry::getInstance();
     $locale = new Zend_Locale('de_DE');
-    $translate = new Zend_Translate('csv', APPLICATION_PATH . '/../languages/de.csv', 'de');
+    $translate = new Zend_Translate('csv', BASE_PATH . '/data/languages/de.csv', 'de');
     //$translate->addTranslation(APPLICATION_PATH . '/../languages/de.csv', 'de'); //TODO: add automatically lang support
 
     $registry->set('Zend_Locale', $locale);
@@ -55,7 +57,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $translator = new Zend_Translate(
             array(
               'adapter'=>'array',
-              'content'=>APPLICATION_PATH . '/../resources/languages',
+              'content'=>BASE_PATH . '/data/resources/languages',
               'locale'=>$locale,
               'scan'=>Zend_Translate::LOCALE_DIRECTORY
             )
@@ -112,6 +114,34 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     return $em;
   }
   
+  /**
+   * Sets the logger inside the registry, so that it can be called via:
+   * 
+   * <code>Zend_Registry::get('log')->crit('Critical');</code>
+   * 
+   * The settings are provided inside the log.ini file.
+   * 
+   * This function can not be named _initLog, because this creates a conflict with Zend.
+   * 
+   * @todo rotate logfiles 
+   */
+  protected function _initLogger() {/*
+    $this->bootstrap('Zend_Log');
+
+    if (!$this->hasPluginResource('Zend_Log')) {
+      throw new Zend_Exception('Log not enabled in config.ini');
+    }
+
+*/$writer = new Zend_Log_Writer_Stream(BASE_PATH . "/data/logs/unplagged.log");
+    $logger = new Zend_Log($writer);
+   //   $logger = $this->getResource('Log');
+   // assert($logger != null);
+    Zend_Registry::set('Log', $logger);
+  }
+  
+  /**
+   * 
+   */
   protected function _initNavigation(){
     
     $config = array(
