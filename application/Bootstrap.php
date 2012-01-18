@@ -180,7 +180,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'title' => 'Documents',
         'module' => 'default',
         'controller' => 'document',
-        'action' => 'list'
+        'action' => 'list',
+        'pages' => array(
+          array(
+            'label' => 'Simtext',
+            'title' => 'Simtext',
+            'module' => 'default',
+            'controller' => 'simtext',
+            'action' => 'index'
+          )
+        )
       ), array(
         'label' => 'Suche',
         'title' => 'Suche',

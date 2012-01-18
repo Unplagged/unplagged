@@ -10,7 +10,7 @@ class Application_Form_Simtext_Analyse extends Zend_Form
         
         $submit->setLabel('Text analyse');
         
-        $this->addElements(array($searchinput, $submit ));
+        $this->addElements(array($submit ));
      }
 }
 
