@@ -11,7 +11,7 @@ class Application_Form_Google_Results extends Zend_Form
       /*  $this->setMethod('GET');
         $this->setAction("http://www.google.de/search");
         //$this->setAttrib('target', '_self');
-          $this->setAttrib('target', '../../views/scripts/googleresultsiframe/');
+          $this->setAttrib('target', '../../views/scripts/');
 
 
         $searchinput = new Zend_Form_Element_Text('q');
@@ -22,19 +22,6 @@ class Application_Form_Google_Results extends Zend_Form
         $submit->setLabel('Google Suche');
         
         $this->addElements(array($searchinput, $submit ));*/
-         ?>
-
-            <iframe src="<?= $this->url(array(
-    'module'=>'Results',
-    'controller'=>'Googleresults',
-    'action'=>'index'),
-    'default', true); ?>  ">
-
-    <?= $this->render('../views/scripts/google/googleresults/index.phtml'); ?>
-</iframe>
-    <?php
-
-
      }
      
     /* public function indexAction(){
