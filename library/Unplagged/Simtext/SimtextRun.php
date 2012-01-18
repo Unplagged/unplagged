@@ -33,18 +33,21 @@ class Unplagged_Simtext_SimtextRun{
       $adapter = new Unplagged_Simtext_SimtextAdapter($inputFileLocation1, $inputFileLocation2, $outputFileLocation, $output);
 
       $result = $adapter->execute();
-      
+      //$result = explode("|",$result);
       var_dump($result);
-      
-
+      //die();
 	  // try to read content from output array and save to a file
-	  file_put_contents($outputFileLocation, $result);
-	  //fwrite($outputFileLocation, $result);
-	  
+	  $reportfile = fopen($report_path, 'w') or die("can't open file");
+	  //file_put_contents($outputFileLocation, $result);
+	  foreach($result as $value)
+	  {
+		fwrite($reportfile,$value . "\r\n");
+	  }
+	  fclose($reportfile);
 	  // init file
 	  // 
        $data["size"] = filesize($outputFileLocation); 
-	     $data["mimetype"] = 'application/octet-stream';
+	   $data["mimetype"] = 'application/octet-stream';
        $data["filename"] = 'test_report.txt';
        $data["extension"] = 'txt';
        $data["location"] = 'storage/reports/';
@@ -53,8 +56,6 @@ class Unplagged_Simtext_SimtextRun{
       $file = new Application_Model_File($data);
       //$this->_em->persist($file);
       //$this->_em->flush();
-	  
-	  //chmod($report_path, 0755);
 	  
       return $file;
 	  //return $outputFileLocation;

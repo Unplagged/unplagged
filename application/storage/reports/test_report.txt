@@ -1,1 +1,27 @@
-File C:\xampp\htdocs\unplagged\application\storage\files\a.txt: 54 tokensFile C:\xampp\htdocs\unplagged\application\storage\files\b.txt: 33 tokensTotal: 87 tokensC:\xampp\htdocs\unplagged\application\storage\files\a.txt: line 1-1|C:\xampp\htdocs\unplagged\application\storage\files\b.txt: line 1-1[33]Lorem ipsum dolor sit amet, consectetu |Lorem ipsum dolor sit amet, consectetu
+File C:\xampp\htdocs\unplagged\application\storage\files\a.txt: 268 tokens
+File C:\xampp\htdocs\unplagged\application\storage\files\b.txt: 397 tokens
+Total: 665 tokens
+
+C:\xampp\htdocs\unplagged\application\storage\files\a.txt: line 3-8|C:\xampp\htdocs\unplagged\application\storage\files\b.txt: line 3-8[72]
+# $Id: READ.ME,v 2.9 2008/09/23 09:07: |# $Id: READ_ME,v 2.7 2008/09/23 09:07:
+                                       |
+These programs test for similar (or eq |These programs test for similar (or eq
+files and can be used to detect common |files and can be used to detect common
+Checkers are available for C, Java, Pa |Checkers are available for C, Java, Pa
+natural text.                          |natural text.
+
+C:\xampp\htdocs\unplagged\application\storage\files\a.txt: line 27-34|C:\xampp\htdocs\unplagged\application\storage\files\b.txt: line 44-51[49]
+     Dick Grune                        |     Dick Grune
+     Vrije Universiteit                |     Vrije Universiteit
+     de Boelelaan 1081                 |     de Boelelaan 1081
+     1081 HV  Amsterdam                |     1081 HV  Amsterdam
+     the Netherlands                   |     the Netherlands
+     email: dick@cs.vu.nl              |     email: dick@cs.vu.nl
+     ftp://ftp.cs.vu.nl/pub/dick       |     ftp://ftp.cs.vu.nl/pub/dick
+     http://www.cs.vu.nl/~dick         |     http://www.cs.vu.nl/~dick
+
+C:\xampp\htdocs\unplagged\application\storage\files\a.txt: line 1-3|C:\xampp\htdocs\unplagged\application\storage\files\b.txt: line 1-3[25]
+# This file is part of the software si |# This file is part of the software si
+# Written by Dick Grune, Vrije Univers |# Written by Dick Grune, Vrije Univers
+# $Id: READ.ME,v 2.9 2008/09/23 09:07: |# $Id: READ_ME,v 2.7 2008/09/23 09:07:
+

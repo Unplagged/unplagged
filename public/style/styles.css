@@ -489,6 +489,10 @@ a:hover {
   padding-left: 3px;
 }
 
+.document-page .stopword{
+  color:#C9C9C9;
+}
+
 /* ==|== non-semantic helper classes ======================================== */
 .ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; }
 .ir br { display: none; }
