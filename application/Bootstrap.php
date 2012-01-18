@@ -151,6 +151,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module' => 'default',
         'controller' => 'document',
         'action' => 'list'
+      ), array(
+        'label' => 'Suche',
+        'title' => 'Suche',
+        'module' => 'default',
+        'controller' => 'googlesearch',
+        'action' => 'index'
       )
     );
     
