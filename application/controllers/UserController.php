@@ -146,5 +146,42 @@ class UserController extends Zend_Controller_Action{
       $this->view->profileForm = $profileForm;
     }
   }
+  
+  /**
+	 * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
+	 * @param String from If defined it selects only users of a specific rank.
+	 */
+	public function autocompleteNamesAction()
+	{
+		$search_string = $this->_getParam('term');
+		// user ids to skip
+		$skipIds = $this->_getParam('skip');
+				
+		// no self select possible
+		//$skipIds .= ", " . $this->_defaultNamespace->user->getId();
+		if(substr($skipIds, 0, 1) == ",")
+		{
+			$skipIds = substr($skip_userids, 1);
+		}
+		
+		if($skipIds != "")
+		{
+			$skipIds = " AND u.id NOT IN (" . $skipIds . ")";
+		}
+		 
+		$qb = $this->_em->createQueryBuilder();
+		$qb->add('select', 	"CONCAT(CONCAT(u.firstname, ' '), u.lastname) AS name, u.id AS value")
+		->add('from', 	'Application_Model_User u')
+		->where("CONCAT(CONCAT(u.firstname, ' '), u.lastname) LIKE '%" . $search_string . "%' " . $skipIds);
+		$qb->setMaxResults(5);
+
+		$dbresults = $qb->getQuery()->getResult();
+$results = array();
+		foreach ($dbresults as $key => $value)
+		{
+      $results[] = $value;
+    }
+		$this->_helper->json($results);
+	}
 
 }

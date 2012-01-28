@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File for class {@link CaseController}.
  */
@@ -20,18 +21,18 @@ class CaseController extends Zend_Controller_Action{
   }
 
   public function indexAction(){
-     $this->_helper->redirector('list', 'case');
+    $this->_helper->redirector('list', 'case');
   }
 
   public function createAction(){
-    $createForm = new Application_Form_Case_Create();
-    
+    $createForm = new Application_Form_Case_Modify();
+
     if($this->_request->isPost()){
       $this->handleCreationData($createForm);
     }
     $this->view->createForm = $createForm;
   }
-  
+
   public function listAction(){
     $query = $this->_em->createQuery('SELECT c FROM Application_Model_Case c');
     $cases = $query->getResult();
@@ -39,12 +40,42 @@ class CaseController extends Zend_Controller_Action{
     $this->view->listCases = $cases;
   }
 
-  private function handleCreationData(Application_Form_Case_Create $createForm){
+  private function handleCreationData(Application_Form_Case_Modify $createForm){
     $formData = $this->_request->getPost();
 
     if($createForm->isValid($formData)){
       $case = new Application_Model_Case($formData['name'], $formData['alias']);
 
+      // add the collaborators
+      $case->clearCollaborators();
+      if(!empty($formData["collaborator"])){
+        foreach($formData["collaborator"] as $key=>$value){
+          $userId = preg_replace('/[^0-9]/', '', $value);
+          $collaborator = $this->_em->find('Application_Model_User', $userId);
+          $case->addReviewer($collaborator);
+        }
+      }
+
+      // add the tags
+      $case->clearTags();
+      if(!empty($formData["tags"])){
+        foreach($formData["tags"] as $key=>$value){
+          $tagId = preg_replace('/[^0-9]/', '', $value);
+          $tag = $this->_em->find('Application_Model_Tag', $tagId);
+          if(!$tag){
+            if(substr($value, 0, 4) == "true"){
+              $value = substr($value, 4);
+            }else{
+              $value = substr($value, 5);
+            }
+
+            $tag = new Application_Model_Tag();
+            $tag->setTitle($value);
+            $this->_em->persist($tag);
+          }
+          $case->addTag($tag);
+        }
+      }
       // write back to persistence manager and flush it
       $this->_em->persist($case);
       $this->_em->flush();
