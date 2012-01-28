@@ -73,10 +73,30 @@ class Application_Model_Case{
    *      )
    */
   private $files;
+  
+  /**
+   * @ManyToMany(targetEntity="Application_Model_Tag")
+   * @JoinTable(name="case_has_tag",
+   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="tag_id", referencedColumnName="id")}
+   *      )
+   */
+  private $tags;
+  
+    /**
+   * @ManyToMany(targetEntity="Application_Model_User")
+   * @JoinTable(name="case_has_collaborator",
+   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")}
+   *      )
+   */
+  private $collaborators;
 
   public function __construct($name, $alias){
     $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
     $this->files = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->collaborators = new \Doctrine\Common\Collections\ArrayCollection();
     $this->name = $name;
     $this->alias = $alias;
   }
@@ -126,6 +146,38 @@ class Application_Model_Case{
   
   public function getCreated(){
     return $this->created;
+  }
+  
+  public function addTag(Application_Model_Tag $tag){
+    return $this->tags->add($tag);
+  }
+  
+  public function removeTag(Application_Model_Tag $tag){
+    return $this->tags->removeElement($tag);
+  }
+  
+  public function getTags(){
+    return $this->tags ;
+  }
+  
+  public function clearTags(){
+    $this->tags->clear();
+  }
+  
+  public function addCollaborator(Application_Model_User $user){
+    return $this->collaborators->add($tag);
+  }
+  
+  public function removeCollaborator(Application_Model_User $user){
+    return $this->collaborators->removeElement($tag);
+  }
+  
+  public function getCollaborators(){
+    return $this->collaborators;
+  }
+  
+  public function clearCollaborators(){
+    $this->collaborators->clear();
   }
   
 
