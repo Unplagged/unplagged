@@ -23,16 +23,19 @@
   <![endif]-->
   </head>
   <body>
+    <?php
+    ?>
     <header id="main-header">
       <div id="settings-panel">
         <div class="content">
           <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
             <div id="avatar"><img src="/images/tmp_avatar.png" /></div>
             <div id="logout-actions">
-              <?php echo $this->translate("Welcome") . " " . $this->defaultNamespace->user->getUsername() . "!"; ?>
+              <?php echo $this->translate("Welcome") . " " . $this->me->getUsername() . "!"; ?>
               <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
             </div>
             <div id="settings">
+              <?php echo $this->translate("Current case"); ?> <div id="current-case-field"><input type="text" name="current-case" id="current-case" <?php if($this->me->getCurrentCase() instanceof Application_Model_Case) { echo " value=\"" . $this->me->getCurrentCase()->getAlias() . "\""; } ?> /><a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>
               <img src="/images/tmp_top_icons.png" />
             </div>
           <?php else: ?>
@@ -61,7 +64,7 @@
             'controller'=>'user',
             'action'=>'edit',
             'params'=>array(
-              'id'=>$this->defaultNamespace->user->getId()
+              'id'=>$this->me->getId()
             )
           ));
         }

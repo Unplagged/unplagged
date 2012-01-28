@@ -39,6 +39,23 @@ class CaseController extends Zend_Controller_Action{
 
     $this->view->listCases = $cases;
   }
+  
+  public function autocompleteAliasAction() {
+    $search_string = $this->_getParam('term');
+    
+    $qb = $this->_em->createQueryBuilder();
+    $qb->add('select', "c.id AS value, c.alias AS label")
+        ->add('from', 'Application_Model_Case c')
+        ->where("c.alias LIKE '%" . $search_string . "%'");
+    $qb->setMaxResults(5);
+
+    $dbresults = $qb->getQuery()->getResult();
+    $results = array();
+    foreach($dbresults as $key=>$value){
+      $results[] = $value;
+    }
+    $this->_helper->json($results);
+  }
 
   private function handleCreationData(Application_Form_Case_Modify $createForm){
     $formData = $this->_request->getPost();

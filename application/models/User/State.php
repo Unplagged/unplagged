@@ -23,7 +23,7 @@ class Application_Model_User_State{
    * 
    * @Id @GeneratedValue @Column(type="integer")
    */
-  private $id;
+  protected $id;
 
   /**
    * A title for the user state.
@@ -31,7 +31,7 @@ class Application_Model_User_State{
    * 
    * @Column(type="string", unique="true", length=32)
    */
-  private $title;
+  protected $title;
 
   /**
    * A description for the user state.
@@ -39,7 +39,7 @@ class Application_Model_User_State{
    * 
    * @Column(type="string", length=256)
    */
-  private $description;
+  protected $description;
 
   public function __construct($data = array()){
     if(isset($data["title"])){

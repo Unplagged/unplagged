@@ -23,7 +23,7 @@ class Application_Model_User{
    * 
    * @Id @GeneratedValue @Column(type="integer")
    */
-  private $id;
+  protected $id;
 
   /**
    * The date when the user registered.
@@ -31,7 +31,7 @@ class Application_Model_User{
    * 
    * @Column(type="datetime")
    */
-  private $created;
+  protected $created;
 
   /**
    * The username, the user account was modified.
@@ -39,7 +39,7 @@ class Application_Model_User{
    * 
    * @Column(type="datetime")
    */
-  private $updated;
+  protected $updated;
 
   /**
    * The username, the user defined as an alias for the account.
@@ -47,7 +47,7 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=32, unique=true)
    */
-  private $username;
+  protected $username;
 
   /**
    * The password the user set up to login to the private area.
@@ -55,7 +55,7 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=32)
    */
-  private $password;
+  protected $password;
 
   /**
    * The email the user set up to login to the private area.
@@ -63,7 +63,7 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=32, unique=true)
    */
-  private $email;
+  protected $email;
 
   /**
    * The users firstname.
@@ -71,7 +71,7 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=64, nullable=true)
    */
-  private $firstname;
+  protected $firstname;
 
   /**
    * The users lastname.
@@ -79,7 +79,7 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=64, nullable=true)
    */
-  private $lastname;
+  protected $lastname;
 
   /**
    * The users registration hash, used to verify the account.
@@ -87,13 +87,19 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=32, unique=true)
    */
-  private $verificationHash;
+  protected $verificationHash;
 
   /**
    * @ManyToOne(targetEntity="Application_Model_User_State")
    * @JoinColumn(name="user_state_id", referencedColumnName="id")
    */
-  private $state;
+  protected $state;
+  
+    /**
+   * @ManyToOne(targetEntity="Application_Model_Case")
+   * @JoinColumn(name="current_case_id", referencedColumnName="id")
+   */
+  protected $currentCase;
 
   /**
    * Method auto-called when object is persisted to database for the first time.
@@ -193,5 +199,16 @@ class Application_Model_User{
 
   public function setLastname($lastname){
     $this->lastname = $lastname;
+  }
+  
+  public function getCurrentCase(){
+    return $this->currentCase;
+  }
+
+  public function setCurrentCase($currentCase){
+    $this->currentCase = $currentCase;
+  }
+    public function unsetCurrentCase(){
+    $this->currentCase = null;
   }
 }

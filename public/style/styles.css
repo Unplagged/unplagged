@@ -716,6 +716,23 @@ a:hover {
 	cursor: pointer;
 }
 
+#current-case-field {
+  display: inline;
+  width: 200px;
+  padding: 1px 3px 1px;
+	text-decoration: none;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border: 1px solid #c0c0c0;
+}
+#current-case-field input {
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 9pt;
+}
+
+
 
 /* ==|== non-semantic helper classes ======================================== */
 .ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; }

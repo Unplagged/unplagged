@@ -108,7 +108,7 @@ class UserController extends Zend_Controller_Action{
   public function editAction(){
     $userId = preg_replace('/[^0-9]/', '', $this->getRequest()->getParam('id'));
     // if either the user is not logged in or no valid user id is defined
-    if(empty($userId) || !$this->_defaultNamespace->user){
+    if(empty($userId) || !$this->_defaultNamespace->userId){
       $this->_helper->redirector('index', 'index');
     }
 
@@ -116,7 +116,7 @@ class UserController extends Zend_Controller_Action{
     if(empty($user)){
       $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
       $this->_helper->redirector('index', 'index');
-    }elseif($this->_defaultNamespace->user->getId() != $userId){
+    }elseif($this->_defaultNamespace->userId != $userId){
       $this->_helper->flashMessenger->addMessage('No permission to edit other users.');
       $this->_helper->redirector('index', 'index');
     }else{
@@ -146,42 +146,68 @@ class UserController extends Zend_Controller_Action{
       $this->view->profileForm = $profileForm;
     }
   }
-  
-  /**
-	 * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
-	 * @param String from If defined it selects only users of a specific rank.
-	 */
-	public function autocompleteNamesAction()
-	{
-		$search_string = $this->_getParam('term');
-		// user ids to skip
-		$skipIds = $this->_getParam('skip');
-				
-		// no self select possible
-		//$skipIds .= ", " . $this->_defaultNamespace->user->getId();
-		if(substr($skipIds, 0, 1) == ",")
-		{
-			$skipIds = substr($skip_userids, 1);
-		}
-		
-		if($skipIds != "")
-		{
-			$skipIds = " AND u.id NOT IN (" . $skipIds . ")";
-		}
-		 
-		$qb = $this->_em->createQueryBuilder();
-		$qb->add('select', 	"CONCAT(CONCAT(u.firstname, ' '), u.lastname) AS name, u.id AS value")
-		->add('from', 	'Application_Model_User u')
-		->where("CONCAT(CONCAT(u.firstname, ' '), u.lastname) LIKE '%" . $search_string . "%' " . $skipIds);
-		$qb->setMaxResults(5);
 
-		$dbresults = $qb->getQuery()->getResult();
-$results = array();
-		foreach ($dbresults as $key => $value)
-		{
+  public function setCurrentCaseAction(){
+    $caseId = preg_replace('/[^0-9]/', '', $this->getRequest()->getParam('case'));
+
+    if($caseId){
+      $case = $this->_em->getRepository('Application_Model_Case')->findOneById($caseId);
+      if($case){        
+        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+        $user->setCurrentCase($case);
+        
+        $this->_em->persist($user);
+        $this->_em->flush();
+        }
+    }
+
+    $result["caseId"] = $caseId;
+    $result["response"] = "200";
+    $this->_helper->json($result);
+  }
+
+  public function resetCurrentCaseAction(){
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    
+    $user->unsetCurrentCase();
+    $this->_em->persist($user);
+    $this->_em->flush();
+    
+    $result["response"] = "200";
+    $this->_helper->json($result);
+  }
+
+  /**
+   * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
+   * @param String from If defined it selects only users of a specific rank.
+   */
+  public function autocompleteNamesAction(){
+    $search_string = $this->_getParam('term');
+    // user ids to skip
+    $skipIds = $this->_getParam('skip');
+
+    // no self select possible
+    //$skipIds .= ", " . $this->_defaultNamespace->userId;
+    if(substr($skipIds, 0, 1) == ","){
+      $skipIds = substr($skip_userids, 1);
+    }
+
+    if($skipIds != ""){
+      $skipIds = " AND u.id NOT IN (" . $skipIds . ")";
+    }
+
+    $qb = $this->_em->createQueryBuilder();
+    $qb->add('select', "CONCAT(CONCAT(u.firstname, ' '), u.lastname) AS name, u.id AS value")
+        ->add('from', 'Application_Model_User u')
+        ->where("CONCAT(CONCAT(u.firstname, ' '), u.lastname) LIKE '%" . $search_string . "%' " . $skipIds);
+    $qb->setMaxResults(5);
+
+    $dbresults = $qb->getQuery()->getResult();
+    $results = array();
+    foreach($dbresults as $key=>$value){
       $results[] = $value;
     }
-		$this->_helper->json($results);
-	}
+    $this->_helper->json($results);
+  }
 
 }

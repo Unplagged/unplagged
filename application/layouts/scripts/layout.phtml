@@ -1,7 +1,10 @@
 <?php
 $defaultNamespace = new Zend_Session_Namespace('Default');
+$em = Zend_Registry::getInstance()->entitymanager;
+$me = $em->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
+
 ?>
-<?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace)); ?>
+<?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace, 'me'=>$me)); ?>
       <div id="content" class="clearfix">
 
         <div class="main">

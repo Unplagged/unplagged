@@ -15,7 +15,7 @@
 class Application_Model_Case{
 
   /** @Id @GeneratedValue @Column(type="integer")  */
-  private $id;
+  protected $id;
 
   /**
    * The "real" name of the case, under which it will get published later on.
@@ -24,7 +24,7 @@ class Application_Model_Case{
    * 
    * @Column(type="string") 
    */
-  private $name = '';
+  protected $name = '';
 
   /**
    * The alias is used to show everyone who doesn't have the permission to see the real case name.
@@ -33,12 +33,12 @@ class Application_Model_Case{
    * 
    * @Column(type="string") 
    */
-  private $alias = '';
+  protected $alias = '';
 
   /**
    * @var string  
    */
-  private $state = '';
+  protected $state = '';
 
   /**
    * The date when the document was created.
@@ -46,7 +46,7 @@ class Application_Model_Case{
    * 
    * @Column(type="datetime")
    */
-  private $created;
+  protected $created;
 
   /**
    * The date when the document was updated the last time.
@@ -54,7 +54,7 @@ class Application_Model_Case{
    * 
    * @Column(type="datetime", nullable=true)
    */
-  private $updated;
+  protected $updated;
 
   /**
    * @ManyToMany(targetEntity="Application_Model_Document")
@@ -63,7 +63,7 @@ class Application_Model_Case{
    *      inverseJoinColumns={@JoinColumn(name="document_id", referencedColumnName="id")}
    *      )
    */
-  private $documents;
+  protected $documents;
 
   /**
    * @ManyToMany(targetEntity="Application_Model_File")
@@ -72,7 +72,7 @@ class Application_Model_Case{
    *      inverseJoinColumns={@JoinColumn(name="file_id", referencedColumnName="id")}
    *      )
    */
-  private $files;
+  protected $files;
   
   /**
    * @ManyToMany(targetEntity="Application_Model_Tag")
@@ -81,7 +81,7 @@ class Application_Model_Case{
    *      inverseJoinColumns={@JoinColumn(name="tag_id", referencedColumnName="id")}
    *      )
    */
-  private $tags;
+  protected $tags;
   
     /**
    * @ManyToMany(targetEntity="Application_Model_User")
@@ -90,7 +90,7 @@ class Application_Model_Case{
    *      inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")}
    *      )
    */
-  private $collaborators;
+  protected $collaborators;
 
   public function __construct($name, $alias){
     $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
