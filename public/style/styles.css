@@ -342,9 +342,7 @@ table.default th {
   text-align: left;
   padding: 8px 5px 8px 15px;
   font-weight: bold;
-  
-      text-align: left;
-    text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+      text-shadow: 0 1px 0 rgba(255,255,255,.5); 
     border-bottom: 1px solid #ccc;
     background-color: #eee;
     background-image: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#eee));
@@ -412,12 +410,12 @@ a:hover {
   margin: 0;
 }
 
-.zend_form  dl {
-  margin: 15px 0 0 15px;
+.zend_form dt {
+  margin: 5px 0 2px 0;
 }
 
 .zend_form label {
-  font-size: 11pt;
+  font-weight: normal;
 }
 .zend_form input[type='text'],
 .zend_form input[type='password'],
@@ -427,14 +425,15 @@ a:hover {
 {
   font-family: Arial, sans-serif;
   background: #ffffff;
-  width: 350px;
+  max-width: 450px;
+  width: 90%;
   padding: 3px 5px 3px;
   text-decoration: none;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border: 1px solid #c0c0c0;
   position: relative;
-  font-size: 11pt;
+  font-size: 10pt;
   margin-bottom: 5px;
 }
 .zend_form input[type='file']
@@ -460,7 +459,7 @@ a:hover {
 .zend_form ul.errors {
   color: red;
   background-color: #ffedf1;
-  margin: 0 0 5px 0;
+  margin: 0 20px 5px 0;
   padding: 3px;
 }
 
@@ -471,17 +470,55 @@ a:hover {
 }
 
 .zend_form fieldset {
+  font-size: 10pt;
+  color: #555;
+  text-align: left;
+}
+
+.zend_form fieldset dl {
   border: 0;
-  background-color: #ebeced;
-  -webkit-border-radius: 5px;
-  margin: 5px 0 5px 0;
+  background-color: #F7F7F7;
+   -moz-border-radius: 0 0 6px 6px;
+    -webkit-border-radius: 0 0 6px 6px;
+    border-radius:  0 0 6px 6px;
+  padding: 15px 0 10px 15px;
+}
+dl.zend_form dt {
+  display: none;
+}
+dl.zend_form dd dt {
+  display: block;
+}
+.zend_form fieldset legend span {
+  padding: 0 5px 0 15px;
 }
 
 .zend_form fieldset legend {
   margin: 0;
-  padding: 0 15px 5px 15px;
+  padding: 0;
+  width: 100%;
+  position: relative;
+  top: 10px;
   font-weight: normal;
-  font-size: 13pt;
+  
+   color: #666666;
+  text-align: left;
+  padding: 8px 0 8px 0;
+  font-weight: bold;
+      text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+    border-bottom: 1px solid #ccc;
+    background-color: #eee;
+    
+      -moz-border-radius: 6px 6px 0 0;
+    -webkit-border-radius: 6px 6px 0 0;
+    border-radius: 6px 6px 0 0;
+    background-color: #eee;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#eee));
+    background-image: -webkit-linear-gradient(top, #f5f5f5, #eee);
+    background-image:    -moz-linear-gradient(top, #f5f5f5, #eee);
+    background-image:     -ms-linear-gradient(top, #f5f5f5, #eee);
+    background-image:      -o-linear-gradient(top, #f5f5f5, #eee); 
+    background-image:         linear-gradient(top, #f5f5f5, #eee);
 }
 
 .zend_form input[type='submit'],
