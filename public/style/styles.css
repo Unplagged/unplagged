@@ -139,6 +139,7 @@ body {
 
 #settings-panel .content {
   padding: 0;
+  min-height: 35px;
 }
 
 #settings-panel .content #avatar {
@@ -147,7 +148,7 @@ body {
 }
 #settings-panel .content #logout-actions {
   float: left;
-  padding: 16px 0 0 75px;
+  padding: 8px 0 0 75px;
 }
 #settings-panel .content #login-actions {
   float: left;
@@ -156,7 +157,7 @@ body {
 
 #settings-panel .content #settings {
   float: right;
-  padding-right: 10px;
+  padding: 8px 10px 0 0;
 }
 
 
