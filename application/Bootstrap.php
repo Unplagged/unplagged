@@ -4,7 +4,7 @@
  */
 
 /**
- * The class is the starting point for the application and initalizes base components.
+ * The class is the starting point for the Unplagged application and initalizes base components.
  *
  * @author Benjamin Oertel <mail@benjaminoertel.com>
  * @version 1.0

@@ -164,7 +164,7 @@ class FileController extends Zend_Controller_Action{
       $fileId = preg_replace('/[^0-9]/', '', $fileId);
 
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
-      $language = "eng";
+      $language = "deu";
 
       if(empty($file)){
         // show error message
