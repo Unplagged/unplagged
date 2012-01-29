@@ -6,7 +6,7 @@
 
 /**
  * The class represents a user.
- * It defines also the structure of the database table for the ORM.
+ * 
  *
  * @author Benjamin Oertel <mail@benjaminoertel.com>
  * @version 1.0
@@ -44,6 +44,9 @@ class Application_Model_User{
   /**
    * The username, the user defined as an alias for the account.
    * @var string The usernamee.
+   * 
+   * @todo do we need to specify the length? I believe 32 could be a bit short and I heard there are no 
+   * performance issues on mysql when we would use 255
    * 
    * @Column(type="string", length=32, unique=true)
    */
@@ -93,31 +96,13 @@ class Application_Model_User{
    * @ManyToOne(targetEntity="Application_Model_User_State")
    * @JoinColumn(name="user_state_id", referencedColumnName="id")
    */
-  protected $state;
+  protected $state;  
   
-    /**
+  /**
    * @ManyToOne(targetEntity="Application_Model_Case")
    * @JoinColumn(name="current_case_id", referencedColumnName="id")
    */
   protected $currentCase;
-
-  /**
-   * Method auto-called when object is persisted to database for the first time.
-   * 
-   * @PrePersist
-   */
-  public function created(){
-    $this->created = new DateTime("now");
-  }
-
-  /**
-   * Method auto-called when object is updated in database.
-   * 
-   * @PrePersist
-   */
-  public function updated(){
-    $this->updated = new DateTime("now");
-  }
 
   public function __construct($data = array()){
     if(isset($data["username"])){
@@ -147,6 +132,26 @@ class Application_Model_User{
     if(isset($data["state"])){
       $this->state = $data["state"];
     }
+  }
+  
+  /**
+   * Sets the creation time to the current time, if it hasn't been already set.
+   * 
+   * @PrePersist
+   */
+  public function created(){
+    if($this->created == null){
+      $this->created = new DateTime("now");
+    }
+  }
+
+  /**
+   * Sets the time of the last update to the current time.
+   * 
+   * @PreUpdate
+   */
+  public function updated(){
+    $this->updated = new DateTime("now");
   }
 
   public function getId(){
@@ -188,11 +193,11 @@ class Application_Model_User{
   public function getState(){
     return $this->state;
   }
-  
+
   public function setState($state){
     $this->state = $state;
   }
-  
+
   public function setFirstname($firstname){
     $this->firstname = $firstname;
   }
@@ -200,7 +205,7 @@ class Application_Model_User{
   public function setLastname($lastname){
     $this->lastname = $lastname;
   }
-  
+
   public function getCurrentCase(){
     return $this->currentCase;
   }
@@ -208,7 +213,8 @@ class Application_Model_User{
   public function setCurrentCase($currentCase){
     $this->currentCase = $currentCase;
   }
-    public function unsetCurrentCase(){
+
+  public function unsetCurrentCase(){
     $this->currentCase = null;
   }
 }

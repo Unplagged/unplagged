@@ -17,15 +17,16 @@ class Application_Form_Case_Modify extends Zend_Form{
     $nameElement->setRequired(true);
 
     $aliasElement = new Zend_Form_Element_Text('alias');
-    $aliasElement->setLabel("Alias");
+    $aliasElement->setLabel("Pseudonym");
     $aliasElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
     $aliasElement->addValidator('stringLength', false, array(2, 64));
     $aliasElement->setAttrib('maxLength', 64);
     $aliasElement->setRequired(false);
     
     $collaborator = new Zend_Form_Element_Text('collaborator');
-		$collaborator->addValidator('Member', false, array("min" => "2", "name" => "collaborator", "skipUsersFrom" => array()));
-		$collaborator->setRequired(true);
+    /** @todo validator doesn't exist, and required is probably not necessary */
+		//$collaborator->addValidator('Member', false, array("min" => "2", "name" => "collaborator", "skipUsersFrom" => array()));
+		//$collaborator->setRequired(true);
 		$collaborator->setLabel('Insert the names of your reviewers.');
         $default_reviewers["readonly"] = (($this->_readonly) ? "true" : "false");
        /* foreach($article->getReviewers() as $user)

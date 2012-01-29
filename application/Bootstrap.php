@@ -64,6 +64,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     return $config;
   }
   
+  protected function _initAccessControl(){
+    
+    $acl = new Unplagged_Acl();
+    $accessControl = new Unplagged_AccessControl($acl);
+    
+    //make sure front controller is initalized
+    $this->bootstrap('FrontController');
+    $this->bootstrap('layout');
+    $this->bootstrap('navigation');
+    $frontController = $this->getResource('FrontController');
+    
+    $frontController->registerPlugin($accessControl);
+  }
+  
   /**
    * Initalize the view.
    * @author Dennis De Cock
@@ -154,7 +168,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module' => 'default',
         'controller' => 'index',
         'action' => 'index',
-        'class' => 'home',     
+        'class' => 'home',
         'order' => -100 // make sure home is the first page
       ), /*array(
         'label' => 'Cases',
@@ -176,20 +190,23 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'title' => 'Files',
         'module' => 'default',
         'controller' => 'file',
-        'action' => 'list'
+        'action' => 'list',
+        'resource'=> 'files'
       ), array(
         'label' => 'Documents',
         'title' => 'Documents',
         'module' => 'default',
         'controller' => 'document',
         'action' => 'list',
+        'resource' => 'document',
         'pages' => array(
           array(
             'label' => 'Simtext',
             'title' => 'Simtext',
             'module' => 'default',
             'controller' => 'simtext',
-            'action' => 'index'
+            'action' => 'index',
+            'resource' => 'simtext'
           )
         )
       ), array(
@@ -202,7 +219,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     );
     
     $container = new Zend_Navigation($config);
-    
+    $this->bootstrap('layout');
+    $layout = $this->getResource('layout');
+    $view = $layout->getView();
+    $view->navigation($container)->setAcl(new Unplagged_Acl())->setRole('guest');
     //@todo doesn't work here for now still in layout.phtml
     /*if(Zend_Auth::getInstance()->hasIdentity()){
       $container->addPage(array(

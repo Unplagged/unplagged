@@ -23,7 +23,7 @@ class Application_Model_User_State{
    * 
    * @Id @GeneratedValue @Column(type="integer")
    */
-  protected $id;
+  private $id;
 
   /**
    * A title for the user state.
@@ -31,7 +31,7 @@ class Application_Model_User_State{
    * 
    * @Column(type="string", unique="true", length=32)
    */
-  protected $title;
+  private $title;
 
   /**
    * A description for the user state.
