@@ -7,30 +7,47 @@
     <?php echo $this->headMeta(); ?>
     <?php
     echo $this->headLink()
-        ->prependStylesheet($this->baseUrl() . '/style/styles.css');
+        ->prependStylesheet($this->baseUrl() . '/style/styles.css')
+        ->appendStylesheet($this->baseUrl() . '/style/flick/jquery-ui-1.8.17.custom.css');
     ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="<?php echo $this->baseUrl('/js/libs/jquery-1.7.1.min.js'); ?>"><\/script>')</script>
+    <script defer src="<?php echo $this->baseUrl('/js/plugins.js'); ?>"></script>
+    <script defer src="<?php echo $this->baseUrl('/js/script.js'); ?>"></script>
+    <script defer src="<?php echo $this->baseUrl('/js/libs/jquery-ui-1.8.17.custom.min'); ?>"></script>
+      <!--[if lt IE 7]>
+  <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+  <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+  <![endif]-->
   </head>
   <body>
+    <?php
+    ?>
     <header id="main-header">
       <div id="settings-panel">
-        <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
-          <div id="avatar"><img src="/images/tmp_avatar.png" /></div>
-          <div id="login-actions">
-            <?php echo $this->translate("Welcome") . " " . $this->defaultNamespace->user->getUsername() . "!"; ?>
-            <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
-          </div>
-          <div id="settings">
-            <img src="/images/tmp_top_icons.png" />
-          </div>
-        <?php else: ?>
-          <div id="login-actions">
-            <?php echo $this->translate("You are not logged in."); ?>
-            <a href="/user/register"><?php echo $this->translate("Register now"); ?></a> 
-            <?php echo $this->translate('or'); ?> <a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
-          </div>
-        <?php endif; ?>
+        <div class="content">
+          <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
+            <div id="avatar"><img src="/images/tmp_avatar.png" /></div>
+            <div id="logout-actions">
+              <?php echo $this->translate("Welcome") . " " . $this->me->getUsername() . "!"; ?>
+              <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
+            </div>
+            <div id="settings">
+              <?php echo $this->translate("Case you're working on"); ?> <div id="current-case-field"><input type="text" name="current-case" id="current-case" <?php if($this->me->getCurrentCase() instanceof Application_Model_Case) { echo " value=\"" . $this->me->getCurrentCase()->getAlias() . "\""; } ?> /><a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>
+              <a href="/case/list"><?php echo $this->translate("Cases Settings"); ?></a><?php /*<img src="/images/tmp_top_icons.png" /> */ ?>
+            </div>
+          <?php else: ?>
+            <div id="login-actions">
+              <?php echo $this->translate("You are not logged in."); ?>
+              <a href="/user/register"><?php echo $this->translate("Register now"); ?></a> 
+              <?php echo $this->translate('or'); ?> <a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
+            </div>
+          <?php endif; ?>
+            <div style="clear: both"></div>
+        </div>
+        <span id="dropdown-button" class="arrow-up"></span>
       </div>
     </header>
     <div id="page">
@@ -47,7 +64,7 @@
             'controller'=>'user',
             'action'=>'edit',
             'params'=>array(
-              'id'=>$this->defaultNamespace->user->getId()
+              'id'=>$this->me->getId()
             )
           ));
         }

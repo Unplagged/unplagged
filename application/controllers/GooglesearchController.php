@@ -6,15 +6,16 @@
 */
 class GooglesearchController extends Zend_Controller_Action
 {
-    
+    public function init()
+    {
+
+    }
     public function indexAction()
     {
         // action body
         $searchForm = new Application_Form_Google_Search;
-       /* $searchForm->setAction('http://www.google.de/search');
-$searchForm->setMethod('GET');*/
-
         $this->view->searchForm = $searchForm;
+        //$this->_helper->redirector('index', 'googlesearch');
     }
     
     public function searchAction()

@@ -163,6 +163,35 @@ class Document_PageController extends Zend_Controller_Action{
     $this->_helper->viewRenderer->setNoRender(true);
   }
 
+  public function stopwordsAction(){
+    $pageId = $this->_getParam('id');
+    if(!empty($pageId)){
+      $pageId = preg_replace('/[^0-9]/', '', $pageId);
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($pageId);
+
+
+      if($page){
+
+        $this->view->page = $page;
+        $words = array('hat', 'mit',
+          'aber', 'als', 'am', 'an', 'auch', 'auf', 'aus', 'bei', 'bin',
+          'bis', 'ist', 'da', 'dadurch', 'daher', 'darum', 'das', 'daß', 'dass', 'dein', 'deine',
+          'dem', 'den', 'der', 'des', 'dessen', 'deshalb', 'die', 'die', 'dieser', 'dieses', 'doch', 'dort', 'du', 'durch',
+          'ein', 'eine', 'einem', 'einen', 'einer', 'eines', 'er', 'es', 'euer', 'eure', 'für', 'hatte', 'hatten', 'hattest',
+          'hattet', 'hier', 'hinter', 'ich', 'ihr', 'ihre', 'im', 'in', 'ist', 'ja', 'jede', 'jedem', 'jeden', 'jeder', 'jedes',
+          'jener', 'jenes', 'jetzt', 'kann', 'kannst', 'können', 'könnt', 'machen', 'mein', 'meine', 'mit', 'muß', 'mußt',
+          'musst', 'müssen', 'müßt', 'nach', 'nachdem', 'nein', 'nicht', 'nun', 'oder', 'seid', 'sein', 'seine', 'sich', 'sie',
+          'sind', 'soll', 'sollen', 'sollst', 'sollt', 'sonst', 'soweit', 'sowie', 'und', 'unser', 'unsere', 'unter', 'vom', 'von',
+          'vor', 'wann', 'warum', 'was', 'weiter', 'weitere', 'wenn', 'wer', 'werde', 'werden', 'werdet', 'weshalb', 'wie', 'wieder',
+          'wieso', 'wir', 'wird', 'wirst', 'wo', 'woher', 'wohin', 'zu', 'zum', 'zur', 'über');
+        $reg = '/(' . implode('|', $words) . ')/i';
+        $lines = $page->getContent();
+        $lines = preg_replace($reg, "<span class='stopword'>$1</span>", $lines);
+        $this->view->stopWordContent = $lines;
+      }
+    }
+  }
+
 }
 
 ?>

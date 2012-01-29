@@ -48,8 +48,8 @@ class AuthController extends Zend_Controller_Action
 
                 if($result->isValid()) {
                     $defaultNamespace = new Zend_Session_Namespace('Default');
-                    $defaultNamespace->user = $result->getIdentity();;
-                    
+                    $defaultNamespace->userId = $result->getIdentity();;
+
                     $this->_helper->flashMessenger->addMessage('You were logged in successfully.');
                     $this->_helper->redirector('index', 'index');
                 } else {
@@ -69,7 +69,7 @@ class AuthController extends Zend_Controller_Action
     {
         Zend_Auth::getInstance()->clearIdentity();
         Zend_Session::forgetMe();
-        unset($this->_defaultNamespace->user);
+        unset($this->_defaultNamespace->userId);
 
         $this->_helper->flashMessenger->addMessage('You were logged off successfully.');
         $this->_helper->redirector('index', 'index');

@@ -11,6 +11,53 @@
  */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
+  /**
+   * Initialize auto loader of Doctrine to get the database connection.
+   * @author: Jan Oliver Oelerich (http://www.oelerich.org/?p=193)
+   *
+   * @return Doctrine_Manager
+   */
+  public function _initDoctrine(){
+    require_once('Doctrine/Common/ClassLoader.php');
+
+    $doctrineConfig = $this->getOption('doctrine');
+
+    $classLoader = new \Doctrine\Common\ClassLoader('Doctrine', APPLICATION_PATH . '/../library/');
+    $classLoader->register();
+
+    $classLoader = new \Doctrine\Common\ClassLoader('models', APPLICATION_PATH);
+    $classLoader->register();
+
+    $classLoader = new \Doctrine\Common\ClassLoader('proxies', APPLICATION_PATH);
+    $classLoader->register();
+
+    $config = new \Doctrine\ORM\Configuration();
+    $driverImpl = $config->newDefaultAnnotationDriver(APPLICATION_PATH . "/models");
+    $config->setMetadataDriverImpl($driverImpl);
+
+    //$cache = new \Doctrine\Common\Cache\ArrayCache;
+    //$config->setMetadataCacheImpl($cache);
+    //$config->setQueryCacheImpl($cache);
+
+    $config->setProxyDir(APPLICATION_PATH . '/proxies');
+    $config->setProxyNamespace('Proxies');
+
+    $connectionOptions = array(
+      'driver'=>$doctrineConfig['conn']['driv'],
+      'user'=>$doctrineConfig['conn']['user'],
+      'password'=>$doctrineConfig['conn']['pass'],
+      'dbname'=>$doctrineConfig['conn']['dbname'],
+      'host'=>$doctrineConfig['conn']['host']
+    );
+
+    $em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
+
+    $registry = Zend_Registry::getInstance();
+    $registry->entitymanager = $em;
+
+    return $em;
+  }
+  
   protected function _initConfig(){
     $config = new Zend_Config($this->getOptions(), true);
     Zend_Registry::set('config', $config);
@@ -67,52 +114,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     return $registry;
   }
 
-  /**
-   * Initialize auto loader of Doctrine to get the database connection.
-   * @author: Jan Oliver Oelerich (http://www.oelerich.org/?p=193)
-   *
-   * @return Doctrine_Manager
-   */
-  public function _initDoctrine(){
-    require_once('Doctrine/Common/ClassLoader.php');
-
-    $doctrineConfig = $this->getOption('doctrine');
-
-    $classLoader = new \Doctrine\Common\ClassLoader('Doctrine', APPLICATION_PATH . '/../library/');
-    $classLoader->register();
-
-    $classLoader = new \Doctrine\Common\ClassLoader('models', APPLICATION_PATH);
-    $classLoader->register();
-
-    $classLoader = new \Doctrine\Common\ClassLoader('proxies', APPLICATION_PATH);
-    $classLoader->register();
-
-    $config = new \Doctrine\ORM\Configuration();
-    $driverImpl = $config->newDefaultAnnotationDriver(APPLICATION_PATH . "/models");
-    $config->setMetadataDriverImpl($driverImpl);
-
-    //$cache = new \Doctrine\Common\Cache\ArrayCache;
-    //$config->setMetadataCacheImpl($cache);
-    //$config->setQueryCacheImpl($cache);
-
-    $config->setProxyDir(APPLICATION_PATH . '/proxies');
-    $config->setProxyNamespace('Proxies');
-
-    $connectionOptions = array(
-      'driver'=>$doctrineConfig['conn']['driv'],
-      'user'=>$doctrineConfig['conn']['user'],
-      'password'=>$doctrineConfig['conn']['pass'],
-      'dbname'=>$doctrineConfig['conn']['dbname'],
-      'host'=>$doctrineConfig['conn']['host']
-    );
-
-    $em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
-
-    $registry = Zend_Registry::getInstance();
-    $registry->entitymanager = $em;
-
-    return $em;
-  }
+  
   
   /**
    * Sets the logger inside the registry, so that it can be called via:
@@ -154,7 +156,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'action' => 'index',
         'class' => 'home',     
         'order' => -100 // make sure home is the first page
-      ), array(
+      ), /*array(
         'label' => 'Cases',
         'title' => 'Cases',
         'module' => 'default',
@@ -169,7 +171,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'action' => 'create'
           )
         )
-      ), array(
+      ),*/ array(
         'label' => 'Files',
         'title' => 'Files',
         'module' => 'default',
@@ -180,7 +182,22 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'title' => 'Documents',
         'module' => 'default',
         'controller' => 'document',
-        'action' => 'list'
+        'action' => 'list',
+        'pages' => array(
+          array(
+            'label' => 'Simtext',
+            'title' => 'Simtext',
+            'module' => 'default',
+            'controller' => 'simtext',
+            'action' => 'index'
+          )
+        )
+      ), array(
+        'label' => 'Suche',
+        'title' => 'Suche',
+        'module' => 'default',
+        'controller' => 'googlesearch',
+        'action' => 'index'
       )
     );
     
