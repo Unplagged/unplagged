@@ -37,7 +37,7 @@ class Application_Model_User{
    * The username, the user account was modified.
    * @var string The latest modification date.
    * 
-   * @Column(type="datetime")
+   * @Column(type="datetime", nullable=true)
    */
   protected $updated;
 
