@@ -85,10 +85,17 @@ class FileController extends Zend_Controller_Action{
   }
 
   public function listAction(){
-    $query = $this->_em->createQuery('SELECT f FROM Application_Model_File f');
-    $files = $query->getResult();
-
-    $this->view->listFiles = $files;
+     // @todo: clean input
+    $page = $this->_getParam('page');
+    
+    $query = $this->_em->createQuery("SELECT f FROM Application_Model_File f");
+		$count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_File f");
+		
+		$paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+		$paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+		$paginator->setCurrentPageNumber($page);
+    
+    $this->view->paginator = $paginator;
   }
 
   public function downloadAction(){

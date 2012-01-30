@@ -1,51 +1,53 @@
 <?php
 $defaultNamespace = new Zend_Session_Namespace('Default');
 $em = Zend_Registry::getInstance()->entitymanager;
-if($defaultNamespace->userId) {
-$me = $em->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
-} else {
+if($defaultNamespace->userId){
+  $me = $em->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
+}else{
   $me = null;
 }
+
 ?>
 <?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace, 'me'=>$me)); ?>
-      <div id="content" class="clearfix">
+<div id="content" class="clearfix">
 
-        <div class="main">
-
-          <div id="main">
-            <h2><?php echo $this->escape($this->title); ?></h2>
-            <?php
-            if(!empty($this->flashMessages)){
-              echo '<div class="flash-messages">';
-          //@todo maybe switch to ul?
-          foreach($this->flashMessages as $key=>$value){
-            echo $this->translate($value) . "<br />";
-          }
-          echo '</div>';
+  <div class="main">
+  <div id="main-wrapper">
+    <div id="main">
+      <h2><?php echo $this->escape($this->title); ?></h2>
+      <?php
+      if(!empty($this->flashMessages)){
+        echo '<div class="flash-messages">';
+        //@todo maybe switch to ul?
+        foreach($this->flashMessages as $key=>$value){
+          echo $this->translate($value) . "<br />";
         }
+        echo '</div>';
+      }
 
-        // content from each view, the rest of this page is global to all views
-        echo $this->layout()->content;
-        ?>
-          </div>
-        </div>
-        <nav id="right-nav">
-          <h4>Aktuelles und Kontroverses</h4>
-          <ul>
-            <li><a href="#">News 1<span class="count">3</span></a></li>
-            <li><a href="#">News 1<span class="count">3</span></a></li>
-            <li><a href="#">News 1<span class="count">3</span></a></li>
-          </ul>
-          <br />
-          <h4>Berichte und Mitteilungen</h4>
-          <ul>
-            <li><a href="#">News 1<span class="count">3</span></a></li>
-            <li><a href="#">News 1<span class="count">3</span></a></li>
-            <li><a href="#">News 1<span class="count">3</span></a></li>
-          </ul>
-        </nav>
+      // content from each view, the rest of this page is global to all views
+      echo $this->layout()->content;
+      ?>
+    </div>
   </div>
+  </div>
+  <nav id="right-nav">
+    <h4>Aktuelles und Kontroverses</h4>
+    <ul>
+      <li><a href="#">News 1<span class="count">3</span></a></li>
+      <li><a href="#">News 1<span class="count">3</span></a></li>
+      <li><a href="#">News 1<span class="count">3</span></a></li>
+    </ul>
+    <br />
+    <h4>Berichte und Mitteilungen</h4>
+    <ul>
+      <li><a href="#">News 1<span class="count">3</span></a></li>
+      <li><a href="#">News 1<span class="count">3</span></a></li>
+      <li><a href="#">News 1<span class="count">3</span></a></li>
+    </ul>
+  </nav>
+</div>
 
-  <?php echo $this->partial('partials/footer.phtml'); ?>
-  </body>
+<?php echo $this->partial('partials/footer.phtml'); ?>
+</body>
 </html>

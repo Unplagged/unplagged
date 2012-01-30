@@ -108,8 +108,8 @@ class UserController extends Zend_Controller_Action{
   public function editAction(){
     $userId = preg_replace('/[^0-9]/', '', $this->getRequest()->getParam('id'));
     // if either the user is not logged in or no valid user id is defined
-    if(empty($userId) || !$this->_defaultNamespace->userId){
-      $this->_helper->redirector('index', 'index');
+    if(empty($userId)){
+      $userId = $this->_defaultNamespace->userId;
     }
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($userId);
