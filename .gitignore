@@ -1,5 +1,7 @@
 .DS_Store
-/docs/*
+/docs/phpdoc
+/docs/phpunit
+
 
 /nbproject/private/
 !.gitignore
