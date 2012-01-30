@@ -58,7 +58,29 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     return $em;
   }
+  
+  
+  /**
+   * Initalize the view.
+   * @author Dennis De Cock
+   
+  protected function _initView(){
+    $defaultConfig = $this->getOption('default');
 
+    $view = new Zend_View();
+    //ZendX_JQuery::enableView($view);
+    $viewrenderer = new Zend_Controller_Action_Helper_ViewRenderer();
+    $viewrenderer->setView($view);
+    Zend_Controller_Action_HelperBroker::addHelper($viewrenderer);
+    $this->bootstrap('layout');
+    $layout = $this->getResource('layout');
+    $view = $layout->getView();
+
+    $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
+    $view->headTitle()->setSeparator(' - ');
+    $view->headTitle($defaultConfig['portalName']);
+  }
+*/
   protected function _initConfig(){
     $config = new Zend_Config($this->getOptions(), true);
     Zend_Registry::set('config', $config);
@@ -98,13 +120,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $defaultConfig = $this->getOption('default');
 
     $view = new Zend_View();
-    //ZendX_JQuery::enableView($view);
-    $viewrenderer = new Zend_Controller_Action_Helper_ViewRenderer();
-    $viewrenderer->setView($view);
-    Zend_Controller_Action_HelperBroker::addHelper($viewrenderer);
-    $this->bootstrap('layout');
-    $layout = $this->getResource('layout');
-    $view = $layout->getView();
 
     $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
     $view->headTitle()->setSeparator(' - ');
