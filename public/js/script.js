@@ -1,18 +1,43 @@
+function autoCompleteCurrentCase(e){   
+  var inputField = $('#current-case');
+  inputField.autocomplete({
+    source: '/case/autocomplete-alias',
+    select: function(e, element) {
+      /* @todo: make sure to allow only selection of valid cases */
+      $.post('/user/set-current-case', {
+        'case': element.item.value
+      }, function(data) {
+      }, "json");
+      inputField.val(element.item.label);
+      return false;
+    }
+  });
+}
+
+function resetCurrentCase(e){   
+  $.post('/user/reset-current-case', {}, function(data) {
+        $('#current-case').val('');
+      }, "json");
+}
+
 $(document).ready(function(){
+  // current case auto completion and reset
+  $('#current-case').focus(autoCompleteCurrentCase);
+  $('#current-case-field .clear').click(resetCurrentCase);
   
   //collapse header line
-  var dropdownButton = $('<span class="dropdown-button arrow-up"></span>');
-  dropdownButton.toggle(function(){
-    //$('#main-header').slideUp();
-    $('#main-header').css('top', '-32px').css('margin-bottom', '80px');
-    dropdownButton.removeClass('arrow-up');
-    dropdownButton.addClass('arrow-down');
-  }, function(){
-    $('#main-header').css('top', '0').css('margin-bottom', '115px');
-    dropdownButton.addClass('arrow-up');
-    dropdownButton.removeClass('arrow-down');
+  $('#dropdown-button').click(function(e) {
+    var content = $('#settings-panel .content');
+    var button = $('#dropdown-button');
+
+    content.toggle();
+    
+    if(content.is(":visible")) {
+      button.addClass("arrow-up");
+    } else {
+      button.removeClass("arrow-up");
+    }
   });
-  $('#settings-panel').append(dropdownButton);
   
   //wrap home menu button, so that icon gets shown
   var homeButton = $('#header .navigation .home');

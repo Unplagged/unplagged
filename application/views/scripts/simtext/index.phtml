@@ -20,17 +20,14 @@
   <?php 
   $i = 0;
   $reportDirectory = "storage" . DIRECTORY_SEPARATOR . "reports" . DIRECTORY_SEPARATOR;
-  $report_name = "test_report.txt";
- 
-  $report_path = APPLICATION_PATH . DIRECTORY_SEPARATOR . $reportDirectory. "$report_name";
- 
+  $report_name = "test_report.txt";  
   
  ?>
  
     
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
-    <td><a href="<?php echo $report_path; ?>"><?php echo $report_name;?></a></td>
-    
+    <td><a href="/simtext/download-report"><?php echo $report_name;?></a></td>
+    <td></td>
   </tr>
   
 </table>
@@ -39,6 +36,6 @@
 //$data["content"] = file_get_content($report_path);
   //$lines = explode('<br />',$content);
 ?>
-<p>
-<a href="/simtext/compare"><?php echo $this->translate("Compare"); ?></a>
-</p>
+<div class="smork-btn simtext-compare-icon">
+  <a href="/simtext/compare"><span><?php echo $this->translate("Compare"); ?></span></a>
+</div>

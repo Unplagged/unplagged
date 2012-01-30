@@ -15,7 +15,7 @@
 class Application_Model_Case{
 
   /** @Id @GeneratedValue @Column(type="integer")  */
-  private $id;
+  protected $id;
 
   /**
    * The "real" name of the case, under which it will get published later on.
@@ -24,7 +24,7 @@ class Application_Model_Case{
    * 
    * @Column(type="string") 
    */
-  private $name = '';
+  protected $name = '';
 
   /**
    * The alias is used to show everyone who doesn't have the permission to see the real case name.
@@ -33,12 +33,12 @@ class Application_Model_Case{
    * 
    * @Column(type="string") 
    */
-  private $alias = '';
+  protected $alias = '';
 
   /**
    * @var string  
    */
-  private $state = '';
+  protected $state = '';
 
   /**
    * The date when the document was created.
@@ -46,7 +46,7 @@ class Application_Model_Case{
    * 
    * @Column(type="datetime")
    */
-  private $created;
+  protected $created;
 
   /**
    * The date when the document was updated the last time.
@@ -54,7 +54,7 @@ class Application_Model_Case{
    * 
    * @Column(type="datetime", nullable=true)
    */
-  private $updated;
+  protected $updated;
 
   /**
    * @ManyToMany(targetEntity="Application_Model_Document")
@@ -63,7 +63,7 @@ class Application_Model_Case{
    *      inverseJoinColumns={@JoinColumn(name="document_id", referencedColumnName="id")}
    *      )
    */
-  private $documents;
+  protected $documents;
 
   /**
    * @ManyToMany(targetEntity="Application_Model_File")
@@ -72,11 +72,31 @@ class Application_Model_Case{
    *      inverseJoinColumns={@JoinColumn(name="file_id", referencedColumnName="id")}
    *      )
    */
-  private $files;
+  protected $files;
+  
+  /**
+   * @ManyToMany(targetEntity="Application_Model_Tag")
+   * @JoinTable(name="case_has_tag",
+   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="tag_id", referencedColumnName="id")}
+   *      )
+   */
+  protected $tags;
+  
+    /**
+   * @ManyToMany(targetEntity="Application_Model_User")
+   * @JoinTable(name="case_has_collaborator",
+   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")}
+   *      )
+   */
+  protected $collaborators;
 
   public function __construct($name, $alias){
     $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
     $this->files = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->collaborators = new \Doctrine\Common\Collections\ArrayCollection();
     $this->name = $name;
     $this->alias = $alias;
   }
@@ -126,6 +146,38 @@ class Application_Model_Case{
   
   public function getCreated(){
     return $this->created;
+  }
+  
+  public function addTag(Application_Model_Tag $tag){
+    return $this->tags->add($tag);
+  }
+  
+  public function removeTag(Application_Model_Tag $tag){
+    return $this->tags->removeElement($tag);
+  }
+  
+  public function getTags(){
+    return $this->tags ;
+  }
+  
+  public function clearTags(){
+    $this->tags->clear();
+  }
+  
+  public function addCollaborator(Application_Model_User $user){
+    return $this->collaborators->add($tag);
+  }
+  
+  public function removeCollaborator(Application_Model_User $user){
+    return $this->collaborators->removeElement($tag);
+  }
+  
+  public function getCollaborators(){
+    return $this->collaborators;
+  }
+  
+  public function clearCollaborators(){
+    $this->collaborators->clear();
   }
   
 

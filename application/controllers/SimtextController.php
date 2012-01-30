@@ -82,6 +82,26 @@ class SimtextController extends Zend_Controller_Action
         
     }
     
+    public function downloadReportAction(){
+        $reportDirectory = "storage" . DIRECTORY_SEPARATOR . "reports" . DIRECTORY_SEPARATOR;
+  $report_name = "test_report.txt";  
+  $downloadPath = APPLICATION_PATH . DIRECTORY_SEPARATOR . $reportDirectory. "$report_name";
+        // set headers
+        header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+        header("Content-Description: File Transfer");
+        header("Content-Disposition: attachment; filename=\"" . $report_name . "\"");
+        header("Content-type: plain/text");
+        header("Content-Transfer-Encoding: binary");
+
+        readfile($downloadPath);
+      
+
+    // disable view
+    $this->view->layout()->disableLayout();
+    $this->_helper->viewRenderer->setNoRender(true);
+  }
+    
  
  }
 ?>

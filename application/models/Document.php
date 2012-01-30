@@ -23,7 +23,7 @@ class Application_Model_Document{
    * 
    * @Id @GeneratedValue @Column(type="integer")
    */
-  private $id;
+  protected $id;
   
   /**
    * The date when the document was created.
@@ -31,20 +31,20 @@ class Application_Model_Document{
    * 
    * @Column(type="datetime")
    */
-  private $created;
+  protected $created;
     /**
    * The title of the document.
    * @var string The title.
    * 
    * @Column(type="string", length=64)
    */
-  private $title;
+  protected $title;
   
   /**
    * @ManyToOne(targetEntity="Application_Model_File")
    * @JoinColumn(name="original_file_id", referencedColumnName="id", onDelete="SET NULL")
    */
-  private $originalFile;
+  protected $originalFile;
 
   /**
    * The lines in the document.
@@ -52,7 +52,7 @@ class Application_Model_Document{
    * @OneToMany(targetEntity="Application_Model_Document_Page", mappedBy="document")
    * @OrderBy({"pageNumber" = "ASC"})
    */
-  private $pages;
+  protected $pages;
 
   public function __construct(array $data=null){
     if(isset($data["file"])){

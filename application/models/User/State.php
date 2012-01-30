@@ -39,7 +39,7 @@ class Application_Model_User_State{
    * 
    * @Column(type="string", length=256)
    */
-  private $description;
+  protected $description;
 
   public function __construct($data = array()){
     if(isset($data["title"])){
