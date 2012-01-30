@@ -20,6 +20,8 @@ function resetCurrentCase(e){
       }, "json");
 }
 
+
+
 $(document).ready(function(){
   // current case auto completion and reset
   $('#current-case').focus(autoCompleteCurrentCase);
@@ -44,4 +46,35 @@ $(document).ready(function(){
   homeButton.wrapInner('<span class="ir"/>');
 });
 
+$(function() {            
+    $(".pagination a").live("click", function() {
+        var href = $(this).attr("href");
+        if(href) {
+          var substr = href.split('/');
+          var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
+
+          window.location.hash = hash;
+        }
+        return false;
+    });
+    
+    $(window).bind('hashchange', function(){
+        var newHash = window.location.hash.substring(1);
+        
+        if (newHash) {
+            var substr = newHash.split('/');
+            var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
+            
+            var url = window.location.pathname;
+            if(url.charAt(url.length-1) != '/') {
+              url += '/';
+            }
+            url += hash;
+            $("#main-wrapper").load(url + " #main");
+        };
+        
+    });
+    
+    $(window).trigger('hashchange');
+});
 

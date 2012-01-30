@@ -10,7 +10,7 @@ $this->headTitle($this->title);
   </tr>
   <?php
   $i = 0;
-  foreach($this->listFiles as $file):
+  foreach($this->paginator as $file):
     ?>
     <tr <?php echo ($i++ % 2 == 0) ? "class=\"even\"" : ""; ?>>
       <td><a href="<?php echo $this->baseUrl('/file/download/id/' . $file->getId()); ?>"><?php echo $file->getFilename(); ?></a></td>
@@ -27,6 +27,8 @@ $this->headTitle($this->title);
     </tr>
   <?php endforeach; ?>
 </table>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
+
 <div class="smork-btn upload-icon">
   <a href="/file/upload"><span><?php echo $this->translate("Upload a file"); ?></span></a>
 </div>

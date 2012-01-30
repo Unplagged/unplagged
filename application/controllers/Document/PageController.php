@@ -18,10 +18,20 @@ class Document_PageController extends Zend_Controller_Action{
   }
 
   public function listAction(){
+    // @todo: clean input
     $documentId = $this->_getParam('id');
+    $page = $this->_getParam('page');
 
     if(!empty($documentId)){
-      $documentId = preg_replace('/[^0-9]/', '', $documentId);
+      $query = $this->_em->createQuery("SELECT p FROM Application_Model_Document_Page p WHERE p.document = '" . $documentId . "'");
+      $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page p WHERE p.document = '" . $documentId . "'");
+
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+      $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+      $paginator->setCurrentPageNumber($page);
+
+      $this->view->paginator = $paginator;
+
       $document = $this->_em->getRepository('Application_Model_Document')->findOneById($documentId);
       if($document){
         $this->view->document = $document;

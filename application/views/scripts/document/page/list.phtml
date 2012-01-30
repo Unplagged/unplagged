@@ -11,8 +11,7 @@ Document: <?php echo $this->document->getTitle(); ?>
   </tr>
   <?php 
   $i = 0;
-  //var_dump($this->document->getPages());
-  foreach($this->document->getPages() as $page): 
+  foreach($this->paginator as $page): 
     ?>
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
     <td><a href="/document_page/show/id/<?php echo $page->getId(); ?>"><?php echo $page->getPageNumber(); ?></a></td>
@@ -25,3 +24,4 @@ Document: <?php echo $this->document->getTitle(); ?>
   </tr>
   <?php endforeach; ?>
 </table>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>

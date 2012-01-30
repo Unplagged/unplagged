@@ -14,7 +14,7 @@ $flashMessenger->clearCurrentMessages();
 <div id="content" class="clearfix">
 
   <div class="main">
-
+  <div id="main-wrapper">
     <div id="main">
       <h2><?php echo $this->escape($this->title); ?></h2>
       <?php
@@ -31,6 +31,7 @@ $flashMessenger->clearCurrentMessages();
       echo $this->layout()->content;
       ?>
     </div>
+  </div>
   </div>
   <nav id="right-nav">
     <h4>Aktuelles und Kontroverses</h4>

@@ -34,13 +34,21 @@ class CaseController extends Zend_Controller_Action{
   }
 
   public function listAction(){
-    $query = $this->_em->createQuery('SELECT c FROM Application_Model_Case c');
-    $cases = $query->getResult();
-
-    $this->view->listCases = $cases;
+    // @todo: clean input
+    $page = $this->_getParam('page');
+    
+    $query = $this->_em->createQuery("SELECT c FROM Application_Model_Case c");
+		$count = $this->_em->createQuery("SELECT COUNT(c.id) FROM Application_Model_Case c");
+		
+		$paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+		$paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+		$paginator->setCurrentPageNumber($page);
+    
+    $this->view->paginator = $paginator;
   }
   
   public function autocompleteAliasAction() {
+    // @todo: clean input
     $search_string = $this->_getParam('term');
     
     $qb = $this->_em->createQueryBuilder();
