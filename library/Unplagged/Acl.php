@@ -40,7 +40,8 @@ class Unplagged_Acl extends Zend_Acl{
     $this->allow(null, 'login');
     $this->allow(null, 'error');
     $this->allow(null, 'googlesearch');
-    $this->allow(null, 'register');
+    $this->allow(null, 'user');
+    $this->deny(null, 'edit-profile');
     
     $this->allow('user', null);
     
