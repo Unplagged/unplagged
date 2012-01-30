@@ -28,6 +28,7 @@ class Unplagged_Acl extends Zend_Acl{
     $this->add(new Zend_Acl_Resource('googlesearch'));
     $this->add(new Zend_Acl_Resource('user'));
     $this->add(new Zend_Acl_Resource('case'));
+    $this->add(new Zend_Acl_Resource('document_page'));
     
     //$this->add(new Zend_Acl_Resource('user'));
     //$this->add(new Zend_Acl_Resource('register'), 'user');
