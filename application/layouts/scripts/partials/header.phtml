@@ -38,7 +38,7 @@
             </div>
             <div id="settings">
               <?php echo $this->translate("Case you're working on"); ?> <div id="current-case-field"><input type="text" name="current-case" id="current-case" <?php if($this->me->getCurrentCase() instanceof Application_Model_Case) { echo " value=\"" . $this->me->getCurrentCase()->getAlias() . "\""; } ?> /><a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>
-              <a href="/case/list"><?php echo $this->translate("Cases Settings"); ?></a><?php /*<img src="/images/tmp_top_icons.png" /> */ ?>
+              <a href="/case/list"><?php echo $this->translate("Case Settings"); ?></a><?php /*<img src="/images/tmp_top_icons.png" /> */ ?>
             </div>
           <?php else: ?>
             <div id="login-actions">

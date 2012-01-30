@@ -5,7 +5,7 @@ $this->headTitle($this->title);
 <table cellpadding="0" cellspacing="0" class="default"> 
   <tr>
     <th><?php echo $this->translate("Filename"); ?></th>
-    <th style="width: 110px;"><?php echo $this->translate("Size"); ?></th>
+    <th style="width: 110px;"><?php echo $this->translate("Uploaded"); ?></th>
     <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
   </tr>
   <?php
@@ -14,7 +14,7 @@ $this->headTitle($this->title);
     ?>
     <tr <?php echo ($i++ % 2 == 0) ? "class=\"even\"" : ""; ?>>
       <td><a href="<?php echo $this->baseUrl('/file/download/id/' . $file->getId()); ?>"><?php echo $file->getFilename(); ?></a></td>
-      <td><?php echo $file->getSize(); ?></td>
+      <td><?php echo $file->getCreated()->format('Y-m-d'); ?></td>
       <td><?php if($file->getIsTarget()){ ?>
           <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page_find.png'); ?>" title="<?php echo $this->translate("unset target"); ?>" /></a>
         <?php }else{ ?>
