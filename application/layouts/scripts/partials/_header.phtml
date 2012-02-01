@@ -1,30 +1,37 @@
 <!doctype html>
 <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]> <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]> <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
   <head>
+      
     <?php echo $this->headMeta(); ?>
+        
     <?php
     echo $this->headLink()
         ->prependStylesheet($this->baseUrl() . '/style/styles.css')
         ->appendStylesheet($this->baseUrl() . '/style/flick/jquery-ui-1.8.17.custom.css');
     ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+  
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="<?php echo $this->baseUrl('/js/libs/jquery-1.7.1.min.js'); ?>"><\/script>')</script>
-    <script defer src="<?php echo $this->baseUrl('/js/plugins.js'); ?>"></script>
+    <script src="<?php echo $this->baseUrl('/js/ctest.js'); ?>"></script>
     <script defer src="<?php echo $this->baseUrl('/js/script.js'); ?>"></script>
+
     <script defer src="<?php echo $this->baseUrl('/js/libs/jquery-ui-1.8.17.custom.min.js'); ?>"></script>
     <script defer src="<?php echo $this->baseUrl('/js/libs/jquery.ba-hashchange.min.js'); ?>"></script>
     
+
       <!--[if lt IE 7]>
-<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-<script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
-<![endif]-->
-  </head>
+  <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+  <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+  <![endif]-->
+      
+ </head>
   <body>
+   
     <?php
     ?>
     <header id="main-header">
@@ -43,7 +50,7 @@
           <?php else: ?>
             <div id="login-actions">
               <?php echo $this->translate("You are not logged in."); ?>
-              <a href="/user/register"><?php echo $this->translate("Register now"); ?></a>
+              <a href="/user/register"><?php echo $this->translate("Register now"); ?></a> 
               <?php echo $this->translate('or'); ?> <a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
             </div>
           <?php endif; ?>
@@ -55,5 +62,28 @@
     <div id="page">
       <header id="header" class="clearfix">
         <h1 class="ir">Unplagged - Plagiarism Detection Cockpit</h1>
+
+        <?php
+        $container = $this->navigation()->getContainer();
+
+        if(Zend_Auth::getInstance()->hasIdentity()){
+          $container->addPage(array(
+            'label'=>'Edit profile',
+            'title'=>'Edit profile',
+            'module'=>'default',
+            'controller'=>'user',
+            'action'=>'edit',
+            'params'=>array(
+              'id'=>$this->me->getId()
+            )
+          ));
+        }
+        ?>
+      
+        <?php echo $this->navigation()->menu(); ?>
+        
+      </header>
+
         <?php echo $this->navigation()->menu(); ?>
       </header><?php echo $this->escape($this->title); ?>
+
