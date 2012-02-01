@@ -11,8 +11,6 @@
     echo $this->headLink()
         ->prependStylesheet($this->baseUrl() . '/style/styles.css')
         ->appendStylesheet($this->baseUrl() . '/style/flick/jquery-ui-1.8.17.custom.css');
-  // $this->headScript()->appendFile($this->baseUrl() .'/js/ctest.js');
-           // <?$this->headScript()->appendFile('/js/ctest.js')
     ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
   
@@ -23,15 +21,9 @@
     <script defer src="<?php echo $this->baseUrl('/js/script.js'); ?>"></script>
 
     <script defer src="<?php echo $this->baseUrl('/js/libs/jquery-ui-1.8.17.custom.min.js'); ?>"></script>
-<<<<<<< HEAD
-     
-
-
- 
-=======
     <script defer src="<?php echo $this->baseUrl('/js/libs/jquery.ba-hashchange.min.js'); ?>"></script>
     
->>>>>>> fc51255111253cf29e1fb4b397d0dc5a81ef6fc6
+
       <!--[if lt IE 7]>
   <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
   <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
@@ -70,7 +62,7 @@
     <div id="page">
       <header id="header" class="clearfix">
         <h1 class="ir">Unplagged - Plagiarism Detection Cockpit</h1>
-<<<<<<< HEAD
+
         <?php
         $container = $this->navigation()->getContainer();
 
@@ -91,7 +83,7 @@
         <?php echo $this->navigation()->menu(); ?>
         
       </header>
-=======
+
         <?php echo $this->navigation()->menu(); ?>
       </header><?php echo $this->escape($this->title); ?>
->>>>>>> fc51255111253cf29e1fb4b397d0dc5a81ef6fc6
+
