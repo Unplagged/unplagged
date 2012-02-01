@@ -235,19 +235,20 @@ body {
 }
 
 #header .navigation li > ul { 
-  display: none; 
+  display: none;
   position: absolute; 
   width: auto;
   margin: 0;
-  padding: 10px 15px 10px 15px;
+  padding: 10px 15px 5px 10px;
   background-color: white;
   border: 1px solid #d9d9d9;
   border-top: none;
+  z-index: 2;
 }
 
 #header .navigation li:hover > ul { 
   display: block; 
-  min-width: 120px;
+  min-width: 160px;
   -webkit-border-radius: 3px;
   -webkit-border-top-left-radius: 0;
   -moz-border-radius: 3px;
@@ -263,7 +264,6 @@ body {
   background-color: transparent;
   display: block;
   padding: 3px 0;
-  border-top: 1px solid #d9d9d9;
 }
 
 #header .navigation li > ul > li:hover {
@@ -272,11 +272,18 @@ body {
   border-radius: 0;
 }
 
-#header .navigation li > ul > li:hover a {
-  color: #40c0e9;
+#header .navigation li > ul > li a {
+  padding: 5px 10px 3px 0;
+  border-top: 1px #ededed solid;
+  display: block;
+  color: #484C51;
 }
 
-#header .navigation li > ul > li:first-child {
+#header .navigation li > ul > li a:hover {
+  text-decoration: underline;
+}
+
+#header .navigation li > ul > li:first-child a {
   border-top: none;
 }
 
@@ -343,29 +350,29 @@ table.default th {
   text-align: left;
   padding: 8px 5px 8px 15px;
   font-weight: bold;
-      text-shadow: 0 1px 0 rgba(255,255,255,.5); 
-    border-bottom: 1px solid #ccc;
-    background-color: #eee;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#eee));
-    background-image: -webkit-linear-gradient(top, #f5f5f5, #eee);
-    background-image:    -moz-linear-gradient(top, #f5f5f5, #eee);
-    background-image:     -ms-linear-gradient(top, #f5f5f5, #eee);
-    background-image:      -o-linear-gradient(top, #f5f5f5, #eee); 
-    background-image:         linear-gradient(top, #f5f5f5, #eee);
+  text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+  border-bottom: 1px solid #ccc;
+  background-color: #eee;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#eee));
+  background-image: -webkit-linear-gradient(top, #f5f5f5, #eee);
+  background-image:    -moz-linear-gradient(top, #f5f5f5, #eee);
+  background-image:     -ms-linear-gradient(top, #f5f5f5, #eee);
+  background-image:      -o-linear-gradient(top, #f5f5f5, #eee); 
+  background-image:         linear-gradient(top, #f5f5f5, #eee);
 
 
 }
 
 table.default th:first-child {
-    -moz-border-radius: 6px 0 0 0;
-    -webkit-border-radius: 6px 0 0 0;
-    border-radius: 6px 0 0 0;  
+  -moz-border-radius: 6px 0 0 0;
+  -webkit-border-radius: 6px 0 0 0;
+  border-radius: 6px 0 0 0;  
 }
 
 table.default th:last-child {
-    -moz-border-radius: 0 6px 0 0;
-    -webkit-border-radius: 0 6px 0 0;
-    border-radius: 0 6px 0 0;
+  -moz-border-radius: 0 6px 0 0;
+  -webkit-border-radius: 0 6px 0 0;
+  border-radius: 0 6px 0 0;
 }
 
 table.default tr {
@@ -479,9 +486,9 @@ a:hover {
 .zend_form fieldset dl {
   border: 0;
   background-color: #F7F7F7;
-   -moz-border-radius: 0 0 6px 6px;
-    -webkit-border-radius: 0 0 6px 6px;
-    border-radius:  0 0 6px 6px;
+  -moz-border-radius: 0 0 6px 6px;
+  -webkit-border-radius: 0 0 6px 6px;
+  border-radius:  0 0 6px 6px;
   padding: 15px 0 10px 15px;
 }
 dl.zend_form dt {
@@ -501,25 +508,25 @@ dl.zend_form dd dt {
   position: relative;
   top: 10px;
   font-weight: normal;
-  
-   color: #666666;
+
+  color: #666666;
   text-align: left;
   padding: 8px 0 8px 0;
   font-weight: bold;
-      text-shadow: 0 1px 0 rgba(255,255,255,.5); 
-    border-bottom: 1px solid #ccc;
-    background-color: #eee;
-    
-      -moz-border-radius: 6px 6px 0 0;
-    -webkit-border-radius: 6px 6px 0 0;
-    border-radius: 6px 6px 0 0;
-    background-color: #eee;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#eee));
-    background-image: -webkit-linear-gradient(top, #f5f5f5, #eee);
-    background-image:    -moz-linear-gradient(top, #f5f5f5, #eee);
-    background-image:     -ms-linear-gradient(top, #f5f5f5, #eee);
-    background-image:      -o-linear-gradient(top, #f5f5f5, #eee); 
-    background-image:         linear-gradient(top, #f5f5f5, #eee);
+  text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+  border-bottom: 1px solid #ccc;
+  background-color: #eee;
+
+  -moz-border-radius: 6px 6px 0 0;
+  -webkit-border-radius: 6px 6px 0 0;
+  border-radius: 6px 6px 0 0;
+  background-color: #eee;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#eee));
+  background-image: -webkit-linear-gradient(top, #f5f5f5, #eee);
+  background-image:    -moz-linear-gradient(top, #f5f5f5, #eee);
+  background-image:     -ms-linear-gradient(top, #f5f5f5, #eee);
+  background-image:      -o-linear-gradient(top, #f5f5f5, #eee); 
+  background-image:         linear-gradient(top, #f5f5f5, #eee);
 }
 
 .zend_form input[type='submit'],
@@ -839,6 +846,57 @@ smork-btn a:active { top: 1px; }
 .smork-btn.simtext-compare-icon a span, .smork-btn.simtext-compare-icon:visited a span {
   background: url(/images/icons/page_copy.png) no-repeat left;
 }
+
+/* pagination controls */
+#content ul.pagination {
+  margin: 10px 0 10px 0;
+  padding: 0;
+  text-align: right;
+  float: right;
+}
+
+#content ul.pagination a {
+  text-decoration: none;
+  color: #555;
+}
+
+#content ul.pagination li {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  display: inline-block;
+  float: left;
+}
+
+#content ul.pagination li a {
+  background-color: #f7f6f6;
+  border: 1px #f3f2f2 solid;
+  margin: 0 3px 0 0;
+  padding: 2px 7px 2px 7px;
+  height: 15px;
+  display: block;
+}
+#content ul.pagination li a.numbers {
+  background-color: #FFFFFF;
+  margin-top: 2px;
+  border: 1px #FFFFFF solid;
+}
+#content ul.pagination li a.numbers:hover {
+  background-color: #FFFFFF;
+}
+#content ul.pagination li a.disabled {
+  color: #d8d7d7;
+}
+
+#content ul.pagination li a:hover {
+  background-color: #dddcdc;
+}
+
+#content ul.pagination li a.active {
+  background-color: #484c51;
+  color: #ffffff;
+}
+
 
 
 /* ==|== non-semantic helper classes ======================================== */

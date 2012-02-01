@@ -23,10 +23,17 @@ class DocumentController extends Zend_Controller_Action{
   }
 
   public function listAction(){
-    $query = $this->_em->createQuery('SELECT d FROM Application_Model_Document d');
-    $documents = $query->getResult();
-
-    $this->view->listDocuments = $documents;
+    // @todo: clean input
+    $page = $this->_getParam('page');
+    
+    $query = $this->_em->createQuery("SELECT d FROM Application_Model_Document d");
+		$count = $this->_em->createQuery("SELECT COUNT(d.id) FROM Application_Model_Document d");
+		
+		$paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+		$paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+		$paginator->setCurrentPageNumber($page);
+    
+    $this->view->paginator = $paginator;
   }
 
   public function deleteAction(){

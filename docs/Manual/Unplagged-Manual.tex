@@ -1,0 +1,33 @@
+\documentclass[paper=A4, pagesize]{scrreprt}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{fixltx2e}
+
+\usepackage[longnamesfirst,nonamebreak]{natbib}
+
+\usepackage{ae}
+\usepackage {ellipsis, ragged2e}
+\usepackage[babel]{csquotes}
+\usepackage[pdfborder={0 0 0}]{hyperref}
+\usepackage{graphicx}
+
+\setlength{\parskip}{0.3cm}
+\linespread {1.25}
+
+\begin{document}
+
+\bibliographystyle {alpha}
+
+\nocite{*}
+
+\include{parts/title}
+
+\tableofcontents
+
+\include{parts/preface}
+
+\bibliography{biblio}
+
+\end{document}

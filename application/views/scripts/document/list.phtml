@@ -9,7 +9,7 @@
   </tr>
   <?php 
   $i = 0;
-  foreach($this->listDocuments as $document): 
+  foreach($this->paginator as $document): 
     ?>
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
     <td><a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
@@ -17,3 +17,4 @@
   </tr>
   <?php endforeach; ?>
 </table>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>

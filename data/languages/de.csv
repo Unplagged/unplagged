@@ -6,7 +6,7 @@ or;oder
 Edit profile;Profil bearbeiten
 List of cases;List von Fällen
 Actions;Aktionen
-Alias;Synonym
+Alias;Pseudonym
 Create a case;Fall anlegen
 Files;Dateien
 Upload a file;Datei hochladen
@@ -34,3 +34,13 @@ Create case;Fall anlegen
 Create;Anlegen
 Name;Name
 Case Information;Fall Informationen
+Documents;Dokumente
+List of documents;Liste von Dokumenten
+Uploaded;Hochgeladen
+Case Settings;Fall Einstellungen
+Case you're working on;Ihr aktueller Fall
+Logout;Ausloggen
+of;von
+You were logged off successfully.;Sie wurden erfolgreich ausgeloggt.
+You were logged in successfully.;Sie wurden erfolgreich eingeloggt.
+Register;Registrieren

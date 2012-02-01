@@ -58,7 +58,29 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     return $em;
   }
+  
+  
+  /**
+   * Initalize the view.
+   * @author Dennis De Cock
+   
+  protected function _initView(){
+    $defaultConfig = $this->getOption('default');
 
+    $view = new Zend_View();
+    //ZendX_JQuery::enableView($view);
+    $viewrenderer = new Zend_Controller_Action_Helper_ViewRenderer();
+    $viewrenderer->setView($view);
+    Zend_Controller_Action_HelperBroker::addHelper($viewrenderer);
+    $this->bootstrap('layout');
+    $layout = $this->getResource('layout');
+    $view = $layout->getView();
+
+    $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
+    $view->headTitle()->setSeparator(' - ');
+    $view->headTitle($defaultConfig['portalName']);
+  }
+*/
   protected function _initConfig(){
     $config = new Zend_Config($this->getOptions(), true);
     Zend_Registry::set('config', $config);
@@ -68,11 +90,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   protected function _initMessenger(){
     $flashMsgHelper = new Zend_Controller_Action_Helper_FlashMessenger();
     Zend_Controller_Action_HelperBroker::addHelper($flashMsgHelper);
-    
+
     $messages = $flashMsgHelper->getMessages();
     $this->bootstrap('layout');
     $view = $this->getResource('layout')->getView();
-    
+
     $view->assign('messages', $messages);
   }
 
@@ -98,13 +120,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $defaultConfig = $this->getOption('default');
 
     $view = new Zend_View();
-    //ZendX_JQuery::enableView($view);
-    $viewrenderer = new Zend_Controller_Action_Helper_ViewRenderer();
-    $viewrenderer->setView($view);
-    Zend_Controller_Action_HelperBroker::addHelper($viewrenderer);
-    $this->bootstrap('layout');
-    $layout = $this->getResource('layout');
-    $view = $layout->getView();
 
     $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
     $view->headTitle()->setSeparator(' - ');
@@ -179,22 +194,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'action'=>'index',
         'class'=>'home',
         'order'=>-100 // make sure home is the first page
-      ), /* array(
-        'label' => 'Cases',
-        'title' => 'Cases',
-        'module' => 'default',
-        'controller' => 'case',
-        'action' => 'list',
-        'pages' => array(
-        array(
-        'label' => 'Create Case',
-        'title' => 'Create Case',
-        'module' => 'default',
-        'controller' => 'case',
-        'action' => 'create'
-        )
-        )
-        ), */ array(
+      ), array(
         'label'=>'Files',
         'title'=>'Files',
         'module'=>'default',
@@ -224,6 +224,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'googlesearch',
         'action'=>'index'
+      ), array(
+        'label'=>'Edit profile',
+        'title'=>'Edit profile',
+        'module'=>'default',
+        'controller'=>'user',
+        'action'=>'edit',
+        'resource' => 'edit-profile'
       )
     );
 
@@ -232,16 +239,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $layout = $this->getResource('layout');
     $view = $layout->getView();
     $view->navigation($container)->setAcl(new Unplagged_Acl())->setRole('guest');
-    //@todo doesn't work here for now still in layout.phtml
-    /* if(Zend_Auth::getInstance()->hasIdentity()){
-      $container->addPage(array(
-      'label' => 'Edit profile',
-      'title' => 'Edit profile',
-      'module' => 'default',
-      'controller' => 'user',
-      'action' => 'edit/id/' . $defaultNamespace->user->getId()
-      ));
-      } */
 
     Zend_Registry::set('Zend_Navigation', $container);
   }

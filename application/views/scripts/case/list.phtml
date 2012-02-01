@@ -10,15 +10,17 @@
   </tr>
   <?php 
   $i = 0;
-  foreach($this->listCases as $case): 
-    ?>
+  foreach ($this->paginator as $case): 
+  ?>
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
     <td><?php echo $case->getName(); ?></td>
     <td><?php echo $case->getAlias(); ?></td>
     <td></td>
   </tr>
   <?php endforeach; ?>
-</table>
+</table> 
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
+
 <div class="smork-btn create-case-icon">
   <a href="/case/create"><span><?php echo $this->translate("Create a new case"); ?></span></a>
 </div>

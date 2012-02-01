@@ -18,6 +18,9 @@ class Unplagged_Acl extends Zend_Acl{
     $this->add(new Zend_Acl_Resource('auth'));
     $this->add(new Zend_Acl_Resource('login'), 'auth');
     $this->add(new Zend_Acl_Resource('logout'), 'auth');
+    $this->add(new Zend_Acl_Resource('user'));
+    $this->add(new Zend_Acl_Resource('register'), 'user');
+    $this->add(new Zend_Acl_Resource('edit-profile'), 'user');
     $this->add(new Zend_Acl_Resource('error'));
     $this->add(new Zend_Acl_Resource('index'));
     $this->add(new Zend_Acl_Resource('document'));
@@ -26,7 +29,6 @@ class Unplagged_Acl extends Zend_Acl{
     $this->add(new Zend_Acl_Resource('files'));
     $this->add(new Zend_Acl_Resource('file'));
     $this->add(new Zend_Acl_Resource('googlesearch'));
-    $this->add(new Zend_Acl_Resource('user'));
     $this->add(new Zend_Acl_Resource('case'));
     $this->add(new Zend_Acl_Resource('document_page'));
     
@@ -39,6 +41,7 @@ class Unplagged_Acl extends Zend_Acl{
     $this->allow(null, 'error');
     $this->allow(null, 'googlesearch');
     $this->allow(null, 'user');
+    $this->deny(null, 'edit-profile');
     
     $this->allow('user', null);
     

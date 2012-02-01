@@ -3,7 +3,7 @@
 /**
  * Doctrine 2 compatible Paginator Adapter.
  * 
- * @author Benjamin Oertel <benjamin.oertel@student.htw-berlin.de>
+ * @author Benjamin Oertel <benjamin.oertel@me.com>
  * @version 1.0
  */
 class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapter_Interface
