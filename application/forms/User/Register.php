@@ -1,7 +1,21 @@
 <?php
 
-/*
- * Form for user registration.
+/**
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -25,7 +39,7 @@ class Application_Form_User_Register extends Zend_Form{
     $emailElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
     $emailElement->addValidator('stringLength', false, array(2, 64));
     $emailElement->addValidator('EmailAddress', true);
-    $emailElement->addValidator(new Unplagged_Validate_NoRecordExists('Application_Model_User','email'));
+    $emailElement->addValidator(new Unplagged_Validate_NoRecordExists('Application_Model_User', 'email'));
     $emailElement->setAttrib('maxLength', 64);
     $emailElement->setRequired(true);
 
@@ -33,7 +47,7 @@ class Application_Form_User_Register extends Zend_Form{
     $usernameElement->setLabel("Shown username");
     $usernameElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
     $usernameElement->addValidator('stringLength', false, array(2, 64));
-    $usernameElement->addValidator(new Unplagged_Validate_NoRecordExists('Application_Model_User','username'));
+    $usernameElement->addValidator(new Unplagged_Validate_NoRecordExists('Application_Model_User', 'username'));
     $usernameElement->setAttrib('maxLength', 64);
     $usernameElement->setRequired(true);
 
@@ -72,4 +86,3 @@ class Application_Form_User_Register extends Zend_Form{
   }
 
 }
-

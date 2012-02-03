@@ -1,6 +1,24 @@
 <?php
 
 /**
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
  * 
  */
 class FileController extends Zend_Controller_Action{
@@ -27,7 +45,6 @@ class FileController extends Zend_Controller_Action{
         //$adapter->addValidator('NotEmpty');
         // Nur JPEG, PNG, und GIFs
         //$adapter->addValidator('Extension', true, array('png,gif,tif,jpg, tiff', 'messages'=>'<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.'));
-
         //muss mit der gruppe geklärt werden
         //Neither APC nor uploadprogress extension installed 
         /* $adapterprogressbar = new Zend_ProgressBar_Adapter_Console();
@@ -61,7 +78,7 @@ class FileController extends Zend_Controller_Action{
 
         // prepare file for uploading
         $adapter->setDestination($file->getAbsoluteLocation());
-        $adapter->addFilter('Rename', array('target' => $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension()));
+        $adapter->addFilter('Rename', array('target'=>$file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension()));
 
         if($adapter->receive()){
           chmod($file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension(), 0755);
@@ -85,16 +102,16 @@ class FileController extends Zend_Controller_Action{
   }
 
   public function listAction(){
-     // @todo: clean input
+    // @todo: clean input
     $page = $this->_getParam('page');
-    
+
     $query = $this->_em->createQuery("SELECT f FROM Application_Model_File f");
-		$count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_File f");
-		
-		$paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
-		$paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-		$paginator->setCurrentPageNumber($page);
-    
+    $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_File f");
+
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+    $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+    $paginator->setCurrentPageNumber($page);
+
     $this->view->paginator = $paginator;
   }
 
