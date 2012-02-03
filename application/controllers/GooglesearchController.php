@@ -25,7 +25,8 @@ class GooglesearchController extends Zend_Controller_Action
 {
     public function init()
     {
-
+ 
+        $this->view->headScript()->appendFile('path/to/the/javascript/file');
     }
     
     public function indexAction()

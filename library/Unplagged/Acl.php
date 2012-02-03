@@ -31,6 +31,8 @@ class Unplagged_Acl extends Zend_Acl{
     $this->add(new Zend_Acl_Resource('googlesearch'));
     $this->add(new Zend_Acl_Resource('case'));
     $this->add(new Zend_Acl_Resource('document_page'));
+    //$this->add(new Zend_Acl_Resource('edit-profile'));
+    
     
     //$this->add(new Zend_Acl_Resource('user'));
     //$this->add(new Zend_Acl_Resource('register'), 'user');
@@ -41,7 +43,8 @@ class Unplagged_Acl extends Zend_Acl{
     $this->allow(null, 'error');
     $this->allow(null, 'googlesearch');
     $this->allow(null, 'user');
-    $this->deny(null, 'edit-profile');
+    //removed because no matching file exists currently, maybe not commited?
+    //$this->deny(null, 'edit-profile');
     
     $this->allow('user', null);
     
