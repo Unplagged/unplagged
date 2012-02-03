@@ -1,6 +1,12 @@
 <?php
 error_reporting(E_ALL);
 
+defined('BASE_PATH')
+    || define('BASE_PATH', realpath(dirname(__FILE__) . '/../'));
+
+defined('TEMP_PATH')
+    || define('TEMP_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'temp');
+
 // Define path to application directory
 defined('APPLICATION_PATH') 
      || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
