@@ -10,21 +10,34 @@
         ->prependStylesheet($this->baseUrl() . '/style/styles.css')
         ->appendStylesheet($this->baseUrl() . '/style/flick/jquery-ui-1.8.17.custom.css');
     ?>
+
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="<?php echo $this->baseUrl('/js/libs/jquery-1.7.1.min.js'); ?>"><\/script>')</script>
     <script defer src="<?php echo $this->baseUrl('/js/plugins.js'); ?>"></script>
     <script defer src="<?php echo $this->baseUrl('/js/script.js'); ?>"></script>
+    <script defer src="<?php echo $this->baseUrl('/js/contextmenu.js'); ?>"></script>
     <script defer src="<?php echo $this->baseUrl('/js/libs/jquery-ui-1.8.17.custom.min.js'); ?>"></script>
     <script defer src="<?php echo $this->baseUrl('/js/libs/jquery.ba-hashchange.min.js'); ?>"></script>
-    
+       
+
+
       <!--[if lt IE 7]>
 <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
 <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
 <![endif]-->
   </head>
   <body>
+      <div id='contextmenu' style='display:none;position:absolute;top:-250;left:0;z-index:100;color:black'>
+        <table cellpadding='5' cellspacing='0' style='background-color:#40bfe8'>
+        <tr><td><a class='menu' href='javascript:history.back()'> Zurück </a></td></tr>
+        <tr><td><a class='menu' href='javascript:history.forward()'> Vorwärts </a></td></tr>
+        <tr><td><hr class='menu'><a class='menu' href='javascript:location.reload()'> Aktualisieren </a></td></tr>
+        <tr><td><a class='menu' href='javascript:print()'> Drucken </a></td></tr>
+           <tr><td><a id='googleSearch' class='menu' href='javascript:googleSearch()'> Google Suche </a></td></tr>
+        </table>
+        </div>
     <?php
     ?>
     <header id="main-header">
