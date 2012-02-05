@@ -1,14 +1,27 @@
 <?php
-
 /**
- * File for class {@link Bootstrap}.
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
- * The class is the starting point for the Unplagged application and initalizes base components.
+ * This class is the starting point for the Unplagged application and initalizes 
+ * all base components.
  *
- * @author Benjamin Oertel <mail@benjaminoertel.com>
- * @version 1.0
+ * @author Unplagged
  */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
@@ -58,13 +71,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     return $em;
   }
-  
-  
+
   /**
    * Initalize the view.
    * @author Dennis De Cock
-   
-  protected function _initView(){
+
+    protected function _initView(){
     $defaultConfig = $this->getOption('default');
 
     $view = new Zend_View();
@@ -79,8 +91,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
     $view->headTitle()->setSeparator(' - ');
     $view->headTitle($defaultConfig['portalName']);
-  }
-*/
+    }
+   */
   protected function _initConfig(){
     $config = new Zend_Config($this->getOptions(), true);
     Zend_Registry::set('config', $config);
@@ -230,7 +242,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'user',
         'action'=>'edit',
-        'resource' => 'edit-profile'
+        'resource'=>'edit-profile'
       )
     );
 

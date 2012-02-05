@@ -14,7 +14,7 @@ class ImagemagickAdapterTest extends PHPUnit_Framework_TestCase{
   {
     $this->setExpectedException('InvalidArgumentException');
     
-    new Unplagged_Parser_ImagemagickAdapter('', '');
+    new Unplagged_Parser_Document_ImagemagickAdapter('', '');
   }
   
   public function testFileGetsParse(){
@@ -29,7 +29,7 @@ class ImagemagickAdapterTest extends PHPUnit_Framework_TestCase{
       unlink($outputFile);
     }
         
-    $adapter = new Unplagged_Parser_ImagemagickAdapter($inputFile, $outputFile);
+    $adapter = new Unplagged_Parser_Document_ImagemagickAdapter($inputFile, $outputFile);
     $adapter->execute();
     
     $this->assertFileExists($outputFile, 'Please make sure Imagemagick is installed and on the include path.');

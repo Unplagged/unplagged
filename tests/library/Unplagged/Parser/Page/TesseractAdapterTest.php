@@ -9,21 +9,21 @@
 class TesseractAdapterTest extends PHPUnit_Framework_TestCase{
   
   public function testCheckTesseractCallIsWorking(){
-    $this->assertTrue(Unplagged_Parser_TesseractAdapter::checkTesseract());
+    $this->assertTrue(Unplagged_Parser_Page_TesseractAdapter::checkTesseract());
   }
   
   public function testCheckTesseractWithWrongCommand(){
-    $this->assertFalse(Unplagged_Parser_TesseractAdapter::checkTesseract('WrongCommand'));
+    $this->assertFalse(Unplagged_Parser_Page_TesseractAdapter::checkTesseract('WrongCommand'));
   }
   
   public function testInputFileMustExist(){
     $this->setExpectedException('InvalidArgumentException');
-    $tesseractAdapter = new Unplagged_Parser_TesseractAdapter('', '', '');
+    $tesseractAdapter = new Unplagged_Parser_Page_TesseractAdapter('', '', '');
   }
   
   public function testOutputFileNameMustBeSpecified(){
     $this->setExpectedException('InvalidArgumentException');
-    new Unplagged_Parser_TesseractAdapter(realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'resources') . DIRECTORY_SEPARATOR, '');
+    new Unplagged_Parser_Page_TesseractAdapter(realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'resources') . DIRECTORY_SEPARATOR, '');
   }
   
   public function testOutputPathMustBeWriteable(){
@@ -32,7 +32,7 @@ class TesseractAdapterTest extends PHPUnit_Framework_TestCase{
     $unwriteableDir = 'unwriteableDir';
     
     $this->setExpectedException('InvalidArgumentException');
-    $tesseractAdapter = new Unplagged_Parser_TesseractAdapter($resourcesPath . $testFileName . '.tif', $unwriteableDir . DIRECTORY_SEPARATOR . $testFileName); 
+    $tesseractAdapter = new Unplagged_Parser_Page_TesseractAdapter($resourcesPath . $testFileName . '.tif', $unwriteableDir . DIRECTORY_SEPARATOR . $testFileName); 
   }
   
   public function testTxtFileGetsCreated(){
@@ -47,7 +47,7 @@ class TesseractAdapterTest extends PHPUnit_Framework_TestCase{
       unlink($outputFileName);
     }
     
-    $tesseractAdapter = new Unplagged_Parser_TesseractAdapter($resourcesPath . $testFileName . '.tif', $outputFile);
+    $tesseractAdapter = new Unplagged_Parser_Page_TesseractAdapter($resourcesPath . $testFileName . '.tif', $outputFile);
     $tesseractAdapter->execute();
     
     $this->assertFileExists($resourcesPath . $testFileName . '.txt', 'Please make sure Tesseract is installed and on the include path.');
