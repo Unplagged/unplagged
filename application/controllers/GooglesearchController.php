@@ -41,7 +41,5 @@ class GooglesearchController extends Zend_Controller_Action
     {
         
     }
-    
- 
  }
 ?>
