@@ -47,7 +47,6 @@ class Unplagged_Acl extends Zend_Acl{
     //$this->deny(null, 'edit-profile');
     
     $this->allow('user', null);
-    
   }
 
 }

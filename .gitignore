@@ -1,6 +1,14 @@
 .DS_Store
 /docs/phpdoc
 /docs/phpunit
+/docs/Developers Manual/*.aux
+/docs/Developers Manual/*.toc
+/docs/Developers Manual/*.log
+/docs/Developers Manual/*.out
+/docs/Developers Manual/*.blg
+/docs/Developers Manual/*.bbl
+/docs/Developers Manual/*.synctex.gz
+/docs/Developers Manual/parts/*.aux
 
 
 /nbproject/private/

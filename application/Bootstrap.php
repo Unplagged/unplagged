@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -42,7 +43,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $classLoader = new \Doctrine\Common\ClassLoader('models', APPLICATION_PATH);
     $classLoader->register();
 
-    $classLoader = new \Doctrine\Common\ClassLoader('proxies', APPLICATION_PATH);
+    $classLoader = new \Doctrine\Common\ClassLoader('proxies', BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR);
     $classLoader->register();
 
     $config = new \Doctrine\ORM\Configuration();
@@ -53,7 +54,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     //$config->setMetadataCacheImpl($cache);
     //$config->setQueryCacheImpl($cache);
 
-    $config->setProxyDir(APPLICATION_PATH . '/proxies');
+    $config->setProxyDir(BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR . 'proxies');
     $config->setProxyNamespace('Proxies');
 
     $connectionOptions = array(
@@ -93,12 +94,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $view->headTitle($defaultConfig['portalName']);
     }
    */
+  
+  /**
+   *
+   * @return \Zend_Config 
+   */
   protected function _initConfig(){
     $config = new Zend_Config($this->getOptions(), true);
     Zend_Registry::set('config', $config);
     return $config;
   }
 
+  /**
+   * 
+   */
   protected function _initMessenger(){
     $flashMsgHelper = new Zend_Controller_Action_Helper_FlashMessenger();
     Zend_Controller_Action_HelperBroker::addHelper($flashMsgHelper);
@@ -110,6 +119,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $view->assign('messages', $messages);
   }
 
+  /**
+   * 
+   */
   protected function _initAccessControl(){
 
     $acl = new Unplagged_Acl();

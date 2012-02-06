@@ -20,7 +20,6 @@
 
 /**
  *
- * @author Dominik Horb <dominik.horb@googlemail.com>
  */
 class CaseController extends Zend_Controller_Action{
 

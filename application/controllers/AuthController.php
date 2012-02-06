@@ -19,10 +19,9 @@
  */
 
 /**
- * The controller class handles all the login and logout behaviour.
+ * This controller class handles all the login and logout behaviour.
  *
- * @author Benjamin Oertel <benjamin.oertel@student.htw-berlin.de>
- * @version 1.0
+ * @author Unplagged Development Team
  */
 class AuthController extends Zend_Controller_Action{
 
