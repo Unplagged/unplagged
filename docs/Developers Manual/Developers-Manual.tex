@@ -5,16 +5,29 @@
 \usepackage[ngerman]{babel}
 \usepackage{fixltx2e}
 
-\usepackage[longnamesfirst,nonamebreak]{natbib}
+\usepackage[nonamebreak]{natbib}
 
+
+\usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{ae}
+\usepackage{listings}
 \usepackage {ellipsis, ragged2e}
 \usepackage[babel]{csquotes}
-\usepackage[pdfborder={0 0 0}]{hyperref}
+\usepackage[pdfborder={0 0 0}, colorlinks=true, urlcolor=blue, linkcolor=Black, breaklinks]{hyperref}
+\usepackage[hyphenbreaks]{breakurl}
 \usepackage{graphicx}
+\usepackage{nameref}
 
 \setlength{\parskip}{0.3cm}
 \linespread {1.25}
+
+\usepackage{xcolor}
+\definecolor{dark-blue}{rgb}{0.15,0.15,0.4}
+\definecolor{medium-blue}{rgb}{0,0,0.5}
+\hypersetup{
+    colorlinks, linkcolor={dark-blue},
+    citecolor={dark-blue}, urlcolor={medium-blue}
+}
 
 \begin{document}
 
@@ -24,7 +37,16 @@
 
 \include{parts/title}
 
+% arabic page numbering should start after the toc, so we start with roman
+\pagenumbering{Roman}
+
+\begingroup % to make sure not every item in the toc is weirdly colored
+\hypersetup{linkcolor=black}
 \tableofcontents
+\endgroup
+
+\clearpage % to ensure that the arabic numbering starts on the page after the toc
+\pagenumbering{arabic}
 
 \include{parts/preface}
 
