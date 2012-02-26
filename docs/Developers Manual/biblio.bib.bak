@@ -1,0 +1,40 @@
+% This file was created with JabRef 2.7.2.
+% Encoding: UTF8
+
+@MISC{Google2012,
+  author = {Google},
+  title = {News Search Interest: plagiat},
+  howpublished = {\url{http://www.google.com/insights/search/\#q=Plagiat&geo=DE&date=1%2F2011%2013m&gprop=news&cmpt=q}},
+  year = {2012},
+  note = {[Online; accessed 07-February-2012]}
+}
+
+@BOOK{Marcotte2011,
+  title = {Responsive Web Design},
+  publisher = {A Book Apart},
+  year = {2011},
+  author = {Ethan Marcotte},
+  pages = {150}
+}
+
+@MISC{Spiegel-Online2011,
+  author = {Spiegel-Online},
+  title = {Streit über VroniPlag-Gründer "Verprellter Liebhaber oder SPD-Mitglied,
+	das ist egal"},
+  howpublished = {\url{http://www.spiegel.de/unispiegel/wunderbar/0,1518,778626,00.html}},
+  year = {2011},
+  note = {[Online; accessed 26.02.12]},
+  owner = {Dominik},
+  timestamp = {2012.02.25}
+}
+
+@MISC{,
+  author = {Dr. Debora Weber-Wulff},
+  title = {Master Project: Plagiarism Detection Cockpit},
+  howpublished = {\url{http://www.f4.htw-berlin.de/~weberwu/classes/HTW/projects/Plagiarism-Detection-Cockpit.shtml}},
+  year = {2011},
+  note = {[Online; accessed 26.02.12]},
+  owner = {Dominik},
+  timestamp = {2012.02.26}
+}
+
