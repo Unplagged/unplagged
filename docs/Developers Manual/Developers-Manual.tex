@@ -1,33 +1,31 @@
+\RequirePackage{fix-cm}
 \documentclass[paper=A4, pagesize]{scrreprt}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8x]{inputenc}
-\usepackage[ngerman]{babel}
+\usepackage[english]{babel}
 \usepackage{fixltx2e}
 
 \usepackage[nonamebreak]{natbib}
 
-
+\usepackage{ae} % somehow beautifies the output, don't know why
 \usepackage[usenames,dvipsnames]{xcolor}
-\usepackage{ae}
 \usepackage{listings}
 \usepackage {ellipsis, ragged2e}
 \usepackage[babel]{csquotes}
-\usepackage[pdfborder={0 0 0}, colorlinks=true, urlcolor=blue, linkcolor=Black, breaklinks]{hyperref}
+
+
+\usepackage[pdfborder={0 0 0}, breaklinks]{hyperref}
 \usepackage[hyphenbreaks]{breakurl}
+\definecolor{dark-blue}{rgb}{0.15,0.15,0.4}
+\definecolor{medium-blue}{rgb}{0,0,0.5}
+\hypersetup{colorlinks, linkcolor={dark-blue}, citecolor={dark-blue}, urlcolor={medium-blue}}
+
 \usepackage{graphicx}
-\usepackage{nameref}
+\usepackage{nameref} % gets the name of a chapter when refering to the label with \nameref{chapterName}
 
 \setlength{\parskip}{0.3cm}
 \linespread {1.25}
-
-\usepackage{xcolor}
-\definecolor{dark-blue}{rgb}{0.15,0.15,0.4}
-\definecolor{medium-blue}{rgb}{0,0,0.5}
-\hypersetup{
-    colorlinks, linkcolor={dark-blue},
-    citecolor={dark-blue}, urlcolor={medium-blue}
-}
 
 \begin{document}
 

@@ -6,12 +6,13 @@ for the
 creation of the \enquote{Unplagged} project, whose development approach will be described here, can be found in this 
 very case of plagiarism. Related to it were the formation of the
 \href{http://de.guttenplag.wikia.com/wiki/GuttenPlag\_Wiki}{GuttenPlag} and it's descendent 
-\href{http://de.vroniplag.wikia.com/wiki/Home}{VroniPlag}, both are Wiki-based communities that collaboratively 
-discover and collect plagiarism in their respective cases and are kind of the role models for the way the
-Unplagged system is build.
+\href{http://de.vroniplag.wikia.com/wiki/Home}{VroniPlag}. Both are Wiki-based communities that are collaboratively 
+discovering and collecting plagiarism in their respective cases and are kind of the role models for the way the
+Unplagged system is developed.
 
 The initial project idea and context were provided by our professor Dr. Debora Weber-Wulff and the two term master project
-every media informatics student at the HTW has to take. As professor Weber-Wulff is a well known expert in Germany on the
+every media informatics student at the \href{http://htw-berlin.de/}{HTW-Berlin} has to take. As professor Weber-Wulff is 
+a well known expert in Germany on the
 topic of plagiarism,
 does research in this field for over ten years\citep{Spiegel-Online2011} and is actively involved in the VroniPlag
 community, she came up with the idea to build a dedicated system --- a \enquote{Plagiarism Detection Cockpit}\citep{Weber-Wulff2011}, 
@@ -30,31 +31,37 @@ To make things a bit more conceivable, we also often refer to it as a mixture of
 comparing texts and marking 
 passages and a modern project management tool like \href{http://www.redmine.org/}{Redmine} or 
 \href{http://www.atlassian.com/JIRA}{JIRA}, 
-to manage the collaborative parts of the system. The big distinction to other plagiarism tools on the market is, that we are not 
-trying to autodetect plagiarism, but focusing on aiding the workflow of the users while he/she is searching for plagiarized
-fragments inside a specific paper.
+to manage the collaborative aspects of the system. The big distinction we make to other plagiarism software on the market is, 
+that the approach is not to autodetect plagiarism, but focused on aiding the workflow of the users while  
+searching for plagiarized
+fragments inside a scientific paper, a homework assignment or any other kind of probable plagiarism.
 
 This present document will be your handbook, if you want to get started helping in the development of this 
 open source project, which is licensed under the \href{http://www.gnu.org/licenses/quick-guide-gplv3}{GNU GPLv3}.
 
 \section{Chapter Overview}
 
-One of the biggest problems we faced at the start was, that none of the team members had written more than a bachelors
+One of the biggest problems we faced at the start was, that none of the team members had written a longer scientific
+text than a bachelors
 thesis and therefore the experience we got with actual scientific writing was very limited and very specific to the 
 field of computer science. We understand the ethical problems, that come with the betrayal of 
 good scientific practice of plagiators, but we simply can not relate easily to the amount of work that has to be put into 
 a Ph D., or be as 
-passionate about plagiarism as Prof. Weber-Wulff always is.
+passionate about plagiarism as Prof. Weber-Wulff always is, because we never experienced it.
 
 That is why we had a lot of catching up to do on the most important history behind VroniPlag, the different types
-of plagiarism, citation styles and the research Prof. Weber-Wulff and others had already done on systems that try to 
-help finding plagiarism. This is what will be described in chapter \ref{chap:plagOverview}, \nameref{chap:plagOverview}, which
-gives a brief overview of all the important topics there.
+of plagiarism, different citation styles and the research Prof. Weber-Wulff and others had already done on systems that try to 
+help finding plagiarism. The chapter \ref{chap:plagOverview}, \nameref{chap:plagOverview}, will
+give a brief overview of the most important topics to get you up to speed with the domain of the software, if you are
+not already familiar with it.
 
 Although we are using agile methods for the development process, the chapter \nameref{chap:systemRequirements} will give
-a more classical collection and description of the parts the system will consist of and how we understood the requirements of the 
+a more classical collection and description of the parts of the system, that already exist or that we identified as 
+necessary parts of Unplaggedhow we understood the requirements of the 
 VroniPlag workflow.
 
 If you know all those things already and simply want to get started working and coding, you should probably jump
-to \nameref{chap:developingUnplagged}, where the installation process and all necessary tools for you as a developer are
-described.
+to \nameref{chap:developingUnplagged}. This chapter will give insights into the project workflow, the basic installation
+steps and all necessary tools for you as a developer.
+
+%In the appendices..
