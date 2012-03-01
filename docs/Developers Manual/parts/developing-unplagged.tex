@@ -32,75 +32,90 @@ know, here is a list of the buzzwords, er technologies that will be mentioned:
 As said in section \nameref{platforms}, the system is developed in a way, so that it should work on multiple platforms. 
 This makes it sometimes difficult to describe certain installation processes in a way that would work for everybody. As
 it's often most problematic, to get some Linux software running on Windows, we will mostly concentrate on the way those
-things are done on this platform and give the instructions for other operating systems as an aside.
+things are done on this platform and give the instructions for other operating systems as an aside if necessary.
 
 \section{Development Environment}
 
 \subsection{Git}
-The version control of all parts of the unplagged project is managed through Git. Since 2005, Git got more and more famous and many developers prefer it over Subversion because of its simplicity. However, nobody of our team ever used Git before so it was a challenge to get it running on all the systems. But we took the challenge to explore all the features Git offers. It is so much easier to create different branches and merge them again, than it is with other version control softwares like Subversion.\\
-\\
+% note from dominik: I changed some things to the actual latex commands, so that we can style later on if we want to 
+The version control of all parts of the unplagged project is managed through Git. Since 2005, Git got more and more 
+famous and many developers prefer it over Subversion because of its simplicity. However, nobody of our team ever used 
+Git before so it was a challenge to get it running on all the systems. But we took the challenge to explore all the 
+features Git offers. It is so much easier to create different branches and merge them again, than it is with other 
+version control softwares like Subversion.
+
 If you didn't use git before, you probably should watch this 8 minutes Git introduction video first:
-http://www.youtube.com/watch?v=RDGzF2M-zlo\\
-\\
-\textbf{\textit{Installating the Git Bash}}
-\\
+\url{http://www.youtube.com/watch?v=RDGzF2M-zlo}
+
+\subsubsection{Installating the Git Bash}
 First of all let's get started with an introduction of how to install the Git console application, called Git Bash. 
 Unfortunately all the GUIs we were evaluating didn't work as expected, so we decided to use it from the console only. 
 A very good instruction on how to install the Git Bash can be found on the website of the github project:
-\\
-\\
-Mac OS X: http://help.github.com/mac-set-up-git/
-\\
-Windows: http://help.github.com/win-set-up-git/
-\\
-Linux: http://help.github.com/linux-set-up-git/
-\\
-\\
-\textbf{\textit{Getting the source code of the unplagged project}}
-\\
-Now it is time to get the project source code on your machine. The whole unplagged project is hosted on github, so first you need to create an account on https://github.com. And then go to the directory where the project shall be located. An example for Mac OS X:
 
-\begin{verbatim}
+\begin{description}
+\item[Mac OS X:] \url{http://help.github.com/mac-set-up-git/}
+\item[Windows:] \url{http://help.github.com/win-set-up-git/}
+\item[Linux:] \url{http://help.github.com/linux-set-up-git/}
+\end{description}
+
+\subsubsection{Getting the source code of the unplagged project}
+Now it is time to get the project source code on your machine. The whole unplagged project is hosted on github, so 
+first you need to create an account on https://github.com. And then go to the directory where the project shall be 
+located. An example for Mac~OS~X:
+
+\begin{lstlisting}[caption=Cloning a repository]
 cd Sites/unplagged.local
 git clone https://<yourusername>@github.com/benoertel/unplagged.git
-\end{verbatim}
+\end{lstlisting}
 
-\textbf{\textit{The most important git commands}}
+\subsubsection{The most important git commands}
 
-You are ready to use Git! Here are some more instructions on the most important commands and how to properly use it. However, if the given instructions in this manuall are not enough, feel free to checkout the whole Git manual on: http://schacon.github.com/git/user-manual.html
+You are ready to use Git! Here are some more instructions on the most important commands and how to properly use it. 
+However, if the given instructions in this manuall are not enough, feel free to checkout the whole Git manual on: 
+\url{http://schacon.github.com/git/user-manual.html}
 
-The unplagged project consists of several branches, which are used to develop and store code indepdently of the other developers. Once a new feature is done, it is merged into the master branch. The master branch usually includes only fully tested and deployable source code. 
+The unplagged project consists of several branches, which are used to develop and store code indepdently of the other 
+developers. Once a new feature is done, it is merged into the master branch. The master branch usually includes only 
+fully tested and deployable source code. 
 
 As a new developer, it is important to create your own branch before doing anything else and switch into it.
-\begin{verbatim}
+
+\begin{lstlisting}[caption=Creating branches]
 git branch mynewfeature
 git checkout mynewfeature
-\end{verbatim}
+\end{lstlisting}
 
 Now you can change whatever you want in the repository.At any point you can store your changes in the repository by using the git commit command. If you created new files, git add has to be executed as well.
 
-\begin{verbatim}
+\begin{lstlisting}[caption=Creating branches]
 git add .
 git commit -m "A message that describes the changes."
-\end{verbatim}
+\end{lstlisting}
 
-When the feature is fully working and approved, it has to be merged back to the master branch, in order to get deployed to the staging environment. To do this, you have to checkout the master branch, update it with git pull and then merge all the changes from the new feature into the master branch and remove the feature branch.
-\begin{verbatim}
+When the feature is fully working and approved, it has to be merged back to the master branch, in order to get deployed 
+to the staging environment. To do this, you have to checkout the master branch, update it with git pull and then merge 
+all the changes from the new feature into the master branch and remove the feature branch.
+
+\begin{lstlisting}[caption=Creating branches]
 git checkout master
 git pull
 git merge mynewfeature
 git branch -d mynewfeature
-\end{verbatim}
+\end{lstlisting}
 
-In comparison to Subversion, for example Git has one more step to really write back to the repository. After a commit, a push has to be done, each push can include multiple commits.
-\begin{verbatim}
+In comparison to Subversion, for example Git has one more step to really write back to the repository. After a commit, 
+a push has to be done, each push can include multiple commits.
+
+\begin{lstlisting}[caption=Creating branches]
 git push
-\end{verbatim}
+\end{lstlisting}
 
 This is it, the changes to the repository have been pushed to the master branch.
 
-\textbf{\textit{Handling conflicts in merging process}}
-It is possible, if two developers were working on the same part of  file, that a conflict raises during the merge. Such a conflict could look like this:
+\subsubsection{Handling conflicts in merging process}
+It is possible, if two developers were working on the same part of  file, that a conflict raises during the merge. Such 
+a conflict could look like this:
+
 \begin{verbatim}
 CONFLICT (content): Merge conflict in readme.txt
 
@@ -135,14 +150,15 @@ Just a change for educational purposes.
 \end{verbatim}
 
 Should look like this after merging:
-\begin{verbatim}
+
+\begin{lstlisting}[caption=Creating branches]
 The goal of this project is the creation of an easy-to-use, web-based
 system to document and detect plagiarism in scientific papers.
 
 hello world
 
 Just a change for educational purposes.
-\end{verbatim}
+\end{lstlisting}
 
 \subsection{Netbeans}
 
@@ -179,7 +195,7 @@ Edit X:\<path to your xampp installation>\apache\conf\extra\httpd-vhosts.conf
 \end{verbatim}
 
 Add the following configuration to the httpd-vhosts.conf file:
-\begin{verbatim}
+\begin{lstlisting}[caption=Apache configuration]
 <VirtualHost *:80>
 ServerName unplagged.local
 DocumentRoot "/Users/me/Sites/unplagged.local/public" 
@@ -192,7 +208,7 @@ Order allow,deny
 Allow from all
 </Directory>
 </VirtualHost>
-\end{verbatim}
+\end{lstlisting}
 
 \section{Installation}
 \subsection{Tesseract}

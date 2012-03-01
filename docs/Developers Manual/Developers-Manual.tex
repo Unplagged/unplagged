@@ -1,4 +1,3 @@
-\RequirePackage{fix-cm}
 \documentclass[paper=A4, pagesize]{scrreprt}
 
 \usepackage[T1]{fontenc}
@@ -10,16 +9,17 @@
 
 \usepackage{ae} % somehow beautifies the output, don't know why
 \usepackage[usenames,dvipsnames]{xcolor}
-\usepackage{listings}
 \usepackage {ellipsis, ragged2e}
 \usepackage[babel]{csquotes}
 \usepackage{microtype}
 
 \usepackage[pdfborder={0 0 0}, breaklinks]{hyperref}
 \usepackage[hyphenbreaks]{breakurl}
-\definecolor{dark-blue}{rgb}{0.15,0.15,0.4}
-\definecolor{medium-blue}{rgb}{0,0,0.5}
-\hypersetup{colorlinks, linkcolor={dark-blue}, citecolor={dark-blue}, urlcolor={medium-blue}}
+
+% used colors see http://en.wikibooks.org/wiki/LaTeX/Colors for more
+\usepackage[usenames,dvipsnames]{xcolor}
+
+\hypersetup{colorlinks, linkcolor={Blue}, citecolor={Blue}, urlcolor={Blue}}
 
 \usepackage{graphicx}
 \usepackage{nameref} % gets the name of a chapter when refering to the label with \nameref{chapterName}
@@ -27,14 +27,60 @@
 %\usepackage{fancyhdr}
 %\pagestyle{fancy}
 
+% package and styles for code listings
+\usepackage{listings}
+\usepackage{courier}
+\lstset{
+         basicstyle=\small\ttfamily, % Standardschrift
+         numberstyle=\small,          % Stil der Zeilennummern
+         numbersep=5pt,              % Abstand der Nummern zum Text
+         tabsize=2,                  % Groesse von Tabs
+         extendedchars=true,         %
+         breaklines=true,       
+         numbers=left,
+	  numbersep=6pt,
+         frame=blr,
+  	   commentstyle=\itshape\color{ForestGreen},
+        keywordstyle=\bfseries\color{Blue},
+        stringstyle=\color{Mahogany},
+         showspaces=false,           % Leerzeichen anzeigen ?
+         showtabs=false,             % Tabs anzeigen ?
+         xleftmargin=24pt,
+        xrightmargin=19pt,
+         framextopmargin=5pt,
+         framexleftmargin=10pt,
+         framexrightmargin=10pt,
+         framexbottommargin=-5pt,
+         framesep=14pt,
+         captionpos=top,
+	   belowcaptionskip=-1pt,
+         showstringspaces=false,      % Leerzeichen in Strings anzeigen ?   
+         language=bash     
+}
+\lstset{language=bash}
+\lstset{morekeywords={git}
+}
+\lstloadlanguages{PHP, HTML, bash, Ruby, C, C++, make}
 
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{MidnightBlue}{\parbox{\textwidth}{\hspace{10pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin={0mm}}
+
+% change some margins of the text
 \setlength{\parskip}{0.3cm}
 \linespread {1.25}
 
+%
+%
+%  The actual document
+%
+%
 \begin{document}
 
 \bibliographystyle {natdin}
 
+% include every item in the bibliogaphy, also not cited ones
 \nocite{*}
 
 \include{parts/title}
@@ -42,12 +88,14 @@
 % arabic page numbering should start after the toc, so we start with roman
 \pagenumbering{Roman}
 
-\begingroup % to make sure not every item in the toc is weirdly colored
+% group with custom link color to make sure not every item in the toc is weirdly colored
+\begingroup 
 \hypersetup{linkcolor=black}
 \tableofcontents
 \endgroup
 
-\clearpage % to ensure that the arabic numbering starts on the page after the toc
+% to ensure that the arabic numbering starts on the page after the toc
+\clearpage 
 \pagenumbering{arabic}
 
 \include{parts/preface}
