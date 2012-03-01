@@ -6,6 +6,8 @@
 \usepackage{fixltx2e}
 
 \usepackage[nonamebreak]{natbib}
+% used colors see http://en.wikibooks.org/wiki/LaTeX/Colors for more
+\usepackage[usenames,dvipsnames]{xcolor}
 
 \usepackage{ae} % somehow beautifies the output, don't know why
 \usepackage[usenames,dvipsnames]{xcolor}
@@ -16,8 +18,7 @@
 \usepackage[pdfborder={0 0 0}, breaklinks]{hyperref}
 \usepackage[hyphenbreaks]{breakurl}
 
-% used colors see http://en.wikibooks.org/wiki/LaTeX/Colors for more
-\usepackage[usenames,dvipsnames]{xcolor}
+
 
 \hypersetup{colorlinks, linkcolor={Blue}, citecolor={Blue}, urlcolor={Blue}}
 
@@ -55,10 +56,11 @@
          captionpos=top,
 	   belowcaptionskip=-1pt,
          showstringspaces=false,      % Leerzeichen in Strings anzeigen ?   
-         language=bash     
+         language=bash,
+         escapeinside={{?}{?}}     
 }
 \lstset{language=bash}
-\lstset{morekeywords={git}
+\lstset{morekeywords={git, clone, status, push, checkout, pull, merge, branch, add, commit }
 }
 \lstloadlanguages{PHP, HTML, bash, Ruby, C, C++, make}
 
