@@ -1,14 +1,37 @@
 \chapter{Developing Unplagged}\label{chap:developingUnplagged}
 
-Coming from the \nameref{chap:systemRequirements} here we go with yet another list of requirements. This time they are about 
-what's necessary or at least helpful for the \enquote{job} you are interested in, if you are reading this document.
+Coming from the \nameref{chap:systemRequirements} here we have yet another set of requirements for you, before we can
+start with the actual description of the technologies used for development in the system. This time it's 
+about what we believe will be helpful or sometimes even necessary for the development of Unplagged. 
 
 First of all, the programming languages mostly used in Unplagged are PHP and JavaScript, both of which in conjuction
-with a framework. The used frameworks are ZEND for PHP and jQuery for Javascript respectively.
+with a framework. Teaching programming languages is, as you probably can imagine well beyond the scope of this document,
+but we will at least try to cover the most important concepts of the frameworks as they occur. 
 
-In this chapter we will give an overview over all the important technologies that
+The used frameworks are 
+\href{http://jquery.com/}{jQuery} for Javascript and \href{http://framework.zend.com/docs/overview}{ZEND} for PHP 
+respectively. jQuery is kind of the industry standard for unobtrusive scripting with about 50\% 
+of the Top 10.000 websites using it according to \citet*{Trends} and the Zend framework is also well established and
+brings a lot of features, that are useful to this project.
 
-As said in section \nameref{platforms}, the system is developed in a way, so that it should work on multiple platforms.
+For most of the other topics, we will give you some (hopefully) helpful resources on the way, if it isn't covered 
+thoroughly by us. But just to let you
+know, here is a list of the buzzwords, er technologies that will be mentioned:
+
+\begin{itemize}
+\item CSS3
+\item HTML5
+\item Continous Integration
+\item Responsive Webdesign
+\item Git
+\item Netbeans
+\item LAMP or similar for your operating system
+\end{itemize}
+
+As said in section \nameref{platforms}, the system is developed in a way, so that it should work on multiple platforms. 
+This makes it sometimes difficult to describe certain installation processes in a way that would work for everybody. As
+it's often most problematic, to get some Linux software running on Windows, we will mostly concentrate on the way those
+things are done on this platform and give the instructions for other operating systems as an aside.
 
 \section{Development Environment}
 
@@ -20,7 +43,9 @@ http://www.youtube.com/watch?v=RDGzF2M-zlo\\
 \\
 \textbf{\textit{Installating the Git Bash}}
 \\
-First of all let's get started with an introduction of how to install the Git console application, called Git Bash. Unfortunately all the GUIs we were evaluating didn't work as expected, so we decided to use it from the console only. A very good instruction on how to install the Git Bash can be found on the website of the github project:
+First of all let's get started with an introduction of how to install the Git console application, called Git Bash. 
+Unfortunately all the GUIs we were evaluating didn't work as expected, so we decided to use it from the console only. 
+A very good instruction on how to install the Git Bash can be found on the website of the github project:
 \\
 \\
 Mac OS X: http://help.github.com/mac-set-up-git/
