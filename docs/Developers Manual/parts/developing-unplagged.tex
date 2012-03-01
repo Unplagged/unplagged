@@ -119,7 +119,54 @@ Just a change for educational purposes.
 \end{verbatim}
 
 \subsection{Netbeans}
+
 \subsection{Staging and Preview System}
+
+This subsection will describe how to configure a virtual host properly. A virtual host is a domain that is mapped to the local web server. It is assumed that Apache, MySQL and PHP are already running on the machine. If not, here are some tutorial to get them all running:
+
+Windows: \href{http://www.apachefriends.org/de/xampp-windows.html#1098}{XAMPP installation instructions}
+
+Mac OS: \href{http://www.djangoapp.com/blog/2011/07/24/installation-of-mysql-server-on-mac-os-x-lion/}{Installation of MySQL} \href{http://www.quarkstar.at/index.php/2009/05/18/webserver-aktivieren-und-konfigurieren-in-mac-os-x/}{Activating Apache, PHP}
+\\\\The first step is to add the virtual host to the vhost config: 
+
+Mac OS: 
+\begin{verbatim}
+sudo vi /private/etc/hosts
+add the following line: "127.0.0.1 unplagged.local"
+\end{verbatim}
+Windows:
+\begin{verbatim}
+Open C:\WINDOWS\system32\drivers\etc\hosts
+add the following line: "127.0.0.1 unplagged.local"
+\end{verbatim}
+Now, the host has to be configured in the file
+
+Mac OS:
+\begin{verbatim}
+sudo vi /private/etc/apache2/extra/httpd-vhosts.conf
+\end{verbatim}
+Windows:
+\begin{verbatim}
+Open C:\xampp\apache\conf\httpd.conf
+Uncomment #Include conf/extra/httpd-vhosts.conf
+Edit X:\<path to your xampp installation>\apache\conf\extra\httpd-vhosts.conf
+\end{verbatim}
+
+Add the following configuration to the httpd-vhosts.conf file:
+\begin{verbatim}
+<VirtualHost *:80>
+ServerName unplagged.local
+DocumentRoot "/Users/me/Sites/unplagged.local/public" 
+SetEnv APPLICATION_ENV "development" 
+<Directory /Users/benjamin/Sites/unplagged.local/public>
+Options +Indexes +FollowSymLinks +ExecCGI
+DirectoryIndex /index.php
+AllowOverride All
+Order allow,deny
+Allow from all
+</Directory>
+</VirtualHost>
+\end{verbatim}
 
 \section{Installation}
 \subsection{Tesseract}
