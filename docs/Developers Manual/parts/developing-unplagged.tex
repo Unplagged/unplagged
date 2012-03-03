@@ -85,7 +85,8 @@ git branch mynewfeature
 git checkout mynewfeature
 \end{lstlisting}
 
-Now anything in the repository can be changed, at any point changes can stored in the repository by using the git commit command. If new files were created, git add has to be executed as well.
+Now anything in the repository can be changed, at any point changes can stored in the repository by using the git commit 
+command. If new files were created, git add has to be executed as well.
 
 \begin{lstlisting}[caption=Creating branches]
 git add .
@@ -125,6 +126,7 @@ error: failed to push some refs to 'https://github.com/benoertel/unplagged.git'
 To prevent you from losing history, non-fast-forward updates were rejected
 Merge the remote changes (e.g. 'git pull') before pushing again.  See the
 'Note about fast-forwards' section of 'git push --help' for details.
+
 \begin{verbatim}
 # Unmerged paths:
 #   (use "git add/rm <file>..." as appropriate to mark resolution)
@@ -132,7 +134,10 @@ Merge the remote changes (e.g. 'git pull') before pushing again.  See the
 #    both modified:      readme.txt
 #
 \end{verbatim}
-To reslove the issues, open the files listed in the error message, in this case "readme.txt" and decide how the correct version should look like, by removing all the "< < < < < < <  HEAD" and "> > > > > > > b478801d68267ef479acc5ca54544634c52c545c" parts.
+
+To reslove the issues, open the files listed in the error message, in this case "readme.txt" and decide how the correct 
+version should look like, by removing all the "< < < < < < <  HEAD" and "> > > > > > > b478801d68267ef479acc5ca54544634c52c545c" 
+parts.
 
 \begin{verbatim}
 <<<<<<< HEAD
@@ -170,7 +175,8 @@ Windows: \url{http://www.apachefriends.org/de/xampp-windows.html#1098}
 
 Mac OS:\\
 \url{http://www.djangoapp.com/blog/2011/07/24/installation-of-mysql-server-on-mac-os-x-lion/} \url{http://www.quarkstar.at/index.php/2009/05/18/webserver-aktivieren-und-konfigurieren-in-mac-os-x/}
-\\\\The first step is to add the virtual host to the vhost config: 
+
+The first step is to add the virtual host to the vhost config: 
 
 \begin{lstlisting}[caption=Mac OS X: Creating virtual host]
 sudo vi /private/etc/hosts
@@ -192,6 +198,7 @@ open C:\xampp\apache\conf\extra\httpd-vhosts.conf
 \end{lstlisting}
 
 Add the following configuration to the httpd-vhosts.conf file:
+
 \begin{lstlisting}[caption=Apache configuration]
 <VirtualHost *:80>
 ServerName unplagged.local
