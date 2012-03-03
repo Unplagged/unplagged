@@ -65,7 +65,7 @@ located. An example for Mac~OS~X:
 
 \begin{lstlisting}[caption=Cloning a repository]
 cd ?Sites/unplagged.local?
-git clone ?https://<yourusername>@github.com/benoertel/unplagged.git?
+git clone ?https://<usrname>@github.com/benoertel/unplagged.git?
 \end{lstlisting}
 
 \subsubsection{The most important git commands}
@@ -78,14 +78,14 @@ The unplagged project consists of several branches, which are used to develop an
 developers. Once a new feature is done, it is merged into the master branch. The master branch usually includes only 
 fully tested and deployable source code. 
 
-As a new developer, it is important to create your own branch before doing anything else and switch into it.
+As a new developer, it is important to create an own branch before doing anything else and switch into it.
 
 \begin{lstlisting}[caption=Creating branches]
 git branch mynewfeature
 git checkout mynewfeature
 \end{lstlisting}
 
-Now you can change whatever you want in the repository.At any point you can store your changes in the repository by using the git commit command. If you created new files, git add has to be executed as well.
+Now anything in the repository can be changed, at any point changes can stored in the repository by using the git commit command. If new files were created, git add has to be executed as well.
 
 \begin{lstlisting}[caption=Creating branches]
 git add .
@@ -93,8 +93,8 @@ git commit -m "A message that describes the changes."
 \end{lstlisting}
 
 When the feature is fully working and approved, it has to be merged back to the master branch, in order to get deployed 
-to the staging environment. To do this, you have to checkout the master branch, update it with git pull and then merge 
-all the changes from the new feature into the master branch and remove the feature branch.
+to the staging environment. To do this, the master branch has to be checked out, updated with git pull and then all changes
+have to be merged from the new feature into the master branch and the feature branch has to be removed.
 
 \begin{lstlisting}[caption=Creating branches]
 git checkout master
@@ -104,7 +104,7 @@ git branch -d mynewfeature
 \end{lstlisting}
 
 In comparison to Subversion, for example Git has one more step to really write back to the repository. After a commit, 
-a push has to be done, each push can include multiple commits.
+a push has to be executed, each push can include multiple commits.
 
 \begin{lstlisting}[caption=Creating branches]
 git push
@@ -166,33 +166,30 @@ Just a change for educational purposes.
 
 This subsection will describe how to configure a virtual host properly. A virtual host is a domain that is mapped to the local web server. It is assumed that Apache, MySQL and PHP are already running on the machine. If not, here are some tutorial to get them all running:
 
-Windows: \href{http://www.apachefriends.org/de/xampp-windows.html#1098}{XAMPP installation instructions}
+Windows: \url{http://www.apachefriends.org/de/xampp-windows.html#1098}
 
-Mac OS: \href{http://www.djangoapp.com/blog/2011/07/24/installation-of-mysql-server-on-mac-os-x-lion/}{Installation of MySQL} \href{http://www.quarkstar.at/index.php/2009/05/18/webserver-aktivieren-und-konfigurieren-in-mac-os-x/}{Activating Apache, PHP}
+Mac OS:\\
+\url{http://www.djangoapp.com/blog/2011/07/24/installation-of-mysql-server-on-mac-os-x-lion/} \url{http://www.quarkstar.at/index.php/2009/05/18/webserver-aktivieren-und-konfigurieren-in-mac-os-x/}
 \\\\The first step is to add the virtual host to the vhost config: 
 
-Mac OS: 
-\begin{verbatim}
+\begin{lstlisting}[caption=Mac OS X: Creating virtual host]
 sudo vi /private/etc/hosts
-add the following line: "127.0.0.1 unplagged.local"
-\end{verbatim}
-Windows:
-\begin{verbatim}
-Open C:\WINDOWS\system32\drivers\etc\hosts
-add the following line: "127.0.0.1 unplagged.local"
-\end{verbatim}
-Now, the host has to be configured in the file
+#add the following line:
+"127.0.0.1 unplagged.local"
 
-Mac OS:
-\begin{verbatim}
 sudo vi /private/etc/apache2/extra/httpd-vhosts.conf
-\end{verbatim}
-Windows:
-\begin{verbatim}
-Open C:\xampp\apache\conf\httpd.conf
-Uncomment #Include conf/extra/httpd-vhosts.conf
-Edit X:\<path to your xampp installation>\apache\conf\extra\httpd-vhosts.conf
-\end{verbatim}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Windows: Creating a virtual host]
+open C:\WINDOWS\system32\drivers\etc\hosts
+#add the following line:
+"127.0.0.1 unplagged.local"
+
+open C:\xampp\apache\conf\httpd.conf
+#Uncomment the following line
+#Include conf/extra/httpd-vhosts.conf
+open C:\xampp\apache\conf\extra\httpd-vhosts.conf
+\end{lstlisting}
 
 Add the following configuration to the httpd-vhosts.conf file:
 \begin{lstlisting}[caption=Apache configuration]
