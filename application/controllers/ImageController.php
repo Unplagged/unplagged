@@ -25,6 +25,7 @@
 class ImageController extends Zend_Controller_Action{
 
   public function init(){
+    $this->_em = Zend_Registry::getInstance()->entitymanager;
     $this->_helper->viewRenderer->setNoRender(true);
     $this->_helper->layout()->disableLayout();
   }
@@ -45,6 +46,29 @@ class ImageController extends Zend_Controller_Action{
     }else{
       $this->getResponse()->setHttpResponseCode(404);
     }
+  }
+  
+  
+  public function viewAction(){
+    $fileId = $this->_getParam('id');
+
+    if(!empty($fileId)){
+      $fileId = preg_replace('/[^0-9]/', '', $fileId);
+      $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
+      if($file){
+        $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
+
+        header("Content-type: " . $file->getMimeType());
+
+        readfile($downloadPath);
+      }else{
+        $this->_helper->flashMessenger->addMessage('No file found.');
+        $this->_helper->redirector('list', 'file');
+      }
+    }
+    // disable view
+    $this->view->layout()->disableLayout();
+    $this->_helper->viewRenderer->setNoRender(true);
   }
 
 }
