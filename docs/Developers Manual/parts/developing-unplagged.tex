@@ -1,17 +1,17 @@
 \chapter{Developing Unplagged}\label{chap:developingUnplagged}
 
-Coming from the \nameref{chap:systemRequirements} here we have yet another set of requirements for you, before we can
+Coming from the \nameref{chap:systemRequirements} here we have yet another set of requirements, before we can
 start with the actual description of the technologies used for development in the system. This time it's 
 about what we believe will be helpful or sometimes even necessary for the development of Unplagged. 
 
 First of all, the programming languages mostly used in Unplagged are PHP and JavaScript, both of which in conjuction
-with a framework. Teaching programming languages is, as you probably can imagine well beyond the scope of this document,
+with a framework. Teaching programming languages is, as you probably can imagine, well beyond the scope of this document,
 but we will at least try to cover the most important concepts of the frameworks as they occur. 
 
 The used frameworks are 
 \href{http://jquery.com/}{jQuery} for Javascript and \href{http://framework.zend.com/docs/overview}{ZEND} for PHP 
 respectively. jQuery is kind of the industry standard for unobtrusive scripting with about 50\% 
-of the Top 10.000 websites using it according to \citet*{Trends} and the Zend framework is also well established and
+of the Top 10.000 websites using it according to \citet{Trends} and the Zend framework is also well established and
 brings a lot of features, that are useful to this project.
 
 For most of the other topics, we will give you some (hopefully) helpful resources on the way, if it isn't covered 
@@ -19,14 +19,12 @@ thoroughly by us. But just to let you
 know, here is a list of the buzzwords, er technologies that will be mentioned:
 
 \begin{itemize}
-\item CSS3
-\item HTML5
+\item HTML5 and CSS3
 \item Continuous Integration
 \item Responsive Webdesign
 \item Progressive Enhancement
 \item Git
 \item Netbeans
-\item LAMP or similar for your operating system
 \end{itemize}
 
 As said in section \nameref{platforms}, the system is developed in a way, so that it should work on multiple platforms. 
@@ -37,19 +35,27 @@ things are done on this platform and give the instructions for other operating s
 \section{Development Environment}
 
 \subsection{Git}
-% note from dominik: I changed some things to the actual latex commands, so that we can style later on if we want to 
-The version control of all parts of the unplagged project is managed through Git. Since 2005, Git got more and more 
-famous and many developers prefer it over Subversion because of its simplicity. However, nobody of our team ever used 
-Git before so it was a challenge to get it running on all the systems. But we took the challenge to explore all the 
-features Git offers. It is so much easier to create different branches and merge them again, than it is with other 
-version control softwares like Subversion.
+The source code and files of all parts of the Unplagged project are managed through Git, 
+with the repository hosted at \href{https://github.com}{Github}. 
+Git is a distributed version control system, that exists since 2005 and gained more and more 
+track in recent years, because many developers prefer it over other version control system because of its simplicity, which
+made it interesting for us to tryout. % citation?
 
-If you didn't use git before, you probably should watch this 8 minutes Git introduction video first:
-\url{http://www.youtube.com/watch?v=RDGzF2M-zlo}
+However, none of the team memebers had ever used 
+Git before in a bigger context so it was a challenge to get it running on all the systems. But we took the challenge to explore all the 
+features Git offers. It is much easier to create different branches and merge them again, than it is with other 
+version control systems like Subversion.
+
+If you didn't use git before, it would probably be a good idea, to watch this 8 minutes Git introduction as a starting point:
+
+\begin{itemize}
+\item \url{http://www.youtube.com/watch?v=RDGzF2M-zlo}
+\end{itemize}
 
 \subsubsection{Installating the Git Bash}
-First of all let's get started with an introduction of how to install the Git console application, called Git Bash. 
-Unfortunately all the GUIs we were evaluating didn't work as expected, so we decided to use it from the console only. 
+First of all let's find out, how to install the Git console application, called Git Bash. 
+Unfortunately all the GUIs we were evaluating didn't work consistently, so we decided to use it from the command line 
+only. 
 A very good instruction on how to install the Git Bash can be found on the website of the github project:
 
 \begin{description}
@@ -59,13 +65,27 @@ A very good instruction on how to install the Git Bash can be found on the websi
 \end{description}
 
 \subsubsection{Getting the source code of the unplagged project}
-Now it is time to get the project source code on your machine. The whole unplagged project is hosted on github, so 
-first you need to create an account on https://github.com. And then go to the directory where the project shall be 
-located. An example for Mac~OS~X:
+Now it is time to get the project source code on your machine. As said before, the whole unplagged project is hosted on 
+github, so if you want to be able to contribute source code later on, you first need to create an account on \url{https://github.com}.
+This isn't necessary, if you simply want to look into the source code, which can be accessed via \url{https://github.com/benoertel/unplagged}.
+
+If you haven't been granted write access to the above mentioned repository by a project member (which is very likely when
+you are reading this document for the first time), you will need to do a fork
+of the Unplagged project right at github, like described in:
+
+\begin{itemize}
+\item \url{http://help.github.com/fork-a-repo/}
+\end{itemize}
+
+After this the following steps are mostly the same, with the distinction of the project URI, which should be the one of 
+your newly created fork.
+
+Open up the Git Bash and switch to the directory where you want the project to be 
+located:
 
 \begin{lstlisting}[caption=Cloning a repository]
 cd ?Sites/unplagged.local?
-git clone ?https://<usrname>@github.com/benoertel/unplagged.git?
+git clone ?https://<username>@github.com/benoertel/unplagged.git?
 \end{lstlisting}
 
 \subsubsection{The most important git commands}
@@ -88,7 +108,7 @@ git checkout mynewfeature
 Now anything in the repository can be changed, at any point changes can stored in the repository by using the git commit 
 command. If new files were created, git add has to be executed as well.
 
-\begin{lstlisting}[caption=Creating branches]
+\begin{lstlisting}[caption=Commiting]
 git add .
 git commit -m "A message that describes the changes."
 \end{lstlisting}
@@ -97,7 +117,7 @@ When the feature is fully working and approved, it has to be merged back to the 
 to the staging environment. To do this, the master branch has to be checked out, updated with git pull and then all changes
 have to be merged from the new feature into the master branch and the feature branch has to be removed.
 
-\begin{lstlisting}[caption=Creating branches]
+\begin{lstlisting}[caption=Merging branches]
 git checkout master
 git pull
 git merge mynewfeature
@@ -107,17 +127,24 @@ git branch -d mynewfeature
 In comparison to Subversion, for example Git has one more step to really write back to the repository. After a commit, 
 a push has to be executed, each push can include multiple commits.
 
-\begin{lstlisting}[caption=Creating branches]
+\begin{lstlisting}[caption=Pushing to the server]
 git push
 \end{lstlisting}
 
-This is it, the changes to the repository have been pushed to the master branch.
+This is nearly it, the changes to the repository have been pushed to the master branch. The only thing, that probably has to be done
+now, is to open up a pull request on github, if you developed on your own fork of the project. This means, that you are
+asking the project members who have access to the \enquote{real} Unplagged github account, to integrate your changes into the actual project
+sources. A nice description of how this process is done can be found at github again:
+
+\begin{itemize}
+\item \url{http://help.github.com/send-pull-requests/}
+\end{itemize}
 
 \subsubsection{Handling conflicts in merging process}
 It is possible, if two developers were working on the same part of  file, that a conflict raises during the merge. Such 
 a conflict could look like this:
 
-\begin{verbatim}
+\begin{lstlisting}
 CONFLICT (content): Merge conflict in readme.txt
 
 To https://github.com/benoertel/unplagged.git
@@ -127,19 +154,19 @@ To prevent you from losing history, non-fast-forward updates were rejected
 Merge the remote changes (e.g. 'git pull') before pushing again.  See the
 'Note about fast-forwards' section of 'git push --help' for details.
 
-\begin{verbatim}
 # Unmerged paths:
 #   (use "git add/rm <file>..." as appropriate to mark resolution)
 #
 #    both modified:      readme.txt
 #
-\end{verbatim}
+\end{lstlisting}
 
-To reslove the issues, open the files listed in the error message, in this case "readme.txt" and decide how the correct 
-version should look like, by removing all the "< < < < < < <  HEAD" and "> > > > > > > b478801d68267ef479acc5ca54544634c52c545c" 
+To reslove the issues, open the files listed in the error message, in this case \textit{readme.txt} and decide how the correct 
+version should look like, by removing all the \enquote{< < < < < < <  HEAD} and 
+\enquote{> > > > > > > b478801d68267ef479acc5ca54544634c52c545c} 
 parts.
 
-\begin{verbatim}
+\begin{lstlisting}[caption=Creating branches]
 <<<<<<< HEAD
 The goal of this project is the creation of an easy-to-use, web-based
 system to document and detect plagiarism in scientific papers.
@@ -152,7 +179,7 @@ system to document and detect plagiarism in scientific papers.
 
 >>>>>>> b478801d68267ef479acc5ca54544634c52c545c
 Just a change for educational purposes.
-\end{verbatim}
+\end{lstlisting}
 
 Should look like this after merging:
 
@@ -167,14 +194,17 @@ Just a change for educational purposes.
 
 \subsection{Netbeans}
 
-\subsection{Staging and Preview System}
+\subsection{Local Deployment}
 
-This subsection will describe how to configure a virtual host properly. A virtual host is a domain that is mapped to the local web server. It is assumed that Apache, MySQL and PHP are already running on the machine. If not, here are some tutorial to get them all running:
+This subsection will describe how to configure a virtual host properly. A virtual host is a domain that is mapped to 
+the local web server. It is assumed that Apache, MySQL and PHP are already running on the machine. If not, here are 
+some tutorial to get them all running:
 
 Windows: \url{http://www.apachefriends.org/de/xampp-windows.html#1098}
 
 Mac OS:\\
-\url{http://www.djangoapp.com/blog/2011/07/24/installation-of-mysql-server-on-mac-os-x-lion/} \url{http://www.quarkstar.at/index.php/2009/05/18/webserver-aktivieren-und-konfigurieren-in-mac-os-x/}
+\url{http://www.djangoapp.com/blog/2011/07/24/installation-of-mysql-server-on-mac-os-x-lion/} 
+\url{http://www.quarkstar.at/index.php/2009/05/18/webserver-aktivieren-und-konfigurieren-in-mac-os-x/}
 
 The first step is to add the virtual host to the vhost config: 
 
@@ -214,10 +244,16 @@ Allow from all
 </VirtualHost>
 \end{lstlisting}
 
-\section{Installation}
 \subsection{Tesseract}
 \subsection{Simtext}
 \subsection{Imagemagick}
+
+\subsection{Continuous Integration}
+
+To always have a running copy of the latest code, we use an automated workflow, that always deploys everything that has been
+pushed to the Github repository. 
+
+
 
 
 

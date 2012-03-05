@@ -1,4 +1,5 @@
-\documentclass[paper=A4, pagesize]{scrreprt}
+\documentclass[paper=A4, pagesize, parskip=full]{scrreprt}
+\linespread {1.25}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8x]{inputenc}
@@ -16,17 +17,16 @@
 \usepackage{microtype}
 
 \usepackage[pdfborder={0 0 0}, breaklinks]{hyperref}
-\usepackage[hyphenbreaks]{breakurl}
-
-
-
 \hypersetup{colorlinks, linkcolor={Blue}, citecolor={Blue}, urlcolor={Blue}}
+\urlstyle{same}
+
+
+
+
 
 \usepackage{graphicx}
 \usepackage{nameref} % gets the name of a chapter when refering to the label with \nameref{chapterName}
 
-%\usepackage{fancyhdr}
-%\pagestyle{fancy}
 
 % package and styles for code listings
 \usepackage{listings}
@@ -69,17 +69,13 @@
 \DeclareCaptionFormat{listing}{\colorbox{MidnightBlue}{\parbox{\textwidth}{\hspace{10pt}#1#2#3}}}
 \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin={0mm}}
 
-% change some margins of the text
-\setlength{\parskip}{0.3cm}
-\linespread {1.25}
 
+%%%%%%%%%%%%%%%%%%%%
 %
+%  Put together the parts of the document
 %
-%  The actual document
-%
-%
+%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-
 \bibliographystyle {natdin}
 
 % include every item in the bibliogaphy, also not cited ones
@@ -87,13 +83,13 @@
 
 \include{parts/title}
 
-% arabic page numbering should start after the toc, so we start with roman
+% arabic page numbering should start after the toc, so we start with roman, but after the title
 \pagenumbering{Roman}
 
 % group with custom link color to make sure not every item in the toc is weirdly colored
 \begingroup 
-\hypersetup{linkcolor=black}
-\tableofcontents
+  \hypersetup{linkcolor=black}
+  \tableofcontents
 \endgroup
 
 % to ensure that the arabic numbering starts on the page after the toc
@@ -101,15 +97,9 @@
 \pagenumbering{arabic}
 
 \include{parts/preface}
-
 \include{parts/plagiarism}
-
 \include{parts/requirements}
-
 \include{parts/developing-unplagged}
-
 \include{parts/appendix}
-
 \bibliography{biblio}
-
 \end{document}
