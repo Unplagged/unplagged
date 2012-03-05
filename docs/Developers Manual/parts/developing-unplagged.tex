@@ -1,8 +1,8 @@
 \chapter{Developing Unplagged}\label{chap:developingUnplagged}
 
 Coming from the \nameref{chap:systemRequirements} here we have yet another set of requirements, before we can
-start with the actual description of the technologies used for development in the system. This time it's 
-about what we believe will be helpful or sometimes even necessary for the development of Unplagged. 
+start with the actual description of the way you can help us develop the system. This time it's 
+about what we believe will be helpful or sometimes even necessary prerequisites. 
 
 First of all, the programming languages mostly used in Unplagged are PHP and JavaScript, both of which in conjuction
 with a framework. Teaching programming languages is, as you probably can imagine, well beyond the scope of this document,
@@ -19,40 +19,47 @@ thoroughly by us. But just to let you
 know, here is a list of the buzzwords, er technologies that will be mentioned:
 
 \begin{itemize}
+\item Scrum
 \item HTML5 and CSS3
 \item Continuous Integration
 \item Responsive Webdesign
 \item Progressive Enhancement
-\item Git
-\item Netbeans
+\item Git, Netbeans, Redmine
+\item Tesseract, Imagemagick
+\item Simtext
 \end{itemize}
 
-As said in section \nameref{platforms}, the system is developed in a way, so that it should work on multiple platforms. 
+As said in section \nameref{platforms}, the system is developed, so that it should work on multiple platforms. 
 This makes it sometimes difficult to describe certain installation processes in a way that would work for everybody. As
 it's often most problematic, to get some Linux software running on Windows, we will mostly concentrate on the way those
 things are done on this platform and give the instructions for other operating systems as an aside if necessary.
 
 \section{Development Environment}
 
+The following parts will mostly focus on the way you can get a development version of unplagged up and running on your 
+system.
+
 \subsection{Git}
 The source code and files of all parts of the Unplagged project are managed through Git, 
 with the repository hosted at \href{https://github.com}{Github}. 
 Git is a distributed version control system, that exists since 2005 and gained more and more 
-track in recent years, because many developers prefer it over other version control system because of its simplicity, which
-made it interesting for us to tryout. % citation?
+track in recent years, because many developers prefer it over other version control system because of its simplicity. This
+made it also interesting for us to use it for Unplagged. % citation?
 
 However, none of the team memebers had ever used 
-Git before in a bigger context so it was a challenge to get it running on all the systems. But we took the challenge to explore all the 
+Git before in a bigger context so it was a challenge to get it running on all the systems. But we took it, to explore all the 
 features Git offers. It is much easier to create different branches and merge them again, than it is with other 
 version control systems like Subversion.
 
 If you didn't use git before, it would probably be a good idea, to watch this 8 minutes Git introduction as a starting point:
+% This feels weird, because it is actually described from the start afterwards, so why the video?
 
 \begin{itemize}
 \item \url{http://www.youtube.com/watch?v=RDGzF2M-zlo}
 \end{itemize}
 
 \subsubsection{Installating the Git Bash}
+
 First of all let's find out, how to install the Git console application, called Git Bash. 
 Unfortunately all the GUIs we were evaluating didn't work consistently, so we decided to use it from the command line 
 only. 
@@ -77,35 +84,42 @@ of the Unplagged project right at github, like described in:
 \item \url{http://help.github.com/fork-a-repo/}
 \end{itemize}
 
-After this the following steps are mostly the same, with the distinction of the project URI, which should be the one of 
+After this the following steps are mostly the same for everybody, with the distinction of the project URIs, which should 
+be the one of 
 your newly created fork.
 
 Open up the Git Bash and switch to the directory where you want the project to be 
-located:
+located and clone the repository:
 
 \begin{lstlisting}[caption=Cloning a repository]
 cd ?Sites/unplagged.local?
 git clone ?https://<username>@github.com/benoertel/unplagged.git?
 \end{lstlisting}
 
+After this you should have a local copy of all the repository data in the specified directory.
+
 \subsubsection{The most important git commands}
 
-You are ready to use Git! Here are some more instructions on the most important commands and how to properly use it. 
-However, if the given instructions in this manuall are not enough, feel free to checkout the whole Git manual on: 
-\url{http://schacon.github.com/git/user-manual.html}
+You are now ready to use Git! Here are some more instructions on the most important commands and how to properly use it. 
+However, if the given instructions in this manual are not enough, feel free to checkout the whole Git manual on: 
 
-The unplagged project consists of several branches, which are used to develop and store code indepdently of the other 
+\begin{itemize}
+\item \url{http://schacon.github.com/git/user-manual.html}
+\end{itemize}
+
+The unplagged project consists of several branches, which are used to develop and store code independently of the other 
 developers. Once a new feature is done, it is merged into the master branch. The master branch usually includes only 
 fully tested and deployable source code. 
 
-As a new developer, it is important to create an own branch before doing anything else and switch into it.
+As a new developer, it is important to create an own branch before doing anything else and switch to it.
 
 \begin{lstlisting}[caption=Creating branches]
 git branch mynewfeature
 git checkout mynewfeature
 \end{lstlisting}
 
-Now anything in the repository can be changed, at any point changes can stored in the repository by using the git commit 
+Now anything in the repository can be changed, at any point changes can be versioned in the repository by using the 
+\textit{git commit} 
 command. If new files were created, git add has to be executed as well.
 
 \begin{lstlisting}[caption=Commiting]
@@ -248,12 +262,52 @@ Allow from all
 \subsection{Simtext}
 \subsection{Imagemagick}
 
-\subsection{Continuous Integration}
+\subsection{Collaboration and Continuous Integration}
 
-To always have a running copy of the latest code, we use an automated workflow, that always deploys everything that has been
-pushed to the Github repository. 
+To make it possible to work efficiently together in our distributed environment, the team uses 
+\href{http://www.redmine.org/}{Redmine} as it's project management tool, which you can access under:
+
+\begin{itemize}
+\item \url{http://tickets.unplagged.com}
+\end{itemize}
+
+If you register there, an administrator should grant you access to the tickets and the wiki, so that you can participate
+in solving the problems at hand. Our current workflow
+
+To always have a running version of the latest code, we use an automated workflow, that always deploys everything that 
+has been pushed to the Github repository on the Unplagged staging server. The machine is a simple Ubuntu web server, that
+is currently also used for hosting our collaboration tools and the webpage.
 
 
+
+\begin{figure}[!h]
+  \centering
+  \fbox{
+    \includegraphics[width=\textwidth]{diagrams/staging-workflow.png}
+  }
+  \caption{Erster Entwurf des Forums}
+  \label{}
+\end{figure}
+
+\lstset{language=bash}
+\begin{lstlisting}[caption=Deployment script]
+#!/bin/bash
+
+cd /var/git/unplagged.git/
+GIT_WORK_TREE=/var/www/preview.unplagged.com git checkout -f
+
+cd /var/www/preview.unplagged.com
+#generate phpdoc
+apigen -s application/ -s library/Unplagged/ -d docs/phpdoc --title "Unplagged Documentation" --todo yes
+
+#run database build scripts
+cd scripts/build
+php initdirectories.php
+php doctrine_staging.php
+
+cd /var/www
+chown www-data:www-data preview.unplagged.com
+\end{lstlisting}
 
 
 
