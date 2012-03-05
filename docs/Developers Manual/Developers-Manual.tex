@@ -20,13 +20,8 @@
 \hypersetup{colorlinks, linkcolor={Blue}, citecolor={Blue}, urlcolor={Blue}}
 \urlstyle{same}
 
-
-
-
-
 \usepackage{graphicx}
 \usepackage{nameref} % gets the name of a chapter when refering to the label with \nameref{chapterName}
-
 
 % package and styles for code listings
 \usepackage{listings}
@@ -92,11 +87,10 @@
   \tableofcontents
 \endgroup
 
-% to ensure that the arabic numbering starts on the page after the toc
-\clearpage 
-\pagenumbering{arabic}
-
 \include{parts/preface}
+
+% to ensure that the arabic numbering starts after the preface
+\pagenumbering{arabic}
 \include{parts/plagiarism}
 \include{parts/requirements}
 \include{parts/developing-unplagged}
