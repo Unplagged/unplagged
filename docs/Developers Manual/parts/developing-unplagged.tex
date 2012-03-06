@@ -51,12 +51,15 @@ Git before in a bigger context so it was a challenge to get it running on all th
 features Git offers. It is much easier to create different branches and merge them again, than it is with other 
 version control systems like Subversion.
 
-If you didn't use git before, it would probably be a good idea, to watch this 8 minutes Git introduction as a starting point:
-% This feels weird, because it is actually described from the start afterwards, so why the video?
+% This feels weird, because the description afterwards is actually nearly the same as in the video, so why show it?
+% I think we should strike this point
 
-\begin{itemize}
-\item \url{http://www.youtube.com/watch?v=RDGzF2M-zlo}
-\end{itemize}
+%If you have experience with more classical central version control systems, but didn't use git before, it would probably 
+%be a good idea, to watch this 8 minutes Git introduction as a starting point, because it compares the Git worfklow to Subversions:
+
+%\begin{itemize}
+%\item \url{http://www.youtube.com/watch?v=RDGzF2M-zlo}
+%\end{itemize}
 
 \subsubsection{Installing Git Bash}
 
@@ -66,9 +69,9 @@ only.
 A very good instruction on how to install the Git Bash can be found on the website of the github project:
 
 \begin{description}
-\item[Mac OS X:] \url{http://help.github.com/mac-set-up-git/}
 \item[Windows:] \url{http://help.github.com/win-set-up-git/}
 \item[Linux:] \url{http://help.github.com/linux-set-up-git/}
+\item[Mac OS X:] \url{http://help.github.com/mac-set-up-git/}
 \end{description}
 
 \subsubsection{Getting the source code of the unplagged project}
@@ -84,7 +87,7 @@ of the Unplagged project right at github, like described in:
 \item \url{http://help.github.com/fork-a-repo/}
 \end{itemize}
 
-After this the following steps are mostly the same for everybody, with the distinction of the project URIs, which should 
+After this, the following steps are mostly the same for everybody, with the distinction of the project URIs, which should 
 be the one of 
 your newly created fork.
 
@@ -93,7 +96,7 @@ located and clone the repository:
 
 \begin{lstlisting}[caption=Cloning a repository]
 cd ?Sites/unplagged.local?
-git clone ?https://<username>@github.com/benoertel/unplagged.git?
+git clone ?https://\textbf{<username>}@github.com/benoertel/unplagged.git?
 \end{lstlisting}
 
 After this you should have a local copy of all the repository data in the specified directory.
@@ -175,7 +178,7 @@ Merge the remote changes (e.g. 'git pull') before pushing again.  See the
 #
 \end{lstlisting}
 
-To reslove the issues, open the files listed in the error message, in this case \textit{readme.txt} and decide how the correct 
+To resolve the issues, open the files listed in the error message, in this case \textit{readme.txt} and decide how the correct 
 version should look like, by removing all the \enquote{< < < < < < <  HEAD} and 
 \enquote{> > > > > > > b478801d68267ef479acc5ca54544634c52c545c} 
 parts.
@@ -262,35 +265,50 @@ Allow from all
 \subsection{Simtext}
 \subsection{Imagemagick}
 
-\subsection{Collaboration and Continuous Integration}
-
-To make it possible to work efficiently together in our distributed environment, the team uses 
-\href{http://www.redmine.org/}{Redmine} as it's project management tool, which you can access under:
-
-\begin{itemize}
-\item \url{http://tickets.unplagged.com}
-\end{itemize}
-
-If you register there, an administrator should grant you access to the tickets and the wiki, so that you can participate
-in solving the problems at hand. Our current workflow
+\subsection{Continuous Integration}
 
 To always have a running version of the latest code, we use an automated workflow, that always deploys everything that 
-has been pushed to the Github repository on the Unplagged staging server. The machine is a simple Ubuntu web server, that
-is currently also used for hosting our collaboration tools and the webpage.
-
-
+has been pushed to the Github repository on the Unplagged staging server. The machine this is done with, is a simple 
+Ubuntu web server, that is also used for hosting our collaboration tools and the webpage.
 
 \begin{figure}[!h]
   \centering
   \fbox{
-    \includegraphics[width=\textwidth]{diagrams/staging-workflow.png}
+    \includegraphics[width=0.97\textwidth]{diagrams/staging-workflow.png}
   }
-  \caption{Erster Entwurf des Forums}
-  \label{}
+  \caption{Deployment workflow}
+  \label{fig:developmentWorkflow}
 \end{figure}
 
+As you can see in figure \ref{fig:developmentWorkflow} the mechanism used for this is a callback, the 
+\textit{post-receive hook} of git, 
+which github employs to let it's users enter a \textit{post-receive URL} to call a URL after someone has pushed to the
+repository. The URL that gets called is located on our staging server and gets answered by a Redmine plugin called 
+\enquote{redmine\_github\_hook}, that would
+normally only call a checkout on the server-side repository, so that the newest sources can be seen via the Redmine
+web frontend. 
+
+\begin{lstlisting}[caption=Changes to redmine\_github\_hook.rb, label=list:redmineGithubHook, language=Ruby]
+# Fetches updates from the remote repository
+def update_repository(repository)
+  command = git_command('fetch origin', repository)
+  if exec(command)
+    command = git_command("fetch origin '+refs/heads/*:refs/heads/*'", repository)
+    exec(command)
+
+    #custom checkout to preview area
+    system('sh /usr/local/etc/scripts/buildUnplaggedPreview.sh')?\label{customRubyChange}?
+  end
+end
+\end{lstlisting}
+
+However, we tweaked the source code of this plugin slightly, as you can see on line \ref{customRubyChange}
+in listing \ref{list:redmineGithubHook} so that it also calls the below bash script(listing \ref{deploymentScript})
+to initiate the deployment process.
+
+
 \lstset{language=bash}
-\begin{lstlisting}[caption=Deployment script]
+\begin{lstlisting}[caption=Deployment script, language=bash, label=list:deploymentScript]
 #!/bin/bash
 
 cd /var/git/unplagged.git/
@@ -309,6 +327,25 @@ cd /var/www
 chown www-data:www-data preview.unplagged.com
 \end{lstlisting}
 
+The bash script is then used to do a \enquote{clean checkout}(without hidden \texttt{.git} folders) of the repository and
+to run \enquote{Apigen}, an engine to process the PHPDoc comments inside the project.
+Those two things can be accessed by the already prepared vHosts on the server:
+
+\begin{itemize}
+\item \url{http://preview.unplagged.com/}
+\item \url{http://phpdoc.unplagged.com/}
+\end{itemize}
+
+\subsubsection{Possible Improvements}
+
+The above described workflow is already nice, but it still has a lot of room for improvement.
+
+\begin{itemize}
+\item Email notification on failed unit test after the deployment on the server
+\item Installer
+\item Separation into a staging environment with the newest commits and an actual preview environment, that can be deployed
+by a simple script and the commit id
+\end{itemize}
 
 
 \section{Architectural Goals}
