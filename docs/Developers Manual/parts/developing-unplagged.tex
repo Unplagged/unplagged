@@ -306,7 +306,6 @@ However, we tweaked the source code of this plugin slightly, as you can see on l
 in listing \ref{list:redmineGithubHook} so that it also calls the below bash script(listing \ref{deploymentScript})
 to initiate the deployment process.
 
-
 \lstset{language=bash}
 \begin{lstlisting}[caption=Deployment script, language=bash, label=list:deploymentScript]
 #!/bin/bash
@@ -336,16 +335,17 @@ Those two things can be accessed by the already prepared vHosts on the server:
 \item \url{http://phpdoc.unplagged.com/}
 \end{itemize}
 
+If you would like to get access to the preview areas, you need to obtain the password and username from a team member.
+
 \subsubsection{Possible Improvements}
 
-The above described workflow is already nice, but it still has a lot of room for improvement.
+The above described workflow is, as we believe, already on a good way, but it still has a lot of room for improvement. 
+First of all, it would
+be nice to only let the deployment go through, if the unit tests ran successfully on the server and to have some sort of 
+email notification mechanism if this wasn't the case.
 
-\begin{itemize}
-\item Email notification on failed unit test after the deployment on the server
-\item Installer
-\item Separation into a staging environment with the newest commits and an actual preview environment, that can be deployed
-by a simple script and the commit id
-\end{itemize}
+Another improvement would also be to have a separation into a staging environment with the newest commits and an 
+actual preview environment, that can be deployed to a known stable state/commit of the system in a simple manner.
 
 
 \section{Architectural Goals}
