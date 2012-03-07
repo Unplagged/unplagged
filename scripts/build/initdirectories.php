@@ -13,6 +13,7 @@ $directories = array(
   'temp',
   'temp' . DIRECTORY_SEPARATOR . 'ocr',
   'temp' . DIRECTORY_SEPARATOR . 'imagemagick',
+  'data' . DIRECTORY_SEPARATOR . 'doctrine',
   'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR . 'proxies'
 );
 
