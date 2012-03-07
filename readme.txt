@@ -14,10 +14,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+/////////////////////////////////////////////////////////////////////
 
-
-The goal of this project is the creation of an easy-to-use, web-based system to document and detect 
-plagiarism in scientific papers. It will provide it's users with tools to prove their hunches while 
-reading and not with a complete auto-detection approach for plagiarism.
+Unplagged is a simple, web-based, collaborative system to help
+discover, collect and document plagiarism in scientic pa-
+pers.
 
 
