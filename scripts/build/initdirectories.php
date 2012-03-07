@@ -12,7 +12,8 @@ $directories = array(
   'data' . DIRECTORY_SEPARATOR . 'cache',
   'temp',
   'temp' . DIRECTORY_SEPARATOR . 'ocr',
-  'temp' . DIRECTORY_SEPARATOR . 'imagemagick'
+  'temp' . DIRECTORY_SEPARATOR . 'imagemagick',
+  'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR . 'proxies'
 );
 
 foreach($directories as $directory){
