@@ -43,13 +43,13 @@ system.
 The source code and files of all parts of the Unplagged project are managed through Git, 
 with the repository hosted at \href{https://github.com}{Github}. 
 Git is a distributed version control system, that exists since 2005 and gained more and more 
-track in recent years, because many developers prefer it over other version control system because of its simplicity. This
+track in recent years. Many developers prefer it over other version control systems, because it is much easier 
+to create different branches and merge them again or simply initalize local repositories. This
 made it also interesting for us to use it for Unplagged. % citation?
 
 However, none of the team memebers had ever used 
 Git before in a bigger context so it was a challenge to get it running on all the systems. But we took it, to explore all the 
-features Git offers. It is much easier to create different branches and merge them again, than it is with other 
-version control systems like Subversion.
+features Git offers. .
 
 % This feels weird, because the description afterwards is actually nearly the same as in the video, so why show it?
 % I think we should strike this point
@@ -75,11 +75,22 @@ A very good instruction on how to install the Git Bash can be found on the websi
 \end{description}
 
 \subsubsection{Getting the source code of the unplagged project}
-Now it is time to get the project source code on your machine. As said before, the whole unplagged project is hosted on 
-github, so if you want to be able to contribute source code later on, you first need to create an account on \url{https://github.com}.
-This isn't necessary, if you simply want to look into the source code, which can be accessed via \url{https://github.com/benoertel/unplagged}.
+Now it is time to get the project source code on your machine. As said before, the whole unplagged project is hosted 
+on 
+github, so if you want to be able to contribute source code later on, you first need to create an account there:
 
-If you haven't been granted write access to the above mentioned repository by a project member (which is very likely when
+\begin{itemize} 
+\item \url{https://github.com}
+\end{itemize}
+
+This isn't necessary, if you simply want to look into the source code, which can be accessed via the repository URL:
+
+\begin{itemize}
+\item \url{https://github.com/benoertel/unplagged}
+\end{itemize}
+
+If you haven't been granted write access to the above mentioned repository by a project member (which is very likely 
+when
 you are reading this document for the first time), you will need to do a fork
 of the Unplagged project right at github, like described in:
 
@@ -87,14 +98,13 @@ of the Unplagged project right at github, like described in:
 \item \url{http://help.github.com/fork-a-repo/}
 \end{itemize}
 
-After this, the following steps are mostly the same for everybody, with the distinction of the project URIs, which should 
-be the one of 
-your newly created fork.
+After this, the following steps are mostly the same for everybody, with the distinction of the project URIs, 
+which should be the one of your newly created fork.
 
 Open up the Git Bash and switch to the directory where you want the project to be 
-located and clone the repository:
+located and clone the repository as you can see in listing \ref{list:cloning}. 
 
-\begin{lstlisting}[caption=Cloning a repository]
+\begin{lstlisting}[caption=Cloning a repository, label=list:cloning]
 cd ?Sites/unplagged.local?
 git clone ?https://\textbf{<username>}@github.com/benoertel/unplagged.git?
 \end{lstlisting}
@@ -103,7 +113,8 @@ After this you should have a local copy of all the repository data in the specif
 
 \subsubsection{The most important git commands}
 
-You are now ready to use Git! Here are some more instructions on the most important commands and how to properly use it. 
+You are now ready to use Git! Here are some more instructions on the most important commands and how to properly 
+use it. 
 However, if the given instructions in this manual are not enough, feel free to checkout the whole Git manual on: 
 
 \begin{itemize}
@@ -121,18 +132,19 @@ git branch mynewfeature
 git checkout mynewfeature
 \end{lstlisting}
 
-Now anything in the repository can be changed, at any point changes can be versioned in the repository by using the 
-\textit{git commit} 
-command. If new files were created, git add has to be executed as well.
+Now anything in the repository can be changed. At any point changes can be versioned in the repository by using the 
+\texttt{git commit} 
+command. If new files were created, \texttt{git add} has to be executed as well.
 
 \begin{lstlisting}[caption=Commiting]
 git add .
 git commit -m "A message that describes the changes."
 \end{lstlisting}
 
-When the feature is fully working and approved, it has to be merged back to the master branch, in order to get deployed 
-to the staging environment. To do this, the master branch has to be checked out, updated with git pull and then all changes
-have to be merged from the new feature into the master branch and the feature branch has to be removed.
+When the feature is fully working and approved, it has to be merged back to the master branch, in order to get 
+deployed to the staging environment. To do this, the master branch has to be checked out, updated with \texttt{git pull} 
+and then all changes have to be merged from the new feature into the master branch. The feature branch can then be
+removed.
 
 \begin{lstlisting}[caption=Merging branches]
 git checkout master
@@ -141,16 +153,19 @@ git merge mynewfeature
 git branch -d mynewfeature
 \end{lstlisting}
 
-In comparison to Subversion, for example Git has one more step to really write back to the repository. After a commit, 
-a push has to be executed, each push can include multiple commits.
+In comparison to Subversion for example, Git has one more step to really write back to the remote source repository. 
+After a \texttt{git commit}, a \texttt{git push} has to be executed, each push can include multiple commits.
 
 \begin{lstlisting}[caption=Pushing to the server]
-git push
+git push origin master
 \end{lstlisting}
 
-This is nearly it, the changes to the repository have been pushed to the master branch. The only thing, that probably has to be done
-now, is to open up a pull request on github, if you developed on your own fork of the project. This means, that you are
-asking the project members who have access to the \enquote{real} Unplagged github account, to integrate your changes into the actual project
+This is nearly it, the changes to the repository have been pushed to the master branch. The only thing, that probably 
+has to be done
+now, is to open up a pull request on github, if you developed on your own fork of the project. This means, that you 
+are
+asking the project members who have access to the \enquote{real} Unplagged github account, to integrate your changes 
+into the actual project
 sources. A nice description of how this process is done can be found at github again:
 
 \begin{itemize}
@@ -158,10 +173,12 @@ sources. A nice description of how this process is done can be found at github a
 \end{itemize}
 
 \subsubsection{Handling conflicts in merging process}
-It is possible, if two developers were working on the same part of  file, that a conflict raises during the merge. Such 
+
+It is possible, if two developers were working on the same part of  file, that a conflict is found during the merge. 
+Such 
 a conflict could look like this:
 
-\begin{lstlisting}[caption=Merge conflict]
+\begin{lstlisting}[caption=Merge conflict, keywordstyle=\color{black}]
 CONFLICT (content): Merge conflict in readme.txt
 
 To https://github.com/benoertel/unplagged.git
@@ -178,12 +195,15 @@ Merge the remote changes (e.g. 'git pull') before pushing again.  See the
 #
 \end{lstlisting}
 
-To resolve the issues, open the files listed in the error message, in this case \textit{readme.txt} and decide how the correct 
+To resolve the issues, open the files listed in the error message, in this case \textit{readme.txt} and decide how 
+the correct 
 version should look like, by removing all the \enquote{< < < < < < <  HEAD} and 
 \enquote{> > > > > > > b478801d68267ef479acc5ca54544634c52c545c} 
-parts.
+parts accordingly or using a dedicated merge tool, that is able to show you the changes that were made
 
-\begin{lstlisting}[caption=Creating branches]
+Here is an example of how this process would work:
+
+\begin{lstlisting}[caption=Conflicted file, keywordstyle=\color{black}]
 <<<<<<< HEAD
 The goal of this project is the creation of an easy-to-use, web-based
 system to document and detect plagiarism in scientific papers.
@@ -198,9 +218,10 @@ system to document and detect plagiarism in scientific papers.
 Just a change for educational purposes.
 \end{lstlisting}
 
-Should look like this after merging:
+Could look like this after merging:
 
-\begin{lstlisting}[caption=Creating branches]
+
+\begin{lstlisting}[caption=Fixed conflict after merging, keywordstyle=\color{black}]
 The goal of this project is the creation of an easy-to-use, web-based
 system to document and detect plagiarism in scientific papers.
 
@@ -209,61 +230,102 @@ hello world
 Just a change for educational purposes.
 \end{lstlisting}
 
-\subsection{Netbeans}
-
 \subsection{Local Deployment}
 
 This subsection will describe how to configure a virtual host properly. A virtual host is a domain that is mapped to 
 the local web server. It is assumed that Apache, MySQL and PHP are already running on the machine. If not, here are 
 some tutorial to get them all running:
 
-Windows: \url{http://www.apachefriends.org/de/xampp-windows.html#1098}
-
-Mac OS:\\
+\begin{description}
+\item [Windows:] \hfill \\
+ \url{http://www.apachefriends.org/de/xampp-windows.html#1098}
+\item [Mac OS:] \hfill \\
 \url{http://www.djangoapp.com/blog/2011/07/24/installation-of-mysql-server-on-mac-os-x-lion/} 
 \url{http://www.quarkstar.at/index.php/2009/05/18/webserver-aktivieren-und-konfigurieren-in-mac-os-x/}
+\end{description}
 
-The first step is to add the virtual host to the vhost config: 
+Most Linux distribution should already have this kind of server stack installed.
 
-\begin{lstlisting}[caption=Mac OS X: Creating virtual host]
-sudo vi /private/etc/hosts
+The main goal is to create a local domain and add the virtual host from listing \ref{list:vhost} to the vhost config. 
+
+In Max~OS~X and Linux this can be done via 
+the command line: 
+
+\begin{lstlisting}[caption=Mac OS X: Creating virtual host, language=bash]
+sudo vi ?\textbf{/private/etc/hosts}?
 #add the following line:
 "127.0.0.1 unplagged.local"
 
-sudo vi /private/etc/apache2/extra/httpd-vhosts.conf
+sudo vi ?\textbf{/private/etc/apache2/extra/httpd-vhosts.conf}?
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Windows: Creating a virtual host]
-open C:\WINDOWS\system32\drivers\etc\hosts
-#add the following line:
-"127.0.0.1 unplagged.local"
+On Windows you need to open up your \textit{hosts} file, which is mostly located in \\
+\textit{C:\textbackslash WINDOWS\textbackslash system32\textbackslash drivers\textbackslash etc\textbackslash hosts}, 
+and add the following line on the bottom:
 
-open C:\xampp\apache\conf\httpd.conf
-#Uncomment the following line
+\begin{lstlisting}[caption=New host declaration]
+127.0.0.1 unplagged.?local?
+\end{lstlisting}
+
+Now you need to open your apache configuration file 
+\textit{C:\textbackslash xampp\textbackslash apache\textbackslash conf\textbackslash httpd.conf} and 
+remove the hash symbol(uncomment) from the following line
+
+\begin{lstlisting}[caption=httpd.conf]
 #Include conf/extra/httpd-vhosts.conf
-open C:\xampp\apache\conf\extra\httpd-vhosts.conf
 \end{lstlisting}
 
-Add the following configuration to the httpd-vhosts.conf file:
+Add the following configuration to the httpd-vhosts.conf file you just included:
 
-\begin{lstlisting}[caption=Apache configuration]
+\begin{lstlisting}[caption=Apache configuration, label=list:vhost]
 <VirtualHost *:80>
-ServerName unplagged.local
-DocumentRoot "/Users/me/Sites/unplagged.local/public" 
-SetEnv APPLICATION_ENV "development" 
-<Directory /Users/benjamin/Sites/unplagged.local/public>
-Options +Indexes +FollowSymLinks +ExecCGI
-DirectoryIndex /index.php
-AllowOverride All
-Order allow,deny
-Allow from all
-</Directory>
+  ServerName unplagged.?local?
+  DocumentRoot ?\enquote{\textbf{/Users/me/Sites/unplagged.local/public}}? 
+  SetEnv APPLICATION_ENV "development" 
+  
+  <Directory ?\enquote{\textbf{/Users/benjamin/Sites/unplagged.local/public}}>?
+    Options +Indexes +FollowSymLinks +ExecCGI
+    DirectoryIndex /index.php
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+  </Directory>
 </VirtualHost>
 \end{lstlisting}
 
-\subsection{Tesseract}
-\subsection{Simtext}
-\subsection{Imagemagick}
+You can tryout your new configuration by entering \textit{unplagged.local} in your browser.
+
+\subsection{Netbeans}
+
+\subsubsection{Configuring Tests}
+
+\subsubsection{Documentation}
+
+Unplagged uses \href{http://apigen.org/}{\citet{Apigen}} for the generation of a HTML page of all the source code documentation comments, 
+because of it's superior and much more beautiful user interface in comparison to the older 
+\href{http://www.phpdoc.org/}{\citet{PHPDocumentor}}.
+
+Sadly the automatic generation is not yet supported by Netbeans, but as it will be soon\citep{Heise2012}, we are
+currently only generating this server-side as described in section \ref{sec:workflow}. 
+
+This section will be enhanced, when the Netbeans user interface becomes available. If you are interested, you could 
+install the software for yourself and use it over the command line.
+
+\subsection{Additional Software}
+
+As we currently have no installer or script that checks for installed software, you still have to install some
+additional dependencies to make some parts of the system work. Those are mainly command line tools that we use
+for the optical character recognition or text comparison.
+
+Most of the times the software wouldn't break completely if those dependencies were not installed, but some parts 
+would silently fail, which is of course one of the more annoying problems to debug.
+
+\subsubsection{Tesseract}
+
+Tesseract is an open source OCR\footnote{Optical character recognition} software, that is used to
+
+\subsubsection{Simtext}
+\subsubsection{Imagemagick}
 
 \subsection{Continuous Integration}
 
