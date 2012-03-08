@@ -409,11 +409,80 @@ email notification mechanism if this wasn't the case.
 Another improvement would also be to have a separation into a staging environment with the newest commits and an 
 actual preview environment, that can be deployed to a known stable state/commit of the system in a simple manner.
 
+\section{User Interface / User Experience}
+
+This chapter will explain the progress and development of the user interface of our project. As we tried to follow the typical project workflow, we first drew a lot of mockups in the beginning, which represented the main features of unplagged. At first the wireframes, or also called mockups were drawn by hand, before we digitalized them. As an example the mockups of the 'new case' page are shown below. All the other mockups can be found in the appendix.
+
+\begin{figure}[!h]
+  \centering
+  \fbox{
+    \includegraphics[width=0.97\textwidth]{mockups/m_new_case.jpg}
+  }
+  \caption{Mockup – New case – hand-drawn}
+  \label{fig:mNewCaseMockup}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+  \fbox{
+    \includegraphics[bb = 30 400 450 750,clip]{mockups/1_new_case.png}
+  }
+  \caption{Mockup – New case – digitalized}
+  \label{fig:1newCaseMockup}
+\end{figure}
+
+
+After we had a basic idea how the main interface should be structured, we created a first screen in Photoshop. Therefore we got several helpful suggestions from the website PremiumPixels: \url{http://www.premiumpixels.com/}.
+
+\begin{figure}[!h]
+  \centering
+  \fbox{
+    \includegraphics[width=0.97\textwidth]{images/init-psd.png}
+  }
+  \caption{Initial Screen PSD}
+  \label{fig:initialScreenPsd}
+\end{figure}
+
+~
+
+The next step, before the HTML template got created, we defined the key features, our user interface should take care of:
+\begin{itemize}
+\item Reponsive Layout – optimized layouts for different devices
+\item Cross-Browser-Compatibility
+\item Light-weight and w3c-conform XML Markup
+\item CSS3 – CSS instead of images
+\end{itemize}
+
+\subsection{Responsive Layout using CSS3 Media Queries}
+Since the worldwide amount of smartphones and templates is growing very fast, website developers should optimize for these devices as well. And so do we. Some functionality as uploading a file, doesn't work on iOS at all, but at least all functions that are working on mobile devices, should work. So the goal is creating a user interface that uses the same markup, but displays is differently on different devices. Therefore CSS media queries can be used, these are basically conditions that execute a part of CSS only if the condition is true. The most prominent conditions are the following:
+
+\begin{lstlisting}[caption=CSS Media Queries, label=list:cssMediaQueries, language=Ruby]
+max-width: 600px  # max browser width 600px
+min-width: 300px  # min browser width 300px
+orientation:landscape # current orientation landscape mode
+orientation:portrait # current orientation portrait mode
+-webkit-min-device-pixel-ratio: 2 # min pixel ration (iPhone 4, Retina)
+\end{lstlisting}
+
+These media queries can be combined in any order to display an optimized page for each device. Since only the CSS changes, the HTML does not have to be touched. An example query looks like this: 
+
+Das entsprechende CSS Media Query sieht wie folgt aus:
+\begin{lstlisting}[caption=CSS Media Query, label=list:cssMediaQuery, language=Ruby]
+@media only screen and (max-width: 600px) { }
+\end{lstlisting}
+
+Media queries are a new feature of modern browsers, except IE9. Though, this isn't a problem, because browsers that don't support them, just display the default css for desktop browsers.
+
+\subsection{Javascript and fallbacks}
+example navigation
+
+\section{Frameworks}
+Zend Framework
+
+Doctrine --> ORM
 
 \section{Architectural Goals}
 
 \subsection{Progressive Enhancement}
 
 \subsection{Test Driven Development}
-
-\subsection{Responsive Design}
