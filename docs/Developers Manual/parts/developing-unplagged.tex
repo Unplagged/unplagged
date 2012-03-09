@@ -411,7 +411,7 @@ actual preview environment, that can be deployed to a known stable state/commit 
 
 \section{User Interface / User Experience}
 
-This chapter will explain the progress and development of the user interface of our project. As we tried to follow the typical project workflow, we first drew a lot of mockups in the beginning, which represented the main features of unplagged. At first the wireframes, or also called mockups were drawn by hand, before we digitalized them. As an example the mockups of the 'new case' page are shown below. All the other mockups can be found in the appendix.
+This chapter will explain the progress and development of the user interface of our project. As we tried to follow the typical project workflow, we first drew a lot of mockups in the beginning, which represented the main features of Unplagged. At first the wireframes, or also called mockups were drawn by hand, before we digitalized them. As an example the mockups of the 'new case' page are shown below. All the other mockups can be found in the appendix.
 
 \begin{figure}[htbp]
   \centering
@@ -422,7 +422,7 @@ This chapter will explain the progress and development of the user interface of 
 
 \begin{figure}[htbp]
   \centering
-    \includegraphics[bb = 30 400 450 750,clip]{mockups/1_new_case.png}
+    \includegraphics[bb = 0 150 410 560,clip]{mockups/1_new_case.png}
   \caption{Mockup – New case – digitalized}
   \label{fig:1newCaseMockup}
 \end{figure}
@@ -468,12 +468,126 @@ Das entsprechende CSS Media Query sieht wie folgt aus:
 Media queries are a new feature of modern browsers, except IE9. Though, this isn't a problem, because browsers that don't support them, just display the default css for desktop browsers.
 
 \subsection{Javascript and fallbacks}
-example navigation
+Even though many websites require Javascript as mandatory for using the whole functionality range of the page, it is important to provide as much functionality as possible, when Javascript is turned of. A short example will show how to implement a pagination with and without Javascript.
+
+Usally when Javascript is disabled, the whole page will be reloaded, when the user changes to another page of the paginated content. The URL in this case will look something like this: \url{http://unplagged.local/document/list/page/2}. When Javascript is enabled, it is much faster to only refresh the area of the page, that really needs to reload, in this case the table with the content of the next page. It is only possible to change the hash of an URL, the part after the hash key (\#), using Javascript, the changed URL will be: \url{http://unplagged.local/document/list/#page/2}. An event called 'hashchange' can trigger a change of this part of the url and then reload the content through an AJAX request.
+
+The pagination has the same HTML markup with and without Javascript, but with Javascript enabled it is much more convenient.
+
+\begin{lstlisting}[caption=Javascript Pagination, label=list:cssMediaQuery, language=Ruby]
+$(".pagination a").live("click", function() {
+        var href = $(this).attr("href");
+        if(href) {
+          var substr = href.split('/');
+          var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
+
+          window.location.hash = hash;
+        }
+        return false;
+    });
+    
+    $(window).bind('hashchange', function(){
+        var newHash = window.location.hash.substring(1);
+        
+        if (newHash) {
+            var substr = newHash.split('/');
+            var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
+            
+            var url = window.location.pathname;
+            if(url.charAt(url.length-1) != '/') {
+              url += '/';
+            }
+            url += hash;
+            $("#main-wrapper").load(url + " #main");
+        };
+        
+    });
+\end{lstlisting}
+
 
 \section{Frameworks}
-Zend Framework
+When we first discussed which programming language and frameworks, the Unplagged project should be built on, we figured out, that everyone was familiar with PHP. Since programming in a group requires a much better structure, than programming on your own, we needed a framework that requires a comfortable Model-View-Controller structure, we decided to use the Zend Framework. And to get rid of all the database issues as well as getting a flexibility in the used database system, we decided to use an Object-Relational-Mapping framework, called Doctrine. What an ORM is, will be discussed later on.
 
-Doctrine --> ORM
+\subsection{Zend Framework}
+The Zend Framework is a typical PHP Framework using the Model-View-Controller pattern. Due to it's pre-defined directory structure, it is easy to get well seperated code. 
+
+The directories and their meaning:
+\begin{itemize}
+\item application --- includes controller, models and view
+\item data --- currently only includes i18n stuff (language stuff)
+\item docs --- PHP Documentation and Developers Manual
+\item library --- extrnal and internal frameworks and extension to the Zend framework
+\item public --- files that are accessible directly through the browser
+\item scripts --- build scripts, deploying scripts
+\item temp --- data that is overridden at any deployment
+\item tests --- PHP Unit tests
+\end{itemize}
+
+The Zend framework offers REST-ful URLs that follow a fixed pattern: \url{unplagged.local/controller/action/key/value/key2/value2}. Each controller is defined as ControllerNameController.php in the application/controllers directory and includes all possible actions. For example a file controller will look like this:
+
+\begin{lstlisting}[caption=Persisting an object to the database in Doctrine, label=list:persistingObjectDoctrine, language=Ruby]
+class FileController extends Zend_Controller_Action{
+	public function init(){
+	}
+
+	public function indexAction(){
+	}
+
+	public function uploadAction(){
+	}
+
+  	public function listAction(){
+	}
+  	
+	public function downloadAction(){
+	}
+}
+\end{lstlisting}
+
+By default, if no action is defined, the indexAction is called. For each action the appropriate view is by default rendered in the application/views/scripts/conntrollerName/actionName.phtml file.
+
+The models directory includes all the objects, this will be discussed in more detail in the following chapter about Doctrine.
+
+\subsection{Doctrine}
+The whole database connection management of Unplagged is implemented using the Doctrine Framework in version 2. 
+It consists of two layers, a database abstraction layer (DBAL) and an object relational mapping framework
+(ORM). The DBAL uses PDO, a PHP framework for encapsulating database statements. The DBAL manages the
+communication with any kind of SQL database and offers an own query syntax. This has the advantage, that
+the database behind the framework can be changed from MySQL, to OracleSQL, PostgreSQL or SQLite at any time.
+The DBAL is the agent between PDO and the ORM. The ORM is the connection between PHP objects and the DBAL.
+
+Before the use of Doctrine is described, it will be explained, how the database on a new machine can be created and how the database structure can be updated, whenever something changed in the structure. Actually this is very easy, it is required to have a local my sql database at this point having 'root' as a username, no password and a database called 'unplagged'. It is also possible to create a new configuration in the application/configs/application.ini file, although this step will not be described in this chapter. If the database is created, the build script can be executed:
+
+\begin{lstlisting}[caption=Updating database structure, label=list:updatingDbStructure, language=Ruby]
+php unplagged.local/scripts/build/doctrine.php
+\end{lstlisting}
+
+Now, the database is created or updated. If the database already existed, the data in it will not be removed! As described below, the big advantage of ORM is, that the programmer can stay in the PHP object context at any time. The only thing that has to be done additionally, is adding
+comments to the member variables of a class, that define the fields in the database:
+
+\begin{lstlisting}[caption=Defining a class in Doctrine, label=list:definingClassDoctrine, language=Ruby]
+/** @Entity */
+class UserClass
+{
+/** @Column(type="integer") */
+private $id;
+/** @Column(length=30) */
+private $username;
+}
+\end{lstlisting}
+
+The whole syntax documentation of doctrine can be found here: \url{http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html} 
+
+To persist a new object to the database, the persist method on this object has to be called, this writes the object into the doctrine cache. It stays in the cache, until the flush method is called, which actually executes all the previous operation since the last flush. These cann be deleting, updating, or editing an object.
+
+\begin{lstlisting}[caption=Persisting an object to the database in Doctrine, label=list:persistingObjectDoctrine, language=Ruby]
+$user = new User();
+$user->setUsername('Max');
+$em->persist($user);
+$em->flush();
+\end{lstlisting}
+
+As the previous examples show, no database programming is necesarry to create or persist a new object to the database, everyhting can be done in the PHP object context.
 
 \section{Architectural Goals}
 
