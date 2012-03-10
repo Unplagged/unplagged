@@ -30,7 +30,7 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
     
     //@todo: escapeshellcmd
     exec($command, $output, $returnVal);
-    echo "imagemagick" . $returnVal;
+
     if($returnVal == 0) {
       chmod($this->outputFilePath, 0755);
       return true;
