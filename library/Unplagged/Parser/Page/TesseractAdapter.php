@@ -49,10 +49,8 @@ class Unplagged_Parser_Page_TesseractAdapter{
   public function execute(){
     $command = $this->tesseractCall . ' ' . $this->inputFileLocation . ' ' . $this->outputFileLocation . ' -l ' . $this->language;
 
-    $output = exec($command, $op, $returnVal);
+    exec($command, $op, $returnVal);
     echo $returnVal . "<br />";
-    print_r($op);
-    echo $output;
     exit();
     // everything okay
     if($returnVal == 0){
