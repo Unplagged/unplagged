@@ -50,7 +50,7 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
       $this->_em->flush();
 
       return $document;
-    }catch(InvalidArgumentException $e){
+    }catch(Exception $e){
       //parsing wasn't successful
       return null;
     }

@@ -27,9 +27,15 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
   public function execute(){
     $output = array();
     $command = $this->imagemagickCall . ' ' . $this->inputFilePath . ' ' . $this->outputFilePath;
+    
     //@todo: escapeshellcmd
-    exec($command, $output);
-    chmod($this->outputFilePath, 0755);
+    exec($command, $output, $returnVal);
+    if($returnVal == 0) {
+      chmod($this->outputFilePath, 0755);
+      return true;
+    } else {
+      throw new Exception("Image could not be converted.");
+    }    
   }
   
   private function checkForInvalidArguments($inputFileLocation, $outputFileLocation){
