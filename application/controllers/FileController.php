@@ -195,8 +195,8 @@ class FileController extends Zend_Controller_Action{
         $this->_helper->flashMessenger->addMessage('No file found by that id.');
       }else{
         $parser = Unplagged_Parser::factory($file->getMimeType());
+        
         $document = $parser->parseToDocument($file, $language);
-
         if(empty($document)){
           $this->_helper->flashMessenger->addMessage('The file could not be parsed.');
         }else{
@@ -224,6 +224,7 @@ class FileController extends Zend_Controller_Action{
           // remove database record
           $this->_em->remove($file);
           $this->_em->flush();
+          $this->_helper->flashMessenger->addMessage('The file was deleted successfully.');
         }else{
           $this->_helper->flashMessenger->addMessage('The file could not be deleted.');
         }
@@ -232,7 +233,6 @@ class FileController extends Zend_Controller_Action{
       }
     }
 
-    $this->_helper->flashMessenger->addMessage('The file was deleted successfully.');
     $this->_helper->redirector('list', 'file');
 
     // disable view

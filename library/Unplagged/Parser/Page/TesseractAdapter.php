@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class wraps the command line calls to the tesseract ocr tool.
  * 
@@ -49,7 +50,18 @@ class Unplagged_Parser_Page_TesseractAdapter{
     $output = array();
     $command = $this->tesseractCall . ' ' . $this->inputFileLocation . ' ' . $this->outputFileLocation . ' -l ' . $this->language;
 
-    exec($command, $output);
+    $output = exec($command, $op, $returnVal);
+
+    // everything okay
+    if($returnVal == 0){
+      return true;
+      // language package not found, try with english again
+    }elseif($returnVal == 11){
+      $this->language = "eng";
+      $this->execute();
+    }else{
+      throw new Exception("File could not be parsed.");
+    }
   }
 
   /**
@@ -62,7 +74,7 @@ class Unplagged_Parser_Page_TesseractAdapter{
     //we simply try to call tesseract without arguments
     //the 2>&1 bit is to supress output on stderr
     $output = shell_exec($command . ' 2>&1');
-    
+
     //the common bit of the ouput between windows and Linux seems to be 'Usage:tesseract'
     if(stripos($output, 'Usage:tesseract') !== false){
       return true;
@@ -81,9 +93,9 @@ class Unplagged_Parser_Page_TesseractAdapter{
 
     if(!file_exists($inputFileLocation)){
       $message = 'The input file doesn\'t exist.';
-    }elseif(!is_string($outputFileLocation) || $outputFileLocation===''){
+    }elseif(!is_string($outputFileLocation) || $outputFileLocation === ''){
       $message = 'The output file name needs to be specified as a string';
-    } elseif(!is_writable(dirname($outputFileLocation))){
+    }elseif(!is_writable(dirname($outputFileLocation))){
       $message = 'The location for the output file is not writeable.';
     }
 
