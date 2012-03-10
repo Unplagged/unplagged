@@ -56,14 +56,13 @@ class Unplagged_Parser_Page_TesseractAdapter{
   //  if($returnVal == 0){
    //   return true;
       // language package not found, try with english again
-   // }else
       if($returnVal == 11){
-      $this->language = "eng";
-      $this->execute();
-    }else{
-return true;   
-//   throw new Exception("File could not be parsed.");
-    }
+        $this->language = "eng";
+        $this->execute();
+      }else{
+  return true;   
+  //   throw new Exception("File could not be parsed.");
+      }
   }
 
   /**
