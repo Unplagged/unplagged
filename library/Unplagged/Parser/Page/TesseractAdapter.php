@@ -47,11 +47,12 @@ class Unplagged_Parser_Page_TesseractAdapter{
    * The result should be a .txt file with the name that was provided to the constructor as the $outputFileName.
    */
   public function execute(){
-    $output = array();
     $command = $this->tesseractCall . ' ' . $this->inputFileLocation . ' ' . $this->outputFileLocation . ' -l ' . $this->language;
 
     $output = exec($command, $op, $returnVal);
-    echo $returnVal;
+    echo $returnVal . "<br />";
+    print_r($op);
+    echo $output;
     exit();
     // everything okay
     if($returnVal == 0){
