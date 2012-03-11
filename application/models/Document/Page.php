@@ -48,7 +48,15 @@ class Application_Model_Document_Page{
    * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $document;
-
+  
+  /**
+   * The lines in the document.
+   * 
+   * @OneToMany(targetEntity="Application_Model_Document_Page_DetectionReport", mappedBy="page")
+   * @OrderBy({"created" = "ASC"})
+   */
+  protected $detectionReports;
+  
   /**
    * The content of the page.
    * 

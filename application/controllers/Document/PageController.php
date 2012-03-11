@@ -55,6 +55,22 @@ class Document_PageController extends Zend_Controller_Action{
     }
   }
 
+  public function detectionReportsAction(){
+    $pageId = $this->_getParam('id');
+    
+    $page = $this->_getParam('page');
+    if(!empty($pageId)){
+      $query = $this->_em->createQuery("SELECT p FROM Application_Model_Document_Page_DetectionReport p WHERE p.page = '" . $pageId . "'");
+      $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page_DetectionReport p WHERE p.page = '" . $pageId . "'");
+
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+      $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+      $paginator->setCurrentPageNumber($page);
+
+      $this->view->paginator = $paginator;
+    }
+  }
+
   public function showAction(){
     $pageId = $this->_getParam('id');
 

@@ -44,6 +44,7 @@ class Unplagged_Acl extends Zend_Acl{
     $this->allow(null, 'error');
     $this->allow(null, 'googlesearch');
     $this->allow(null, 'user');
+    $this->allow(null, 'document');
     //removed because no matching file exists currently, maybe not commited?
     //$this->deny(null, 'edit-profile');
     
