@@ -18,6 +18,7 @@ Document: <?php echo $this->document->getTitle(); ?>
     <td>
           <a href="<?php echo "/document_page/de-hyphen/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/text_padding_right.png'); ?>" title="<?php echo $this->translate("de-hyphen"); ?>" /></a>
   <a href="<?php echo "/document_page/stopwords/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/zoom.png'); ?>" title="<?php echo $this->translate("stopword"); ?>" /></a>
+  <a href="<?php echo "/document_page/detection-reports/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/report_magnify.png'); ?>" title="<?php echo $this->translate("Plagiarism Detection Reports"); ?>" /></a>
   <a href="<?php echo "/document_page/edit/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/pencil.png'); ?>" title="<?php echo $this->translate("edit"); ?>" /></a>
     <a href="<?php echo "/document_page/delete/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("delete"); ?>" /></a>
     </td>

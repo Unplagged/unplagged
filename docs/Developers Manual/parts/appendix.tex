@@ -6,6 +6,33 @@
 
 \chapter{Time Logging}
 
+%Simply export
+
+\DTLloaddb{overview}{data/timelog-overview.csv}
+\begin{table}[htbp]
+  \caption{Overview By Member and Month}
+  \centering
+  \DTLdisplaydb{overview}
+\end{table}
+
+\begin{landscape}
+
+\DTLsetseparator{,}
+% don't forget to escape special characters like _ or # in the input .csv
+
+\DTLloaddb{issueMember}{data/timelog-issue-member.csv}
+  \centering
+ \DTLdisplaylongdb[caption="Overview By Member and Issue"]{issueMember}
+
+\DTLloaddb{sprints}{data/timelog-sprints.csv}
+\begin{table}[htbp]
+  \caption{Overview By Sprints}
+  \centering
+  \DTLdisplaydb{sprints}
+\end{table}
+
+\end{landscape}
+
 \chapter{Mockups}
 
 \section{Hand-Drawn}

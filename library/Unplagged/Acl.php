@@ -26,26 +26,19 @@ class Unplagged_Acl extends Zend_Acl{
     $this->add(new Zend_Acl_Resource('document'));
     $this->add(new Zend_Acl_Resource('list'), 'document');
     $this->add(new Zend_Acl_Resource('simtext'), 'document');
+    $this->add(new Zend_Acl_Resource('response-plagiarism'), 'document');
     $this->add(new Zend_Acl_Resource('files'));
     $this->add(new Zend_Acl_Resource('file'));
     $this->add(new Zend_Acl_Resource('googlesearch'));
     $this->add(new Zend_Acl_Resource('case'));
     $this->add(new Zend_Acl_Resource('document_page'));
     $this->add(new Zend_Acl_Resource('image'));
-    //$this->add(new Zend_Acl_Resource('edit-profile'));
-    
-    
-    //$this->add(new Zend_Acl_Resource('user'));
-    //$this->add(new Zend_Acl_Resource('register'), 'user');
 
-
-    $this->allow(null, 'index');
-    $this->allow(null, 'login');
-    $this->allow(null, 'error');
-    $this->allow(null, 'googlesearch');
-    $this->allow(null, 'user');
-    //removed because no matching file exists currently, maybe not commited?
-    //$this->deny(null, 'edit-profile');
+    $this->allow('guest', 'index');
+    $this->allow('guest', 'googlesearch');
+    $this->allow('guest', 'error');
+    $this->allow('guest', 'user', 'register');
+    $this->allow('guest', 'document', 'response-plagiarism');
     
     $this->allow('user', null);
   }

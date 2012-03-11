@@ -1,0 +1,280 @@
+﻿Issue,Member,Total
+none,,18.30
+,Dominik Horb,18.30
+Feature \#1: Trac aufsetzen,,2.00
+,Dominik Horb,1.00
+,Dominik Horb,1.00
+Feature \#5: Create Wiki List of Interesting Plagiarism Papers,,1.00
+,Dominik Horb,1.00
+Feature \#6: Logo,,8.00
+,Benjamin Oertel,7.00
+,Elsa Mahari,1.00
+Feature \#8: Configure Email Notification in Trac,,1.50
+,Dominik Horb,1.50
+Feature \#9: Github in Trac integrieren,,1.00
+,Dominik Horb,1.00
+Bug \#11: Umstellung von Trac auf Redmine,,3.50
+,Dominik Horb,3.50
+Bug \#12: Zeitmanagement in Trac integrieren,,4.80
+,Dominik Horb,4.80
+Bug \#13: Initalize basics in wiki and issues,,1.00
+,Dominik Horb,1.00
+Bug \#14: Setup Github in Redmine,,2.50
+,Dominik Horb,2.50
+Bug \#15: Fremde Federn finden,,3.00
+,Dominik Horb,3.00
+Feature \#16: OCR Research,,3.50
+,Dominik Horb,3.50
+Feature \#20: Create Wiki Page for UserRoles,,1.00
+,Tien Nguyen,1.00
+Time \#21: Meeting 24.10.11,,12.50
+,Dominik Horb,2.50
+,Benjamin Oertel,2.50
+,Elsa Mahari,2.50
+,Tien Nguyen,2.50
+,Heiko Stammel,2.50
+Time \#22: Meeting 17.10.11,,10.00
+,Dominik Horb,2.00
+,Benjamin Oertel,2.00
+,Elsa Mahari,2.00
+,Tien Nguyen,2.00
+,Heiko Stammel,2.00
+Time \#23: Meeting 10.10.11,,10.00
+,Dominik Horb,2.00
+,Benjamin Oertel,2.00
+,Elsa Mahari,2.00
+,Tien Nguyen,2.00
+,Heiko Stammel,2.00
+Time \#24: Debbie-Meeting 18.10.11,,7.00
+,Dominik Horb,1.00
+,Benjamin Oertel,1.00
+,Elsa Mahari,2.00
+,Tien Nguyen,1.00
+,Heiko Stammel,2.00
+Feature \#28: Resume: Projectmeeting with HTW-Plag-Team,,4.00
+,Heiko Stammel,4.00
+Feature \#29: Projectmanagement Research,,7.00
+,Heiko Stammel,7.00
+Feature \#30: Scrum Research,,6.00
+,Heiko Stammel,6.00
+Feature \#31: Create Wiki for Project Management Steps,,2.00
+,Heiko Stammel,2.00
+Feature \#32: Create Wiki for Scrum,,1.00
+,Heiko Stammel,1.00
+Bug \#33: Mockup hand-drawng,,6.00
+,Benjamin Oertel,6.00
+Bug \#34: Mockup digital version,,11.00
+,Benjamin Oertel,11.00
+Bug \#35: Textvergleich-Algorithmen rechechieren,,1.00
+,Tien Nguyen,1.00
+Time \#39: Meeting 31.10.11,,12.50
+,Dominik Horb,2.50
+,Benjamin Oertel,2.50
+,Elsa Mahari,2.50
+,Tien Nguyen,2.50
+,Heiko Stammel,2.50
+Time \#43: Meeting 2011-11-04 (Martin Heidingsfelder),,8.00
+,Benjamin Oertel,2.00
+,Elsa Mahari,2.00
+,Tien Nguyen,2.00
+,Heiko Stammel,2.00
+Feature \#44: Setting up initial Zend Framework + Doctrine environment,,2.00
+,Benjamin Oertel,2.00
+Feature \#45: User Stories,,1.00
+,Tien Nguyen,1.00
+Time \#47: Meeting 07.11.11,,10.00
+,Dominik Horb,2.00
+,Benjamin Oertel,2.00
+,Elsa Mahari,2.00
+,Tien Nguyen,2.00
+,Heiko Stammel,2.00
+Time \#48: Meeting 14.11.11,,10.00
+,Dominik Horb,2.00
+,Benjamin Oertel,2.00
+,Elsa Mahari,2.00
+,Tien Nguyen,2.00
+,Heiko Stammel,2.00
+Time \#49: Wiki Editing,,2.00
+,Dominik Horb,2.00
+Bug \#50: Meeting Plagiatsteam HTW 3.11.11,,6.00
+,Dominik Horb,1.50
+,Benjamin Oertel,1.50
+,Heiko Stammel,3.00
+Time \#53: Debbie Meeting 15.11.11,,7.50
+,Dominik Horb,1.50
+,Benjamin Oertel,1.50
+,Elsa Mahari,1.50
+,Tien Nguyen,1.50
+,Heiko Stammel,1.50
+Feature \#56: User registration,,6.50
+,Benjamin Oertel,6.50
+Feature \#57: Profile information update,,3.00
+,Benjamin Oertel,3.00
+Time \#58: Meeting 28.11.11,,12.50
+,Dominik Horb,2.50
+,Benjamin Oertel,2.50
+,Elsa Mahari,2.50
+,Tien Nguyen,2.50
+,Heiko Stammel,2.50
+Feature \#59: Defining coding guidelines,,0.50
+,Benjamin Oertel,0.50
+Feature \#61: Meeting 24.11.11 - Setting up developing environment ,,12.00
+,Dominik Horb,3.00
+,Benjamin Oertel,3.00
+,Elsa Mahari,3.00
+,Tien Nguyen,3.00
+Feature \#62: Identify target,,0.50
+,Benjamin Oertel,0.50
+Feature \#63: Read a file,,1.00
+,Benjamin Oertel,1.00
+Feature \#64: Upload files,,8.00
+,Elsa Mahari,8.00
+Feature \#65: User Login,,6.50
+,Benjamin Oertel,1.00
+,Tien Nguyen,5.50
+Feature \#66: Create a new case,,2.00
+,Dominik Horb,2.00
+Feature \#67: Setting up PHPUnit,,7.50
+,Dominik Horb,3.50
+,Benjamin Oertel,2.00
+,Elsa Mahari,2.00
+Time \#68: Meeting 05.12.11,,4.00
+,Dominik Horb,2.00
+,Elsa Mahari,2.00
+Time \#69: Reading DocBook-XML,,4.00
+,Dominik Horb,4.00
+Feature \#70: Writing git tutorial,,1.00
+,Benjamin Oertel,1.00
+Time \#71: Meeting Online 07.12.11,,16.00
+,Dominik Horb,4.00
+,Benjamin Oertel,4.00
+,Elsa Mahari,4.00
+,Tien Nguyen,4.00
+Time \#72: Meeting preparation PHPDoc,,2.00
+,Dominik Horb,2.00
+Feature \#73: Layout design,,10.50
+,Benjamin Oertel,10.50
+Bug \#74: protocoll meeting minuts 05.12.2011,,0.50
+,Elsa Mahari,0.50
+Time \#75: Creation of Preview area on server,,3.00
+,Dominik Horb,3.00
+Time \#76: Meeting 12.12.2011,,7.50
+,Dominik Horb,1.50
+,Benjamin Oertel,1.50
+,Elsa Mahari,1.50
+,Tien Nguyen,1.50
+,Heiko Stammel,1.50
+Time \#77: create Wiki page for MeetingMinutes 15.11.2011 ,,0.50
+,Tien Nguyen,0.50
+Feature \#78: Setting up the unplagged-blog,,17.00
+,Heiko Stammel,17.00
+Feature \#79: Google Helper,,10.00
+,Elsa Mahari,10.00
+Feature \#80: SIM-Text,,13.00
+,Dominik Horb,3.00
+,Tien Nguyen,10.00
+Feature \#81: Correct/edit OCR-scanned Text,,4.00
+,Benjamin Oertel,4.00
+Feature \#82: De-hyphanator,,8.00
+,Benjamin Oertel,8.00
+Feature \#83: Non-stop word identification,,8.00
+,Dominik Horb,2.00
+,Heiko Stammel,6.00
+Feature \#84: Display text,,3.50
+,Dominik Horb,1.00
+,Benjamin Oertel,2.50
+Feature \#85: Standard OCR,,18.00
+,Dominik Horb,12.00
+,Benjamin Oertel,6.00
+Feature \#86: Change file list view columns,,0.50
+,Benjamin Oertel,0.50
+Feature \#87: Decrease line-height in tables.,,0.50
+,Benjamin Oertel,0.50
+Time \#89: create Wiki page for MeetingMinutes 13.12.2011 ,,0.50
+,Tien Nguyen,0.50
+Time \#90: Prepare automatic preview area,,11.25
+,Dominik Horb,11.25
+Time \#101: Preparation of Database Mocks,,3.50
+,Dominik Horb,3.50
+Feature \#102: Basics for responsive layout,,9.00
+,Dominik Horb,9.00
+Time \#103: Meeting 10.01.12,,3.00
+,Dominik Horb,1.50
+,Elsa Mahari,1.50
+Bug \#104: Skype Meeting 4.01.12,,1.00
+,Elsa Mahari,1.00
+Bug \#105: Switching Menu to Zend\_Navigation,,3.00
+,Dominik Horb,3.00
+Feature \#106: Add Imagemagick to convert to different formats,,10.00
+,Dominik Horb,6.00
+,Benjamin Oertel,4.00
+Bug \#107: Meeting 2012-01-09,,1.50
+,Tien Nguyen,1.50
+Time \#108: Skype Meeting 12.01.12,,4.00
+,Dominik Horb,2.00
+,Elsa Mahari,2.00
+Time \#109: Cleaning up directory structure,,2.50
+,Dominik Horb,2.50
+Feature \#110: Implementing Zend\_Acl for user access control,,13.50
+,Dominik Horb,11.50
+,Benjamin Oertel,2.00
+Feature \#111: Improving interface workflow,,8.00
+,Benjamin Oertel,8.00
+Time \#115: Debbie Meeting 18.01.12 ,,6.00
+,Dominik Horb,3.00
+,Elsa Mahari,3.00
+Feature \#116: Logger,,4.00
+,Dominik Horb,2.00
+,Benjamin Oertel,2.00
+Feature \#117: Create Paging mechanism,,6.00
+,Benjamin Oertel,6.00
+Bug \#118: create Wiki page for MeetingMinutes 18.01.2012,,0.50
+,Tien Nguyen,0.50
+Bug \#119: Fixing several css issues,,5.00
+,Benjamin Oertel,5.00
+"Feature \#120: Beautifying forms, tables and buttons",,5.00
+,Benjamin Oertel,5.00
+Time \#122: 23.01.12 Meeting,,6.00
+,Dominik Horb,2.00
+,Benjamin Oertel,2.00
+,Elsa Mahari,2.00
+Time \#123: 30.01.12 Meeting,,6.00
+,Dominik Horb,2.00
+,Benjamin Oertel,2.00
+,Elsa Mahari,2.00
+Time \#128: LaTeX preparation,,2.00
+,Dominik Horb,2.00
+Time \#142: License research and inclusion,,6.00
+,Dominik Horb,6.00
+Bug \#143: FIxing tests after last refactorings,,1.50
+,Dominik Horb,1.50
+Time \#144: Reading Zend Doku for Bootstrap Plugins,,4.00
+,Dominik Horb,4.00
+Time \#145: Meeting 06.02.12,,2.00
+,Dominik Horb,2.00
+Time \#146: Basic TOC and split up of LaTeX document,,1.50
+,Dominik Horb,1.50
+Feature \#147: Preface Developers Manual,,7.00
+,Dominik Horb,7.00
+Time \#148: Documentation - Chapter Git,,4.50
+,Benjamin Oertel,4.50
+Time \#149: Meeting 04.03.12,,5.00
+,Dominik Horb,2.50
+,Benjamin Oertel,2.50
+Time \#150: Writing chapter about Zend and Doctrine Framework,,5.00
+,Benjamin Oertel,5.00
+Time \#151: Writing chapter about User Interface / User Experience,,6.00
+,Benjamin Oertel,6.00
+Time \#152: Adding mockups to documentation,,2.00
+,Benjamin Oertel,2.00
+Time \#153: Team Meeting – 2012-03-10,,1.50
+,Benjamin Oertel,1.50
+Time \#154: Reading in latex documentation,,3.00
+,Benjamin Oertel,3.00
+Feature \#155: Improvements of error detection in tesseract parser,,2.00
+,Benjamin Oertel,2.00
+Feature \#156: Implementing Webservice of PlagAware,,6.00
+,Benjamin Oertel,6.00
+"Bug \#157: Zend Acl – allowing/denying access to actions, not only controllers",,1.00
+,Benjamin Oertel,1.00
+Total,,548.35
