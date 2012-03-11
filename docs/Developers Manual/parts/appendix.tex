@@ -4,9 +4,11 @@
 
 \chapter{Minutes}
 
-\chapter{Time Logging}
+\chapter{Logged Time As Of March 11, 2012}
+% should be updated later on, now simply to make sure it works
+% generate various reports in redmine and export as csv
+% don't forget to escape special characters like _ or # in the input .csv with \_ or \#
 
-%Simply export
 
 \DTLloaddb{overview}{data/timelog-overview.csv}
 \begin{table}[htbp]
@@ -18,7 +20,6 @@
 \begin{landscape}
 
 \DTLsetseparator{,}
-% don't forget to escape special characters like _ or # in the input .csv
 
 \DTLloaddb{issueMember}{data/timelog-issue-member.csv}
   \centering
