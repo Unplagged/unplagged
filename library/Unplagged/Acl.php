@@ -39,6 +39,8 @@ class Unplagged_Acl extends Zend_Acl{
     $this->allow('guest', 'error');
     $this->allow('guest', 'user', 'register');
     $this->allow('guest', 'document', 'response-plagiarism');
+    
+    $this->allow('user', null);
   }
 
 }
