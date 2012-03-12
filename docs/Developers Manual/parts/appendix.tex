@@ -1,13 +1,16 @@
 \begin{appendix}
 
-\chapter{Sprints}
-
 \chapter{Minutes}
 
 \chapter{Logged Time As Of March 11, 2012}
+
+The following tables are some example reports generated from the logged time in Redmine. To find the most recent version
+of these reports or to generate custom data analysis you can use the \enquote{Report} tool found in Redmine on the \enquote{Overview}
+page.
+
 % should be updated later on, now simply to make sure it works
 % generate various reports in redmine and export as csv
-% don't forget to escape special characters like _ or # in the input .csv with \_ or \#
+% don't forget to escape special characters like _ or # in the input .csv, e. g. \_ or \#
 
 
 \DTLloaddb{overview}{data/timelog-overview.csv}
@@ -23,7 +26,7 @@
 
 \DTLloaddb{issueMember}{data/timelog-issue-member.csv}
   \centering
- \DTLdisplaylongdb[caption="Overview By Member and Issue"]{issueMember}
+ \DTLdisplaylongdb[caption=Overview By Member and Issue]{issueMember}
 
 \DTLloaddb{sprints}{data/timelog-sprints.csv}
 \begin{table}[htbp]

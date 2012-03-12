@@ -17,13 +17,15 @@ occur during the maintenance of badly designed software.
 Most of the times this works pretty well, but sometimes we are still trying to figure out how to 
 get everyone up to speed with every technology and part of the system or how to divide the responsibilites carefully.
 
-To start this project, we opted to use \textit{Scrum} %\footnote{More information can be found at} 
+To start this project, we opted to use \textit{Scrum}\footnote{A nice introduction into Scrum is \enquote{The Scrum Primer} 
+of the Scrum Alliance: \url{http://www.scrumalliance.org/resources/339}} 
 as our agile development approach. If you are familiar with this
 methodology, you may notice, that there could be a few problems when considering, that the team is working mostly 
 distributed
 without a common office and with very different time tables for each of the members.
 
-We struggled a bit to the tweak the workflow that is required by Scrum in 
+We struggled a bit to tweak the workflow that is required by Scrum to fit the situation we faced, but you will see in the
+following what we came up with.
 
 \section{The Workflow}
 
@@ -37,12 +39,37 @@ To make it possible to work efficiently together in this kind of environment, we
 If you register there, an administrator should grant you access to the tickets and the wiki, so that you can participate
 in solving the problems at hand.
 
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=\textwidth]{images/roadmap.png}
+  \caption{Redmine Roadmap}
+  \label{fig:roadmap}
+\end{figure}
+
+What we are doing there is to map every \textit{Sprint} and the \textit{Product Backlog} to Redmine's notion of \enquote{Version} and
+every identified \textit{User Story} to an \enquote{Issue}.
+
+You can see in figure \ref{fig:roadmap} the view of the roadmap, with the current sprint 5 designated to create this very
+document at the bottom and a not very well filled product backlog at the top. 
+
+Normally 
+every identified user story that is not part of the current sprint should be in the product backlog (and we got plenty), 
+but as we were still working
+in our small group at this point, the hassle of filling in all the tickets seemed unnecessary. This is something that
+will be fixed in the near future, so that you are able to see where the development is going.
+
+Currently we are working mostly with four week long sprints, to overcome the problem that we are not working fulltime
+on the tickets, which is something that scrum normally assumes. 
+
+To have a nice statistical overview and more planning security for the \enquote{scrums}, it is required to log the time 
+that was spent on an issue within redmine.
+
 % Redmine description, Meetings, Debbie, Scrum Cards, Server, Website
 
 
-\subsection{Team Meetings}
 
-\subsection{\enquote{Debbie Meetings}}
+\subsection{Product Owner --- \enquote{The Debbie Meetings}}
+
 
 \begin{figure}[!h]
   \centering
@@ -51,6 +78,14 @@ in solving the problems at hand.
   \label{fig:scrumming}
 \end{figure}
 
+To figure out the user stories we mostly rely on what we internally call \enquote{Debbie Meetings}.
+Normally every two weeks, the members of the team meet with Prof. Weber-Wulff, who we state to be our \textit{Product
+Owner}.
+
+If we have a prototype that we consider to have enough business value to be shown to more people, the focus will 
+probably shift away to a more broader understanding of the product owner, because there are some more sources from
+which feedback on the system can be gathered.
+
 \begin{figure}[!h]
   \centering
     \includegraphics[width=0.8\textwidth]{images/2011-11-15-user-stories-4.jpg}
@@ -58,10 +93,15 @@ in solving the problems at hand.
   \label{fig:userStories}
 \end{figure}
 
+\subsection{Team Meetings}
+
+The Unplagged version of the \textit{Daily Scrum} is currently a weekly meeting
+
+
 \section{Target Group}
 
 \section{User roles}
-
+%This is copied from the wiki, so probably copy back there when the text is finished
 As the Unplagged system will provide a permission based user system, our goal is to make it possible, to create custom user roles from an administration area and make it possible for users to have multiple user roles in one case and also different roles for different cases.
 The standard roles which will be provided by the system are:
 
