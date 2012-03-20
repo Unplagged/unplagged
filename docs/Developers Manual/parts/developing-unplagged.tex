@@ -1,7 +1,7 @@
 \chapter{Developing Unplagged}\label{chap:developingUnplagged}
 
 Coming from the \nameref{chap:systemRequirements} here we have yet another set of requirements, before we can
-start with the actual description of the way you can help us develop the system. This time it's 
+start with the actual description of the used technologies within the system. This time it's 
 about what we believe will be helpful or sometimes even necessary prerequisites. 
 
 First of all, the programming languages mostly used in Unplagged are PHP and JavaScript, both of which in conjuction
@@ -325,9 +325,9 @@ Tesseract is an open source OCR\footnote{Optical character recognition} software
 texts from scanned images a user can upload. 
 
 The big idea is to build the system in a way that enables users to
-plugin their favourite OCR system, but to have one default system that produces satisfying results.
+plugin their favourite OCR system, but to have one default system that produces satisfying results in Tesseract.
 
-You can download the latest installation files under:
+You can download the latest installation files from:
 
 \begin{itemize}
 \item \url{http://code.google.com/p/tesseract-ocr/downloads/list}
@@ -354,6 +354,19 @@ You should be able to click the \enquote{parse} icon on files now:
 
 \subsubsection{Imagemagick}
 
+Because Tesseract and probably other OCR systems that are provided via a plugin won't work with every image format a 
+user decides to upload, we integrated Imagemagick as a tool to convert images from one format to another. To install
+it you can simply follow the installation instructions provided here:
+
+\begin{itemize}
+\item \url{http://imagemagick.org/script/binary-releases.php?ImageMagick=9dd9ttmq4g67oh5sbk4e6rjj70}
+\end{itemize}
+
+Similar as with Tesseract, you can change the ini directive \texttt{parser.imagemagickPath}, if you chose not to include
+the executable in your path.
+
+If you installed it properly, you can try to upload an image file other than \textit{.tiff} and parse it with Tesseract,
+which should work now.
 
 \subsubsection{Simtext}
 
@@ -392,7 +405,8 @@ however needs some special treatment to make the compilation work:
 \begin{enumerate}
 \item Download and install \enquote{Make for Windows} from \url{http://gnuwin32.sourceforge.net/packages/make.htm} and 
 \enquote{Flex for Windows} from \url{http://gnuwin32.sourceforge.net/packages/flex.htm}
-\item Add the folder of the binaries to the path (should be something like \texttt{C:\\Program Files (x86)\\GnuWin32\\bin})
+\item Add the folder of the binaries to the path (should be something like 
+\texttt{C:\textbackslash Program Files (x86) \textbackslash GnuWin32\textbackslash bin})
 \item Rename \enquote{flex.exe} to \enquote{lex.exe}
 \item Unzip and open Simtext directory on the command line and type:
 \end{enumerate}
@@ -402,6 +416,7 @@ however needs some special treatment to make the compilation work:
 >sim_c READ.ME READ_ME
 \end{lstlisting}
 
+And again, to make it work you can set the ini directive \texttt{simtext.simtextPath} to the appropriate path.
 
 \subsection{Continuous Integration}\label{sec:continuousIntegration}
 
@@ -487,7 +502,11 @@ actual preview environment, that can be deployed to a known stable state/commit 
 
 \section{User Interface / User Experience}
 
-This chapter will explain the progress and development of the user interface of our project. As we tried to follow the typical project workflow, we first drew a lot of mockups in the beginning, which represented the main features of Unplagged. At first the wireframes, or also called mockups were drawn by hand, before we digitalized them. As an example the mockups of the 'new case' page are shown below. All the other mockups can be found in the appendix.
+This chapter will explain the progress and development of the user interface of our project. As we tried to follow the 
+typical project workflow, we first drew a lot of mockups in the beginning, which represented the main features of 
+Unplagged. At first the wireframes, or also called mockups were drawn by hand, before we digitalized them. As an example 
+the mockups of the 'new case' page are shown below in figure \ref{fig:mNewCaseMockup}. All the other mockups can be found 
+in the appendix \ref{appendix:mockups}.
 
 \begin{figure}[htbp]
   \centering
@@ -504,7 +523,12 @@ This chapter will explain the progress and development of the user interface of 
 \end{figure}
 
 
-After we had a basic idea how the main interface should be structured, we created a first screen in Photoshop. Therefore we got several helpful suggestions from the website PremiumPixels: \url{http://www.premiumpixels.com/}.
+After we had a basic idea how the main interface should be structured, we created a first screen in Photoshop. Therefore 
+we got several helpful suggestions from the website PremiumPixels: 
+
+\begin{itemize}
+\item \url{http://www.premiumpixels.com/}.
+\end{itemize}
 
 \begin{figure}[htbp]
   \centering
@@ -514,15 +538,27 @@ After we had a basic idea how the main interface should be structured, we create
 \end{figure}
 
 The next step, before the HTML template got created, we defined the key features, our user interface should take care of:
+
 \begin{itemize}
 \item Reponsive Layout – optimized layouts for different devices
 \item Cross-Browser-Compatibility
-\item Light-weight and w3c-conform XML Markup
+\item Light-weight and w3c-conform HTML5 Markup
 \item Progressive enhcancement with CSS3 – CSS instead of images where possible
 \end{itemize}
 
 \subsection{Responsive Layout using CSS3 Media Queries}
-Since the worldwide amount of smartphones and templates is growing very fast, website developers should optimize for these devices as well. And so do we. Some functionality as uploading a file, doesn't work on iOS at all, but at least all functions that are working on mobile devices, should work. So the goal is creating a user interface that uses the same markup, but displays is differently on different devices. Therefore CSS media queries can be used, these are basically conditions that execute a part of CSS only if the condition is true. The most prominent conditions are the following:
+
+Since the worldwide amount of different mobile and desktop devices is growing very fast, Ethan Marcotte coined the term
+\textit{Resposive Webdesign}\citep{Marcotte2011} for websites that are not optimized for any devices at all, but  
+simply for different screen resolutions. And so do we. 
+
+Some functionality as uploading a file, doesn't work on iOS at 
+all, but at least 
+all functions that are working on mobile devices, should work. So the goal is to create a user interface that uses the 
+same markup, but displays differently according to the device it is viewed on. Therefore CSS media queries are used, 
+these are 
+basically conditions that apply the CSS only if the condition is true. The most prominent conditions are 
+the following:
 
 \begingroup 
 \begin{lstlisting}[caption=CSS Media Queries, label=list:cssMediaQueries, language=Ruby]
@@ -534,17 +570,23 @@ orientation:portrait # current orientation portrait mode
 \end{lstlisting}
 \endgroup
 
-These media queries can be combined in any order to display an optimized page for each device. Since only the CSS changes, the HTML does not have to be touched. An example query looks like this: 
+These media queries can be combined in any order to display an optimized page for each device. Since only the CSS 
+changes, the HTML does not have to be touched. An example query looks like this: 
 
-Das entsprechende CSS Media Query sieht wie folgt aus:
 \begin{lstlisting}[caption=CSS Media Query, label=list:cssMediaQuery, language=Ruby]
 @media only screen and (max-width: 600px) { }
 \end{lstlisting}
 
-Media queries are a new feature of modern browsers, except IE9. Though, this isn't a problem, because browsers that don't support them, just display the default css for desktop browsers.
+Media queries are a CSS2 feature which most modern browsers, except IE9, implement. This isn't a problem though, because 
+browsers that don't 
+support them, just display the default css for desktop browsers, which is optimized for a width of about 1000 pixels.
 
 \subsection{Javascript and fallbacks}
-Even though many websites require Javascript as mandatory for using the whole functionality range of the page, it is important to provide as much functionality as possible, when Javascript is turned of. A short example will show how to implement a pagination with and without Javascript.
+
+Even though many websites require Javascript as mandatory for using the whole functionality range of the page, it is 
+important to provide as much functionality as possible, when Javascript is turned of, to ensure accessibility\citep[page 323]{Zeldman2010}.
+A short example will show how 
+to implement a pagination with and without Javascript.
 
 Usally when Javascript is disabled, the whole page will be reloaded, when the user changes to another page of the paginated content. The URL in this case will look something like this: \url{http://unplagged.local/document/list/page/2}. When Javascript is enabled, it is much faster to only refresh the area of the page, that really needs to reload, in this case the table with the content of the next page. It is only possible to change the hash of an URL, the part after the hash key (\#), using Javascript, the changed URL will be: \url{http://unplagged.local/document/list/#page/2}. An event called 'hashchange' can trigger a change of this part of the url and then reload the content through an AJAX request.
 
@@ -582,26 +624,34 @@ $(".pagination a").live("click", function() {
 
 
 \section{Frameworks}
-When we first discussed which programming language and frameworks, the Unplagged project should be built on, we figured out, that everyone was familiar with PHP. Since programming in a group requires a much better structure, than programming on your own, we needed a framework that requires a comfortable Model-View-Controller structure, we decided to use the Zend Framework. And to get rid of all the database issues as well as getting a flexibility in the used database system, we decided to use an Object-Relational-Mapping framework, called Doctrine. What an ORM is, will be discussed later on.
+When we first discussed which programming language and frameworks, the Unplagged project should be built on, we figured 
+out, that everyone was familiar with PHP. Since programming in a group requires a much better structure, than programming 
+on your own, we needed a framework that requires a comfortable Model-View-Controller structure, we decided to use the Zend 
+Framework. And to get rid of all the database issues as well as getting a flexibility in the used database system, we 
+decided to use an Object-Relational-Mapping(ORM) framework, called Doctrine. What an ORM is, will be discussed later on.
 
 \subsection{Zend Framework}
-The Zend Framework is a typical PHP Framework using the Model-View-Controller pattern. Due to it's pre-defined directory structure, it is easy to get well seperated code. 
+The Zend Framework is a typical PHP Framework using the Model-View-Controller pattern. Due to it's pre-defined directory 
+structure, it is easy to get well seperated code. 
 
 The directories and their meaning:
 \begin{itemize}
 \item application --- includes controller, models and view
 \item data --- currently only includes i18n stuff (language stuff)
 \item docs --- PHP Documentation and Developers Manual
-\item library --- extrnal and internal frameworks and extension to the Zend framework
+\item library --- external and internal frameworks and extension to the Zend framework
 \item public --- files that are accessible directly through the browser
 \item scripts --- build scripts, deploying scripts
 \item temp --- data that is overridden at any deployment
 \item tests --- PHP Unit tests
 \end{itemize}
 
-The Zend framework offers REST-ful URLs that follow a fixed pattern: \url{unplagged.local/controller/action/key/value/key2/value2}. Each controller is defined as ControllerNameController.php in the application/controllers directory and includes all possible actions. For example a file controller will look like this:
+The Zend framework offers RESTful\footnote{See for example \enquote{RESTful Web Services} of Richardson and Ruby for 
+more information} URLs that follow a fixed pattern: \texttt{unplagged.local/controller/action/key/value/key2/value2}. Each 
+controller is defined as ControllerNameController.php in the \texttt{application/controllers} directory and includes 
+all possible actions. For example a file controller will look like this:
 
-\begin{lstlisting}[caption=Persisting an object to the database in Doctrine, label=list:persistingObjectDoctrine, language=Ruby]
+\begin{lstlisting}[caption=Persisting an object to the database in Doctrine, label=list:persistingObjectDoctrine, language=PHP]
 class FileController extends Zend_Controller_Action{
 	public function init(){
 	}
@@ -612,7 +662,7 @@ class FileController extends Zend_Controller_Action{
 	public function uploadAction(){
 	}
 
-  	public function listAction(){
+  public function listAction(){
 	}
   	
 	public function downloadAction(){
@@ -620,9 +670,10 @@ class FileController extends Zend_Controller_Action{
 }
 \end{lstlisting}
 
-By default, if no action is defined, the indexAction is called. For each action the appropriate view is by default rendered in the application/views/scripts/conntrollerName/actionName.phtml file.
+By default, if no action is defined, the \texttt{indexAction} is called. For each action the appropriate view is by 
+default rendered in the \texttt{application/views/scripts/conntrollerName/actionName.phtml} file.
 
-The models directory includes all the objects, this will be discussed in more detail in the following chapter about Doctrine.
+The \texttt{models} directory includes all the objects, this will be discussed in more detail in the following chapter about Doctrine.
 
 \subsection{Doctrine}
 The whole database connection management of Unplagged is implemented using the Doctrine Framework in version 2. 
@@ -632,29 +683,42 @@ communication with any kind of SQL database and offers an own query syntax. This
 the database behind the framework can be changed from MySQL, to OracleSQL, PostgreSQL or SQLite at any time.
 The DBAL is the agent between PDO and the ORM. The ORM is the connection between PHP objects and the DBAL.
 
-Before the use of Doctrine is described, it will be explained, how the database on a new machine can be created and how the database structure can be updated, whenever something changed in the structure. Actually this is very easy, it is required to have a local my sql database at this point having 'root' as a username, no password and a database called 'unplagged'. It is also possible to create a new configuration in the application/configs/application.ini file, although this step will not be described in this chapter. If the database is created, the build script can be executed:
+Before the use of Doctrine is described, it will be explained, how the database on a new machine can be created 
+and how the database structure can be updated, whenever something changed in the structure. Actually this is very easy, 
+it is required to have a local MySQL database at this point having root' as a username, no password and a database 
+called 'unplagged'. It is also possible to create a new configuration in the 
+application/configs/application.ini file, although this step will not be described in this chapter. If the database is 
+created, the build script can be executed:
 
 \begin{lstlisting}[caption=Updating database structure, label=list:updatingDbStructure, language=Ruby]
 php unplagged.local/scripts/build/doctrine.php
 \end{lstlisting}
 
-Now, the database is created or updated. If the database already existed, the data in it will not be removed! As described below, the big advantage of ORM is, that the programmer can stay in the PHP object context at any time. The only thing that has to be done additionally, is adding
+Now, the database is created or updated. If the database already existed, the data in it will not be removed! 
+As described below, the big advantage of ORM is, that the programmer can stay in the PHP object context at any time. 
+The only thing that has to be done additionally, is adding
 comments to the member variables of a class, that define the fields in the database:
 
 \begin{lstlisting}[caption=Defining a class in Doctrine, label=list:definingClassDoctrine, language=Ruby]
 /** @Entity */
 class UserClass
 {
-/** @Column(type="integer") */
-private $id;
-/** @Column(length=30) */
-private $username;
+  /** @Column(type="integer") */
+  private $id;
+  /** @Column(length=30) */
+  private $username;
 }
 \end{lstlisting}
 
-The whole syntax documentation of doctrine can be found here: \url{http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html} 
+The whole syntax documentation of doctrine can be found here: 
 
-To persist a new object to the database, the persist method on this object has to be called, this writes the object into the doctrine cache. It stays in the cache, until the flush method is called, which actually executes all the previous operation since the last flush. These cann be deleting, updating, or editing an object.
+\begin{itemize}
+\item \url{http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html} 
+\end{itemize}
+
+To persist a new object to the database, the persist method on this object has to be called, this writes the object 
+into the doctrine cache. It stays in the cache, until the flush method is called, which actually executes all the 
+previous operation since the last flush. These cann be deleting, updating, or editing an object.
 
 \begin{lstlisting}[caption=Persisting an object to the database in Doctrine, label=list:persistingObjectDoctrine, language=Ruby]
 $user = new User();
@@ -663,10 +727,5 @@ $em->persist($user);
 $em->flush();
 \end{lstlisting}
 
-As the previous examples show, no database programming is necesarry to create or persist a new object to the database, everyhting can be done in the PHP object context.
-
-\section{Architectural Goals}
-
-\subsection{Progressive Enhancement}
-
-\subsection{Test Driven Development}
+As the previous examples show, no database programming is necessary to create or persist a new object to the database, 
+everyhting can be done in the PHP object context.
