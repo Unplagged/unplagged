@@ -1,6 +1,41 @@
 <?php
 $this->title = $this->translate("List of uploaded files");
 $this->headTitle($this->title);
+function defineClass($ext)
+{
+    if($ext=='jpg'||$ext=='jpeg'||$ext=='png'||$ext=='gif') 
+    {
+        echo 'picture';
+    }
+    else
+    {
+        echo 'nopicture';
+    }
+}
+
+function defineFileLogo($ext)
+{
+    if($ext=='jpg'||$ext=='jpeg'||$ext=='png'||$ext=='gif') 
+    {
+        return 'picture.png';
+    }
+    else if ($ext=='pdf')
+    {
+        return 'page_white_acrobat.png';
+    } 
+    else if ($ext=='doc'||$ext=='odt'||$ext=='txt')
+    {
+        return 'page_white_text.png';
+    }
+    else if ($ext=='zip')
+    {
+        return 'page_white_zip.png';
+    } 
+    else
+    {
+        return 'page_white_text.png';
+    }
+}
 ?>
 <table cellpadding="0" cellspacing="0" class="default"> 
   <tr>
@@ -8,12 +43,23 @@ $this->headTitle($this->title);
     <th style="width: 110px;"><?php echo $this->translate("Uploaded"); ?></th>
     <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
   </tr>
+
   <?php
   $i = 0;
   foreach($this->paginator as $file):
     ?>
     <tr <?php echo ($i++ % 2 == 0) ? "class=\"even\"" : ""; ?>>
-      <td><a href="<?php echo $this->baseUrl('/file/download/id/' . $file->getId()); ?>"><?php echo $file->getFilename(); ?></a></td>
+      <td>
+          <a 
+              class="<?php defineClass($file->getExtension())?>" 
+              
+              href="<?php echo $this->baseUrl('/image/view/id/' . $file->getId());?>">
+          <!-- $this->baseUrl('storage/files/' . $file->getId() . "." . $file->getExtension());*//*$this->baseUrl('/file/download/id/' . $file->getId());-->
+          
+              <img class="fileTypeIcon" src="<?php echo $this->baseUrl('images/icons/' . defineFileLogo($file->getExtension()));?>"/>
+              <?php echo $file->getFilename(); ?>
+          </a>
+      </td>
       <td><?php echo $file->getCreated()->format('Y-m-d'); ?></td>
       <td><?php if($file->getIsTarget()){ ?>
           <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page_find.png'); ?>" title="<?php echo $this->translate("unset target"); ?>" /></a>

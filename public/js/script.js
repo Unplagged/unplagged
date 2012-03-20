@@ -40,7 +40,7 @@ $(document).ready(function(){
       button.removeClass("arrow-up");
     }
   });
-  
+ 
   //wrap home menu button, so that icon gets shown
   var homeButton = $('#header .navigation .home');
   homeButton.wrapInner('<span class="ir"/>');

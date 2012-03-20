@@ -79,7 +79,20 @@ function copyText(e)
 {
     alert("copyText");
 }
-  
+function markAll()
+{
+    
+}
+    function copyToClipboard(s) {
+    if (window.clipboardData && clipboardData.setData) {
+    clipboardData.setData('text', s);
+    }
+    }
+function deleteSearchWords()
+{   
+    searchBuffer = "";
+    updateGoogleSearchText();
+}
 function googleSearch()
 {
     cleanSearchBuffer();

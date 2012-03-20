@@ -58,7 +58,14 @@ class ImageController extends Zend_Controller_Action{
       if($file){
         $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
 
-        header("Content-type: " . $file->getMimeType());
+        if($file->getExtension()== 'jpg' || $file->getExtension()== 'jpeg' || $file->getExtension()== 'gif' || $file->getExtension()== 'png' ||$file->getExtension()== 'tiff' )
+        {
+            header("Content-type: image/".$file->getExtension());
+        }
+        else 
+            {
+                header("Content-type: " . $file->getMimeType());
+            }
 
         readfile($downloadPath);
       }else{
@@ -69,6 +76,23 @@ class ImageController extends Zend_Controller_Action{
     // disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
+  }
+  
+  
+  //to get the path to show the pictures in lightview
+  public function getpathAction()
+  {
+          $fileId = $this->_getParam('id');
+    $downloadPath = '';
+
+    if(!empty($fileId)){
+      $fileId = preg_replace('/[^0-9]/', '', $fileId);
+      $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
+      if($file){
+        $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
+      }
+    }
+    echo $downloadPath;
   }
 
 }

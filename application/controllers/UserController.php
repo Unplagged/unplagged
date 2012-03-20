@@ -143,10 +143,33 @@ class UserController extends Zend_Controller_Action{
 
         // if the form doesn't validate, pass to view and return
         if($profileForm->isValid($formData)){
+          print_r($formData);
+          
+          $adapter = new Zend_File_Transfer_Adapter_Http();
+          $adapter->setOptions(array('useByteString'=>false));
+          
+          // collect file information
+         $avatarfileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
+         $fileExt = pathinfo($adapter->getFileName(), PATHINFO_EXTENSION);
+          
+          // store file in database to get an id
+            $data = array();
+            $data["size"] = $adapter->getFileSize('avatarfilepath');
+            //if the mime type is always application/octet-stream, then the 
+            //mime magic and fileinfo extensions are probably not installed
+            $data["mimetype"] = $adapter->getMimeType('avatarfilepath');
+            $data["filename"] = !empty($newName) ? $newName . "." . $fileExt : $avatarfileName;
+            $data["extension"] = $fileExt;
+            $data["location"] = "application" . DIRECTORY_SEPARATOR . "storage" . DIRECTORY_SEPARATOR . "files";
+
+            $file = new Application_Model_File($data);
+            $id = $this->_em->persist($file);
+            $this->_em->flush();
+            
           // select the user and update the values
           $user->setFirstname($this->getRequest()->getParam('firstname'));
           $user->setLastname($this->getRequest()->getParam('lastname'));
-
+          $user->setAvatarfilepath($file->getId());
           // write back to persistence manage and flush it
           $this->_em->persist($user);
           $this->_em->flush();

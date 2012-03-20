@@ -36,7 +36,6 @@ class Application_Form_File_Upload extends Zend_Form{
     $elementnewname->setLabel('Neuer Dateiname:');
 
     $elementsubmit = new Zend_Form_Element_Submit('submit');
-
     $elementsubmit->setLabel('Datei hochladen');
     $elementsubmit->removeDecorator('DtDdWrapper');
 

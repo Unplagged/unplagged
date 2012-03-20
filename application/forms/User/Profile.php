@@ -51,7 +51,7 @@ class Application_Form_User_Profile extends Zend_Form{
     $user = $em->getRepository('Application_Model_User')->findOneById($this->userId);
     $this->setMethod('post');
     $this->setAction("/user/edit/id/" . $this->userId);
-
+    
     $usernameElement = new Zend_Form_Element_Text('username');
     $usernameElement->setLabel("Username");
     $usernameElement->setValue($user->getUsername());
@@ -78,11 +78,16 @@ class Application_Form_User_Profile extends Zend_Form{
     $lastnameElement->setAttrib('maxLength', 64);
     $lastnameElement->setRequired(true);
 
+    $avatarfilepath = new Zend_Form_Element_File('avatarfilepath');
+    $avatarfilepath->setLabel('Avatar-Dateipfad:');
+    $avatarfilepath->setRequired(true);
+    
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Save');
     $submitElement->setIgnore(true);
     $submitElement->setAttrib('class', 'submit');
     $submitElement->removeDecorator('DtDdWrapper');
+   
 
     $this->addElements(array(
       $emailElement
@@ -91,11 +96,14 @@ class Application_Form_User_Profile extends Zend_Form{
       , $lastnameElement
     ));
 
+    $this->addElement($avatarfilepath);
+    
     $this->addDisplayGroup(array(
       'email'
       , 'username'
       , 'firstname'
       , 'lastname'
+      , 'avatarfilepath'
         )
         , 'personalGoup'
         , array('legend'=>'Personal Information')

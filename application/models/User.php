@@ -109,6 +109,15 @@ class Application_Model_User{
   protected $state;  
   
   /**
+   * The users avatar filepath.
+   * @var string the filepath to the users avatar.
+   * 
+   * @Column(type="string", length=64, unique=false, nullable=true)
+   */
+  protected $avatarfilepath;  
+  
+  
+  /**
    * @ManyToOne(targetEntity="Application_Model_Case")
    * @JoinColumn(name="current_case_id", referencedColumnName="id")
    */
@@ -141,6 +150,10 @@ class Application_Model_User{
 
     if(isset($data["state"])){
       $this->state = $data["state"];
+    }
+    
+    if(isset($data["avatarfilepath"])){
+      $this->avatarfilepath = $data["avatarfilepath"];
     }
   }
   
@@ -204,6 +217,10 @@ class Application_Model_User{
     return $this->state;
   }
 
+   public function getAvatarfilepath(){
+    return $this->avatarfilepath;
+  }
+  
   public function setState($state){
     $this->state = $state;
   }
@@ -222,6 +239,10 @@ class Application_Model_User{
 
   public function setCurrentCase($currentCase){
     $this->currentCase = $currentCase;
+  }
+  
+  public function setAvatarfilepath($avatarfilepath){
+    $this->avatarfilepath = $avatarfilepath;
   }
 
   public function unsetCurrentCase(){

@@ -897,7 +897,9 @@ smork-btn a:active { top: 1px; }
   color: #ffffff;
 }
 
-
+a .fileTypeIcon a:link {
+    text-decoration: none;
+}
 
 /* ==|== non-semantic helper classes ======================================== */
 .ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; }

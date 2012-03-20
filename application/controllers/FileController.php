@@ -112,6 +112,13 @@ class FileController extends Zend_Controller_Action{
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($page);
 
+    foreach($paginator as $file) {
+        //$handle = file($file->getAbsoluteLocation() . $file->getId() . "." . $file->getExtension());
+        //Zend_Debug::dump($handle);
+        //exit;
+        $file->setLocation(APPLICATION_PATH . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $file->getFilename());
+    }
+    
     $this->view->paginator = $paginator;
   }
 
