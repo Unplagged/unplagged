@@ -550,7 +550,7 @@ The next step, before the HTML template got created, we defined the key features
 
 Since the worldwide amount of different mobile and desktop devices is growing very fast, Ethan Marcotte coined the term
 \textit{Resposive Webdesign}\citep{Marcotte2011} for websites that are not optimized for any devices at all, but  
-simply for different screen resolutions. And so do we. 
+simply for different screen resolutions. And this is what we do. 
 
 Some functionality as uploading a file, doesn't work on iOS at 
 all, but at least 
@@ -579,7 +579,8 @@ changes, the HTML does not have to be touched. An example query looks like this:
 
 Media queries are a CSS2 feature which most modern browsers, except IE9, implement. This isn't a problem though, because 
 browsers that don't 
-support them, just display the default css for desktop browsers, which is optimized for a width of about 1000 pixels.
+support them, just display the default css outside of the media queries, which is optimized for a width of about 1000 pixels 
+in our case.
 
 \subsection{Javascript and fallbacks}
 
@@ -662,7 +663,11 @@ class FileController extends Zend_Controller_Action{
 	public function uploadAction(){
 	}
 
+<<<<<<< HEAD
   public function listAction(){
+=======
+	public function listAction(){
+>>>>>>> 7a2ccf18eebad5d280d777f496be384bdf2a24f8
 	}
   	
 	public function downloadAction(){
