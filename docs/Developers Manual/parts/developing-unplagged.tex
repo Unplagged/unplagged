@@ -45,8 +45,9 @@ track in recent years. Many developers prefer it over other version control syst
 to create different branches and merge them again or simply initalize local repositories. This
 made it also interesting for us to use it for Unplagged. % citation?
 
-However, none of the team memebers had ever used 
-Git before in a bigger context so it was a challenge to get it running on all the systems. But we took it, to explore all the 
+However, none of the team members had ever used 
+Git before in a bigger context so it was a challenge to get a common workflow running on all the systems. But we took it, 
+to explore all the 
 features Git offers.
 
 % This feels weird, because the description afterwards is actually nearly the same as in the video, so why show it?
@@ -238,7 +239,7 @@ some tutorial to get them all running:
 \item [Windows:] \hfill \\
  \url{http://www.apachefriends.org/de/xampp-windows.html#1098}
 \item [Mac OS:] \hfill \\
-\url{http://www.djangoapp.com/blog/2011/07/24/installation-of-mysql-server-on-mac-os-x-lion/} 
+\url{http://www.djangoapp.com/blog/2011/07/24/installation-of-mysql-server-on-mac-os-x-lion/} \\
 \url{http://www.quarkstar.at/index.php/2009/05/18/webserver-aktivieren-und-konfigurieren-in-mac-os-x/}
 \end{description}
 
@@ -359,7 +360,7 @@ user decides to upload, we integrated Imagemagick as a tool to convert images fr
 it you can simply follow the installation instructions provided here:
 
 \begin{itemize}
-\item \url{http://imagemagick.org/script/binary-releases.php?ImageMagick=9dd9ttmq4g67oh5sbk4e6rjj70}
+\item \url{http://imagemagick.org/script/binary-releases.php}
 \end{itemize}
 
 Similar as with Tesseract, you can change the ini directive \texttt{parser.imagemagickPath}, if you chose not to include
@@ -407,7 +408,7 @@ however needs some special treatment to make the compilation work:
 \enquote{Flex for Windows} from \url{http://gnuwin32.sourceforge.net/packages/flex.htm}
 \item Add the folder of the binaries to the path (should be something like 
 \texttt{C:\textbackslash Program Files (x86) \textbackslash GnuWin32\textbackslash bin})
-\item Rename \enquote{flex.exe} to \enquote{lex.exe}
+\item Rename \enquote{flex.exe} to \enquote{lex.exe} in the above mentioned directory
 \item Unzip and open Simtext directory on the command line and type:
 \end{enumerate}
 \begin{lstlisting}[caption=Installing and checking simtext, language=bash]
@@ -416,7 +417,8 @@ however needs some special treatment to make the compilation work:
 >sim_c READ.ME READ_ME
 \end{lstlisting}
 
-And again, to make it work you can set the ini directive \texttt{simtext.simtextPath} to the appropriate path.
+And again, to make it work you can set the ini directive \texttt{simtext.simtextPath} to the appropriate path or simply
+include it in your systems path variable.
 
 \subsection{Continuous Integration}\label{sec:continuousIntegration}
 
@@ -502,7 +504,7 @@ actual preview environment, that can be deployed to a known stable state/commit 
 
 \section{User Interface / User Experience}
 
-This chapter will explain the progress and development of the user interface of our project. As we tried to follow the 
+Here we will explain the progress and development of the user interface of Unplagged. As we tried to follow the 
 typical project workflow, we first drew a lot of mockups in the beginning, which represented the main features of 
 Unplagged. At first the wireframes, or also called mockups were drawn by hand, before we digitalized them. As an example 
 the mockups of the 'new case' page are shown below in figure \ref{fig:mNewCaseMockup}. All the other mockups can be found 
