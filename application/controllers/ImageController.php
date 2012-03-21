@@ -49,7 +49,7 @@ class ImageController extends Zend_Controller_Action{
   }
   
   
-  public function viewAction(){
+public function viewAction(){
     $fileId = $this->_getParam('id');
 
     if(!empty($fileId)){
@@ -58,7 +58,14 @@ class ImageController extends Zend_Controller_Action{
       if($file){
         $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
 
-        header("Content-type: " . $file->getMimeType());
+        if($file->getExtension()== 'jpg' || $file->getExtension()== 'jpeg' || $file->getExtension()== 'gif' || $file->getExtension()== 'png' ||$file->getExtension()== 'tiff' )
+        {
+            header("Content-type: image/".$file->getExtension());
+        }
+        else
+            {
+                header("Content-type: " . $file->getMimeType());
+            }
 
         readfile($downloadPath);
       }else{
@@ -70,6 +77,5 @@ class ImageController extends Zend_Controller_Action{
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
-
 }
 ?>
