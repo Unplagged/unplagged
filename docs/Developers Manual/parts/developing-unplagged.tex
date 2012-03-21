@@ -1,7 +1,7 @@
 \chapter{Developing Unplagged}\label{chap:developingUnplagged}
 
 Coming from the \nameref{chap:systemRequirements} here we have yet another set of requirements, before we can
-start with the actual description of the way you can help us develop the system. This time it's 
+start with the actual description of the used technologies within the system. This time it's 
 about what we believe will be helpful or sometimes even necessary prerequisites. 
 
 First of all, the programming languages mostly used in Unplagged are PHP and JavaScript, both of which in conjuction
@@ -16,27 +16,25 @@ brings a lot of features, that are useful to this project.
 
 For most of the other topics, we will give you some (hopefully) helpful resources on the way, if it isn't covered 
 thoroughly by us. But just to let you
-know, here is a list of the buzzwords, er technologies that will be mentioned:
+know, here is a list of the buzzwords, err technologies that will be mentioned:
 
 \begin{itemize}
-\item Scrum
 \item HTML5 and CSS3
 \item Continuous Integration
 \item Responsive Webdesign
 \item Progressive Enhancement
 \item Git, Netbeans, Redmine
-\item Tesseract, Imagemagick
-\item Simtext
+\item Tesseract, Imagemagick, Simtext
 \end{itemize}
 
-As said in section \nameref{platforms}, the system is developed, so that it should work on multiple platforms. 
+As said before, the system is developed, so that it should work on multiple platforms. 
 This makes it sometimes difficult to describe certain installation processes in a way that would work for everybody. As
 it's often most problematic, to get some Linux software running on Windows, we will mostly concentrate on the way those
 things are done on this platform and give the instructions for other operating systems as an aside if necessary.
 
 \section{Development Environment}
 
-The following parts will mostly focus on the way you can get a development version of unplagged up and running on your 
+The following section will mostly focus on the way you can get a development version of unplagged up and running on your 
 system.
 
 \subsection{Git}
@@ -47,9 +45,10 @@ track in recent years. Many developers prefer it over other version control syst
 to create different branches and merge them again or simply initalize local repositories. This
 made it also interesting for us to use it for Unplagged. % citation?
 
-However, none of the team memebers had ever used 
-Git before in a bigger context so it was a challenge to get it running on all the systems. But we took it, to explore all the 
-features Git offers. .
+However, none of the team members had ever used 
+Git before in a bigger context so it was a challenge to get a common workflow running on all the systems. But we took it, 
+to explore all the 
+features Git offers.
 
 % This feels weird, because the description afterwards is actually nearly the same as in the video, so why show it?
 % I think we should strike this point
@@ -121,7 +120,7 @@ However, if the given instructions in this manual are not enough, feel free to c
 \item \url{http://schacon.github.com/git/user-manual.html}
 \end{itemize}
 
-The unplagged project consists of several branches, which are used to develop and store code independently of the other 
+The Unplagged project consists of several branches, which are used to develop and store code independently of the other 
 developers. Once a new feature is done, it is merged into the master branch. The master branch usually includes only 
 fully tested and deployable source code. 
 
@@ -136,7 +135,7 @@ Now anything in the repository can be changed. At any point changes can be versi
 \texttt{git commit} 
 command. If new files were created, \texttt{git add} has to be executed as well.
 
-\begin{lstlisting}[caption=Commiting]
+\begin{lstlisting}[caption=Adding all new files and commiting]
 git add .
 git commit -m "A message that describes the changes."
 \end{lstlisting}
@@ -146,7 +145,7 @@ deployed to the staging environment. To do this, the master branch has to be che
 and then all changes have to be merged from the new feature into the master branch. The feature branch can then be
 removed.
 
-\begin{lstlisting}[caption=Merging branches]
+\begin{lstlisting}[caption=Merging branch into master]
 git checkout master
 git pull
 git merge mynewfeature
@@ -174,7 +173,7 @@ sources. A nice description of how this process is done can be found at github a
 
 \subsubsection{Handling conflicts in merging process}
 
-It is possible, if two developers were working on the same part of  file, that a conflict is found during the merge. 
+It is possible, if two developers were working on the same part of a file, that a conflict is found during the merge. 
 Such 
 a conflict could look like this:
 
@@ -197,7 +196,7 @@ Merge the remote changes (e.g. 'git pull') before pushing again.  See the
 
 To resolve the issues, open the files listed in the error message, in this case \textit{readme.txt} and decide how 
 the correct 
-version should look like, by removing all the \enquote{< < < < < < <  HEAD} and 
+version should look like, by removing or changingn all the \enquote{< < < < < < <  HEAD} and 
 \enquote{> > > > > > > b478801d68267ef479acc5ca54544634c52c545c} 
 parts accordingly or using a dedicated merge tool, that is able to show you the changes that were made
 
@@ -218,7 +217,7 @@ system to document and detect plagiarism in scientific papers.
 Just a change for educational purposes.
 \end{lstlisting}
 
-Could look like this after merging:
+It could look like this after merging:
 
 
 \begin{lstlisting}[caption=Fixed conflict after merging, keywordstyle=\color{black}]
@@ -240,15 +239,16 @@ some tutorial to get them all running:
 \item [Windows:] \hfill \\
  \url{http://www.apachefriends.org/de/xampp-windows.html#1098}
 \item [Mac OS:] \hfill \\
-\url{http://www.djangoapp.com/blog/2011/07/24/installation-of-mysql-server-on-mac-os-x-lion/} 
+\url{http://www.djangoapp.com/blog/2011/07/24/installation-of-mysql-server-on-mac-os-x-lion/} \\
 \url{http://www.quarkstar.at/index.php/2009/05/18/webserver-aktivieren-und-konfigurieren-in-mac-os-x/}
 \end{description}
 
-Most Linux distribution should already have this kind of server stack installed.
+Most Linux distributions should already have this kind of server stack installed.
 
-The main goal is to create a local domain and add the virtual host from listing \ref{list:vhost} to the vhost config. 
+The main goal to make the system run, is to create a local domain and add the virtual host from listing \ref{list:vhost} 
+to the vhost config. 
 
-In Max~OS~X and Linux this can be done via 
+In Max~OS~X this can be done via 
 the command line: 
 
 \begin{lstlisting}[caption=Mac OS X: Creating virtual host, language=bash]
@@ -306,7 +306,7 @@ because of it's superior and much more beautiful user interface in comparison to
 \href{http://www.phpdoc.org/}{\citet{PHPDocumentor}}.
 
 Sadly the automatic generation is not yet supported by Netbeans, but as it will be soon\citep{Heise2012}, we are
-currently only generating this server-side as described in section \ref{sec:workflow}. 
+currently only generating this server-side as described in section \ref{sec:continuousIntegration}. 
 
 This section will be enhanced, when the Netbeans user interface becomes available. If you are interested, you could 
 install the software for yourself and use it over the command line.
@@ -322,12 +322,105 @@ would silently fail, which is of course one of the more annoying problems to deb
 
 \subsubsection{Tesseract}
 
-Tesseract is an open source OCR\footnote{Optical character recognition} software, that is used to
+Tesseract is an open source OCR\footnote{Optical character recognition} software, that is currently used to \enquote{figure out}
+texts from scanned images a user can upload. 
 
-\subsubsection{Simtext}
+The big idea is to build the system in a way that enables users to
+plugin their favourite OCR system, but to have one default system that produces satisfying results in Tesseract.
+
+You can download the latest installation files from:
+
+\begin{itemize}
+\item \url{http://code.google.com/p/tesseract-ocr/downloads/list}
+\end{itemize}
+
+After installing Tesseract, the easiest way to make it work with Unplagged, is to put it on your systems execution path,
+so that it could be called from the command line in any directoy.
+
+If for some reason you don't want to do this, you can also change the following line in 
+\texttt{/application/configs/application.ini} to the path where you installed Tesseract to:
+
+\begin{lstlisting}[caption=Tesseract executable path]
+parser.tesseractPath = 'tesseract'
+\end{lstlisting}
+
+You should be able to click the \enquote{parse} icon on files now:
+
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=0.9\textwidth]{images/parse-button.png}
+  \caption{Parsing Files with Tesseract}
+  \label{fig:parseButton}
+\end{figure}
+
 \subsubsection{Imagemagick}
 
-\subsection{Continuous Integration}
+Because Tesseract and probably other OCR systems that are provided via a plugin won't work with every image format a 
+user decides to upload, we integrated Imagemagick as a tool to convert images from one format to another. To install
+it you can simply follow the installation instructions provided here:
+
+\begin{itemize}
+\item \url{http://imagemagick.org/script/binary-releases.php}
+\end{itemize}
+
+Similar as with Tesseract, you can change the ini directive \texttt{parser.imagemagickPath}, if you chose not to include
+the executable in your path.
+
+If you installed it properly, you can try to upload an image file other than \textit{.tiff} and parse it with Tesseract,
+which should work now.
+
+\subsubsection{Simtext}
+
+Simtext is a text comparison tool, that is able to output nice data of the differences between texts. In figure 
+\ref{fig:simtextOutput} for example, you can see the default side-by-side comparison and in figure \ref{fig:simtextDiff}, 
+the output in \textit{diff} format is shown.
+
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=\textwidth]{images/simtext-output.png}
+  \caption{Default Simtext output}
+  \label{fig:simtextOutput}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=0.8\textwidth]{images/simtext-output-diff.png}
+  \caption{Simtext output in diff format}
+  \label{fig:simtextDiff}
+\end{figure}
+
+Installing Simtext can sadly be a bit tricky, because only the sources and no executables(at least none that worked for us) 
+are distributed. We already
+provided a Windows 64bit EXE and an executable that runs on our Ubuntu staging environment in \texttt{/library/SIM/bin}, 
+but if you use any other environment, you will have to compile the C sources of the system for yourself. The sources can
+be found here:
+
+\begin{itemize}
+\item \url{http://dickgrune.com/Programs/similarity_tester/}
+\end{itemize} 
+
+We assume, that Linux users will be familiar with the installation steps that are described in the readme file. The only
+thing that can be easily overlooked there is the necessity to install \textit{Flex} first. Windows
+however needs some special treatment to make the compilation work:
+
+\begin{enumerate}
+\item Download and install \enquote{Make for Windows} from \url{http://gnuwin32.sourceforge.net/packages/make.htm} and 
+\enquote{Flex for Windows} from \url{http://gnuwin32.sourceforge.net/packages/flex.htm}
+\item Add the folder of the binaries to the path (should be something like 
+\texttt{C:\textbackslash Program Files (x86) \textbackslash GnuWin32\textbackslash bin})
+\item Rename \enquote{flex.exe} to \enquote{lex.exe} in the above mentioned directory
+\item Unzip and open Simtext directory on the command line and type:
+\end{enumerate}
+\begin{lstlisting}[caption=Installing and checking simtext, language=bash]
+>make
+>sim_c --help
+>sim_c READ.ME READ_ME
+\end{lstlisting}
+
+And again, to make it work you can set the ini directive \texttt{simtext.simtextPath} to the appropriate path or simply
+include it in your systems path variable.
+
+\subsection{Continuous Integration}\label{sec:continuousIntegration}
 
 To always have a running version of the latest code, we use an automated workflow, that always deploys everything that 
 has been pushed to the Github repository on the Unplagged staging server. The machine this is done with, is a simple 
@@ -411,7 +504,11 @@ actual preview environment, that can be deployed to a known stable state/commit 
 
 \section{User Interface / User Experience}
 
-This chapter will explain the progress and development of the user interface of our project. As we tried to follow the typical project workflow, we first drew a lot of mockups in the beginning, which represented the main features of Unplagged. At first the wireframes, or also called mockups were drawn by hand, before we digitalized them. As an example the mockups of the 'new case' page are shown below. All the other mockups can be found in the appendix.
+Here we will explain the progress and development of the user interface of Unplagged. As we tried to follow the 
+typical project workflow, we first drew a lot of mockups in the beginning, which represented the main features of 
+Unplagged. At first the wireframes, or also called mockups were drawn by hand, before we digitalized them. As an example 
+the mockups of the 'new case' page are shown below in figure \ref{fig:mNewCaseMockup}. All the other mockups can be found 
+in the appendix \ref{appendix:mockups}.
 
 \begin{figure}[htbp]
   \centering
@@ -428,7 +525,12 @@ This chapter will explain the progress and development of the user interface of 
 \end{figure}
 
 
-After we had a basic idea how the main interface should be structured, we created a first screen in Photoshop. Therefore we got several helpful suggestions from the website PremiumPixels: \url{http://www.premiumpixels.com/}.
+After we had a basic idea how the main interface should be structured, we created a first screen in Photoshop. Therefore 
+we got several helpful suggestions from the website PremiumPixels: 
+
+\begin{itemize}
+\item \url{http://www.premiumpixels.com/}.
+\end{itemize}
 
 \begin{figure}[htbp]
   \centering
@@ -438,15 +540,27 @@ After we had a basic idea how the main interface should be structured, we create
 \end{figure}
 
 The next step, before the HTML template got created, we defined the key features, our user interface should take care of:
+
 \begin{itemize}
 \item Reponsive Layout – optimized layouts for different devices
 \item Cross-Browser-Compatibility
-\item Light-weight and w3c-conform XML Markup
+\item Light-weight and w3c-conform HTML5 Markup
 \item Progressive enhcancement with CSS3 – CSS instead of images where possible
 \end{itemize}
 
 \subsection{Responsive Layout using CSS3 Media Queries}
-Since the worldwide amount of smartphones and templates is growing very fast, website developers should optimize for these devices as well. And so do we. Some functionality as uploading a file, doesn't work on iOS at all, but at least all functions that are working on mobile devices, should work. So the goal is creating a user interface that uses the same markup, but displays is differently on different devices. Therefore CSS media queries can be used, these are basically conditions that execute a part of CSS only if the condition is true. The most prominent conditions are the following:
+
+Since the worldwide amount of different mobile and desktop devices is growing very fast, Ethan Marcotte coined the term
+\textit{Resposive Webdesign}\citep{Marcotte2011} for websites that are not optimized for any devices at all, but  
+simply for different screen resolutions. And this is what we do. 
+
+Some functionality as uploading a file, doesn't work on iOS at 
+all, but at least 
+all functions that are working on mobile devices, should work. So the goal is to create a user interface that uses the 
+same markup, but displays differently according to the device it is viewed on. Therefore CSS media queries are used, 
+these are 
+basically conditions that apply the CSS only if the condition is true. The most prominent conditions are 
+the following:
 
 \begingroup 
 \begin{lstlisting}[caption=CSS Media Queries, label=list:cssMediaQueries, language=Ruby]
@@ -458,17 +572,24 @@ orientation:portrait # current orientation portrait mode
 \end{lstlisting}
 \endgroup
 
-These media queries can be combined in any order to display an optimized page for each device. Since only the CSS changes, the HTML does not have to be touched. An example query looks like this: 
+These media queries can be combined in any order to display an optimized page for each device. Since only the CSS 
+changes, the HTML does not have to be touched. An example query looks like this: 
 
-Das entsprechende CSS Media Query sieht wie folgt aus:
 \begin{lstlisting}[caption=CSS Media Query, label=list:cssMediaQuery, language=Ruby]
 @media only screen and (max-width: 600px) { }
 \end{lstlisting}
 
-Media queries are a new feature of modern browsers, except IE9. Though, this isn't a problem, because browsers that don't support them, just display the default css for desktop browsers.
+Media queries are a CSS2 feature which most modern browsers, except IE9, implement. This isn't a problem though, because 
+browsers that don't 
+support them, just display the default css outside of the media queries, which is optimized for a width of about 1000 pixels 
+in our case.
 
 \subsection{Javascript and fallbacks}
-Even though many websites require Javascript as mandatory for using the whole functionality range of the page, it is important to provide as much functionality as possible, when Javascript is turned of. A short example will show how to implement a pagination with and without Javascript.
+
+Even though many websites require Javascript as mandatory for using the whole functionality range of the page, it is 
+important to provide as much functionality as possible, when Javascript is turned of, to ensure accessibility\citep[page 323]{Zeldman2010}.
+A short example will show how 
+to implement a pagination with and without Javascript.
 
 Usally when Javascript is disabled, the whole page will be reloaded, when the user changes to another page of the paginated content. The URL in this case will look something like this: \url{http://unplagged.local/document/list/page/2}. When Javascript is enabled, it is much faster to only refresh the area of the page, that really needs to reload, in this case the table with the content of the next page. It is only possible to change the hash of an URL, the part after the hash key (\#), using Javascript, the changed URL will be: \url{http://unplagged.local/document/list/#page/2}. An event called 'hashchange' can trigger a change of this part of the url and then reload the content through an AJAX request.
 
@@ -506,26 +627,34 @@ $(".pagination a").live("click", function() {
 
 
 \section{Frameworks}
-When we first discussed which programming language and frameworks, the Unplagged project should be built on, we figured out, that everyone was familiar with PHP. Since programming in a group requires a much better structure, than programming on your own, we needed a framework that requires a comfortable Model-View-Controller structure, we decided to use the Zend Framework. And to get rid of all the database issues as well as getting a flexibility in the used database system, we decided to use an Object-Relational-Mapping framework, called Doctrine. What an ORM is, will be discussed later on.
+When we first discussed which programming language and frameworks, the Unplagged project should be built on, we figured 
+out, that everyone was familiar with PHP. Since programming in a group requires a much better structure, than programming 
+on your own, we needed a framework that requires a comfortable Model-View-Controller structure, we decided to use the Zend 
+Framework. And to get rid of all the database issues as well as getting a flexibility in the used database system, we 
+decided to use an Object-Relational-Mapping(ORM) framework, called Doctrine. What an ORM is, will be discussed later on.
 
 \subsection{Zend Framework}
-The Zend Framework is a typical PHP Framework using the Model-View-Controller pattern. Due to it's pre-defined directory structure, it is easy to get well seperated code. 
+The Zend Framework is a typical PHP Framework using the Model-View-Controller pattern. Due to it's pre-defined directory 
+structure, it is easy to get well seperated code. 
 
 The directories and their meaning:
 \begin{itemize}
 \item application --- includes controller, models and view
 \item data --- currently only includes i18n stuff (language stuff)
 \item docs --- PHP Documentation and Developers Manual
-\item library --- extrnal and internal frameworks and extension to the Zend framework
+\item library --- external and internal frameworks and extension to the Zend framework
 \item public --- files that are accessible directly through the browser
 \item scripts --- build scripts, deploying scripts
 \item temp --- data that is overridden at any deployment
 \item tests --- PHP Unit tests
 \end{itemize}
 
-The Zend framework offers REST-ful URLs that follow a fixed pattern: \url{unplagged.local/controller/action/key/value/key2/value2}. Each controller is defined as ControllerNameController.php in the application/controllers directory and includes all possible actions. For example a file controller will look like this:
+The Zend framework offers RESTful\footnote{See for example \enquote{RESTful Web Services} of Richardson and Ruby for 
+more information} URLs that follow a fixed pattern: \texttt{unplagged.local/controller/action/key/value/key2/value2}. Each 
+controller is defined as ControllerNameController.php in the \texttt{application/controllers} directory and includes 
+all possible actions. For example a file controller will look like this:
 
-\begin{lstlisting}[caption=Persisting an object to the database in Doctrine, label=list:persistingObjectDoctrine, language=Ruby]
+\begin{lstlisting}[caption=Persisting an object to the database in Doctrine, label=list:persistingObjectDoctrine, language=PHP]
 class FileController extends Zend_Controller_Action{
 	public function init(){
 	}
@@ -536,7 +665,11 @@ class FileController extends Zend_Controller_Action{
 	public function uploadAction(){
 	}
 
-  	public function listAction(){
+<<<<<<< HEAD
+  public function listAction(){
+=======
+	public function listAction(){
+>>>>>>> 7a2ccf18eebad5d280d777f496be384bdf2a24f8
 	}
   	
 	public function downloadAction(){
@@ -544,9 +677,10 @@ class FileController extends Zend_Controller_Action{
 }
 \end{lstlisting}
 
-By default, if no action is defined, the indexAction is called. For each action the appropriate view is by default rendered in the application/views/scripts/conntrollerName/actionName.phtml file.
+By default, if no action is defined, the \texttt{indexAction} is called. For each action the appropriate view is by 
+default rendered in the \texttt{application/views/scripts/conntrollerName/actionName.phtml} file.
 
-The models directory includes all the objects, this will be discussed in more detail in the following chapter about Doctrine.
+The \texttt{models} directory includes all the objects, this will be discussed in more detail in the following chapter about Doctrine.
 
 \subsection{Doctrine}
 The whole database connection management of Unplagged is implemented using the Doctrine Framework in version 2. 
@@ -556,29 +690,42 @@ communication with any kind of SQL database and offers an own query syntax. This
 the database behind the framework can be changed from MySQL, to OracleSQL, PostgreSQL or SQLite at any time.
 The DBAL is the agent between PDO and the ORM. The ORM is the connection between PHP objects and the DBAL.
 
-Before the use of Doctrine is described, it will be explained, how the database on a new machine can be created and how the database structure can be updated, whenever something changed in the structure. Actually this is very easy, it is required to have a local my sql database at this point having 'root' as a username, no password and a database called 'unplagged'. It is also possible to create a new configuration in the application/configs/application.ini file, although this step will not be described in this chapter. If the database is created, the build script can be executed:
+Before the use of Doctrine is described, it will be explained, how the database on a new machine can be created 
+and how the database structure can be updated, whenever something changed in the structure. Actually this is very easy, 
+it is required to have a local MySQL database at this point having root' as a username, no password and a database 
+called 'unplagged'. It is also possible to create a new configuration in the 
+application/configs/application.ini file, although this step will not be described in this chapter. If the database is 
+created, the build script can be executed:
 
 \begin{lstlisting}[caption=Updating database structure, label=list:updatingDbStructure, language=Ruby]
 php unplagged.local/scripts/build/doctrine.php
 \end{lstlisting}
 
-Now, the database is created or updated. If the database already existed, the data in it will not be removed! As described below, the big advantage of ORM is, that the programmer can stay in the PHP object context at any time. The only thing that has to be done additionally, is adding
+Now, the database is created or updated. If the database already existed, the data in it will not be removed! 
+As described below, the big advantage of ORM is, that the programmer can stay in the PHP object context at any time. 
+The only thing that has to be done additionally, is adding
 comments to the member variables of a class, that define the fields in the database:
 
 \begin{lstlisting}[caption=Defining a class in Doctrine, label=list:definingClassDoctrine, language=Ruby]
 /** @Entity */
 class UserClass
 {
-/** @Column(type="integer") */
-private $id;
-/** @Column(length=30) */
-private $username;
+  /** @Column(type="integer") */
+  private $id;
+  /** @Column(length=30) */
+  private $username;
 }
 \end{lstlisting}
 
-The whole syntax documentation of doctrine can be found here: \url{http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html} 
+The whole syntax documentation of doctrine can be found here: 
 
-To persist a new object to the database, the persist method on this object has to be called, this writes the object into the doctrine cache. It stays in the cache, until the flush method is called, which actually executes all the previous operation since the last flush. These cann be deleting, updating, or editing an object.
+\begin{itemize}
+\item \url{http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html} 
+\end{itemize}
+
+To persist a new object to the database, the persist method on this object has to be called, this writes the object 
+into the doctrine cache. It stays in the cache, until the flush method is called, which actually executes all the 
+previous operation since the last flush. These cann be deleting, updating, or editing an object.
 
 \begin{lstlisting}[caption=Persisting an object to the database in Doctrine, label=list:persistingObjectDoctrine, language=Ruby]
 $user = new User();
@@ -587,10 +734,5 @@ $em->persist($user);
 $em->flush();
 \end{lstlisting}
 
-As the previous examples show, no database programming is necesarry to create or persist a new object to the database, everyhting can be done in the PHP object context.
-
-\section{Architectural Goals}
-
-\subsection{Progressive Enhancement}
-
-\subsection{Test Driven Development}
+As the previous examples show, no database programming is necessary to create or persist a new object to the database, 
+everyhting can be done in the PHP object context.

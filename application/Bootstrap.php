@@ -243,12 +243,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
           )
         )
       ), array(
-        'label'=>'Suche',
-        'title'=>'Suche',
-        'module'=>'default',
-        'controller'=>'googlesearch',
-        'action'=>'index'
-      ), array(
         'label'=>'Edit profile',
         'title'=>'Edit profile',
         'module'=>'default',
