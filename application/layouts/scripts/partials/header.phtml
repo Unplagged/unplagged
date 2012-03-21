@@ -8,7 +8,8 @@
     <?php
     echo $this->headLink()
         ->prependStylesheet($this->baseUrl() . '/style/styles.css')
-        ->appendStylesheet($this->baseUrl() . '/style/flick/jquery-ui-1.8.17.custom.css');
+        ->appendStylesheet($this->baseUrl() . '/style/flick/jquery-ui-1.8.17.custom.css')
+        ->appendStylesheet($this->baseUrl() . '/js/libs/css/jquery.lightbox-0.5.css');;
     ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
@@ -20,6 +21,9 @@
     <script defer src="<?php echo $this->baseUrl('/js/contextmenu.js'); ?>"></script>
     <script defer src="<?php echo $this->baseUrl('/js/libs/jquery-ui-1.8.17.custom.min.js'); ?>"></script>
     <script defer src="<?php echo $this->baseUrl('/js/libs/jquery.ba-hashchange.min.js'); ?>"></script>
+    <script defer src="<?php echo $this->baseUrl('/js/libs/js/jquery.js'); ?>"></script>
+    <script defer src="<?php echo $this->baseUrl('/js/libs/js/jquery.lightbox-0.5.js'); ?>"></script>
+    <script defer src="<?php echo $this->baseUrl('/js/pictureview.js'); ?>"></script>
   </head>
   <body>
        <div id='contextmenu' style='display:none;position:absolute;top:-250;left:0;z-index:100;color:black'>
