@@ -22,12 +22,9 @@
     <script defer src="<?php echo $this->baseUrl('/js/libs/jquery.ba-hashchange.min.js'); ?>"></script>
   </head>
   <body>
-      <div id='contextmenu' style='display:none;position:absolute;top:-250;left:0;z-index:100;color:black'>
+       <div id='contextmenu' style='display:none;position:absolute;top:-250;left:0;z-index:100;color:black'>
         <table cellpadding='5' cellspacing='0' style='background-color:#40bfe8'>
-        <tr><td><a class='menu' href='javascript:history.back()'> Zurück </a></td></tr>
-        <tr><td><a class='menu' href='javascript:history.forward()'> Vorwärts </a></td></tr>
-        <tr><td><hr class='menu'><a class='menu' href='javascript:location.reload()'> Aktualisieren </a></td></tr>
-        <tr><td><a class='menu' href='javascript:print()'> Drucken </a></td></tr>
+          <tr><td><a class='menu' href='javascript:deleteSearchWords()'> Google-Suchwörter löschen </a></td></tr>
            <tr><td><a id='googleSearch' class='menu' href='javascript:googleSearch()'> Google Suche </a></td></tr>
         </table>
         </div>
