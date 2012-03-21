@@ -1,7 +1,8 @@
 % I'm not totally sure, if this should be described together or seperate, but somehow or SCRUM approach and the Redmine
 % stuff should be mentioned somewhere before the developing part and as this are probably only three pages or somethin
 % it probably could be integrated here
-\chapter{Project Workflow and  Requirements}\label{chap:systemRequirements}
+\chapter{Project Workflow and  Requirements}
+\label{chap:systemRequirements}
 
 First of all, we've got a confession to make: Unplagged is like a big playground of new 
 workflows and technologies for us, as we are aiming to incorporate 
@@ -59,7 +60,7 @@ in our small group at this point, the hassle of filling in all the tickets seeme
 will be fixed in the near future, so that you are able to see where the development is going.
 
 Currently we are working mostly with four week long sprints, to overcome the problem that we are not working fulltime
-on the tickets, which is something that scrum normally assumes. 
+on the tickets, which is something that scrum normally assumes with its two week long sprints.
 
 To have a nice statistical overview and more planning security for the \enquote{scrums}, it is required to log the time 
 that was spent on an issue within redmine.
@@ -102,10 +103,52 @@ example from the VroniPlag group, which can be reached through their IRC channel
 
 \subsection{Team Meetings}
 
-The Unplagged version of the \textit{Daily Scrum} is currently a weekly meeting.
+The Unplagged version of the \textit{Daily Scrum} is currently a weekly meeting. Even our meetings weren't daily, it was still a meeting which was respecting the other characteristics of a \textit{Daily Scrum}. Each team member used to say what he did for the last week and what he attends to do for the next week. These meetings were good occassions to verify the evolution of the project and determine the possilbe bottlenecks as soon as possible. 
 
+The Unplagged version of the \textit{Daily Scrum} is currently a weekly meeting, where we sit down
+and evaluate the current state of the sprint and estimate the time that will be needed for the user stories at hand.
+Sometimes we complement this also with meetings over Skype and TeamViewer to enforce a little bit more communication and 
+figure out some problems within the actual working environments.
+
+This is probably the most problematic aspect of our version of Scrum, because the daily frequency of the meetings normally 
+helps to let everybody know more about necessary changes in the logic of previously discussed ideas and makes the process
+really agile. Sometimes this led to situations where team members developed unnecessary complicated, in a wrong direction
+or not compatible with each other, which only got noticed a week later.
+
+\minisec{}
+Our projectteam was doing the meetings every monday for at least one hour. Most of the times we met at the same place, if due to appointment collisions we couldn't manage to meet in persons, we met in Skype. So we never used to skip the weekly meeting.
+\minisec{}
+For each meeting that we held someone was responsible for writing the protocol about the meeting. For each protocol a new wiki-page was created to our \href{http://www.redmine.org/}{Redmine}. To put the protocols to our \href{http://www.redmine.org/}{Redmine} was really helpful for the teamwork. So everybody had access to it and could if necessary have a look on the decisions which were made in the past.
+\minisec{}
+During the meetings at least these following points have been discussed:
+\minisec{}
+\begin{itemize}
+\item What was done last week. 
+\item What will be done for the next week.
+\item Organisation issues.
+\item External dependencies issues.
+\item Problems encountered last week.
+\item Further questions.
+\end{itemize}
+\minisec{}
+All the protocols which were made during the phase one are available on the appendix \ref{ch:minutes} (page number \pageref{ch:minutes}).
 
 \section{Target Group}
+
+The main goal of the application is to support the detection of plagiarism. So the target group is composed of people who want to correct documents and be sure that this does not contain any plagiarism.
+\minisec{}
+The following list is showing people who could be interested in using this application:
+\minisec{}
+\begin{itemize}
+\item Professors 
+\item Teachers
+\item Academics
+\item Instructors
+\item Tutors
+\item ...
+\end{itemize}
+\minisec{}
+This people are mostly not it-specialists, so it is important to focus on it during the development of the application. This has an influence on the way they will use the application: it must be easy and naturally to use, the results must be easy to understand and reliable.
 
 \section{User roles}
 %This is copied from the wiki, so probably copy back there when the text is finished
@@ -128,6 +171,167 @@ An admin owns all permissions, such as user administration or project administra
 \end{description}
 
 \section{Basic functionalities}
+The following points are showing the basic functionalities of the application.
+\subsection{Register}
+A person who want to use the application need to register first. It gets the abbility to do it, as soon as it opens the start-page and hit the "Jetzt anmelden" link.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/reg1.jpg}
+  \caption{register1}
+  \label{fig:register1}
+\end{figure}
+
+Below you see the register form which has to be filled.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/register_form.jpg}
+  \caption{register1}
+  \label{fig:register1}
+\end{figure}
+
+Every entry here will be saved in the database.
+
+\subsection{Login}
+
+The login functionality is an easy to use form, which can be successfully used from every user which is already registered. With a click of the "Einloggen" link, the login form will be visible.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/oderEinloggen.jpg}
+  \caption{"Einloggen" Link}
+  \label{fig:einloggen}
+\end{figure}
+
+The received login datas that are taken from the login form will be compared with the entries in the database, are the entries valid, the user has the right to use further functions in the application.
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/login_form.jpg}
+  \caption{login form}
+  \label{fig:einloggen}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/after_login.jpg}
+  \caption{after login view}
+  \label{fig:einloggen}
+\end{figure}
+\subsection{Files overview}
+The tab "Dateien" is showing the list of files which were added from an user. Not only shows it an overview it also has several additionaly functions which can be processed for a file.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/dateien.jpg}
+  \caption{overview of files}
+  \label{fig:einloggen}
+\end{figure}
+\subsubsection{Set target}
+If the user wants to mark a specific file as his target file, he can do it just with a click on the following symbol.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/set_target2.jpg}
+  \caption{target function symbol}
+  \label{fig:einloggen}
+\end{figure}
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/set_target1.jpg}
+  \caption{not marked file}
+  \label{fig:einloggen}
+\end{figure}
+Afterwards a binoculars icon will be shown.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/set_target3.jpg}
+  \caption{marked target file}
+  \label{fig:target file}
+\end{figure}
+\subsubsection{Parse}
+The parse function parses the mentioned file and forwards the parsed file to the "Dokumente" section.
+Witht a click of the following symbol, the parse function will be fired.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/parse_symbol.jpg}
+  \caption{parse symbol}
+  \label{fig:parse symbol}
+\end{figure}
+\subsubsection{Download}
+With the disk-symbol the user can download the listed file.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/download_symbol.jpg}
+  \caption{download symbol}
+  \label{fig:download symbol}
+\end{figure}
+\subsubsection{Delete}
+To delete a file the user only needs to click on the following symbol.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/delete_symbol.jpg}
+  \caption{delete symbol}
+  \label{fig:delete symbol}
+\end{figure}
+After the function was fired the path to the file in the database and the file in the related folder will be deleted.
+\subsubsection{File upload}
+The file uploader is a important function, it gives the user the opportunity to upload data which he want to work on it. Also has the user the opportunity to give the file a desired name.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/datei_hochladen.jpg}
+  \caption{file uploader}
+  \label{fig:file uploader}
+\end{figure}
+
+\subsection{Parsed files overview}
+So after a file was parsed with the parsed function from the "Dateien" section, it will be listed in the "Dokumente" tab.
+\subsubsection{Integration of detection plagiarism software}
+The "plag-detection" functionality gives user the possibility to check a parsed file of plagiarism automatically. It uses the application interface from the company "PlagAware". This is possible during our coorporation with "PlagAware".
+With the following symbol the "plag-detection" function can be used on the file.The detailed result report is not to see on the application. But the user has the possibility to see it on the "PlagAware" page.The user can get several informations on the application, like the success of the scanning and the procentaged part of the plagiarism.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/plagdetection_symbol.jpg}
+  \caption{detect plagiarism symbol}
+  \label{detect plagiarism symbol}
+\end{figure}
+\subsubsection{Delete}
+To delete a parsed file the user only needs to click on the following symbol.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/delete_symbol.jpg}
+  \caption{delete symbol}
+  \label{fig:delete symbol}
+\end{figure}
+After the function was fired the path to the file in the database and the file in the related folder will be deleted.
+\subsubsection{Simtex}
+The simtext function is meant to compare two files with each other. So equal parts in texts can be detected.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/simtext_running.png}
+  \caption{e.g. simtext running}
+  \label{fig: simtext running}
+\end{figure}
+The simtext function also creates a report, where further detailed information can be seen.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/simtext_report.jpg}
+  \caption{e.g. simtex report}
+  \label{fig:e.g. simtex report}
+\end{figure}
+In the report the equal parts on the compared files are shown.
+\subsection{Edit profile}
+The "Profil bearbeiten" form is a form which gives the user the opportunity to change profile infromations that he gave before. All edit and saved entries will be saved in the database.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/edit_profile.jpg}
+  \caption{profile edit form}
+  \label{fig: profile edit form}
+\end{figure}
+\subsection{Googlesearch}
+The "Googlesearch" function is content from the contextmenu of the application. The contextmenu only shows if the user marked text on the application. So the user can direclty search for text in google from the application. After the user clicked on "GoogleSuche nach:" the browser will open the google page with the results of the search. To delete the searchwords the user have to click on "Goolge-Suchwörter löschen".
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/contextmenu.jpg}
+  \caption{googlesearch contextmenu}
+  \label{fig:contextmenu}
+\end{figure}
 
 \section{Document Parser}
 
@@ -137,3 +341,69 @@ An admin owns all permissions, such as user administration or project administra
 
 %Perhaps better on the way for every part?
 \section{Use Cases}
+The following diagramms are so called "uml use case diagramms". The use cases are ment to visualize the interaction between the user and the system.
+\subsection{Register}
+The not registered actor wants to use the application. To use the application he have to first register. Which includes the follow steps:
+\minisec{}
+\begin{itemize}
+\item User opens the webpage of unplagged.
+\item User clicks on the "Jetzt anmelden" link.
+\item User puts needed information in the register form.
+\item User saves entries.
+\end{itemize}
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/use_cases/registration.png}
+  \caption{use case register}
+  \label{fig:use case register}
+\end{figure}
+
+\subsection{Login}
+A registered user wants to work at the application.
+\minisec{}
+Condition: user registered.
+\minisec{}
+\begin{itemize}
+\item User opens the webpage of unplagged.
+\item User clicks on the "Einloggen" link.
+\item User puts needed information in the login form.
+\item User sends entries.
+\end{itemize}
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/use_cases/login.png}
+  \caption{use case login}
+  \label{fig:use case login}
+\end{figure}
+
+\subsection{File Upload}
+A user wants to upload a file.
+\minisec{}
+Condition: user logged in and opend the tab "Dateien".
+\minisec{}
+\begin{itemize}
+\item User clicks on the button "Datei hochladen".
+\item User browses for the file which he want to upload.
+\item (Optional: User gives new name for the uploaded file.)
+\end{itemize}
+
+\subsection{Parse}
+A user wants to parse a file.
+\minisec{}
+Condition: user already uploaded the file successfully on the section "Dateien".
+\minisec{}
+\begin{itemize}
+\item User clicks on the parse-icon button.
+\end{itemize}
+\subsection{Simtext}
+\subsection{Googlesearch}
+A user wants to google-search a word in the application.
+\minisec{}
+\begin{itemize}
+\item User clicks on a word or text.
+\item User makes a right click on the marked part.
+\item User clicks on the context menu of the  "GoogleSuche nach:" link.
+\item User can see results in extern browser page.
+\end{itemize}
+
+
