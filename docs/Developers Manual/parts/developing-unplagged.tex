@@ -378,115 +378,6 @@ currently only generating this server-side as described in section \ref{sec:cont
 This section will be enhanced, when the Netbeans user interface becomes available. If you are interested, you could 
 install the software for yourself and use it on the command line.
 
-\subsection{Additional Software}
-
-As we currently have no installer or script that checks for installed software, you still have to install some
-additional dependencies to make some parts of the system work. Those are mainly command line tools that we use
-for the optical character recognition or text comparison.
-
-Most of the times the software wouldn't break completely if those dependencies were not installed, but some parts 
-would silently fail, which is of course one of the more annoying problems to debug.
-
-\subsubsection{Tesseract}
-
-Tesseract is an open source OCR\footnote{Optical character recognition} software, that is currently used to \enquote{figure out}
-texts from scanned images a user can upload. 
-
-The big idea is to build the system in a way that enables users to
-plugin their favourite OCR system, but to have one default system that produces satisfying results in Tesseract.
-
-You can download the latest installation files from:
-
-\begin{itemize}
-\item \url{http://code.google.com/p/tesseract-ocr/downloads/list}
-\end{itemize}
-
-After installing Tesseract, the easiest way to make it work with Unplagged, is to put it on your systems execution path,
-so that it could be called from the command line in any directoy.
-
-If for some reason you don't want to do this, you can also change the following line in 
-\texttt{/application/configs/application.ini} to the path where you installed Tesseract to:
-
-\begin{lstlisting}[caption=Tesseract executable path]
-parser.tesseractPath = 'tesseract'
-\end{lstlisting}
-
-You should be able to click the \enquote{parse} icon on files now:
-
-\begin{figure}[htbp]
-  \centering
-    \includegraphics[width=0.9\textwidth]{images/parse-button.png}
-  \caption{Parsing Files with Tesseract}
-  \label{fig:parseButton}
-\end{figure}
-
-\subsubsection{Imagemagick}
-
-Because Tesseract and probably other OCR systems that are provided via a plugin won't work with every image format a 
-user decides to upload, we integrated Imagemagick as a tool to convert images from one format to another. To install
-it you can simply follow the installation instructions provided here:
-
-\begin{itemize}
-\item \url{http://imagemagick.org/script/binary-releases.php}
-\end{itemize}
-
-Similar as with Tesseract, you can change the ini directive \texttt{parser.imagemagickPath}, if you chose not to include
-the executable in your path.
-
-If you installed it properly, you can try to upload an image file other than \textit{.tiff} and parse it with Tesseract,
-which should work now.
-
-\subsubsection{Simtext}
-
-Simtext is a text comparison tool, that is able to output nice data of the differences between texts. In figure 
-\ref{fig:simtextOutput} for example, you can see the default side-by-side comparison and in figure \ref{fig:simtextDiff}, 
-the output in \textit{diff} format is shown.
-
-\begin{figure}[htbp]
-  \centering
-    \includegraphics[width=\textwidth]{images/simtext-output.png}
-  \caption{Default Simtext output}
-  \label{fig:simtextOutput}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-    \includegraphics[width=0.8\textwidth]{images/simtext-output-diff.png}
-  \caption{Simtext output in diff format}
-  \label{fig:simtextDiff}
-\end{figure}
-
-Installing Simtext can sadly be a bit tricky, because only the sources and no executables(at least none that worked for us) 
-are distributed. We already
-provided a Windows 64bit EXE and an executable that runs on our Ubuntu staging environment in \texttt{/library/SIM/bin}, 
-but if you use any other environment, you will have to compile the C sources of the system for yourself. The sources can
-be found here:
-
-\begin{itemize}
-\item \url{http://dickgrune.com/Programs/similarity_tester/}
-\end{itemize} 
-
-We assume, that Linux users will be familiar with the installation steps that are described in the readme file. The only
-thing that can be easily overlooked there is the necessity to install \textit{Flex} first. Windows
-however needs some special treatment to make the compilation work:
-
-\begin{enumerate}
-\item Download and install \enquote{Make for Windows} from \url{http://gnuwin32.sourceforge.net/packages/make.htm} and 
-\enquote{Flex for Windows} from \url{http://gnuwin32.sourceforge.net/packages/flex.htm}
-\item Add the folder of the binaries to the path (should be something like 
-\texttt{C:\textbackslash Program Files (x86) \textbackslash GnuWin32\textbackslash bin})
-\item Rename \enquote{flex.exe} to \enquote{lex.exe} in the above mentioned directory
-\item Unzip and open Simtext directory on the command line and type:
-\end{enumerate}
-\begin{lstlisting}[caption=Installing and checking simtext, language=bash]
->make
->sim_c --help
->sim_c READ.ME READ_ME
-\end{lstlisting}
-
-And again, to make it work you can set the ini directive \texttt{simtext.simtextPath} to the appropriate path or simply
-include it in your systems path variable.
-
 \subsection{Continuous Integration}\label{sec:continuousIntegration}
 
 To always have a running version of the latest code, we use an automated workflow, that always deploys everything that 
@@ -717,7 +608,7 @@ The directories and their meaning:
 \end{itemize}
 
 The Zend framework offers RESTful\footnote{See for example \enquote{RESTful Web Services} of Richardson and Ruby for 
-more information} URLs that follow a fixed pattern: \texttt{unplagged.local/controller/action/key/value/key2/value2}. Each 
+more information} URLs that follow a fixed pattern: \texttt{\nolinkurl{unplagged.local/controller/action/key/value/key2/value2}}. Each 
 controller is defined as ControllerNameController.php in the \texttt{application/controllers} directory and includes 
 all possible actions. For example a file controller will look like this:
 
@@ -745,7 +636,7 @@ class FileController extends Zend_Controller_Action{
 \end{lstlisting}
 
 By default, if no action is defined, the \texttt{indexAction} is called. For each action the appropriate view is by 
-default rendered in the \texttt{application/views/scripts/conntrollerName/actionName.phtml} file.
+default rendered in the \texttt{\nolinkurl{application/views/scripts/conntrollerName/actionName.phtml}} file.
 
 The \texttt{models} directory includes all the objects, this will be discussed in more detail in the following chapter about Doctrine.
 
@@ -803,3 +694,112 @@ $em->flush();
 
 As the previous examples show, no database programming is necessary to create or persist a new object to the database, 
 everyhting can be done in the PHP object context.
+
+\section{Additional Software}
+
+As we currently have no installer or script that checks for installed software, you still have to install some
+additional dependencies to make some parts of the system work. Those are mainly command line tools that we use
+for the optical character recognition or text comparison.
+
+Most of the times the software wouldn't break completely if those dependencies were not installed, but some parts 
+would silently fail, which is of course one of the more annoying problems to debug.
+
+\subsection{Tesseract}
+
+Tesseract is an open source OCR\footnote{Optical character recognition} software, that is currently used to \enquote{figure out}
+texts from scanned images a user can upload. 
+
+The big idea is to build the system in a way that enables users to
+plugin their favourite OCR system, but to have one default system that produces satisfying results in Tesseract.
+
+You can download the latest installation files from:
+
+\begin{itemize}
+\item \url{http://code.google.com/p/tesseract-ocr/downloads/list}
+\end{itemize}
+
+After installing Tesseract, the easiest way to make it work with Unplagged, is to put it on your systems execution path,
+so that it could be called from the command line in any directoy.
+
+If for some reason you don't want to do this, you can also change the following line in 
+\texttt{/application/configs/application.ini} to the path where you installed Tesseract to:
+
+\begin{lstlisting}[caption=Tesseract executable path]
+parser.tesseractPath = 'tesseract'
+\end{lstlisting}
+
+You should be able to click the \enquote{parse} icon on files now:
+
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=0.9\textwidth]{images/parse-button.png}
+  \caption{Parsing Files with Tesseract}
+  \label{fig:parseButton}
+\end{figure}
+
+\subsection{Imagemagick}
+
+Because Tesseract and probably other OCR systems that are provided via a plugin won't work with every image format a 
+user decides to upload, we integrated Imagemagick as a tool to convert images from one format to another. To install
+it you can simply follow the installation instructions provided here:
+
+\begin{itemize}
+\item \url{http://imagemagick.org/script/binary-releases.php}
+\end{itemize}
+
+Similar as with Tesseract, you can change the ini directive \texttt{parser.imagemagickPath}, if you chose not to include
+the executable in your path.
+
+If you installed it properly, you can try to upload an image file other than \textit{.tiff} and parse it with Tesseract,
+which should work now.
+
+\subsection{Simtext}
+
+Simtext is a text comparison tool, that is able to output nice data of the differences between texts. In figure 
+\ref{fig:simtextOutput} for example, you can see the default side-by-side comparison and in figure \ref{fig:simtextDiff}, 
+the output in \textit{diff} format is shown.
+
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=\textwidth]{images/simtext-output.png}
+  \caption{Default Simtext output}
+  \label{fig:simtextOutput}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=0.8\textwidth]{images/simtext-output-diff.png}
+  \caption{Simtext output in diff format}
+  \label{fig:simtextDiff}
+\end{figure}
+
+Installing Simtext can sadly be a bit tricky, because only the sources and no executables(at least none that worked for us) 
+are distributed. We already
+provided a Windows 64bit EXE and an executable that runs on our Ubuntu staging environment in \texttt{/library/SIM/bin}, 
+but if you use any other environment, you will have to compile the C sources of the system for yourself. The sources can
+be found here:
+
+\begin{itemize}
+\item \url{http://dickgrune.com/Programs/similarity_tester/}
+\end{itemize} 
+
+We assume, that Linux users will be familiar with the installation steps that are described in the readme file. The only
+thing that can be easily overlooked there is the necessity to install \textit{Flex} first. Windows
+however needs some special treatment to make the compilation work:
+
+\begin{enumerate}
+\item Download and install \enquote{Make for Windows} from \url{http://gnuwin32.sourceforge.net/packages/make.htm} and 
+\enquote{Flex for Windows} from \url{http://gnuwin32.sourceforge.net/packages/flex.htm}
+\item Add the folder of the binaries to the path (should be something like 
+\texttt{C:\textbackslash Program Files (x86) \textbackslash GnuWin32\textbackslash bin})
+\item Rename \enquote{flex.exe} to \enquote{lex.exe} in the above mentioned directory
+\item Unzip and open Simtext directory on the command line and type:
+\end{enumerate}
+\begin{lstlisting}[caption=Installing and checking simtext, language=bash]
+>make
+>sim_c --help
+>sim_c READ.ME READ_ME
+\end{lstlisting}
+
+And again, to make it work you can set the ini directive \texttt{simtext.simtextPath} to the appropriate path or simply
+include it in your systems path variable.
