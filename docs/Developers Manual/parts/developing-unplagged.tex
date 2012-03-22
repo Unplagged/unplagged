@@ -296,8 +296,75 @@ Add the following configuration to the httpd-vhosts.conf file you just included:
 You can tryout your new configuration by entering \textit{unplagged.local} in your browser.
 
 \subsection{Netbeans}
+As a software developer who wants to develop object-oriented and use a free software, there is acutally not so much software to choose from available. Either Eclipse or Netbeans, we decided to use Netbeans since it has more built-in plugins for PHP and it is faster.
 
-\subsubsection{Configuring Tests}
+This section will describe how to configure Netbeans in order to start working on the Unplagged project. It is necessarry that PHPUnit is already installed on the machine, otherwise not all steps of the Netbeans setup can be done.
+
+\subsubsection{Setting up PHPUnit}
+
+\begin{description}
+\item [Mac OS:] \hfill \\
+\url{http://kubyshkin.ru/programming/phpunit-on-mac-os-x-snow-leopard-10-6/} \\
+\url{http://www.newmediacampaigns.com/page/install-pear-phpunit-xdebug-on-macosx-snow-leopard} \\
+\url{http://www.phpunit.de/manual/3.6/en/code-coverage-analysis.html}
+
+\item [Windows:] \hfill \\
+For windows there a are some more steps to. First of all it is assumed that XAMPP is already installed.
+\end{description}
+
+\begin{lstlisting}[caption=Setting up PHPUnit on Windows]
+# download http://pear.php.net/go-pear.phar and save it to
+C:\xampp\php
+# open a command prompt and go to
+C:/xampp/php
+# type the following commands
+php go-pear.phar
+pear update-channels
+pear upgrade --alldeps
+pear channel-discover components.ez.no
+pear channel-discover pear.symfony-project.com
+pear channel-discover pear.phpunit.de
+pear install --alldeps phpunit/PHPUnit
+\end{lstlisting}
+
+After the installation process is finished, go to the preferences in Netbeans, choose the PHP tab and then the tab "Unit Testing". First try to click the search button, if the installation of PHPUnit is not found, add the following:
+
+\begin{description}
+\item [Mac OS:] \hfill \\
+\textit{/usr/bin/phpunit}
+\item [Windows:] \hfill \\
+\textit{C:\textbackslash xampp\textbackslash php\textbackslash phpunit.bat}
+\end{description}
+
+\subsubsection{Configuring Netbeans}
+Download the latest Netbeans release for PHP from the Netbeans webpage:\\
+\url{http://netbeans.org/downloads/}
+
+\begin{lstlisting}[caption=Setting up Netbeans project]
+Install it and go to File > New Project
+Choose PHP > PHP Appliction with Existing Sources
+Set "Sources Folder" to the directory, where the git repository is located.
+"Project Name" can e.g. be "unplagged.com"
+"PHP Version" should be "5.3"
+"Default Encoding" "UTF-8"
+IMPORTANT: Check the Checkbox "Put NetBeans metadata into a seperate directory" and choose another directory than the git repository.
+\end{lstlisting}
+
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/netbeans/01_new_project.png}
+  \caption{Netbeans -- New project -- Name and Location}
+  \label{fig:newProjectPart1}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/netbeans/02_run_as.png}
+  \caption{Netbeans -- New project -- Run Configuration}
+  \label{fig:newProjectPart2}
+\end{figure}
+
+Now the project is created and coding can start.
 
 \subsubsection{Documentation}
 
@@ -309,7 +376,7 @@ Sadly the automatic generation is not yet supported by Netbeans, but as it will 
 currently only generating this server-side as described in section \ref{sec:continuousIntegration}. 
 
 This section will be enhanced, when the Netbeans user interface becomes available. If you are interested, you could 
-install the software for yourself and use it over the command line.
+install the software for yourself and use it on the command line.
 
 \subsection{Additional Software}
 
