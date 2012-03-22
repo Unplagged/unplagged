@@ -26,7 +26,7 @@ class Unplagged_Parser_Page_TesseractAdapter{
    * it is assumed, that tesseract can be called from anywhere.
    * @param string $language The language which tesseract should use for it's parsing.
    */
-  public function __construct($inputFileLocation, $outputFileLocation, $language = 'deu'){
+  public function __construct($inputFileLocation, $outputFileLocation, $language = 'eng'){
     $message = $this->checkForInvalidArguments($inputFileLocation, $outputFileLocation);
 
     if($message === false){
