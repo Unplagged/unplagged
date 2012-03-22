@@ -3,7 +3,7 @@ $this->title = $this->translate("List of uploaded files");
 $this->headTitle($this->title);
 function defineClass($ext)
 {
-    if($ext=='jpg'||$ext=='jpeg'||$ext=='png'||$ext=='gif')
+    if($ext=='jpg'||$ext=='jpeg'||$ext=='png'||$ext=='gif'||$ext=='tiff')
     {
         echo 'picture';
     }
@@ -15,7 +15,7 @@ function defineClass($ext)
 
 function defineFileLogo($ext)
 {
-    if($ext=='jpg'||$ext=='jpeg'||$ext=='png'||$ext=='gif')
+    if($ext=='jpg'||$ext=='jpeg'||$ext=='png'||$ext=='gif'||$ext=='tiff')
     {
         return 'picture.png';
     }

@@ -24,56 +24,59 @@
 \contentsline {figure}{\numberline {2.1}{\ignorespaces Redmine Roadmap\relax }}{31}{figure.caption.41}
 \contentsline {figure}{\numberline {2.2}{\ignorespaces Scrum Meeting\relax }}{32}{figure.caption.42}
 \contentsline {figure}{\numberline {2.3}{\ignorespaces User Stories\relax }}{33}{figure.caption.43}
-\contentsline {figure}{\numberline {2.4}{\ignorespaces register1\relax }}{36}{figure.caption.44}
-\contentsline {figure}{\numberline {2.5}{\ignorespaces register1\relax }}{37}{figure.caption.45}
-\contentsline {figure}{\numberline {2.6}{\ignorespaces "Einloggen" Link\relax }}{37}{figure.caption.46}
-\contentsline {figure}{\numberline {2.7}{\ignorespaces login form\relax }}{38}{figure.caption.47}
-\contentsline {figure}{\numberline {2.8}{\ignorespaces after login view\relax }}{38}{figure.caption.48}
-\contentsline {figure}{\numberline {2.9}{\ignorespaces overview of files\relax }}{39}{figure.caption.49}
-\contentsline {figure}{\numberline {2.10}{\ignorespaces target function symbol\relax }}{39}{figure.caption.51}
-\contentsline {figure}{\numberline {2.11}{\ignorespaces not marked file\relax }}{40}{figure.caption.52}
-\contentsline {figure}{\numberline {2.12}{\ignorespaces marked target file\relax }}{40}{figure.caption.53}
-\contentsline {figure}{\numberline {2.13}{\ignorespaces parse symbol\relax }}{40}{figure.caption.55}
-\contentsline {figure}{\numberline {2.14}{\ignorespaces Download symbol\relax }}{40}{figure.caption.57}
-\contentsline {figure}{\numberline {2.15}{\ignorespaces Delete symbol\relax }}{40}{figure.caption.59}
-\contentsline {figure}{\numberline {2.16}{\ignorespaces file uploader\relax }}{41}{figure.caption.61}
-\contentsline {figure}{\numberline {2.17}{\ignorespaces detect plagiarism symbol\relax }}{42}{figure.caption.63}
-\contentsline {figure}{\numberline {2.18}{\ignorespaces delete symbol\relax }}{42}{figure.caption.65}
-\contentsline {figure}{\numberline {2.19}{\ignorespaces e.g. simtext running\relax }}{42}{figure.caption.67}
-\contentsline {figure}{\numberline {2.20}{\ignorespaces Example of a Simtex report\relax }}{43}{figure.caption.68}
-\contentsline {figure}{\numberline {2.21}{\ignorespaces Profile edit form\relax }}{44}{figure.caption.69}
-\contentsline {figure}{\numberline {2.22}{\ignorespaces Googlesearch contextmenu\relax }}{44}{figure.caption.70}
-\contentsline {figure}{\numberline {2.23}{\ignorespaces use case register\relax }}{46}{figure.caption.71}
-\contentsline {figure}{\numberline {2.24}{\ignorespaces use case login\relax }}{47}{figure.caption.72}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces register1\relax }}{41}{figure.caption.45}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces register1\relax }}{42}{figure.caption.46}
+\contentsline {figure}{\numberline {2.6}{\ignorespaces "Einloggen" Link\relax }}{42}{figure.caption.47}
+\contentsline {figure}{\numberline {2.7}{\ignorespaces login form\relax }}{43}{figure.caption.48}
+\contentsline {figure}{\numberline {2.8}{\ignorespaces after login view\relax }}{43}{figure.caption.49}
+\contentsline {figure}{\numberline {2.9}{\ignorespaces overview of files\relax }}{44}{figure.caption.50}
+\contentsline {figure}{\numberline {2.10}{\ignorespaces target function symbol\relax }}{45}{figure.caption.52}
+\contentsline {figure}{\numberline {2.11}{\ignorespaces not marked file\relax }}{45}{figure.caption.53}
+\contentsline {figure}{\numberline {2.12}{\ignorespaces marked target file\relax }}{45}{figure.caption.54}
+\contentsline {figure}{\numberline {2.13}{\ignorespaces parse symbol\relax }}{45}{figure.caption.56}
+\contentsline {figure}{\numberline {2.14}{\ignorespaces Download symbol\relax }}{46}{figure.caption.58}
+\contentsline {figure}{\numberline {2.15}{\ignorespaces Delete symbol\relax }}{46}{figure.caption.60}
+\contentsline {figure}{\numberline {2.16}{\ignorespaces file uploader\relax }}{46}{figure.caption.62}
+\contentsline {figure}{\numberline {2.17}{\ignorespaces detect plagiarism symbol\relax }}{48}{figure.caption.69}
+\contentsline {figure}{\numberline {2.18}{\ignorespaces delete symbol\relax }}{48}{figure.caption.71}
+\contentsline {figure}{\numberline {2.19}{\ignorespaces e.g. simtext running\relax }}{49}{figure.caption.73}
+\contentsline {figure}{\numberline {2.20}{\ignorespaces Example of a Simtex report\relax }}{49}{figure.caption.74}
+\contentsline {figure}{\numberline {2.21}{\ignorespaces Profile edit form\relax }}{50}{figure.caption.75}
+\contentsline {figure}{\numberline {2.22}{\ignorespaces Googlesearch contextmenu\relax }}{51}{figure.caption.76}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Parsing Files with Tesseract\relax }}{59}{figure.caption.80}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Default Simtext output\relax }}{61}{figure.caption.83}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Simtext output in diff format\relax }}{62}{figure.caption.84}
-\contentsline {figure}{\numberline {3.4}{\ignorespaces Deployment workflow\relax }}{63}{figure.caption.85}
-\contentsline {figure}{\numberline {3.5}{\ignorespaces Mockup -- New case -- hand-drawn\relax }}{66}{figure.caption.87}
-\contentsline {figure}{\numberline {3.6}{\ignorespaces Mockup -- New case -- digitalized\relax }}{67}{figure.caption.88}
-\contentsline {figure}{\numberline {3.7}{\ignorespaces Initial Screen PSD\relax }}{68}{figure.caption.89}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Parsing Files with Tesseract\relax }}{62}{figure.caption.84}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Default Simtext output\relax }}{64}{figure.caption.87}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Simtext output in diff format\relax }}{65}{figure.caption.88}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Deployment workflow\relax }}{66}{figure.caption.89}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Mockup -- New case -- hand-drawn\relax }}{69}{figure.caption.91}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Mockup -- New case -- digitalized\relax }}{70}{figure.caption.92}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Initial Screen PSD\relax }}{71}{figure.caption.93}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {A.1}{\ignorespaces meeting protocol no. 6\relax }}{77}{figure.caption.90}
-\contentsline {figure}{\numberline {A.2}{\ignorespaces meeting protocol no. 8\relax }}{78}{figure.caption.91}
-\contentsline {figure}{\numberline {A.3}{\ignorespaces meeting protocol no. 10\relax }}{78}{figure.caption.92}
-\contentsline {figure}{\numberline {A.4}{\ignorespaces meeting protocol no. 11\relax }}{79}{figure.caption.93}
-\contentsline {figure}{\numberline {A.5}{\ignorespaces meeting protocol no. 12\relax }}{79}{figure.caption.94}
-\contentsline {figure}{\numberline {A.6}{\ignorespaces meeting protocol no. 13\relax }}{80}{figure.caption.95}
-\contentsline {figure}{\numberline {A.7}{\ignorespaces meeting protocol no. 15\relax }}{80}{figure.caption.96}
-\contentsline {figure}{\numberline {A.8}{\ignorespaces meeting protocol no. 17\relax }}{81}{figure.caption.97}
-\contentsline {figure}{\numberline {A.9}{\ignorespaces meeting protocol no. 18\relax }}{81}{figure.caption.98}
-\contentsline {figure}{\numberline {A.10}{\ignorespaces meeting protocol no. 19\relax }}{82}{figure.caption.99}
+\contentsline {figure}{\numberline {A.1}{\ignorespaces meeting protocol no. 5\relax }}{81}{figure.caption.94}
+\contentsline {figure}{\numberline {A.2}{\ignorespaces meeting protocol no. 6\relax }}{82}{figure.caption.95}
+\contentsline {figure}{\numberline {A.3}{\ignorespaces meeting protocol no. 7\relax }}{83}{figure.caption.96}
+\contentsline {figure}{\numberline {A.4}{\ignorespaces meeting protocol no. 8\relax }}{83}{figure.caption.97}
+\contentsline {figure}{\numberline {A.5}{\ignorespaces meeting protocol no. 9\relax }}{84}{figure.caption.98}
+\contentsline {figure}{\numberline {A.6}{\ignorespaces meeting protocol no. 10\relax }}{85}{figure.caption.99}
+\contentsline {figure}{\numberline {A.7}{\ignorespaces meeting protocol no. 11\relax }}{86}{figure.caption.100}
+\contentsline {figure}{\numberline {A.8}{\ignorespaces meeting protocol no. 12\relax }}{86}{figure.caption.101}
+\contentsline {figure}{\numberline {A.9}{\ignorespaces meeting protocol no. 13\relax }}{87}{figure.caption.102}
+\contentsline {figure}{\numberline {A.10}{\ignorespaces meeting protocol no. 14\relax }}{87}{figure.caption.103}
+\contentsline {figure}{\numberline {A.11}{\ignorespaces meeting protocol no. 15\relax }}{88}{figure.caption.104}
+\contentsline {figure}{\numberline {A.12}{\ignorespaces meeting protocol no. 16\relax }}{88}{figure.caption.105}
+\contentsline {figure}{\numberline {A.13}{\ignorespaces meeting protocol no. 17\relax }}{89}{figure.caption.106}
+\contentsline {figure}{\numberline {A.14}{\ignorespaces meeting protocol no. 18\relax }}{89}{figure.caption.107}
+\contentsline {figure}{\numberline {A.15}{\ignorespaces meeting protocol no. 19\relax }}{90}{figure.caption.108}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {C.1}{\ignorespaces Mockup \IeC {\textendash } Compare results \IeC {\textendash } digitalized \relax }}{98}{figure.caption.102}
-\contentsline {figure}{\numberline {C.2}{\ignorespaces Mockup \IeC {\textendash } Media list \IeC {\textendash } digitalized \relax }}{99}{figure.caption.103}
-\contentsline {figure}{\numberline {C.3}{\ignorespaces Mockup \IeC {\textendash } New case \IeC {\textendash } digitalized \relax }}{100}{figure.caption.104}
-\contentsline {figure}{\numberline {C.4}{\ignorespaces Mockup \IeC {\textendash } New fragment \IeC {\textendash } digitalized \relax }}{101}{figure.caption.105}
-\contentsline {figure}{\numberline {C.5}{\ignorespaces Mockup \IeC {\textendash } New project \IeC {\textendash } digitalized \relax }}{102}{figure.caption.106}
-\contentsline {figure}{\numberline {C.6}{\ignorespaces Mockup \IeC {\textendash } New case \IeC {\textendash } digitalized \relax }}{103}{figure.caption.107}
-\contentsline {figure}{\numberline {C.7}{\ignorespaces Mockup \IeC {\textendash } List fragments \IeC {\textendash } digitalized \relax }}{104}{figure.caption.108}
-\contentsline {figure}{\numberline {C.8}{\ignorespaces Mockup \IeC {\textendash } New fragment \IeC {\textendash } digitalized \relax }}{105}{figure.caption.109}
-\contentsline {figure}{\numberline {C.9}{\ignorespaces Mockup \IeC {\textendash } Show fragment for approval \IeC {\textendash } digitalized \relax }}{106}{figure.caption.110}
-\contentsline {figure}{\numberline {C.10}{\ignorespaces Mockup \IeC {\textendash } New report \IeC {\textendash } digitalized \relax }}{107}{figure.caption.111}
+\contentsline {figure}{\numberline {C.1}{\ignorespaces Mockup \IeC {\textendash } Compare results \IeC {\textendash } digitalized \relax }}{106}{figure.caption.111}
+\contentsline {figure}{\numberline {C.2}{\ignorespaces Mockup \IeC {\textendash } Media list \IeC {\textendash } digitalized \relax }}{107}{figure.caption.112}
+\contentsline {figure}{\numberline {C.3}{\ignorespaces Mockup \IeC {\textendash } New case \IeC {\textendash } digitalized \relax }}{108}{figure.caption.113}
+\contentsline {figure}{\numberline {C.4}{\ignorespaces Mockup \IeC {\textendash } New fragment \IeC {\textendash } digitalized \relax }}{109}{figure.caption.114}
+\contentsline {figure}{\numberline {C.5}{\ignorespaces Mockup \IeC {\textendash } New project \IeC {\textendash } digitalized \relax }}{110}{figure.caption.115}
+\contentsline {figure}{\numberline {C.6}{\ignorespaces Mockup \IeC {\textendash } New case \IeC {\textendash } digitalized \relax }}{111}{figure.caption.116}
+\contentsline {figure}{\numberline {C.7}{\ignorespaces Mockup \IeC {\textendash } List fragments \IeC {\textendash } digitalized \relax }}{112}{figure.caption.117}
+\contentsline {figure}{\numberline {C.8}{\ignorespaces Mockup \IeC {\textendash } New fragment \IeC {\textendash } digitalized \relax }}{113}{figure.caption.118}
+\contentsline {figure}{\numberline {C.9}{\ignorespaces Mockup \IeC {\textendash } Show fragment for approval \IeC {\textendash } digitalized \relax }}{114}{figure.caption.119}
+\contentsline {figure}{\numberline {C.10}{\ignorespaces Mockup \IeC {\textendash } New report \IeC {\textendash } digitalized \relax }}{115}{figure.caption.120}

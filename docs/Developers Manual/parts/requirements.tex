@@ -140,10 +140,11 @@ All the protocols which were made during the phase one are available in the appe
 
 \section{Target Group}
 
-The main goal of the application is to support the detection of plagiarism. So the target group is composed of people 
-who want to correct documents and be sure that this does not contain any plagiarism.
+Our main target group is \textit{vroniplag}.
+\minisec{}
+But of course a goal of the application is to support the detection of plagiarism for other groups as well. So the target group is composed of people who want to correct documents and be sure that this does not contain any plagiarism.
 
-The following list is showing people who could be interested in using this application:
+The following list is showing personas who could be interested in using this application:
 
 \begin{itemize}
 \item Professors 
@@ -155,6 +156,134 @@ The following list is showing people who could be interested in using this appli
 \end{itemize}
 
 This people are mostly not it-specialists, so it is important to focus on it during the development of the application. This has an influence on the way they will use the application: it must be easy and naturally to use, the results must be easy to understand and reliable.
+\section{Planned functionalities}
+\subsection{System Requirements}
+
+The following points describe some of the basic functionalities:
+
+\begin{itemize}
+\item Unplagged works in common modern browsers.
+\item Unplagged works in common modern browsers.
+\item The system can be used collaboratively, i. e. multiple users can work together on a case.
+\item A user can provide input data for a case in different types of formats, e. g. pdf, jpeg, odt or doc.
+\item A user can mark parts of the input data as fragments and store associated data, e. g. comments, plagiarism type or original source.
+\item The users can create customizable reports for a case from the plagiarisms they found.
+\item The system integrates OCR tools.
+\item The reports can be generated in different types of output formats.
+\item The system provides hooks to integrate plugins, for example to use different kinds of OCRs or to integrate intrinsic plagiarism detection.
+\end{itemize}
+
+And here it is broken down into the currently identified sections/modules of the system:
+
+\subsection{Administration}
+
+\begin{itemize}
+\item Create, update and delete cases and users (User roles)
+\end{itemize}
+
+\subsection{Creating a new case}
+
+Basic Information:
+\begin{itemize}
+\item Case Name
+\item Probably an alias for the case
+\item Visible to the public (yes/no) (if yes: show a hint "Project will be visible to anyone" and let user approve it)
+\item Approvals needed (2 by default)
+\end{itemize}
+
+Suspect documents:
+\begin{itemize}
+\item Uploading documents belonging to the case
+\end{itemize}
+
+Collaborators:
+\begin{itemize}
+\item Name
+\item Multiple groups with pre-defined right sets
+\item Locked (whether the user is currently locked and can't do anything in the project or not)
+\end{itemize}
+
+
+\subsection{ Document Parser}
+
+Take different kinds of documents or images and convert them into a common internal representation.
+
+\subsection{ Editor Mode}
+
+\subsubsection{ Detection modes}
+
+Google Search - if no source is found yet
+\begin{itemize}
+\item Double click words in a suspect document
+\item Do a Google-Search on it (left screen suspect document, right side of the screen: google search)
+\item if something interesting is found on Google, open the source
+\item Let user import the source into our system with bibtex information about the author and so on
+\item Mark words in suspect document and imported source
+\item Save as a new case
+\end{itemize}
+
+Sim
+\begin{itemize}
+\item Mark a browseable part in the suspect document and do a sim with a given source
+\item Store result and highlight dif
+\item Start creating fragments
+\end{itemize}
+
+Other sources
+\begin{itemize}
+\item Send suspicious document to a webservice and get back a report that can be used for further editing 
+\end{itemize}
+
+\subsection{Creating a candidate fragment}
+
+Starting point:
+\minisec{}
+ by hand:
+\begin{itemize}
+\item Show suspect document on the left, possible source on the right
+\item  Select parts on the left and right
+\end{itemize}
+
+detection mode
+\begin{itemize}
+\item automatically pre-marked text parts on each side, can be shifted
+\end{itemize}
+
+\begin{itemize}
+\item Allow marking with different colors in one fragment
+\item Multiple types can be added to each fragment  (Strukturplagiat, Bauernopfer,...)
+\end{itemize}
+
+Additional requirements:
+Other sources
+\begin{itemize}
+\item Send suspicious document to a webservice and get back a report that can be used for further editing 
+\item Merging multiple fragments
+\item Marking a fragment over multiple pages
+\item Mini Post-it on each line to add a specific note to a text part
+\end{itemize}
+
+Information:
+\begin{itemize}
+\item  A collection of page number, line number, word number of start and end  needs to be stored
+\end{itemize}
+
+\subsection{Approving a candidate fragment}
+\begin{itemize}
+\item  Show link to original source
+\item show suspect part marked and show plagiarism type (Strukturplagiat, Bauernopfer,...) on the left
+\item and source part on the right with marked text
+\end{itemize}
+
+\begin{itemize}
+\item Add a comment and set a tick if approved or not
+\item show stats how many people already approved or rejected the candidate fragment
+\end{itemize}
+
+\subsection{Report Generation}
+\begin{itemize}
+\item  drag and drop of fragment
+\end{itemize}
 
 \section{User roles}
 
@@ -177,13 +306,13 @@ Case-Managers can set up new cases and manage colloborators for their cases and 
 An admin owns all permissions, such as user administration or project administration. They also hvae the ability to to block/unblock an existing case.
 \end{description}
 
-\section{Basic functionalities}
+\section{Current state of th basic functionalities}
 
 The following points are showing the basic functionalities of the application.
 
 \subsection{Register}
 
-A person who want to use the application need to register first. It gets the abbility to do it, as soon as it opens the 
+A person who wants to use the application need to register first. It gets the abbility to do it, as soon as it opens the 
 start-page and hit the \enquote{Jetzt anmelden} link.
 
 \begin{figure}[!ht]
@@ -232,6 +361,12 @@ entries valid, the user has the right to use further functions in the applicatio
   \caption{after login view}
   \label{fig:einloggen}
 \end{figure}
+
+\subsection{Create case}
+
+To creat an own case the user only need to click on the \enquote{Fall Einstellungen} button(button wird als bild noch eingefügt).
+
+If the user has already some cases listed he can search for it in the searchfield (bild wird eingefügt). The field also shows the current case. This helps the user to orientate.
 
 \subsection{Files overview}
 
@@ -325,13 +460,28 @@ it. Also has the user the opportunity to give the file a desired name.
 So after a file was parsed with the parsed function from the \enquote{Dateien} section, it will be listed in the 
 \enquote{Dokumente} tab.
 
+As soon as the user clicks on a listed document, the parsed pages of the documents will be shown. In this area the user has several functions which he can use to a page. This functions are followed listed.
+
+\subsubsection{De-hyphen}
+If a word is at the end of a line to long to fit in the line, the one half of the word gets an hyphen. This function marks thos sentence. So for the user such broken words are easy to detect.
+
+\subsubsection{Stopwords}
+Stopwords are disturbing or not so interesting parts in texts for plagiarism. Thats why the user can gray them out with this functionality.
+
+\subsubsection{Plagiarism detection reports}
+With this function the user has the possibility to see the reports, which were created by a plagiarism detection software.
+
+\subsubsection{Edit}
+The user hast the possibility to edit the page.
+\subsubsection{Delete}
+The user can delete the desired page.
 \subsubsection{Integration of detection plagiarism software}
 
 The \enquote{plag-detection} functionality gives user the possibility to check a parsed file of plagiarism automatically. 
 It uses the application interface from the company \enquote{PlagAware}. This is possible during our coorporation with 
 \enquote{PlagAware}.
 With the following symbol the \enquote{plag-detection} function can be used on the file.The detailed result report is 
-not to see on the application. But the user has the possibility to see it on the "PlagAware" page.The user can get 
+not to see on the application. But the user has the possibility to see it on the \enquote{PlagAware} page.The user can get 
 several informations on the application, like the success of the scanning and the procentaged part of the plagiarism.
 
 \begin{figure}[!ht]
@@ -378,7 +528,7 @@ In the report the equal parts on the compared files are shown.
 
 \subsection{Edit profile}
 
-The \enquote{Profil bearbeiten} form is a form which gives the user the opportunity to change profile infromations that 
+The \enquote{Profil bearbeiten} form is a form which gives the user the opportunity to change profile informations that 
 he gave before. All edit and saved entries will be saved in the database.
 
 \begin{figure}[!ht]
@@ -412,78 +562,3 @@ document.
 Currently this is used when a user uploads an image of scanned text and tries to parse it as described in section 
 \nameref{sec:parse-file}.
 
-%Perhaps better on the way for every part?
-\section{Use Cases}
-
-The following UML use-case diagrams are meant to visualize the interaction 
-between the user and the system.
-
-\subsection{Register}
-
-The not registered actor wants to use the application. To use the application he have to first register. Which includes 
-the follow steps:
-
-
-\begin{itemize}
-\item User opens the webpage of unplagged.
-\item User clicks on the "Jetzt anmelden" link.
-\item User puts needed information in the register form.
-\item User saves entries.
-\end{itemize}
-
-\begin{figure}[!ht]
-  \centering
-    \includegraphics[width=0.97\textwidth]{images/use_cases/registration.png}
-  \caption{use case register}
-  \label{fig:use case register}
-\end{figure}
-
-\subsection{Login}
-
-A registered user wants to work at the application.
-
-Condition: user registered.
-
-\begin{itemize}
-\item User opens the webpage of unplagged.
-\item User clicks on the "Einloggen" link.
-\item User puts needed information in the login form.
-\item User sends entries.
-\end{itemize}
-
-\begin{figure}[!ht]
-  \centering
-    \includegraphics[width=0.97\textwidth]{images/use_cases/login.png}
-  \caption{use case login}
-  \label{fig:use case login}
-\end{figure}
-
-\subsection{File Upload}
-A user wants to upload a file.
-
-Condition: user logged in and opend the tab "Dateien".
-
-\begin{itemize}
-\item User clicks on the button "Datei hochladen".
-\item User browses for the file which he want to upload.
-\item (Optional: User gives new name for the uploaded file.)
-\end{itemize}
-
-\subsection{Parse}
-A user wants to parse a file.
-
-Condition: user already uploaded the file successfully on the section "Dateien".
-
-\begin{itemize}
-\item User clicks on the parse-icon button.
-\end{itemize}
-
-\subsection{Googlesearch}
-A user wants to google-search a word in the application.
-
-\begin{itemize}
-\item User clicks on a word or text.
-\item User makes a right click on the marked part.
-\item User clicks on the context menu of the  "GoogleSuche nach:" link.
-\item User can see results in extern browser page.
-\end{itemize}
