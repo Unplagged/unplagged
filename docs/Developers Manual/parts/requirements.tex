@@ -47,7 +47,7 @@ in solving the problems at hand.
   \label{fig:roadmap}
 \end{figure}
 
-What we are doing there is to map every \textit{Sprint} and the \textit{Product Backlog} to Redmine's notion of \enquote{Version} and
+What we are doing there, is to map every \textit{Sprint} and the \textit{Product Backlog} to Redmine's notion of \enquote{Version} and
 every identified \textit{User Story} to an \enquote{Issue}.
 
 You can see in figure \ref{fig:roadmap} the view of the roadmap, with the current sprint 5 designated to create this very
@@ -104,24 +104,25 @@ example from the VroniPlag group, which can be reached through their IRC channel
 
 % I think it's better to use present tense, because the meetings will continue
 The Unplagged version of the \textit{Daily Scrum} is currently a weekly meeting. Even though our meetings aren't daily, they 
-are still respecting the other characteristics of a \textit{Daily Scrum}. Each team member says what he did in 
-the last week and what he is going to do the next week. 
+are still respecting the other characteristics of a \textit{Daily Scrum}. Each team member says what was done in 
+the last week and what is going to be done the next week. 
 
-But those meetings are also the most problematic aspect of our version of Scrum, because the daily frequency of the 
+Those meetings are also the most problematic aspect of our version of Scrum, because the daily frequency of the 
 meetings normally 
 helps to let everybody know more about necessary changes in the logic of previously discussed ideas and makes the 
 process
 really agile. Sometimes this led to situations where team members developed unnecessary complicated, in a wrong direction
 or not compatible with each other, which only got noticed a week later.
 
-Our projectteam was doing the meetings every monday for at least one hour. Most of the times we met at the same place, 
+Our projectteam was doing the meetings every Monday for at least one hour. Most of the times we met at the same place, 
 if due to appointment collisions we couldn't manage to meet in person, we met in Skype. So we never used to skip the 
 weekly meeting.
 
-For each meeting that we held someone was responsible for writing the protocol about the meeting. For each protocol a 
-new wiki-page was created in \href{http://www.redmine.org/}{Redmine}. To put the protocols into this tool
+% protocol is not really the same in english as Protokoll in german
+For each meeting that we held someone was responsible for writing the minutes of the meeting. For each minutes a 
+new wiki-page was created in \href{http://www.redmine.org/}{Redmine}. To put them into this tool
 was really helpful for the teamwork, because everybody had access to it and could, 
-if necessary, have a look on the decisions which were made in the past.
+if necessary, have a look at the decisions which were made in the past.
 
 During the meetings at least these following points have been discussed:
 
@@ -131,12 +132,12 @@ During the meetings at least these following points have been discussed:
 \item Time estimates of user stories
 \item Organizational issues
 \item External dependency issues
-\item Problems encountered last week
+\item Problems encountered in the past
 \item Further questions
 \end{itemize}
 
-All the protocols which were made during the phase one are available in the appendix \ref{ch:minutes} 
-(page number \pageref{ch:minutes}).
+All the minutes which were made during the first semester of the project are available in the appendix \ref{ch:Meetings} 
+at page \pageref{ch:Meetings}.
 
 \section{Target Group}
 
@@ -155,7 +156,8 @@ The following list is showing personas who could be interested in using this app
 \item ...
 \end{itemize}
 
-This people are mostly not it-specialists, so it is important to focus on it during the development of the application. This has an influence on the way they will use the application: it must be easy and naturally to use, the results must be easy to understand and reliable.
+These people are mostly not IT-specialists, so it is important to focus on it during the development of the application. This has an influence on the way they will use the application: it must be easy and naturally to use, the results must be easy to understand and reliable.
+
 \section{Planned functionalities}
 \subsection{System Requirements}
 
@@ -285,10 +287,13 @@ Information:
 \item  drag and drop of fragment
 \end{itemize}
 
+
 \section{User roles}
 
-As the Unplagged system will provide a permission based user system, our goal is to make it possible, to create custom 
-user roles from an administration area and make it possible for users to have multiple user roles in one case and also different roles for different cases.
+As the Unplagged system will provide a permission based user system somewhere in the future, our goal is to make it 
+possible, to create custom 
+user roles from an administration area and make it possible for users to have multiple user roles in one case and also 
+different roles for different cases.
 The standard roles which will be provided by the system are:
 
 \begin{description}
@@ -312,8 +317,7 @@ The following points are showing the basic functionalities of the application.
 
 \subsection{Register}
 
-A person who wants to use the application need to register first. It gets the abbility to do it, as soon as it opens the 
-start-page and hit the \enquote{Jetzt anmelden} link.
+A person who wants to use the application needs to register first. The person then gets the ability to do it, as soon as opening the start-page and clicking the \enquote{Jetzt anmelden} link.
 
 \begin{figure}[!ht]
   \centering
@@ -331,12 +335,12 @@ Below you see the register form which has to be filled.
   \label{fig:register1}
 \end{figure}
 
-Every entry here will be saved in the database.
+Every entry here will be saved in the database. Before the user can acutally login, a verification link sent to the email address, the user entered in the registration form, has to be opened. This prevents abuse and fake accounts at least a little.
 
 \subsection{Login}
 
 The login functionality is an easy to use form, which can be successfully used from every user which is already 
-registered. With a click of the "Einloggen" link, the login form will be visible.
+registered and verified. With a click on the "Einloggen" link, the login form will be visible.
 
 \begin{figure}[!ht]
   \centering
@@ -345,7 +349,7 @@ registered. With a click of the "Einloggen" link, the login form will be visible
   \label{fig:einloggen}
 \end{figure}
 
-The received login datas that are taken from the login form will be compared with the entries in the database, are the 
+The received login data that are taken from the login form will be compared with the entries in the database, are the 
 entries valid, the user has the right to use further functions in the application.
 
 \begin{figure}[!ht]
@@ -371,7 +375,7 @@ If the user has already some cases listed he can search for it in the searchfiel
 \subsection{Files overview}
 
 The tab \enquote{Dateien} is showing the list of files which were added from an user. Not only shows it an overview it 
-also has several additionaly functions which can be processed for a file.
+also has several additionaly functions which can be processed on a file.
 
 \begin{figure}[!ht]
   \centering
@@ -445,8 +449,7 @@ After the function was fired the path to the file in the database and the file i
 
 \subsubsection{File upload}
 
-The file uploader is a important function, it gives the user the opportunity to upload data which he want to work on 
-it. Also has the user the opportunity to give the file a desired name.
+The file uploader is a important function, it gives the user the opportunity to upload data which he wants to work on. The user also has the opportunity to give the file a desired name.
 
 \begin{figure}[!ht]
   \centering
@@ -457,7 +460,7 @@ it. Also has the user the opportunity to give the file a desired name.
 
 \subsection{Parsed files overview}\label{sec:parse-file}
 
-So after a file was parsed with the parsed function from the \enquote{Dateien} section, it will be listed in the 
+So after a file was parsed with the parse function from the \enquote{Dateien} section, it will be listed in the 
 \enquote{Dokumente} tab.
 
 As soon as the user clicks on a listed document, the parsed pages of the documents will be shown. In this area the user has several functions which he can use to a page. This functions are followed listed.
@@ -551,7 +554,7 @@ the searchwords the user have to click on \enquote{Goolge-Suchwörter löschen}.
   \label{fig:contextmenu}
 \end{figure}
 
-\section{Document Parser}
+\subsection{Document Parser}
 
 The document parser is more of a background functionality that enables a user to input data into the system. 
 Essentially it is only an interface, that can be used to implement converters for different types of data, e. g images 
@@ -561,4 +564,3 @@ document.
 
 Currently this is used when a user uploads an image of scanned text and tries to parse it as described in section 
 \nameref{sec:parse-file}.
-
