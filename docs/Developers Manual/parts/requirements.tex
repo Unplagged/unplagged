@@ -13,7 +13,7 @@ fact, that we are essentially trying to incubate Unplagged as a real open source
 only work if
 it is well crafted and if cutting-edge workflows and technologies are used. Nearly all of the team members
 are also working in some kind of web related side job, so we all got enough experiences with the problems that can 
-occur during the maintenance of badly designed software.
+occur during the maintenance of badly designed web applications.
 
 Most of the times this works pretty well, but sometimes we are still trying to figure out how to 
 get everyone up to speed with every technology and part of the system or how to divide the responsibilites carefully.
@@ -105,21 +105,22 @@ example from the VroniPlag group, which can be reached through their IRC channel
 % I think it's better to use present tense, because the meetings will continue
 The Unplagged version of the \textit{Daily Scrum} is currently a weekly meeting. Even though our meetings aren't daily, they 
 are still respecting the other characteristics of a \textit{Daily Scrum}. Each team member says what he did in 
-the last week and what he is going to do the next week. These meetings were good occassions to verify the evolution of 
-the project and determine the possible bottlenecks as soon as possible. 
+the last week and what he is going to do the next week. 
 
-This is probably the most problematic aspect of our version of Scrum, because the daily frequency of the meetings normally 
-helps to let everybody know more about necessary changes in the logic of previously discussed ideas and makes the process
+But those meetings are also the most problematic aspect of our version of Scrum, because the daily frequency of the 
+meetings normally 
+helps to let everybody know more about necessary changes in the logic of previously discussed ideas and makes the 
+process
 really agile. Sometimes this led to situations where team members developed unnecessary complicated, in a wrong direction
 or not compatible with each other, which only got noticed a week later.
 
 Our projectteam was doing the meetings every monday for at least one hour. Most of the times we met at the same place, 
-if due to appointment collisions we couldn't manage to meet in persons, we met in Skype. So we never used to skip the 
+if due to appointment collisions we couldn't manage to meet in person, we met in Skype. So we never used to skip the 
 weekly meeting.
 
 For each meeting that we held someone was responsible for writing the protocol about the meeting. For each protocol a 
 new wiki-page was created in \href{http://www.redmine.org/}{Redmine}. To put the protocols into this tool
-was really helpful for the teamwork. So everybody had access to it and could, 
+was really helpful for the teamwork, because everybody had access to it and could, 
 if necessary, have a look on the decisions which were made in the past.
 
 During the meetings at least these following points have been discussed:
@@ -134,11 +135,13 @@ During the meetings at least these following points have been discussed:
 \item Further questions
 \end{itemize}
 
-All the protocols which were made during the phase one are available in the appendix \ref{ch:minutes} (page number \pageref{ch:minutes}).
+All the protocols which were made during the phase one are available in the appendix \ref{ch:minutes} 
+(page number \pageref{ch:minutes}).
 
 \section{Target Group}
 
-The main goal of the application is to support the detection of plagiarism. So the target group is composed of people who want to correct documents and be sure that this does not contain any plagiarism.
+The main goal of the application is to support the detection of plagiarism. So the target group is composed of people 
+who want to correct documents and be sure that this does not contain any plagiarism.
 
 The following list is showing people who could be interested in using this application:
 
@@ -154,8 +157,9 @@ The following list is showing people who could be interested in using this appli
 This people are mostly not it-specialists, so it is important to focus on it during the development of the application. This has an influence on the way they will use the application: it must be easy and naturally to use, the results must be easy to understand and reliable.
 
 \section{User roles}
-%This is copied from the wiki, so probably copy back there when the text is finished
-As the Unplagged system will provide a permission based user system, our goal is to make it possible, to create custom user roles from an administration area and make it possible for users to have multiple user roles in one case and also different roles for different cases.
+
+As the Unplagged system will provide a permission based user system, our goal is to make it possible, to create custom 
+user roles from an administration area and make it possible for users to have multiple user roles in one case and also different roles for different cases.
 The standard roles which will be provided by the system are:
 
 \begin{description}
@@ -247,7 +251,7 @@ If the user wants to mark a specific file as his target file, he can do it just 
 
 \begin{figure}[!ht]
   \centering
-    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/set_target2.jpg}
+    \includegraphics[width=0.05\textwidth]{images/page.png}
   \caption{target function symbol}
   \label{fig:einloggen}
 \end{figure}
@@ -275,7 +279,7 @@ Witht a click of the following symbol, the parse function will be fired.
 
 \begin{figure}[!ht]
   \centering
-    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/parse_symbol.jpg}
+    \includegraphics[width=0.05\textwidth]{images/page_gear.png}
   \caption{parse symbol}
   \label{fig:parse symbol}
 \end{figure}
@@ -286,8 +290,8 @@ With the disk-symbol the user can download the listed file.
 
 \begin{figure}[!ht]
   \centering
-    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/download_symbol.jpg}
-  \caption{download symbol}
+    \includegraphics{images/disk.png}
+  \caption{Download symbol}
   \label{fig:download symbol}
 \end{figure}
 
@@ -297,8 +301,8 @@ To delete a file the user only needs to click on the following symbol.
 
 \begin{figure}[!ht]
   \centering
-    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/delete_symbol.jpg}
-  \caption{delete symbol}
+    \includegraphics[width=0.05\textwidth]{images/delete.png}
+  \caption{Delete symbol}
   \label{fig:delete symbol}
 \end{figure}
 
@@ -316,7 +320,7 @@ it. Also has the user the opportunity to give the file a desired name.
   \label{fig:file uploader}
 \end{figure}
 
-\subsection{Parsed files overview}
+\subsection{Parsed files overview}\label{sec:parse-file}
 
 So after a file was parsed with the parsed function from the \enquote{Dateien} section, it will be listed in the 
 \enquote{Dokumente} tab.
@@ -332,7 +336,7 @@ several informations on the application, like the success of the scanning and th
 
 \begin{figure}[!ht]
   \centering
-    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/plagdetection_symbol.jpg}
+    \includegraphics[width=0.05\textwidth]{images/eye.png}
   \caption{detect plagiarism symbol}
   \label{detect plagiarism symbol}
 \end{figure}
@@ -343,14 +347,14 @@ To delete a parsed file the user only needs to click on the following symbol.
 
 \begin{figure}[!ht]
   \centering
-    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/delete_symbol.jpg}
+    \includegraphics[width=0.05\textwidth]{images/delete.png}
   \caption{delete symbol}
   \label{fig:delete symbol}
 \end{figure}
 
 After the function was fired the path to the file in the database and the file in the related folder will be deleted.
 
-\subsubsection{Simtex}
+\subsubsection{Simtext}
 
 The simtext function is meant to compare two files with each other. So equal parts in texts can be detected.
 
@@ -399,14 +403,19 @@ the searchwords the user have to click on \enquote{Goolge-Suchwörter löschen}.
 
 \section{Document Parser}
 
-\section{Detection Modes}
+The document parser is more of a background functionality that enables a user to input data into the system. 
+Essentially it is only an interface, that can be used to implement converters for different types of data, e. g images 
+of scanned texts, PDFs, Word documents 
+or similar, into an internal representation of a 
+document.  
 
-\section{Plugin Architecture}
+Currently this is used when a user uploads an image of scanned text and tries to parse it as described in section 
+\nameref{sec:parse-file}.
 
 %Perhaps better on the way for every part?
 \section{Use Cases}
 
-The following diagramms are so called "uml use case diagramms". The use cases are ment to visualize the interaction 
+The following UML use-case diagrams are meant to visualize the interaction 
 between the user and the system.
 
 \subsection{Register}
