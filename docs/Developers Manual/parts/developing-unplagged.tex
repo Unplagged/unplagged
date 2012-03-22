@@ -293,31 +293,50 @@ Add the following configuration to the httpd-vhosts.conf file you just included:
 </VirtualHost>
 \end{lstlisting}
 
-You can tryout your new configuration by entering \textit{unplagged.local} in your browser.
+You can tryout your new configuration by entering \textit{unplagged.local} in your browser, which should at least yield
+some result now even though the database hasn't be initalized yet.
 
 \subsection{Netbeans}
-As a software developer who wants to develop object-oriented and use a free software, there is acutally not so much software to choose from available. Either Eclipse or Netbeans, we decided to use Netbeans since it has more built-in plugins for PHP and it is faster.
+As a software developer who wants to use a free software IDE, there are actually not many tools available that support multiple 
+languages properly. Either Eclipse or Netbeans, we decided to 
+use Netbeans since it has more built-in 
+plugins for PHP and it is faster in our experience.
 
-This section will describe how to configure Netbeans in order to start working on the Unplagged project. It is necessarry that PHPUnit is already installed on the machine, otherwise not all steps of the Netbeans setup can be done.
+Although it is possible to work with other tools, we would like to encourage you to try Netbeans out if you haven't 
+already, because it makes for a similar working environment for every team member and will enable us to help you 
+more easily if any problems occur.
+
+First of all, you will need to download the latest Netbeans release for your System and PHP from the Netbeans webpage 
+and install it:
+
+\begin{itemize}
+\item \url{http://netbeans.org/downloads/}
+\end{itemize}
 
 \subsubsection{Setting up PHPUnit}
 
+This section will describe how to configure Netbeans for PHPUnit. It is 
+necessarry that PHPUnit is already installed on the machine, otherwise not all steps of the Netbeans setup can be done. 
+So below are some resources or help to install it properly.
+
 \begin{description}
-\item [Mac OS:] \hfill \\
-\url{http://kubyshkin.ru/programming/phpunit-on-mac-os-x-snow-leopard-10-6/} \\
-\url{http://www.newmediacampaigns.com/page/install-pear-phpunit-xdebug-on-macosx-snow-leopard} \\
-\url{http://www.phpunit.de/manual/3.6/en/code-coverage-analysis.html}
+\item [Mac OS:] \hfill
+\begin{itemize}
+\item \url{http://kubyshkin.ru/programming/phpunit-on-mac-os-x-snow-leopard-10-6/}
+\item \url{http://www.newmediacampaigns.com/page/install-pear-phpunit-xdebug-on-macosx-snow-leopard}
+\item \url{http://www.phpunit.de/manual/3.6/en/code-coverage-analysis.html}
+\end{itemize}
 
 \item [Windows:] \hfill \\
-For windows there a are some more steps to. First of all it is assumed that XAMPP is already installed.
+For windows there a are some more steps to do. First of all it is assumed that XAMPP is already installed.
 \end{description}
 
+\begin{enumerate}
+\item Download http://pear.php.net/go-pear.phar and save it to C:\textbackslash xampp\textbackslash php
+\item Open a command prompt and go to C:\textbackslash xampp\textbackslash php
+\item Type the following commands:
+\end{enumerate}
 \begin{lstlisting}[caption=Setting up PHPUnit on Windows]
-# download http://pear.php.net/go-pear.phar and save it to
-C:\xampp\php
-# open a command prompt and go to
-C:/xampp/php
-# type the following commands
 php go-pear.phar
 pear update-channels
 pear upgrade --alldeps
@@ -337,18 +356,6 @@ After the installation process is finished, go to the preferences in Netbeans, c
 \end{description}
 
 \subsubsection{Configuring Netbeans}
-Download the latest Netbeans release for PHP from the Netbeans webpage:\\
-\url{http://netbeans.org/downloads/}
-
-\begin{lstlisting}[caption=Setting up Netbeans project]
-Install it and go to File > New Project
-Choose PHP > PHP Appliction with Existing Sources
-Set "Sources Folder" to the directory, where the git repository is located.
-"Project Name" can e.g. be "unplagged.com"
-"PHP Version" should be "5.3"
-"Default Encoding" "UTF-8"
-IMPORTANT: Check the Checkbox "Put NetBeans metadata into a seperate directory" and choose another directory than the git repository.
-\end{lstlisting}
 
 \begin{figure}[htbp]
   \centering
@@ -356,6 +363,18 @@ IMPORTANT: Check the Checkbox "Put NetBeans metadata into a seperate directory" 
   \caption{Netbeans -- New project -- Name and Location}
   \label{fig:newProjectPart1}
 \end{figure}
+
+\begin{enumerate}
+\item Go to File > New Project
+\item Choose PHP > PHP Appliction with Existing Sources(See figure \ref{fig:newProjectPart1}
+\item Set \enquote{Sources Folder} to the directory, where the git repository is located.
+\item \enquote{Project Name} can e.g. be \enquote{unplagged.com}
+\item \enquote{PHP Version} should be \enquote{5.3}
+\item \enquote{Default Encoding} should be \enquote{UTF-8}
+\item IMPORTANT: Check the Checkbox \enquote{Put NetBeans metadata into a seperate directory} and choose another 
+directory than the git repository.
+\end{enumerate}
+
 
 \begin{figure}[htbp]
   \centering
