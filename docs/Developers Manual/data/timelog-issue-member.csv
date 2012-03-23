@@ -1,16 +1,18 @@
-﻿Issue,Member,Total
-none,,18.30
-,Dominik Horb,18.30
-Feature \#1: Trac aufsetzen,,2.00
+Issue,Member,Total
+none,,41.20
+,Dominik Horb,33.70
+,Benjamin Oertel,6.00
+,Elsa Mahari,1.50
+Feature \#1: Trac aufsetzen,,2.50
 ,Dominik Horb,1.00
-,Dominik Horb,1.00
-Feature \#5: Create Wiki List of Interesting Plagiarism Papers,,1.00
-,Dominik Horb,1.00
+,Dominik Horb,1.50
+Feature \#5: Create Wiki List of Interesting Plagiarism Papers,,1.60
+,Dominik Horb,1.60
 Feature \#6: Logo,,8.00
 ,Benjamin Oertel,7.00
 ,Elsa Mahari,1.00
-Feature \#8: Configure Email Notification in Trac,,1.50
-,Dominik Horb,1.50
+Feature \#8: Configure Email Notification in Trac,,1.80
+,Dominik Horb,1.80
 Feature \#9: Github in Trac integrieren,,1.00
 ,Dominik Horb,1.00
 Bug \#11: Umstellung von Trac auf Redmine,,3.50
@@ -51,22 +53,26 @@ Time \#24: Debbie-Meeting 18.10.11,,7.00
 ,Elsa Mahari,2.00
 ,Tien Nguyen,1.00
 ,Heiko Stammel,2.00
+Bug \#25: Create Wiki Page for Workflow New case,,0.50
+,Tien Nguyen,0.50
 Feature \#28: Resume: Projectmeeting with HTW-Plag-Team,,4.00
 ,Heiko Stammel,4.00
-Feature \#29: Projectmanagement Research,,7.00
-,Heiko Stammel,7.00
+Feature \#29: Projectmanagement Research,,13.00
+,Heiko Stammel,13.00
 Feature \#30: Scrum Research,,6.00
 ,Heiko Stammel,6.00
 Feature \#31: Create Wiki for Project Management Steps,,2.00
 ,Heiko Stammel,2.00
-Feature \#32: Create Wiki for Scrum,,1.00
-,Heiko Stammel,1.00
+Feature \#32: Create Wiki for Scrum,,9.00
+,Heiko Stammel,9.00
 Bug \#33: Mockup hand-drawng,,6.00
 ,Benjamin Oertel,6.00
 Bug \#34: Mockup digital version,,11.00
 ,Benjamin Oertel,11.00
-Bug \#35: Textvergleich-Algorithmen rechechieren,,1.00
-,Tien Nguyen,1.00
+Bug \#35: Textvergleich-Algorithmen rechechieren,,6.00
+,Tien Nguyen,6.00
+Bug \#36: creating Wiki page for Text comparision,,2.00
+,Tien Nguyen,2.00
 Time \#39: Meeting 31.10.11,,12.50
 ,Dominik Horb,2.50
 ,Benjamin Oertel,2.50
@@ -94,8 +100,8 @@ Time \#48: Meeting 14.11.11,,10.00
 ,Elsa Mahari,2.00
 ,Tien Nguyen,2.00
 ,Heiko Stammel,2.00
-Time \#49: Wiki Editing,,2.00
-,Dominik Horb,2.00
+Time \#49: Wiki Editing,,3.40
+,Dominik Horb,3.40
 Bug \#50: Meeting Plagiatsteam HTW 3.11.11,,6.00
 ,Dominik Horb,1.50
 ,Benjamin Oertel,1.50
@@ -138,9 +144,10 @@ Feature \#67: Setting up PHPUnit,,7.50
 ,Dominik Horb,3.50
 ,Benjamin Oertel,2.00
 ,Elsa Mahari,2.00
-Time \#68: Meeting 05.12.11,,4.00
+Time \#68: Meeting 05.12.11,,6.00
 ,Dominik Horb,2.00
 ,Elsa Mahari,2.00
+,Heiko Stammel,2.00
 Time \#69: Reading DocBook-XML,,4.00
 ,Dominik Horb,4.00
 Feature \#70: Writing git tutorial,,1.00
@@ -198,11 +205,14 @@ Time \#101: Preparation of Database Mocks,,3.50
 ,Dominik Horb,3.50
 Feature \#102: Basics for responsive layout,,9.00
 ,Dominik Horb,9.00
-Time \#103: Meeting 10.01.12,,3.00
+Time \#103: Meeting 10.01.12,,6.00
 ,Dominik Horb,1.50
 ,Elsa Mahari,1.50
-Bug \#104: Skype Meeting 4.01.12,,1.00
+,Tien Nguyen,1.50
+,Heiko Stammel,1.50
+Bug \#104: Skype Meeting 4.01.12,,2.00
 ,Elsa Mahari,1.00
+,Heiko Stammel,1.00
 Bug \#105: Switching Menu to Zend\_Navigation,,3.00
 ,Dominik Horb,3.00
 Feature \#106: Add Imagemagick to convert to different formats,,10.00
@@ -210,9 +220,11 @@ Feature \#106: Add Imagemagick to convert to different formats,,10.00
 ,Benjamin Oertel,4.00
 Bug \#107: Meeting 2012-01-09,,1.50
 ,Tien Nguyen,1.50
-Time \#108: Skype Meeting 12.01.12,,4.00
+Time \#108: Skype Meeting 12.01.12,,8.00
 ,Dominik Horb,2.00
+,Benjamin Oertel,2.00
 ,Elsa Mahari,2.00
+,Heiko Stammel,2.00
 Time \#109: Cleaning up directory structure,,2.50
 ,Dominik Horb,2.50
 Feature \#110: Implementing Zend\_Acl for user access control,,13.50
@@ -220,9 +232,15 @@ Feature \#110: Implementing Zend\_Acl for user access control,,13.50
 ,Benjamin Oertel,2.00
 Feature \#111: Improving interface workflow,,8.00
 ,Benjamin Oertel,8.00
-Time \#115: Debbie Meeting 18.01.12 ,,6.00
+Feature \#112: Improving google search,,20.00
+,Elsa Mahari,20.00
+Feature \#113: Improving simtext workflow to simtext two files.,,20.00
+,Tien Nguyen,20.00
+Time \#115: Debbie Meeting 18.01.12 ,,12.00
 ,Dominik Horb,3.00
+,Benjamin Oertel,3.00
 ,Elsa Mahari,3.00
+,Heiko Stammel,3.00
 Feature \#116: Logger,,4.00
 ,Dominik Horb,2.00
 ,Benjamin Oertel,2.00
@@ -234,14 +252,17 @@ Bug \#119: Fixing several css issues,,5.00
 ,Benjamin Oertel,5.00
 "Feature \#120: Beautifying forms, tables and buttons",,5.00
 ,Benjamin Oertel,5.00
-Time \#122: 23.01.12 Meeting,,6.00
+Time \#122: 23.01.12 Meeting,,8.00
 ,Dominik Horb,2.00
 ,Benjamin Oertel,2.00
 ,Elsa Mahari,2.00
-Time \#123: 30.01.12 Meeting,,6.00
+,Heiko Stammel,2.00
+Time \#123: 30.01.12 Meeting,,9.50
 ,Dominik Horb,2.00
 ,Benjamin Oertel,2.00
 ,Elsa Mahari,2.00
+,Tien Nguyen,1.50
+,Heiko Stammel,2.00
 Time \#128: LaTeX preparation,,2.00
 ,Dominik Horb,2.00
 Time \#142: License research and inclusion,,6.00
@@ -250,25 +271,32 @@ Bug \#143: FIxing tests after last refactorings,,1.50
 ,Dominik Horb,1.50
 Time \#144: Reading Zend Doku for Bootstrap Plugins,,4.00
 ,Dominik Horb,4.00
-Time \#145: Meeting 06.02.12,,2.00
+Time \#145: Meeting 06.02.12,,8.00
 ,Dominik Horb,2.00
+,Benjamin Oertel,2.00
+,Elsa Mahari,2.00
+,Heiko Stammel,2.00
 Time \#146: Basic TOC and split up of LaTeX document,,1.50
 ,Dominik Horb,1.50
 Feature \#147: Preface Developers Manual,,7.00
 ,Dominik Horb,7.00
-Time \#148: Documentation - Chapter Git,,4.50
-,Benjamin Oertel,4.50
-Time \#149: Meeting 04.03.12,,5.00
+Time \#148: Documentation - Chapter Git,,5.50
+,Benjamin Oertel,5.50
+Time \#149: Meeting 04.03.12,,10.00
 ,Dominik Horb,2.50
 ,Benjamin Oertel,2.50
-Time \#150: Writing chapter about Zend and Doctrine Framework,,5.00
-,Benjamin Oertel,5.00
-Time \#151: Writing chapter about User Interface / User Experience,,6.00
-,Benjamin Oertel,6.00
+,Elsa Mahari,2.50
+,Heiko Stammel,2.50
+Time \#150: Writing chapter about Zend and Doctrine Framework,,5.50
+,Benjamin Oertel,5.50
+Time \#151: Writing chapter about User Interface / User Experience,,8.00
+,Benjamin Oertel,8.00
 Time \#152: Adding mockups to documentation,,2.00
 ,Benjamin Oertel,2.00
-Time \#153: Team Meeting – 2012-03-10,,1.50
+Time \#153: Team Meeting – 2012-03-10,,4.50
+,Dominik Horb,1.50
 ,Benjamin Oertel,1.50
+,Elsa Mahari,1.50
 Time \#154: Reading in latex documentation,,3.00
 ,Benjamin Oertel,3.00
 Feature \#155: Improvements of error detection in tesseract parser,,2.00
@@ -277,4 +305,69 @@ Feature \#156: Implementing Webservice of PlagAware,,6.00
 ,Benjamin Oertel,6.00
 "Bug \#157: Zend Acl – allowing/denying access to actions, not only controllers",,1.00
 ,Benjamin Oertel,1.00
-Total,,548.35
+Feature \#158: Preparing Table Environment for Time Logging,,2.70
+,Dominik Horb,2.70
+Time \#159: Writing Project Workflow,,3.00
+,Dominik Horb,3.00
+Bug \#160: Fixing rewrite from tickets.unplagged.com,,3.00
+,Dominik Horb,1.50
+,Benjamin Oertel,1.50
+Time \#161: Team Meeting – 2012-03-17,,4.50
+,Benjamin Oertel,1.50
+,Elsa Mahari,1.50
+,Heiko Stammel,1.50
+Feature \#162: Lightview for picture view,,26.00
+,Benjamin Oertel,1.00
+,Elsa Mahari,25.00
+Feature \#163: Icons including so that you can see which filetype (extension) the file is,,4.00
+,Elsa Mahari,4.00
+Feature \#164: basic-note field,,20.00
+,Elsa Mahari,20.00
+Feature \#165: avatar uplodader,,20.00
+,Elsa Mahari,20.00
+Time \#167: Final presentation ws11/12,,19.00
+,Benjamin Oertel,9.00
+,Tien Nguyen,1.00
+,Heiko Stammel,9.00
+Time \#168: Writing chapter about Local Deployment,,3.00
+,Benjamin Oertel,3.00
+Time \#169: Writing chapter summary and outlook,,1.50
+,Benjamin Oertel,1.50
+Time \#170: create Wiki page for MeetingMinutes 23.01.2012,,0.40
+,Tien Nguyen,0.40
+Time \#171: create Wiki page for MeetingMinutes 01.02.2012,,0.40
+,Tien Nguyen,0.40
+Bug \#172: research and document about Plagiarism classification,,10.00
+,Tien Nguyen,10.00
+Bug \#173: research and document about Vroni Plag ,,10.00
+,Tien Nguyen,10.00
+Bug \#174: Proofreading Chapter 3.,,2.00
+,Heiko Stammel,2.00
+Bug \#175: Proofreading Chapter 1.,,0.60
+,Dominik Horb,0.60
+Bug \#176: Proofreading Chapter 4.,,1.30
+,Dominik Horb,0.80
+,Elsa Mahari,0.50
+Time \#177: Meeting 21.03.12,,18.00
+,Dominik Horb,4.50
+,Benjamin Oertel,4.50
+,Elsa Mahari,4.50
+,Heiko Stammel,4.50
+Bug \#178: Research and Documentation about Plagiarism ,,10.00
+,Heiko Stammel,10.00
+Bug \#179: Research and Documentation about Plagiarism definition and history,,12.00
+,Heiko Stammel,12.00
+Bug \#180: Research and Document about How To Detect Plagiarism,,24.00
+,Heiko Stammel,24.00
+Bug \#181: Research and Document about the Comparison of Plagiarism Detection Systems,,30.00
+,Heiko Stammel,30.00
+Bug \#182: Research and Documentation about How To Detect Plagiarism,,21.00
+,Heiko Stammel,21.00
+Bug \#183: Research and Document about History Plagiarism,,20.00
+,Heiko Stammel,20.00
+Time \#185: Vortrag Aufdeckung von Plagiat,,4.00
+,Elsa Mahari,2.00
+,Heiko Stammel,2.00
+Time \#186: everything what has something to do with writing the documentation,,40.00
+,Elsa Mahari,40.00
+Total,,984.95

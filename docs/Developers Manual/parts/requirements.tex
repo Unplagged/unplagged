@@ -311,3 +311,318 @@ Case-Managers can set up new cases and manage colloborators for their cases and 
 An admin owns all permissions, such as user administration or project administration. They also hvae the ability to to block/unblock an existing case.
 \end{description}
 
+\section{Current state of th basic functionalities}
+
+The following points are showing the basic functionalities of the application.
+
+\subsection{Register}
+
+A person who wants to use the application needs to register first. The person then gets the ability to do it, as soon as opening the start-page and clicking the \enquote{Jetzt anmelden} link.
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.50\textwidth]{images/basic_functionalities/reg1.png}
+  \caption{Register link}
+  \label{fig:register link}
+\end{figure}
+
+Below you see the register form which has to be filled.
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/register_form.png}
+  \caption{Register form}
+  \label{fig:register form}
+\end{figure}
+
+Every entry here will be saved in the database. Before the user can acutally login, a verification link sent to the email address, the user entered in the registration form, has to be opened. This prevents abuse and fake accounts at least a little.
+
+\subsection{Login}
+
+The login functionality is an easy to use form, which can be successfully used from every user which is already 
+registered and verified. With a click on the "Einloggen" link, the login form will be visible.
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.30\textwidth]{images/basic_functionalities/oderEinloggen.png}
+  \caption{"Einloggen" Link}
+  \label{fig:einloggen}
+\end{figure}
+
+The received login data that are taken from the login form will be compared with the entries in the database, are the 
+entries valid, the user has the right to use further functions in the application.
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/login_form.png}
+  \caption{Login form}
+  \label{fig:einloggen}
+\end{figure}
+
+Below you see the view after the login.
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/after_login.png}
+  \caption{After login view}
+  \label{fig:after login view}
+\end{figure}
+
+\subsection{Create case}
+
+To creat an own case the user only need to click on the \enquote{Fall Einstellungen} link.
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.30\textwidth]{images/basic_functionalities/case_options.png}
+  \caption{Case options}
+  \label{fig:case options}
+\end{figure}
+
+
+If the user has already some cases listed he can search for it in the searchfield. The field also shows the current case. This helps the user to orientate.
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.40\textwidth]{images/basic_functionalities/current_case_search_field.png}
+  \caption{Current case and search field}
+  \label{fig:current case and search field}
+\end{figure}
+
+\subsection{Files overview}
+
+The tab \enquote{Dateien} is showing the list of files which were added from an user. Not only shows it an overview it 
+also has several additionaly functions which can be processed on a file.
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/dateien.png}
+  \caption{Overview of files}
+  \label{fig:overview of files}
+\end{figure}
+
+\subsubsection{Set target}
+
+If the user wants to mark a specific file as his target file, he can do it just with a click on the following symbol.
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/page.png}
+  \caption{File symbol}
+  \label{fig: file symbol}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/set_target1.png}
+  \caption{Not marked file}
+  \label{fig:not marked file}
+\end{figure}
+
+Afterwards a binoculars icon will be shown.
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/set_target2.png}
+  \caption{Marked target file}
+  \label{fig:marked target file}
+\end{figure}
+
+\subsubsection{Parse}
+
+The parse function parses the mentioned file and forwards the parsed file to the \enquote{Dokumente} section.
+Witht a click of the following symbol, the parse function will be fired.
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/page_gear.png}
+  \caption{Parse symbol}
+  \label{fig:parse symbol}
+\end{figure}
+
+\subsubsection{Download}
+
+With the disk-symbol the user can download the listed file.
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics{images/disk.png}
+  \caption{Download symbol}
+  \label{fig: download symbol}
+\end{figure}
+
+\subsubsection{Delete}
+
+To delete a file the user only needs to click on the following symbol.
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/delete.png}
+  \caption{Delete symbol}
+  \label{fig: ddelete symbol}
+\end{figure}
+
+After the function was fired the path to the file in the database and the file in the related folder will be deleted.
+
+\subsubsection{File upload}
+
+The file uploader is a important function, it gives the user the opportunity to upload data which he wants to work on. The user also has the opportunity to give the file a desired name.
+
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/datei_hochladen.png}
+  \caption{File uploader}
+  \label{fig:file uploader}
+\end{figure}
+
+\subsection{Parsed files overview}\label{sec:parse-file}
+
+So after a file was parsed with the parse function from the \enquote{Dateien} section, it will be listed in the 
+\enquote{Dokumente} tab.
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/dokumente.png}
+  \caption{List of parsed documents}
+  \label{fig: List of parsed documents}
+\end{figure}
+
+The following functions are provided there for the user.
+
+\subsubsection{Integration of detection plagiarism software}
+
+The \enquote{plag-detection} functionality gives user the possibility to check a parsed file of plagiarism automatically. 
+It uses the application interface from the company \enquote{PlagAware}. This is possible during our coorporation with 
+\enquote{PlagAware}.
+With the following symbol the \enquote{plag-detection} function can be used on the file.The detailed result report is 
+not to see on the application. But the user has the possibility to see it on the \enquote{PlagAware} page.The user can get 
+several informations on the application, like the success of the scanning and the procentaged part of the plagiarism.
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/eye.png}
+  \caption{Detect plagiarism symbol}
+  \label{fig:detect plagiarism symbol}
+\end{figure}
+
+\subsubsection{Delete}
+
+To delete a parsed file the user only needs to click on the following symbol.
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/delete.png}
+  \caption{Delete symbol}
+  \label{fig:delete symbol}
+\end{figure}
+
+After the function was fired the path to the file in the database and the file in the related folder will be deleted.
+\minisec{}
+
+As soon as the user clicks on a listed document, the parsed pages of the documents will be shown. In this area the user has several functions which he can use to a page. This functions are followed listed.
+
+\subsubsection{De-hyphen}
+If a word is at the end of a line to long to fit in the line, one half of the word gets a hyphen. This function marks those sentence. So for the user such broken words are easy to detect.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/text_padding_right.png}
+  \caption{De-hyphen function symbol}
+  \label{fig:De-hyphen function symbol}
+\end{figure}
+
+\subsubsection{Stopwords}
+Stopwords are disturbing or not so interesting parts in texts for plagiarism. Thats why the user can gray them out with this functionality.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/zoom.png}
+  \caption{Stopword function symbol}
+  \label{fig:stopword function symbol}
+\end{figure}
+
+
+\subsubsection{Plagiarism detection reports}
+With this function the user has the possibility to see the reports, which were created by a plagiarism detection software.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/report_magnify.png}
+  \caption{Plagiarism detection reports symbol}
+  \label{fig:plagiarism detection reports symbol}
+\end{figure}
+
+
+\subsubsection{Edit}
+The user hast the possibility to edit the text of the page.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/pencil.png}
+  \caption{Edit symbol}
+  \label{fig:edit symbol}
+\end{figure}
+
+\subsubsection{Delete}
+The user can delete the desired page.
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.05\textwidth]{images/basic_functionalities/delete.png}
+  \caption{Delete symbol}
+  \label{fig:delete symbol}
+\end{figure}
+
+\subsubsection{Simtext}
+
+The simtext function is meant to compare two files with each other. So equal parts in texts can be detected.
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/simtext_running.png}
+  \caption{Simtext running example}
+  \label{fig: Simtext running example}
+\end{figure}
+
+The simtext function also creates a report, where further detailed information can be seen.
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/simtext_report.png}
+  \caption{Example of a Simtex report}
+  \label{fig:example simtex report}
+\end{figure}
+
+In the report the equal parts on the compared files are shown.
+
+\subsection{Edit profile}
+
+The \enquote{Profil bearbeiten} form is a form which gives the user the opportunity to change profile informations that 
+he gave before. All edit and saved entries will be saved in the database.
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/edit_profile.png}
+  \caption{Profile edit form}
+  \label{fig: profile edit form}
+\end{figure}
+
+\subsection{Googlesearch}
+
+The \enquote{Googlesearch} function is content from the contextmenu of the application. The contextmenu only shows if 
+the user marked text on the application. So the user can direclty search for text in google from the application. After 
+the searchwords the user have to click on \enquote{Goolge-Suchwörter löschen}.
+
+\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.97\textwidth]{images/basic_functionalities/contextmenu_googlesearch.png}
+  \caption{Googlesearch contextmenu}
+  \label{fig:contextmenu}
+\end{figure}
+
+\subsection{Document Parser}
+
+The document parser is more of a background functionality that enables a user to input data into the system. 
+Essentially it is only an interface, that can be used to implement converters for different types of data, e. g images 
+of scanned texts, PDFs, Word documents 
+or similar, into an internal representation of a 
+document.  
+
+Currently this is used when a user uploads an image of scanned text and tries to parse it as described in section 
+\nameref{sec:parse-file}.
+
