@@ -1,14 +1,17 @@
 var x=0;
 var y=0;
 var searchBuffer='';
-
-// defines wether the click was on the contextmenu or not
+// defines whether the click was on the contextmenu or not
 var contextMenu = false;
+var contextMenuId = 'contextmenu';
+
+$(document).ready(function(){
+  
+
 
 document.body.oncontextmenu = rightClick;
 document.body.onclick = clickHandler;
 
-var contextMenuId = 'contextmenu';
 document.getElementById(contextMenuId).onmouseover = function(){
     contextMenu = true;
 };
@@ -111,3 +114,4 @@ function cleanSearchBuffer()
     searchBuffer = searchBuffer.replace(' ',' ');
     searchBuffer = searchBuffer.replace(' ',' ');
 }
+});

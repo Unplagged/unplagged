@@ -54,7 +54,7 @@ $(document).ready(function(){
     }
   });
   
-  
+  addContextMenu();
   
   //wrap home menu button, so that icon gets shown
   var homeButton = $('#header .navigation .home');
