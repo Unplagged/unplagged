@@ -14,7 +14,6 @@ if($defaultNamespace->userId){
   <div class="main">
   <div id="main-wrapper">
     <div id="main">
-      <h2><?php echo $this->escape($this->title); ?></h2>
       <?php
       if(!empty($this->flashMessages)){
         echo '<div class="flash-messages">';
@@ -24,6 +23,9 @@ if($defaultNamespace->userId){
         }
         echo '</div>';
       }
+      ?>
+      <h2><?php echo $this->escape($this->title); ?></h2>
+      <?php
 
       // content from each view, the rest of this page is global to all views
       echo $this->layout()->content;
