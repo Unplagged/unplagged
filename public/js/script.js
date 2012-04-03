@@ -25,16 +25,6 @@ function resetCurrentCase(e){
       }, "json");
 }
 
-function addContextMenu(){
-  var contextMenuElement = '<div id="contextmenu" style="display:none;position:absolute;top:-250;left:0;z-index:100;color:black">' + 
-        '<table cellpadding="5" cellspacing="0" style="background-color:#40bfe8">' +
-          '<tr><td><a class="menu" href="javascript:deleteSearchWords()"> Google-Suchwörter löschen </a></td></tr>' +
-           '<tr><td><a id="googleSearch" class="menu" href="javascript:googleSearch()"> Google Suche </a></td></tr>' +
-        '</table>' +
-        '</div>';
-  $('body').prepend(contextMenuElement);
-}
-
 $(document).ready(function(){
   // current case auto completion and reset
   $('#current-case').focus(autoCompleteCurrentCase);
@@ -54,7 +44,21 @@ $(document).ready(function(){
     }
   });
   
+  //unobtrusively add the context menu, so that users without js don't see it
   addContextMenu();
+  
+  /**
+   * Adds the html for the context menu to the body.
+   */
+  function addContextMenu(){
+    var contextMenuElement = '<div id="contextmenu" style="display:none;position:absolute;top:-250;left:0;z-index:100;color:black">' + 
+          '<table cellpadding="5" cellspacing="0" style="background-color:#40bfe8">' +
+            '<tr><td><a class="menu" href="javascript:deleteSearchWords()"> Google-Suchwörter löschen </a></td></tr>' +
+            '<tr><td><a id="googleSearch" class="menu" href="javascript:googleSearch()"> Google Suche </a></td></tr>' +
+          '</table>' +
+          '</div>';
+    $('body').prepend(contextMenuElement);
+  }
   
   //wrap home menu button, so that icon gets shown
   var homeButton = $('#header .navigation .home');

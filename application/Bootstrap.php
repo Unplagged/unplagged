@@ -72,31 +72,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     return $em;
   }
-
-  /**
-   * Initalize the view.
-   * @author Dennis De Cock
-
-    protected function _initView(){
-    $defaultConfig = $this->getOption('default');
-
-    $view = new Zend_View();
-    //ZendX_JQuery::enableView($view);
-    $viewrenderer = new Zend_Controller_Action_Helper_ViewRenderer();
-    $viewrenderer->setView($view);
-    Zend_Controller_Action_HelperBroker::addHelper($viewrenderer);
-    $this->bootstrap('layout');
-    $layout = $this->getResource('layout');
-    $view = $layout->getView();
-
-    $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
-    $view->headTitle()->setSeparator(' - ');
-    $view->headTitle($defaultConfig['portalName']);
-    }
-   */
   
   /**
-   *
+   * Loads the config and sets it in the registry.
+   * 
    * @return \Zend_Config 
    */
   protected function _initConfig(){
@@ -106,7 +85,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   }
 
   /**
-   * 
+   * Initalizes the flash messenger.
    */
   protected function _initMessenger(){
     $flashMsgHelper = new Zend_Controller_Action_Helper_FlashMessenger();
@@ -167,7 +146,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $translator = new Zend_Translate(
             array(
               'adapter'=>'array',
-              'content'=>BASE_PATH . '/data/resources/languages',
+              'content'=>BASE_PATH . '/data/languages',
               'locale'=>$locale,
               'scan'=>Zend_Translate::LOCALE_DIRECTORY
             )

@@ -97,7 +97,7 @@ class Application_Model_Case{
    */
   protected $tags;
   
-    /**
+  /**
    * @ManyToMany(targetEntity="Application_Model_User")
    * @JoinTable(name="case_has_collaborator",
    *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
@@ -147,6 +147,20 @@ class Application_Model_Case{
     return $this->alias;
   }
 
+  /**
+   * This function returns the current name of the case depending on the state it is in, i. e. the alias at default and
+   * the name if the case is already public.
+   */
+  public function getPublishableName(){
+    $publishableName = $this->getAlias();
+    
+    if($this->getState() === 'public'){
+      $publishableName = $this->getName();
+    }
+    
+    return $publishableName;
+  }
+  
   /**
    * @return string
    */

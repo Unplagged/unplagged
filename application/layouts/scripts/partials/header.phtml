@@ -4,6 +4,7 @@
 <!--[if IE 8]> <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
   <head>
+    <!-- Design based on http://www.premiumpixels.com/ -->
     <?php echo $this->headMeta(); ?>
     <?php
     echo $this->headLink()
@@ -12,6 +13,7 @@
         ->appendStylesheet($this->baseUrl() . '/js/libs/css/jquery.lightbox-0.5.css');
     ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Modernizr needs to stay in the head to work properly -->
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
   </head>
   <body>
@@ -25,15 +27,25 @@
               <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
             </div>
             <div id="settings">
-              <?php echo $this->translate("Case you're working on"); ?> <div id="current-case-field"><input type="text" name="current-case" id="current-case" <?php if($this->me->getCurrentCase() instanceof Application_Model_Case){
-              echo " value=\"" . $this->me->getCurrentCase()->getAlias() . "\"";
-            } ?> /><a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>
-              <a href="/case/list"><?php echo $this->translate("Case Settings"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
+              <?php echo $this->translate("Case you're working on"); ?> 
+              <div id="current-case-field">
+                <?php
+                  $value = '';
+                  if($this->me->getCurrentCase() instanceof Application_Model_Case){ 
+                    $value = 'value="' . $this->me->getCurrentCase()->getPublishableName() . '"'; 
+                  }
+                ?>
+                <select>
+                  <option></option>
+                </select>
+                <input type="text" name="current-case" id="current-case" <?php echo $value; ?> />
+                <a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>
+                <a href="/case/list"><?php echo $this->translate("Case Settings"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
             </div>
-            <?php else: ?>
+          <?php else: ?>
             <div id="login-actions">
               <a href="/user/register"><?php echo $this->translate("Register now"); ?></a>
-            <?php echo $this->translate('or') . ' '; ?><a href="/auth/login"><?php echo $this->translate("login"); ?></a>
+              <?php echo $this->translate('or') . ' '; ?><a href="/auth/login"><?php echo $this->translate("login"); ?></a>
             </div>
           <?php endif; ?>
           <div style="clear: both"></div>
