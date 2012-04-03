@@ -13,24 +13,8 @@
     ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
-    
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="<?php echo $this->baseUrl('/js/libs/jquery-1.7.1.min.js'); ?>"><\/script>')</script>
-    <script defer src="<?php echo $this->baseUrl('/js/plugins.js'); ?>"></script>
-    <script defer src="<?php echo $this->baseUrl('/js/script.js'); ?>"></script>
-    <script defer src="<?php echo $this->baseUrl('/js/contextmenu.js'); ?>"></script>
-    <script defer src="<?php echo $this->baseUrl('/js/libs/jquery-ui-1.8.17.custom.min.js'); ?>"></script>
-    <script defer src="<?php echo $this->baseUrl('/js/libs/jquery.ba-hashchange.min.js'); ?>"></script>
-    <script defer src="<?php echo $this->baseUrl('/js/libs/js/jquery.lightbox-0.5.js'); ?>"></script>
-    <script defer src="<?php echo $this->baseUrl('/js/pictureview.js'); ?>"></script>
   </head>
   <body>
-       <div id='contextmenu' style='display:none;position:absolute;top:-250;left:0;z-index:100;color:black'>
-        <table cellpadding='5' cellspacing='0' style='background-color:#40bfe8'>
-          <tr><td><a class='menu' href='javascript:deleteSearchWords()'> Google-Suchwörter löschen </a></td></tr>
-           <tr><td><a id='googleSearch' class='menu' href='javascript:googleSearch()'> Google Suche </a></td></tr>
-        </table>
-        </div>
     <header id="main-header">
       <div id="settings-panel">
         <div class="content">
@@ -48,9 +32,8 @@
             </div>
             <?php else: ?>
             <div id="login-actions">
-              <?php echo $this->translate("You are not logged in."); ?>
               <a href="/user/register"><?php echo $this->translate("Register now"); ?></a>
-            <?php echo $this->translate('or') . ' '; ?><a href="/auth/login"><?php echo $this->translate("Login"); ?></a>
+            <?php echo $this->translate('or') . ' '; ?><a href="/auth/login"><?php echo $this->translate("login"); ?></a>
             </div>
           <?php endif; ?>
           <div style="clear: both"></div>

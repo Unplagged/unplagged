@@ -1,3 +1,8 @@
+/**
+ * @todo just as a sidenote, javascript functions should never be put into global context like below, but rather into a 
+ * self executing function, this should definitely be changed later on
+ */
+
 function autoCompleteCurrentCase(e){   
   var inputField = $('#current-case');
   inputField.autocomplete({
@@ -20,7 +25,15 @@ function resetCurrentCase(e){
       }, "json");
 }
 
-
+function addContextMenu(){
+  var contextMenuElement = '<div id="contextmenu" style="display:none;position:absolute;top:-250;left:0;z-index:100;color:black">' + 
+        '<table cellpadding="5" cellspacing="0" style="background-color:#40bfe8">' +
+          '<tr><td><a class="menu" href="javascript:deleteSearchWords()"> Google-Suchwörter löschen </a></td></tr>' +
+           '<tr><td><a id="googleSearch" class="menu" href="javascript:googleSearch()"> Google Suche </a></td></tr>' +
+        '</table>' +
+        '</div>';
+  $('body').prepend(contextMenuElement);
+}
 
 $(document).ready(function(){
   // current case auto completion and reset
@@ -41,11 +54,16 @@ $(document).ready(function(){
     }
   });
   
+  
+  
   //wrap home menu button, so that icon gets shown
   var homeButton = $('#header .navigation .home');
   homeButton.wrapInner('<span class="ir"/>');
 });
 
+/**
+ * The pagination plugin.
+ */
 $(function() {            
     $(".pagination a").live("click", function() {
         var href = $(this).attr("href");

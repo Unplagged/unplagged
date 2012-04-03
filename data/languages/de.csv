@@ -1,10 +1,9 @@
 # Unplagged csv file [de]
-Register now;Jetzt anmelden
-Login;Einloggen
-You are not logged in;Sie sind nicht eingeloggt.
+Register now;Jetzt registrieren
+login;einloggen
 or;oder
 Edit profile;Profil bearbeiten
-List of cases;List von Fällen
+List of cases;Liste der Fälle
 Actions;Aktionen
 Alias;Pseudonym
 Create a case;Fall anlegen
@@ -44,3 +43,4 @@ of;von
 You were logged off successfully.;Sie wurden erfolgreich ausgeloggt.
 You were logged in successfully.;Sie wurden erfolgreich eingeloggt.
 Register;Registrieren
+Imprint;Impressum
