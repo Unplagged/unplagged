@@ -1,44 +1,10 @@
 <?php
 $this->title = $this->translate("List of uploaded files");
 $this->headTitle($this->title);
-function defineClass($ext)
-{
-    if($ext=='jpg'||$ext=='jpeg'||$ext=='png'||$ext=='gif'||$ext=='tiff')
-    {
-        echo 'picture';
-    }
-    else
-    {
-        echo 'nopicture';
-    }
-}
-
-function defineFileLogo($ext)
-{
-    if($ext=='jpg'||$ext=='jpeg'||$ext=='png'||$ext=='gif'||$ext=='tiff')
-    {
-        return 'picture.png';
-    }
-    else if ($ext=='pdf')
-    {
-        return 'page_white_acrobat.png';
-    }
-    else if ($ext=='doc'||$ext=='odt'||$ext=='txt')
-    {
-        return 'page_white_text.png';
-    }
-    else if ($ext=='zip')
-    {
-        return 'page_white_zip.png';
-    }
-    else
-    {
-        return 'page_white_text.png';
-    }
-}
 ?>
 <table cellpadding="0" cellspacing="0" class="default">
   <tr>
+    <th style="width: 20px;">&nbsp;</th>
     <th><?php echo $this->translate("Filename"); ?></th>
     <th style="width: 110px;"><?php echo $this->translate("Uploaded"); ?></th>
     <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
@@ -50,13 +16,10 @@ function defineFileLogo($ext)
     ?>
     <tr <?php echo ($i++ % 2 == 0) ? "class=\"even\"" : ""; ?>>
       <td>
-          <a
-              class="<?php defineClass($file->getExtension())?>"
-              
-              href="<?php echo $this->baseUrl('/image/view/id/' . $file->getId());?>">
-          <!-- $this->baseUrl('storage/files/' . $file->getId() . "." . $file->getExtension());*//*$this->baseUrl('/file/download/id/' . $file->getId());-->
-          
-              <img class="fileTypeIcon" src="<?php echo $this->baseUrl('images/icons/' . defineFileLogo($file->getExtension()));?>"/>
+          <img class="fileTypeIcon" src="<?php echo $this->baseUrl('images/icons/' . Unplagged_Helper::getFileIconByExtenstion($file->getExtension()));?>"/>
+      </td>
+      <td>
+          <a <?php if($file->isImage()){ echo "class=\"picture\""; } ?> href="<?php echo $this->baseUrl('/image/view/id/' . $file->getId());?>">          
               <?php echo $file->getFilename(); ?>
           </a>
       </td>

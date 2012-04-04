@@ -208,6 +208,10 @@ class Application_Model_File {
   public function setExtension($extension){
     $this->extension = $extension;
   }
+  
+  public function isImage() {
+    return in_array($this->extension, array('jpg', 'jpeg', 'png', 'gif', 'tiff'));
+  }
 
 
 }
