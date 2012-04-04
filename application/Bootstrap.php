@@ -146,7 +146,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $translator = new Zend_Translate(
             array(
               'adapter'=>'array',
-              'content'=>BASE_PATH . '/data/languages',
+              'content'=>BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages',
               'locale'=>$locale,
               'scan'=>Zend_Translate::LOCALE_DIRECTORY
             )
