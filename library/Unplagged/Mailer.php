@@ -73,7 +73,7 @@ class Unplagged_Mailer{
     $bodyText .= 'this E-Mail address. If it wasn\'t you, simply ignore this mail. ' . "\r" . "\n" . "\r" . "\n";
     
     $bodyText .= 'Otherwise click the following link: ' . "\r" . "\n";
-    $bodyText .= $config->link->recoverPassword . $user->getVerificationHash() . "\r" . "\n";
+    $bodyText .= $config->link->passwordRecovery . $user->getVerificationHash() . "\r" . "\n";
 
     $bodyText .= Unplagged_Mailer::getFooter();
 
@@ -81,7 +81,7 @@ class Unplagged_Mailer{
     $mail->setBodyText($bodyText);
     $mail->setFrom($config->default->senderEmail, $config->default->senderName);
     $mail->addTo($user->getEmail());
-    $mail->setSubject($config->default->portalName . ' Account successfully verified');
+    $mail->setSubject($config->default->portalName . ' Password recovery');
     $mail->send();
 
     return true;
@@ -121,7 +121,8 @@ class Unplagged_Mailer{
     $config = Zend_Registry::get('config');
     
     $footerText = "\r" . "\n";
-    $footerText .= 'Your team of ' . $config->default->portalName . "\r" . "\n";
+    $footerText .= 'Your team of ' . "\r" . "\n";
+    $footerText .= $config->default->portalName;
     
     return $footerText;
   }
