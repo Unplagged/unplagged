@@ -99,7 +99,8 @@ class UserController extends Zend_Controller_Action{
       $this->_helper->redirector('index', 'index');
     }else{
       $user->setState($this->_em->getRepository('Application_Model_User_State')->findOneByTitle('activated'));
-
+      $user->setVerificationHash(Unplagged_Helper::generateRandomHash());
+        
       // write back to persistence manage and flush it
       $this->_em->persist($user);
       $this->_em->flush();
@@ -114,6 +115,54 @@ class UserController extends Zend_Controller_Action{
       $this->_helper->flashMessenger->addMessage('Verification finished successfully.');
       $this->_helper->redirector('index', 'index');
     }
+  }
+  
+  /**
+   * Recovers a users password
+   */
+  public function recoverPasswordAction() {
+    $recoveryHash = preg_replace('/[^0-9a-z]/i', '', $this->getRequest()->getParam('hash'));
+    $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($recoveryHash);
+    
+    if(empty($user)) {
+      $recoverForm = new Application_Form_User_Password_Recover();
+    } else {
+      $recoverForm = new Application_Form_User_Password_Reset($recoveryHash);     
+    }
+    
+    // form has been submitted through post request
+    if($this->_request->isPost()){
+      $formData = $this->_request->getPost();
+
+      // if the form doesn't validate, pass to view and return
+      if($recoverForm->isValid($formData)){
+        // send a recovery mail to the user associated with this e-mail address.
+        if(empty($user)) {
+          $email = $this->getRequest()->getParam('email');
+          $user = $this->_em->getRepository('Application_Model_User')->findOneByEmail($email);
+          
+          Unplagged_Mailer::sendPasswordRecoveryMail($user);
+          $this->_helper->flashMessenger->addMessage('An E-Mail has been sent to your address, follow the instructions in this mail.');
+          $this->_helper->redirector('index', 'index');
+        
+        // reset the password to the new one
+        } else {
+          $password = $this->getRequest()->getParam('password');
+          $user->setPassword(Unplagged_Helper::hashString($password));
+          $user->setVerificationHash(Unplagged_Helper::generateRandomHash());
+          
+        // write back to persistence manager and flush it
+          $this->_em->persist($user);
+          $this->_em->flush();
+          
+          $this->_helper->flashMessenger->addMessage('Your password has been reset successfully, you can login now.');
+          $this->_helper->redirector('login', 'auth'); 
+        }
+      }
+    }
+
+    // send form to view
+    $this->view->recoverForm = $recoverForm;
   }
 
   /**
