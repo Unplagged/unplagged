@@ -48,14 +48,14 @@ class Application_Model_Log{
   protected $created;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_Log_Action", cascade={"remove"})
-   * @JoinColumn(name="log_action_id", referencedColumnName="id")
+   * @ManyToOne(targetEntity="Application_Model_Log_Action")
+   * @JoinColumn(name="log_action_id", referencedColumnName="id", onDelete="CASCADE")
    */
   protected $action;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_User", cascade={"remove"})
-   * @JoinColumn(name="user_id", referencedColumnName="id")
+   * @ManyToOne(targetEntity="Application_Model_User")
+   * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
    */
   protected $user;
 

@@ -64,7 +64,6 @@ class Application_Form_User_Register extends Zend_Form{
     $reenterPasswordElement->addValidator('Identical', false, array('token' => 'password'));
     $reenterPasswordElement->setRequired(true);
 
-
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Register');
     $submitElement->setIgnore(true);
