@@ -227,4 +227,13 @@ class Application_Model_User{
   public function unsetCurrentCase(){
     $this->currentCase = null;
   }
+  
+  public function setPassword($password){
+    $this->password = $password;
+  }
+  
+  public function setVerificationHash($verificationHash){
+    $this->verificationHash = $verificationHash;
+  }
+
 }

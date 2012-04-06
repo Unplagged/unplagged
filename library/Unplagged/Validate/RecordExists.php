@@ -5,12 +5,12 @@
  */
 
 /**
- * This validator helps to check if a specific column in the databse contains a specific record.
+ * This validator helps to check if a specific column in the databse contains a specific record already.
  *
  * @author Benjamin Oertel <mail@benjaminoertel.com>
  * @version 1.0
  */
-class Unplagged_Validate_NoRecordExists extends Zend_Validate_Abstract{
+class Unplagged_Validate_RecordExists extends Zend_Validate_Abstract{
 
   private $_table;
   private $_field;
@@ -18,7 +18,7 @@ class Unplagged_Validate_NoRecordExists extends Zend_Validate_Abstract{
   const OK = '';
 
   protected $_messageTemplates = array(
-    self::OK=>"'%value%' does already exist in the database."
+    self::OK=>"'%value%' could not be found in the database."
   );
 
   public function __construct($table, $field){
@@ -32,7 +32,7 @@ class Unplagged_Validate_NoRecordExists extends Zend_Validate_Abstract{
 
     $element = $this->_em->getRepository($this->_table)->findBy(array($this->_field => $value));
 
-    if(empty($element)){
+    if(!empty($element)){
       return true;
     } else {
       $this->_error(self::OK);
