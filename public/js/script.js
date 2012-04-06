@@ -58,7 +58,7 @@ $(document).ready(function(){
             '<tr><td><a id="googleSearch" class="menu" href="javascript:googleSearch()"> Google Suche </a></td></tr>' +
           '</table>' +
           '</div>';
-    $('body').prepend(contextMenuElement);
+    $('body').append(contextMenuElement);
   }
   //unobtrusively add the context menu, so that users without js don't see it
   addContextMenu();

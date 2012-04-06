@@ -93,23 +93,86 @@ header[role=toolbar] .content {
   width: 90%;
   padding: 0;
   min-height: 35px;
+  line-height: 35px;
 }
 
 header[role=toolbar] a {
   color: #8b8f91;
 }
 
-#logout-actions {
+.user-box {
   float: left;
-  padding: 8px 0 0 75px;
 }
 
-#login-actions {
-  float: left;
-  padding: 8px 0;
+.avatar {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #F5F5F5;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: 0px 3px 5px #a1a1a1;	/* webkit browser*/ 
+  -moz-box-shadow: 0px 3px 5px #a1a1a1;	/* firefox */ 
+  box-shadow: 0px 3px 5px #a1a1a1;
 }
 
-#settings {
+.user-box .avatar{
+  float: left;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+.button{
+  padding: 0 3px;
+  display: inline-block;
+  border: 1px outset #c5c5c5;
+  background-color: #f5f5f5;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  text-decoration: none;
+  line-height: 22px;
+}
+
+
+
+a.button {
+  text-decoration: none;
+}
+
+.button:hover {
+  border-style: inset;
+}
+
+.button .arrow-down {
+  display: inline-block;
+  margin-left: 3px;
+  margin-bottom: 2px;
+  padding-right: 18px;
+  height: 18px;
+  background: url(../images/arrow-down.png) no-repeat right -4px transparent;
+  border-left: 1px solid #d5d5d5;
+  vertical-align: bottom;
+}
+
+.button:hover span{
+  background-position: right -27px;
+}
+
+.button:hover ul {
+  display: block;
+}
+
+.user-menu {
+  float: left; 
+}
+
+.user-menu ul { 
+  display: none;
+}
+
+
+#settings, .settings-box {
   float: right;
   padding: 8px 10px 0 0;
 }
@@ -397,12 +460,12 @@ table.default tr.even {
   background-color: #f7f7f7;
 }
 
-a {
+div[role=main] a {
   color: #226e87;
   text-decoration: none;
 }
 
-a:hover {
+div[role=main] a:hover {
   text-decoration: underline;
 }
 
