@@ -71,7 +71,9 @@ body {
   min-width: 240px;
 }
 
-#main-header{
+
+/* ==|== toolbar styles ======================================================= */
+header[role=toolbar]{
   color: white;
   background: #333333;
   background: -moz-linear-gradient(top, #4c4f54 0%, #000000 100%);
@@ -81,13 +83,59 @@ body {
   background: -ms-linear-gradient(top, #4c4f54 0%,#000000 100%);
   background: linear-gradient(top, #4c4f54 0%,#000000 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4f54', endColorstr='#000000',GradientType=0 );
-  padding: 4px 0;
-  position: relative;
+  padding: 5px 0;
   margin-bottom: 115px;
+  position: relative; /* for the js close button */
 }
 
-/* styling for the small arrow which collapses the the main header */
-.js #main-header #dropdown-button {
+header[role=toolbar] .content {
+  margin: auto;
+  width: 90%;
+  padding: 0;
+  min-height: 35px;
+}
+
+header[role=toolbar] a {
+  color: #8b8f91;
+}
+
+#logout-actions {
+  float: left;
+  padding: 8px 0 0 75px;
+}
+
+#login-actions {
+  float: left;
+  padding: 8px 0;
+}
+
+#settings {
+  float: right;
+  padding: 8px 10px 0 0;
+}
+
+
+/* ==|== banner styles(logo and nav) ======================================================= */
+header[role=banner] {
+  position: relative;
+  top: -80px;
+  margin-bottom: -60px;
+  background: url('../images/header.png') no-repeat right top #40C0E9;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+
+header[role=banner] h1 {
+  background: url('../images/logo.png') no-repeat center center transparent;
+  width: 182px;
+  height: 53px;
+  position: relative;
+  top: 15px;
+  left: 20px;
+}
+/* styling for the small arrow which collapses the toolbar header */
+.js #dropdown-button {
   position: absolute;
   float: right;
   bottom: -10px;
@@ -99,7 +147,7 @@ body {
   border-top: 10px solid black;
 }
 
-.js #main-header #dropdown-button.arrow-up {
+.js .arrow-up {
   bottom: 0px;
   right: 20px;
   width: 0;
@@ -109,7 +157,7 @@ body {
   border-top: 0;
 }
 
-#page {
+.pagewrap {
   width: 90%;
   margin: 0 auto 30px;;
   padding: 0 1.5625% 10px 1.5625%; /* 15px/960px */
@@ -122,73 +170,21 @@ body {
   border-radius: 2px;
 }
 
-#page footer{
+footer[role=contentinfo]{
   margin-top: 20px;
   font-size: 11px;
   text-align: right;
 }
 
-#settings-panel{ 
-  margin: auto;
-  width: 90%;
-}
 
-#settings-panel a {
-  color: #8b8f91;
-}
-
-#settings-panel .content {
-  padding: 0;
-  min-height: 35px;
-}
-
-#settings-panel .content #avatar {
-  float: left;
-  position: absolute;
-}
-#settings-panel .content #logout-actions {
-  float: left;
-  padding: 8px 0 0 75px;
-}
-#settings-panel .content #login-actions {
-  float: left;
-  padding: 8px 0;
-}
-
-#settings-panel .content #settings {
-  float: right;
-  padding: 8px 10px 0 0;
-}
-
-
-
-#header {
-  position: relative;
-  top: -80px;
-  margin-bottom: -60px;
-  background: url('../images/header.png') no-repeat right top #40C0E9;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-}
-
-#header h1 {
-  background: url('../images/logo.png') no-repeat center center transparent;
-  width: 182px;
-  height: 53px;
-  position: relative;
-  top: 15px;
-  left: 20px;
-}
-
-#header .navigation {
+.navigation {
   list-style-type: none;
   margin: 35px 0 0 10px;
   padding: 0;
 }
 
 
-#header .navigation li {
+.navigation li {
   background-color: #484C51;
   display: inline-block;
   margin-right: 2px;
@@ -203,20 +199,20 @@ body {
 }
 
 /* zoom: 1 to make the inline-block work */
-.ie7 #header .navigation li {
+.ie7 .navigation li {
   zoom: 1;
 }
 
-#header .navigation li:hover, #header .navigation li.active {
+.navigation li:hover, .navigation li.active {
   background-color: white;
   color: #484C51;
 }
 
-#header .navigation li:hover a, #header .navigation li.active a {
+.navigation li:hover a, .navigation li.active a {
   color: #484C51;
 }
 
-#header .navigation li a {
+.navigation li a {
   display: inline-block;
   padding: 11px 10px 9px 10px;
   color: white;
@@ -224,17 +220,17 @@ body {
   font-size: 9pt;
 }
 
-#header .navigation li .home span{
+.navigation li .home span{
   background: url(../images/home_icon.png) no-repeat 0 0;
   width: 16px;
   text-indent: -9999em;
 }
 
-#header .navigation li:hover .home span, #header .navigation li.active .home span {
+.navigation li:hover .home span, .navigation li.active .home span {
   background-position: 0 -16px;
 }
 
-#header .navigation li > ul { 
+.navigation li > ul { 
   display: none;
   position: absolute; 
   width: auto;
@@ -246,7 +242,7 @@ body {
   z-index: 2;
 }
 
-#header .navigation li:hover > ul { 
+.navigation li:hover > ul { 
   display: block; 
   min-width: 160px;
   -webkit-border-radius: 3px;
@@ -260,30 +256,30 @@ body {
   box-shadow: 1px 1px 2px #d9d9d9;
 }
 
-#header .navigation li > ul > li {
+.navigation li > ul > li {
   background-color: transparent;
   display: block;
   padding: 3px 0;
 }
 
-#header .navigation li > ul > li:hover {
+.navigation li > ul > li:hover {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0;
 }
 
-#header .navigation li > ul > li a {
+.navigation li > ul > li a {
   padding: 5px 10px 3px 0;
   border-top: 1px #ededed solid;
   display: block;
   color: #484C51;
 }
 
-#header .navigation li > ul > li a:hover {
+.navigation li > ul > li a:hover {
   text-decoration: underline;
 }
 
-#header .navigation li > ul > li:first-child a {
+.navigation li > ul > li:first-child a {
   border-top: none;
 }
 

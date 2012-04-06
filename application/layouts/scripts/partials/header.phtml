@@ -17,29 +17,30 @@
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
   </head>
   <body>
-    <header id="main-header">
-      <div id="settings-panel">
+    <header role="toolbar" id="main-header">
         <div class="content">
           <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
-            <div id="avatar"><img src="/images/tmp_avatar.png" /></div>
             <div id="logout-actions">
-              <?php echo $this->translate("Welcome") . " " . $this->me->getUsername() . "!"; ?>
+              <img class="avatar" src="/images/tmp_avatar.png" />
+              <button><?php echo $this->me->getUsername(); ?></button>
               <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
             </div>
             <div id="settings">
-              <?php echo $this->translate("Case you're working on"); ?> 
+              <p><?php echo $this->translate("Current Case"); ?></p>
               <div id="current-case-field">
                 <?php
-                  $value = '';
+                  $value = 'Select a case';
                   if($this->me->getCurrentCase() instanceof Application_Model_Case){ 
-                    $value = 'value="' . $this->me->getCurrentCase()->getPublishableName() . '"'; 
+                    $value = $this->me->getCurrentCase()->getPublishableName(); 
                   }
                 ?>
-                <select>
-                  <option></option>
-                </select>
-                <input type="text" name="current-case" id="current-case" <?php echo $value; ?> />
-                <a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>
+                <form class="current-case" method="POST" action="/user/set-current-case">
+                  <select name="case">
+                    <option><?php echo $value; ?></option>
+                  </select>
+                  <button>OK</button>  
+                </form>
+                <!--<a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>-->
                 <a href="/case/list"><?php echo $this->translate("Case Settings"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
             </div>
           <?php else: ?>
@@ -53,8 +54,9 @@
         <span id="dropdown-button" class="arrow-up"></span>
       </div>
     </header>
-    <div id="page">
-      <header id="header" class="clearfix">
+    <div id="page" class="pagewrap">
+      <header role="banner" id="header" class="clearfix">
         <h1 class="ir">Unplagged - The Plagiarism Detection Cockpit</h1>
-        <?php echo $this->navigation()->menu(); ?>
-      </header><?php echo $this->escape($this->title); ?>
+        <nav><?php echo $this->navigation()->menu(); ?></nav>
+      </header>
+      <?php echo $this->escape($this->title); ?>
