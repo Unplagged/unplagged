@@ -71,6 +71,50 @@ body {
   min-width: 240px;
 }
 
+/* ==|== reusable styles ======================================================= */
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #F5F5F5;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: 0px 3px 5px #a1a1a1;	/* webkit browser*/ 
+  -moz-box-shadow: 0px 3px 5px #a1a1a1;	/* firefox */ 
+  box-shadow: 0px 3px 5px #a1a1a1;
+}
+
+.button{
+  padding: 0 3px;
+  display: inline-block;
+  border: 1px outset #c5c5c5;
+  background-color: #f5f5f5;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  text-decoration: none;
+  line-height: 22px;
+}
+
+.button:hover {
+  border-style: solid;
+}
+
+.button .arrow-down {
+  display: inline-block;
+  margin-left: 3px;
+  margin-bottom: 2px;
+  padding-right: 18px;
+  height: 18px;
+  background: url(../images/arrow-down.png) no-repeat right -4px transparent;
+  border-left: 1px solid #d5d5d5;
+  vertical-align: bottom;
+}
+
+.button:hover .arrow-down{
+  background-position: right -27px;
+}
 
 /* ==|== toolbar styles ======================================================= */
 header[role=toolbar]{
@@ -104,62 +148,19 @@ header[role=toolbar] a {
   float: left;
 }
 
-.avatar {
-  width: 50px;
-  height: 50px;
-  border: 3px solid #F5F5F5;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  -webkit-box-shadow: 0px 3px 5px #a1a1a1;	/* webkit browser*/ 
-  -moz-box-shadow: 0px 3px 5px #a1a1a1;	/* firefox */ 
-  box-shadow: 0px 3px 5px #a1a1a1;
-}
-
 .user-box .avatar{
   float: left;
   margin-top: 5px;
   margin-right: 5px;
 }
 
-.button{
-  padding: 0 3px;
-  display: inline-block;
-  border: 1px outset #c5c5c5;
-  background-color: #f5f5f5;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  text-decoration: none;
-  line-height: 22px;
-}
-
-.button:hover {
-  border-style: solid;
-}
-
-.button .arrow-down {
-  display: inline-block;
-  margin-left: 3px;
-  margin-bottom: 2px;
-  padding-right: 18px;
-  height: 18px;
-  background: url(../images/arrow-down.png) no-repeat right -4px transparent;
-  border-left: 1px solid #d5d5d5;
-  vertical-align: bottom;
-}
-
-.button:hover span{
-  background-position: right -27px;
-}
-
-.button:hover ul {
-  display: block;
-}
-
 .user-menu {
   float: left;
   position: relative;
+}
+
+.user-menu:hover .arrow-down{
+  background-position: right -27px;
 }
 
 .user-menu ul { 
@@ -168,7 +169,7 @@ header[role=toolbar] a {
   background: whiteSmoke;
   border: 1px solid #c5c5c5;
   z-index: 1000;
-  top: 28px;
+  top: 28px; /* top: 100%; would be nicer, but doesn't work due to line-height */
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
@@ -191,11 +192,13 @@ header[role=toolbar] a {
 }
 
 
-#settings, .settings-box {
+.case-settings-box {
   float: right;
-  padding: 8px 10px 0 0;
 }
 
+.case-settings-box form {
+  float: left;
+}
 
 /* ==|== banner styles(logo and nav) ======================================================= */
 header[role=banner] {
@@ -229,7 +232,7 @@ header[role=banner] h1 {
   border-top: 10px solid black;
 }
 
-.js .arrow-up {
+.js #dropdown-button.arrow-up {
   bottom: 0px;
   right: 20px;
   width: 0;

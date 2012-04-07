@@ -17,45 +17,43 @@
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
   </head>
   <body>
-    <header role="toolbar" id="main-header">
+    <header role="toolbar">
         <div class="content">
           <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
             <div class="user-box">
-              <img class="avatar" src="/images/tmp_avatar.png" />
-              <div class="user-menu clearfix">
-                <a class="button clearfix" href="/user/edit"><span><?php echo $this->me->getUsername(); ?></span><span class="arrow-down"></span></a>
+              <img class="avatar" src="/images/default-avatar.png" />
+              <div class="user-menu">
+                <a class="button" href="/user/edit"><span><?php echo $this->me->getUsername(); ?></span><span class="arrow-down"></span></a>
                 <ul>
                   <li><a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a></li>
                   <li><a href="/user/edit"><?php echo $this->translate("Edit Profile"); ?></a></li>
                 </ul>
               </div>
             </div>
-            <div id="settings">
-              <p><?php echo $this->translate("Current Case"); ?></p>
-              <div id="current-case-field">
-                <?php
-                  $value = 'Select a case';
-                  if($this->me->getCurrentCase() instanceof Application_Model_Case){ 
-                    $value = $this->me->getCurrentCase()->getPublishableName(); 
-                  }
-                ?>
-                <form class="current-case" method="POST" action="/user/set-current-case">
-                  <select name="case">
-                    <option><?php echo $value; ?></option>
-                  </select>
-                  <button>OK</button>  
-                </form>
-                <!--<a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>-->
-                <a href="/case/list"><?php echo $this->translate("Case Settings"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
+            <div class="case-settings-box">
+              <?php
+                $value = 'Select a case';
+                if($this->me->getCurrentCase() instanceof Application_Model_Case){ 
+                  $value = $this->me->getCurrentCase()->getPublishableName(); 
+                }
+              ?>
+              <form class="current-case" method="POST" action="/user/set-current-case">
+                <span><?php echo $this->translate("Current Case"); ?></span>
+                <select name="case">
+                  <option><?php echo $value; ?></option>
+                </select>
+                <button>OK</button>  
+              </form>
+              <!--<a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>-->
+              <a href="/case/list"><?php echo $this->translate("Case Settings"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
             </div>
-          <?php else: ?>
-            <div class="user-box">
-              <a href="/user/register"><?php echo $this->translate("Register now"); ?></a>
-              <?php echo $this->translate('or') . ' '; ?><a href="/auth/login"><?php echo $this->translate("login"); ?></a>
-            </div>
-          <?php endif; ?>
-          <div style="clear: both"></div>
-        </div>
+        <?php else: ?>
+          <div>
+            <a href="/user/register"><?php echo $this->translate("Register now"); ?></a>
+            <span><?php echo $this->translate('or') . ' '; ?></span>
+            <a href="/auth/login"><?php echo $this->translate("login"); ?></a>
+          </div>
+        <?php endif; ?>
         <span id="dropdown-button" class="arrow-up"></span>
       </div>
     </header>
