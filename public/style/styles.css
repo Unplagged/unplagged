@@ -134,14 +134,8 @@ header[role=toolbar] a {
   line-height: 22px;
 }
 
-
-
-a.button {
-  text-decoration: none;
-}
-
 .button:hover {
-  border-style: inset;
+  border-style: solid;
 }
 
 .button .arrow-down {
@@ -164,11 +158,36 @@ a.button {
 }
 
 .user-menu {
-  float: left; 
+  float: left;
+  position: relative;
 }
 
 .user-menu ul { 
   display: none;
+  position: absolute;
+  background: whiteSmoke;
+  border: 1px solid #c5c5c5;
+  z-index: 1000;
+  top: 28px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0 30px 0 5px;
+}
+
+.user-menu li a{
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.user-menu li:hover a{
+  text-decoration: underline;
+}
+
+.user-menu:hover ul {
+  display: block;
 }
 
 
