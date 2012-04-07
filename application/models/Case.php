@@ -133,6 +133,10 @@ class Application_Model_Case{
     $this->updated = new DateTime("now");
   }
 
+  public function getId(){
+    return $this->id;  
+  }
+  
   /**
    * @return string 
    */

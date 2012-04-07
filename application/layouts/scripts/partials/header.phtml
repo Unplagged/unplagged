@@ -32,17 +32,21 @@
             </div>
             <div class="case-settings-box">
               <?php
-                $value = 'Select a case';
+                $currentLabel = '';
+                $currentValue = null;
                 if($this->me->getCurrentCase() instanceof Application_Model_Case){ 
-                  $value = $this->me->getCurrentCase()->getPublishableName(); 
+                  $currentLabel = $this->me->getCurrentCase()->getPublishableName(); 
+                  $currentValue = $this->me->getCurrentCase()->getId();
                 }
               ?>
               <form class="current-case" method="POST" action="/user/set-current-case">
                 <span><?php echo $this->translate("Current Case"); ?></span>
                 <select name="case">
-                  <option><?php echo $value; ?></option>
+                  <?php if($currentLabel===''): ?>
+                  <option><?php echo $this->translate('Please select a Case'); ?></option>
+                  <?php endif; ?>
                   <?php foreach($this->cases as $case): ?>
-                  <option value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
+                  <option <?php if($case['value']==$currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
                   <?php endforeach; ?>
                 </select>
                 <button>OK</button>  
