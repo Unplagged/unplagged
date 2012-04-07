@@ -219,7 +219,6 @@ class UserController extends Zend_Controller_Action{
     //probably should check if it's a number and leave everything else as is
     $caseId = preg_replace('/[^0-9]/', '', $this->getRequest()->getParam('case'));
     if($caseId){
-    die('hier');
       $case = $this->_em->getRepository('Application_Model_Case')->findOneById($caseId);
       
       if($case){
@@ -231,9 +230,9 @@ class UserController extends Zend_Controller_Action{
       }
 
       
-        $result["caseId"] = $caseId;
-        $result["response"] = "200";
-        $this->_helper->json($result);
+        //$result["caseId"] = $caseId;
+        //$result["response"] = "200";
+        //$this->_helper->json($result);
     }
     $this->_helper->viewRenderer->setNoRender(true);
     $this->_redirect();

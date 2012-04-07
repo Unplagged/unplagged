@@ -41,6 +41,9 @@
                 <span><?php echo $this->translate("Current Case"); ?></span>
                 <select name="case">
                   <option><?php echo $value; ?></option>
+                  <?php foreach($this->cases as $case): ?>
+                  <option value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
+                  <?php endforeach; ?>
                 </select>
                 <button>OK</button>  
               </form>

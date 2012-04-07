@@ -10,14 +10,16 @@
   </tr>
   <?php 
   $i = 0;
-  foreach ($this->paginator as $case): 
   ?>
+  <?php if($this->paginator): ?>
+  <?php foreach ($this->paginator as $case): ?>
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
     <td><?php echo $case->getName(); ?></td>
     <td><?php echo $case->getAlias(); ?></td>
     <td></td>
   </tr>
   <?php endforeach; ?>
+  <?php endif; ?>
 </table> 
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
 
