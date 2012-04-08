@@ -28,7 +28,9 @@
  */
 class Application_Model_Case{
 
-  /** @Id @GeneratedValue @Column(type="integer")  */
+  /** 
+   * @Id @GeneratedValue @Column(type="integer")  
+   */
   protected $id;
 
   /**
@@ -56,6 +58,7 @@ class Application_Model_Case{
 
   /**
    * The date when the document was created.
+   * 
    * @var string The creation date.
    * 
    * @Column(type="datetime")
@@ -64,6 +67,7 @@ class Application_Model_Case{
 
   /**
    * The date when the document was updated the last time.
+   * 
    * @var string The update date.
    * 
    * @Column(type="datetime", nullable=true)
@@ -197,11 +201,11 @@ class Application_Model_Case{
   }
   
   public function addCollaborator(Application_Model_User $user){
-    return $this->collaborators->add($tag);
+    return $this->collaborators->add($user);
   }
   
   public function removeCollaborator(Application_Model_User $user){
-    return $this->collaborators->removeElement($tag);
+    return $this->collaborators->removeElement($user);
   }
   
   public function getCollaborators(){
@@ -212,6 +216,21 @@ class Application_Model_Case{
     $this->collaborators->clear();
   }
   
+  public function addFile(Application_Model_File $file){
+    return $this->files->add($file);
+  }
+  
+  public function removeFile(Application_Model_File $file){
+    return $this->file->removeElement($file);
+  }
+  
+  public function getFiles(){
+    return $this->files;
+  }
+  
+  public function clearFiles(){
+    $this->files->clear();
+  }
 
 }
 

@@ -36,7 +36,7 @@ $(document).ready(function(){
   
   //collapse header line
   $('#dropdown-button').click(function(e) {
-    var content = $('#settings-panel .content');
+    var content = $('header[role=toolbar] .content');
     var button = $('#dropdown-button');
 
     content.toggle();
