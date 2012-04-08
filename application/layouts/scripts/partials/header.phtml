@@ -18,18 +18,8 @@
   </head>
   <body>
     <header role="toolbar">
-        <div class="content">
+        <div class="content clearfix">
           <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
-            <div class="user-box">
-              <img class="avatar" src="/images/default-avatar.png" />
-              <div class="user-menu">
-                <a class="button" href="/user/edit"><span><?php echo $this->me->getUsername(); ?></span><span class="arrow-down"></span></a>
-                <ul>
-                  <li><a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a></li>
-                  <li><a href="/user/edit"><?php echo $this->translate("Edit Profile"); ?></a></li>
-                </ul>
-              </div>
-            </div>
             <div class="case-settings-box">
               <?php
                 $currentLabel = '';
@@ -54,6 +44,16 @@
                 </select>
                 <button class="button">Ok</button>  
               </form>
+            </div>
+            <div class="user-box">
+              <img class="avatar" src="/images/default-avatar.png" />
+              <div class="user-menu">
+                <a class="button" href="/user/edit"><span><?php echo $this->me->getUsername(); ?></span><span class="arrow-down"></span></a>
+                <ul>
+                  <li><a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a></li>
+                  <li><a href="/user/edit"><?php echo $this->translate("Edit Profile"); ?></a></li>
+                </ul>
+              </div>
             </div>
         <?php else: ?>
           <div>

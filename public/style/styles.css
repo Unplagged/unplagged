@@ -146,12 +146,14 @@ header[role=toolbar] a {
 
 .user-box {
   float: left;
+  position: relative;
+  padding-left: 60px;
 }
 
 .user-box .avatar{
-  float: left;
-  margin-top: 5px;
-  margin-right: 5px;
+  position: absolute;
+  top: 5px;
+  left: 0;
 }
 
 .user-menu {
@@ -233,22 +235,22 @@ header[role=banner] h1 {
 .js #dropdown-button {
   position: absolute;
   float: right;
-  bottom: -10px;
+  bottom: -8px;
   left: 90%;
   cursor: pointer;
   width: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid black;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid black;
 }
 
 .js #dropdown-button.arrow-up {
   bottom: 0px;
   right: 20px;
   width: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid #f5f5f5;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #f5f5f5;
   border-top: 0;
 }
 
