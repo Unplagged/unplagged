@@ -191,13 +191,23 @@ header[role=toolbar] a {
   display: block;
 }
 
-
 .case-settings-box {
   float: right;
 }
 
 .case-settings-box form {
   float: left;
+}
+
+.case-settings-box select {
+  height: 24px;
+  border-radius: 3px;
+  width: 150px;
+}
+
+.case-settings-box > a {
+  float: left;
+  padding-right: 5px;
 }
 
 /* ==|== banner styles(logo and nav) ======================================================= */

@@ -39,20 +39,21 @@
                   $currentValue = $this->me->getCurrentCase()->getId();
                 }
               ?>
+              <!--<a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>-->
+              <a href="/case/list"><?php echo $this->translate("Edit Cases"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
               <form class="current-case" method="POST" action="/user/set-current-case">
-                <span><?php echo $this->translate("Current Case"); ?></span>
                 <select name="case">
                   <?php if($currentLabel===''): ?>
                   <option><?php echo $this->translate('Please select a Case'); ?></option>
+                  <?php else: ?>
+                  <option></option>
                   <?php endif; ?>
                   <?php foreach($this->cases as $case): ?>
                   <option <?php if($case['value']==$currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
                   <?php endforeach; ?>
                 </select>
-                <button>OK</button>  
+                <button class="button">Ok</button>  
               </form>
-              <!--<a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>-->
-              <a href="/case/list"><?php echo $this->translate("Case Settings"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
             </div>
         <?php else: ?>
           <div>

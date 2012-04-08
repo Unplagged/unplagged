@@ -218,22 +218,21 @@ class UserController extends Zend_Controller_Action{
     //@todo should we really replace some stuff here(don't really know what it does), I would think we 
     //probably should check if it's a number and leave everything else as is
     $caseId = preg_replace('/[^0-9]/', '', $this->getRequest()->getParam('case'));
+    $case = null;
     if($caseId){
       $case = $this->_em->getRepository('Application_Model_Case')->findOneById($caseId);
-      
-      if($case){
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        $user->setCurrentCase($case);
-
-        $this->_em->persist($user);
-        $this->_em->flush();
-      }
 
       
         //$result["caseId"] = $caseId;
         //$result["response"] = "200";
         //$this->_helper->json($result);
     }
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $user->setCurrentCase($case);
+
+    $this->_em->persist($user);
+    $this->_em->flush();
+    
     $this->_helper->viewRenderer->setNoRender(true);
     $this->_redirect();
   }
