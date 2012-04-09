@@ -114,5 +114,3 @@ class Application_Model_Document extends Application_Model_Base{
   }
 
 }
-
-?> 

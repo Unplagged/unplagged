@@ -87,7 +87,4 @@ abstract class Application_Model_Base{
   public function getComments(){
     return $this->comments;
   }
-
 }
-
-?>

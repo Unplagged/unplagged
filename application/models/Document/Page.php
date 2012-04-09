@@ -103,5 +103,3 @@ class Application_Model_Document_Page extends Application_Model_Base{
     return "page-icon";
   }
 }
-
-?> 

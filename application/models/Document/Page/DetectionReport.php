@@ -174,5 +174,3 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
   }
 
 }
-
-?> 
