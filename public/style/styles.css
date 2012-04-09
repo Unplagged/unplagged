@@ -1005,7 +1005,7 @@ smork-btn a:active { top: 1px; }
 }
 
 .smork-btn.file-icon a span, .smork-btn.file-icon:visited a span {
-  background: url(/images/icons/download.png) no-repeat left;
+  background: url(/images/icons/disk.png) no-repeat left;
 }
 
 .smork-btn.notification-icon a span, .smork-btn.notification-icon:visited a span {
