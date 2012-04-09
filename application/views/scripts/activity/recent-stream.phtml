@@ -1,0 +1,44 @@
+<?php
+$this->title = $this->translate("Recent activity");
+$this->headTitle($this->title);
+?>
+
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
+
+<div id="activity-stream">
+<?php foreach($this->paginator as $notification): ?>
+  <div class="activity-item">
+    <div class="activity">
+      <div class="image"><img class="avatar" src="/user/avatar/id/<?php echo $notification->getUser()->getId(); ?>" /></div>
+      <div class="details">
+        <div class="title"><h4><?php echo $notification->getTitle(); ?><span> <?php echo $notification->getUser()->getUsername(); ?></span></h4> <span class="date"><?php echo Unplagged_Helper::humanTiming($notification->getCreated()); ?></span></div>
+        <p><?php echo $notification->getMessage(); ?></p>
+        <div style="text-align: right">
+          <div class="smork-btn light <?php echo $notification->getSource()->getIconClass(); ?>">
+            <a href="<?php echo $notification->getSource()->getDirectLink(); ?>"><span>Open <?php echo $notification->getSource()->getDirectName(); ?></span></a>
+          </div>
+          <div class="smork-btn light comments-icon">
+            <a href="#" class="toggle-comments"><span>Show comments</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="activity-more">
+      <div class="settings">
+        <div class="arrow-down"></div>
+      </div>
+      <div class="comments-loading"><img src="/images/ajax-loader.gif" alt="" /></div>
+      <div class="comments"></div>
+      <div class="write-comment-box">
+        <input type="text" name="text" placeholder="Write a comment" class="comment-field" />
+        <input type="hidden" name="sourceId" value="<?php echo $notification->getSource()->getId(); ?>" class="comment-field" />
+        <div class="smork-btn light comment-icon">
+          <a href="#" class="write-comment"><span>Write comment</span></a>
+        </div>
+      </div>
+    </div>
+    </div>
+  <?php endforeach; ?>
+</div>
+
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>

@@ -25,15 +25,7 @@
  * @Entity 
  * @Table(name="document_pages")
  */
-class Application_Model_Document_Page{
-
-  /**
-   * The documentId is an unique identifier for each document.
-   * @var string The documentId.
-   * 
-   * @Id @GeneratedValue @Column(type="integer")
-   */
-  private $id;
+class Application_Model_Document_Page extends Application_Model_Base{
 
   /**
    * The page number in the origional document.
@@ -99,6 +91,16 @@ class Application_Model_Document_Page{
 
   public function setContent($content){
     $this->content = $content;
+  }
+    public function getDirectName(){
+    return "page";
+  }
+    public function getDirectLink(){
+    return "/document_page/show/id/" . $this->id;
+  }
+
+  public function getIconClass(){
+    return "page-icon";
   }
 }
 

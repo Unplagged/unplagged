@@ -26,15 +26,7 @@
  * @Table(name="document_pages_detection_reports")
  * @HasLifeCycleCallbacks
  */
-class Application_Model_Document_Page_DetectionReport{
-
-  /**
-   * The documentId is an unique identifier for each document.
-   * @var string The documentId.
-   * 
-   * @Id @GeneratedValue @Column(type="integer")
-   */
-  private $id;
+class Application_Model_Document_Page_DetectionReport extends Application_Model_Base{
 
   /**
    * The date when the file was uploaded.
@@ -156,7 +148,7 @@ class Application_Model_Document_Page_DetectionReport{
   public function getUser(){
     return $this->user;
   }
-  
+
   public function getState(){
     return $this->state;
   }
@@ -164,10 +156,22 @@ class Application_Model_Document_Page_DetectionReport{
   public function setState($state){
     $this->state = $state;
   }
+
   public function getCreated(){
     return $this->created;
   }
 
+  public function getDirectName(){
+    return "detection report";
+  }
+
+  public function getDirectLink(){
+    return "/document-page-detection-report/show/id/" . $this->id;
+  }
+
+  public function getIconClass(){
+    return "report-icon";
+  }
 
 }
 

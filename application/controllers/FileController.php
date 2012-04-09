@@ -82,7 +82,11 @@ class FileController extends Zend_Controller_Action{
 
         if($adapter->receive()){
           chmod($file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension(), 0755);
-
+          
+          // notification
+          $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          Unplagged_Helper::notify("file_uploaded", $file, $user);
+      
           $this->_helper->flashMessenger->addMessage('File was uploaded successfully.');
           $this->_helper->redirector('list', 'file');
         }else{

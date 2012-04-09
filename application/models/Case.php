@@ -26,10 +26,7 @@
  * @Table(name="cases")
  * @HasLifeCycleCallbacks
  */
-class Application_Model_Case{
-
-  /** @Id @GeneratedValue @Column(type="integer")  */
-  protected $id;
+class Application_Model_Case extends Application_Model_Base{
 
   /**
    * The "real" name of the case, under which it will get published later on.
@@ -38,7 +35,7 @@ class Application_Model_Case{
    * 
    * @Column(type="string") 
    */
-  protected $name = '';
+  private $name = '';
 
   /**
    * The alias is used to show everyone who doesn't have the permission to see the real case name.
@@ -47,12 +44,12 @@ class Application_Model_Case{
    * 
    * @Column(type="string") 
    */
-  protected $alias = '';
+  private $alias = '';
 
   /**
    * @var string  
    */
-  protected $state = '';
+  private $state = '';
 
   /**
    * The date when the document was created.
@@ -60,7 +57,7 @@ class Application_Model_Case{
    * 
    * @Column(type="datetime")
    */
-  protected $created;
+  private $created;
 
   /**
    * The date when the document was updated the last time.
@@ -68,7 +65,7 @@ class Application_Model_Case{
    * 
    * @Column(type="datetime", nullable=true)
    */
-  protected $updated;
+  private $updated;
 
   /**
    * @ManyToMany(targetEntity="Application_Model_Document")
@@ -77,7 +74,7 @@ class Application_Model_Case{
    *      inverseJoinColumns={@JoinColumn(name="document_id", referencedColumnName="id")}
    *      )
    */
-  protected $documents;
+  private $documents;
 
   /**
    * @ManyToMany(targetEntity="Application_Model_File")
@@ -86,8 +83,8 @@ class Application_Model_Case{
    *      inverseJoinColumns={@JoinColumn(name="file_id", referencedColumnName="id")}
    *      )
    */
-  protected $files;
-  
+  private $files;
+
   /**
    * @ManyToMany(targetEntity="Application_Model_Tag")
    * @JoinTable(name="case_has_tag",
@@ -95,8 +92,8 @@ class Application_Model_Case{
    *      inverseJoinColumns={@JoinColumn(name="tag_id", referencedColumnName="id")}
    *      )
    */
-  protected $tags;
-  
+  private $tags;
+
   /**
    * @ManyToMany(targetEntity="Application_Model_User")
    * @JoinTable(name="case_has_collaborator",
@@ -104,7 +101,7 @@ class Application_Model_Case{
    *      inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")}
    *      )
    */
-  protected $collaborators;
+  private $collaborators;
 
   public function __construct($name, $alias){
     $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
@@ -153,61 +150,85 @@ class Application_Model_Case{
    */
   public function getPublishableName(){
     $publishableName = $this->getAlias();
-    
+
     if($this->getState() === 'public'){
       $publishableName = $this->getName();
     }
-    
+
     return $publishableName;
   }
-  
+
   /**
    * @return string
    */
   public function getState(){
     return $this->state;
   }
-  
+
   public function getUpdated(){
     return $this->updated;
   }
-  
+
   public function getCreated(){
     return $this->created;
   }
-  
+
   public function addTag(Application_Model_Tag $tag){
     return $this->tags->add($tag);
   }
-  
+
   public function removeTag(Application_Model_Tag $tag){
     return $this->tags->removeElement($tag);
   }
-  
+
   public function getTags(){
-    return $this->tags ;
+    return $this->tags;
   }
-  
+
   public function clearTags(){
     $this->tags->clear();
   }
-  
+
   public function addCollaborator(Application_Model_User $user){
     return $this->collaborators->add($tag);
   }
-  
+
   public function removeCollaborator(Application_Model_User $user){
     return $this->collaborators->removeElement($tag);
   }
-  
+
   public function getCollaborators(){
     return $this->collaborators;
   }
-  
+
   public function clearCollaborators(){
     $this->collaborators->clear();
   }
+
+  public function getDirectName(){
+    return "case";
+  }
   
+  public function getDirectLink(){
+    return "/case/show/id/" . $this->id;
+  }
+  
+  public function getIconClass(){
+    return "case-icon";
+  }
+
+  public function toArray(){
+    $result = array();
+
+    if(!empty($this->name)){
+      $result["name"] = $this->name;
+    }
+    if(!empty($this->alias)){
+      $result["alias"] = $this->alias;
+    }
+
+    return $result;
+  }
 
 }
 

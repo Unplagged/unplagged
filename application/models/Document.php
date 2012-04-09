@@ -29,36 +29,29 @@
  * @Table(name="documents")
  * @HasLifeCycleCallbacks
  */
-class Application_Model_Document{
+class Application_Model_Document extends Application_Model_Base{
 
-  /**
-   * The documentId is an unique identifier for each document.
-   * @var string The documentId.
-   * 
-   * @Id @GeneratedValue @Column(type="integer")
-   */
-  protected $id;
-  
   /**
    * The date when the document was created.
    * @var string The creation date.
    * 
    * @Column(type="datetime")
    */
-  protected $created;
-    /**
+  private $created;
+
+  /**
    * The title of the document.
    * @var string The title.
    * 
    * @Column(type="string", length=64)
    */
-  protected $title;
-  
+  private $title;
+
   /**
    * @ManyToOne(targetEntity="Application_Model_File")
    * @JoinColumn(name="original_file_id", referencedColumnName="id", onDelete="SET NULL")
    */
-  protected $originalFile;
+  private $originalFile;
 
   /**
    * The lines in the document.
@@ -66,16 +59,16 @@ class Application_Model_Document{
    * @OneToMany(targetEntity="Application_Model_Document_Page", mappedBy="document")
    * @OrderBy({"pageNumber" = "ASC"})
    */
-  protected $pages;
+  private $pages;
 
-  public function __construct(array $data=null){
+  public function __construct(array $data = null){
     if(isset($data["file"])){
       $this->originalFile = $data["file"];
     }
 
     if(isset($data["title"])){
       $this->title = $data["title"];
-    }    $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
+    } $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
   }
 
   /**
@@ -94,18 +87,32 @@ class Application_Model_Document{
   public function getOriginalData(){
     return 'originalData';
   }
-  
+
   public function getTitle(){
     return $this->title;
   }
-  
+
   public function addPage(Application_Model_Document_Page $page){
     $page->setDocument($this);
     $this->pages->add($page);
   }
+
   public function getPages(){
     return $this->pages;
   }
+
+  public function getDirectName(){
+    return "document";
+  }
+
+  public function getDirectLink(){
+    return "/document/show/id/" . $this->id;
+  }
+
+  public function getIconClass(){
+    return "document-icon";
+  }
+
 }
 
 ?> 

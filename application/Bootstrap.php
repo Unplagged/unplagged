@@ -242,5 +242,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     Zend_Registry::set('Zend_Navigation', $container);
   }
+  
+  protected function setConstants($constants){
+        foreach ($constants as $key=>$value){
+            if(!defined($key)){
+                define($key, $value);
+            }
+        }
+}
 
 }

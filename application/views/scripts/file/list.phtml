@@ -16,7 +16,7 @@ $this->headTitle($this->title);
     ?>
     <tr <?php echo ($i++ % 2 == 0) ? "class=\"even\"" : ""; ?>>
       <td>
-          <img class="fileTypeIcon" src="<?php echo $this->baseUrl('images/icons/' . Unplagged_Helper::getFileIconByExtenstion($file->getExtension()));?>"/>
+          <img class="icon" src="<?php echo $this->baseUrl('images/icons/' . Unplagged_Helper::getFileIconByExtenstion($file->getExtension()));?>" />
       </td>
       <td>
           <a <?php if($file->isImage()){ echo "class=\"picture\""; } ?> href="<?php echo $this->baseUrl('/image/view/id/' . $file->getId());?>">          

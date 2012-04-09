@@ -29,15 +29,7 @@
  * @Table(name="files")
  * @HasLifeCycleCallbacks
  */
-class Application_Model_File {
-
-  /**
-   * The fileId is an unique identifier for each file.
-   * @var string The fileId.
-   * 
-   * @Id @GeneratedValue @Column(type="integer")
-   */
-  private $id;
+class Application_Model_File extends Application_Model_Base{
 
   /**
    * The date when the file was uploaded.
@@ -86,7 +78,7 @@ class Application_Model_File {
    * @Column(type="string", length=64)
    */
   private $location;
-  
+
   /**
    * The extension of the file.
    * @var string The file extension.
@@ -94,7 +86,7 @@ class Application_Model_File {
    * @Column(type="string", length=16)
    */
   private $extension;
-  
+
   /**
    * If the file is target or not
    * @var string The file is a target.
@@ -104,7 +96,7 @@ class Application_Model_File {
    * @todo maybe we should move this to the case? So that we would have an array of target files
    * and then we could probably add here some associations to representations of this file, that were 
    * already created
-   */ 
+   */
   private $isTarget = false;
 
   /**
@@ -124,29 +116,29 @@ class Application_Model_File {
   public function updated(){
     $this->updated = new DateTime("now");
   }
-  
+
   public function __construct($data = array()){
-    if(isset($data["filename"])) {
+    if(isset($data["filename"])){
       $this->filename = $data["filename"];
     }
-    
-    if(isset($data["mimetype"])) {
+
+    if(isset($data["mimetype"])){
       $this->mimetype = $data["mimetype"];
     }
-    
-    if(isset($data["size"])) {
+
+    if(isset($data["size"])){
       $this->size = $data["size"];
     }
-    
-    if(isset($data["location"])) {
+
+    if(isset($data["location"])){
       $this->location = $data["location"];
     }
-    
-    if(isset($data["extension"])) {
+
+    if(isset($data["extension"])){
       $this->extension = $data["extension"];
     }
   }
-  
+
   public function getId(){
     return $this->id;
   }
@@ -160,7 +152,7 @@ class Application_Model_File {
   public function setId($id){
     $this->id = $id;
   }
-  
+
   public function getCreated(){
     return $this->created;
   }
@@ -180,7 +172,7 @@ class Application_Model_File {
   public function getSize(){
     return round($this->size / 1024, 2) . " KB";
   }
-  
+
   public function getExtension(){
     return $this->extension;
   }
@@ -188,19 +180,19 @@ class Application_Model_File {
   public function getLocation(){
     return $this->location;
   }
-  
+
   public function getAbsoluteLocation(){
     return BASE_PATH . DIRECTORY_SEPARATOR . $this->location;
   }
-  
+
   public function getIsTarget(){
     return $this->isTarget;
   }
 
   public function setIsTarget($isTarget){
     $this->isTarget = $isTarget;
-  }    
-  
+  }
+
   public function setLocation($location){
     $this->location = $location;
   }
@@ -208,10 +200,34 @@ class Application_Model_File {
   public function setExtension($extension){
     $this->extension = $extension;
   }
-  
-  public function isImage() {
+
+  public function isImage(){
     return in_array($this->extension, array('jpg', 'jpeg', 'png', 'gif', 'tiff'));
   }
 
+  public function getDirectName(){
+    return "file";
+  }
+
+  public function getDirectLink(){
+    return "/file/show/id/" . $this->id;
+  }
+
+  public function getIconClass(){
+    return "file-icon";
+  }
+
+  public function toArray(){
+    $result = array();
+
+    if(!empty($this->filename)){
+      $result["filename"] = $this->filename;
+    }
+    if(!empty($this->extension)){
+      $result["extension"] = $this->extension;
+    }
+
+    return $result;
+  }
 
 }

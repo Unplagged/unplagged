@@ -67,11 +67,10 @@ class UserController extends Zend_Controller_Action{
         $this->_em->flush();
 
         // log registration
-        Unplagged_Dao_Log::log("user", "registration", $user);
+        Unplagged_Helper::notify("user_registered", $user, $user);
 
         // send registration mail
         Unplagged_Mailer::sendRegistrationMail($user);
-        Unplagged_Dao_Log::log("mailer", "registration", $user);
 
         $this->_helper->flashMessenger->addMessage('Registration done.');
         $this->_helper->redirector('index', 'index');
@@ -105,12 +104,11 @@ class UserController extends Zend_Controller_Action{
       $this->_em->persist($user);
       $this->_em->flush();
 
-      // log verification
-      Unplagged_Dao_Log::log("user", "verification", $user);
+      // notification
+      Unplagged_Helper::notify("user_verified", $user, $user);
 
       // send registration mail
       Unplagged_Mailer::sendActivationMail($user);
-      Unplagged_Dao_Log::log("mailer", "verification", $user);
 
       $this->_helper->flashMessenger->addMessage('Verification finished successfully.');
       $this->_helper->redirector('index', 'index');
@@ -140,11 +138,20 @@ class UserController extends Zend_Controller_Action{
         if(empty($user)){
           $email = $this->getRequest()->getParam('email');
           $user = $this->_em->getRepository('Application_Model_User')->findOneByEmail($email);
+          
+          $lastNotificationAction = $this->_em->getRepository('Application_Model_Notification_Action')->findOneByName("user_requested_password");
+          $lastNotification = $this->_em->getRepository('Application_Model_Notification')->findOneBy(array("action" => $lastNotificationAction->getId(), "user" => $user->getId()));
 
-          Unplagged_Mailer::sendPasswordRecoveryMail($user);
-          $this->_helper->flashMessenger->addMessage('An E-Mail has been sent to your address, follow the instructions in this mail.');
-          $this->_helper->redirector('index', 'index');
+          if($lastNotification && ($lastNotification->getCreated()->getTimestamp() > time() - NOTIFICATIONS_TIME_INTERVAL)){
+            $this->_helper->flashMessenger->addMessage('There was already a password recovery request for this account.');
+            $this->_helper->redirector('recover-password', 'user');
+          }else{
+            Unplagged_Mailer::sendPasswordRecoveryMail($user);
+            Unplagged_Helper::notify("user_requested_password", $user, $user);
 
+            $this->_helper->flashMessenger->addMessage('An E-Mail has been sent to your address, follow the instructions in this mail.');
+            $this->_helper->redirector('index', 'index');
+          }
           // reset the password to the new one
         }else{
           $password = $this->getRequest()->getParam('password');
@@ -287,9 +294,8 @@ class UserController extends Zend_Controller_Action{
 
       // if the form doesn't validate, pass to view and return
       if($removalForm->isValid($formData)){
-        
-        // @todo: handle mail
 
+        // @todo: handle mail
         // write back to persistence manage and flush it
         $this->_em->remove($user);
         $this->_em->flush();
@@ -297,11 +303,11 @@ class UserController extends Zend_Controller_Action{
         $this->_helper->redirector('logout', 'auth');
         $this->_helper->flashMessenger->addMessage('User Profile removed successfully.');
         $this->_helper->redirector('index', 'index');
-
-        }
+      }
     }
 
     // send form to view
     $this->view->removalForm = $removalForm;
   }
+
 }

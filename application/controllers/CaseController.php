@@ -117,6 +117,10 @@ class CaseController extends Zend_Controller_Action{
       // write back to persistence manager and flush it
       $this->_em->persist($case);
       $this->_em->flush();
+      
+      // notification
+      $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+      Unplagged_Helper::notify("case_created", $case, $user);
 
       $this->_helper->flashMessenger->addMessage('The case was successfully created.');
       $this->_helper->redirector('index', 'case');

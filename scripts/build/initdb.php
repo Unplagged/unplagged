@@ -27,38 +27,48 @@ $application = new Zend_Application(
 $application->getBootstrap()->bootstrap('doctrine');
 $em = $application->getBootstrap()->getResource('doctrine');
 
-// init log actions
-$data["module"] = "user";
-$data["title"] = "registration";
-$data["description"] = "A user registers on the plattform.";
-$logAction = new Application_Model_Log_Action($data);
-$em->persist($logAction);
+
+// 1) init notification actions
+unset($data);
+$data["name"] = "user_registered";
+$data["description"] = "A user registerd on the plattform.";
+$notificationAction = new Application_Model_Notification_Action($data);
+$em->persist($notificationAction);
 
 unset($data);
-$data["module"] = "user";
-$data["title"] = "profile_update";
-$data["description"] = "A user updates the own account.";
-$logAction = new Application_Model_Log_Action($data);
-$em->persist($logAction);
+$data["name"] = "user_updated_profile";
+$data["description"] = "A user updated the own account.";
+$notificationAction = new Application_Model_Notification_Action($data);
+$em->persist($notificationAction);
 
 unset($data);
-$data["module"] = "user";
-$data["title"] = "verification";
-$data["description"] = "A user verifies the own account.";
-$logAction = new Application_Model_Log_Action($data);
-$em->persist($logAction);
+$data["name"] = "user_verified";
+$data["description"] = "A user verified the own account.";
+$notificationAction = new Application_Model_Notification_Action($data);
+$em->persist($notificationAction);
 
 unset($data);
-$data["module"] = "mailer";
-$data["title"] = "registraion";
-$data["description"] = "A mail was sent to the user asking for verifying the account.";
-$logAction = new Application_Model_Log_Action($data);
-$em->persist($logAction);
+$data["name"] = "user_requested_password";
+$data["description"] = "A user requested the own password.";
+$notificationAction = new Application_Model_Notification_Action($data);
+$em->persist($notificationAction);
+
+unset($data);
+$data["name"] = "case_created";
+$data["description"] = "A case was created.";
+$notificationAction = new Application_Model_Notification_Action($data);
+$em->persist($notificationAction);
+
+unset($data);
+$data["name"] = "file_uploaded";
+$data["description"] = "A file was uploaded.";
+$notificationAction = new Application_Model_Notification_Action($data);
+$em->persist($notificationAction);
 
 $em->flush();
 
 
-// init user states
+// 3) init user states
 unset($data);
 $data["title"] = "registered";
 $data["description"] = "A user registered on the page and did not finish the verification process yet.";
