@@ -121,7 +121,7 @@ class Application_Model_Notification extends Application_Model_Base{
       case "case_created":
         return "Case " . $this->getSource()->getPublishableName() . " was created";
       case "file_uploaded":
-        return "File " . $this->getSource()->getUsername() . " was uploaded";
+        return "File " . $this->getSource()->getFilename() . " was uploaded";
     }
   }
 
