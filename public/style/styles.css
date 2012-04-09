@@ -85,7 +85,8 @@ p {
 
 /* ==|== reusable styles ======================================================= */
 
-.avatar {
+.avatar,
+.avatar-small{
   width: 50px;
   height: 50px;
   border: 3px solid #F5F5F5;
@@ -95,6 +96,11 @@ p {
   -webkit-box-shadow: 0px 3px 5px #a1a1a1;	/* webkit browser*/ 
   -moz-box-shadow: 0px 3px 5px #a1a1a1;	/* firefox */ 
   box-shadow: 0px 3px 5px #a1a1a1;
+}
+
+.avatar-small {
+  width: 40px;
+  height: 40px;
 }
 
 .button{

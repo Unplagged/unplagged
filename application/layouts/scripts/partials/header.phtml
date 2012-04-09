@@ -46,7 +46,7 @@
               </form>
             </div>
             <div class="user-box">
-              <img class="avatar" src="/images/default-avatar.png" />
+              <img class="avatar" src="<?php echo $this->me->getAvatar(); ?>" />
               <div class="user-menu">
                 <a class="button" href="/user/edit"><span><?php echo $this->me->getUsername(); ?></span><span class="arrow-down"></span></a>
                 <ul>

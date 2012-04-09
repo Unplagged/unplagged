@@ -99,6 +99,12 @@ class Application_Model_User extends Application_Model_Base{
    * @JoinColumn(name="user_state_id", referencedColumnName="id")
    */
   private $state;
+  
+    /**
+   * @ManyToOne(targetEntity="Application_Model_File")
+   * @JoinColumn(name="user_avatar_id", referencedColumnName="id")
+   */
+  private $avatar;
 
   /**
    * @ManyToOne(targetEntity="Application_Model_Case")
@@ -227,6 +233,14 @@ class Application_Model_User extends Application_Model_Base{
   public function setVerificationHash($verificationHash){
     $this->verificationHash = $verificationHash;
   }
+  
+  public function getAvatar(){
+    if(empty($this->avatar)) {
+     return "/images/default-avatar.png";
+    }
+    
+    return "/image/view/" . $this->avatar->getId();
+  }
 
   public function getDirectName(){
     return "user";
@@ -245,7 +259,8 @@ class Application_Model_User extends Application_Model_Base{
 
     $result["id"] = $this->id;
     $result["username"] = $this->username;
-
+    $result["avatar"] = $this->getAvatar();
+    
     return $result;
   }
 

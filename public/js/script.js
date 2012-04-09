@@ -94,7 +94,7 @@ $(document).ready(function(){
   
   function addComment(data, target) {
     var tpl = '<div class="comment">\n\
-            <div class="image"><img class="avatar" src="/user/avatar/id/' + data.author.id + '" style="width: 40px"></div>\n\
+            <div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>\n\
             <div class="details">\n\
             <div class="title"><b>' + data.author.username + '</b> ' + data.text + '\n\
             <span class="date">' + data.created + '</span>\n\

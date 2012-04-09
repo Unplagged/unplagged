@@ -9,7 +9,7 @@ $this->headTitle($this->title);
 <?php foreach($this->paginator as $notification): ?>
   <div class="activity-item">
     <div class="activity">
-      <div class="image"><img class="avatar" src="/user/avatar/id/<?php echo $notification->getUser()->getId(); ?>" /></div>
+      <div class="image"><img class="avatar" src="<?php echo $notification->getUser()->getAvatar(); ?>" /></div>
       <div class="details">
         <div class="title"><h4><?php echo $notification->getTitle(); ?><span> <?php echo $notification->getUser()->getUsername(); ?></span></h4> <span class="date"><?php echo Unplagged_Helper::humanTiming($notification->getCreated()); ?></span></div>
         <p><?php echo $notification->getMessage(); ?></p>
