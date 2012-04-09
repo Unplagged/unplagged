@@ -1,5 +1,5 @@
-      <footer>
-        <a href=""><?php $this->translate('Impressum'); ?></a>
+      <footer role="contentinfo">
+        <a href=""><?php echo $this->translate('Imprint'); ?></a>
       </footer>
     </div>
     <!-- Notify the user that his IE is too old and that he should consider downloading Chrome Frame for the full experience -->
@@ -11,16 +11,16 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="<?php echo $this->baseUrl('/js/libs/jquery-1.7.1.min.js'); ?>"><\/script>')</script>
     
-    <!-- plugins as those below should be put into plugins.js later on -->
+    <?php //plugins as those below should be put into plugins.js later on ?>
     <script defer src="<?php echo $this->baseUrl('/js/libs/jquery-ui-1.8.17.custom.min.js'); ?>"></script>
     <script defer src="<?php echo $this->baseUrl('/js/libs/jquery.ba-hashchange.min.js'); ?>"></script>
     <script defer src="<?php echo $this->baseUrl('/js/libs/js/jquery.lightbox-0.5.js'); ?>"></script>
     
-    <!-- The 'Actual' project scripts-->
+    <?php //The 'Actual' project scripts ?>
     <script defer src="<?php echo $this->baseUrl('/js/plugins.js'); ?>"></script>
     <script defer src="<?php echo $this->baseUrl('/js/script.js'); ?>"></script>
     
-    <!-- This probably needs to be merged with script.js -->
+    <?php //This probably needs to be merged with script.js ?>
     <script defer src="<?php echo $this->baseUrl('/js/contextmenu.js'); ?>"></script>
 </body>
 </html>

@@ -217,23 +217,31 @@ class UserController extends Zend_Controller_Action{
     }
   }
 
+  /**
+   * Sets the current Case of this User based on the request parameter 'case' if the user has
+   * the permission for the case. 
+   */
   public function setCurrentCaseAction(){
+    //@todo should we really replace some stuff here(don't really know what it does), I would think we 
+    //probably should check if it's a number and leave everything else as is
     $caseId = preg_replace('/[^0-9]/', '', $this->getRequest()->getParam('case'));
-
+    $case = null;
     if($caseId){
       $case = $this->_em->getRepository('Application_Model_Case')->findOneById($caseId);
-      if($case){
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        $user->setCurrentCase($case);
 
-        $this->_em->persist($user);
-        $this->_em->flush();
-      }
+      
+        //$result["caseId"] = $caseId;
+        //$result["response"] = "200";
+        //$this->_helper->json($result);
     }
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $user->setCurrentCase($case);
 
-    $result["caseId"] = $caseId;
-    $result["response"] = "200";
-    $this->_helper->json($result);
+    $this->_em->persist($user);
+    $this->_em->flush();
+    
+    $this->_helper->viewRenderer->setNoRender(true);
+    $this->_redirect();
   }
 
   public function resetCurrentCaseAction(){
@@ -246,7 +254,7 @@ class UserController extends Zend_Controller_Action{
     $result["response"] = "200";
     $this->_helper->json($result);
   }
-
+  
   /**
    * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
    * @param String from If defined it selects only users of a specific rank.

@@ -17,44 +17,57 @@
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
   </head>
   <body>
-    <header id="main-header">
-      <div id="settings-panel">
-        <div class="content">
+    <header role="toolbar">
+        <div class="content clearfix">
           <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
-            <div id="avatar"><img src="/images/tmp_avatar.png" /></div>
-            <div id="logout-actions">
-              <?php echo $this->translate("Welcome") . " " . $this->me->getUsername() . "!"; ?>
-              <a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a>
-            </div>
-            <div id="settings">
-              <?php echo $this->translate("Case you're working on"); ?> 
-              <div id="current-case-field">
-                <?php
-                  $value = '';
-                  if($this->me->getCurrentCase() instanceof Application_Model_Case){ 
-                    $value = 'value="' . $this->me->getCurrentCase()->getPublishableName() . '"'; 
-                  }
-                ?>
-                <select>
+            <div class="case-settings-box">
+              <?php
+                $currentLabel = '';
+                $currentValue = null;
+                if($this->me->getCurrentCase() instanceof Application_Model_Case){ 
+                  $currentLabel = $this->me->getCurrentCase()->getPublishableName(); 
+                  $currentValue = $this->me->getCurrentCase()->getId();
+                }
+              ?>
+              <!--<a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>-->
+              <a href="/case/list"><?php echo $this->translate("Edit Cases"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
+              <form class="current-case" method="POST" action="/user/set-current-case">
+                <select name="case">
+                  <?php if($currentLabel===''): ?>
+                  <option><?php echo $this->translate('Please select a Case'); ?></option>
+                  <?php else: ?>
                   <option></option>
+                  <?php endif; ?>
+                  <?php foreach($this->cases as $case): ?>
+                  <option <?php if($case['value']==$currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
+                  <?php endforeach; ?>
                 </select>
-                <input type="text" name="current-case" id="current-case" <?php echo $value; ?> />
-                <a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>
-                <a href="/case/list"><?php echo $this->translate("Case Settings"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
+                <button class="button">Ok</button>  
+              </form>
             </div>
-          <?php else: ?>
-            <div id="login-actions">
-              <a href="/user/register"><?php echo $this->translate("Register now"); ?></a>
-              <?php echo $this->translate('or') . ' '; ?><a href="/auth/login"><?php echo $this->translate("login"); ?></a>
+            <div class="user-box">
+              <img class="avatar" src="/images/default-avatar.png" />
+              <div class="user-menu">
+                <a class="button" href="/user/edit"><span><?php echo $this->me->getUsername(); ?></span><span class="arrow-down"></span></a>
+                <ul>
+                  <li><a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a></li>
+                  <li><a href="/user/edit"><?php echo $this->translate("Edit Profile"); ?></a></li>
+                </ul>
+              </div>
             </div>
-          <?php endif; ?>
-          <div style="clear: both"></div>
-        </div>
-        <span id="dropdown-button" class="arrow-up"></span>
+        <?php else: ?>
+          <div>
+            <a href="/user/register"><?php echo $this->translate("Register now"); ?></a>
+            <span><?php echo $this->translate('or') . ' '; ?></span>
+            <a href="/auth/login"><?php echo $this->translate("login"); ?></a>
+          </div>
+        <?php endif; ?>
       </div>
+      <span id="dropdown-button" class="arrow-up"></span>
     </header>
-    <div id="page">
-      <header id="header" class="clearfix">
+    <div id="page" class="pagewrap">
+      <header role="banner" id="header" class="clearfix">
         <h1 class="ir">Unplagged - The Plagiarism Detection Cockpit</h1>
-        <?php echo $this->navigation()->menu(); ?>
-      </header><?php echo $this->escape($this->title); ?>
+        <nav><?php echo $this->navigation()->menu(); ?></nav>
+      </header>
+      <?php echo $this->escape($this->title); ?>

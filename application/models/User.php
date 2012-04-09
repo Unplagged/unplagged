@@ -146,7 +146,7 @@ class Application_Model_User extends Application_Model_Base{
       $this->created = new DateTime("now");
     }
   }
-
+  
   /**
    * Sets the time of the last update to the current time.
    * 

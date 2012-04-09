@@ -224,13 +224,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'resource'=>'simtext'
           )
         )
-      ), array(
-        'label'=>'Edit profile',
-        'title'=>'Edit profile',
-        'module'=>'default',
-        'controller'=>'user',
-        'action'=>'edit',
-        'resource'=>'edit-profile'
       )
     );
 
