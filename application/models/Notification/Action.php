@@ -23,33 +23,25 @@
  * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
- * @Table(name="log_actions")
+ * @Table(name="notification_actions")
  */
-class Application_Model_Log_Action{
+class Application_Model_Notification_Action {
 
   /**
-   * The logActionId is an unique identifier for each log action.
-   * @var string The log action id.
+   * The id is an unique identifier for each notification type.
+   * @var string The notification type id.
    * 
    * @Id @GeneratedValue @Column(type="integer")
    */
   private $id;
 
   /**
-   * The module for the log acction.
-   * @var string The module.
-   * 
-   * @Column(type="string", length=32)
-   */
-  private $module;
-
-  /**
-   * A title for the log acction.
-   * @var string The usernamee.
+   * A unique name for the notification acction type.
+   * @var string The name of the notification action type.
    * 
    * @Column(type="string", unique="true", length=32)
    */
-  private $title;
+  private $name;
 
   /**
    * A description for the log action.
@@ -60,13 +52,10 @@ class Application_Model_Log_Action{
   private $description;
 
   public function __construct($data = array()){
-    if(isset($data["module"])){
-      $this->module = $data["module"];
+    if(isset($data["name"])){
+      $this->name = $data["name"];
     }
-
-    if(isset($data["title"])){
-      $this->title = $data["title"];
-    }
+    
     if(isset($data["description"])){
       $this->description = $data["description"];
     }
@@ -75,15 +64,11 @@ class Application_Model_Log_Action{
   public function getId(){
     return $this->id;
   }
-
-  public function getModule(){
-    return $this->module;
+  
+  public function getName(){
+    return $this->name;
   }
-
-  public function getTitle(){
-    return $this->title;
-  }
-
+  
   public function getDescription(){
     return $this->description;
   }

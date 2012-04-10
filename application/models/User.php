@@ -25,15 +25,7 @@
  * @Table(name="users")
  * @HasLifeCycleCallbacks
  */
-class Application_Model_User{
-
-  /**
-   * The userId is an unique identifier for each user.
-   * @var string The userId.
-   * 
-   * @Id @GeneratedValue @Column(type="integer")
-   */
-  protected $id;
+class Application_Model_User extends Application_Model_Base{
 
   /**
    * The date when the user registered.
@@ -41,7 +33,7 @@ class Application_Model_User{
    * 
    * @Column(type="datetime")
    */
-  protected $created;
+  private $created;
 
   /**
    * The username, the user account was modified.
@@ -49,7 +41,7 @@ class Application_Model_User{
    * 
    * @Column(type="datetime", nullable=true)
    */
-  protected $updated;
+  private $updated;
 
   /**
    * The username, the user defined as an alias for the account.
@@ -60,7 +52,7 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=32, unique=true)
    */
-  protected $username;
+  private $username;
 
   /**
    * The password the user set up to login to the private area.
@@ -68,7 +60,7 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=32)
    */
-  protected $password;
+  private $password;
 
   /**
    * The email the user set up to login to the private area.
@@ -76,7 +68,7 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=32, unique=true)
    */
-  protected $email;
+  private $email;
 
   /**
    * The users firstname.
@@ -84,7 +76,7 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=64, nullable=true)
    */
-  protected $firstname;
+  private $firstname;
 
   /**
    * The users lastname.
@@ -92,7 +84,7 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=64, nullable=true)
    */
-  protected $lastname;
+  private $lastname;
 
   /**
    * The users registration hash, used to verify the account.
@@ -100,19 +92,25 @@ class Application_Model_User{
    * 
    * @Column(type="string", length=32, unique=true)
    */
-  protected $verificationHash;
+  private $verificationHash;
 
   /**
    * @ManyToOne(targetEntity="Application_Model_User_State")
    * @JoinColumn(name="user_state_id", referencedColumnName="id")
    */
-  protected $state;  
+  private $state;
   
+    /**
+   * @ManyToOne(targetEntity="Application_Model_File")
+   * @JoinColumn(name="user_avatar_id", referencedColumnName="id")
+   */
+  private $avatar;
+
   /**
    * @ManyToOne(targetEntity="Application_Model_Case")
    * @JoinColumn(name="current_case_id", referencedColumnName="id")
    */
-  protected $currentCase;
+  private $currentCase;
 
   public function __construct($data = array()){
     if(isset($data["username"])){
@@ -143,7 +141,7 @@ class Application_Model_User{
       $this->state = $data["state"];
     }
   }
-  
+
   /**
    * Sets the creation time to the current time, if it hasn't been already set.
    * 
@@ -227,13 +225,43 @@ class Application_Model_User{
   public function unsetCurrentCase(){
     $this->currentCase = null;
   }
-  
+
   public function setPassword($password){
     $this->password = $password;
   }
-  
+
   public function setVerificationHash($verificationHash){
     $this->verificationHash = $verificationHash;
+  }
+  
+  public function getAvatar(){
+    if(empty($this->avatar)) {
+     return "/images/default-avatar.png";
+    }
+    
+    return "/image/view/" . $this->avatar->getId();
+  }
+
+  public function getDirectName(){
+    return "user";
+  }
+
+  public function getDirectLink(){
+    return "/user/show/id/" . $this->id;
+  }
+
+  public function getIconClass(){
+    return "user-icon";
+  }
+
+  public function toArray(){
+    $result = array();
+
+    $result["id"] = $this->id;
+    $result["username"] = $this->username;
+    $result["avatar"] = $this->getAvatar();
+    
+    return $result;
   }
 
 }

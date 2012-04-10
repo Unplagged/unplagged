@@ -30,6 +30,9 @@ class IndexController extends Zend_Controller_Action{
   }
 
   public function indexAction(){
+    if($this->_defaultNamespace->userId) {
+      $this->_helper->redirector('recent-stream', 'activity');
+    }
     Zend_Registry::get('Log')->debug('Index');
   }
 

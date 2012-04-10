@@ -39,7 +39,7 @@ class Unplagged_Helper{
   public static function checkStringAndHash($string, $hash){
     return $hash == $this->hashString($string);
   }
-  
+
   /**
    * Gets the appropriate icon for a specific file extension
    * 
@@ -58,6 +58,52 @@ class Unplagged_Helper{
       return 'page_white_zip.png';
     }else{
       return 'page_white_text.png';
+    }
+  }
+
+  /**
+   * Create a new entry in the notification table.
+   * 
+   * @string $type The notification type.
+   * @string $title The element id the notification is related to.
+   * @integer $user The user the notification belongs to.
+   * 
+   */
+  public static function notify($action, $source, $user){
+    $em = Zend_Registry::getInstance()->entitymanager;
+
+    $data = array();
+    $data["action"] = $em->getRepository('Application_Model_Notification_Action')->findOneBy(array('name'=>$action));
+    $data["user"] = $user;
+    $data["source"] = $source;
+
+    $notification = new Application_Model_Notification($data);
+
+    $em->persist($notification);
+    $em->flush();
+  }
+
+  public static function humanTiming(DateTime $dateTime){
+
+    $totaldelay = time() - $dateTime->getTimestamp();
+
+    if($totaldelay <= 0){
+      return '';
+    }else{
+      if($days = floor($totaldelay / 86400)){
+        return $dateTime->format("Y-m-d H:i:s");
+      }
+      if($hours = floor($totaldelay / 3600)){
+        $totaldelay = $totaldelay % 3600;
+        return $hours . ' hours ago';
+      }
+      if($minutes = floor($totaldelay / 60)){
+        $totaldelay = $totaldelay % 60;
+        return $minutes . ' minutes ago';
+      }
+      if($seconds = floor($totaldelay / 1)){
+        return 'less than a minute ago';
+      }
     }
   }
 

@@ -79,9 +79,9 @@ class Application_Form_User_Register extends Zend_Form{
 
     $this->addDisplayGroup(array(
       'email'
+      , 'username'
       , 'password'
       , 'confirmedPassword'
-      , 'username'
         )
         , 'credentialGroup'
         , array('legend'=>'Credential Information')
