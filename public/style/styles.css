@@ -951,19 +951,24 @@ smork-btn a:active { top: 1px; }
 }
 
 /* pagination controls */
-#content ul.pagination {
+.pagination {
   margin: 10px 0 10px 0;
   padding: 0;
   text-align: right;
   float: right;
 }
 
-#content ul.pagination a {
+.pagination li:first-child a{
+  color: #555 !important;
+  text-decoration: none !important;
+}
+
+.pagination a {
   text-decoration: none;
   color: #555;
 }
 
-#content ul.pagination li {
+.pagination li {
   padding: 0;
   margin: 0;
   list-style-type: none;
@@ -971,7 +976,7 @@ smork-btn a:active { top: 1px; }
   float: left;
 }
 
-#content ul.pagination li a {
+.pagination li a {
   background-color: #f7f6f6;
   border: 1px #f3f2f2 solid;
   margin: 0 3px 0 0;
@@ -979,28 +984,27 @@ smork-btn a:active { top: 1px; }
   height: 15px;
   display: block;
 }
-#content ul.pagination li a.numbers {
+.pagination li a.numbers {
   background-color: #FFFFFF;
   margin-top: 2px;
   border: 1px #FFFFFF solid;
 }
-#content ul.pagination li a.numbers:hover {
+
+.pagination li a.numbers:hover {
   background-color: #FFFFFF;
 }
-#content ul.pagination li a.disabled {
+.pagination li a.disabled {
   color: #d8d7d7;
 }
 
-#content ul.pagination li a:hover {
+.pagination li a:hover {
   background-color: #dddcdc;
 }
 
-#content ul.pagination li a.active {
+.pagination li a.active {
   background-color: #484c51;
   color: #ffffff;
 }
-
-
 
 /* ==|== non-semantic helper classes ======================================== */
 .ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; }

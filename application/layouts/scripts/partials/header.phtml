@@ -34,7 +34,7 @@
               <form class="current-case" method="POST" action="/user/set-current-case">
                 <select name="case">
                   <?php if($currentLabel===''): ?>
-                  <option><?php echo $this->translate('Please select a Case'); ?></option>
+                  <option><?php echo $this->translate('Select a Case'); ?></option>
                   <?php else: ?>
                   <option></option>
                   <?php endif; ?>
@@ -63,7 +63,6 @@
           </div>
         <?php endif; ?>
       </div>
-      <span id="dropdown-button" class="arrow-up"></span>
     </header>
     <div id="page" class="pagewrap">
       <header role="banner" id="header" class="clearfix">

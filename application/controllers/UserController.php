@@ -82,6 +82,10 @@ class UserController extends Zend_Controller_Action{
     $this->view->registerForm = $registerForm;
   }
 
+  public function filesAction(){
+    
+  }
+  
   /**
    * Verifies a user by a given hash in database.
    */

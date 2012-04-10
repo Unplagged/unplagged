@@ -125,6 +125,10 @@ class CaseController extends Zend_Controller_Action{
     }
   }
 
+  public function filesAction(){
+    Zend_Registry::get('Log')->debug(BASE_PATH);
+    $this->_helper->viewRenderer(BASE_PATH . '/views/scripts/file/list', null, true);
+  }
 }
 
 ?>

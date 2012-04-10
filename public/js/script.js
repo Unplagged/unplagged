@@ -34,6 +34,9 @@ $(document).ready(function(){
         }, "json");
   }
   
+  var dropdownButton = '<span id="dropdown-button" class="arrow-up"></span>';
+  $('header[role=toolbar]').append(dropdownButton);
+  
   //collapse header line
   $('#dropdown-button').click(function(e) {
     var content = $('header[role=toolbar] .content');
