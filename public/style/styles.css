@@ -1126,7 +1126,7 @@ smork-btn a:active { top: 1px; }
   position: relative;
 }
 
-.comments-wrapper .settings  {
+.comments-wrapper .arrow-wrapper  {
   background-color: #efefef;
   color: white;
   font-size: 12px;
@@ -1134,7 +1134,7 @@ smork-btn a:active { top: 1px; }
   padding-left: 90px;
 }
 
-.comments-wrapper .settings .arrow-down {
+.comments-wrapper .arrow-wrapper .arrow-down {
   position: absolute;
   width: 0;
   border-left: 10px solid transparent;

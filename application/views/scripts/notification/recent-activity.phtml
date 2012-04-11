@@ -24,6 +24,7 @@ $this->headTitle($this->title);
       </div>
     </div>
     <?php echo $this->partial('partials/comments.phtml', array('source' => $notification->getSource(), 'hidden' => true)); ?>
+  </div>
   <?php endforeach; ?>
 </div>
 
