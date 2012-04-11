@@ -33,7 +33,7 @@ class Unplagged_Acl extends Zend_Acl{
     $this->add(new Zend_Acl_Resource('case'));
     $this->add(new Zend_Acl_Resource('document_page'));
     $this->add(new Zend_Acl_Resource('image'));
-    $this->add(new Zend_Acl_Resource('activity'));
+    $this->add(new Zend_Acl_Resource('notification'));
     $this->add(new Zend_Acl_Resource('comment'));
 
     $this->allow('guest', 'index');

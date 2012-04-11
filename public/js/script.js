@@ -31,41 +31,44 @@ function resetCurrentCase(e){
 $(document).ready(function(){
   
   
-  $("#activity-stream .toggle-comments").click(function() {
-    var more = $(this).closest(".activity").siblings('.activity-more');  
-    var target = more.children(".comments");
-    var loading = more.children(".comments-loading");
-    var sourceId = more.children(".write-comment-box").children("input[name='sourceId']").val();
-    
-    if($(this).hasClass("shown")) {
+  $(".toggle-comments").click(function() {
+    var targetId = $(this).attr("for");
+    var target = $("#" + targetId);
+    var comments = target.children(".comments");
+    var loading = target.children(".comments-loading");
+    var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
+
+    if(target.is(':visible')) {
       $(this).html("<span>Show comments</span>");
-      $(this).removeClass("shown");
+      $(this).removeClass("expanded");
+      console.log(target);
       
-      more.slideUp(800, function() {
-        target.html("");
+      target.slideUp(800, function() {
+        comments.html("");
       });
     } else {
+      console.log(target);
       $(this).html("<span>Hide comments</span>");
-      $(this).addClass("shown");
-      more.show();
-      target.hide();
+      $(this).addClass("expanded");
+      target.show();
+      comments.hide();
       loading.slideDown(800, function() {
         $.post('/comment/list', {
           'source': sourceId,
           'format': 'json'
         }, function(data) {
         if(!data.errorcode) {
-          target.html("");
+          comments.html("");
           $.each(data, function() {
-            addComment(this, target);
+            addComment(this, comments);
           });
           loading.slideUp(800, function() {
-            target.slideDown(300);
+            comments.slideDown(300);
           });
         } else {
-        target.html('<div class="comment">' + data.message + '</div>');
+        comments.html('<div class="comment">' + data.message + '</div>');
           loading.slideUp(800, function() {
-            target.slideDown(300);
+            comments.slideDown(300);
           });
         }
         }, "json");
@@ -79,7 +82,7 @@ $(document).ready(function(){
     var source = $(this).closest(".write-comment-box").children("input[name='sourceId']");
     var text = $(this).closest(".write-comment-box").children("input[name='text']");
 
-    var target = $(this).closest('.activity-more').children(".comments");
+    var target = $(this).closest('.comments-wrapper').children(".comments");
     if(text.val()) {
         $.post('/comment/create', {
           'source': source.val(),

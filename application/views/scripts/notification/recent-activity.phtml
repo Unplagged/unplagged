@@ -18,26 +18,12 @@ $this->headTitle($this->title);
             <a href="<?php echo $notification->getSource()->getDirectLink(); ?>"><span>Open <?php echo $notification->getSource()->getDirectName(); ?></span></a>
           </div>
           <div class="smork-btn light comments-icon">
-            <a href="#" class="toggle-comments"><span>Show comments</span></a>
+            <a href="#" for="comments-wrapper-<?php echo $notification->getSource()->getId(); ?>" class="toggle-comments"><span>Show comments</span></a>
           </div>
         </div>
       </div>
     </div>
-    <div class="activity-more">
-      <div class="settings">
-        <div class="arrow-down"></div>
-      </div>
-      <div class="comments-loading"><img src="/images/ajax-loader.gif" alt="" /></div>
-      <div class="comments"></div>
-      <div class="write-comment-box">
-        <input type="text" name="text" placeholder="Write a comment" class="comment-field" />
-        <input type="hidden" name="sourceId" value="<?php echo $notification->getSource()->getId(); ?>" class="comment-field" />
-        <div class="smork-btn light comment-icon">
-          <a href="#" class="write-comment"><span>Write comment</span></a>
-        </div>
-      </div>
-    </div>
-    </div>
+    <?php echo $this->partial('partials/comments.phtml', array('source' => $notification->getSource(), 'hidden' => true)); ?>
   <?php endforeach; ?>
 </div>
 

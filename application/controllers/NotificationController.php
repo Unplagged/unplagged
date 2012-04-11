@@ -23,7 +23,7 @@
  *
  * @author Unplagged Development Team
  */
-class ActivityController extends Zend_Controller_Action{
+class NotificationController extends Zend_Controller_Action{
 
   /**
    * Initalizes registry and namespace instance in the controller and allows to display flash messages in the view.
@@ -36,13 +36,13 @@ class ActivityController extends Zend_Controller_Action{
   }
 
   public function indexAction(){
-      $this->_helper->redirector('recent-stream', 'activity');
+      $this->_helper->redirector('recent-activity', 'notification');
   }
 
   /**
    * Displays a list with the most recent activites related to a user.
    */
-  public function recentStreamAction(){
+  public function recentActivityAction(){
     // @todo: clean input
     $page = $this->_getParam('page');
 
