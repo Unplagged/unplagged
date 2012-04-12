@@ -82,7 +82,19 @@ class UserController extends Zend_Controller_Action{
   }
 
   public function filesAction(){
+    $page = $this->_getParam('page');
+
+    $query = $this->_em->createQuery("SELECT f FROM Application_Model_File f");
+    $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_File f");
+
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+    $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+    $paginator->setCurrentPageNumber($page);
+
+    $this->view->paginator = $paginator;
     
+    //change the view to the one from the file controller
+    $this->_helper->viewRenderer->renderBySpec('list', array('controller' => 'file'));
   }
   
   /**

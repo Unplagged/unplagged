@@ -19,7 +19,7 @@
  */
 
 /**
- * The class represents a user.
+ * This class represents a user of the Unplagged system.
  * 
  * @Entity 
  * @Table(name="users")
@@ -29,6 +29,7 @@ class Application_Model_User extends Application_Model_Base{
 
   /**
    * The date when the user registered.
+   * 
    * @var string The registration date.
    * 
    * @Column(type="datetime")
@@ -36,7 +37,8 @@ class Application_Model_User extends Application_Model_Base{
   private $created;
 
   /**
-   * The username, the user account was modified.
+   * The date when this user got last modified.
+   * 
    * @var string The latest modification date.
    * 
    * @Column(type="datetime", nullable=true)
@@ -45,12 +47,10 @@ class Application_Model_User extends Application_Model_Base{
 
   /**
    * The username, the user defined as an alias for the account.
-   * @var string The usernamee.
    * 
-   * @todo do we need to specify the length? I believe 32 could be a bit short and I heard there are no 
-   * performance issues on mysql when we would use 255
+   * @var string The username.
    * 
-   * @Column(type="string", length=32, unique=true)
+   * @Column(type="string", length=255, unique=true)
    */
   private $username;
 
@@ -100,7 +100,7 @@ class Application_Model_User extends Application_Model_Base{
    */
   private $state;
   
-    /**
+  /**
    * @ManyToOne(targetEntity="Application_Model_File")
    * @JoinColumn(name="user_avatar_id", referencedColumnName="id")
    */
@@ -112,6 +112,15 @@ class Application_Model_User extends Application_Model_Base{
    */
   private $currentCase;
 
+  /**
+   * @ManyToMany(targetEntity="Application_Model_File") 
+   * @JoinTable(name="user_has_file",
+   *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="file_id", referencedColumnName="id")}
+   *      )
+   */
+  private $files;
+  
   public function __construct($data = array()){
     if(isset($data["username"])){
       $this->username = $data["username"];
@@ -140,6 +149,8 @@ class Application_Model_User extends Application_Model_Base{
     if(isset($data["state"])){
       $this->state = $data["state"];
     }
+    
+    $this->files = new \Doctrine\Common\Collections\ArrayCollection();
   }
 
   /**
@@ -230,6 +241,22 @@ class Application_Model_User extends Application_Model_Base{
     $this->password = $password;
   }
 
+  public function addFile(Application_Model_File $file){
+    return $this->files->add($file);
+  }
+  
+  public function removeFile(Application_Model_File $file){
+    return $this->file->removeElement($file);
+  }
+  
+  public function getFiles(){
+    return $this->files;
+  }
+  
+  public function clearFiles(){
+    $this->files->clear();
+  }
+  
   public function setVerificationHash($verificationHash){
     $this->verificationHash = $verificationHash;
   }

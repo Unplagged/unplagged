@@ -27,7 +27,7 @@
             <h2>Class Coverage Distribution</h2>
             <canvas id="classCoverageDistribution" width="475" height="200"></canvas>
             <script>
-            var ccd = new RGraph.Bar('classCoverageDistribution', [26,0,0,2,0,1,2,1,3,2,0,4]);
+            var ccd = new RGraph.Bar('classCoverageDistribution', [26,5,2,1,2,0,1,1,1,3,0,2]);
             ccd.Set('chart.background.barcolor1', 'white');
             ccd.Set('chart.background.barcolor2', 'white');
             ccd.Set('chart.colors', ['blue']);
@@ -44,7 +44,7 @@
             <h2>Class Complexity</h2>
             <canvas id="classComplexity" width="475" height="200"></canvas>
             <script>
-            var cc = new RGraph.Scatter('classComplexity', [[28.571428571429,9,"blue","AuthController"],[0,15,"blue","CaseController"],[0,30,"blue","Document_PageController"],[0,15,"blue","DocumentController"],[0,10,"blue","ErrorController"],[0,25,"blue","FileController"],[0,12,"blue","ImageController"],[100,2,"blue","IndexController"],[0,8,"blue","SimtextController"],[0,6,"blue","TagController"],[0,23,"blue","UserController"],[57.692307692308,16,"blue","Application_Model_Case"],[41.176470588235,9,"blue","Application_Model_Document"],[0,10,"blue","Application_Model_Document_Page"],[0,21,"blue","Application_Model_Document_Page_DetectionReport"],[25.641025641026,22,"blue","Application_Model_File"],[76.470588235294,10,"blue","Application_Model_Log"],[100,8,"blue","Application_Model_Log_Action"],[0,4,"blue","Application_Model_Tag"],[0,0,"blue","Application_Model_Upload"],[71.428571428571,27,"blue","Application_Model_User"],[100,6,"blue","Application_Model_User_State"],[60,4,"blue","Unplagged_AccessControl"],[100,1,"blue","Unplagged_Acl"],[0,14,"blue","Unplagged_Auth_Adapter_Doctrine"],[0,1,"blue","Unplagged_Dao_Log"],[0,1,"blue","Unplagged_Detector"],[0,8,"blue","Unplagged_Detector_PlagAware"],[50,3,"blue","Unplagged_Helper"],[0,3,"blue","Unplagged_Mailer"],[0,3,"blue","Unplagged_Paginator_Adapter_DoctrineQuery"],[0,2,"blue","Unplagged_Parser"],[0,3,"blue","Unplagged_Parser_Document_ImageParser"],[84,9,"blue","Unplagged_Parser_Document_ImagemagickAdapter"],[0,2,"blue","Unplagged_Parser_Document_TesseractParser"],[87.096774193548,11,"blue","Unplagged_Parser_Page_TesseractAdapter"],[70.588235294118,3,"blue","Unplagged_Parser_Page_TesseractParser"],[0,9,"blue","Unplagged_Simtext_SimtextAdapter"],[0,5,"blue","Unplagged_Simtext_SimtextRun"],[0,14,"blue","Zend_Validate_Member"],[0,3,"blue","Unplagged_Validate_NoRecordExists"]]);
+            var cc = new RGraph.Scatter('classComplexity', [[28.571428571429,9,"blue","AuthController"],[0,16,"blue","CaseController"],[0,8,"blue","CommentController"],[0,30,"blue","Document_PageController"],[0,15,"blue","DocumentController"],[0,10,"blue","ErrorController"],[0,25,"blue","FileController"],[0,12,"blue","ImageController"],[80,3,"blue","IndexController"],[0,6,"blue","NotificationController"],[0,8,"blue","SimtextController"],[0,6,"blue","TagController"],[0,33,"blue","UserController"],[0,6,"blue","Application_Model_Base"],[31.25,29,"blue","Application_Model_Case"],[2.9411764705882,16,"blue","Application_Model_Comment"],[35,12,"blue","Application_Model_Document"],[4.5454545454545,13,"blue","Application_Model_Document_Page"],[2.3255813953488,24,"blue","Application_Model_Document_Page_DetectionReport"],[19.607843137255,29,"blue","Application_Model_File"],[2.1739130434783,24,"blue","Application_Model_Notification"],[0,6,"blue","Application_Model_Notification_Action"],[11.111111111111,7,"blue","Application_Model_Tag"],[51.428571428571,39,"blue","Application_Model_User"],[100,6,"blue","Application_Model_User_State"],[60,4,"blue","Unplagged_AccessControl"],[100,1,"blue","Unplagged_Acl"],[0,14,"blue","Unplagged_Auth_Adapter_Doctrine"],[0,1,"blue","Unplagged_Detector"],[0,8,"blue","Unplagged_Detector_PlagAware"],[5.8823529411765,20,"blue","Unplagged_Helper"],[0,5,"blue","Unplagged_Mailer"],[0,3,"blue","Unplagged_Paginator_Adapter_DoctrineQuery"],[0,2,"blue","Unplagged_Parser"],[0,3,"blue","Unplagged_Parser_Document_ImageParser"],[84,9,"blue","Unplagged_Parser_Document_ImagemagickAdapter"],[0,2,"blue","Unplagged_Parser_Document_TesseractParser"],[87.096774193548,11,"blue","Unplagged_Parser_Page_TesseractAdapter"],[70.588235294118,3,"blue","Unplagged_Parser_Page_TesseractParser"],[0,9,"blue","Unplagged_Simtext_SimtextAdapter"],[0,5,"blue","Unplagged_Simtext_SimtextRun"],[0,14,"blue","Zend_Validate_Member"],[0,3,"blue","Unplagged_Validate_NoRecordExists"],[0,3,"blue","Unplagged_Validate_RecordExists"]]);
             cc.Set('chart.xmax', 100);
             cc.Set('chart.background.barcolor1', 'white');
             cc.Set('chart.background.barcolor2', 'white');
@@ -61,15 +61,15 @@
             <h2>Top Project Risks</h2>
             <ul>
               <li><a href="library_Unplagged_Simtext_SimtextRun.php.html#11">Unplagged_Simtext_SimtextRun</a> (30)</li>
-              <li><a href="application_models_Document.php.html#32">Application_Model_Document</a> (25)</li>
+              <li><a href="library_Unplagged_Validate_RecordExists.php.html#13">Unplagged_Validate_RecordExists</a> (12)</li>
               <li><a href="library_Unplagged_Parser_Document_ImageParser.php.html#11">Unplagged_Parser_Document_ImageParser</a> (12)</li>
               <li><a href="library_Unplagged_Validate_NoRecordExists.php.html#13">Unplagged_Validate_NoRecordExists</a> (12)</li>
-              <li><a href="application_models_Log.php.html#32">Application_Model_Log</a> (11)</li>
               <li><a href="library_Unplagged_Parser_Page_TesseractAdapter.php.html#11">Unplagged_Parser_Page_TesseractAdapter</a> (11)</li>
               <li><a href="library_Unplagged_Parser_Document_ImagemagickAdapter.php.html#9">Unplagged_Parser_Document_ImagemagickAdapter</a> (9)</li>
               <li><a href="library_Unplagged_Parser.php.html#13">Unplagged_Parser</a> (6)</li>
               <li><a href="library_Unplagged_AccessControl.php.html#12">Unplagged_AccessControl</a> (5)</li>
               <li><a href="library_Unplagged_Parser_Page_TesseractParser.php.html#11">Unplagged_Parser_Page_TesseractParser</a> (3)</li>
+              <li><a href="application_controllers_IndexController.php.html#24">IndexController</a> (3)</li>
 
             </ul>
           </td>
@@ -77,16 +77,16 @@
           <td valign="top">
             <h2>Least Tested Methods</h2>
             <ul>
-              <li><a href="application_models_Tag.php.html#62">Application_Model_Tag::getId</a> (0%)</li>
-              <li><a href="application_models_Tag.php.html#70">Application_Model_Tag::getTitle</a> (0%)</li>
-              <li><a href="application_models_Tag.php.html#79">Application_Model_Tag::setTitle</a> (0%)</li>
-              <li><a href="application_models_User.php.html#152">Application_Model_User::created</a> (0%)</li>
-              <li><a href="application_models_Tag.php.html#55">Application_Model_Tag::__construct</a> (0%)</li>
-              <li><a href="application_models_Log.php.html#98">Application_Model_Log::getCreated</a> (0%)</li>
-              <li><a href="application_models_File.php.html#208">Application_Model_File::setExtension</a> (0%)</li>
-              <li><a href="application_models_Log.php.html#76">Application_Model_Log::created</a> (0%)</li>
-              <li><a href="application_models_Log.php.html#94">Application_Model_Log::getId</a> (0%)</li>
-              <li><a href="application_models_User.php.html#163">Application_Model_User::updated</a> (0%)</li>
+              <li><a href="application_models_Notification.php.html#113">Application_Model_Notification::getTitle</a> (0%)</li>
+              <li><a href="application_models_Notification.php.html#109">Application_Model_Notification::getIconClass</a> (0%)</li>
+              <li><a href="application_models_Notification.php.html#128">Application_Model_Notification::getMessage</a> (0%)</li>
+              <li><a href="application_models_Notification_Action.php.html#54">Application_Model_Notification_Action::__construct</a> (0%)</li>
+              <li><a href="application_models_Notification_Action.php.html#68">Application_Model_Notification_Action::getName</a> (0%)</li>
+              <li><a href="application_models_Notification_Action.php.html#64">Application_Model_Notification_Action::getId</a> (0%)</li>
+              <li><a href="application_models_Notification.php.html#105">Application_Model_Notification::getDirectLink</a> (0%)</li>
+              <li><a href="application_models_Notification.php.html#101">Application_Model_Notification::getDirectName</a> (0%)</li>
+              <li><a href="application_models_Notification.php.html#71">Application_Model_Notification::__construct</a> (0%)</li>
+              <li><a href="application_models_Notification.php.html#67">Application_Model_Notification::created</a> (0%)</li>
 
             </ul>
           </td>
@@ -98,7 +98,7 @@
 
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr><td class="ruler"><img src="glass.png" width="3" height="3" alt=""></td></tr>
-      <tr><td class="versionInfo">Generated by <a href="http://github.com/sebastianbergmann/php-code-coverage" target="_top">PHP_CodeCoverage 1.0.4</a> using <a href="http://www.php.net/" target="_top">PHP 5.3.8</a> and PHPUnit 3.5.14 at Thu Mar 22 19:09:43 CET 2012.</td></tr>
+      <tr><td class="versionInfo">Generated by <a href="http://github.com/sebastianbergmann/php-code-coverage" target="_top">PHP_CodeCoverage 1.0.4</a> using <a href="http://www.php.net/" target="_top">PHP 5.3.8</a> and PHPUnit 3.5.14 at Thu Apr 12 17:37:43 CEST 2012.</td></tr>
     </table>
 
     <br/>

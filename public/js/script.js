@@ -89,32 +89,6 @@ $(document).ready(function(){
             target.append(tpl);
   }
   
-  // current case auto completion and reset
-  $('#current-case').focus(autoCompleteCurrentCase);
-  $('#current-case-field .clear').click(resetCurrentCase);
-  
-  function autoCompleteCurrentCase(e){   
-    var inputField = $('#current-case');
-    inputField.autocomplete({
-      source: '/case/autocomplete-alias',
-      select: function(e, element) {
-        /* @todo: make sure to allow only selection of valid cases */
-        $.post('/user/set-current-case', {
-          'case': element.item.value
-        }, function(data) {
-        }, "json");
-        inputField.val(element.item.label);
-        return false;
-      }
-    });
-  }
-
-  function resetCurrentCase(e){   
-    $.post('/user/reset-current-case', {}, function(data) {
-          $('#current-case').val('');
-        }, "json");
-  }
-  
   var dropdownButton = '<span id="dropdown-button" class="arrow-up"></span>';
   $('header[role=toolbar]').append(dropdownButton);
   

@@ -53,6 +53,7 @@ abstract class Application_Model_Base{
 
   /**
    * The base element comments.
+   * 
    * @var string The base element comments.
    * 
    * @OneToMany(targetEntity="Application_Model_Comment", mappedBy="source")
@@ -74,7 +75,7 @@ abstract class Application_Model_Base{
    */
   abstract public function getDirectLink();
   
-    /**
+  /**
    * Returns a direct name of the type of element. 
    */
   abstract public function getDirectName();

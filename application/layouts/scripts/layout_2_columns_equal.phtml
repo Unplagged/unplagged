@@ -1,31 +1,18 @@
 <?php
 $defaultNamespace = new Zend_Session_Namespace('Default');
+$layout = $this->layout();
 ?>
 <?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace)); ?>
-
-  <div id="content" class="clearfix layout-2-columns-equal">
-    <div class="main">
-      <h2><?php echo $this->escape($this->title); ?></h2>
-      <div id="main">
-        <?php
-        if(!empty($this->flashMessages)){
-          echo '<div class="flash-messages">';
-
-          //@todo maybe switch to ul?
-          foreach($this->flashMessages as $key=>$value){
-            echo $this->translate($value) . "<br />";
-          }
-          echo '</div>';
-        }
-
-        // content from each view, the rest of this page is global to all views
-        echo $this->layout()->content;
-        ?>
-      </div>
-    </div>
-    <div id="sub">
-      <img src="/images/tmp_submenu.png" alt="" />
+<div role="main" id="content" class="clearfix layout-2-columns-equal">
+  <?php echo $this->partial('partials/messages.phtml', array('defaultNamespace'=>$defaultNamespace, 'flashMessages'=>$this->flashMessages)); ?>
+  <h2><?php echo $this->escape($this->title); ?></h2>
+  <div class="first left">
+    <div id="main">
+      <?php echo $layout->firstContent; ?>
     </div>
   </div>
-
-  <?php echo $this->partial('partials/footer.phtml'); ?>
+  <div class="second right">
+    <?php echo $layout->secondContent; ?>
+  </div>
+</div>
+<?php echo $this->partial('partials/footer.phtml'); ?>

@@ -211,7 +211,7 @@ class Application_Model_Case extends Application_Model_Base{
     $this->collaborators->clear();
   }
   
-    public function addFile(Application_Model_File $file){
+  public function addFile(Application_Model_File $file){
     return $this->files->add($file);
   }
   
@@ -225,7 +225,6 @@ class Application_Model_Case extends Application_Model_Base{
   
   public function clearFiles(){
     $this->files->clear();
-
   }
 
   public function getDirectName(){

@@ -10,10 +10,8 @@ $this->headTitle($this->title);
     <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
   </tr>
 
-  <?php
-  $i = 0;
-  foreach($this->paginator as $file):
-    ?>
+  <?php $i = 0; ?>
+  <?php foreach($this->paginator as $file): ?>
     <tr <?php echo ($i++ % 2 == 0) ? 'class="even"' : ""; ?>>
       <td>
           <img class="icon" src="<?php echo $this->baseUrl('images/icons/' . Unplagged_Helper::getFileIconByExtenstion($file->getExtension()));?>" />
