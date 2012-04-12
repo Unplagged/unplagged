@@ -52,15 +52,6 @@ class Application_Model_Case extends Application_Model_Base{
   private $state = '';
 
   /**
-   * The date when the document was created.
-   * 
-   * @var string The creation date.
-   * 
-   * @Column(type="datetime")
-   */
-  private $created;
-
-  /**
    * The date when the document was updated the last time.
    * 
    * @var string The update date.
@@ -112,15 +103,6 @@ class Application_Model_Case extends Application_Model_Base{
     $this->collaborators = new \Doctrine\Common\Collections\ArrayCollection();
     $this->name = $name;
     $this->alias = $alias;
-  }
-
-  /**
-   * Method auto-called when object is persisted to database for the first time.
-   * 
-   * @PrePersist
-   */
-  public function created(){
-    $this->created = new DateTime("now");
   }
 
   /**

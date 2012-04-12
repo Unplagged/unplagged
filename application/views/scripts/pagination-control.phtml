@@ -1,6 +1,6 @@
 
 <?php if ($this->pageCount): ?>
-<ul class="pagination">
+<ul class="pagination clearfix">
 <li><a class="numbers"><?php echo $this->firstItemNumber; ?> - <?php echo $this->lastItemNumber; ?> <?php echo $this->translate("of"); ?> <?php echo $this->totalItemCount; ?> &nbsp;</a></li>
  
 <!-- First page link -->
@@ -52,5 +52,5 @@
   <li><a class="disabled">»|</a></li>
 <?php endif; ?>
  
-</ul><br style="clear: both" />
+</ul>
 <?php endif; ?>

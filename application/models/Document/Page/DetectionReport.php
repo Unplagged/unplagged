@@ -29,14 +29,6 @@
 class Application_Model_Document_Page_DetectionReport extends Application_Model_Base{
 
   /**
-   * The date when the file was uploaded.
-   * @var string The upload date.
-   * 
-   * @Column(type="datetime")
-   */
-  private $created;
-
-  /**
    * The percentage of plagiarism in this page.
    * @var integer The percentage of plagiarism.
    * 
@@ -102,15 +94,6 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
 
   public function getId(){
     return $this->id;
-  }
-
-  /**
-   * Method auto-called when object is persisted to database for the first time.
-   * 
-   * @PrePersist
-   */
-  public function created(){
-    $this->created = new DateTime("now");
   }
 
   public function getContent(){

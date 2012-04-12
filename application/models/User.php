@@ -28,15 +28,6 @@
 class Application_Model_User extends Application_Model_Base{
 
   /**
-   * The date when the user registered.
-   * 
-   * @var string The registration date.
-   * 
-   * @Column(type="datetime")
-   */
-  private $created;
-
-  /**
    * The date when this user got last modified.
    * 
    * @var string The latest modification date.
@@ -151,17 +142,6 @@ class Application_Model_User extends Application_Model_Base{
     }
     
     $this->files = new \Doctrine\Common\Collections\ArrayCollection();
-  }
-
-  /**
-   * Sets the creation time to the current time, if it hasn't been already set.
-   * 
-   * @PrePersist
-   */
-  public function created(){
-    if($this->created == null){
-      $this->created = new DateTime("now");
-    }
   }
   
   /**

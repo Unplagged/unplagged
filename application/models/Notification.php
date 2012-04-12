@@ -51,23 +51,6 @@ class Application_Model_Notification extends Application_Model_Base{
    */
   private $source;
 
-  /**
-   * The date when the log entry was created.
-   * @var string The creation date.
-   *
-   * @Column(type="datetime")
-   */
-  private $created;
-
-  /**
-   * Method auto-called when object is persisted to database for the first time.
-   *
-   * @PrePersist
-   */
-  public function created(){
-    $this->created = new DateTime("now");
-  }
-
   public function __construct($data = array()){
     if(isset($data["user"])){
       $this->user = $data["user"];
