@@ -1127,13 +1127,12 @@ smork-btn a:active { top: 1px; }
   font-size: 12px;
 }
 
-#activity-stream .activity-more {
+.comments-wrapper {
   background-color: #efefef;
   position: relative;
-  display: none;
 }
 
-#activity-stream .activity-more .settings  {
+.comments-wrapper .arrow-wrapper  {
   background-color: #efefef;
   color: white;
   font-size: 12px;
@@ -1141,7 +1140,7 @@ smork-btn a:active { top: 1px; }
   padding-left: 90px;
 }
 
-#activity-stream .activity-more .settings .arrow-down {
+.comments-wrapper .arrow-wrapper .arrow-down {
   position: absolute;
   width: 0;
   border-left: 10px solid transparent;
@@ -1152,36 +1151,34 @@ smork-btn a:active { top: 1px; }
   margin-left: 15px;
 }
 
-
-
-#activity-stream .activity-more .comment-field {
+.comments-wrapper .comment-field {
   font-size: 10px;
   border: 1px #888C95 solid;
   width: 200px;
   padding: 4px;
 }
 
-#activity-stream .activity-more .comments-loading {
+.comments-wrapper .comments-loading {
   display: none;
   padding: 10px;
   text-align: center;
 }
 
-#activity-stream .activity-more .comments .comment,
-#activity-stream .activity-more .write-comment-box {
+.comments-wrapper .comments .comment,
+.comments-wrapper .write-comment-box {
   border-bottom: 1px white solid;
   padding: 10px 10px 10px 90px;
 }
 
-#activity-stream .activity-more .comments .comment .image {
+.comments-wrapper .comments .comment .image {
     width: 50px;
   position: absolute;
 }
-#activity-stream .activity-more .comments .comment .details {
+.comments-wrapper .comments .comment .details {
     margin-left: 50px;
   min-height: 50px;
 }
-#activity-stream .activity-more .comments .comment .details .date {
+.comments-wrapper .comments .comment .details .date {
   color: #a4a2a2;
 }
 
@@ -1195,7 +1192,6 @@ smork-btn a:active { top: 1px; }
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; }
-
 
 /* ==|== media queries ====================================================== */
 

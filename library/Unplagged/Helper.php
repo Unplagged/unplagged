@@ -87,7 +87,7 @@ class Unplagged_Helper{
 
     $totaldelay = time() - $dateTime->getTimestamp();
 
-    if($totaldelay <= 0){
+    if($totaldelay < 0){
       return '';
     }else{
       if($days = floor($totaldelay / 86400)){
@@ -101,9 +101,7 @@ class Unplagged_Helper{
         $totaldelay = $totaldelay % 60;
         return $minutes . ' minutes ago';
       }
-      if($seconds = floor($totaldelay / 1)){
-        return 'less than a minute ago';
-      }
+      return 'less than a minute ago';
     }
   }
 
