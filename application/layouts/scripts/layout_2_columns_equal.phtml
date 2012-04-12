@@ -1,9 +1,29 @@
 <?php
 $defaultNamespace = new Zend_Session_Namespace('Default');
-$layout = $this->layout();
+$em = Zend_Registry::getInstance()->entitymanager;
+if($defaultNamespace->userId){
+  $me = $em->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
+}else{
+  $me = null;
+}
+
+// had to remove function because it somehow was included twice here
+$qb = $em->createQueryBuilder();
+$qb->add('select', "c.id AS value, c.alias AS label")
+    ->add('from', 'Application_Model_Case c');
+
+$dbresults = $qb->getQuery()->getResult();
+$results = array();
+
+foreach($dbresults as $value){
+  $results[] = $value;
+}
+ 
+$cases = $results;
+
 ?>
-<?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace)); ?>
-<div role="main" id="content" class="clearfix layout-2-columns-equal">
+<?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace, 'me'=>$me, 'cases'=>$cases)); ?>
+<div role="main" class="clearfix layout-2-columns-equal">
   <?php echo $this->partial('partials/messages.phtml', array('defaultNamespace'=>$defaultNamespace, 'flashMessages'=>$this->flashMessages)); ?>
   <h2><?php echo $this->escape($this->title); ?></h2>
   <div class="first left">

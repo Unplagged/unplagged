@@ -112,17 +112,7 @@ p {
   -moz-border-radius: 3px;
   border-radius: 3px;
   text-decoration: none;
-  line-height: 22px;
-  
-  background: #f2f6f8; /* Old browsers */
-  background: -moz-linear-gradient(top,  #f2f6f8 0%, #f5f5f5 50%, #b5c6d0 51%, #f5f5f5 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f6f8), color-stop(50%,#f5f5f5), color-stop(51%,#b5c6d0), color-stop(100%,#f5f5f5)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #f2f6f8 0%,#f5f5f5 50%,#b5c6d0 51%,#f5f5f5 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #f2f6f8 0%,#f5f5f5 50%,#b5c6d0 51%,#f5f5f5 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #f2f6f8 0%,#f5f5f5 50%,#b5c6d0 51%,#f5f5f5 100%); /* IE10+ */
-  background: linear-gradient(top,  #f2f6f8 0%,#f5f5f5 50%,#b5c6d0 51%,#f5f5f5 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#f5f5f5',GradientType=0 ); /* IE6-9 */
-  
+  line-height: 22px;  
   color: #8B8F91;
 }
 
@@ -173,10 +163,14 @@ header[role=toolbar] a {
   color: #8b8f91;
 }
 
+header[role=toolbar] a:hover{
+  text-decoration: none;
+}
+
 .user-box {
   float: left;
   position: relative;
-  padding-left: 60px;
+  padding-left: 60px; /* space for the absolute positioned avatar */
 }
 
 .user-box .avatar{
@@ -714,9 +708,10 @@ dl.zend_form dd dt {
 smork-btn a:active { top: 1px; }
 
 .flash-messages {
+  list-style-type: none;
   background: #fefabf;
+  margin-top: 0;
   padding: 6px;
-  margin: 5px 10px 5px 0;
 }
 
 .document-page {

@@ -18,43 +18,42 @@
   </head>
   <body>
     <header role="toolbar">
-        <div class="content clearfix">
-          <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
-            <div class="case-settings-box">
-              <?php
-                $currentLabel = '';
-                $currentValue = null;
-                if($this->me->getCurrentCase() instanceof Application_Model_Case){ 
-                  $currentLabel = $this->me->getCurrentCase()->getPublishableName(); 
-                  $currentValue = $this->me->getCurrentCase()->getId();
-                }
-              ?>
-              <!--<a href="#" title="<?php echo $this->translate("Unset current case"); ?>" class="clear">x</a></div>-->
-              <a href="/case/list"><?php echo $this->translate("Edit Cases"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
-              <form class="current-case" method="POST" action="/user/set-current-case">
-                <select name="case">
-                  <?php if($currentLabel===''): ?>
+      <div class="content clearfix">
+        <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
+          <div class="case-settings-box">
+            <?php
+            $currentLabel = '';
+            $currentValue = null;
+            if($this->me->getCurrentCase() instanceof Application_Model_Case){
+              $currentLabel = $this->me->getCurrentCase()->getPublishableName();
+              $currentValue = $this->me->getCurrentCase()->getId();
+            }
+            ?>
+            <a href="/case/list"><?php echo $this->translate("Edit Cases"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
+            <form class="current-case" method="POST" action="/user/set-current-case">
+              <select name="case">
+                <?php if($currentLabel === ''): ?>
                   <option><?php echo $this->translate('Select a Case'); ?></option>
-                  <?php else: ?>
+                <?php else: ?>
                   <option></option>
-                  <?php endif; ?>
-                  <?php foreach($this->cases as $case): ?>
-                  <option <?php if($case['value']==$currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
-                  <?php endforeach; ?>
-                </select>
-                <button class="button">Ok</button>  
-              </form>
+                <?php endif; ?>
+                <?php foreach($this->cases as $case): ?>
+                  <option <?php if($case['value'] == $currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
+                <?php endforeach; ?>
+              </select>
+              <button class="button">Ok</button>  
+            </form>
+          </div>
+          <div class="user-box">
+            <img class="avatar" src="<?php echo $this->me->getAvatar(); ?>" />
+            <div class="user-menu">
+              <a class="button" href="/user/edit"><span><?php echo $this->me->getUsername(); ?></span><span class="arrow-down"></span></a>
+              <ul>
+                <li><a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a></li>
+                <li><a href="/user/edit"><?php echo $this->translate("Edit Profile"); ?></a></li>
+              </ul>
             </div>
-            <div class="user-box">
-              <img class="avatar" src="<?php echo $this->me->getAvatar(); ?>" />
-              <div class="user-menu">
-                <a class="button" href="/user/edit"><span><?php echo $this->me->getUsername(); ?></span><span class="arrow-down"></span></a>
-                <ul>
-                  <li><a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a></li>
-                  <li><a href="/user/edit"><?php echo $this->translate("Edit Profile"); ?></a></li>
-                </ul>
-              </div>
-            </div>
+          </div>
         <?php else: ?>
           <div>
             <a href="/user/register"><?php echo $this->translate("Register now"); ?></a>

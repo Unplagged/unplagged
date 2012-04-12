@@ -1,10 +1,7 @@
 <?php if(!empty($this->flashMessages)): ?>
-  <div class="flash-messages">
-    <?php 
-      //@todo maybe switch to ul?
-      foreach($this->flashMessages as $key=>$value){
-        echo $this->translate($value) . "<br />";
-      }
-    ?>
-  </div>
+  <ul class="flash-messages">
+    <?php foreach($this->flashMessages as $value): ?>
+      <li><?php echo $this->translate($value); ?></li>
+    <?php endforeach; ?>
+  </ul>
 <?php endif; ?>
