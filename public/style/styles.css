@@ -241,6 +241,11 @@ header[role=toolbar] a {
   padding-right: 5px;
 }
 
+/* if js is active it handles the submit on change, so no button is needed */
+.js .case-settings-box button {
+  display: none;
+}
+
 /* ==|== banner styles(logo and nav) ======================================================= */
 header[role=banner] {
   position: relative;
