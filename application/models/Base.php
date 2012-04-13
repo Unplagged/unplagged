@@ -39,7 +39,9 @@
  * ,"detection_report" = "Application_Model_Document_Page_DetectionReport"
  * ,"comment" = "Application_Model_Comment"
  * ,"tag" = "Application_Model_Tag"
- * ,"notification" = "Application_Model_Notification"})
+ * ,"notification" = "Application_Model_Notification"
+ * ,"document_fragment" = "Application_Model_Document_Fragment"
+ * ,"document_page_position" = "Application_Model_Document_Page_Position"})
  * 
  */
 abstract class Application_Model_Base{
