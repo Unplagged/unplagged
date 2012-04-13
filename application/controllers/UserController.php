@@ -81,6 +81,37 @@ class UserController extends Zend_Controller_Action{
     $this->view->registerForm = $registerForm;
   }
 
+  public function filesAction(){
+    $page = $this->_getParam('page');
+
+    $userId = $this->_defaultNamespace->userId;
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($userId);
+    $userFiles = $user->getFiles();
+    
+    $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($userFiles->toArray()));
+    $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+    $paginator->setCurrentPageNumber($page);
+
+    $this->view->paginator = $paginator;
+    
+    //change the view to the one from the file controller
+    $this->_helper->viewRenderer->renderBySpec('list', array('controller' => 'file'));
+  }
+  
+  public function addFileAction(){
+    $this->_helper->viewRenderer->setNoRender(true);
+    
+    $fileId = $this->_getParam('id');
+    $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
+    
+    $userId = $this->_defaultNamespace->userId;
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($userId);
+    
+    $user->addFile($file);
+    $this->_em->persist($user);
+    $this->_em->flush();
+  }
+  
   /**
    * Verifies a user by a given hash in database.
    */

@@ -1,31 +1,38 @@
 <?php
 $defaultNamespace = new Zend_Session_Namespace('Default');
+$em = Zend_Registry::getInstance()->entitymanager;
+if($defaultNamespace->userId){
+  $me = $em->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
+}else{
+  $me = null;
+}
+
+// had to remove function because it somehow was included twice here
+$qb = $em->createQueryBuilder();
+$qb->add('select', "c.id AS value, c.alias AS label")
+    ->add('from', 'Application_Model_Case c');
+
+$dbresults = $qb->getQuery()->getResult();
+$results = array();
+
+foreach($dbresults as $value){
+  $results[] = $value;
+}
+ 
+$cases = $results;
+
 ?>
-<?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace)); ?>
-
-  <div id="content" class="clearfix layout-2-columns-equal">
-    <div class="main">
-      <h2><?php echo $this->escape($this->title); ?></h2>
-      <div id="main">
-        <?php
-        if(!empty($this->flashMessages)){
-          echo '<div class="flash-messages">';
-
-          //@todo maybe switch to ul?
-          foreach($this->flashMessages as $key=>$value){
-            echo $this->translate($value) . "<br />";
-          }
-          echo '</div>';
-        }
-
-        // content from each view, the rest of this page is global to all views
-        echo $this->layout()->content;
-        ?>
-      </div>
-    </div>
-    <div id="sub">
-      <img src="/images/tmp_submenu.png" alt="" />
+<?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace, 'me'=>$me, 'cases'=>$cases)); ?>
+<div role="main" class="clearfix layout-2-columns-equal">
+  <?php echo $this->partial('partials/messages.phtml', array('defaultNamespace'=>$defaultNamespace, 'flashMessages'=>$this->flashMessages)); ?>
+  <h2><?php echo $this->escape($this->title); ?></h2>
+  <div class="first left">
+    <div id="main">
+      <?php echo $layout->firstContent; ?>
     </div>
   </div>
-
-  <?php echo $this->partial('partials/footer.phtml'); ?>
+  <div class="second right">
+    <?php echo $layout->secondContent; ?>
+  </div>
+</div>
+<?php echo $this->partial('partials/footer.phtml'); ?>

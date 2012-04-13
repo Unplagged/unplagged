@@ -1,0 +1,7 @@
+<?php if(!empty($this->flashMessages)): ?>
+  <ul class="flash-messages">
+    <?php foreach($this->flashMessages as $value): ?>
+      <li><?php echo $this->translate($value); ?></li>
+    <?php endforeach; ?>
+  </ul>
+<?php endif; ?>

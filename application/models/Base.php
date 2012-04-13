@@ -21,6 +21,7 @@
 /**
  * The class represents a base class for any type of item that can receive 
  * comments or can be the source of a notification.
+ * 
  * It defines also the structure of the database table for the ORM.
  *
  * @author Benjamin Oertel <benjamin.oertel@me.com>
@@ -54,14 +55,23 @@ abstract class Application_Model_Base{
   protected $id;
 
   /**
+   * The date when the user registered.
+   * 
+   * @var string The registration date.
+   * 
+   * @Column(type="datetime")
+   */
+  protected $created;
+  
+  /**
    * The base element comments.
+   * 
    * @var string The base element comments.
    * 
    * @OneToMany(targetEntity="Application_Model_Comment", mappedBy="source")
    * @JoinColumn(name="comment_id", referencedColumnName="id")
    */
   private $comments;
-  
   
   public function __construct(){
     $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
@@ -72,11 +82,24 @@ abstract class Application_Model_Base{
   }
   
   /**
+   * Sets the creation time to the current time, if it is null.
+   * 
+   * This will normally be auto called the first time the object is persisted by doctrine.
+   * 
+   * @PrePersist
+   */
+  public function created(){
+    if($this->created == null){
+      $this->created = new DateTime("now");
+    }
+  }
+  
+  /**
    * Returns a direct link to an element by id. 
    */
   abstract public function getDirectLink();
   
-    /**
+  /**
    * Returns a direct name of the type of element. 
    */
   abstract public function getDirectName();

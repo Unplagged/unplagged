@@ -7,47 +7,29 @@ if($defaultNamespace->userId){
   $me = null;
 }
 
-/**
- *@todo this should only be temporary to tryout a different ui style  
- */
-function findCases($em){
-    
-  $qb = $em->createQueryBuilder();
-  $qb->add('select', "c.id AS value, c.alias AS label")
-      ->add('from', 'Application_Model_Case c');
+// had to remove function because it somehow was included twice here
+$qb = $em->createQueryBuilder();
+$qb->add('select', "c.id AS value, c.alias AS label")
+    ->add('from', 'Application_Model_Case c');
 
-  $dbresults = $qb->getQuery()->getResult();
-  $results = array();
-  
-  foreach($dbresults as $key=>$value){
-    $results[] = $value;
-  }
-  
-  return $results;
+$dbresults = $qb->getQuery()->getResult();
+$results = array();
+
+foreach($dbresults as $key=>$value){
+  $results[] = $value;
 }
-
-$cases = findCases($em);
+ 
+$cases = $results;
 
 ?>
 <?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace, 'me'=>$me, 'cases'=>$cases)); ?>
-<div role="main" id="content" class="clearfix">
-
+<div role="main" class="clearfix">
+  <?php echo $this->partial('partials/messages.phtml', array('defaultNamespace'=>$defaultNamespace, 'flashMessages'=>$this->flashMessages)); ?>
+  <h2><?php echo $this->escape($this->title); ?></h2>
   <div class="main">
   <div id="main-wrapper">
     <div id="main">
       <?php
-      if(!empty($this->flashMessages)){
-        echo '<div class="flash-messages">';
-        //@todo maybe switch to ul?
-        foreach($this->flashMessages as $key=>$value){
-          echo $this->translate($value) . "<br />";
-        }
-        echo '</div>';
-      }
-      ?>
-      <h2><?php echo $this->escape($this->title); ?></h2>
-      <?php
-
       // content from each view, the rest of this page is global to all views
       echo $this->layout()->content;
       ?>

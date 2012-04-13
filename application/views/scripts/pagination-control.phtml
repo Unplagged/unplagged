@@ -1,12 +1,12 @@
 
 <?php if ($this->pageCount): ?>
-<ul class="pagination">
-<li><a class="numbers"><?php echo $this->firstItemNumber; ?> - <?php echo $this->lastItemNumber; ?> <?php echo $this->translate("of"); ?> <?php echo $this->totalItemCount; ?> &nbsp;</a></li>
+<ul class="pagination clearfix">
+<li class="numbers"><?php echo $this->firstItemNumber; ?> - <?php echo $this->lastItemNumber; ?> <?php echo $this->translate("of"); ?> <?php echo $this->totalItemCount; ?></li>
  
 <!-- First page link -->
 <?php if (isset($this->previous)): ?>
   <li>
-  <a href="<?php echo $this->url(array('page' => $this->first)); ?>">|«</a>
+  <a href="<?php echo $this->url(array('page' => $this->first)); ?>">|&laquo;</a>
   </li>
 <?php else: ?>
   <li><a class="disabled">|«</a></li>
@@ -15,7 +15,7 @@
 <!-- Previous page link -->
 <?php if (isset($this->previous)): ?>
 <li>  
-<a href="<?php echo $this->url(array('page' => $this->previous)); ?>">«</a>
+<a href="<?php echo $this->url(array('page' => $this->previous)); ?>">&laquo;</a>
 </li>
   <?php else: ?>
   <li><a class="disabled">«</a></li>
@@ -46,11 +46,11 @@
 <!-- Last page link -->
 <?php if (isset($this->next)): ?>
   <li>
-  <a href="<?php echo $this->url(array('page' => $this->last)); ?>">»|</a>
+  <a href="<?php echo $this->url(array('page' => $this->last)); ?>">&raquo;|</a>
   </li>
 <?php else: ?>
-  <li><a class="disabled">»|</a></li>
+  <li><a class="disabled">&raquo;|</a></li>
 <?php endif; ?>
  
-</ul><br style="clear: both" />
+</ul>
 <?php endif; ?>

@@ -206,7 +206,33 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'file',
         'action'=>'list',
-        'resource'=>'files'
+        'resource'=>'files',
+        'pages'=>array(
+          array(
+            'label'=>'Case Files',
+            'title'=>'Case Files',
+            'module'=>'default',
+            'controller'=>'case',
+            'action'=>'files',
+            'resource'=>'files'
+          ),
+          array(
+            'label'=>'Public Files',
+            'title'=>'Public Files',
+            'module'=>'default',
+            'controller'=>'file',
+            'action'=>'list',
+            'resource'=>'files'
+          ),
+          array(
+            'label'=>'Personal Files',
+            'title'=>'Personal Files',
+            'module'=>'default',
+            'controller'=>'user',
+            'action'=>'files',
+            'resource'=>'files'
+          )
+        )
       ), array(
         'label'=>'Documents',
         'title'=>'Documents',

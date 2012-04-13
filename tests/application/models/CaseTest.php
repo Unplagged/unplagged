@@ -3,6 +3,7 @@
 /**
  * File for class {@link CaseTest}.
  */
+require_once '../application/models/Base.php';
 require_once '../application/models/Case.php';
 
 /**

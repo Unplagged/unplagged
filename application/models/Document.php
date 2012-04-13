@@ -32,14 +32,6 @@
 class Application_Model_Document extends Application_Model_Base{
 
   /**
-   * The date when the document was created.
-   * @var string The creation date.
-   * 
-   * @Column(type="datetime")
-   */
-  private $created;
-
-  /**
    * The title of the document.
    * @var string The title.
    * 
@@ -69,15 +61,6 @@ class Application_Model_Document extends Application_Model_Base{
     if(isset($data["title"])){
       $this->title = $data["title"];
     } $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
-  }
-
-  /**
-   * Method auto-called when object is persisted to database for the first time.
-   * 
-   * @PrePersist
-   */
-  public function created(){
-    $this->created = new DateTime("now");
   }
 
   public function getId(){

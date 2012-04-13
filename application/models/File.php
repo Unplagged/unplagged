@@ -32,14 +32,6 @@
 class Application_Model_File extends Application_Model_Base{
 
   /**
-   * The date when the file was uploaded.
-   * @var string The upload date.
-   * 
-   * @Column(type="datetime")
-   */
-  private $created;
-
-  /**
    * The date when the file was modified.
    * @var string The latest modification date.
    * 
@@ -98,15 +90,6 @@ class Application_Model_File extends Application_Model_Base{
    * already created
    */
   private $isTarget = false;
-
-  /**
-   * Method auto-called when object is persisted to database for the first time.
-   * 
-   * @PrePersist
-   */
-  public function created(){
-    $this->created = new DateTime("now");
-  }
 
   /**
    * Method auto-called when object is updated in database.
