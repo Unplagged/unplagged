@@ -296,6 +296,8 @@ header[role=banner] h1 {
   border-radius: 2px;
 }
 
+
+/* ==|== footer styles ======================================================= */
 footer[role=contentinfo]{
   margin-top: 20px;
   font-size: 11px;
@@ -1026,58 +1028,53 @@ smork-btn a:active { top: 1px; }
 
 /* pagination controls */
 .pagination {
-  margin: 10px 0 10px 0;
-  padding: 0;
+  margin: 10px 0;
+  list-style-type: none;
   text-align: right;
-  float: right;
+  line-height: 20px;
+  cursor: default;
 }
 
-.pagination li:first-child a{
-  color: #555 !important;
-  text-decoration: none !important;
+.pagination li {
+  display: inline-block;
+  height: 20px;
+  border: 1px #f3f2f2 solid;
+  margin-right: 3px;
+}
+
+.pagination li:last-child{
+  margin-right: 0;
 }
 
 .pagination a {
   text-decoration: none;
   color: #555;
-}
-
-.pagination li {
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-  display: inline-block;
-  float: left;
-}
-
-.pagination li a {
   background-color: #f7f6f6;
-  border: 1px #f3f2f2 solid;
-  margin: 0 3px 0 0;
-  padding: 2px 7px 2px 7px;
-  height: 15px;
   display: block;
+  padding: 0 7px;
 }
-.pagination li a.numbers {
+
+.pagination .numbers {
   background-color: #FFFFFF;
-  margin-top: 2px;
+  margin-top: 3px;
   border: 1px #FFFFFF solid;
 }
 
-.pagination li a.numbers:hover {
+.pagination .numbers:hover {
   background-color: #FFFFFF;
 }
-.pagination li a.disabled {
+.pagination .disabled {
   color: #d8d7d7;
 }
 
-.pagination li a:hover {
+.pagination a:hover {
   background-color: #dddcdc;
 }
 
-.pagination li a.active {
+.pagination a.active {
   background-color: #484c51;
   color: #ffffff;
+  cursor: pointer;
 }
 
 #activity-stream {
