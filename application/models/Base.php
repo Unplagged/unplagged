@@ -28,6 +28,7 @@
  * @version 1.0
  * 
  * @Entity 
+ * @HasLifeCycleCallbacks
  * @Table(name="bases") 
  * @InheritanceType("JOINED") 
  * @DiscriminatorColumn(name="type", type="string") 
@@ -55,9 +56,9 @@ abstract class Application_Model_Base{
   protected $id;
 
   /**
-   * The date when the user registered.
+   * The date and time when the object was created initially.
    * 
-   * @var string The registration date.
+   * @var string The inital persistence date and time.
    * 
    * @Column(type="datetime")
    */
@@ -112,4 +113,9 @@ abstract class Application_Model_Base{
   public function getComments(){
     return $this->comments;
   }
+  
+  public function getCreated(){
+    return $this->created;
+  }
+
 }

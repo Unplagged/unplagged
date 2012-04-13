@@ -27,7 +27,6 @@
  *
  * @Entity
  * @Table(name="notifications")
- * @HasLifeCycleCallbacks
  */
 class Application_Model_Notification extends Application_Model_Base{
 
@@ -75,10 +74,6 @@ class Application_Model_Notification extends Application_Model_Base{
 
   public function getSource(){
     return $this->source;
-  }
-
-  public function getCreated(){
-    return $this->created;
   }
 
   public function getDirectName(){

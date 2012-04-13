@@ -32,14 +32,6 @@
 class Application_Model_Document_Fragment extends Application_Model_Base{
 
   /**
-   * The date when the document was created.
-   * @var string The creation date.
-   * 
-   * @Column(type="datetime")
-   */
-  private $created;
-
-  /**
    * The title of the document.
    * @var string The title.
    * 
@@ -64,15 +56,6 @@ class Application_Model_Document_Fragment extends Application_Model_Base{
   private $posEnd;
 
   public function __construct(array $data = null){
-  }
-
-  /**
-   * Method auto-called when object is persisted to database for the first time.
-   * 
-   * @PrePersist
-   */
-  public function created(){
-    $this->created = new DateTime("now");
   }
 
   public function getDirectName(){

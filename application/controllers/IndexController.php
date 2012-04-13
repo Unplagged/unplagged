@@ -34,30 +34,6 @@ class IndexController extends Zend_Controller_Action{
       $this->_helper->redirector('recent-activity', 'notification');
     }
     Zend_Registry::get('Log')->debug('Index');
-    
-    /*$pageNumber = 1;
-    $query = $this->_em->createQuery('
-      SELECT f FROM Application_Model_Document_Fragment f
-      JOIN f.posStart s
-      JOIN s.page sp
-      JOIN f.posEnd e
-      JOIN e.page ep
-      WHERE :pn >= sp.pageNumber AND :pn <= ep.pageNumber');
-    $query->setParameter("pn", $pageNumber);
-    
-    $fragments = $query->getResult();
-    foreach($fragments as $fragment) {
-      echo "fragment: from[page:" . $fragment->getPosStart()->getPage()->getPageNumber() . " line:" . $fragment->getPosStart()->getLinePos() . " char:" . $fragment->getPosStart()->getCharacterPos() ."]" . 
-          "- to[page:" . $fragment->getPosEnd()->getPage()->getPageNumber() . " line:" . $fragment->getPosEnd()->getLinePos() . " char:" . $fragment->getPosEnd()->getCharacterPos() ."]<br />";
-    }*/
-    $query = $this->_em->createQuery('SELECT p, d FROM Application_Model_Document d JOIN d.pages p WHERE d.id = 5 AND p.id > 1');
-    //$query->setParameter("pn", $pageNumber);
-     
-     print_r($query->getArrayResult());
-//    foreach($pages as $page) {
-     // print_r($page);
- //    echo $page->getId();
-  //  }
   }
 
 }

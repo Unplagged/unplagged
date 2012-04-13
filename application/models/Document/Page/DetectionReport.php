@@ -140,10 +140,6 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
     $this->state = $state;
   }
 
-  public function getCreated(){
-    return $this->created;
-  }
-
   public function getDirectName(){
     return "detection report";
   }
