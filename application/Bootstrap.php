@@ -28,8 +28,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
   /**
    * Initialize auto loader of Doctrine to get the database connection.
-   * @author: Jan Oliver Oelerich (http://www.oelerich.org/?p=193)
-   *
+   * 
+   * @author Jan Oliver Oelerich (http://www.oelerich.org/?p=193)
    * @return Doctrine_Manager
    */
   public function _initDoctrine(){

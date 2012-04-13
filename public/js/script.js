@@ -78,21 +78,22 @@ $(document).ready(function(){
   });
   
   function addComment(data, target) {
-    var tpl = '<div class="comment">\n\
-            <div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>\n\
-            <div class="details">\n\
-            <div class="title"><b>' + data.author.username + '</b> ' + data.text + '\n\
-            <span class="date">' + data.created + '</span>\n\
-            </div>\n\
-            </div>\n\
-            </div>';
+    var tpl = '<div class="comment">' +
+            '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
+            '<div class="details">' +
+            '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
+            '<span class="date">' + data.created + '</span>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
             target.append(tpl);
   }
   
+  
+  // add the little arrow button to collapse the toolbar
   var dropdownButton = '<span id="dropdown-button" class="arrow-up"></span>';
   $('header[role=toolbar]').append(dropdownButton);
   
-  //collapse header line
   $('#dropdown-button').click(function(e) {
     var content = $('header[role=toolbar] .content');
     var button = $('#dropdown-button');
@@ -105,21 +106,6 @@ $(document).ready(function(){
       button.removeClass("arrow-up");
     }
   });
-  
-  /**
-   * Adds the html for the context menu to the body.
-   */
-  function addContextMenu(){
-    var contextMenuElement = '<div id="contextmenu" style="display:none;position:absolute;top:-250;left:0;z-index:100;color:black">' + 
-          '<table cellpadding="5" cellspacing="0" style="background-color:#40bfe8">' +
-            '<tr><td><a class="menu" href="javascript:deleteSearchWords()"> Google-Suchwörter löschen </a></td></tr>' +
-            '<tr><td><a id="googleSearch" class="menu" href="javascript:googleSearch()"> Google Suche </a></td></tr>' +
-          '</table>' +
-          '</div>';
-    $('body').append(contextMenuElement);
-  }
-  //unobtrusively add the context menu, so that users without js don't see it
-  addContextMenu();
   
   //wrap home menu button, so that icon gets shown
   var homeButton = $('#header .navigation .home');
