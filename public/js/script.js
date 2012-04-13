@@ -9,7 +9,7 @@
 $(document).ready(function(){
  
   //submit the case selection on change of the dropdown
-  $('.case-settings-box select').change(function(){
+  $('.case-settings-box select').chosen({allow_single_deselect: true}).change(function(){
     $(this).closest('form').submit();  
   });
   

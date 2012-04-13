@@ -31,12 +31,8 @@
             ?>
             <a href="/case/list"><?php echo $this->translate("Edit Cases"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
             <form class="current-case" method="POST" action="/user/set-current-case">
-              <select name="case">
-                <?php if($currentLabel === ''): ?>
-                  <option><?php echo $this->translate('Select a Case'); ?></option>
-                <?php else: ?>
+              <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
                   <option></option>
-                <?php endif; ?>
                 <?php foreach($this->cases as $case): ?>
                   <option <?php if($case['value'] == $currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
                 <?php endforeach; ?>

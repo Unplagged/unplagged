@@ -25,7 +25,7 @@ $this->headTitle($this->title);
       <td><?php if($file->getIsTarget()){ ?>
           <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page_find.png'); ?>" title="<?php echo $this->translate("unset target"); ?>" /></a>
         <?php }else{ ?>
-          <a href="<?php echo "/file/set-target/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page.png'); ?>" title="<?php echo $this->translate("set target"); ?>" /></a>
+          <a href="<?php echo "/file/set-target/id/" . $file->getId(); ?>" class="target"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page.png'); ?>" title="<?php echo $this->translate("set target"); ?>" /></a>
         <?php } ?>
         <a href="<?php echo "/file/parse/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page_gear.png'); ?>" title="<?php echo $this->translate("parse"); ?>" /></a>
         <a href="<?php echo "/file/download/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/disk.png'); ?>" title="<?php echo $this->translate("download"); ?>" /></a>
