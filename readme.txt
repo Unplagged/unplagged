@@ -18,4 +18,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Unplagged is a simple, web-based, collaborative system to help
 discover, collect and document plagiarism in scientic pa-
-pers.
+pers. 
