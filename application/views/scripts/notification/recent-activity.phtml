@@ -18,12 +18,12 @@ $this->headTitle($this->title);
             <a href="<?php echo $notification->getSource()->getDirectLink(); ?>"><span>Open <?php echo $notification->getSource()->getDirectName(); ?></span></a>
           </div>
           <div class="smork-btn light comments-icon">
-            <a href="#" for="comments-wrapper-<?php echo $notification->getSource()->getId(); ?>" class="toggle-comments"><span>Show comments</span></a>
+            <a href="#" for="comments-wrapper-<?php echo $notification->getId(); ?>" class="toggle-comments"><span>Show comments</span></a>
           </div>
         </div>
       </div>
     </div>
-    <?php echo $this->partial('partials/comments.phtml', array('source' => $notification->getSource(), 'hidden' => true)); ?>
+    <?php echo $this->partial('partials/comments.phtml', array('sourceId' => $notification->getId(), 'hidden' => true)); ?>
   </div>
   <?php endforeach; ?>
 </div>

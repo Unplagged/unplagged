@@ -117,5 +117,13 @@ class Application_Model_Notification extends Application_Model_Base{
         return "File " . $this->getSource()->getFilename() . " was uploaded.";
     }
   }
+  
+  public function toArray(){
+    $result = array();
+
+    $result["id"] = $this->id;
+    
+    return $result;
+  }
 
 }

@@ -23,13 +23,11 @@ $(document).ready(function(){
     if(target.is(':visible')) {
       $(this).html("<span>Show comments</span>");
       $(this).removeClass("expanded");
-      console.log(target);
       
       target.slideUp(800, function() {
         comments.html("");
       });
     } else {
-      console.log(target);
       $(this).html("<span>Hide comments</span>");
       $(this).addClass("expanded");
       target.show();
