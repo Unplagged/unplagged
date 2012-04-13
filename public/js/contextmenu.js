@@ -1,117 +1,108 @@
-var x=0;
-var y=0;
 var searchBuffer='';
 // defines whether the click was on the contextmenu or not
 var contextMenu = false;
 var contextMenuId = 'contextmenu';
 
 $(document).ready(function(){
-  
+  $(document).bind("contextmenu", rightClick);
+  $(document).bind("click", clickHandler);
 
-
-document.body.oncontextmenu = rightClick;
-document.body.onclick = clickHandler;
-
-document.getElementById(contextMenuId).onmouseover = function(){
+  $("#" + contextMenuId).onmouseover = function(){
     contextMenu = true;
-};
-document.getElementById(contextMenuId).onmouseout = function(){
+  };
+  $("#" + contextMenuId).onmouseout = function(){
     contextMenu = false;
-};
+  };
+});
 
 function rightClick(ev)
 {
-    if (searchBuffer != '') {
-        // if searchBuffer is not empty, it means that the user has selected a word
-        // => show our context menu.
-        x = (document.all) ? window.event.x + document.body.scrollLeft : ev.pageX;
-        y = (document.all) ? window.event.y + document.body.scrollTop : ev.pageY;
-        var scrollTop = document.body.scrollTop ? document.body.scrollTop : document.documentElement.scrollTop;
-        var scrollLeft = document.body.scrollLeft ? document.body.scrollLeft : document.documentElement.scrollLeft;
+  if (searchBuffer != '') {
+    // if searchBuffer is not empty, it means that the user has selected a word
+    // => show our context menu.
+    var scrollTop = document.body.scrollTop ? document.body.scrollTop : document.documentElement.scrollTop;
+    var scrollLeft = document.body.scrollLeft ? document.body.scrollLeft : document.documentElement.scrollLeft;
     
-        document.getElementById(contextMenuId).style.left = ev.clientX + scrollLeft + 'px';
-        document.getElementById(contextMenuId).style.top = ev.clientY + scrollTop + 'px';
+    $("#" + contextMenuId).css({ position: "absolute", left: ev.clientX + scrollLeft + 'px', top: ev.clientY + scrollTop + 'px' });
+    $("#" + contextMenuId).show();
     
-        document.getElementById(contextMenuId).style.display='block';
-    
-        // avoid showing default contextMenu
-        return false;
-    } else {
-        // if searchBuffer is empty, show normal context menu.
-        return true;
-    }
+    // avoid showing default contextMenu
+    return false;
+  } else {
+    // if searchBuffer is empty, show normal context menu.
+    return true;
+  }
 }
 
 function clickHandler()
 {
-    document.getElementById(contextMenuId).style.display = "none";
+  $("#" + contextMenuId).hide();
     
-    // if click on contextmenu, we do not need to save the selection
-    // in the searchBuffer
-    if (!contextMenu) {
-        var selectedText = getSelectedText();
-        if (selectedText != '' && selectedText != null
-            && selectedText != undefined && selectedText != ' '){
-            searchBuffer += ' ' + selectedText;
-            updateGoogleSearchText();
-        }
+  // if click on contextmenu, we do not need to save the selection
+  // in the searchBuffer
+  if (!contextMenu) {
+    var selectedText = getSelectedText();
+    if (selectedText != '' && selectedText != null
+      && selectedText != undefined && selectedText != ' '){
+      searchBuffer += ' ' + selectedText;
+      updateGoogleSearchText();
     }
+  }
 }
 
 function getSelectedText()
 {
-    var text = '';
+  var text = '';
     
-    if (window.getSelection)
-    {
-        text = window.getSelection();
-    }
-    else if (document.getSelection)
-    {
-        text = document.getSelection();
-    }
-    else if (document.selection)
-    {
-        text = document.selection.createRange().text;
-    }
+  if (window.getSelection)
+  {
+    text = window.getSelection();
+  }
+  else if (document.getSelection)
+  {
+    text = document.getSelection();
+  }
+  else if (document.selection)
+  {
+    text = document.selection.createRange().text;
+  }
 
-    return text;
+  return text;
 }
 
 function copyText(e)
 {
-    alert("copyText");
+  alert("copyText");
 }
 function markAll()
 {
     
 }
-    function copyToClipboard(s) {
-    if (window.clipboardData && clipboardData.setData) {
+function copyToClipboard(s) {
+  if (window.clipboardData && clipboardData.setData) {
     clipboardData.setData('text', s);
-    }
-    }
+  }
+}
 function deleteSearchWords()
 {
-    searchBuffer = "";
-    updateGoogleSearchText();
+  searchBuffer = "";
+  updateGoogleSearchText();
 }
 function googleSearch()
 {
-    cleanSearchBuffer();
-    window.open('http://www.google.de/search?q='+searchBuffer, '_newTab');
-    searchBuffer = '';
-    updateGoogleSearchText();
+  cleanSearchBuffer();
+  window.open('http://www.google.de/search?q='+searchBuffer, '_newTab');
+  searchBuffer = '';
+  updateGoogleSearchText();
 }
 
 function updateGoogleSearchText()
 {
-    document.getElementById('googleSearch').innerHTML = "GoogleSuche nach: '" + searchBuffer + "'";
+  $('#googleSearch').html("GoogleSuche nach: '" + searchBuffer + "'");
 }
 
 function cleanSearchBuffer()
 {
-    searchBuffer = searchBuffer.replace(' ',' ');
-    searchBuffer = searchBuffer.replace(' ',' ');
+  searchBuffer = searchBuffer.replace(' ',' ');
+  searchBuffer = searchBuffer.replace(' ',' ');
 }
-});
