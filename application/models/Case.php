@@ -113,10 +113,6 @@ class Application_Model_Case extends Application_Model_Base{
   public function updated(){
     $this->updated = new DateTime("now");
   }
-
-  public function getId(){
-    return $this->id;  
-  }
   
   /**
    * @return string 
@@ -155,10 +151,6 @@ class Application_Model_Case extends Application_Model_Base{
 
   public function getUpdated(){
     return $this->updated;
-  }
-
-  public function getCreated(){
-    return $this->created;
   }
 
   public function addTag(Application_Model_Tag $tag){

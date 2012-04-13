@@ -1,4 +1,4 @@
-<div class="comments-wrapper" id="comments-wrapper-<?php echo $this->source->getId(); ?>" <?php echo $this->hidden ? " style=\"display: none\"" : ""; ?>>
+<div class="comments-wrapper" id="comments-wrapper-<?php echo $this->sourceId; ?>" <?php echo $this->hidden ? " style=\"display: none\"" : ""; ?>>
   <div class="arrow-wrapper">
     <div class="arrow-down"></div>
   </div>
@@ -6,7 +6,7 @@
   <div class="comments"></div>
   <div class="write-comment-box">
     <input type="text" name="text" placeholder="Write a comment" class="comment-field" />
-    <input type="hidden" name="sourceId" value="<?php echo $this->source->getId(); ?>" class="comment-field" />
+    <input type="hidden" name="sourceId" value="<?php echo $this->sourceId; ?>" class="comment-field" />
     <div class="smork-btn light comment-icon">
       <a href="#" class="write-comment"><span>Write comment</span></a>
     </div>

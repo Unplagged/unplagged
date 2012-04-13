@@ -157,10 +157,6 @@ class Application_Model_User extends Application_Model_Base{
     return $this->id;
   }
 
-  public function getCreated(){
-    return $this->created;
-  }
-
   public function getUpdated(){
     return $this->updated;
   }

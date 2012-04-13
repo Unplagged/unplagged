@@ -27,7 +27,6 @@
  *
  * @Entity
  * @Table(name="notifications")
- * @HasLifeCycleCallbacks
  */
 class Application_Model_Notification extends Application_Model_Base{
 
@@ -77,10 +76,6 @@ class Application_Model_Notification extends Application_Model_Base{
     return $this->source;
   }
 
-  public function getCreated(){
-    return $this->created;
-  }
-
   public function getDirectName(){
     return "notification";
   }
@@ -121,6 +116,14 @@ class Application_Model_Notification extends Application_Model_Base{
       case "file_uploaded":
         return "File " . $this->getSource()->getFilename() . " was uploaded.";
     }
+  }
+  
+  public function toArray(){
+    $result = array();
+
+    $result["id"] = $this->id;
+    
+    return $result;
   }
 
 }

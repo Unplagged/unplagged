@@ -27,7 +27,6 @@
  * 
  * @Entity
  * @Table(name="comments")
- * @HasLifeCycleCallbacks
  */
 class Application_Model_Comment extends Application_Model_Base{
 
@@ -60,23 +59,6 @@ class Application_Model_Comment extends Application_Model_Base{
    * @JoinColumn(name="source_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $source;
-
-  /**
-   * The date when the comment was created.
-   * @var string The creation date.
-   *
-   * @Column(type="datetime")
-   */
-  protected $created;
-
-  /**
-   * Method auto-called when object is persisted to database for the first time.
-   *
-   * @PrePersist
-   */
-  public function created(){
-    $this->created = new DateTime("now");
-  }
 
   /**
    * Constructor.
