@@ -154,6 +154,10 @@ header[role=toolbar]{
   position: relative; /* for the js close button */
 }
 
+header[role=toolbar] .login-register-box {
+  color: white;
+}
+
 header[role=toolbar] .content {
   margin: auto;
   width: 90%;
