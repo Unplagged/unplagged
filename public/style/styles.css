@@ -132,6 +132,29 @@ p {
   text-decoration: none;
 }
 
+.button:hover {
+  border: 1px solid #aaa;
+  -webkit-box-shadow: 0 1px 0 #fff inset;
+  -moz-box-shadow   : 0 1px 0 #fff inset;
+  -o-box-shadow     : 0 1px 0 #fff inset;
+  box-shadow        : 0 1px 0 #fff inset;
+  background-color: #eee;
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#ffffff', GradientType=0 );
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(20%, #eeeeee), color-stop(80%, #ffffff));
+  background-image: -webkit-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  background-image: -moz-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  background-image: -o-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  background-image: -ms-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  background-image: linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  -webkit-border-bottom-left-radius : 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomleft : 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-left-radius : 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+}
+
 .ie9 .button {
   border-radius: 0;
 }
@@ -173,6 +196,13 @@ p {
 
 .contextmenu li:first-child{
   margin-top: 0;
+}
+
+.drop-area {
+  width: 60%;
+  height: 400px;
+  margin: auto;
+  border: 5px dashed #40C0E9;
 }
 
 /* ==|== toolbar styles ======================================================= */
@@ -231,13 +261,17 @@ header[role=toolbar] a:hover{
 .user-menu ul { 
   display: none;
   position: absolute;
-  background: whiteSmoke;
+  background: white;
   border: 1px solid #c5c5c5;
+  border-top: none;
   z-index: 1000;
   top: 100%; 
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
+  -webkit-border-top-left-radius : 0;
+  -moz-border-radius-topleft : 0;
+  border-top-left-radius : 0;
   list-style-type: none;
   margin: 0;
   padding: 0 30px 0 5px;
