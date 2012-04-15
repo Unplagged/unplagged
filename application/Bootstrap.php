@@ -72,7 +72,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     return $em;
   }
-
+  
   /**
    * Loads the config and sets it in the registry.
    * 
@@ -122,7 +122,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $frontController = $this->getResource('FrontController');
     $frontController->registerPlugin(new Unplagged_UrlHistory());
   }
-
+  
   /**
    * Initalize the view.
    * @author Dennis De Cock
@@ -143,10 +143,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    */
   protected function _initTranslate(){
     $locale = new Zend_Locale('de_DE');
-
+    
     $registry = Zend_Registry::getInstance();
     $registry->set('Zend_Locale', $locale);
-
+    
     $translate = new Zend_Translate('csv', BASE_PATH . '/data/languages/de.csv', 'de');
     //$translate->addTranslation(APPLICATION_PATH . '/../languages/de.csv', 'de'); //TODO: add automatically lang support
 
@@ -196,7 +196,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * 
    */
   protected function _initNavigation(){
-
+    
     $config = array(
       array(
         //home icon gets set via js, because I didn't find a simple way to do add a <span> here
@@ -268,13 +268,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     Zend_Registry::set('Zend_Navigation', $container);
   }
-
+  
   protected function setConstants($constants){
-    foreach($constants as $key=>$value){
-      if(!defined($key)){
-        define($key, $value);
-      }
-    }
+        foreach ($constants as $key=>$value){
+            if(!defined($key)){
+                define($key, $value);
+            }
+        }
   }
 
 }

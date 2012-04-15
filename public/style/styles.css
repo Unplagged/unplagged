@@ -1,4 +1,4 @@
-/* HTML5 ✰ Boilerplate
+/* HTML5 âœ° Boilerplate
  * ==|== normalize ==========================================================
 */
 article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
@@ -169,7 +169,7 @@ header[role=toolbar]{
   background: -ms-linear-gradient(top, #4c4f54 0%,#000000 100%);
   background: linear-gradient(top, #4c4f54 0%,#000000 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4f54', endColorstr='#000000',GradientType=0 );
-  padding: 5px 0;
+  padding: 10px 0;
   margin-bottom: 115px;
   position: relative; /* for the js close button */
 }
@@ -181,9 +181,7 @@ header[role=toolbar] .login-register-box {
 header[role=toolbar] .content {
   margin: auto;
   width: 90%;
-  padding: 0;
-  min-height: 35px;
-  line-height: 35px;
+  line-height: 24px;
 }
 
 header[role=toolbar] a {
@@ -202,7 +200,6 @@ header[role=toolbar] a:hover{
 
 .user-box .avatar{
   position: absolute;
-  top: 5px;
   left: 0;
 }
 
@@ -254,7 +251,7 @@ header[role=toolbar] a:hover{
 .case-settings-box select {
   height: 24px;
   border-radius: 3px;
-  width: 150px;
+  width: 200px;
 }
 
 .case-settings-box > a {
@@ -290,11 +287,9 @@ header[role=banner] h1 {
 /* styling for the small arrow which collapses the toolbar header */
 .js #dropdown-button {
   position: absolute;
-  float: right;
   bottom: -8px;
   left: 90%;
   cursor: pointer;
-  width: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-top: 8px solid black;
@@ -302,8 +297,6 @@ header[role=banner] h1 {
 
 .js #dropdown-button.arrow-up {
   bottom: 0px;
-  right: 20px;
-  width: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-bottom: 8px solid #f5f5f5;
@@ -1265,7 +1258,7 @@ smork-btn a:active { top: 1px; }
 .chzn-container {
   font-size: 13px;
   position: relative;
-  display: inline-block;
+  /* Removed display: inline-block; here, because Firefox had problems */ 
   zoom: 1;
   *display: inline;
 }

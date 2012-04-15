@@ -23,7 +23,7 @@
  * 
  * @author Unplagged
  */
-class BaseController extends Zend_Controller_Action {
+class BaseController extends Zend_Controller_Action{
 
   /**
    * Initalizes registry and namespace instance in the controller and allows to display flash messages in the view.
@@ -36,15 +36,24 @@ class BaseController extends Zend_Controller_Action {
 
     $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
   }
-  
+
   /**
-   * Sets the page title to the given value and also prepends it to the head title.
+   * Sets the page title to the given value and prepends it to the head title.
    * 
-   * @param type $title 
+   * @param string $title 
    */
   protected function setTitle($title){
     $this->view->title = $title;
     $this->view->headTitle()->prepend($title);
+  }
+
+  /**
+   * Looks up the session data and redirects the user to the page that was visited before. 
+   */
+  protected function redirectToLastPage(){
+    $this->_helper->viewRenderer->setNoRender(true);
+    $historySessionNamespace = new Zend_Session_Namespace('history');
+    $this->_redirect($historySessionNamespace->last);
   }
 
 }

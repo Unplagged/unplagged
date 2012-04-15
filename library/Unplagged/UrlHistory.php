@@ -19,8 +19,12 @@
  */
 
 /**
- * This class stores the last visited url in the session to enable to redirect 
- * back after non visible actions.
+ * This class can be registered in the Bootstrap and then stores the current 
+ * URI in the session to make it possible to redirect the user back to the 
+ * last page that was visited.
+ * 
+ * This can for example be necessary during the case selection in order to
+ * stay on the same page, but with different data.
  * 
  * @author Unplagged
  */

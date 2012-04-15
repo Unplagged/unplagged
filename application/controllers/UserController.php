@@ -259,9 +259,7 @@ class UserController extends BaseController{
     $this->_em->persist($user);
     $this->_em->flush();
     
-    $this->_helper->viewRenderer->setNoRender(true);
-    $historySessionNamespace = new Zend_Session_Namespace('history');
-    $this->_redirect($historySessionNamespace->last);
+    $this->redirectToLastPage();
   }
 
   public function resetCurrentCaseAction(){

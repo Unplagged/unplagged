@@ -15,7 +15,7 @@ $(document).ready(function(){
     var contextMenuElement = '<ul id="contextmenu" class="contextmenu">' + 
             '<li><a class="menu">Google-Suchwörter löschen</a></li>' +
             '<li><a id="googleSearch" class="menu">Google Suche</a></li>' +
-          '</div>';
+          '</ul>';
     $('body').append(contextMenuElement);
   }
   
