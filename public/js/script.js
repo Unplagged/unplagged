@@ -87,24 +87,6 @@ $(document).ready(function(){
             target.append(tpl);
   }
   
-  
-  // add the little arrow button to collapse the toolbar
-  var dropdownButton = '<span id="dropdown-button" class="arrow-up"></span>';
-  $('header[role=toolbar]').append(dropdownButton);
-  
-  $('#dropdown-button').click(function(e) {
-    var content = $('header[role=toolbar] .content');
-    var button = $('#dropdown-button');
-
-    content.toggle();
-    
-    if(content.is(":visible")) {
-      button.addClass("arrow-up");
-    } else {
-      button.removeClass("arrow-up");
-    }
-  });
-  
   //wrap home menu button, so that icon gets shown
   var homeButton = $('#header .navigation .home');
   homeButton.wrapInner('<span class="ir"/>');

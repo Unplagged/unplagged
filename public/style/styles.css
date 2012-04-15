@@ -284,25 +284,6 @@ header[role=banner] h1 {
   left: 20px;
 }
 
-/* styling for the small arrow which collapses the toolbar header */
-.js #dropdown-button {
-  position: absolute;
-  bottom: -8px;
-  left: 90%;
-  cursor: pointer;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 8px solid black;
-}
-
-.js #dropdown-button.arrow-up {
-  bottom: 0px;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 8px solid #f5f5f5;
-  border-top: 0;
-}
-
 .pagewrap {
   width: 90%;
   margin: 0 auto 30px;;
