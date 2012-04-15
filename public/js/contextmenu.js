@@ -12,16 +12,14 @@ $(document).ready(function(){
    * Adds the html for the context menu to the body.
    */
   function addContextMenu(){
-    var contextMenuElement = '<div id="contextmenu" style="display:none;position:absolute;z-index:10000;color:black">' + 
-          '<table cellpadding="5" cellspacing="0" style="background-color:#40bfe8">' +
-            '<tr><td><a class="menu"> Google-Suchwörter löschen </a></td></tr>' +
-            '<tr><td><a id="googleSearch" class="menu"> Google Suche </a></td></tr>' +
-          '</table>' +
+    var contextMenuElement = '<ul id="contextmenu" class="contextmenu">' + 
+            '<li><a class="menu">Google-Suchwörter löschen</a></li>' +
+            '<li><a id="googleSearch" class="menu">Google Suche</a></li>' +
           '</div>';
     $('body').append(contextMenuElement);
   }
   
-  $('#contextmenu tr:first-child').click(deleteSearchWords);
+  $('#contextmenu li:first-child').click(deleteSearchWords);
   $('#googleSearch').click(googleSearch);
   
   

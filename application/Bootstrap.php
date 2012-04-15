@@ -72,7 +72,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     return $em;
   }
-  
+
   /**
    * Loads the config and sets it in the registry.
    * 
@@ -116,6 +116,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   }
 
   /**
+   * Registers the plugin that stores the last visited url. 
+   */
+  protected function _initHistory(){
+    $frontController = $this->getResource('FrontController');
+    $frontController->registerPlugin(new Unplagged_UrlHistory());
+  }
+
+  /**
    * Initalize the view.
    * @author Dennis De Cock
    */
@@ -125,8 +133,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $view = new Zend_View();
 
     $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
-    $view->headTitle()->setSeparator(' - ');
-    $view->headTitle($defaultConfig['portalName']);
+    $view->headTitle()->setSeparator(' - ')->append($defaultConfig['applicationName']);
   }
 
   /**
@@ -136,10 +143,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    */
   protected function _initTranslate(){
     $locale = new Zend_Locale('de_DE');
-    
+
     $registry = Zend_Registry::getInstance();
     $registry->set('Zend_Locale', $locale);
-    
+
     $translate = new Zend_Translate('csv', BASE_PATH . '/data/languages/de.csv', 'de');
     //$translate->addTranslation(APPLICATION_PATH . '/../languages/de.csv', 'de'); //TODO: add automatically lang support
 
@@ -261,13 +268,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     Zend_Registry::set('Zend_Navigation', $container);
   }
-  
+
   protected function setConstants($constants){
-        foreach ($constants as $key=>$value){
-            if(!defined($key)){
-                define($key, $value);
-            }
-        }
-}
+    foreach($constants as $key=>$value){
+      if(!defined($key)){
+        define($key, $value);
+      }
+    }
+  }
 
 }

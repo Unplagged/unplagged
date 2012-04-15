@@ -47,7 +47,7 @@ class Unplagged_Helper{
    * 
    * @return The filename of the appropriate icon.
    */
-  public static function getFileIconByExtenstion($ext){
+  public static function getFileIconByExtension($ext){
     if($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'gif' || $ext == 'tiff'){
       return 'picture.png';
     }else if($ext == 'pdf'){

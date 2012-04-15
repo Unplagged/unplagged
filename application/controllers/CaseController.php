@@ -18,20 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'BaseController.php';
+
 /**
  *
  */
-class CaseController extends Zend_Controller_Action{
-
-  /**
-   * Initalizes registry and namespace instance in the controller and allows to display flash messages in the view.
-   * @see Zend_Controller_Action::init()
-   */
-  public function init(){
-    $this->_em = Zend_Registry::getInstance()->entitymanager;
-    $this->_defaultNamespace = new Zend_Session_Namespace('Default');
-    $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
-  }
+class CaseController extends BaseController{
 
   public function indexAction(){
     $this->_helper->redirector('list', 'case');
@@ -130,8 +122,41 @@ class CaseController extends Zend_Controller_Action{
   }
 
   public function filesAction(){
-    Zend_Registry::get('Log')->debug(BASE_PATH);
-    $this->_helper->viewRenderer(BASE_PATH . '/views/scripts/file/list', null, true);
+    
+    $this->setTitle('Case Files');
+    
+    $page = $this->_getParam('page');
+
+    $userId = $this->_defaultNamespace->userId;
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($userId);
+    $case = $user->getCurrentCase();
+    
+    $caseFiles = $case->getFiles();
+    
+    $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($caseFiles->toArray()));
+    $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+    $paginator->setCurrentPageNumber($page);
+
+    $this->view->paginator = $paginator;
+    
+    //change the view to the one from the file controller
+    $this->_helper->viewRenderer->renderBySpec('list', array('controller' => 'file'));
+  }
+  
+  public function addFileAction(){
+    $this->_helper->viewRenderer->setNoRender(true);
+    
+    $fileId = $this->_getParam('id');
+    $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
+    
+    $userId = $this->_defaultNamespace->userId;
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($userId);
+    
+    $case = $user->getCurrentCase();
+    
+    $case->addFile($file);
+    $this->_em->persist($case);
+    $this->_em->flush();
   }
 }
 

@@ -6,6 +6,7 @@
   <head>
     <!-- Design based on http://www.premiumpixels.com/ -->
     <?php echo $this->headMeta(); ?>
+    <?php echo $this->headTitle(); ?>
     <?php
     echo $this->headLink()
         ->prependStylesheet($this->baseUrl() . '/style/styles.css')
@@ -64,4 +65,3 @@
         <h1 class="ir">Unplagged - The Plagiarism Detection Cockpit</h1>
         <nav><?php echo $this->navigation()->menu(); ?></nav>
       </header>
-      <?php echo $this->escape($this->title); ?>

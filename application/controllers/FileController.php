@@ -18,16 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'BaseController.php';
+
 /**
  * 
  */
-class FileController extends Zend_Controller_Action{
-
-  public function init(){
-    $this->_em = Zend_Registry::getInstance()->entitymanager;
-    $this->_defaultNamespace = new Zend_Session_Namespace('Default');
-    $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
-  }
+class FileController extends BaseController{
 
   public function indexAction(){
     $this->_helper->redirector('list', 'file');
@@ -106,6 +102,8 @@ class FileController extends Zend_Controller_Action{
   }
 
   public function listAction(){
+    $this->setTitle('Public Files');
+    
     // @todo: clean input
     $page = $this->_getParam('page');
 

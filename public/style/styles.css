@@ -139,6 +139,26 @@ p {
   cursor: crosshair;
 }
 
+.contextmenu {
+  display:none;
+  position:absolute;
+  z-index:10000;
+  color:black;
+  background-color:#40bfe8;
+  list-style-type: none;
+  margin: 0;
+  padding: 10px;
+}
+
+.contextmenu li{
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.contextmenu li:first-child{
+  margin-top: 0;
+}
+
 /* ==|== toolbar styles ======================================================= */
 header[role=toolbar]{
   background: #333333;
@@ -305,11 +325,14 @@ header[role=banner] h1 {
 
 
 /* ==|== footer styles ======================================================= */
+
 footer[role=contentinfo]{
   margin-top: 20px;
   font-size: 11px;
   text-align: right;
 }
+
+
 
 .navigation {
   list-style-type: none;
