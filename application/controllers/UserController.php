@@ -18,23 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'BaseController.php';
+
 /**
  * The controller class handles all the user transactions as rights requests and user management.
  *
  */
-class UserController extends Zend_Controller_Action{
-
-  /**
-   * Initalizes registry and namespace instance in the controller and allows to display flash messages in the view.
-   * 
-   * @see Zend_Controller_Action::init()
-   */
-  public function init(){
-    $this->_em = Zend_Registry::getInstance()->entitymanager;
-    $this->_defaultNamespace = new Zend_Session_Namespace('Default');
-
-    $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
-  }
+class UserController extends BaseController{
 
   public function indexAction(){
     
@@ -82,6 +72,9 @@ class UserController extends Zend_Controller_Action{
   }
 
   public function filesAction(){
+    
+    $this->setTitle('Personal Files');
+    
     $page = $this->_getParam('page');
 
     $userId = $this->_defaultNamespace->userId;
@@ -259,11 +252,6 @@ class UserController extends Zend_Controller_Action{
     $case = null;
     if($caseId){
       $case = $this->_em->getRepository('Application_Model_Case')->findOneById($caseId);
-
-      
-        //$result["caseId"] = $caseId;
-        //$result["response"] = "200";
-        //$this->_helper->json($result);
     }
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
     $user->setCurrentCase($case);
@@ -271,8 +259,7 @@ class UserController extends Zend_Controller_Action{
     $this->_em->persist($user);
     $this->_em->flush();
     
-    $this->_helper->viewRenderer->setNoRender(true);
-    $this->_redirect();
+    $this->redirectToLastPage();
   }
 
   public function resetCurrentCaseAction(){

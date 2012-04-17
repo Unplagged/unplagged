@@ -1,11 +1,13 @@
 <!doctype html>
-<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]> <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]> <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie"> <![endif]-->
+<!--[if IE 7]> <html class="no-js ie7 oldie"> <![endif]-->
+<!--[if IE 8]> <html class="no-js ie8 oldie"> <![endif]-->
+<!--[if IE 9]> <html class="no-js ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
   <head>
     <!-- Design based on http://www.premiumpixels.com/ -->
     <?php echo $this->headMeta(); ?>
+    <?php echo $this->headTitle(); ?>
     <?php
     echo $this->headLink()
         ->prependStylesheet($this->baseUrl() . '/style/styles.css')
@@ -13,6 +15,7 @@
         ->appendStylesheet($this->baseUrl() . '/js/libs/css/jquery.lightbox-0.5.css');
     ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- Modernizr needs to stay in the head to work properly -->
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
   </head>
@@ -31,12 +34,8 @@
             ?>
             <a href="/case/list"><?php echo $this->translate("Edit Cases"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
             <form class="current-case" method="POST" action="/user/set-current-case">
-              <select name="case">
-                <?php if($currentLabel === ''): ?>
-                  <option><?php echo $this->translate('Select a Case'); ?></option>
-                <?php else: ?>
+              <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
                   <option></option>
-                <?php endif; ?>
                 <?php foreach($this->cases as $case): ?>
                   <option <?php if($case['value'] == $currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
                 <?php endforeach; ?>
@@ -55,7 +54,7 @@
             </div>
           </div>
         <?php else: ?>
-          <div>
+          <div class="login-register-box">
             <a href="/user/register"><?php echo $this->translate("Register now"); ?></a>
             <span><?php echo $this->translate('or') . ' '; ?></span>
             <a href="/auth/login"><?php echo $this->translate("login"); ?></a>
@@ -68,4 +67,3 @@
         <h1 class="ir">Unplagged - The Plagiarism Detection Cockpit</h1>
         <nav><?php echo $this->navigation()->menu(); ?></nav>
       </header>
-      <?php echo $this->escape($this->title); ?>

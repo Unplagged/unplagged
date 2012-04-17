@@ -28,8 +28,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
   /**
    * Initialize auto loader of Doctrine to get the database connection.
-   * @author: Jan Oliver Oelerich (http://www.oelerich.org/?p=193)
-   *
+   * 
+   * @author Jan Oliver Oelerich (http://www.oelerich.org/?p=193)
    * @return Doctrine_Manager
    */
   public function _initDoctrine(){
@@ -116,6 +116,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   }
 
   /**
+   * Registers the plugin that stores the last visited url. 
+   */
+  protected function _initHistory(){
+    $frontController = $this->getResource('FrontController');
+    $frontController->registerPlugin(new Unplagged_UrlHistory());
+  }
+  
+  /**
    * Initalize the view.
    * @author Dennis De Cock
    */
@@ -125,8 +133,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $view = new Zend_View();
 
     $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
-    $view->headTitle()->setSeparator(' - ');
-    $view->headTitle($defaultConfig['portalName']);
+    $view->headTitle()->setSeparator(' - ')->append($defaultConfig['applicationName']);
   }
 
   /**
@@ -189,7 +196,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * 
    */
   protected function _initNavigation(){
-
+    
     $config = array(
       array(
         //home icon gets set via js, because I didn't find a simple way to do add a <span> here
