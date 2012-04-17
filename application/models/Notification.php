@@ -100,6 +100,8 @@ class Application_Model_Notification extends Application_Model_Base{
         return "Case " . $this->getSource()->getPublishableName() . " was created";
       case "file_uploaded":
         return "File " . $this->getSource()->getFilename() . " was uploaded";
+      case "fragment_created":
+        return "Fragment " . $this->getSource()->getTitle() . " was created";
     }
   }
 
@@ -115,14 +117,16 @@ class Application_Model_Notification extends Application_Model_Base{
         return "Case " . $this->getSource()->getPublishableName() . " was created.";
       case "file_uploaded":
         return "File " . $this->getSource()->getFilename() . " was uploaded.";
+      case "fragment_created":
+        return "Fragment " . $this->getSource()->getTitle() . " was created";
     }
   }
-  
+
   public function toArray(){
     $result = array();
 
     $result["id"] = $this->id;
-    
+
     return $result;
   }
 

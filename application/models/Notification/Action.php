@@ -19,7 +19,7 @@
  */
 
 /**
- * The class represents a log action.
+ * The class represents a notification action.
  * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
@@ -28,23 +28,23 @@
 class Application_Model_Notification_Action {
 
   /**
-   * The id is an unique identifier for each notification type.
-   * @var string The notification type id.
+   * The id is an unique identifier for each notification action.
+   * @var string The notification action id.
    * 
    * @Id @GeneratedValue @Column(type="integer")
    */
   private $id;
 
   /**
-   * A unique name for the notification acction type.
-   * @var string The name of the notification action type.
+   * A unique name for the notification action.
+   * @var string The name of the notification action.
    * 
-   * @Column(type="string", unique="true", length=32)
+   * @Column(type="string", unique=true, length=32)
    */
   private $name;
 
   /**
-   * A description for the log action.
+   * A description for the notification action.
    * @var string The description.
    * 
    * @Column(type="string", length=256)

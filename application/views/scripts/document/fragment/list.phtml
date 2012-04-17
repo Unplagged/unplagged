@@ -1,0 +1,28 @@
+<?php
+    $this->title = $this->translate("List of fragments");
+    $this->headTitle($this->title);
+?>
+<table cellpadding="0" cellspacing="0" class="default"> 
+  <tr>
+    <th><?php echo $this->translate("Title"); ?></th>
+    <th style="width: 70px;"><?php echo $this->translate("Page from"); ?></th>
+    <th style="width: 70px;"><?php echo $this->translate("Page to"); ?></th>
+    <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
+  </tr>
+  <?php $i = 0; ?>
+  <?php if($this->paginator): ?>
+  <?php foreach($this->paginator as $fragment): ?>
+  <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
+    <td><a href="<?php echo $fragment->getDirectLink(); ?>"><?php echo $fragment->getTitle(); ?></a></td>
+    <td><?php echo $fragment->getSource()->getPageFrom()->getPageNumber(); ?></td>
+    <td><?php echo $fragment->getSource()->getPageTo()->getPageNumber(); ?></td>
+    <td><a href="<?php echo "/document_fragment/remove/id/" . $fragment->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("Remove fragment."); ?>" /></a></td>
+  </tr>
+  <?php endforeach; ?>
+  <?php endif; ?>
+</table>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
+
+<div class="smork-btn upload-icon">
+  <a href="/document_fragment/create"><span><?php echo $this->translate("Create a fragment"); ?></span></a>
+</div>

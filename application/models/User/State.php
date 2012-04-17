@@ -40,7 +40,7 @@ class Application_Model_User_State{
    * A title for the user state.
    * @var string The user state.
    * 
-   * @Column(type="string", unique="true", length=32)
+   * @Column(type="string", unique=true, length=32)
    */
   private $title;
 

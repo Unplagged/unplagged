@@ -4,25 +4,16 @@
 ?>
 Document: <?php echo $this->document->getTitle(); ?>
 
-    <table cellpadding="0" cellspacing="0" class="default"> 
-  <tr>
-    <th><?php echo $this->translate("Page number"); ?></th>
-    <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
-  </tr>
-  <?php 
-  $i = 0;
-  foreach($this->paginator as $page): 
-    ?>
-  <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
-    <td><a href="/document_page/show/id/<?php echo $page->getId(); ?>"><?php echo $page->getPageNumber(); ?></a></td>
-    <td>
-          <a href="<?php echo "/document_page/de-hyphen/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/text_padding_right.png'); ?>" title="<?php echo $this->translate("de-hyphen"); ?>" /></a>
-  <a href="<?php echo "/document_page/stopwords/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/zoom.png'); ?>" title="<?php echo $this->translate("stopword"); ?>" /></a>
-  <a href="<?php echo "/document_page/detection-reports/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/report_magnify.png'); ?>" title="<?php echo $this->translate("Plagiarism Detection Reports"); ?>" /></a>
-  <a href="<?php echo "/document_page/edit/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/pencil.png'); ?>" title="<?php echo $this->translate("edit"); ?>" /></a>
-    <a href="<?php echo "/document_page/delete/id/" . $page->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("delete"); ?>" /></a>
-    </td>
-  </tr>
+<div class="default-container">
+<h3><?php echo $this->translate("Document pages"); ?></h3>
+
+<div class="document-page-overview">
+  <?php $i = 0; ?>
+  <?php foreach($this->paginator as $page): ?>
+  <div class="page percentage-<?php echo $page->getPlagiarismPercentage(); ?>">
+    <a href="/document_page/show/id/<?php echo $page->getId(); ?>"><?php echo Unplagged_Helper::formatDocumentPageNumber($page->getPageNumber()); ?></a>
+  </div>
   <?php endforeach; ?>
-</table>
+</div>
+</div>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>

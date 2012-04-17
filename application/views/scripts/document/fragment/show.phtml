@@ -1,0 +1,31 @@
+<?php
+$this->title = $this->translate("Fragment");
+$this->headTitle($this->title);
+?>
+<br/>
+<?php echo $this->translate("Name"); ?>: <?php echo $this->fragment->getTitle(); ?><br />
+<?php echo $this->translate("Type"); ?>: <?php echo $this->fragment->getType()->getName(); ?><br/>
+<?php echo $this->translate("Source"); ?>: //<br/>
+<div class="document-page diff clearfix">
+  <div class="src-wrapper">
+    <h3><?php echo $this->translate("Fragment"); ?></h3>
+    <p>From: page <?php echo $this->plag->getPageFrom()->getPageNumber(); ?>, line <?php echo $this->source->getLineFrom(); ?></p>
+    <p>To: page <?php echo $this->plag->getPageTo()->getPageNumber(); ?>, line <?php echo $this->source->getLineTo(); ?></p>    <ol>
+      <?php foreach($this->plagLines as $plagLine){ ?> 
+        <li><?php echo $plagLine; ?></li>
+      <?php } ?>
+    </ol>
+  </div>
+  <div class="src-wrapper">
+    <h3><?php echo $this->translate("Source"); ?></h3>
+    <p>From: page <?php echo $this->source->getPageFrom()->getPageNumber(); ?>, line <?php echo $this->source->getLineFrom(); ?></p>
+    <p>To: page <?php echo $this->source->getPageTo()->getPageNumber(); ?>, line <?php echo $this->source->getLineTo(); ?></p>
+    <ol>
+      <?php foreach($this->sourceLines as $sourceLine){ ?> 
+        <li><?php echo $sourceLine; ?></li>
+      <?php } ?>
+    </ol>
+  </div>
+</div>
+
+<?php echo $this->translate("Note"); ?>: <?php echo $this->fragment->getNote(); ?>

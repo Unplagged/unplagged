@@ -43,7 +43,9 @@
  * ,"tag" = "Application_Model_Tag"
  * ,"notification" = "Application_Model_Notification"
  * ,"document_fragment" = "Application_Model_Document_Fragment"
- * ,"document_page_position" = "Application_Model_Document_Page_Position"})
+ * ,"versionable_version" = "Application_Model_Versionable_Version"
+ * ,"document_fragment_partial" = "Application_Model_Document_Fragment_Partial"
+ * })
  * 
  */
 abstract class Application_Model_Base{
@@ -82,9 +84,13 @@ abstract class Application_Model_Base{
     return $this->id;
   }
   
+  public function setId($id){
+    $this->id = $id;
+  }
+
+    
   /**
    * Sets the creation time to the current time, if it is null.
-   * 
    * This will normally be auto called the first time the object is persisted by doctrine.
    * 
    * @PrePersist

@@ -19,7 +19,7 @@
  */
 
 /**
- * The class represents a line of text in a document.
+ * The class represents a single document.
  * It defines also the structure of the database table for the ORM.
  *
  * @author Benjamin Oertel <mail@benjaminoertel.com>
@@ -40,12 +40,6 @@ class Application_Model_Document extends Application_Model_Base{
   private $title;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_File")
-   * @JoinColumn(name="original_file_id", referencedColumnName="id", onDelete="SET NULL")
-   */
-  private $originalFile;
-
-  /**
    * The lines in the document.
    * 
    * @OneToMany(targetEntity="Application_Model_Document_Page", mappedBy="document")
@@ -53,26 +47,49 @@ class Application_Model_Document extends Application_Model_Base{
    */
   private $pages;
 
+  /**
+   * The fragments in the document.
+   * 
+   * @OneToMany(targetEntity="Application_Model_Document_Fragment", mappedBy="fragment")
+   */
+  private $fragments;
+
+  /**
+   * The bibtex information of the document.
+   * @var string The bibtex information.
+   * 
+   * @Column(type="text", nullable=true)
+   */
+  private $bibtex;
+
   public function __construct(array $data = null){
-    if(isset($data["file"])){
-      $this->originalFile = $data["file"];
-    }
 
     if(isset($data["title"])){
       $this->title = $data["title"];
-    } $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    if(isset($data["bibtex"])){
+      $this->bibtex = $data["bibtex"];
+    }
+
+    $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->fragments = new \Doctrine\Common\Collections\ArrayCollection();
   }
 
   public function getId(){
     return $this->id;
   }
 
-  public function getOriginalData(){
-    return 'originalData';
-  }
-
   public function getTitle(){
     return $this->title;
+  }
+
+  public function getBibtex(){
+    return $this->bibtex;
+  }
+
+  public function getPages(){
+    return $this->pages;
   }
 
   public function addPage(Application_Model_Document_Page $page){
@@ -80,8 +97,13 @@ class Application_Model_Document extends Application_Model_Base{
     $this->pages->add($page);
   }
 
-  public function getPages(){
-    return $this->pages;
+  public function getFragments(){
+    return $this->fragments;
+  }
+
+  public function addFragment(Application_Model_Document_Fragment $fragment){
+    $fragment->setDocument($this);
+    $this->fragments->add($fragment);
   }
 
   public function getDirectName(){

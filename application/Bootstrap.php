@@ -72,7 +72,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     return $em;
   }
-  
+
   /**
    * Loads the config and sets it in the registry.
    * 
@@ -136,10 +136,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    */
   protected function _initTranslate(){
     $locale = new Zend_Locale('de_DE');
-    
+
     $registry = Zend_Registry::getInstance();
     $registry->set('Zend_Locale', $locale);
-    
+
     $translate = new Zend_Translate('csv', BASE_PATH . '/data/languages/de.csv', 'de');
     //$translate->addTranslation(APPLICATION_PATH . '/../languages/de.csv', 'de'); //TODO: add automatically lang support
 
@@ -201,6 +201,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'class'=>'home',
         'order'=>-100 // make sure home is the first page
       ), array(
+        'label'=>'Activity',
+        'title'=>'Activity',
+        'module'=>'default',
+        'controller'=>'notification',
+        'action'=>'recent-activity',
+        'resource'=>'notification'
+      ), array(
         'label'=>'Files',
         'title'=>'Files',
         'module'=>'default',
@@ -239,17 +246,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'document',
         'action'=>'list',
-        'resource'=>'document',
-        'pages'=>array(
-          array(
-            'label'=>'Simtext',
-            'title'=>'Simtext',
-            'module'=>'default',
-            'controller'=>'simtext',
-            'action'=>'index',
-            'resource'=>'simtext'
-          )
-        )
+        'resource'=>'document'
+      ), array(
+        'label'=>'Fragments',
+        'title'=>'Fragments',
+        'module'=>'default',
+        'controller'=>'document_fragment',
+        'action'=>'list',
+        'resource'=>'document_fragment'
       )
     );
 
@@ -261,13 +265,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     Zend_Registry::set('Zend_Navigation', $container);
   }
-  
+
   protected function setConstants($constants){
-        foreach ($constants as $key=>$value){
-            if(!defined($key)){
-                define($key, $value);
-            }
-        }
-}
+    foreach($constants as $key=>$value){
+      if(!defined($key)){
+        define($key, $value);
+      }
+    }
+  }
 
 }

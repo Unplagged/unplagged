@@ -67,7 +67,7 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
   /**
    * The content of the page.
    * 
-   * @Column(type="text", nullable="true")
+   * @Column(type="text", nullable=true)
    */
   private $content;
 
