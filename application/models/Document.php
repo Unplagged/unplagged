@@ -117,5 +117,9 @@ class Application_Model_Document extends Application_Model_Base{
   public function getIconClass(){
     return "document-icon";
   }
+  
+  public function setTitle($title){
+    $this->title = $title;
+  }
 
 }

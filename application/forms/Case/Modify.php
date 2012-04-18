@@ -44,6 +44,13 @@ class Application_Form_Case_Modify extends Zend_Form{
     $aliasElement->addValidator('stringLength', false, array(2, 64));
     $aliasElement->setAttrib('maxLength', 64);
     $aliasElement->setRequired(false);
+    
+    $abbreviationElement = new Zend_Form_Element_Text('abbreviation');
+    $abbreviationElement->setLabel("Abbreviation");
+    $abbreviationElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
+    $abbreviationElement->addValidator('stringLength', false, array(2, 5));
+    $abbreviationElement->setAttrib('maxLength', 5);
+    $abbreviationElement->setRequired(true);
 
     $collaborator = new Zend_Form_Element_Text('collaborator');
     /** @todo validator doesn't exist, and required is probably not necessary */
@@ -76,7 +83,7 @@ class Application_Form_Case_Modify extends Zend_Form{
       ))));
 
     $submitElement = new Zend_Form_Element_Submit('submit');
-    $submitElement->setLabel('Create');
+    $submitElement->setLabel('Create case');
     $submitElement->setIgnore(true);
     $submitElement->setAttrib('class', 'submit');
     $submitElement->removeDecorator('DtDdWrapper');
@@ -84,13 +91,14 @@ class Application_Form_Case_Modify extends Zend_Form{
     $this->addElements(array(
       $nameElement
       , $aliasElement
+      , $abbreviationElement
       , $tags
       , $collaborator
     ));
 
-    $this->addDisplayGroup(array('name', 'alias', 'tags', 'collaborator')
+    $this->addDisplayGroup(array('name', 'alias', 'abbreviation', 'tags', 'collaborator')
         , 'credentialGroup'
-        , array('legend'=>'Case creation')
+        , array('legend'=>'Case Information')
     );
 
     $this->addElements(array(

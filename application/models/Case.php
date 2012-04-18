@@ -105,13 +105,14 @@ class Application_Model_Case extends Application_Model_Base{
    */
   private $collaborators;
 
-  public function __construct($name, $alias){
+  public function __construct($name = null, $alias = null, $abbreviation = null){
     $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
     $this->files = new \Doctrine\Common\Collections\ArrayCollection();
     $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
     $this->collaborators = new \Doctrine\Common\Collections\ArrayCollection();
     $this->name = $name;
     $this->alias = $alias;
+    $this->abbreviation = $abbreviation;
   }
 
   /**
@@ -234,6 +235,23 @@ class Application_Model_Case extends Application_Model_Base{
 
     return $result;
   }
+  
+  public function getAbbreviation(){
+    return $this->abbreviation;
+  }
+  
+  public function setName($name){
+    $this->name = $name;
+  }
+
+  public function setAlias($alias){
+    $this->alias = $alias;
+  }
+
+  public function setAbbreviation($abbreviation){
+    $this->abbreviation = $abbreviation;
+  } 
+  
 
 }
 

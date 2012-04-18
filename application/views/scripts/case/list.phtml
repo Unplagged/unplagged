@@ -6,6 +6,7 @@
   <tr>
     <th><?php echo $this->translate("Name"); ?></th>
     <th style="width: 110px;"><?php echo $this->translate("Alias"); ?></th>
+    <th style="width: 100px;"><?php echo $this->translate("Abbreviation"); ?></th>
     <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
   </tr>
   <?php 
@@ -15,8 +16,9 @@
   <?php foreach ($this->paginator as $case): ?>
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
     <td><?php echo $case->getName(); ?></td>
+    <td><?php echo $case->getAbbreviation(); ?></td>
     <td><?php echo $case->getAlias(); ?></td>
-    <td></td>
+    <td><a href="<?php echo "/case/edit/id/" . $case->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/pencil.png'); ?>" title="<?php echo $this->translate("Edit case"); ?>" /></a></td>
   </tr>
   <?php endforeach; ?>
   <?php endif; ?>

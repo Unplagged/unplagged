@@ -24,12 +24,30 @@
  * @author Benjamin Oertel <mail@benjaminoertel.com>
  * @version 1.0
  */
-class Application_Form_Document_Fragment extends Zend_Form{
+class Application_Form_Document_Fragment_Modify extends Zend_Form{
 
   private $types = array();
   private $documents = array();
 
-  public function __construct($params = array()){
+  public function __construct(){
+    $em = Zend_Registry::getInstance()->entitymanager;
+    
+    $query = $em->createQuery("SELECT t FROM Application_Model_Document_Fragment_Type t");
+    $types = $query->getResult();
+
+    $params["types"] = array();
+    foreach($types as $type){
+      $params["types"][$type->getId()] = $type->getName();
+    }
+
+    $query = $em->createQuery("SELECT d FROM Application_Model_Document d");
+    $documents = $query->getResult();
+
+    $params["documents"] = array();
+    foreach($documents as $document){
+      $params["documents"][$document->getId()] = $document->getTitle();
+    }
+    
     $this->types = $params['types'];
     $this->documents = $params['documents'];
 

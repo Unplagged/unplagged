@@ -130,5 +130,25 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
   public function getNote(){
     return $this->note;
   }
+  
+  public function setNote($note){
+    $this->note = $note;
+  }
+
+  public function setType($type){
+    $this->type = $type;
+  }
+  
+  public function setPlag($plag){
+    $this->plag = $plag;
+  }
+
+  public function setSource($source){
+    $this->source = $source;
+  }
+
+
+
+
 
 }

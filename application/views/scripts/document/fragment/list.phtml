@@ -16,7 +16,10 @@
     <td><a href="<?php echo $fragment->getDirectLink(); ?>"><?php echo $fragment->getTitle(); ?></a></td>
     <td><?php echo $fragment->getSource()->getPageFrom()->getPageNumber(); ?></td>
     <td><?php echo $fragment->getSource()->getPageTo()->getPageNumber(); ?></td>
-    <td><a href="<?php echo "/document_fragment/remove/id/" . $fragment->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("Remove fragment."); ?>" /></a></td>
+    <td>
+      <a href="<?php echo "/document_fragment/edit/id/" . $fragment->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/pencil.png'); ?>" title="<?php echo $this->translate("Edit fragment"); ?>" /></a>
+      <a href="<?php echo "/document_fragment/remove/id/" . $fragment->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("Remove fragment."); ?>" /></a>
+    </td>
   </tr>
   <?php endforeach; ?>
   <?php endif; ?>
