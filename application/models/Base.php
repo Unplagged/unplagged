@@ -87,7 +87,6 @@ abstract class Application_Model_Base{
   public function setId($id){
     $this->id = $id;
   }
-
     
   /**
    * Sets the creation time to the current time, if it is null.

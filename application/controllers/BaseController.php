@@ -51,9 +51,17 @@ class BaseController extends Zend_Controller_Action{
    * Looks up the session data and redirects the user to the page that was visited before. 
    */
   protected function redirectToLastPage(){
-    $this->_helper->viewRenderer->setNoRender(true);
     $historySessionNamespace = new Zend_Session_Namespace('history');
-    $this->_redirect($historySessionNamespace->last);
+    
+    //check if the last url is the same as the current to avoid infinite loop
+    if($historySessionNamespace->last !== $this->getRequest()->getRequestUri()){
+      $this->_helper->viewRenderer->setNoRender(true);
+      $this->_redirect($historySessionNamespace->last);
+    } else {
+      //if we don't know where the user wants to go, the default is the
+      //activity stream
+      $this->_helper->redirector('recent-activity', 'notification');  
+    }
   }
 
 }

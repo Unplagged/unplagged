@@ -103,6 +103,11 @@ p {
   height: 40px;
 }
 
+/*
+ * A simple button element from html like this:
+ * 
+ * <a class="button">The Text</a>
+ */
 .button{  
   background-color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0 );   
@@ -127,12 +132,12 @@ p {
   white-space: nowrap;
   position: relative;
   line-height: 24px;
-  padding: 0 0 0 8px;
+  padding: 0 8px;
   color: #444444;
   text-decoration: none;
 }
 
-.button:hover {
+.button:hover, .button.hover, .dropdown-button:hover .button, .dropdown-button.hover .button {
   border: 1px solid #aaa;
   -webkit-box-shadow: 0 1px 0 #fff inset;
   -moz-box-shadow   : 0 1px 0 #fff inset;
@@ -146,33 +151,89 @@ p {
   background-image: -o-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
   background-image: -ms-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
   background-image: linear-gradient(top, #eeeeee 20%, #ffffff 80%);
-  -webkit-border-bottom-left-radius : 0;
-  -webkit-border-bottom-right-radius: 0;
-  -moz-border-radius-bottomleft : 0;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-left-radius : 0;
-  border-bottom-right-radius: 0;
-  border-bottom: none;
 }
 
 .ie9 .button {
   border-radius: 0;
 }
 
-.button .arrow-down {
+/* 
+ * Styling for a .dropdown-button element.
+ *
+ * This element is mostly identical to .button but needs an additional <div>
+ * wrapper around it with an <ul> inside, i. e. like so:
+ * 
+ * <div class="dropdown-button">
+ *   <a class="button">The Button</a>
+ *   <ul>
+ *     <li>A dropdown menu item</li>
+ *   </ul>
+ * </div>
+ */
+.dropdown-button {
+  position: relative;
+}
+
+.dropdown-button .arrow-down {
   display: inline-block;
   margin-left: 3px;
   margin-bottom: 2px;
   padding-right: 18px;
   height: 18px;
-  background: url(../images/chosen-sprite.png) no-repeat 0 -3px;
-  border-left: 1px solid #d5d5d5;
+  background: url(../images/chosen-sprite.png) no-repeat 0 -4px;
   vertical-align: bottom;
 }
 
-.button:hover .arrow-down{
-  background-position: -18px -3px;
+.dropdown-button:hover .arrow-down, .dropdown-button.hover .arrow-down{
+  background-position: -18px -4px;
 }
+
+.dropdown-button .button {
+  padding-right: 0;
+}
+
+.dropdown-button:hover .button, .dropdown-button.hover .button {
+  border-bottom: none;
+  -webkit-border-bottom-left-radius : 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomleft : 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-left-radius : 0;
+  border-bottom-right-radius: 0;
+}
+
+.dropdown-button ul { 
+  display: none;
+  position: absolute;
+  background: white;
+  border: 1px solid #c5c5c5;
+  border-top: none;
+  z-index: 1000;
+  top: 100%; 
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-border-top-left-radius : 0;
+  -moz-border-radius-topleft : 0;
+  border-top-left-radius : 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0 30px 0 5px;
+}
+
+.dropdown-button li a{
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.dropdown-button li:hover{
+  text-decoration: underline;
+}
+
+.dropdown-button:hover ul, .dropdown-button.hover ul {
+  display: block;
+}
+
 
 .target {
   cursor: crosshair;
@@ -251,43 +312,6 @@ header[role=toolbar] a:hover{
 
 .user-menu {
   float: left;
-  position: relative;
-}
-
-.user-menu:hover .arrow-down{
-  background-position: -18px -3px;
-}
-
-.user-menu ul { 
-  display: none;
-  position: absolute;
-  background: white;
-  border: 1px solid #c5c5c5;
-  border-top: none;
-  z-index: 1000;
-  top: 100%; 
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  -webkit-border-top-left-radius : 0;
-  -moz-border-radius-topleft : 0;
-  border-top-left-radius : 0;
-  list-style-type: none;
-  margin: 0;
-  padding: 0 30px 0 5px;
-}
-
-.user-menu li a{
-  white-space: nowrap;
-  text-decoration: none;
-}
-
-.user-menu li:hover a{
-  text-decoration: underline;
-}
-
-.user-menu:hover ul {
-  display: block;
 }
 
 .case-settings-box {

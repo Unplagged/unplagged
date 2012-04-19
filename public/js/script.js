@@ -13,6 +13,11 @@ $(document).ready(function(){
     $(this).closest('form').submit();  
   });
   
+  $('.dropdown-button .button').click(function(){
+    $(this).parent().toggleClass('hover');   
+    return false;
+  });
+  
   $(".toggle-comments").click(function() {
     var targetId = $(this).attr("for");
     var target = $("#" + targetId);

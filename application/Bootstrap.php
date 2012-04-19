@@ -33,11 +33,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * @return Doctrine_Manager
    */
   public function _initDoctrine(){
-    require_once('Doctrine/Common/ClassLoader.php');
+    require_once('Doctrine' . DIRECTORY_SEPARATOR . 'Common' . DIRECTORY_SEPARATOR . 'ClassLoader.php');
 
     $doctrineConfig = $this->getOption('doctrine');
 
-    $classLoader = new \Doctrine\Common\ClassLoader('Doctrine', APPLICATION_PATH . '/../library/');
+    $classLoader = new \Doctrine\Common\ClassLoader('Doctrine', BASE_PATH . DIRECTORY_SEPARATOR . 'library');
     $classLoader->register();
 
     $classLoader = new \Doctrine\Common\ClassLoader('models', APPLICATION_PATH);
