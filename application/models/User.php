@@ -114,7 +114,7 @@ class Application_Model_User extends Application_Model_Base{
   /**
    * @Column(type="string", length=255)
    */
-  private $salt;
+  private $salt = '';
   
   /**
    * @ManyToMany(targetEntity="Application_Model_File") 

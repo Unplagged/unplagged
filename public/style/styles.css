@@ -163,7 +163,7 @@ p {
  * This element is mostly identical to .button but needs an additional <div>
  * wrapper around it with an <ul> inside, i. e. like so:
  * 
- * <div class="dropdown-button">
+ * <div class="dropdown-button hoverable">
  *   <a class="button">The Button</a>
  *   <ul>
  *     <li>A dropdown menu item</li>
