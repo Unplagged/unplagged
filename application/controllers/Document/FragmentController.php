@@ -84,7 +84,9 @@ class Document_FragmentController extends Zend_Controller_Action{
       $modifyForm->getElement("note")->setValue($fragment->getNote());
 
       $modifyForm->getElement("candidateDocument")->setValue($fragment->getPlag()->getPageFrom()->getDocument()->getId());
-      $modifyForm->getElement("candidateBibTex")->setAttrib("style", "display: none;");
+      foreach($modifyForm->getElement("candidateBibTex")->getDecorators() as $decorator){
+        $decorator->setOption('style', 'display: none');
+      }
       $modifyForm->getElement("candidatePageFrom")->setValue($fragment->getPlag()->getPageFrom()->getPageNumber());
       $modifyForm->getElement("candidateLineFrom")->setValue($fragment->getPlag()->getLineFrom());
       $modifyForm->getElement("candidatePageTo")->setValue($fragment->getPlag()->getPageTo()->getPageNumber());
@@ -92,7 +94,9 @@ class Document_FragmentController extends Zend_Controller_Action{
       $modifyForm->getElement("candidateText")->setValue($fragment->getPlag()->getText());
 
       $modifyForm->getElement("sourceDocument")->setValue($fragment->getSource()->getPageFrom()->getDocument()->getId());
-      $modifyForm->getElement("sourceBibTex")->setAttrib("style", "display: none;");
+      foreach($modifyForm->getElement("sourceBibTex")->getDecorators() as $decorator){
+        $decorator->setOption('style', 'display: none');
+      }
       $modifyForm->getElement("sourcePageFrom")->setValue($fragment->getSource()->getPageFrom()->getPageNumber());
       $modifyForm->getElement("sourceLineFrom")->setValue($fragment->getSource()->getLineFrom());
       $modifyForm->getElement("sourcePageTo")->setValue($fragment->getSource()->getPageTo()->getPageNumber());
@@ -226,6 +230,15 @@ class Document_FragmentController extends Zend_Controller_Action{
       $this->_em->flush();
 
       return true;
+    }else{
+      foreach($modifyForm->getElement("candidateBibTex")->getDecorators() as $decorator){
+        $display = $formData['candidateDocument'] == "new" ? "block" : "none";
+        $decorator->setOption('style', 'display: ' . $display);
+      }
+      foreach($modifyForm->getElement("sourceBibTex")->getDecorators() as $decorator){
+        $display = $formData['sourceDocument'] == "new" ? "block" : "none";
+        $decorator->setOption('style', 'display: ' . $display);
+      }
     }
 
     return false;

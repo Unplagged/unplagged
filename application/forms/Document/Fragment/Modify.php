@@ -78,7 +78,7 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
     $candidateDocumentElement->setLabel("Document");
     $candidateDocumentElement->addMultiOption("new", "Neues Dokument");
     $candidateDocumentElement->addMultiOptions($this->documents);
-    $candidateDocumentElement->setAttrib('onchange', 'if($(this).val() == \'new\') { $(\'#candidateBibTex-label\').show(); $(\'#candidateBibTex-element\').show(); } else { $(\'#candidateBibTex-label\').hide(); $(\'#candidateBibTex-element\').hide(); }');
+    $candidateDocumentElement->setAttrib('onchange', 'if($(this).val() == \'new\') { $(\'#candidateBibTex-label label\').show(); $(\'#candidateBibTex-element\').show(); } else { $(\'#candidateBibTex-label label\').hide(); $(\'#candidateBibTex-element\').hide(); }');
     
     $candidateBibTexElement = new Zend_Form_Element_Textarea('candidateBibTex');
     $candidateBibTexElement->setLabel("Candidate BiBTex");
@@ -107,7 +107,7 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
     $sourceDocumentElement->setLabel("Document");
     $sourceDocumentElement->addMultiOption("new", "Neues Dokument");
     $sourceDocumentElement->addMultiOptions($this->documents);
-    $sourceDocumentElement->setAttrib('onchange', 'if($(this).val() == \'new\') { $(\'#sourceBibTex-label\').show(); $(\'#sourceBibTex-element\').show(); } else { $(\'#sourceBibTex-label\').hide(); $(\'#sourceBibTex-element\').hide(); }');
+    $sourceDocumentElement->setAttrib('onchange', 'if($(this).val() == \'new\') { $(\'#sourceBibTex-label label\').show(); $(\'#sourceBibTex-element\').show(); } else { $(\'#sourceBibTex-label label\').hide(); $(\'#sourceBibTex-element\').hide(); }');
     
     $sourcePageFromElement = new Zend_Form_Element_Text('sourcePageFrom');
     $sourcePageFromElement->setLabel("Page from");
