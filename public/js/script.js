@@ -8,12 +8,14 @@
 
 $(document).ready(function(){
  
-  //submit the case selection on change of the dropdown
+  // submit the case selection on change of the dropdown
   $('.case-settings-box select').chosen({allow_single_deselect: true}).change(function(){
     $(this).closest('form').submit();  
   });
   
-  $('.dropdown-button .button').click(function(){
+  // if js is enabled we only want to open the menu on click, the other behaviour is
+  // just a fallback for non-js users
+  $('.dropdown-button').removeClass('hoverable').find('.button').click(function(){
     $(this).parent().toggleClass('hover');   
     return false;
   });

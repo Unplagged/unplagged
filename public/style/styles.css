@@ -184,7 +184,7 @@ p {
   vertical-align: bottom;
 }
 
-.dropdown-button:hover .arrow-down, .dropdown-button.hover .arrow-down{
+.dropdown-button.hoverable:hover .arrow-down, .dropdown-button.hover .arrow-down{
   background-position: -18px -4px;
 }
 
@@ -192,7 +192,7 @@ p {
   padding-right: 0;
 }
 
-.dropdown-button:hover .button, .dropdown-button.hover .button {
+.dropdown-button.hoverable:hover .button, .dropdown-button.hover .button {
   border-bottom: none;
   -webkit-border-bottom-left-radius : 0;
   -webkit-border-bottom-right-radius: 0;
@@ -230,7 +230,7 @@ p {
   text-decoration: underline;
 }
 
-.dropdown-button:hover ul, .dropdown-button.hover ul {
+.dropdown-button.hoverable:hover ul, .dropdown-button.hover ul {
   display: block;
 }
 
