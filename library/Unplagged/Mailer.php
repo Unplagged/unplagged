@@ -73,7 +73,9 @@ class Unplagged_Mailer{
     $bodyText .= 'this E-Mail address. If it wasn\'t you, simply ignore this mail. ' . "\r" . "\n" . "\r" . "\n";
     
     $bodyText .= 'Otherwise click the following link: ' . "\r" . "\n";
-    $bodyText .= $config->link->passwordRecovery . $user->getVerificationHash() . "\r" . "\n";
+    $bodyText .= $config->link->passwordRecovery . $user->getVerificationHash() . "\r" . "\n" . "\r" . "\n";
+
+    $bodyText .= 'Username: ' . $user->getUsername() . "\r" . "\n";
 
     $bodyText .= Unplagged_Mailer::getFooter();
 

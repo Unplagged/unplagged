@@ -1,4 +1,7 @@
 <?php
+
+$sidebar = $this->layout()->sidebar;
+
 $defaultNamespace = new Zend_Session_Namespace('Default');
 $em = Zend_Registry::getInstance()->entitymanager;
 if($defaultNamespace->userId){
@@ -18,39 +21,37 @@ $results = array();
 foreach($dbresults as $key=>$value){
   $results[] = $value;
 }
- 
-$cases = $results;
 
+$cases = $results;
 ?>
 <?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace, 'me'=>$me, 'cases'=>$cases)); ?>
 <div role="main" class="clearfix show-contextmenu">
   <?php echo $this->partial('partials/messages.phtml', array('defaultNamespace'=>$defaultNamespace, 'flashMessages'=>$this->flashMessages)); ?>
   <h2><?php echo $this->escape($this->title); ?></h2>
   <div class="main">
-  <div id="main-wrapper">
-    <div id="main">
-      <?php
-      // content from each view, the rest of this page is global to all views
-      echo $this->layout()->content;
-      ?>
+    <div id="main-wrapper">
+      <div <?php if(!empty($sidebar)) echo "id=\"main\""; ?>>
+        <?php
+        // content from each view, the rest of this page is global to all views
+        echo $this->layout()->content;
+        ?>
+      </div>
     </div>
   </div>
-  </div>
-  <nav id="right-nav">
-    <h4>Aktuelles und Kontroverses</h4>
-    <ul>
-      <li><a href="#">News 1<span class="count">3</span></a></li>
-      <li><a href="#">News 1<span class="count">3</span></a></li>
-      <li><a href="#">News 1<span class="count">3</span></a></li>
-    </ul>
-    <br />
-    <h4>Berichte und Mitteilungen</h4>
-    <ul>
-      <li><a href="#">News 1<span class="count">3</span></a></li>
-      <li><a href="#">News 1<span class="count">3</span></a></li>
-      <li><a href="#">News 1<span class="count">3</span></a></li>
-    </ul>
-  </nav>
+  <?php
+  if(!empty($sidebar)){
+    switch($sidebar){
+      case "fragment-tools":
+        echo $this->partial('partials/sidebars/fragment_tools.phtml', array("versionableId" => $this->layout()->versionableId));
+        break;
+      case "page-tools":
+        echo $this->partial('partials/sidebars/page_tools.phtml', array("pageId" => $this->layout()->versionableId));
+        break;
+      default:
+        echo $this->partial('partials/sidebars/default.phtml');
+    }
+  } //echo $partial;
+  ?>
 </div>
 
 <?php echo $this->partial('partials/footer.phtml'); ?>

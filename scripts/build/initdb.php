@@ -27,7 +27,6 @@ $application = new Zend_Application(
 $application->getBootstrap()->bootstrap('doctrine');
 $em = $application->getBootstrap()->getResource('doctrine');
 
-
 // 1) init notification actions
 unset($data);
 $data["name"] = "user_registered";
@@ -65,8 +64,13 @@ $data["description"] = "A file was uploaded.";
 $notificationAction = new Application_Model_Notification_Action($data);
 $em->persist($notificationAction);
 
-$em->flush();
+unset($data);
+$data["name"] = "fragment_created";
+$data["description"] = "A new fragment was created.";
+$notificationAction = new Application_Model_Notification_Action($data);
+$em->persist($notificationAction);
 
+$em->flush();
 
 // 3) init user states
 unset($data);
@@ -86,5 +90,62 @@ $data["title"] = "locked";
 $data["description"] = "A user that was locked.";
 $userState = new Application_Model_User_State($data);
 $em->persist($userState);
+
+$em->flush();
+
+// 4) fragment types
+unset($data);
+$data["name"] = "UnbekannteQuelle";
+$data["description"] = "UnbekannteQuelle";
+$fragmentType = new Application_Model_Document_Fragment_Type($data);
+$em->persist($fragmentType);
+
+unset($data);
+$data["name"] = "KeinPlagiat";
+$data["description"] = "KeinPlagiat";
+$fragmentType = new Application_Model_Document_Fragment_Type($data);
+$em->persist($fragmentType);
+
+unset($data);
+$data["name"] = "Verschleierung";
+$data["description"] = "Verschleierung";
+$fragmentType = new Application_Model_Document_Fragment_Type($data);
+$em->persist($fragmentType);
+
+unset($data);
+$data["name"] = "HalbsatzFlickerei";
+$data["description"] = "HalbsatzFlickerei";
+$fragmentType = new Application_Model_Document_Fragment_Type($data);
+$em->persist($fragmentType);
+
+unset($data);
+$data["name"] = "ShakeAndPaste";
+$data["description"] = "ShakeAndPaste";
+$fragmentType = new Application_Model_Document_Fragment_Type($data);
+$em->persist($fragmentType);
+
+unset($data);
+$data["name"] = "ÜbersetzungsPlagiat";
+$data["description"] = "ÜbersetzungsPlagiat";
+$fragmentType = new Application_Model_Document_Fragment_Type($data);
+$em->persist($fragmentType);
+
+unset($data);
+$data["name"] = "StrukturPlagiat";
+$data["description"] = "StrukturPlagiat";
+$fragmentType = new Application_Model_Document_Fragment_Type($data);
+$em->persist($fragmentType);
+
+unset($data);
+$data["name"] = "BauernOpfer";
+$data["description"] = "BauernOpfer";
+$fragmentType = new Application_Model_Document_Fragment_Type($data);
+$em->persist($fragmentType);
+
+unset($data);
+$data["name"] = "VerschärftesBauernOpfer";
+$data["description"] = "VerschärftesBauernOpfer";
+$fragmentType = new Application_Model_Document_Fragment_Type($data);
+$em->persist($fragmentType);
 
 $em->flush();

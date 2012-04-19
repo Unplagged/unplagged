@@ -25,7 +25,7 @@
  * @Entity 
  * @Table(name="document_pages")
  */
-class Application_Model_Document_Page extends Application_Model_Base{
+class Application_Model_Document_Page extends Application_Model_Versionable{
 
   /**
    * The page number in the origional document.
@@ -40,7 +40,7 @@ class Application_Model_Document_Page extends Application_Model_Base{
    * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $document;
-  
+
   /**
    * The lines in the document.
    * 
@@ -48,15 +48,29 @@ class Application_Model_Document_Page extends Application_Model_Base{
    * @OrderBy({"created" = "ASC"})
    */
   protected $detectionReports;
-  
+
   /**
    * The content of the page.
    * 
-   * @Column(type="text", nullable="true")
+   * @Column(type="text", nullable=true)
    */
   private $content;
 
+  /**
+   * The file the document was initially created from.
+   * 
+   * @ManyToOne(targetEntity="Application_Model_File")
+   * @JoinColumn(name="original_file_id", referencedColumnName="id", onDelete="SET NULL")
+   */
+  private $originalFile;
+
   public function __construct($data){
+    parent::__construct();
+    
+    if(isset($data["file"])){
+      $this->originalFile = $data["file"];
+    }
+
     if(isset($data["content"])){
       $this->content = $data["content"];
     }
@@ -66,15 +80,25 @@ class Application_Model_Document_Page extends Application_Model_Base{
     }
     $this->lines = new \Doctrine\Common\Collections\ArrayCollection();
   }
+  
+  public function toArray() {
+    $data["content"] = $this->content;
+    $data["pageNumber"] = $this->pageNumber;
+    //@todo $data["file"] = ...
+  }
 
   public function getId(){
     return $this->id;
   }
 
+  public function getOriginalFile(){
+    return $this->originalFile;
+  }
+
   public function setDocument(Application_Model_Document $document){
     $this->document = $document;
   }
-  
+
   public function getPageNumber(){
     return $this->pageNumber;
   }
@@ -82,9 +106,11 @@ class Application_Model_Document_Page extends Application_Model_Base{
   public function getContent(){
     return $this->content;
   }
+
   public function getDocument(){
     return $this->document;
   }
+
   public function setPageNumber($pageNumber){
     $this->pageNumber = $pageNumber;
   }
@@ -92,14 +118,29 @@ class Application_Model_Document_Page extends Application_Model_Base{
   public function setContent($content){
     $this->content = $content;
   }
-    public function getDirectName(){
+
+  public function getDirectName(){
     return "page";
   }
-    public function getDirectLink(){
+
+  public function getDirectLink(){
     return "/document_page/show/id/" . $this->id;
   }
 
   public function getIconClass(){
     return "page-icon";
   }
+
+  /**
+   * Return the percentage of plagiarism on this page.
+   * For now it returns only random values.
+   * 
+   * @return percentage value of plagiarism 
+   */
+  public function getPlagiarismPercentage(){
+    $rand = rand(0, 11) * 10;
+
+    return ($rand == 110 ? "unchecked" : $rand);
+  }
+
 }

@@ -60,7 +60,7 @@ class AuthController extends BaseController{
           ;
 
           $this->_helper->flashMessenger->addMessage('You were logged in successfully.');
-          $this->_helper->redirector('index', 'index');
+          $this->_helper->redirector('recent-activity', 'notification');
         }else{
           $this->_helper->flashMessenger->addMessage('Login failed.');
           $this->_helper->redirector('login', 'auth');

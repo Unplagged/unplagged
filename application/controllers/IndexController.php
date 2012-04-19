@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -27,13 +26,86 @@ class IndexController extends Zend_Controller_Action{
     $this->_em = Zend_Registry::getInstance()->entitymanager;
     $this->_defaultNamespace = new Zend_Session_Namespace('Default');
     $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
+    
+    Zend_Layout::getMvcInstance()->sidebar = 'default';
   }
 
   public function indexAction(){
-    if($this->_defaultNamespace->userId) {
-      $this->_helper->redirector('recent-activity', 'notification');
-    }
-    Zend_Registry::get('Log')->debug('Index');
+    //Zend_Registry::get('Log')->debug('Index');
+    
+    /*
+    // partial 1
+    $data["page"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneById(21);
+    $data["linePos"] = 1;
+    $data["characterPos"] = 1;
+    $posStart = new Application_Model_Document_Page_Position($data);
+    $this->_em->persist($posStart);
+    
+    unset($data);
+    $data["page"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneById(21);
+    $data["linePos"] = 5;
+    $data["characterPos"] = 10;
+    $posEnd = new Application_Model_Document_Page_Position($data);
+    $this->_em->persist($posEnd);
+    
+    unset($data);
+    $data["title"] = "Hello World";
+    $data["posStart"] = $posStart;
+    $data["posEnd"] = $posEnd;
+    $partialPlag = new Application_Model_Document_Fragment_Partial($data);
+    
+    
+    // partial 2
+    $data["page"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneById(21);
+    $data["linePos"] = 1;
+    $data["characterPos"] = 1;
+    $posStart = new Application_Model_Document_Page_Position($data);
+    $this->_em->persist($posStart);
+    
+    unset($data);
+    $data["page"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneById(21);
+    $data["linePos"] = 5;
+    $data["characterPos"] = 10;
+    $posEnd = new Application_Model_Document_Page_Position($data);
+    $this->_em->persist($posEnd);
+    
+    unset($data);
+    $data["title"] = "Hello World 2";
+    $data["posStart"] = $posStart;
+    $data["posEnd"] = $posEnd;
+    $partialSource = new Application_Model_Document_Fragment_Partial($data);
+    
+    
+    // fragment
+    unset($data);
+    $data["plag"] = $partialPlag; 
+    $data["source"] = $partialSource;
+    $data["title"] = "my fragment";
+
+    $fragment = new Application_Model_Document_Fragment($data);
+    $this->_em->persist($fragment);
+    $this->_em->flush(); 
+    */
+
+    
+
+    
+    // update a fragment
+   // $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById(3238);    
+   // $fragment->setTitle(rand(0,10000));
+   // $this->_em->persist($fragment);
+   // $this->_em->flush();
+    
+    /*
+    //$post = new Application_Model_BlogPost();
+    $post = $this->_em->getRepository('Application_Model_BlogPost')->findOneById(1);
+    $post->setTitle(rand(0,10000));
+    $post->setBody("test");
+     $this->_em->persist($post);
+    $this->_em->flush();
+     */
+     
   }
+
 
 }

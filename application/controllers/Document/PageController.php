@@ -27,6 +27,10 @@ class Document_PageController extends Zend_Controller_Action{
     $this->_em = Zend_Registry::getInstance()->entitymanager;
     $this->_defaultNamespace = new Zend_Session_Namespace('Default');
     $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
+    
+    $pageId = $this->_getParam('id');
+    Zend_Layout::getMvcInstance()->sidebar = 'page-tools';
+    Zend_Layout::getMvcInstance()->versionableId = $pageId;
   }
 
   public function indexAction(){
@@ -43,7 +47,7 @@ class Document_PageController extends Zend_Controller_Action{
       $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page p WHERE p.document = '" . $documentId . "'");
 
       $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
-      $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+      $paginator->setItemCountPerPage(100);
       $paginator->setCurrentPageNumber($page);
 
       $this->view->paginator = $paginator;
@@ -53,6 +57,9 @@ class Document_PageController extends Zend_Controller_Action{
         $this->view->document = $document;
       }
     }
+    
+    Zend_Layout::getMvcInstance()->sidebar = null;
+    Zend_Layout::getMvcInstance()->versionableId = null;
   }
 
   public function detectionReportsAction(){

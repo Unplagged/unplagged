@@ -52,6 +52,15 @@ class Application_Model_Case extends Application_Model_Base{
   private $state = '';
 
   /**
+   * An abbreviation for the case.
+   *
+   * @var string
+   *
+   * @Column(type="string", length=4) 
+   */
+  private $abbreviation;
+
+  /**
    * The date when the document was updated the last time.
    * 
    * @var string The update date.
@@ -96,13 +105,14 @@ class Application_Model_Case extends Application_Model_Base{
    */
   private $collaborators;
 
-  public function __construct($name, $alias){
+  public function __construct($name = null, $alias = null, $abbreviation = null){
     $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
     $this->files = new \Doctrine\Common\Collections\ArrayCollection();
     $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
     $this->collaborators = new \Doctrine\Common\Collections\ArrayCollection();
     $this->name = $name;
     $this->alias = $alias;
+    $this->abbreviation = $abbreviation;
   }
 
   /**
@@ -113,7 +123,7 @@ class Application_Model_Case extends Application_Model_Base{
   public function updated(){
     $this->updated = new DateTime("now");
   }
-  
+
   /**
    * @return string 
    */
@@ -135,7 +145,7 @@ class Application_Model_Case extends Application_Model_Base{
   public function getPublishableName(){
     $publishableName = $this->getAlias();
 
-    if($this->getState() === 'public'){
+    if($this->getState() == 'public'){
       $publishableName = $this->getName();
     }
 
@@ -184,19 +194,19 @@ class Application_Model_Case extends Application_Model_Base{
   public function clearCollaborators(){
     $this->collaborators->clear();
   }
-  
+
   public function addFile(Application_Model_File $file){
     return $this->files->add($file);
   }
-  
+
   public function removeFile(Application_Model_File $file){
     return $this->file->removeElement($file);
   }
-  
+
   public function getFiles(){
     return $this->files;
   }
-  
+
   public function clearFiles(){
     $this->files->clear();
   }
@@ -204,11 +214,11 @@ class Application_Model_Case extends Application_Model_Base{
   public function getDirectName(){
     return "case";
   }
-  
+
   public function getDirectLink(){
     return "/case/show/id/" . $this->id;
   }
-  
+
   public function getIconClass(){
     return "case-icon";
   }
@@ -225,6 +235,23 @@ class Application_Model_Case extends Application_Model_Base{
 
     return $result;
   }
+  
+  public function getAbbreviation(){
+    return $this->abbreviation;
+  }
+  
+  public function setName($name){
+    $this->name = $name;
+  }
+
+  public function setAlias($alias){
+    $this->alias = $alias;
+  }
+
+  public function setAbbreviation($abbreviation){
+    $this->abbreviation = $abbreviation;
+  } 
+  
 
 }
 

@@ -62,7 +62,7 @@ class UserController extends BaseController{
         // send registration mail
         Unplagged_Mailer::sendRegistrationMail($user);
 
-        $this->_helper->flashMessenger->addMessage('Registration done.');
+        $this->_helper->flashMessenger->addMessage('In order to finish your registration, please check your E-Mails.');
         $this->_helper->redirector('index', 'index');
       }
     }

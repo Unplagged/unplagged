@@ -105,6 +105,48 @@ class Unplagged_Helper{
     }
   }
 
+  public function formatDocumentPageNumber($pageNumber){
+    return str_pad($pageNumber, 3, '0', STR_PAD_LEFT);
+  }
+
+  public function formatDiff($diff, $baseVersion, $changeVersion) {
+    if(empty($diff)) {
+      return "<br />No difference";
+    }
+    
+    $diff = $diff[0];
+    
+    $baseResult = "";
+    $changedResult = "";
+    
+    $baseResult .= "<div class=\"document-page diff clearfix\"><div class=\"src-wrapper\"><h3>Version " . $baseVersion . "</h3><ol>";
+    $changedResult .= "<div class=\"src-wrapper\"><h3>Version " . $changeVersion . "</h3><ol>";
+    foreach($diff as $lines) {
+      $base = $lines["base"];
+      $change = $lines["changed"];
+      
+      $iterator = count($base["lines"]) > count($change["lines"]) ? $base["lines"] : $change["lines"];
+      foreach($iterator as $key => $line) {
+        $baseText = !empty($base["lines"][$key]) ? $base["lines"][$key] : "";
+        $changeText = !empty($change["lines"][$key]) ? $change["lines"][$key] : "";
+        
+        if(empty($baseText))
+          $changeText = "<ins>" . $changeText . "</ins>";
+        
+        $baseResult .= "<li>" . $baseText . "</li>";
+        
+        if(empty($changeText))
+          $changeText = "<del>" . $changeText . "</del>";
+        
+        $changedResult .= "<li>" . $changeText . "</li>";
+      }
+    }
+    $baseResult .= "</ol></div>";
+    $changedResult .= "</ol></div></div>";
+   
+    return $baseResult . $changedResult;
+  }
+
 }
 
 ?>

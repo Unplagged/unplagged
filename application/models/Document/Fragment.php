@@ -1,5 +1,7 @@
 <?php
 
+use DoctrineExtensions\Versionable\Versionable;
+
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -29,58 +31,123 @@
  * @Table(name="document_fragments")
  * @HasLifeCycleCallbacks
  */
-class Application_Model_Document_Fragment extends Application_Model_Base{
+class Application_Model_Document_Fragment extends Application_Model_Versionable{
 
   /**
-   * The title of the document.
-   * @var string The title.
+   * The note.
+   * @var string The note.
    * 
-   * @Column(type="string", length=64)
+   * @Column(type="text")
    */
-  private $title;
+  private $note;
 
   /**
-   * The starting position in the document.
+   * The lines in the document.
+   * 
+   * @ManyToOne(targetEntity="Application_Model_Document_Fragment_Type")
+   * @JoinColumn(name="fragment_type_id", referencedColumnName="id")
+   */
+  private $type;
+
+  /**
+   * The plag partial of the fragment.
    *
-   * @OneToOne(targetEntity="Application_Model_Document_Page_Position")
-   * @JoinColumn(name="page_position_start_id", referencedColumnName="id")
+   * @OneToOne(targetEntity="Application_Model_Document_Fragment_Partial", cascade={"persist", "remove"})
+   * @JoinColumn(name="fragment_partial_plag_id", referencedColumnName="id", onDelete="CASCADE")
    */
-  private $posStart;
+  private $plag;
 
   /**
-   * The ending position in the document.
-   *  
-   * @OneToOne(targetEntity="Application_Model_Document_Page_Position")
-   * @JoinColumn(name="page_position_end_id", referencedColumnName="id")
+   * The source partial of the fragment.
+   *
+   * @OneToOne(targetEntity="Application_Model_Document_Fragment_Partial", cascade={"persist", "remove"})
+   * @JoinColumn(name="fragment_partial_source_id", referencedColumnName="id", onDelete="CASCADE")
    */
-  private $posEnd;
+  private $source;
+
+  /**
+   * @ManyToOne(targetEntity="Application_Model_Document", inversedBy="fragments")
+   * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
+   */
+  private $document;
 
   public function __construct(array $data = null){
+    parent::__construct();
+    if(isset($data["plag"])){
+      $this->plag = $data["plag"];
+    }
+
+    if(isset($data["source"])){
+      $this->source = $data["source"];
+    }
+
+    if(isset($data["note"])){
+      $this->note = $data["note"];
+    }
+
+    if(isset($data["type"])){
+      $this->type = $data["type"];
+    }
+  }
+
+  public function toArray(){
+    $data["plag"] = $this->plag->toArray();
+    $data["source"] = $this->source->toArray();
+    $data["note"] = $this->note;
+    $data["type"] = $this->type->toArray();
+
+    return $data;
   }
 
   public function getDirectName(){
-    return "document_fragment";
+    return "fragment";
   }
 
   public function getDirectLink(){
-    return "/document-fragment/show/id/" . $this->id;
+    return "/document_fragment/show/id/" . $this->id;
   }
 
   public function getIconClass(){
     return "document-icon";
   }
-  
+
+  public function getPlag(){
+    return $this->plag;
+  }
+
+  public function getSource(){
+    return $this->source;
+  }
+
+  public function getType(){
+    return $this->type;
+  }
+
   public function getTitle(){
-    return $this->title;
+    return "ABC" . $this->getPlag()->getPageFrom()->getPageNumber();
   }
 
-  public function getPosStart(){
-    return $this->posStart;
+  public function getNote(){
+    return $this->note;
+  }
+  
+  public function setNote($note){
+    $this->note = $note;
   }
 
-  public function getPosEnd(){
-    return $this->posEnd;
+  public function setType($type){
+    $this->type = $type;
   }
+  
+  public function setPlag($plag){
+    $this->plag = $plag;
+  }
+
+  public function setSource($source){
+    $this->source = $source;
+  }
+
+
 
 
 

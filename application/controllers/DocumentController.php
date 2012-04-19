@@ -35,6 +35,35 @@ class DocumentController extends Zend_Controller_Action{
     $this->_helper->redirector('list', 'document');
   }
 
+  public function editAction(){
+    $input = new Zend_Filter_Input(array('id'=>'digits'), null, $this->_getAllParams());
+
+    $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
+
+    if($document){
+      $modifyForm = new Application_Form_Document_Modify();
+      $modifyForm->setAction("/document/edit/id/" . $input->id);
+
+      $modifyForm->getElement("title")->setValue($document->getTitle());
+      $modifyForm->getElement("submit")->setLabel("Save document");
+
+      if($this->_request->isPost()){
+        $result = $this->handleModifyData($modifyForm, $document);
+
+        if($result){
+          $this->_helper->flashMessenger->addMessage('The document was updated successfully.');
+          $this->_helper->redirector('list', 'document');
+        }
+      }
+
+      $this->view->title = "Edit case";
+      $this->view->modifyForm = $modifyForm;
+      $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
+    }else{
+      $this->_helper->redirector('list', 'document');
+    }
+  }
+
   public function listAction(){
     // @todo: clean input
     $page = $this->_getParam('page');
@@ -88,7 +117,8 @@ class DocumentController extends Zend_Controller_Action{
         foreach($pages as $page){
           $detector = Unplagged_Detector::factory();
 
-          $data["user"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);;
+          $data["user"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          ;
           $data["page"] = $page;
           $data["state"] = "running";
           $data["servicename"] = $detector->getServiceName();
@@ -96,13 +126,13 @@ class DocumentController extends Zend_Controller_Action{
           $report = new Application_Model_Document_Page_DetectionReport($data);
           $this->_em->persist($report);
           $this->_em->flush();
-          
+
           $started = $detector->detect($report);
           if($started){
             $successPages[] = $page->getPageNumber();
           }else{
             $errorPages[] = $page->getPageNumber();
-            
+
             $this->_em->remove($report);
             $this->_em->flush();
           }
@@ -145,6 +175,30 @@ class DocumentController extends Zend_Controller_Action{
 
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
+  }
+
+  private function handleModifyData(Application_Form_Document_Modify $modifyForm, Application_Model_Document $document = null){
+    if(!($document)){
+      $document = new Application_Model_Document();
+    }
+
+    $formData = $this->_request->getPost();
+    if($modifyForm->isValid($formData)){
+
+      $document->setTitle($formData['title']);
+
+      // write back to persistence manager and flush it
+      $this->_em->persist($document);
+      $this->_em->flush();
+
+      /*      // notification @todo: add notification
+        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+        Unplagged_Helper::notify("case_created", $case, $user);
+       */
+      return true;
+    }
+    
+    return false;
   }
 
 }
