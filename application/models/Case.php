@@ -20,7 +20,7 @@
 
 /**
  *
- * @author Dominik Horb <dominik.horb@googlemail.com>
+ * 
  * 
  * @Entity
  * @Table(name="cases")
@@ -104,12 +104,18 @@ class Application_Model_Case extends Application_Model_Base{
    *      )
    */
   private $collaborators;
+  
+  /**
+   * ManyToMany(targetEntity="Application_Model_User_Role_InheritableRole") 
+   */
+  private $roles;
 
   public function __construct($name = null, $alias = null, $abbreviation = null){
-    $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
-    $this->files = new \Doctrine\Common\Collections\ArrayCollection();
-    $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
-    $this->collaborators = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->documents = new ArrayCollection();
+    $this->files = new ArrayCollection();
+    $this->tags = new ArrayCollection();
+    $this->collaborators = new ArrayCollection();
+    $this->role = new ArrayCollection();
     $this->name = $name;
     $this->alias = $alias;
     $this->abbreviation = $abbreviation;
@@ -252,7 +258,9 @@ class Application_Model_Case extends Application_Model_Base{
     $this->abbreviation = $abbreviation;
   } 
   
-
+  public function getRoles(){
+    return $this->roles;  
+  }
 }
 
 ?>

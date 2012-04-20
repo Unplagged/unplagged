@@ -33,11 +33,11 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   protected $id;
   
   /**
-   * A list of all the permissions that were allowed customly for this role.
+   * A list of all the permissions that are allowed for an owner of this role.
    * 
-   * @var type 
+   * @var ArrayCollection
    * 
-   * @ManyToMany(targetEntity
+   * ManyToMany(targetEntity
    */
   private $permissions;
   
@@ -45,10 +45,6 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    * Stores the roles this role is extending.
    * 
    * @ManyToMany(targetEntity="Application_Model_User_Role")
-   * @JoinTable(name="roles_inherited",
-   *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
-   *      inverseJoinColumns={@JoinColumn(name="", referencedColumnName="id")}
-   *      )
    */
   private $inheritedRoles;
 

@@ -103,6 +103,8 @@ class UserController extends BaseController{
     $user->addFile($file);
     $this->_em->persist($user);
     $this->_em->flush();
+    
+    $this->redirectToLastPage();
   }
   
   /**

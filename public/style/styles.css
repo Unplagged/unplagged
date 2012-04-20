@@ -128,7 +128,6 @@ p {
   -moz-box-shadow   : 0 0 3px #ffffff inset, 0 1px 1px rgba(0,0,0,0.1);
   box-shadow        : 0 0 3px #ffffff inset, 0 1px 1px rgba(0,0,0,0.1);
   display: block;
-  overflow: hidden;
   white-space: nowrap;
   position: relative;
   line-height: 24px;
@@ -153,6 +152,7 @@ p {
   background-image: linear-gradient(top, #eeeeee 20%, #ffffff 80%);
 }
 
+/* ie9 has a bug with border-radius and gradient, where the background would bleed out of the rounded corners */
 .ie9 .button {
   border-radius: 0;
 }
@@ -206,19 +206,34 @@ p {
   display: none;
   position: absolute;
   background: white;
-  border: 1px solid #c5c5c5;
-  border-top: none;
+  border: 1px solid #aaa;
   z-index: 1000;
   top: 100%; 
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  -webkit-border-top-left-radius : 0;
-  -moz-border-radius-topleft : 0;
-  border-top-left-radius : 0;
+  -webkit-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
   list-style-type: none;
   margin: 0;
   padding: 0 30px 0 5px;
+  -webkit-box-shadow: 0 4px 5px rgba(0,0,0,.15);
+  -moz-box-shadow   : 0 4px 5px rgba(0,0,0,.15);
+  -o-box-shadow     : 0 4px 5px rgba(0,0,0,.15);
+  box-shadow        : 0 4px 5px rgba(0,0,0,.15);
+}
+
+.dropdown-button .button.hoverable:hover:after, .dropdown-button.hover .button:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  border-top: 1px solid white;
+  width: 100%;
+  height: 1px;
+  display: block;
+  bottom: -2px;
+  z-index: 2000;
 }
 
 .dropdown-button li a{

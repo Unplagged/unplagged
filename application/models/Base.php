@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * The class represents a base class for any type of item that can receive 
  * comments or can be the source of a notification.

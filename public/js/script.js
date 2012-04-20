@@ -126,7 +126,7 @@ $(function() {
         url += '/';
       }
       url += hash;
-      $("#main-wrapper").load(url + " #main");
+      $("#main-wrapper").load(url + " .main");
     };
         
   });
