@@ -64,5 +64,12 @@
     <div id="page" class="pagewrap">
       <header role="banner" id="header" class="clearfix">
         <h1 class="ir">Unplagged - The Plagiarism Detection Cockpit</h1>
+        <?php
+          $controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+          $page = $this->navigation()->findOneByController($controller); /* @var $page Zend_Navigation_Page */
+          if ( $page ) {
+            $page->setActive();
+          }
+         ?>
         <nav><?php echo $this->navigation()->menu(); ?></nav>
       </header>

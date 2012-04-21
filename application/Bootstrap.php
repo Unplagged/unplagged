@@ -269,7 +269,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $layout = $this->getResource('layout');
     $view = $layout->getView();
     $view->navigation($container)->setAcl(new Unplagged_Acl())->setRole('guest');
-
+    
     Zend_Registry::set('Zend_Navigation', $container);
   }
 
