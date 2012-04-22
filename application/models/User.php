@@ -54,6 +54,14 @@ class Application_Model_User extends Application_Model_Base{
   private $password;
 
   /**
+   *
+   * @var type 
+   * 
+   * @
+   */
+  private $role;
+  
+  /**
    * The email the user set up to login to the private area.
    * @var string The email address.
    * 
@@ -105,6 +113,11 @@ class Application_Model_User extends Application_Model_Base{
    */
   private $currentCase;
 
+  /**
+   * @Column(type="string", length=255)
+   */
+  private $salt = '';
+  
   /**
    * @ManyToMany(targetEntity="Application_Model_File") 
    * @JoinTable(name="user_has_file",
@@ -269,4 +282,7 @@ class Application_Model_User extends Application_Model_Base{
     return $result;
   }
 
+  public function getSalt(){
+    return $this->salt; 
+  }
 }

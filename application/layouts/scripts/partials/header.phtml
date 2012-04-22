@@ -1,6 +1,5 @@
 <!doctype html>
-<!--[if lt IE 7]> <html class="no-js ie6 oldie"> <![endif]-->
-<!--[if IE 7]> <html class="no-js ie7 oldie"> <![endif]-->
+<!--[if lte IE 7]> <html class="no-js ie7 oldie"> <![endif]-->
 <!--[if IE 8]> <html class="no-js ie8 oldie"> <![endif]-->
 <!--[if IE 9]> <html class="no-js ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
@@ -45,8 +44,8 @@
           </div>
           <div class="user-box">
             <img class="avatar" src="<?php echo $this->me->getAvatar(); ?>" />
-            <div class="user-menu">
-              <a class="button" href="/user/edit"><span><?php echo $this->me->getUsername(); ?></span><span class="arrow-down"></span></a>
+            <div class="dropdown-button hoverable user-menu">
+              <a class="button" href="/user/edit"><?php echo $this->me->getUsername(); ?><span class="arrow-down"></span></a>
               <ul>
                 <li><a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a></li>
                 <li><a href="/user/edit"><?php echo $this->translate("Edit Profile"); ?></a></li>
@@ -65,5 +64,12 @@
     <div id="page" class="pagewrap">
       <header role="banner" id="header" class="clearfix">
         <h1 class="ir">Unplagged - The Plagiarism Detection Cockpit</h1>
+        <?php
+          $controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+          $page = $this->navigation()->findOneByController($controller); /* @var $page Zend_Navigation_Page */
+          if ( $page ) {
+            $page->setActive();
+          }
+         ?>
         <nav><?php echo $this->navigation()->menu(); ?></nav>
       </header>

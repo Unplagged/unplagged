@@ -19,66 +19,95 @@
  */
 
 /**
- * This controller class handles all the login and logout behaviour.
+ * This controller class handles all user authentication behaviour, i. e. login and logout.
  *
  * @author Unplagged Development Team
  */
 class AuthController extends Unplagged_Controller_Action{
 
-  public function indexAction(){
-    $auth = Zend_Auth::getInstance();
-    if($auth->hasIdentity()){
-      $this->_helper->redirector('index', 'index');
-    }
+  private $auth;
 
-    $this->_forward("login");
+  public function init(){
+    parent::init();
+    $this->auth = Zend_Auth::getInstance();
   }
 
+  /**
+   * Forwards to the login action.
+   * 
+   * The login action isn't done directly here, to keep the possibility of adding something else to the index later on.
+   */
+  public function indexAction(){
+    $this->_forward('login');
+  }
+
+  /**
+   * Shows the login form or handles the login data if something was sent.
+   * 
+   * The user is redirected to the last visited page.
+   */
   public function loginAction(){
-    $auth = Zend_Auth::getInstance();
-    if($auth->hasIdentity()){
-      $this->_helper->redirector('index', 'index');
+    if($this->auth->hasIdentity()){
+      $this->redirectToLastPage();
+    }else{
+      $loginForm = new Application_Form_Auth_Login();
+
+      $request = $this->getRequest();
+      if($request->isPost()){
+        $this->handleLoginData($loginForm);
+      }
+
+      $this->view->loginForm = $loginForm;
     }
+  }
 
-    $loginForm = new Application_Form_Auth_Login();
-    $request = $this->getRequest();
-    if($request->isPost()){
-      $formData = $this->_request->getPost();
+  /**
+   * Checks the POST data for valid login credentials and sets session data.
+   * 
+   * @param Application_Form_Auth_Login $loginForm 
+   */
+  private function handleLoginData(Application_Form_Auth_Login $loginForm){
+    $formData = $this->_request->getPost();
 
-      if($loginForm->isValid($formData)){
-        $username = $this->getRequest()->getParam('username');
-        $password = Unplagged_Helper::hashString($this->getRequest()->getParam("password"));
+    if($loginForm->isValid($formData)){
+      $username = $this->getRequest()->getParam('username');
+      $password = Unplagged_Helper::hashString($this->getRequest()->getParam('password'));
 
-        $adapter = new Unplagged_Auth_Adapter_Doctrine($this->_em, "Application_Model_User", "username", "password", $username, $password);
-        $result = $auth->authenticate($adapter);
+      $adapter = new Unplagged_Auth_Adapter_Doctrine($this->_em, 'Application_Model_User', 'username', 'password', $username, $password);
+      $result = $this->auth->authenticate($adapter);
 
-        if($result->isValid()){
-          $defaultNamespace = new Zend_Session_Namespace('Default');
-          $defaultNamespace->userId = $result->getIdentity();
-          ;
+      if($result->isValid()){
+        $defaultNamespace = new Zend_Session_Namespace('Default');
+        $defaultNamespace->userId = $result->getIdentity();
 
-          $this->_helper->flashMessenger->addMessage('You were logged in successfully.');
-          $this->_helper->redirector('recent-activity', 'notification');
-        }else{
-          $this->_helper->flashMessenger->addMessage('Login failed.');
-          $this->_helper->redirector('login', 'auth');
-        }
+        $this->_helper->flashMessenger->addMessage('You were logged in successfully.');
+        //@todo I know it's not perfect right now, because the activity stream isn't reached this way, but I think 
+        //it's overall a better experience when you clicked a bookmark or link and then get redirected to the login,
+        //to reach the actually requested page after this and not be always thrown to the activity stream
+        $this->redirectToLastPage();
+      }else{
+        $this->_helper->flashMessenger->addMessage('Login failed.');
+        $this->_helper->redirector('login', 'auth');
       }
     }
-
-    $this->view->loginForm = $loginForm;
   }
-
+  
   /**
    * Logs the user off. The identity is removed and the session is cleared.
    */
   public function logoutAction(){
-    Zend_Auth::getInstance()->clearIdentity();
+    $this->logout();
+    $this->_helper->flashMessenger->addMessage('You were logged off successfully.');
+    $this->redirectToLastPage();
+  }
+  
+  /**
+   * Clears all session data that was stored for the current user. 
+   */
+  private function logout(){
+    $this->auth->clearIdentity();
     Zend_Session::forgetMe();
     unset($this->_defaultNamespace->userId);
-
-    $this->_helper->flashMessenger->addMessage('You were logged off successfully.');
-    $this->_helper->redirector('index', 'index');
   }
 
 }

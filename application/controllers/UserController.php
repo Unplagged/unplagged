@@ -96,8 +96,8 @@ class UserController extends Unplagged_Controller_Action{
     $user->addFile($file);
     $this->_em->persist($user);
     $this->_em->flush();
-
-    $this->_helper->viewRenderer->setNoRender(true);
+    
+    $this->redirectToLastPage();
   }
 
   /**

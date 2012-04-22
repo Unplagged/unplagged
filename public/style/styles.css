@@ -103,6 +103,11 @@ p {
   height: 40px;
 }
 
+/*
+ * A simple button element from html like this:
+ * 
+ * <a class="button">The Text</a>
+ */
 .button{  
   background-color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0 );   
@@ -123,33 +128,127 @@ p {
   -moz-box-shadow   : 0 0 3px #ffffff inset, 0 1px 1px rgba(0,0,0,0.1);
   box-shadow        : 0 0 3px #ffffff inset, 0 1px 1px rgba(0,0,0,0.1);
   display: block;
-  overflow: hidden;
   white-space: nowrap;
   position: relative;
   line-height: 24px;
-  padding: 0 0 0 8px;
+  padding: 0 8px;
   color: #444444;
   text-decoration: none;
 }
 
+.button:hover, .button.hover, .dropdown-button:hover .button, .dropdown-button.hover .button {
+  border: 1px solid #aaa;
+  -webkit-box-shadow: 0 1px 0 #fff inset;
+  -moz-box-shadow   : 0 1px 0 #fff inset;
+  -o-box-shadow     : 0 1px 0 #fff inset;
+  box-shadow        : 0 1px 0 #fff inset;
+  background-color: #eee;
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#ffffff', GradientType=0 );
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(20%, #eeeeee), color-stop(80%, #ffffff));
+  background-image: -webkit-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  background-image: -moz-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  background-image: -o-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  background-image: -ms-linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+  background-image: linear-gradient(top, #eeeeee 20%, #ffffff 80%);
+}
+
+/* ie9 has a bug with border-radius and gradient, where the background would bleed out of the rounded corners */
 .ie9 .button {
   border-radius: 0;
 }
 
-.button .arrow-down {
+/* 
+ * Styling for a .dropdown-button element.
+ *
+ * This element is mostly identical to .button but needs an additional <div>
+ * wrapper around it with an <ul> inside, i. e. like so:
+ * 
+ * <div class="dropdown-button hoverable">
+ *   <a class="button">The Button</a>
+ *   <ul>
+ *     <li>A dropdown menu item</li>
+ *   </ul>
+ * </div>
+ */
+.dropdown-button {
+  position: relative;
+}
+
+.dropdown-button .arrow-down {
   display: inline-block;
   margin-left: 3px;
   margin-bottom: 2px;
   padding-right: 18px;
   height: 18px;
-  background: url(../images/chosen-sprite.png) no-repeat 0 -3px;
-  border-left: 1px solid #d5d5d5;
+  background: url(../images/chosen-sprite.png) no-repeat 0 -4px;
   vertical-align: bottom;
 }
 
-.button:hover .arrow-down{
-  background-position: -18px -3px;
+.dropdown-button.hoverable:hover .arrow-down, .dropdown-button.hover .arrow-down{
+  background-position: -18px -4px;
 }
+
+.dropdown-button .button {
+  padding-right: 0;
+}
+
+.dropdown-button.hoverable:hover .button, .dropdown-button.hover .button {
+  border-bottom: none;
+  -webkit-border-bottom-left-radius : 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-bottomleft : 0;
+  -moz-border-radius-bottomright: 0;
+  border-bottom-left-radius : 0;
+  border-bottom-right-radius: 0;
+}
+
+.dropdown-button ul { 
+  display: none;
+  position: absolute;
+  background: white;
+  border: 1px solid #aaa;
+  z-index: 1000;
+  top: 100%; 
+  -webkit-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0 30px 0 5px;
+  -webkit-box-shadow: 0 4px 5px rgba(0,0,0,.15);
+  -moz-box-shadow   : 0 4px 5px rgba(0,0,0,.15);
+  -o-box-shadow     : 0 4px 5px rgba(0,0,0,.15);
+  box-shadow        : 0 4px 5px rgba(0,0,0,.15);
+}
+
+.dropdown-button .button.hoverable:hover:after, .dropdown-button.hover .button:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  border-top: 1px solid white;
+  width: 100%;
+  height: 1px;
+  display: block;
+  bottom: -2px;
+  z-index: 2000;
+}
+
+.dropdown-button li a{
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.dropdown-button li:hover{
+  text-decoration: underline;
+}
+
+.dropdown-button.hoverable:hover ul, .dropdown-button.hover ul {
+  display: block;
+}
+
 
 .target {
   cursor: crosshair;
@@ -173,6 +272,13 @@ p {
 
 .contextmenu li:first-child{
   margin-top: 0;
+}
+
+.drop-area {
+  width: 60%;
+  height: 400px;
+  margin: auto;
+  border: 5px dashed #40C0E9;
 }
 
 /* ==|== toolbar styles ======================================================= */
@@ -221,39 +327,6 @@ header[role=toolbar] a:hover{
 
 .user-menu {
   float: left;
-  position: relative;
-}
-
-.user-menu:hover .arrow-down{
-  background-position: -18px -3px;
-}
-
-.user-menu ul { 
-  display: none;
-  position: absolute;
-  background: whiteSmoke;
-  border: 1px solid #c5c5c5;
-  z-index: 1000;
-  top: 100%; 
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  list-style-type: none;
-  margin: 0;
-  padding: 0 30px 0 5px;
-}
-
-.user-menu li a{
-  white-space: nowrap;
-  text-decoration: none;
-}
-
-.user-menu li:hover a{
-  text-decoration: underline;
-}
-
-.user-menu:hover ul {
-  display: block;
 }
 
 .case-settings-box {

@@ -23,6 +23,9 @@ class Unplagged_Helper{
    * @String $string The unhashed string.
    * 
    * @return The hashed string.
+   * 
+   * @todo we need to change this md5 isn't secure at all, normally this needs salting and at least sha256, better would
+   * be to use bcrypt or phpass
    */
   public static function hashString($string){
     return md5($string);
