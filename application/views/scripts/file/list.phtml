@@ -18,7 +18,7 @@
           <img class="icon" src="<?php echo $this->baseUrl('images/icons/' . Unplagged_Helper::getFileIconByExtension($file->getExtension()));?>" />
       </td>
       <td>
-          <a <?php if($file->isImage()){ echo 'class="picture"'; } ?> href="<?php echo $this->baseUrl('/image/view/id/' . $file->getId());?>">          
+          <a <?php if($file->isImage()){ echo 'class="picture"'; } ?> href="<?php echo $this->baseUrl('/image/show/id/' . $file->getId());?>">          
               <?php echo $file->getFilename(); ?>
           </a>
       </td>

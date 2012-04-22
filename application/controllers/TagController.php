@@ -24,20 +24,9 @@
  * @author Benjamin Oertel <mail@benjaminoertel.com>
  * @version 1.0
  */
-class TagController extends Zend_Controller_Action{
-
-  /**
-   * Initalizes registry and namespace instance in the controller and allows to display flash messages in the view.
-   * @see Zend_Controller_Action::init()
-   */
-  public function init(){
-    $this->_em = Zend_Registry::getInstance()->entitymanager;
-    $this->_defaultNamespace = new Zend_Session_Namespace('Default');
-    $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
-  }
+class TagController extends Unplagged_Controller_Action{
 
   public function indexAction(){
-    
   }
 
   /**

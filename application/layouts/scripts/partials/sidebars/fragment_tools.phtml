@@ -1,7 +1,34 @@
 <nav id="right-nav">
-  <h4>Tools</h4>
+  <h4>Actions</h4>
   <ul>
-    <li><a href="#">Simtext</a></li>
-    <li><a href="/document_fragment/diff/id/<?php echo $this->versionableId; ?>">Show changelog</a></li>
+    <li>
+      <a href="<?php echo "/document_fragment/show/id/" . $this->fragmentId;     ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/page.png'); ?>" title="<?php echo $this->translate("Show"); ?>" /><span><?php echo $this->translate("Show"); ?></span>
+      </a>
+    </li>
+        <li>
+      <a href="<?php echo "/document_fragment/edit/id/" . $this->fragmentId;     ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/pencil.png'); ?>" title="<?php echo $this->translate("Edit"); ?>" /><span><?php echo $this->translate("Edit"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document_fragment/delete/id/" . $this->fragmentId;     ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("Remove"); ?>" /><span><?php echo $this->translate("Remove"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/table_row_delete.png'); ?>" title="<?php echo $this->translate("Simtext"); ?>" /><span><?php echo $this->translate("Simtext"); ?></span>
+      </a>
+    </li>
+  </ul>
+  
+  <h4>Links</h4>
+  <ul>
+    <li>
+      <a href="<?php echo "/document_fragment/changelog/id/" . $this->fragmentId;     ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/table_relationship.png'); ?>" title="<?php echo $this->translate("Changelog"); ?>" /><span><?php echo $this->translate("Changelog"); ?></span>
+      </a>
+    </li>
   </ul>
 </nav>

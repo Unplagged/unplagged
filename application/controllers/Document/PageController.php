@@ -19,18 +19,17 @@
  */
 
 /**
- * Description of DocumentController
+ * This class handles actions related to pages within a document
  */
-class Document_PageController extends Zend_Controller_Action{
+class Document_PageController extends Unplagged_Controller_Action{
 
   public function init(){
-    $this->_em = Zend_Registry::getInstance()->entitymanager;
-    $this->_defaultNamespace = new Zend_Session_Namespace('Default');
-    $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
-    
-    $pageId = $this->_getParam('id');
+    parent::init();
+
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
     Zend_Layout::getMvcInstance()->sidebar = 'page-tools';
-    Zend_Layout::getMvcInstance()->versionableId = $pageId;
+    Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 
   public function indexAction(){
@@ -38,52 +37,48 @@ class Document_PageController extends Zend_Controller_Action{
   }
 
   public function listAction(){
-    // @todo: clean input
-    $documentId = $this->_getParam('id');
-    $page = $this->_getParam('page');
+    $input = new Zend_Filter_Input(array('id'=>'Digits', 'page'=>'Digits'), null, $this->_getAllParams());
 
-    if(!empty($documentId)){
-      $query = $this->_em->createQuery("SELECT p FROM Application_Model_Document_Page p WHERE p.document = '" . $documentId . "'");
-      $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page p WHERE p.document = '" . $documentId . "'");
+    if(!empty($input->id)){
+      $query = $this->_em->createQuery("SELECT p FROM Application_Model_Document_Page p WHERE p.document = '" . $input->id . "'");
+      $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page p WHERE p.document = '" . $input->id . "'");
 
       $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
       $paginator->setItemCountPerPage(100);
-      $paginator->setCurrentPageNumber($page);
+      $paginator->setCurrentPageNumber($input->page);
 
       $this->view->paginator = $paginator;
 
-      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($documentId);
+      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
       if($document){
         $this->view->document = $document;
       }
     }
-    
+
     Zend_Layout::getMvcInstance()->sidebar = null;
     Zend_Layout::getMvcInstance()->versionableId = null;
   }
 
   public function detectionReportsAction(){
-    $pageId = $this->_getParam('id');
-    
-    $page = $this->_getParam('page');
-    if(!empty($pageId)){
-      $query = $this->_em->createQuery("SELECT p FROM Application_Model_Document_Page_DetectionReport p WHERE p.page = '" . $pageId . "'");
-      $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page_DetectionReport p WHERE p.page = '" . $pageId . "'");
+    $input = new Zend_Filter_Input(array('id'=>'Digits', 'page'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $query = $this->_em->createQuery("SELECT p FROM Application_Model_Document_Page_DetectionReport p WHERE p.page = '" . $input->id . "'");
+      $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page_DetectionReport p WHERE p.page = '" . $input->id . "'");
 
       $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-      $paginator->setCurrentPageNumber($page);
+      $paginator->setCurrentPageNumber($input->page);
 
       $this->view->paginator = $paginator;
     }
   }
 
   public function showAction(){
-    $pageId = $this->_getParam('id');
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    if(!empty($pageId)){
-      $pageId = preg_replace('/[^0-9]/', '', $pageId);
-      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($pageId);
+    if(!empty($input->id)){
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
         $this->view->page = $page;
       }
@@ -91,11 +86,10 @@ class Document_PageController extends Zend_Controller_Action{
   }
 
   public function deHyphenAction(){
-    $pageId = $this->_getParam('id');
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    if(!empty($pageId)){
-      $pageId = preg_replace('/[^0-9]/', '', $pageId);
-      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($pageId);
+    if(!empty($input->id)){
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
         $this->view->page = $page;
 
@@ -155,11 +149,11 @@ class Document_PageController extends Zend_Controller_Action{
   }
 
   public function editAction(){
-    $pageId = $this->getRequest()->getParam('id');
-    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($pageId);
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
 
     $editForm = new Application_Form_Document_Page_Modify();
-    $editForm->setAction("/document_page/edit/id/" . $pageId);
+    $editForm->setAction("/document_page/edit/id/" . $input->id);
 
     $editForm->getElement("pageNumber")->setValue($page->getPageNumber());
     $editForm->getElement("content")->setValue(str_replace("<br />", "\n", $page->getContent()));
@@ -190,11 +184,10 @@ class Document_PageController extends Zend_Controller_Action{
   }
 
   public function deleteAction(){
-    $pageId = $this->_getParam('id');
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    if(!empty($pageId)){
-      $pageId = preg_replace('/[^0-9]/', '', $pageId);
-      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($pageId);
+    if(!empty($input->id)){
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
         $this->_em->remove($page);
         $this->_em->flush();
@@ -213,15 +206,11 @@ class Document_PageController extends Zend_Controller_Action{
   }
 
   public function stopwordsAction(){
-    $pageId = $this->_getParam('id');
-    if(!empty($pageId)){
-      $pageId = preg_replace('/[^0-9]/', '', $pageId);
-      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($pageId);
-
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+    if(!empty($input->id)){
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
 
       if($page){
-
-        $this->view->page = $page;
         $words = array('hat', 'mit',
           'aber', 'als', 'am', 'an', 'auch', 'auf', 'aus', 'bei', 'bin',
           'bis', 'ist', 'da', 'dadurch', 'daher', 'darum', 'das', 'daß', 'dass', 'dein', 'deine',
@@ -236,9 +225,103 @@ class Document_PageController extends Zend_Controller_Action{
         $reg = '/(' . implode('|', $words) . ')/i';
         $lines = $page->getContent();
         $lines = preg_replace($reg, "<span class='stopword'>$1</span>", $lines);
+
         $this->view->stopWordContent = $lines;
+        $this->view->page = $page;
       }
     }
+  }
+
+  public function simtextReportsAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits', 'page'=>'Digits', 'show'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->show)){
+      $report = $this->_em->getRepository('Application_Model_Document_Page_SimtextReport')->findOneById($input->show);
+      $this->view->report = $report;
+      
+      $this->render('simtext/show');
+    }else{
+      if(!empty($input->id)){
+        $query = $this->_em->createQuery("SELECT p FROM Application_Model_Document_Page_SimtextReport p WHERE p.page = '" . $input->id . "'");
+        $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page_SimtextReport p WHERE p.page = '" . $input->id . "'");
+
+        $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+        $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+        $paginator->setCurrentPageNumber($input->page);
+
+        $this->view->paginator = $paginator;
+        $this->render('simtext/list-reports');
+      }
+    }
+
+    Zend_Layout::getMvcInstance()->sidebar = null;
+    Zend_Layout::getMvcInstance()->versionableId = null;
+  }
+
+  /**
+   * Does a simtext comparision with a page and multiple  
+   */
+  public function simtextAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
+      $this->view->page = $page;
+
+      $simtextForm = new Application_Form_Document_Page_Simtext();
+      $simtextForm->setAction("/document_page/simtext/id/" . $input->id);
+
+      if($this->_request->isPost()){
+        $result = $this->handleSimtextData($simtextForm, $page);
+
+        if($result){
+          $this->_helper->flashMessenger->addMessage('The simtext process was started, you will be notified, whenever it is finished.');
+          //$this->_helper->redirector('list', 'case');
+        }
+      }
+
+      $this->view->title = "Create case";
+      $this->view->simtextForm = $simtextForm;
+      $this->render('simtext/create');
+    }
+  }
+
+  private function handleSimtextData(Application_Form_Document_Page_Simtext $simtextForm, Application_Model_Document_Page $page){
+   if(!($page)){
+      $page = new Application_Model_Document_Page();
+    }
+
+    $formData = $this->_request->getPost();
+    if($simtextForm->isValid($formData)){
+
+      $data["page"] = $page;
+      $data["title"] = $formData["title"];
+      $data["documents"] = $formData["documents"];
+      $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+      $report = new Application_Model_Document_Page_SimtextReport($data);
+
+      // start task
+      $data = array();
+      $data["initiator"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+      $data["ressource"] = $report;
+      $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('page_simtext');
+      $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+      $task = new Application_Model_Task($data);
+
+      $this->_em->persist($task);
+      $this->_em->flush();
+
+      /*
+        //$formData["documents"]
+        // notification @todo: add notification
+        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+        Unplagged_Helper::notify("case_created", $case, $user);
+       */
+
+      return true;
+    }
+
+    return false;
   }
 
 }

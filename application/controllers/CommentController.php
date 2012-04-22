@@ -23,37 +23,27 @@
  *
  * @author Unplagged Development Team
  */
-class CommentController extends Zend_Controller_Action{
-
-  /**
-   * Initalizes registry and namespace instance in the controller and allows to display flash messages in the view.
-   * @see Zend_Controller_Action::init()
-   */
-  public function init(){
-    $this->_em = Zend_Registry::getInstance()->entitymanager;
-    $this->_defaultNamespace = new Zend_Session_Namespace('Default');
-    $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
-  }
+class CommentController extends Unplagged_Controller_Action{
 
   public function indexAction(){
     $this->_helper->redirector('list', 'comment');
   }
 
+  /**
+   * Handles the creation of a new comment. 
+   */
   public function createAction(){
-    // @todo: sanitize
-    $sourceId = $this->_getParam('source');
-    $title = $this->_getParam('title');
-    $text = $this->_getParam('text');
+    $input = new Zend_Filter_Input(array('source'=>'Digits', 'title'=>'Alpha', 'text'=>'Alpha'), null, $this->_getAllParams());
 
-    $source = $this->_em->getRepository('Application_Model_Base')->findOneById($sourceId);
+    $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
 
-    if($source && $text){
+    if($source && $input->text){
       $data = array();
       $data["author"] = $user;
       $data["source"] = $source;
-      $data["title"] = $title;
-      $data["text"] = $text;
+      $data["title"] = $input->title;
+      $data["text"] = $input->text;
       
       $comment = new Application_Model_Comment($data);
       $this->_em->persist($comment);
@@ -71,12 +61,12 @@ class CommentController extends Zend_Controller_Action{
    * Displays a list with all activities related to a user.
    */
   public function listAction(){
-    // @todo: sanitize
-    $sourceId = $this->_getParam('source');
-    $source = $this->_em->getRepository('Application_Model_Base')->findOneById($sourceId);
+    $input = new Zend_Filter_Input(array('source'=>'Digits'), null, $this->_getAllParams());
+    
+    $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
 
     if($source){
-      $comments = $this->_em->getRepository("Application_Model_Comment")->findBySource($sourceId);
+      $comments = $this->_em->getRepository("Application_Model_Comment")->findBySource($input->source);
       
       $result = array();
       foreach($comments as $comment) {

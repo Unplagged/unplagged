@@ -1,0 +1,11 @@
+<?php
+$this->title = $this->translate("Simtext report");
+$this->headTitle($this->title);
+?>
+
+<h3><?php echo $this->report->getTitle(); ?></h3>
+
+<?php echo $this->report->getContent() ? $this->report->getContent() : "No content"; ?>
+
+<?php // @todo: implement valid php back link ?>
+<p><a href="javascript: history.back();">back</a></p>

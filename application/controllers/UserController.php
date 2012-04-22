@@ -18,13 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'BaseController.php';
-
 /**
  * The controller class handles all the user transactions as rights requests and user management.
  *
  */
-class UserController extends BaseController{
+class UserController extends Unplagged_Controller_Action{
 
   public function indexAction(){
     
@@ -49,7 +47,7 @@ class UserController extends BaseController{
         $data["password"] = Unplagged_Helper::hashString($this->getRequest()->getParam('password'));
         $data["email"] = $this->getRequest()->getParam('email');
         $data["verificationHash"] = Unplagged_Helper::generateRandomHash();
-        $data["state"] = $this->_em->getRepository('Application_Model_User_State')->findOneByTitle('registered');
+        $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
         $user = new Application_Model_User($data);
 
         // write back to persistence manager and flush it
@@ -72,56 +70,53 @@ class UserController extends BaseController{
   }
 
   public function filesAction(){
+    $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
     
     $this->setTitle('Personal Files');
-    
-    $page = $this->_getParam('page');
 
-    $userId = $this->_defaultNamespace->userId;
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($userId);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
     $userFiles = $user->getFiles();
-    
+
     $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($userFiles->toArray()));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-    $paginator->setCurrentPageNumber($page);
+    $paginator->setCurrentPageNumber($input->page);
 
     $this->view->paginator = $paginator;
-    
+
     //change the view to the one from the file controller
-    $this->_helper->viewRenderer->renderBySpec('list', array('controller' => 'file'));
+    $this->_helper->viewRenderer->renderBySpec('list', array('controller'=>'file'));
   }
-  
+
   public function addFileAction(){
-    $this->_helper->viewRenderer->setNoRender(true);
-    
-    $fileId = $this->_getParam('id');
-    $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
-    
-    $userId = $this->_defaultNamespace->userId;
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($userId);
-    
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+
     $user->addFile($file);
     $this->_em->persist($user);
     $this->_em->flush();
+
+    $this->_helper->viewRenderer->setNoRender(true);
   }
-  
+
   /**
    * Verifies a user by a given hash in database.
    */
   public function verifyAction(){
-    $verificationHash = preg_replace('/[^0-9a-z]/i', '', $this->getRequest()->getParam('hash'));
+    $input = new Zend_Filter_Input(array('hash'=>'Alpha'), null, $this->_getAllParams());
 
     // if no valid verification hash is set
-    if(empty($verificationHash)){
+    if(empty($input->hash)){
       $this->_helper->redirector('index', 'index');
     }
 
-    $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($verificationHash);
-    if(empty($user) || $user->getState()->getTitle() != 'registered'){
+    $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
+    if(empty($user) || $user->getState()->getTitle() != 'user_registered'){
       $this->_helper->flashMessenger->addMessage('Verification failed.');
       $this->_helper->redirector('index', 'index');
     }else{
-      $user->setState($this->_em->getRepository('Application_Model_User_State')->findOneByTitle('activated'));
+      $user->setState($this->_em->getRepository('Application_Model_State')->findOneByName('user_activated'));
       $user->setVerificationHash(Unplagged_Helper::generateRandomHash());
 
       // write back to persistence manage and flush it
@@ -143,13 +138,14 @@ class UserController extends BaseController{
    * Recovers a users password
    */
   public function recoverPasswordAction(){
-    $recoveryHash = preg_replace('/[^0-9a-z]/i', '', $this->getRequest()->getParam('hash'));
-    $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($recoveryHash);
+    $input = new Zend_Filter_Input(array('hash'=>'Alpha'), null, $this->_getAllParams());
+
+    $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
 
     if(empty($user)){
       $recoverForm = new Application_Form_User_Password_Recover();
     }else{
-      $recoverForm = new Application_Form_User_Password_Reset($recoveryHash);
+      $recoverForm = new Application_Form_User_Password_Reset($input->hash);
     }
 
     // form has been submitted through post request
@@ -162,9 +158,9 @@ class UserController extends BaseController{
         if(empty($user)){
           $email = $this->getRequest()->getParam('email');
           $user = $this->_em->getRepository('Application_Model_User')->findOneByEmail($email);
-          
+
           $lastNotificationAction = $this->_em->getRepository('Application_Model_Notification_Action')->findOneByName("user_requested_password");
-          $lastNotification = $this->_em->getRepository('Application_Model_Notification')->findOneBy(array("action" => $lastNotificationAction->getId(), "user" => $user->getId()));
+          $lastNotification = $this->_em->getRepository('Application_Model_Notification')->findOneBy(array("action"=>$lastNotificationAction->getId(), "user"=>$user->getId()));
 
           if($lastNotification && ($lastNotification->getCreated()->getTimestamp() > time() - NOTIFICATIONS_TIME_INTERVAL)){
             $this->_helper->flashMessenger->addMessage('There was already a password recovery request for this account.');
@@ -200,13 +196,14 @@ class UserController extends BaseController{
    * Displays a form for editing a user profile.
    */
   public function editAction(){
-    $userId = preg_replace('/[^0-9]/', '', $this->getRequest()->getParam('id'));
+    $input = new Zend_Filter_Input(array('hash'=>'Digits'), null, $this->_getAllParams());
+
     // if either the user is not logged in or no valid user id is defined
-    if(empty($userId)){
+    if(empty($input->id)){
       $userId = $this->_defaultNamespace->userId;
     }
 
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($userId);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($input->id);
     if(empty($user)){
       $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
       $this->_helper->redirector('index', 'index');
@@ -246,19 +243,18 @@ class UserController extends BaseController{
    * the permission for the case. 
    */
   public function setCurrentCaseAction(){
-    //@todo should we really replace some stuff here(don't really know what it does), I would think we 
-    //probably should check if it's a number and leave everything else as is
-    $caseId = preg_replace('/[^0-9]/', '', $this->getRequest()->getParam('case'));
+    $input = new Zend_Filter_Input(array('hash'=>'Digits'), null, $this->_getAllParams());
+
     $case = null;
-    if($caseId){
-      $case = $this->_em->getRepository('Application_Model_Case')->findOneById($caseId);
+    if($input->id){
+      $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
     }
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
     $user->setCurrentCase($case);
 
     $this->_em->persist($user);
     $this->_em->flush();
-    
+
     $this->redirectToLastPage();
   }
 
@@ -272,12 +268,13 @@ class UserController extends BaseController{
     $result["response"] = "200";
     $this->_helper->json($result);
   }
-  
+
   /**
    * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
    * @param String from If defined it selects only users of a specific rank.
    */
   public function autocompleteNamesAction(){
+    // @todo clean inpit
     $search_string = $this->_getParam('term');
     // user ids to skip
     $skipIds = $this->_getParam('skip');

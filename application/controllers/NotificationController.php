@@ -23,17 +23,7 @@
  *
  * @author Unplagged Development Team
  */
-class NotificationController extends Zend_Controller_Action{
-
-  /**
-   * Initalizes registry and namespace instance in the controller and allows to display flash messages in the view.
-   * @see Zend_Controller_Action::init()
-   */
-  public function init(){
-    $this->_em = Zend_Registry::getInstance()->entitymanager;
-    $this->_defaultNamespace = new Zend_Session_Namespace('Default');
-    $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
-  }
+class NotificationController extends Unplagged_Controller_Action{
 
   public function indexAction(){
       $this->_helper->redirector('recent-activity', 'notification');
@@ -43,15 +33,14 @@ class NotificationController extends Zend_Controller_Action{
    * Displays a list with the most recent activites related to a user.
    */
   public function recentActivityAction(){
-    // @todo: clean input
-    $page = $this->_getParam('page');
+    $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
     $query = $this->_em->createQuery("SELECT n FROM Application_Model_Notification n ORDER BY n.created DESC");
     $count = $this->_em->createQuery("SELECT COUNT(n.id) FROM Application_Model_Notification n");
 
     $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-    $paginator->setCurrentPageNumber($page);
+    $paginator->setCurrentPageNumber($input->page);
 
     $this->view->paginator = $paginator;
   }
@@ -64,9 +53,8 @@ class NotificationController extends Zend_Controller_Action{
   }
   
   public function commentsAction() {
-    // @todo: sanitize
-    $sourceId = $this->_getParam('source');
-    $source = $this->_em->getRepository('Application_Model_Base')->findOneById($sourceId);
+    $input = new Zend_Filter_Input(array('source'=>'Digits'), null, $this->_getAllParams());
+    $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
     
     if($source) {
       $query = $this->_em->createQuery("SELECT c FROM Application_Model_Comment c");

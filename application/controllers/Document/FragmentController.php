@@ -19,22 +19,28 @@
  */
 
 /**
- * Description of Document_FragmentController
+ * This controller handles fragment related stuff.
  */
-class Document_FragmentController extends Zend_Controller_Action{
+class Document_FragmentController extends Unplagged_Controller_Action{
 
   public function init(){
-    $this->_em = Zend_Registry::getInstance()->entitymanager;
-    $this->_defaultNamespace = new Zend_Session_Namespace('Default');
-    $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
+    parent::init();
+
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
+    Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 
   public function indexAction(){
     
   }
 
+  /**
+   * Displays a single fragment by a given id. 
+   */
   public function showAction(){
-    $input = new Zend_Filter_Input(array('id'=>'digits'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
 
@@ -42,14 +48,20 @@ class Document_FragmentController extends Zend_Controller_Action{
     $this->view->plag = $fragment->getPlag();
     $this->view->source = $fragment->getSource();
 
-    // @todo remove, jsut for now to have something, it should be changed to explode("\n",...          
-    $this->view->plagLines = str_split(json_encode($fragment->getPlag()->getText()), 20);
-    $this->view->sourceLines = str_split(json_encode($fragment->getSource()->getText()), 20);
+    // @todo remove, jsut for now to have something, it should be changed to explode("\n",...  
+    $plagText = $fragment->getPlag()->getText();
+    $sourceText = $fragment->getSource()->getText();
+    
+    $this->view->plagLines = explode("\n", $plagText);
+    $this->view->sourceLines = explode("\n", $sourceText);
 
     Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 
+  /**
+   * Handles the creation of a new fragment. 
+   */
   public function createAction(){
     $modifyForm = new Application_Form_Document_Fragment_Modify();
 
@@ -71,8 +83,11 @@ class Document_FragmentController extends Zend_Controller_Action{
     $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document_fragment'));
   }
 
+  /**
+   * Handles the edit of an already exisiting fragment. 
+   */
   public function editAction(){
-    $input = new Zend_Filter_Input(array('id'=>'digits'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
 
@@ -127,32 +142,33 @@ class Document_FragmentController extends Zend_Controller_Action{
   }
 
   public function listAction(){
-    // @todo: clean input
-    $page = $this->_getParam('page');
+    $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
     $query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f");
     $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_Document_Fragment f");
 
     $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-    $paginator->setCurrentPageNumber($page);
+    $paginator->setCurrentPageNumber($input->page);
 
     $this->view->paginator = $paginator;
+    
+    Zend_Layout::getMvcInstance()->sidebar = null;
+    Zend_Layout::getMvcInstance()->versionableId = null;
   }
 
   public function diffAction(){
-    // @todo: clean input
-    $versionableId = $this->_getParam('id');
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $query = $this->_em->createQuery("SELECT v FROM Application_Model_Versionable_Version v WHERE v.versionable = :versionable");
-    $query->setParameter("versionable", $versionableId);
+    $query->setParameter("versionable", $input->id);
     $versions = $query->getResult();
 
     $params["versions"] = array();
     foreach($versions as $version){
       $params["versions"][$version->getId()] = "Version " . $version->getVersion();
     }
-    $params["action"] = "/document_fragment/diff/id/" . $versionableId;
+    $params["action"] = "/document_fragment/diff/id/" . $input->id;
 
     // create the form
     $diffVersionsForm = new Application_Form_Versionable_Diff($params);
@@ -197,6 +213,27 @@ class Document_FragmentController extends Zend_Controller_Action{
 
     $this->view->diffVersionsForm = $diffVersionsForm;
     Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
+  }
+
+  public function deleteAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $document = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
+      if($document){
+        $this->_em->remove($document);
+        $this->_em->flush();
+      }else{
+        $this->_helper->flashMessenger->addMessage('The fragment does not exist.');
+      }
+    }
+
+    $this->_helper->flashMessenger->addMessage('The fragment was deleted successfully.');
+    $this->_helper->redirector('list', 'document_fragment');
+
+    // disable view
+    $this->view->layout()->disableLayout();
+    $this->_helper->viewRenderer->setNoRender(true);
   }
 
   private function handleModifyData(Application_Form_Document_Fragment_Modify $modifyForm, Application_Model_Document_Fragment $fragment = null){

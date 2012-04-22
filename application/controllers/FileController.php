@@ -18,12 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'BaseController.php';
-
 /**
  * 
  */
-class FileController extends BaseController{
+class FileController extends Unplagged_Controller_Action{
 
   public function indexAction(){
     $this->_helper->redirector('list', 'file');
@@ -78,11 +76,11 @@ class FileController extends BaseController{
 
         if($adapter->receive()){
           chmod($file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension(), 0755);
-          
+
           // notification
           $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
           Unplagged_Helper::notify("file_uploaded", $file, $user);
-      
+
           $this->_helper->flashMessenger->addMessage('File was uploaded successfully.');
           $this->_helper->redirector('list', 'file');
         }else{
@@ -102,27 +100,25 @@ class FileController extends BaseController{
   }
 
   public function listAction(){
-    $this->setTitle('Public Files');
+    $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
     
-    // @todo: clean input
-    $page = $this->_getParam('page');
+    $this->setTitle('Public Files');
 
     $query = $this->_em->createQuery("SELECT f FROM Application_Model_File f");
     $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_File f");
 
     $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-    $paginator->setCurrentPageNumber($page);
+    $paginator->setCurrentPageNumber($input->page);
 
     $this->view->paginator = $paginator;
   }
 
   public function downloadAction(){
-    $fileId = $this->_getParam('id');
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    if(!empty($fileId)){
-      $fileId = preg_replace('/[^0-9]/', '', $fileId);
-      $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
+    if(!empty($input->id)){
+      $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
         $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
 
@@ -146,22 +142,24 @@ class FileController extends BaseController{
   }
 
   public function setTargetAction(){
-    $fileId = $this->_getParam('id');
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    $this->targetAction($fileId, true);
+    $this->targetAction($input->id, true);
   }
 
   public function unsetTargetAction(){
-    $fileId = $this->_getParam('id');
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    $this->targetAction($fileId, false);
+    $this->targetAction($input->id, false);
   }
-
+  
+  /**
+   * Handles setting and unsetting a file as the target file of a case.
+   * @param Integer $fileId
+   * @param Boolean $isTarget 
+   */
   private function targetAction($fileId, $isTarget){
-    $fileId = $this->_getParam('id');
-
     if(!empty($fileId)){
-      $fileId = preg_replace('/[^0-9]/', '', $fileId);
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
       if($file){
         $file->setIsTarget($isTarget);
@@ -180,16 +178,17 @@ class FileController extends BaseController{
     $this->_helper->viewRenderer->setNoRender(true);
   }
 
+  /**
+   * Parses a single file into a document using OCR. 
+   */
   public function parseAction(){
-    $fileId = $this->_getParam('id');
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    if(empty($fileId)){
+    if(empty($input->id)){
       // show error message
       $this->_helper->flashMessenger->addMessage('The fileId has to be set.');
     }else{
-      $fileId = preg_replace('/[^0-9]/', '', $fileId);
-
-      $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
+      $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       $language = "eng";
 
       if(empty($file)){
@@ -197,7 +196,7 @@ class FileController extends BaseController{
         $this->_helper->flashMessenger->addMessage('No file found by that id.');
       }else{
         $parser = Unplagged_Parser::factory($file->getMimeType());
-        
+
         $document = $parser->parseToDocument($file, $language);
         if(empty($document)){
           $this->_helper->flashMessenger->addMessage('The file could not be parsed.');
@@ -211,12 +210,14 @@ class FileController extends BaseController{
     $this->_helper->redirector('list', 'file');
   }
 
+  /**
+   * Deletes a single file. 
+   */
   public function deleteAction(){
-    $fileId = $this->_getParam('id');
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    if(!empty($fileId)){
-      $fileId = preg_replace('/[^0-9]/', '', $fileId);
-      $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
+    if(!empty($input->id)){
+      $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
 
         // remove file from file system
@@ -243,4 +244,5 @@ class FileController extends BaseController{
   }
 
 }
+
 ?>

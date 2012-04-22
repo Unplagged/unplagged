@@ -73,7 +73,7 @@ class Unplagged_Helper{
     $em = Zend_Registry::getInstance()->entitymanager;
 
     $data = array();
-    $data["action"] = $em->getRepository('Application_Model_Notification_Action')->findOneBy(array('name'=>$action));
+    $data["action"] = $em->getRepository('Application_Model_Action')->findOneBy(array('name'=>$action));
     $data["user"] = $user;
     $data["source"] = $source;
 

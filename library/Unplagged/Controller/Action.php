@@ -23,7 +23,7 @@
  * 
  * @author Unplagged
  */
-class BaseController extends Zend_Controller_Action{
+abstract class Unplagged_Controller_Action extends Zend_Controller_Action{
 
   /**
    * Initalizes registry and namespace instance in the controller and allows to display flash messages in the view.
@@ -52,6 +52,7 @@ class BaseController extends Zend_Controller_Action{
    */
   protected function redirectToLastPage(){
     $this->_helper->viewRenderer->setNoRender(true);
+    
     $historySessionNamespace = new Zend_Session_Namespace('history');
     $this->_redirect($historySessionNamespace->last);
   }

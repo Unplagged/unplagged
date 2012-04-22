@@ -23,26 +23,10 @@
  * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
- * @Table(name="document_page_detection_reports")
+ * @Table(name="document_page_simtext_reports")
  * @HasLifeCycleCallbacks
  */
-class Application_Model_Document_Page_DetectionReport extends Application_Model_Base{
-
-  /**
-   * The percentage of plagiarism in this page.
-   * @var integer The percentage of plagiarism.
-   * 
-   * @Column(type="decimal", scale=2, nullable=true)
-   */
-  private $percentage;
-
-  /**
-   * The used service that did the detection.
-   * @var string The servicename.
-   * 
-   * @Column(type="string", length=64)
-   */
-  private $servicename;
+class Application_Model_Document_Page_SimtextReport extends Application_Model_Base{
 
   /**
    * The current state of the report.
@@ -53,7 +37,7 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
   private $state;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_Document_Page", inversedBy="detection_reports")
+   * @ManyToOne(targetEntity="Application_Model_Document_Page", inversedBy="simtext_reports", cascade={"persist"})
    * @JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $page;
@@ -62,10 +46,24 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
    * @ManyToOne(targetEntity="Application_Model_User", cascade={"remove"})
    * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
    */
-  protected $user;
+  private $user;
 
   /**
-   * The content of the page.
+   * The documents, to compare the page against.
+   * 
+   * @Column(type="array", nullable=true)
+   */
+  private $documents;
+
+  /**
+   * The title of the report.
+   * 
+   * @Column(type="string")
+   */
+  private $title;
+  
+  /**
+   * The content of the report.
    * 
    * @Column(type="text", nullable=true)
    */
@@ -75,14 +73,14 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
     if(isset($data["content"])){
       $this->content = $data["content"];
     }
-    if(isset($data["percentage"])){
-      $this->percentage = $data["percentage"];
-    }
-    if(isset($data["servicename"])){
-      $this->servicename = $data["servicename"];
+    if(isset($data["title"])){
+      $this->title = $data["title"];
     }
     if(isset($data["page"])){
       $this->page = $data["page"];
+    }
+    if(isset($data["documents"])){
+      $this->documents = $data["documents"];
     }
     if(isset($data["state"])){
       $this->state = $data["state"];
@@ -139,13 +137,22 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
   public function setState($state){
     $this->state = $state;
   }
+  
+  public function getTitle(){
+    return $this->title;
+  }
 
+  public function getDocuments(){
+    return $this->documents;
+  }
+
+    
   public function getDirectName(){
     return "detection report";
   }
 
   public function getDirectLink(){
-    return "/document-page-detection-report/show/id/" . $this->id;
+    return "/document_page/simtext-reports/id/" . $this->page->getId() . "/show/" . $this->id;
   }
 
   public function getIconClass(){

@@ -177,7 +177,7 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
       , 'candidateText'
         )
         , 'candidateGroup'
-        , array('legend'=>'Candidate Information', 'class'=>'two-column-form clearfix')
+        , array('legend'=>'Candidate Information', 'class'=>'two-column-form')
     );
 
     $this->addDisplayGroup(array(
@@ -190,7 +190,7 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
       , 'sourceText'
         )
         , 'sourceGroup'
-        , array('legend'=>'Source Information', 'class'=>'two-column-form clearfix')
+        , array('legend'=>'Source Information', 'class'=>'two-column-form')
     );
 
     $this->addElements(array(

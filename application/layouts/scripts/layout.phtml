@@ -42,7 +42,7 @@ $cases = $results;
   if(!empty($sidebar)){
     switch($sidebar){
       case "fragment-tools":
-        echo $this->partial('partials/sidebars/fragment_tools.phtml', array("versionableId" => $this->layout()->versionableId));
+        echo $this->partial('partials/sidebars/fragment_tools.phtml', array("fragmentId" => $this->layout()->versionableId));
         break;
       case "page-tools":
         echo $this->partial('partials/sidebars/page_tools.phtml', array("pageId" => $this->layout()->versionableId));

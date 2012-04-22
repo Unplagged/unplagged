@@ -19,44 +19,55 @@
  */
 
 /**
- * The class represents a user state.
+ * The class represents a notification action.
  * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
- * @Table(name="user_states")
+ * @Table(name="states")
  */
-class Application_Model_User_State{
+class Application_Model_State {
 
   /**
-   * The logActionId is an unique identifier for each user state.
-   * @var string The user state id.
-   * $access protected
+   * The id is an unique identifier for each notification action.
+   * @var string The notification action id.
    * 
    * @Id @GeneratedValue @Column(type="integer")
    */
   private $id;
 
   /**
-   * A title for the user state.
-   * @var string The user state.
+   * A unique name for the notification action.
+   * @var string The name of the notification action.
    * 
    * @Column(type="string", unique=true, length=32)
+   */
+  private $name;
+  
+  /**
+   * A unique name for the notification action.
+   * @var string The name of the notification action.
+   * 
+   * @Column(type="string", length=32)
    */
   private $title;
 
   /**
-   * A description for the user state.
-   * @var string The user state.
+   * A description for the notification action.
+   * @var string The description.
    * 
    * @Column(type="string", length=256)
    */
-  protected $description;
+  private $description;
 
   public function __construct($data = array()){
+    if(isset($data["name"])){
+      $this->name = $data["name"];
+    }
+
     if(isset($data["title"])){
       $this->title = $data["title"];
     }
-
+    
     if(isset($data["description"])){
       $this->description = $data["description"];
     }
@@ -65,13 +76,18 @@ class Application_Model_User_State{
   public function getId(){
     return $this->id;
   }
-
+  
+  public function getName(){
+    return $this->name;
+  }
+  
+  public function getDescription(){
+    return $this->description;
+  }
   public function getTitle(){
     return $this->title;
   }
 
-  public function getDescription(){
-    return $this->description;
-  }
+
 
 }

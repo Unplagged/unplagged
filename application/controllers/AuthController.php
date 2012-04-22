@@ -18,14 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'BaseController.php';
-
 /**
  * This controller class handles all the login and logout behaviour.
  *
  * @author Unplagged Development Team
  */
-class AuthController extends BaseController{
+class AuthController extends Unplagged_Controller_Action{
 
   public function indexAction(){
     $auth = Zend_Auth::getInstance();

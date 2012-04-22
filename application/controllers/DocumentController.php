@@ -23,20 +23,14 @@
  *
  * @author benjamin
  */
-class DocumentController extends Zend_Controller_Action{
-
-  public function init(){
-    $this->_em = Zend_Registry::getInstance()->entitymanager;
-    $this->_defaultNamespace = new Zend_Session_Namespace('Default');
-    $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
-  }
+class DocumentController extends Unplagged_Controller_Action{
 
   public function indexAction(){
     $this->_helper->redirector('list', 'document');
   }
 
   public function editAction(){
-    $input = new Zend_Filter_Input(array('id'=>'digits'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
 
@@ -64,26 +58,30 @@ class DocumentController extends Zend_Controller_Action{
     }
   }
 
+  /**
+   * Lists all documents. 
+   */
   public function listAction(){
-    // @todo: clean input
-    $page = $this->_getParam('page');
+    $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
     $query = $this->_em->createQuery("SELECT d FROM Application_Model_Document d");
     $count = $this->_em->createQuery("SELECT COUNT(d.id) FROM Application_Model_Document d");
 
     $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-    $paginator->setCurrentPageNumber($page);
+    $paginator->setCurrentPageNumber($input->page);
 
     $this->view->paginator = $paginator;
   }
 
+  /**
+   * Removes a single document by id. 
+   */
   public function deleteAction(){
-    $documentId = $this->_getParam('id');
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    if(!empty($documentId)){
-      $documentId = preg_replace('/[^0-9]/', '', $documentId);
-      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($documentId);
+    if(!empty($input->id)){
+      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
       if($document){
         $this->_em->remove($document);
         $this->_em->flush();
@@ -104,11 +102,10 @@ class DocumentController extends Zend_Controller_Action{
    * Initializes an automated plagiarism detection.
    */
   public function detectPlagiarismAction(){
-    $documentId = $this->_getParam('id');
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    if(!empty($documentId) && $this->_defaultNamespace->userId){
-      $documentId = preg_replace('/[^0-9]/', '', $documentId);
-      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($documentId);
+    if(!empty($input->id) && $this->_defaultNamespace->userId){
+      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
       if($document){
         $pages = $document->getPages();
 
@@ -163,9 +160,10 @@ class DocumentController extends Zend_Controller_Action{
    * Initializes an automated plagiarism detection.
    */
   public function responsePlagiarismAction(){
-    $params = $this->getRequest()->getParams();
-    $detector = Unplagged_Detector::factory($params["detector"]);
-    $report = $detector->handleResult($params);
+    $input = new Zend_Filter_Input(array('detector'=>'Alpha'), null, $this->_getAllParams());
+    
+    $detector = Unplagged_Detector::factory($$input->detector);
+    $report = $detector->handleResult($input);
 
     $this->_em->persist($report);
     $this->_em->flush();

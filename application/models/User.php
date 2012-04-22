@@ -86,8 +86,10 @@ class Application_Model_User extends Application_Model_Base{
   private $verificationHash;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_User_State")
-   * @JoinColumn(name="user_state_id", referencedColumnName="id")
+   * The current state of the user.
+   * 
+   * @ManyToOne(targetEntity="Application_Model_State")
+   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
    */
   private $state;
   

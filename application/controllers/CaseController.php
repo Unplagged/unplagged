@@ -17,12 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'BaseController.php';
 
 /**
- *
+ * Handles action related to cases.
  */
-class CaseController extends BaseController{
+class CaseController extends Unplagged_Controller_Action{
 
   public function indexAction(){
     $this->_helper->redirector('list', 'case');
@@ -46,7 +45,7 @@ class CaseController extends BaseController{
   }
 
   public function editAction(){
-    $input = new Zend_Filter_Input(array('id'=>'digits'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
 
@@ -77,7 +76,7 @@ class CaseController extends BaseController{
   }
 
   public function listAction(){
-    $input = new Zend_Filter_Input(array('page'=>'digits'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
     $query = $this->_em->createQuery("SELECT c FROM Application_Model_Case c");
     $count = $this->_em->createQuery("SELECT COUNT(c.id) FROM Application_Model_Case c");
@@ -90,14 +89,12 @@ class CaseController extends BaseController{
   }
 
   public function autocompleteAliasAction(){
-    // @todo: clean input
-
-    $search_string = $this->_getParam('term');
+    $input = new Zend_Filter_Input(array('term'=>'Alpha'), null, $this->_getAllParams());
 
     $qb = $this->_em->createQueryBuilder();
     $qb->add('select', "c.id AS value, c.alias AS label")
         ->add('from', 'Application_Model_Case c')
-        ->where("c.alias LIKE '%" . $search_string . "%'");
+        ->where("c.alias LIKE '%" . $input->term . "%'");
     $qb->setMaxResults(5);
 
     $dbresults = $qb->getQuery()->getResult();
@@ -109,20 +106,19 @@ class CaseController extends BaseController{
   }
 
   public function filesAction(){
-
+    $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
+    
     $this->setTitle('Case Files');
-
-    $page = $this->_getParam('page');
 
     $userId = $this->_defaultNamespace->userId;
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($userId);
     $case = $user->getCurrentCase();
-
+    
     $caseFiles = $case->getFiles();
 
     $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($caseFiles->toArray()));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-    $paginator->setCurrentPageNumber($page);
+    $paginator->setCurrentPageNumber($input->page);
 
     $this->view->paginator = $paginator;
 
@@ -131,19 +127,18 @@ class CaseController extends BaseController{
   }
 
   public function addFileAction(){
-    $this->_helper->viewRenderer->setNoRender(true);
-
-    $fileId = $this->_getParam('id');
-    $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
-
-    $userId = $this->_defaultNamespace->userId;
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($userId);
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+    
+    $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
 
     $case = $user->getCurrentCase();
 
     $case->addFile($file);
     $this->_em->persist($case);
     $this->_em->flush();
+    
+    $this->_helper->viewRenderer->setNoRender(true);
   }
 
   private function handleModifyData(Application_Form_Case_Modify $modifyForm, Application_Model_Case $case = null){

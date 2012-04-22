@@ -280,5 +280,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       }
     }
   }
+  
+  protected function _initAutoloadCrons() {
+    $autoloader = new Zend_Loader_Autoloader_Resource(array(
+        'namespace' => 'Cron_',
+        'basePath'  => APPLICATION_PATH . '/../crons/',
+    ));
+    
+    echo APPLICATION_PATH . '/../crons/';
+  }
 
 }

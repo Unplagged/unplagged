@@ -42,8 +42,7 @@ class Application_Model_Tag extends Application_Model_Base{
   /**
    * Constructor.
    */
-  public function __construct(){
-    
+  public function __construct(){ 
   }
 
   /**

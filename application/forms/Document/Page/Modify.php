@@ -39,7 +39,7 @@ class Application_Form_Document_Page_Modify extends Zend_Form{
     $contentElement->setLabel("Content");
 
     $submitElement = new Zend_Form_Element_Submit('submit');
-    $submitElement->setLabel('Save');
+    $submitElement->setLabel('Save page');
     $submitElement->setIgnore(true);
     $submitElement->setAttrib('class', 'submit');
     $submitElement->removeDecorator('DtDdWrapper');

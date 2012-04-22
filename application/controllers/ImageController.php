@@ -19,53 +19,35 @@
  */
 
 /**
- *
+ * Handles stuff related to images.
  * @author Unplagged
  */
-class ImageController extends Zend_Controller_Action{
+class ImageController extends Unplagged_Controller_Action{
 
   public function init(){
-    $this->_em = Zend_Registry::getInstance()->entitymanager;
+    parent::init();
+    
     $this->_helper->viewRenderer->setNoRender(true);
     $this->_helper->layout()->disableLayout();
   }
 
-  /**
-   * Displays an image specified by the name parameter.
-   */
   public function indexAction(){
-    $imageName = $this->_getParam('name');
-
-    $path = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
-    $fullPath = $path . $imageName;
-
-    if(!empty($imageName) && file_exists($fullPath)){
-      $imageInfo = getimagesize($fullPath);
-      $this->getResponse()->setHeader('Content-Type', $imageInfo['mime']);
-      readfile($fullPath);
-    }else{
-      $this->getResponse()->setHttpResponseCode(404);
-    }
+    
   }
-  
-  
-public function viewAction(){
-    $fileId = $this->_getParam('id');
 
-    if(!empty($fileId)){
-      $fileId = preg_replace('/[^0-9]/', '', $fileId);
-      $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
+  public function showAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
         $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
 
-        if($file->getExtension()== 'jpg' || $file->getExtension()== 'jpeg' || $file->getExtension()== 'gif' || $file->getExtension()== 'png' ||$file->getExtension()== 'tiff' )
-        {
-            header("Content-type: image/".$file->getExtension());
+        if($file->getExtension() == 'jpg' || $file->getExtension() == 'jpeg' || $file->getExtension() == 'gif' || $file->getExtension() == 'png' || $file->getExtension() == 'tiff'){
+          header("Content-type: image/" . $file->getExtension());
+        }else{
+          header("Content-type: " . $file->getMimeType());
         }
-        else
-            {
-                header("Content-type: " . $file->getMimeType());
-            }
 
         readfile($downloadPath);
       }else{
@@ -77,5 +59,7 @@ public function viewAction(){
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
+
 }
+
 ?>

@@ -21,13 +21,7 @@
 /**
  * 
  */
-class SimtextController extends Zend_Controller_Action{
-
-  public function init(){
-    $this->_em = Zend_Registry::getInstance()->entitymanager;
-    $this->_defaultNamespace = new Zend_Session_Namespace('Default');
-    $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
-  }
+class SimtextController extends Unplagged_Controller_Action{
 
   public function indexAction(){
     $query = $this->_em->createQuery('SELECT d FROM Application_Model_Document d');
@@ -102,7 +96,6 @@ class SimtextController extends Zend_Controller_Action{
     header("Content-Transfer-Encoding: binary");
 
     readfile($downloadPath);
-
 
     // disable view
     $this->view->layout()->disableLayout();

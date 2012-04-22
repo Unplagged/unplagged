@@ -37,7 +37,7 @@ class Application_Model_Notification extends Application_Model_Base{
   private $user;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_Notification_Action")
+   * @ManyToOne(targetEntity="Application_Model_Action")
    * @JoinColumn(name="action_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $action;

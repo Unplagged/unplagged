@@ -23,9 +23,9 @@
  * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
- * @Table(name="notification_actions")
+ * @Table(name="actions")
  */
-class Application_Model_Notification_Action {
+class Application_Model_Action {
 
   /**
    * The id is an unique identifier for each notification action.
