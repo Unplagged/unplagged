@@ -120,6 +120,12 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::setLastname($lastname);
     }
 
+    public function setAvatar($avatar)
+    {
+        $this->__load();
+        return parent::setAvatar($avatar);
+    }
+
     public function getCurrentCase()
     {
         $this->__load();
@@ -204,6 +210,12 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::toArray();
     }
 
+    public function getSalt()
+    {
+        $this->__load();
+        return parent::getSalt();
+    }
+
     public function setId($id)
     {
         $this->__load();
@@ -231,7 +243,7 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'updated', 'username', 'password', 'email', 'firstname', 'lastname', 'verificationHash', 'state', 'avatar', 'currentCase', 'files');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'updated', 'username', 'password', 'email', 'firstname', 'lastname', 'verificationHash', 'salt', 'state', 'avatar', 'currentCase', 'files');
     }
 
     public function __clone()

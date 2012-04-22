@@ -78,6 +78,11 @@ class Application_Form_User_Profile extends Zend_Form{
     $lastnameElement->setAttrib('maxLength', 64);
     $lastnameElement->setRequired(true);
 
+    $avatar = new Zend_Form_Element_File('avatar');
+    $avatar->setLabel('Avatar-Dateipfad:');
+    $avatar->setRequired(true);   
+    
+    
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Save');
     $submitElement->setIgnore(true);
@@ -90,12 +95,15 @@ class Application_Form_User_Profile extends Zend_Form{
       , $firstnameElement
       , $lastnameElement
     ));
+    
+    $this->addElement($avatarfilepath);
 
     $this->addDisplayGroup(array(
       'email'
       , 'username'
       , 'firstname'
       , 'lastname'
+      , 'avatar'
         )
         , 'personalGoup'
         , array('legend'=>'Personal Information')

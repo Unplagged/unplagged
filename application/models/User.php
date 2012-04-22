@@ -147,6 +147,10 @@ class Application_Model_User extends Application_Model_Base{
     if(isset($data["lastname"])){
       $this->lastname = $data["lastname"];
     }
+    
+    if(isset($data["avatar"])){
+      $this->avatar = $data["avatar"];
+    }
 
     if(isset($data["verificationHash"])){
       $this->verificationHash = $data["verificationHash"];
@@ -214,6 +218,10 @@ class Application_Model_User extends Application_Model_Base{
 
   public function setLastname($lastname){
     $this->lastname = $lastname;
+  }
+  
+  public function setAvatar($avatar){
+    $this->avatar = $avatar;
   }
 
   public function getCurrentCase(){
