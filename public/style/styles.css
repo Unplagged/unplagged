@@ -1858,3 +1858,15 @@ ins {
   direction: rtl;
 }
 /* @end Chosen */
+
+/*colours for the simtext operation (compare function) to mark the same texts*/
+.fragmark-0 { background-color: #f5cf9f; }
+.fragmark-1 { background-color: #c2f598; }
+.fragmark-2 { background-color: #a7c6f2; }
+.fragmark-3 { background-color: #f29f9f; }
+.fragmark-4 { background-color: #aff2be; }
+.fragmark-5 { background-color: #e8a3ff; }
+.fragmark-6 { background-color: #e6e181; }
+.fragmark-7 { background-color: #b8b8ff; }
+.fragmark-8 { background-color: #f5cf9f; }
+.fragmark-9 { background-color: #a5e6ed; }
