@@ -286,8 +286,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'namespace' => 'Cron_',
         'basePath'  => APPLICATION_PATH . '/../crons/',
     ));
-    
-    echo APPLICATION_PATH . '/../crons/';
   }
 
 }
