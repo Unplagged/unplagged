@@ -13,7 +13,11 @@
   foreach($this->paginator as $report): 
     ?>
   <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
+    <?php if($report->getState()->getName() == "report_generated") { ?>
     <td><a href="<?php echo $report->getDirectLink(); ?>"><?php echo $report->getTitle(); ?></a></td>
+    <?php } else { ?>
+    <td><?php echo $report->getTitle(); ?></td>
+    <?php } ?>
     <td><?php //echo $report->getCreated()->format('Y-m-d'); ?></td>
     <td><?php echo $report->getState()->getTitle(); ?></td>
   </tr>

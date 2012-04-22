@@ -275,8 +275,8 @@ class Document_PageController extends Unplagged_Controller_Action{
         $result = $this->handleSimtextData($simtextForm, $page);
 
         if($result){
-          $this->_helper->flashMessenger->addMessage('The simtext process was started, you will be notified, whenever it is finished.');
-          //$this->_helper->redirector('list', 'case');
+          $this->_helper->flashMessenger->addMessage('The simtext process was started, you will be notified, whenever it is finished.');          
+          $this->_helper->redirector('simtext-reports', 'document_page', '', array('id'=>$input->id));
         }
       }
 

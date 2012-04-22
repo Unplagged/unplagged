@@ -104,7 +104,7 @@ class UserController extends Unplagged_Controller_Action{
    * Verifies a user by a given hash in database.
    */
   public function verifyAction(){
-    $input = new Zend_Filter_Input(array('hash'=>'Alpha'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('hash'=>'Alnum'), null, $this->_getAllParams());
 
     // if no valid verification hash is set
     if(empty($input->hash)){
@@ -112,7 +112,7 @@ class UserController extends Unplagged_Controller_Action{
     }
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
-    if(empty($user) || $user->getState()->getTitle() != 'user_registered'){
+    if(empty($user) || $user->getState()->getName() != 'user_registered'){
       $this->_helper->flashMessenger->addMessage('Verification failed.');
       $this->_helper->redirector('index', 'index');
     }else{
@@ -138,7 +138,7 @@ class UserController extends Unplagged_Controller_Action{
    * Recovers a users password
    */
   public function recoverPasswordAction(){
-    $input = new Zend_Filter_Input(array('hash'=>'Alpha'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('hash'=>'Alnum'), null, $this->_getAllParams());
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
 
