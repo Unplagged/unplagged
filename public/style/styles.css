@@ -351,10 +351,19 @@ header[role=toolbar] a:hover{
   float: left;
 }
 
+.no-js .case-settings-box form {
+  width: 220px;
+}
+
+.no-js .case-settings-box .button {
+  float: right;
+}
+
 .case-settings-box select {
-  height: 24px;
+  height: 26px;
   border-radius: 3px;
-  width: 200px;
+  width: 180px;
+  float: left;
 }
 
 .case-settings-box > a {
@@ -1880,6 +1889,7 @@ ins {
     display: block;
     float: none;
     text-align: right;
+    padding-right: 0;
   }
   
   .user-box {
@@ -1889,7 +1899,7 @@ ins {
 }
 
 
-@media(max-width: 400px) {
+@media only screen and (max-width: 400px) {
   
   .user-box{
     position: static;
