@@ -28,14 +28,14 @@ $(document).ready(function(){
     var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
 
     if(target.is(':visible')) {
-      $(this).html("<span>Show comments</span>");
+      $(this).html("<span class=\"comments-icon\">Show comments</span>");
       $(this).removeClass("expanded");
       
       target.slideUp(800, function() {
         comments.html("");
       });
     } else {
-      $(this).html("<span>Hide comments</span>");
+      $(this).html("<span class=\"comments-icon\">Hide comments</span>");
       $(this).addClass("expanded");
       target.show();
       comments.hide();

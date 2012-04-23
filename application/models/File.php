@@ -189,7 +189,7 @@ class Application_Model_File extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    return "file";
+    return $this->filename;
   }
 
   public function getDirectLink(){

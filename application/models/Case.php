@@ -220,7 +220,7 @@ class Application_Model_Case extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    return "case";
+    return $this->name; // @todo: change to getpublishablename
   }
 
   public function getDirectLink(){

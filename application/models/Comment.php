@@ -114,7 +114,7 @@ class Application_Model_Comment extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    return "comment";
+    return $this->title;
   }
   
   public function getDirectLink(){

@@ -9,18 +9,20 @@ $this->headTitle($this->title);
 <?php foreach($this->paginator as $notification): ?>
   <div class="activity-item">
     <div class="activity">
-      <div class="image"><img class="avatar" src="<?php echo $notification->getUser()->getAvatar(); ?>" /></div>
+      <div class="image"><img class="avatar-small" src="<?php echo $notification->getUser()->getAvatar(); ?>" /></div>
       <div class="details">
-        <div class="title"><h4><?php echo $notification->getTitle(); ?><span> <?php echo $notification->getUser()->getUsername(); ?></span></h4> <span class="date"><?php echo Unplagged_Helper::humanTiming($notification->getCreated()); ?></span></div>
-        <p><?php echo $notification->getMessage(); ?></p>
-        <div style="text-align: right">
-          <div class="smork-btn light <?php echo $notification->getSource()->getIconClass(); ?>">
-            <a href="<?php echo $notification->getSource()->getDirectLink(); ?>"><span>Open <?php echo $notification->getSource()->getDirectName(); ?></span></a>
-          </div>
-          <div class="smork-btn light comments-icon">
-            <a href="#" for="comments-wrapper-<?php echo $notification->getId(); ?>" class="toggle-comments"><span>Show comments</span></a>
+        <div class="title-wrapper">
+          <h4>
+            <span class="title <?php echo $notification->getSource()->getIconClass(); ?>"><?php echo sprintf($notification->getTitle(), "<a href=\"" . $notification->getSource()->getDirectLink() . "\">" . $notification->getSource()->getDirectName() . "</a>"); ?></span> <span class="user"><?php echo $notification->getUser()->getUsername();?>, <?php echo Unplagged_Helper::humanTiming($notification->getCreated()); ?> </span>
+          </h4>
+          <div class="links"  style="text-align: right">
+          <div class="smork-btn light">
+            <a href="#" for="comments-wrapper-<?php echo $notification->getId(); ?>" class="toggle-comments"><span class="comments-icon">Show comments</span></a>
           </div>
         </div>
+        </div>
+        <p><?php echo $notification->getMessage(); ?></p>
+        
       </div>
     </div>
     <?php echo $this->partial('partials/comments.phtml', array('sourceId' => $notification->getId(), 'hidden' => true)); ?>
