@@ -91,6 +91,40 @@ class Application_Model_Notification extends Application_Model_Base{
   public function getTitle(){
     switch($this->action->getName()){
       case "user_registered":
+        return "User %s registered";
+      case "user_verified":
+        return "User %s verified";
+      case "user_requested_password":
+        return "User %s requested password";
+      case "case_created":
+        return "Case %s was created";
+      case "file_uploaded":
+        return "File %s was uploaded";
+      case "fragment_created":
+        return "Fragment %s was created";
+    }
+  }
+
+  public function getMessage(){
+    switch($this->action->getName()){
+      case "user_registered":
+        return "The user created a new account on the website.";
+      case "user_verified":
+        return "The user verified his account.";
+      case "user_requested_password":
+        return "The user requested a new password for his account.";
+      case "case_created":
+        return "A new Case was created.";
+      case "file_uploaded":
+        return "A new file was uploaded to the files area.";
+      case "fragment_created":
+        return "A new fragment was created";
+    }
+  }
+  
+  /*public function getTitle(){
+    switch($this->action->getName()){
+      case "user_registered":
         return "User " . $this->getSource()->getUsername() . " registered";
       case "user_verified":
         return "User " . $this->getSource()->getUsername() . " verified";
@@ -120,7 +154,7 @@ class Application_Model_Notification extends Application_Model_Base{
       case "fragment_created":
         return "Fragment " . $this->getSource()->getTitle() . " was created";
     }
-  }
+  }*/
 
   public function toArray(){
     $result = array();

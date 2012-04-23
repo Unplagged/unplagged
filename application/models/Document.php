@@ -107,7 +107,7 @@ class Application_Model_Document extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    return "document";
+    return $this->title;
   }
 
   public function getDirectLink(){

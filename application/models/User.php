@@ -261,7 +261,7 @@ class Application_Model_User extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    return "user";
+    return $this->username;
   }
 
   public function getDirectLink(){
