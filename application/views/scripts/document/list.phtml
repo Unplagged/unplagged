@@ -1,15 +1,25 @@
 <?php
-$this->title = $this->translate("List of documents");
-$this->headTitle($this->title);
+    $this->title = $this->translate("List of documents");
+    $this->headTitle($this->title);
 ?>
-<?php if($this->paginator): ?>
-  <div class="document-overview">
-    <?php foreach($this->paginator as $document): ?>
-    <div class="document">
-      <?php echo $this->translate("Title"); ?>
-      <a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a>
-    </div>
+<table cellpadding="0" cellspacing="0" class="default"> 
+  <tr>
+    <th><?php echo $this->translate("Title"); ?></th>
+    <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
+  </tr>
+  <?php 
+  $i = 0;
+  if($this->paginator):?>
+  <?php foreach($this->paginator as $document): ?>
+  <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
+    <td><a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
+    <td>
+      <a href="<?php echo "/document/edit/id/" . $document->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/pencil.png'); ?>" title="<?php echo $this->translate("Edit case"); ?>" /></a>
+      <a href="<?php echo "/document/detect-plagiarism/id/" . $document->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/eye.png'); ?>" title="<?php echo $this->translate("detect plagiarism"); ?>" /></a> 
+      <a href="<?php echo "/document/delete/id/" . $document->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("delete"); ?>" /></a>
+    </td>
+  </tr>
   <?php endforeach; ?>
-  </div>
-<?php endif; ?>
+  <?php endif; ?>
+</table>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>

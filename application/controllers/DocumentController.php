@@ -55,13 +55,14 @@ class DocumentController extends Unplagged_Controller_Action{
 
         if($result){
           $this->_helper->flashMessenger->addMessage('The document was updated successfully.');
-          $this->_helper->redirector('list', 'document');
+          $params = array('id'=>$document->getId());
+          $this->_helper->redirector('list', 'document_page', '', $params);
         }
       }
 
-      $this->view->title = "Edit case";
+      $this->view->title = "Edit document";
       $this->view->modifyForm = $modifyForm;
-      $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
+      $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document'));
     }else{
       $this->_helper->redirector('list', 'document');
     }
