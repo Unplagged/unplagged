@@ -159,7 +159,7 @@ class UserController extends Unplagged_Controller_Action{
           $email = $this->getRequest()->getParam('email');
           $user = $this->_em->getRepository('Application_Model_User')->findOneByEmail($email);
 
-          $lastNotificationAction = $this->_em->getRepository('Application_Model_Notification_Action')->findOneByName("user_requested_password");
+          $lastNotificationAction = $this->_em->getRepository('Application_Model_Action')->findOneByName("user_requested_password");
           $lastNotification = $this->_em->getRepository('Application_Model_Notification')->findOneBy(array("action"=>$lastNotificationAction->getId(), "user"=>$user->getId()));
 
           if($lastNotification && ($lastNotification->getCreated()->getTimestamp() > time() - NOTIFICATIONS_TIME_INTERVAL)){
@@ -196,23 +196,23 @@ class UserController extends Unplagged_Controller_Action{
    * Displays a form for editing a user profile.
    */
   public function editAction(){
-    $input = new Zend_Filter_Input(array('hash'=>'Digits'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     // if either the user is not logged in or no valid user id is defined
     if(empty($input->id)){
-      $userId = $this->_defaultNamespace->userId;
+      $input->id = $this->_defaultNamespace->userId;
     }
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($input->id);
     if(empty($user)){
       $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
       $this->_helper->redirector('index', 'index');
-    }elseif($this->_defaultNamespace->userId != $userId){
+    }elseif($this->_defaultNamespace->userId != $input->id){
       $this->_helper->flashMessenger->addMessage('No permission to edit other users.');
       $this->_helper->redirector('index', 'index');
     }else{
       // display the form with user data pre-loaded
-      $profileForm = new Application_Form_User_Profile($userId);
+      $profileForm = new Application_Form_User_Profile($input->id);
 
       // form has been submitted through post request
       if($this->_request->isPost()){
