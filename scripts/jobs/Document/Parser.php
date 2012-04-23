@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once("../Base.php");
+require_once(realpath(dirname(__FILE__)) . "/../Base.php");
 
 /**
  * This class represents a cronjob for parsing larger files into documents using OCR.
@@ -40,24 +40,26 @@ class Cron_Document_Parser extends Cron_Base{
 
     if($tasks){
       $task = $tasks[0];
-      
+
       $document = $task->getRessource();
       $file = $document->getOriginalFile();
-      
+
       $language = "eng";
       $parser = Unplagged_Parser::factory($file->getMimeType());
       $document = $parser->parseToDocument($file, $language, $document);
+      
+      if($document instanceof Application_Model_Document){
+        // update document
+        $document->setState(self::$em->getRepository('Application_Model_State')->findOneByName("document_parsed"));
 
-      // update document
-      $document->setState(self::$em->getRepository('Application_Model_State')->findOneByName("document_parsed"));
+        // update task
+        $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
 
-      // update task
-      $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
+        self::$em->persist($document);
+        self::$em->persist($task);
 
-      self::$em->persist($document);
-      self::$em->persist($task);
-
-      self::$em->flush();
+        self::$em->flush();
+      }
     }
   }
 
