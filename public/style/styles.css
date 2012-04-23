@@ -1337,6 +1337,28 @@ smork-btn a:active { top: 1px; }
   background: yellow;
 }
 
+.document-overview .document {
+  display: inline-block;
+  margin: 2px;
+  border: 1px #D4D4D4 solid;
+    background-image: url(/images/notebook.png);
+    background-repeat: repeat-y;
+    background-position: -65px 0;
+ line-height: 25px;
+ padding: 0;
+}
+
+.document-overview .document a {
+  display: block;
+  width: 160px;
+  height: 200px;
+  text-align: left;
+  padding: 15px;
+
+
+}
+
+
 .document-page-overview {
   padding: 5px;
 

@@ -1,0 +1,68 @@
+<nav id="right-nav">
+  <h4>Actions</h4>
+  <ul>
+    <li>
+      <a href="<?php echo "/document_page/show/id/" . $this->pageId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/page.png'); ?>" title="<?php echo $this->translate("Show"); ?>" /><span><?php echo $this->translate("Show"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document_page/edit/id/" . $this->pageId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/pencil.png'); ?>" title="<?php echo $this->translate("Edit"); ?>" /><span><?php echo $this->translate("Edit"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document_page/delete/id/" . $this->pageId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("Remove"); ?>" /><span><?php echo $this->translate("Remove"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document_page/edit/id/" . $this->pageId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/textfield_add.png'); ?>" title="<?php echo $this->translate("Create fragment"); ?>" /><span><?php echo $this->translate("Create fragment"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document_page/de-hyphen/id/" . $this->pageId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/text_padding_right.png'); ?>" title="<?php echo $this->translate("De-hyphen"); ?>" /><span><?php echo $this->translate("De-hyphen"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document_page/stopwords/id/" . $this->pageId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/zoom.png'); ?>" title="<?php echo $this->translate("Non-stopword identification"); ?>" /><span><?php echo $this->translate("Non-stopword identification"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document_page/simtext/id/" . $this->pageId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/table_row_delete.png'); ?>" title="<?php echo $this->translate("Simtext"); ?>" /><span><?php echo $this->translate("Simtext"); ?></span>
+      </a>
+    </li>
+  </ul>
+  <h4>Links</h4>
+  <ul>
+    <li>
+      <a href="<?php echo "/document_fragment/list/page/" . $this->pageId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/textfield_rename.png'); ?>" title="<?php echo $this->translate("Fragments"); ?>" /><span><?php echo $this->translate("Fragments"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document_page/detection-reports/id/" . $this->pageId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/report_magnify.png'); ?>" title="<?php echo $this->translate("Plagiarism Detection Reports"); ?>" /><span><?php echo $this->translate("Plagiarism Detection Reports"); ?></span>
+      </a>
+    </li>
+        <li>
+      <a href="<?php echo "/document_page/simtext-reports/id/" . $this->pageId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/table_row_delete.png'); ?>" title="<?php echo $this->translate("Simtext Reports"); ?>" /><span><?php echo $this->translate("Simtext Reports"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document_page/changelog/id/" . $this->pageId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/table_relationship.png'); ?>" title="<?php echo $this->translate("Changelog"); ?>" /><span><?php echo $this->translate("Changelog"); ?></span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+
+        <a href="<?php echo "/document/edit/id/" . $document->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/pencil.png'); ?>" title="<?php echo $this->translate("Edit case"); ?>" /></a>
+        <a href="<?php echo "/document/detect-plagiarism/id/" . $document->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/eye.png'); ?>" title="<?php echo $this->translate("detect plagiarism"); ?>" /></a> 
+        <a href="<?php echo "/document/delete/id/" . $document->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("delete"); ?>" /></a>

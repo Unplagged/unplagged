@@ -13,20 +13,22 @@ class Unplagged_Parser_Document_TesseractParser implements Unplagged_Parser_Docu
   public function __construct(){
     $this->_em = Zend_Registry::getInstance()->entitymanager;
   }
-  
-  public function parseToDocument(Application_Model_File $file, $language){
-    // init document
-    $data["file"] = $file;
-    $data["title"] = $file->getFilename();
 
-    $document = new Application_Model_Document($data);
+  public function parseToDocument(Application_Model_File $file, $language, Application_Model_Document $document = null){
+    // init document
+    if(!$document){
+      $data["file"] = $file;
+      $data["title"] = $file->getFilename();
+
+      $document = new Application_Model_Document($data);
+    }
 
     $parser = new Unplagged_Parser_Page_TesseractParser();
     $page = $parser->parseToPage($file, $language);
     $document->addPage($page);
     $page->setPageNumber(1);
     $this->_em->persist($page);
-    
+
     $this->_em->persist($document);
     $this->_em->flush();
 

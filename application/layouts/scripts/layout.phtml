@@ -47,6 +47,9 @@ $cases = $results;
       case "page-tools":
         echo $this->partial('partials/sidebars/page_tools.phtml', array("pageId" => $this->layout()->versionableId));
         break;
+      case "document-tools":
+        echo $this->partial('partials/sidebars/document_tools.phtml', array("documentId" => $this->layout()->versionableId));
+        break;
       default:
         echo $this->partial('partials/sidebars/default.phtml');
     }

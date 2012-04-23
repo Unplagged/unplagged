@@ -62,6 +62,22 @@ class Application_Model_Document extends Application_Model_Base{
    */
   private $bibtex;
 
+  /**
+   * The current state of the report.
+   * 
+   * @ManyToOne(targetEntity="Application_Model_State")
+   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
+   */
+  private $state;
+  
+  /**
+   * The file the document was initially created from.
+   * 
+   * @ManyToOne(targetEntity="Application_Model_File")
+   * @JoinColumn(name="original_file_id", referencedColumnName="id", onDelete="SET NULL")
+   */
+  private $originalFile;
+
   public function __construct(array $data = null){
 
     if(isset($data["title"])){
@@ -70,6 +86,12 @@ class Application_Model_Document extends Application_Model_Base{
 
     if(isset($data["bibtex"])){
       $this->bibtex = $data["bibtex"];
+    }
+    if(isset($data["state"])){
+      $this->state = $data["state"];
+    }
+    if(isset($data["originalFile"])){
+      $this->originalFile = $data["originalFile"];
     }
 
     $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
@@ -117,9 +139,21 @@ class Application_Model_Document extends Application_Model_Base{
   public function getIconClass(){
     return "document-icon";
   }
-  
+
   public function setTitle($title){
     $this->title = $title;
+  }
+
+  public function getState(){
+    return $this->state;
+  }
+
+  public function setState($state){
+    $this->state = $state;
+  }
+  
+  public function getOriginalFile(){
+    return $this->originalFile;
   }
 
 }

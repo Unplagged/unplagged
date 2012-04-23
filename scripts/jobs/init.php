@@ -14,6 +14,12 @@ defined('APPLICATION_PATH')
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
+/**
+ * @const TEMP_PATH The path to the directory where temporary data should be stored.
+ */
+defined('TEMP_PATH')
+    || define('TEMP_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'temp');
+
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
       realpath(APPLICATION_PATH . '/../library'),

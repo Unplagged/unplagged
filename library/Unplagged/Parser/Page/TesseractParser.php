@@ -22,13 +22,12 @@ class Unplagged_Parser_Page_TesseractParser implements Unplagged_Parser_Page_Par
    * @return Application_Model_Document
    */
   public function parseToPage(Application_Model_File $file, $language){
-
     try{
       $hash = Unplagged_Helper::generateRandomHash();
-      //@todo switch to getFilename() later on when a display name function exists
-      $inputFileLocation = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
+
+      $inputFileLocation = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getFilename();
       $outputFileLocation = TEMP_PATH . DIRECTORY_SEPARATOR . 'ocr' . DIRECTORY_SEPARATOR . $hash;
-      
+
       $adapter = new Unplagged_Parser_Page_TesseractAdapter($inputFileLocation, $outputFileLocation, $language);
       $adapter->execute();
 
@@ -42,7 +41,7 @@ class Unplagged_Parser_Page_TesseractParser implements Unplagged_Parser_Page_Par
 
       $page = new Application_Model_Document_Page($data);
       // remove the ocr-scanned document, because it is stored in the database now
-      //unset($outputFileLocation);
+      unlink($outputFileLocation);
 
       return $page;
     }catch(InvalidArgumentException $e){

@@ -26,13 +26,12 @@ $application = new Zend_Application(
  
 $application->getBootstrap()->bootstrap('doctrine');
 $em = $application->getBootstrap()->getResource('doctrine');
-
+/*
 unset($data);
 $data["name"] = "page_simtext";
 $data["description"] = "Create a simtext report for a single page";
 $action = new Application_Model_Action($data);
 $em->persist($action);
-
 
 // 1) init notification actions
 unset($data);
@@ -195,5 +194,14 @@ $data["name"] = "VerschärftesBauernOpfer";
 $data["description"] = "VerschärftesBauernOpfer";
 $fragmentType = new Application_Model_Document_Fragment_Type($data);
 $em->persist($fragmentType);
+
+$em->flush();
+*/
+
+unset($data);
+$data["name"] = "file_parse";
+$data["description"] = "Parse a file into a document";
+$action = new Application_Model_Action($data);
+$em->persist($action);
 
 $em->flush();
