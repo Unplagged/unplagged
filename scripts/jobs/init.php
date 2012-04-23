@@ -4,11 +4,11 @@ $time = microtime(true);
 $memory = memory_get_usage();
 
 defined('BASE_PATH')
-    || define('BASE_PATH', realpath(dirname(__FILE__) . '/../'));
+    || define('BASE_PATH', realpath(dirname(__FILE__) . '/../../'));
 
 // Define path to application directory
 defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
+    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../application'));
 
 // Define application environment
 defined('APPLICATION_ENV')
