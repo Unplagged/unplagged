@@ -42,6 +42,11 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
     if($tasks){
       $task = $tasks[0];
+      
+      $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
+      self::$em->persist($task);
+      self::$em->flush();
+      
       $report = $task->getRessource();
 
       // generate the simtext result
