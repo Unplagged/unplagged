@@ -15,7 +15,7 @@ $(document).ready(function(){
   
   // if js is enabled we only want to open the menu on click, the other behaviour is
   // just a fallback for non-js users
-  $('.dropdown-button').removeClass('hoverable').find('.button').click(function(){
+  $('.dropdown-button').removeClass('hoverable').find('.button').live('click', function(){
     $(this).parent().toggleClass('hover');   
     return false;
   });
@@ -93,6 +93,13 @@ $(document).ready(function(){
             '</div>';
             target.append(tpl);
   }
+  
+  //make dropdown out of the action icons
+  function wrapActions(){
+    var dropdownButton = $('<div class="dropdown-button" />');
+    $('.action-list').addClass('').wrap(dropdownButton).parent().prepend('<button class="button">Select action<span class="arrow-down"></span></button>');
+  }
+  wrapActions();
   
   //wrap home menu button, so that icon gets shown
   var homeButton = $('#header .navigation .home');

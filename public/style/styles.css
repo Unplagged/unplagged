@@ -281,6 +281,20 @@ p {
   border: 5px dashed #40C0E9;
 }
 
+.action-list {
+  list-style-type: none;
+   margin: 0;
+   padding: 0;
+}
+
+.action-list li {
+  display: inline-block;
+}
+
+.js .action-list li {
+  display: block;
+}
+
 /* ==|== toolbar styles ======================================================= */
 header[role=toolbar]{
   background: #333333;
