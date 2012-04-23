@@ -15,7 +15,7 @@ $(document).ready(function(){
   
   // if js is enabled we only want to open the menu on click, the other behaviour is
   // just a fallback for non-js users
-  $('.dropdown-button').removeClass('hoverable').find('.button').click(function(){
+  $('.dropdown-button').removeClass('hoverable').find('.button').live('click', function(){
     $(this).parent().toggleClass('hover');   
     return false;
   });
@@ -28,14 +28,14 @@ $(document).ready(function(){
     var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
 
     if(target.is(':visible')) {
-      $(this).html("<span>Show comments</span>");
+      $(this).html("<span class=\"comments-icon\">Show comments</span>");
       $(this).removeClass("expanded");
       
       target.slideUp(800, function() {
         comments.html("");
       });
     } else {
-      $(this).html("<span>Hide comments</span>");
+      $(this).html("<span class=\"comments-icon\">Hide comments</span>");
       $(this).addClass("expanded");
       target.show();
       comments.hide();
@@ -93,6 +93,19 @@ $(document).ready(function(){
             '</div>';
             target.append(tpl);
   }
+  
+  //make dropdown out of the action icons
+  function wrapActions(){
+    var dropdownButton = $('<div class="dropdown-button" />');
+    $('.action-list').addClass('').wrap(dropdownButton).parent().prepend('<button class="button">Select action<span class="arrow-down"></span></button>');
+    $('.action-list a').each(function(){
+      var currentAction = $(this);
+      var title = currentAction.attr('title');
+      currentAction.removeAttr('title');
+      currentAction.append('<span>' + title + '</span>');
+    });
+  }
+  wrapActions();
   
   //wrap home menu button, so that icon gets shown
   var homeButton = $('#header .navigation .home');

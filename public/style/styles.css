@@ -99,8 +99,8 @@ p {
 }
 
 .avatar-small {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
 }
 
 /*
@@ -279,6 +279,20 @@ p {
   height: 400px;
   margin: auto;
   border: 5px dashed #40C0E9;
+}
+
+.action-list {
+  list-style-type: none;
+   margin: 0;
+   padding: 0;
+}
+
+.action-list li {
+  display: inline-block;
+}
+
+.js .action-list li {
+  display: block;
 }
 
 /* ==|== toolbar styles ======================================================= */
@@ -1097,60 +1111,60 @@ smork-btn a:active { top: 1px; }
 .smork-btn {
   display: inline-block;
 }
-.smork-btn a span, .smork-btn:visited a span {
-  background: no-repeat left;
+.smork-btn a span, .smork-btn:visited a span,
+.activity-item a span{
   padding: 1px 0 1px 22px;
 }
 
-.smork-btn.upload-icon a span, .smork-btn.upload-icon:visited a span {
+.upload-icon, .upload-icon:visited {
   background: url(/images/icons/page_white_get.png) no-repeat left;
 }
 
-.smork-btn.create-case-icon a span, .smork-btn.create-case-icon:visited a span {
+.create-case-icon, .create-case-icon:visited {
   background: url(/images/icons/book_add.png) no-repeat left;
 }
 
-.smork-btn.simtext-compare-icon a span, .smork-btn.simtext-compare-icon:visited a span {
+.simtext-compare-icon, .simtext-compare-icon:visited {
   background: url(/images/icons/page_copy.png) no-repeat left;
 }
 
-.smork-btn.comments-icon a span, .smork-btn.comments-icon:visited a span {
+.comments-icon, .comments-icon:visited {
   background: url(/images/icons/comments.png) no-repeat left;
 }
 
-.smork-btn.user-icon a span, .smork-btn.user-icon:visited a span {
+.user-icon, .user-icon:visited {
   background: url(/images/icons/user.png) no-repeat left;
 }
 
-.smork-btn.case-icon a span, .smork-btn.case-icon:visited a span {
+.case-icon, .case-icon:visited {
   background: url(/images/icons/book.png) no-repeat left;
 }
 
-.smork-btn.comment-icon a span, .smork-btn.comment-icon:visited a span {
+.comment-icon, .comment-icon:visited {
   background: url(/images/icons/comment.png) no-repeat left;
 }
 
-.smork-btn.document-icon a span, .smork-btn.document-icon:visited a span {
+.document-icon, .document-icon:visited {
   background: url(/images/icons/script.png) no-repeat left;
 }
 
-.smork-btn.file-icon a span, .smork-btn.file-icon:visited a span {
+.file-icon, .file-icon:visited {
   background: url(/images/icons/disk.png) no-repeat left;
 }
 
-.smork-btn.notification-icon a span, .smork-btn.notification-icon:visited a span {
+.notification-icon, .notification-icon:visited {
   background: url(/images/icons/clock.png) no-repeat left;
 }
 
-.smork-btn.tag-icon a span, .smork-btn.tag-icon:visited a span {
+.tag-icon, .tag-icon:visited {
   background: url(/images/icons/tag_blue.png) no-repeat left;
 }
 
-.smork-btn.document-page-icon a span, .smork-btn.document-page-icon:visited a span {
+.document-page-icon, .document-page-icon:visited {
   background: url(/images/icons/page.png) no-repeat left;
 }
 
-.smork-btn.report-icon a span, .smork-btn.report-icon:visited a span {
+.report-icon, .report-icon:visited {
   background: url(/images/icons/report.png) no-repeat left;
 }
 
@@ -1211,7 +1225,7 @@ smork-btn a:active { top: 1px; }
 
 #activity-stream .activity {
   border-bottom: 1px #EFEFEF solid;
-  padding: 10px;
+  padding: 5px 8px 8px 8px;
 }
 
 #activity-stream .activity:hover {
@@ -1224,23 +1238,27 @@ smork-btn a:active { top: 1px; }
 }
 
 #activity-stream .activity .details {
-  margin-left: 80px;
-  min-height: 60px;
+  margin-left: 60px;
+  min-height: 35px;
+  padding-top: 5px;
+}
+#activity-stream .activity .title-wrapper .title {
+  padding-left: 20px;
 }
 
-#activity-stream .activity .title h4 {
+#activity-stream .activity .title-wrapper h4 {
   margin: 0;
   padding: 0;
   display: inline-block;
   font-size: 13px;
 }
 
-#activity-stream .activity .title h4 span {
+#activity-stream .activity .title-wrapper h4 span.user {
   font-weight: normal;
   color: #888C95;
 }
 
-#activity-stream .activity .title .date {
+#activity-stream .activity .title-wrapper .links {
   color: #A4A2A2;
   display: inline-block;
   float: right;
@@ -1261,8 +1279,7 @@ smork-btn a:active { top: 1px; }
   background-color: #efefef;
   color: white;
   font-size: 12px;
-  padding: 15px 10px 5px 10px;
-  padding-left: 90px;
+  padding: 15px 10px 5px 65px;
 }
 
 .comments-wrapper .arrow-wrapper .arrow-down {
@@ -1292,7 +1309,7 @@ smork-btn a:active { top: 1px; }
 .comments-wrapper .comments .comment,
 .comments-wrapper .write-comment-box {
   border-bottom: 1px white solid;
-  padding: 10px 10px 10px 90px;
+  padding: 10px 10px 10px 70px;
 }
 
 .comments-wrapper .comments .comment .image {
@@ -1301,7 +1318,7 @@ smork-btn a:active { top: 1px; }
 }
 .comments-wrapper .comments .comment .details {
   margin-left: 50px;
-  min-height: 50px;
+  min-height: 40px;
 }
 .comments-wrapper .comments .comment .details .date {
   color: #a4a2a2;
@@ -1858,3 +1875,15 @@ ins {
   direction: rtl;
 }
 /* @end Chosen */
+
+/*colours for the simtext operation (compare function) to mark the same texts*/
+.fragmark-0 { background-color: #f5cf9f; }
+.fragmark-1 { background-color: #c2f598; }
+.fragmark-2 { background-color: #a7c6f2; }
+.fragmark-3 { background-color: #f29f9f; }
+.fragmark-4 { background-color: #aff2be; }
+.fragmark-5 { background-color: #e8a3ff; }
+.fragmark-6 { background-color: #e6e181; }
+.fragmark-7 { background-color: #b8b8ff; }
+.fragmark-8 { background-color: #f5cf9f; }
+.fragmark-9 { background-color: #a5e6ed; }

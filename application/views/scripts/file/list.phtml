@@ -23,20 +23,51 @@
           </a>
       </td>
       <td><?php echo $file->getCreated()->format('Y-m-d'); ?></td>
-      <td><?php if($file->getIsTarget()): ?>
-          <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page_find.png'); ?>" title="<?php echo $this->translate("unset target"); ?>" /></a>
+      <td>
+        <ul class="action-list">
+        <?php if($file->getIsTarget()): ?>
+          <li>
+            <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Unset target"); ?>">
+              <img class="icon" src="<?php echo $this->baseUrl('images/icons/page_find.png'); ?>" alt="" />
+            </a>
+          </li>
         <?php else: ?>
-          <a href="<?php echo "/file/set-target/id/" . $file->getId(); ?>" class="target"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page.png'); ?>" title="<?php echo $this->translate("set target"); ?>" /></a>
+          <li>
+            <a href="<?php echo "/file/set-target/id/" . $file->getId(); ?>" class="target" title="<?php echo $this->translate("Set target"); ?>">
+              <img class="icon" src="<?php echo $this->baseUrl('images/icons/page.png'); ?>" alt="" />
+            </a>
+          </li>
         <?php endif; ?>
-        <a href="<?php echo "/file/parse/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page_gear.png'); ?>" title="<?php echo $this->translate("parse"); ?>" /></a>
-        <a href="<?php echo "/file/download/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/disk.png'); ?>" title="<?php echo $this->translate("download"); ?>" /></a>
-        <a href="<?php echo "/file/delete/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("delete"); ?>" /></a>
+          <li>
+            <a href="<?php echo "/file/parse/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Parse"); ?>">
+              <img class="icon" src="<?php echo $this->baseUrl('images/icons/page_gear.png'); ?>" alt="" />
+            </a>
+          </li>
+          <li>
+            <a href="<?php echo "/file/download/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Download"); ?>">
+              <img class="icon" src="<?php echo $this->baseUrl('images/icons/disk.png'); ?>" />
+            </a>
+          </li>
+          <li>
+            <a href="<?php echo "/file/delete/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Delete"); ?>">
+              <img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" alt="" />
+            </a>
+          </li>
         <?php if(Zend_Controller_Front::getInstance()->getRequest()->getControllerName() !== 'user'): ?>
-          <a href="<?php echo "/user/add-file/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/basket_put.png'); ?>" title="<?php echo $this->translate("Add to personal files"); ?>" /></a>
+          <li>
+            <a href="<?php echo "/user/add-file/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Add to personal files"); ?>">
+              <img class="icon" src="<?php echo $this->baseUrl('images/icons/basket_put.png'); ?>" alt=""/>
+            </a>
+          </li>
         <?php endif; ?>
         <?php if(Zend_Controller_Front::getInstance()->getRequest()->getControllerName() !== 'case'): ?>
-          <a href="<?php echo "/case/add-file/id/" . $file->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/package_add.png'); ?>" title="<?php echo $this->translate("Add to current case"); ?>" /></a>
+          <li>
+            <a href="<?php echo "/case/add-file/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Add to current case"); ?>">
+              <img class="icon" src="<?php echo $this->baseUrl('images/icons/package_add.png'); ?>" alt="" />
+            </a>
+          </li>
           <?php endif; ?>
+        </ul>
       </td>
     </tr>
   <?php endforeach; ?>

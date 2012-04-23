@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Doctrine\Common\Collections\ArrayCollection;  // good idea, but does not work on my machine in base class
+
 /**
  *
  * 
@@ -218,7 +220,7 @@ class Application_Model_Case extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    return "case";
+    return $this->name; // @todo: change to getpublishablename
   }
 
   public function getDirectLink(){

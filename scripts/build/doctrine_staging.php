@@ -1,7 +1,7 @@
 <?php
 //set only as development environment, when nothing was defined before
 defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'staging'));
+    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
 /**
  * @const BASE_PATH The path to the application directory.

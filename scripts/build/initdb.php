@@ -10,7 +10,7 @@ defined('BASE_PATH')
     || define('BASE_PATH', realpath(dirname(__FILE__) . '/../../'));
 
 define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../application'));
- echo APPLICATION_PATH;
+
 set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library'),
     get_include_path(),

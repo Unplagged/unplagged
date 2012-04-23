@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * The class represents a base class for any type of item that can receive 
  * comments or can be the source of a notification.
@@ -110,7 +108,7 @@ abstract class Application_Model_Base{
   abstract public function getDirectLink();
   
   /**
-   * Returns a direct name of the type of element. 
+   * Returns the title or name of the specific object of the element. 
    */
   abstract public function getDirectName();
   
