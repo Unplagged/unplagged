@@ -50,19 +50,19 @@ class Unplagged_Parser_Page_TesseractAdapter{
     $command = $this->tesseractCall . ' ' . $this->inputFileLocation . ' ' . $this->outputFileLocation . ' -l ' . $this->language;
 
     exec($command, $op, $returnVal);
-   // echo $returnVal . "<br />";
-   // exit();
+    // echo $returnVal . "<br />";
+    // exit();
     // everything okay
-  //  if($returnVal == 0){
-   //   return true;
-      // language package not found, try with english again
-      if($returnVal == 11){
-        $this->language = "eng";
-        $this->execute();
-      }else{
-  return true;   
-  //   throw new Exception("File could not be parsed.");
-      }
+    //  if($returnVal == 0){
+    //   return true;
+    // language package not found, try with english again
+    if($returnVal == 11){
+      $this->language = "eng";
+      $this->execute();
+    }else{
+      return true;
+      //   throw new Exception("File could not be parsed.");
+    }
   }
 
   /**

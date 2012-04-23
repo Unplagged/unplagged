@@ -1,0 +1,25 @@
+<nav id="right-nav">
+  <h4>Actions</h4>
+  <ul>
+    <li>
+      <a href="<?php echo "/document_page/list/id/" . $this->documentId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/page.png'); ?>" title="<?php echo $this->translate("Show"); ?>" /><span><?php echo $this->translate("Show"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document/edit/id/" . $this->documentId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/pencil.png'); ?>" title="<?php echo $this->translate("Edit"); ?>" /><span><?php echo $this->translate("Edit"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document/delete/id/" . $this->documentId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("Remove"); ?>" /><span><?php echo $this->translate("Remove"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document/detect-plagiarism/id/" . $this->documentId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/eye.png'); ?>" title="<?php echo $this->translate("Detect Plagiarism"); ?>" /><span><?php echo $this->translate("Detect Plagiarism"); ?></span>
+      </a>
+    </li>
+  </ul>
+</nav>

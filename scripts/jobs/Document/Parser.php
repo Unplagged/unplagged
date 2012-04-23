@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once("../Base.php");
 
 /**
@@ -30,16 +29,35 @@ class Cron_Document_Parser extends Cron_Base{
   public static function init(){
     parent::init();
   }
-  
-  public static function start(){
-    // @todo: dummy stuff, do something real here
-    $query = self::$em->createQuery("SELECT f FROM Application_Model_File f WHERE f.id > :id");
-    $query->setParameter("id", 1);
 
-    $files = $query->getResult();
-    
-    foreach($files as $file) {
-      echo $file->getId() . "\n";
+  public static function start(){
+    $query = self::$em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
+    $query->setParameter("action", "file_parse");
+    $query->setParameter("state", "task_scheduled");
+    $query->setMaxResults(1);
+
+    $tasks = $query->getResult();
+
+    if($tasks){
+      $task = $tasks[0];
+      
+      $document = $task->getRessource();
+      $file = $document->getOriginalFile();
+      
+      $language = "eng";
+      $parser = Unplagged_Parser::factory($file->getMimeType());
+      $document = $parser->parseToDocument($file, $language, $document);
+
+      // update document
+      $document->setState(self::$em->getRepository('Application_Model_State')->findOneByName("document_parsed"));
+
+      // update task
+      $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
+
+      self::$em->persist($document);
+      self::$em->persist($task);
+
+      self::$em->flush();
     }
   }
 
@@ -47,5 +65,4 @@ class Cron_Document_Parser extends Cron_Base{
 
 Cron_Document_Parser::init();
 Cron_Document_Parser::start();
-
 ?>

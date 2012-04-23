@@ -55,8 +55,8 @@ class Document_PageController extends Unplagged_Controller_Action{
       }
     }
 
-    Zend_Layout::getMvcInstance()->sidebar = null;
-    Zend_Layout::getMvcInstance()->versionableId = null;
+    Zend_Layout::getMvcInstance()->sidebar = "document-tools";
+    Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 
   public function detectionReportsAction(){
@@ -253,9 +253,6 @@ class Document_PageController extends Unplagged_Controller_Action{
         $this->render('simtext/list-reports');
       }
     }
-
-    Zend_Layout::getMvcInstance()->sidebar = null;
-    Zend_Layout::getMvcInstance()->versionableId = null;
   }
 
   /**

@@ -25,6 +25,15 @@
  */
 class DocumentController extends Unplagged_Controller_Action{
 
+  public function init(){
+    parent::init();
+
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    Zend_Layout::getMvcInstance()->sidebar = 'document-tools';
+    Zend_Layout::getMvcInstance()->versionableId = $input->id;
+  }
+
   public function indexAction(){
     $this->_helper->redirector('list', 'document');
   }
@@ -46,13 +55,14 @@ class DocumentController extends Unplagged_Controller_Action{
 
         if($result){
           $this->_helper->flashMessenger->addMessage('The document was updated successfully.');
-          $this->_helper->redirector('list', 'document');
+          $params = array('id'=>$document->getId());
+          $this->_helper->redirector('list', 'document_page', '', $params);
         }
       }
 
-      $this->view->title = "Edit case";
+      $this->view->title = "Edit document";
       $this->view->modifyForm = $modifyForm;
-      $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
+      $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document'));
     }else{
       $this->_helper->redirector('list', 'document');
     }
@@ -72,6 +82,9 @@ class DocumentController extends Unplagged_Controller_Action{
     $paginator->setCurrentPageNumber($input->page);
 
     $this->view->paginator = $paginator;
+
+    Zend_Layout::getMvcInstance()->sidebar = null;
+    Zend_Layout::getMvcInstance()->versionableId = null;
   }
 
   /**
@@ -161,7 +174,7 @@ class DocumentController extends Unplagged_Controller_Action{
    */
   public function responsePlagiarismAction(){
     $input = new Zend_Filter_Input(array('detector'=>'Alpha'), null, $this->_getAllParams());
-    
+
     $detector = Unplagged_Detector::factory($$input->detector);
     $report = $detector->handleResult($input);
 
@@ -195,7 +208,7 @@ class DocumentController extends Unplagged_Controller_Action{
        */
       return true;
     }
-    
+
     return false;
   }
 

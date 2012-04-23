@@ -101,7 +101,7 @@ class FileController extends Unplagged_Controller_Action{
 
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
-    
+
     $this->setTitle('Public Files');
 
     $query = $this->_em->createQuery("SELECT f FROM Application_Model_File f");
@@ -152,7 +152,7 @@ class FileController extends Unplagged_Controller_Action{
 
     $this->targetAction($input->id, false);
   }
-  
+
   /**
    * Handles setting and unsetting a file as the target file of a case.
    * @param Integer $fileId
@@ -195,15 +195,38 @@ class FileController extends Unplagged_Controller_Action{
         // show error message
         $this->_helper->flashMessenger->addMessage('No file found by that id.');
       }else{
-        $parser = Unplagged_Parser::factory($file->getMimeType());
+        // pdfs will e generated through cron
+        if($file->getExtension() == "pdf"){
+          $data["title"] = $file->getFilename();
+          $data["originalFile"] = $file;
+          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+          $document = new Application_Model_Document($data);
 
-        $document = $parser->parseToDocument($file, $language);
-        if(empty($document)){
-          $this->_helper->flashMessenger->addMessage('The file could not be parsed.');
-        }else{
-          $this->_em->persist($document);
+          // start task
+          $data = array();
+          $data["initiator"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          $data["ressource"] = $document;
+          $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('file_parse');
+          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+          $task = new Application_Model_Task($data);
+
+          $this->_em->persist($task);
           $this->_em->flush();
-          $this->_helper->flashMessenger->addMessage('The file was successfully parsed.');
+          
+          $this->_helper->flashMessenger->addMessage('The file will be generated now, you will be notified asap.');
+
+          // images will be parsed directly
+        }else{
+          $parser = Unplagged_Parser::factory($file->getMimeType());
+
+          $document = $parser->parseToDocument($file, $language);
+          if(empty($document)){
+            $this->_helper->flashMessenger->addMessage('The file could not be parsed.');
+          }else{
+            $this->_em->persist($document);
+            $this->_em->flush();
+            $this->_helper->flashMessenger->addMessage('The file was successfully parsed.');
+          }
         }
       }
     }
