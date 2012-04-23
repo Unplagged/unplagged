@@ -98,6 +98,12 @@ $(document).ready(function(){
   function wrapActions(){
     var dropdownButton = $('<div class="dropdown-button" />');
     $('.action-list').addClass('').wrap(dropdownButton).parent().prepend('<button class="button">Select action<span class="arrow-down"></span></button>');
+    $('.action-list a').each(function(){
+      var currentAction = $(this);
+      var title = currentAction.attr('title');
+      currentAction.removeAttr('title');
+      currentAction.append('<span>' + title + '</span>');
+    });
   }
   wrapActions();
   
