@@ -243,11 +243,11 @@ class UserController extends Unplagged_Controller_Action{
    * the permission for the case. 
    */
   public function setCurrentCaseAction(){
-    $input = new Zend_Filter_Input(array('hash'=>'Digits'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('case'=>'Digits'), null, $this->_getAllParams());
 
     $case = null;
-    if($input->id){
-      $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
+    if($input->case){
+      $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->case);
     }
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
     $user->setCurrentCase($case);
