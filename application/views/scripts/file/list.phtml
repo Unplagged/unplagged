@@ -24,7 +24,7 @@
       </td>
       <td><?php echo $file->getCreated()->format('Y-m-d'); ?></td>
       <td>
-        <ul class="action-list">
+        <ul class="action-list left-dropout">
         <?php if($file->getIsTarget()): ?>
           <li>
             <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Unset target"); ?>">
