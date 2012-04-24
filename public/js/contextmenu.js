@@ -25,7 +25,9 @@ $(document).ready(function(){
   
   //to make it possible to show the contextmenu only on certain elements, 
   //we only use it when the class show-contextmenu is present
-  $('.show-contextmenu').bind('contextmenu', showCustomContextmenu);
+  $('.show-contextmenu').bind('contextmenu', showCustomContextmenu).mouseover(function(){
+    
+  });
 
   //we probably only need mouseup, because then we know that the selection is finished
   $('.show-contextmenu').bind('mouseup', clickHandler);
