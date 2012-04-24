@@ -1,5 +1,5 @@
 <?php
-
+//require_once(realpath(dirname(__FILE__)) . "/Compare_text.php");
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -100,8 +100,41 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
     $candidateLineToElement->setRequired(true);
 
     $candidateTextElement = new Zend_Form_Element_Textarea('candidateText');
+	//$candidateTextElement->setAttrib('onchange', 'if (\'onchange\' == true){ $simtext = new Unplagged_Simtext_SimtextRebuild(); $simtextResult = $simtext->compare($("textarea#candidateText").val(),$("textarea#sourceText").val(),4)'; $("textarea#candidateComparedText").val($simtextResult[0]);}'));
+	
+	//$simtext = new Unplagged_Simtext_SimtextRebuild();
+	// $simtextResult = $simtext->compare("test test test test","test test test test",4);
+	// if(!empty($simtextResult)){
+	// var_dump($simtextResult);
+	$candidateTextElement->setAttrib('onchange', 
+									'	
+									
+									if (onchange)
+									{	 //$simtext = new Unplagged_Simtext_SimtextRebuild(); 
+									//$simtext ="hahaha";
+									//$left = $(this).("textarea#candidateText").value;
+									//$left = $("textarea#candidateText").val();
+									//$right = $("textarea#sourceText").val();
+									//$simtextResult = $simtext->compare($left,$right,4);
+									$simtextResult = compare("test test test test","test test test test",4);
+									var_dump($simtextResult);
+									//if(empty($simtextResult)){
+										$("textarea#candidateComparedText").val("hahahha"); 
+										
+										 //$("textarea#candidateComparedText").val($simtextResult.getElementById(\'simtext\').html());
+										// $("textarea#candidateComparedText").val($simtextResult);
+										//}
+									}
+									'
+									);
+									
+	//'onchange', '$("textarea#sourceComparedText").val($(this).val())'
     $candidateTextElement->setLabel("Text");
     
+	$candidateComparedTextElement = new Zend_Form_Element_Textarea('candidateComparedText');
+	$candidateComparedTextElement->setAttrib('readonly',true);
+    $candidateComparedTextElement->setLabel("Compared Text");
+	
     // source group
     $sourceDocumentElement = new Zend_Form_Element_Select('sourceDocument');
     $sourceDocumentElement->setLabel("Document");
@@ -126,7 +159,15 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
     $sourceLineToElement->setRequired(true);
 
     $sourceTextElement = new Zend_Form_Element_Textarea('sourceText');
+	$sourceTextElement->setAttrib('onchange', '$("textarea#sourceComparedText").val($(this).val())');
+	//"$(\'#sourceComparedText\').value=$(this).val()"
+	//$("textarea#ExampleMessage").val(result.exampleMessage);
     $sourceTextElement->setLabel("Text");
+	
+	$sourceCompareTextElement = new Zend_Form_Element_Textarea('sourceComparedText');
+	$sourceCompareTextElement->setAttrib('readonly',true);
+	//$sourceCompareTextElement->setValue('$(\'#sourceText\').val()');
+    $sourceCompareTextElement->setLabel("Compared Text");
 
     $sourceBibTexElement = new Zend_Form_Element_Textarea('sourceBibTex');
     $sourceBibTexElement->setLabel("Source BiBTex");
@@ -137,6 +178,12 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
     $submitElement->setIgnore(true);
     $submitElement->setAttrib('class', 'submit');
     $submitElement->removeDecorator('DtDdWrapper');
+	
+	$submitElement2 = new Zend_Form_Element_Submit('submit2');
+    $submitElement2->setLabel('Compare text');
+    $submitElement2->setIgnore(true);
+    $submitElement2->setAttrib('class', 'submit2');
+    $submitElement2->removeDecorator('DtDdWrapper');
 
     $this->addElements(array(
       $typeElement
@@ -149,6 +196,7 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
       , $candidateLineToElement
       , $candidateTextElement
       , $candidateBibTexElement
+	  , $candidateComparedTextElement
       
       , $sourceDocumentElement
       , $sourceBibTexElement
@@ -157,6 +205,7 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
       , $sourcePageToElement
       , $sourceLineToElement
       , $sourceTextElement
+	  , $sourceCompareTextElement
     ));
 
     $this->addDisplayGroup(array(
@@ -175,6 +224,7 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
       , 'candidatePageTo'
       , 'candidateLineTo'
       , 'candidateText'
+	  , 'candidateComparedText'
         )
         , 'candidateGroup'
         , array('legend'=>'Candidate Information', 'class'=>'two-column-form')
@@ -188,13 +238,15 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
       , 'sourcePageTo'
       , 'sourceLineTo'
       , 'sourceText'
+	  , 'sourceComparedText'
         )
         , 'sourceGroup'
         , array('legend'=>'Source Information', 'class'=>'two-column-form')
     );
 
     $this->addElements(array(
-      $submitElement
+      $submitElement,
+	  $submitElement2
     ));
   }
 

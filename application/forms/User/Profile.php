@@ -96,7 +96,7 @@ class Application_Form_User_Profile extends Zend_Form{
       , $lastnameElement
     ));
     
-    $this->addElement($avatarfilepath);
+    $this->addElement($avatar);
 
     $this->addDisplayGroup(array(
       'email'

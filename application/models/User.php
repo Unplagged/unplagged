@@ -261,11 +261,14 @@ class Application_Model_User extends Application_Model_Base{
   }
   
   public function getAvatar(){
-    if(empty($this->avatar)) {
+    /*if(empty($this->avatar)) {
      return "/images/default-avatar.png";
-    }
+    }*/
     
-    return "/image/view/" . $this->avatar->getId();
+    //return "/image/view/" . $this->avatar->getId();
+     return "/image/show/id/70"; //. $this->id;
+     //es funktioniert nur weil ich den speicherort von storage/avatar auf storage/files verlegt habe
+     // also genauso genommen habe wie in der showAction im ImageController
   }
 
   public function getDirectName(){
