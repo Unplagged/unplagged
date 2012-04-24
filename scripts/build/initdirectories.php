@@ -34,10 +34,11 @@ function createDirectory($directory){
   if(!is_dir($fullPath)){
     mkdir($fullPath);
     
+    chmod($fullPath, 0777);
     return true;
   }
-  chmod($fullPath, 0755);
   
+  chmod($fullPath, 0777);
   return false;
 }
 ?>
