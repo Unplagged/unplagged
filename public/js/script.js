@@ -15,10 +15,23 @@ $(document).ready(function(){
   
   // if js is enabled we only want to open the menu on click, the other behaviour is
   // just a fallback for non-js users
-  $('.dropdown-button').removeClass('hoverable').find('.button').live('click', function(){
-    $(this).parent().toggleClass('hover');   
+  $('.dropdown-button').removeClass('hoverable').find('.button').live('click', toggleDropout);
+  
+  function toggleDropout(){
+    closeDropouts($(this).parent());
+    $(this).parent().toggleClass('hover');
+    
     return false;
+  }
+  
+  function closeDropouts(exclude){
+    $('.dropdown-button').not(exclude).removeClass('hover');
+  }
+  
+  $(document).live('click', function(){
+    $('.dropdown-button').removeClass('hover');  
   });
+  
   
   $(".toggle-comments").click(function() {
     var targetId = $(this).attr("for");

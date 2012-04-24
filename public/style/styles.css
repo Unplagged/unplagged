@@ -216,11 +216,15 @@ p {
   border-bottom-left-radius: 5px;
   list-style-type: none;
   margin: 0;
-  padding: 0 30px 0 5px;
+  padding: 0;
   -webkit-box-shadow: 0 4px 5px rgba(0,0,0,.15);
   -moz-box-shadow   : 0 4px 5px rgba(0,0,0,.15);
   -o-box-shadow     : 0 4px 5px rgba(0,0,0,.15);
   box-shadow        : 0 4px 5px rgba(0,0,0,.15);
+}
+
+.left-dropout{
+  right: 0;
 }
 
 .dropdown-button .button.hoverable:hover:after, .dropdown-button.hover .button:after {
@@ -238,6 +242,8 @@ p {
 .dropdown-button li a{
   white-space: nowrap;
   text-decoration: none;
+  display: block;
+  padding: 5px;
 }
 
 .dropdown-button li:hover{
@@ -282,12 +288,28 @@ p {
 
 .action-list {
   list-style-type: none;
-   margin: 0;
-   padding: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.action-list .icon {
+  margin-right: 5px;
 }
 
 .action-list li {
   display: inline-block;
+}
+
+.action-list li a {
+  line-height: 18px;
+}
+
+.action-list li:hover a{
+  background-color: #FBF8E9;
+  transition: background-color .5s ease-in-out;
+  -moz-transition: background-color .5s ease-in-out; /* Firefox 4 */
+  -webkit-transition: background-color .5s ease-in-out; /* Safari and Chrome */
+  -o-transition: background-color .5s ease-in-out; /* Opera */
 }
 
 .js .action-list li {
@@ -341,6 +363,10 @@ header[role=toolbar] a:hover{
 
 .user-menu {
   float: left;
+}
+
+.user-menu.dropdown-button ul {
+  min-width: 100px;
 }
 
 .case-settings-box {
@@ -1936,7 +1962,6 @@ ins {
     width: 100%;
   }
   
-  
   .case-settings-box .chzn-container {
     width: 100% !important;
   }
@@ -1952,6 +1977,15 @@ ins {
   header[role=toolbar] .content {
     width: 220px;
     max-width: 220px;
+  }
+  
+  header[role=banner] h1 {
+    width: 100%;
+    left: 0;
+  }
+  
+  header[role=banner] .navigation {
+    text-align: center;
   }
 }
 
