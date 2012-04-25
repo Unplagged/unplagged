@@ -153,12 +153,6 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form {
         $submitElement->setAttrib('class', 'submit');
         $submitElement->removeDecorator('DtDdWrapper');
 
-        $submitElement2 = new Zend_Form_Element_Submit('submit2');
-        $submitElement2->setLabel('Compare text');
-        $submitElement2->setIgnore(true);
-        $submitElement2->setAttrib('class', 'submit2');
-        $submitElement2->removeDecorator('DtDdWrapper');
-
         $this->addElements(array(
             $typeElement
             , $noteElement
@@ -251,8 +245,7 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form {
         $this->source->clearValidators();
 
         $this->addElements(array(
-            $submitElement,
-            $submitElement2
+            $submitElement
         ));
     }
 
