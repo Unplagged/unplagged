@@ -125,7 +125,6 @@ function markTexts($comparedTexts,$list1,$list2) {
     $newlist1 = implode(" ", $list1);
     $newlist2 = implode(" ", $list2);
 
-    return "<div style='float:left; width: 500px;margin-right:20px;'>" . $newlist1 . "</div>" . "<div>" . $newlist2 . "</div>" ;
+    return "<div style='float:left; width: 330px;margin-right:20px;'>" . $newlist1 . "</div>" . "<div>" . $newlist2 . "</div>" ;
 }
-
 ?> 
