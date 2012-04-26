@@ -1,5 +1,5 @@
 <?php
-
+require_once(realpath(dirname(__FILE__)) . "/../../scripts/jobs/Document/Page/Compare_text.php");
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -21,86 +21,93 @@
 /**
  * 
  */
-class SimtextController extends Unplagged_Controller_Action{
+class SimtextController extends Unplagged_Controller_Action {
 
-  public function indexAction(){
-    $query = $this->_em->createQuery('SELECT d FROM Application_Model_Document d');
-    $documents = $query->getResult();
+    public function indexAction() {
+        $query = $this->_em->createQuery('SELECT d FROM Application_Model_Document d');
+        $documents = $query->getResult();
 
-    $this->view->listDocuments = $documents;
-  }
-
-  // calling simtext action
-  public function compareAction(){
-    $simForm = new Application_Form_Simtext_Analyse;
-    $request = $this->getRequest();
-    if($request->isPost()){
-      $this->_helper->flashMessenger->addMessage('Text analyse running');
-      //$query = $this->_em->createQuery('SELECT f FROM Application_Model_File f');//WHERE filename=\'a.txt\'');
-      //$text1 = $query->getResult();
-
-      $fileDirectory = "storage" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR;
-      $reportDirectory = "storage" . DIRECTORY_SEPARATOR . "reports" . DIRECTORY_SEPARATOR;
-
-      $file1_path = APPLICATION_PATH . DIRECTORY_SEPARATOR . $fileDirectory . "a.txt";
-      $file2_path = APPLICATION_PATH . DIRECTORY_SEPARATOR . $fileDirectory . "b.txt";
-
-      if($file1_path != "" && $file2_path != ""){
-        $report_name = "test_report.txt";
-        $report_path = APPLICATION_PATH . DIRECTORY_SEPARATOR . $reportDirectory . "$report_name";
-
-        // create file in report directory
-        //$reportfile = fopen($report_path, 'w') or die("can't open file");
-        //$reporter_name = "test.txt";
-        $this->_helper->flashMessenger->addMessage($file1_path);
-        $this->_helper->flashMessenger->addMessage($file2_path);
-        $this->_helper->flashMessenger->addMessage($report_path);
-
-        // running simtext and return a report file
-        $simtext = new Unplagged_Simtext_SimtextRun();
-        $report = $simtext->runSimtext($file1_path, $file2_path, $report_path);
-
-        //$this->_helper->flashMessenger->addMessage($report);
-
-        if(empty($report)){
-          $this->_helper->flashMessenger->addMessage('The report could not be created.');
-        }else{
-          //$this->_em->persist($report);
-          //$this->_em->flush();
-          $this->_helper->flashMessenger->addMessage('The report was successfully created.');
-          $this->_helper->redirector('compare', 'simtext');
-
-          // close file stream
-          //fclose($reportfile);
-        }
-      }else{
-        //$this->_helper->flashMessenger->addMessage($text1);
-        $this->_helper->flashMessenger->addMessage('Comparing failed');
-        $this->_helper->redirector('compare', 'simtext');
-      }
+        $this->view->listDocuments = $documents;
     }
 
-    $this->view->simForm = $simForm;
-  }
+    // calling simtext action
+    public function compareAction() {
+        $simForm = new Application_Form_Simtext_Analyse;
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $this->_helper->flashMessenger->addMessage('Text analyse running');
+            //$query = $this->_em->createQuery('SELECT f FROM Application_Model_File f');//WHERE filename=\'a.txt\'');
+            //$text1 = $query->getResult();
 
-  public function downloadReportAction(){
-    $reportDirectory = "storage" . DIRECTORY_SEPARATOR . "reports" . DIRECTORY_SEPARATOR;
-    $report_name = "test_report.txt";
-    $downloadPath = APPLICATION_PATH . DIRECTORY_SEPARATOR . $reportDirectory . "$report_name";
-    // set headers
-    header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-    header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-    header("Content-Description: File Transfer");
-    header("Content-Disposition: attachment; filename=\"" . $report_name . "\"");
-    header("Content-type: plain/text");
-    header("Content-Transfer-Encoding: binary");
+            $fileDirectory = "storage" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR;
+            $reportDirectory = "storage" . DIRECTORY_SEPARATOR . "reports" . DIRECTORY_SEPARATOR;
 
-    readfile($downloadPath);
+            $file1_path = APPLICATION_PATH . DIRECTORY_SEPARATOR . $fileDirectory . "a.txt";
+            $file2_path = APPLICATION_PATH . DIRECTORY_SEPARATOR . $fileDirectory . "b.txt";
 
-    // disable view
-    $this->view->layout()->disableLayout();
-    $this->_helper->viewRenderer->setNoRender(true);
-  }
+            if ($file1_path != "" && $file2_path != "") {
+                $report_name = "test_report.txt";
+                $report_path = APPLICATION_PATH . DIRECTORY_SEPARATOR . $reportDirectory . "$report_name";
+
+                // create file in report directory
+                //$reportfile = fopen($report_path, 'w') or die("can't open file");
+                //$reporter_name = "test.txt";
+                $this->_helper->flashMessenger->addMessage($file1_path);
+                $this->_helper->flashMessenger->addMessage($file2_path);
+                $this->_helper->flashMessenger->addMessage($report_path);
+
+                // running simtext and return a report file
+                $simtext = new Unplagged_Simtext_SimtextRun();
+                $report = $simtext->runSimtext($file1_path, $file2_path, $report_path);
+
+                //$this->_helper->flashMessenger->addMessage($report);
+
+                if (empty($report)) {
+                    $this->_helper->flashMessenger->addMessage('The report could not be created.');
+                } else {
+                    //$this->_em->persist($report);
+                    //$this->_em->flush();
+                    $this->_helper->flashMessenger->addMessage('The report was successfully created.');
+                    $this->_helper->redirector('compare', 'simtext');
+
+                    // close file stream
+                    //fclose($reportfile);
+                }
+            } else {
+                //$this->_helper->flashMessenger->addMessage($text1);
+                $this->_helper->flashMessenger->addMessage('Comparing failed');
+                $this->_helper->redirector('compare', 'simtext');
+            }
+        }
+
+        $this->view->simForm = $simForm;
+    }
+
+    public function downloadReportAction() {
+        $reportDirectory = "storage" . DIRECTORY_SEPARATOR . "reports" . DIRECTORY_SEPARATOR;
+        $report_name = "test_report.txt";
+        $downloadPath = APPLICATION_PATH . DIRECTORY_SEPARATOR . $reportDirectory . "$report_name";
+        // set headers
+        header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+        header("Content-Description: File Transfer");
+        header("Content-Disposition: attachment; filename=\"" . $report_name . "\"");
+        header("Content-type: plain/text");
+        header("Content-Transfer-Encoding: binary");
+
+        readfile($downloadPath);
+
+        // disable view
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+    }
+
+    public function ajaxAction() {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+        echo compare($_REQUEST['left'], $_REQUEST['right'], 4);
+    }
 
 }
+
 ?>
