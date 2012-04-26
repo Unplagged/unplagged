@@ -27,6 +27,9 @@ $cases = $results;
 <?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace, 'me'=>$me, 'cases'=>$cases)); ?>
 <div role="main" class="clearfix show-contextmenu">
   <?php echo $this->partial('partials/messages.phtml', array('defaultNamespace'=>$defaultNamespace, 'flashMessages'=>$this->flashMessages)); ?>
+  <!--<div class="breadcrumbs">
+    <?php //echo $this->navigation()->breadcrumbs(); ?>
+  </div>-->
   <h2><?php echo $this->escape($this->title); ?></h2>
   <div class="main">
     <div id="main-wrapper">

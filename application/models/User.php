@@ -57,10 +57,10 @@ class Application_Model_User extends Application_Model_Base{
    *
    * @var type 
    * 
-   * @
+   * @OneToOne(targetEntity="Application_Model_User_Role", cascade={"persist"})
    */
   private $role;
-  
+
   /**
    * The email the user set up to login to the private area.
    * @var string The email address.
@@ -100,7 +100,7 @@ class Application_Model_User extends Application_Model_Base{
    * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
    */
   private $state;
-  
+
   /**
    * @ManyToOne(targetEntity="Application_Model_File")
    * @JoinColumn(name="user_avatar_id", referencedColumnName="id")
@@ -117,7 +117,7 @@ class Application_Model_User extends Application_Model_Base{
    * @Column(type="string", length=255)
    */
   private $salt = '';
-  
+
   /**
    * @ManyToMany(targetEntity="Application_Model_File") 
    * @JoinTable(name="user_has_file",
@@ -126,7 +126,7 @@ class Application_Model_User extends Application_Model_Base{
    *      )
    */
   private $files;
-  
+
   public function __construct($data = array()){
     if(isset($data["username"])){
       $this->username = $data["username"];
@@ -155,10 +155,16 @@ class Application_Model_User extends Application_Model_Base{
     if(isset($data["state"])){
       $this->state = $data["state"];
     }
-    
+
     $this->files = new \Doctrine\Common\Collections\ArrayCollection();
+    
+    if(isset($data['role']) && $data['role'] instanceof Application_Model_User_Role ){
+      $this->role = $data['role'];  
+    } else {
+      $this->role = new Application_Model_User_Role();
+    }
   }
-  
+
   /**
    * Sets the time of the last update to the current time.
    * 
@@ -235,28 +241,36 @@ class Application_Model_User extends Application_Model_Base{
   public function addFile(Application_Model_File $file){
     return $this->files->add($file);
   }
-  
+
   public function removeFile(Application_Model_File $file){
     return $this->file->removeElement($file);
   }
-  
+
   public function getFiles(){
     return $this->files;
   }
-  
+
   public function clearFiles(){
     $this->files->clear();
   }
-  
+
+  public function hasFiles(){
+    if($this->files->count() > 0){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   public function setVerificationHash($verificationHash){
     $this->verificationHash = $verificationHash;
   }
-  
+
   public function getAvatar(){
-    if(empty($this->avatar)) {
-     return "/images/default-avatar.png";
+    if(empty($this->avatar)){
+      return "/images/default-avatar.png";
     }
-    
+
     return "/image/view/" . $this->avatar->getId();
   }
 
@@ -278,11 +292,16 @@ class Application_Model_User extends Application_Model_Base{
     $result["id"] = $this->id;
     $result["username"] = $this->username;
     $result["avatar"] = $this->getAvatar();
-    
+
     return $result;
   }
 
   public function getSalt(){
-    return $this->salt; 
+    return $this->salt;
   }
+  
+  public function getRole(){
+    return $this->role;  
+  }
+
 }

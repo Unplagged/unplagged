@@ -21,7 +21,7 @@
   <body>
     <header role="toolbar">
       <div class="content clearfix">
-        <?php if(Zend_Auth::getInstance()->hasIdentity()): ?>
+        <?php if(Zend_Auth::getInstance()->hasIdentity() && $this->me): ?>
           <div class="case-settings-box clearfix">
             <?php
             $currentLabel = '';
@@ -31,7 +31,9 @@
               $currentValue = $this->me->getCurrentCase()->getId();
             }
             ?>
-            <a href="/case/list"><?php echo $this->translate("Edit Cases"); ?></a><?php /* <img src="/images/tmp_top_icons.png" /> */ ?>
+            <?php if($currentValue): ?>
+            <a href="/case/edit/id/<?php echo $currentValue; ?>"><?php echo $this->translate("Edit Case"); ?></a>
+            <?php endif; ?>
             <form class="current-case" method="POST" action="/user/set-current-case">
               <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
                   <option></option>

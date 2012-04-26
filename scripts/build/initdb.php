@@ -279,4 +279,13 @@ if(empty($element)){
   $em->persist($state);
 }
 
+//default user roles 
+$element = $em->getRepository('Application_Model_User_GuestRole')->findOneById(1);
+if(empty($element)){
+  $guestRole = new Application_Model_User_GuestRole();
+  $guestRole->addPermission('case_view_public');
+  $guestRole->addPermission('index');
+  $em->persist($guestRole);
+}
+
 $em->flush();

@@ -19,9 +19,22 @@
  */
 
 /**
- * This class can be used to store a list of permissions to certain resources.
+ * This class can be used to store a list of permissions to certain resources, which are identified by a simple string.
+ * 
+ * It is able to "inherit" an unlimited number of InheritableRoles, this means it has all permissions that are also set
+ * for the inherited role. Please note that changes that are made to the inherited role will also change the permissions
+ * that were made for this role.
+ * 
+ * @todo We could think about adding a blacklist of permissions later on, so that admin could refuse certain permissions
+ * to the user even if an inherited role changes and allows it.
  * 
  * @author Unplagged
+ * 
+ * @Entity
+ * @table(name="roles")
+ * @InheritanceType("SINGLE_TABLE")
+ * @DiscriminatorColumn(name="discr", type="string")
+ * @DiscriminatorMap({"user_role" = "Application_Model_User_Role", "user_guest_role" = "Application_Model_User_GuestRole", "user_inheritable_role" = "Application_Model_User_InheritableRole"})
  */
 class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   
@@ -30,26 +43,58 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    * @GeneratedValue
    * @Column(type="integer") 
    */
-  protected $id;
+  private $id;
+  
+  private $roleId = 'user';
   
   /**
    * A list of all the permissions that are allowed for an owner of this role.
-   * 
-   * @var ArrayCollection
-   * 
-   * ManyToMany(targetEntity
+   * @Column(type="array")
    */
   private $permissions;
   
   /**
    * Stores the roles this role is extending.
    * 
-   * @ManyToMany(targetEntity="Application_Model_User_Role")
+   * @ManyToMany(targetEntity="Application_Model_User_InheritableRole")
+   * @JoinTable(name="role_inherits",
+   *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="inherited_role_id", referencedColumnName="id")}
+   *      )
    */
   private $inheritedRoles;
 
   public function __construct(){
     $this->inheritedRoles = new \Doctrine\Common\Collections\ArrayCollection();
+    
+    $defaultPermissions = array(
+      'index',
+      'error',
+      'case',
+      'activity_stream_public',
+      'files_view_public',
+      'user_register',
+      'auth',
+      'auth_login',
+      'auth_logout',
+      'user',
+      'user_register',
+      'document',
+      'document_list',
+      'document_simtext',
+      'document_response-plagiarism',
+      'files',
+      'file',
+      'googlesearch',
+      'document-page',
+      'document-fragment',
+      'image',
+      'notification',
+      'comment',
+      'activity_stream_public'
+      );
+    
+    $this->permissions = $defaultPermissions;
   }
   
   public function getId() {
@@ -57,11 +102,19 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   }
   
   public function getRoleId(){
-    return $this->getId();
+    if($this->roleId === null){
+      return $this->getId()->toString();
+    } else {
+      return $this->roleId;  
+    }  
   }
   
   public function getPermissions(){
     return $this->permissions;  
+  }
+  
+  public function addPermission($permission){
+    $this->permissions[] = $permission; 
   }
   
   public function addInheritedRole(Unplagged_Model_User_InheritableRole $inheritedRole){
