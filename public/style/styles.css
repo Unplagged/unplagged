@@ -407,7 +407,7 @@ header[role=banner] {
   position: relative;
   top: -80px;
   margin-bottom: -60px;
-  background: url('../images/header.png') no-repeat right top #40C0E9;
+  background: url('../images/header_font.png') no-repeat right top #40C0E9;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -420,6 +420,16 @@ header[role=banner] h1 {
   position: relative;
   top: 15px;
   left: 20px;
+}
+
+header[role=banner] #beta-patch {
+  background: url('../images/beta_patch.png') no-repeat left top;
+  display: inline-block;
+  width: 102px;
+  height: 103px;
+  position: absolute;
+  right: -1px;
+  top: -3px;
 }
 
 .pagewrap {
