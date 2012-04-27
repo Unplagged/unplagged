@@ -37,24 +37,23 @@ class Unplagged_AccessControl extends Zend_Controller_Plugin_Abstract{
     
     $role = $this->user->getRole()->getRoleId();
     if(Zend_Auth::getInstance()->hasIdentity()){
-      $role = 'user';
-
       $front = Zend_Controller_Front::getInstance();
       $bootstrap = $front->getParam('bootstrap');
       $bootstrap->bootstrap('layout');
       $layout = $bootstrap->getResource('layout');
       $view = $layout->getView();
       $view->navigation()->setRole('user');
-    }
+    } else {
 
-    //For this example, we will use the controller as the resource:
-    $resource = $request->getControllerName();
-    $action = $request->getActionName();
-    
-    if(!$this->acl->isAllowed($role, $resource, $action)){
-      //If the user has no access we send him elsewhere by changing the request
-      $request->setControllerName('auth')
-          ->setActionName('login');
+      //For this example, we will use the controller as the resource:
+      $resource = $request->getControllerName();
+      $action = $request->getActionName();
+
+      if($this->acl->has($resource . '_' . $action) && !$this->acl->isAllowed($role, $resource . '_' . $action)){
+        //If the user has no access we send him elsewhere by changing the request
+        $request->setControllerName('auth')
+            ->setActionName('login');
+      }
     }
   }
 

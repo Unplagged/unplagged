@@ -99,15 +99,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   }
 
   /**
-   * If no user is logged in, a guest user is set as default.
+   * If no user is logged in, the guest user is set as default.
    */
   protected function _initGuest(){
-    if(!Zend_Auth::getInstance()->hasIdentity()){
+    
+    $defaultNamespace = new Zend_Session_Namespace('Default');
+    
+    if(!$defaultNamespace->user){
       $guestRole = new Application_Model_User_GuestRole();
+      
+      //temporary until set in the db
       $guestRole->addPermission('case_view_public');
       $guestRole->addPermission('index');
       $guestRole->addPermission('case');
-      $defaultNamespace = new Zend_Session_Namespace('Default');
+      
+      //store the user in the session
       $defaultNamespace->user = new Application_Model_User(array('role'=>$guestRole));
     }
   }
@@ -118,17 +124,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   protected function _initAccessControl(){
     //make sure at least the rights for the guest user are set if nobody logged in yet
     $this->bootstrap('guest');
-
-    //initalize the current users ACL from 
+    //we also need the entity manager, so make sure this is created prior
+    $this->bootstrap('doctrine');
+    
+    //initalize the current users ACL
     $defaultNamespace = new Zend_Session_Namespace('Default');
-    $acl = Unplagged_Acl::constructFromUser($defaultNamespace->user);
+    $registry = Zend_Registry::getInstance();
+    $acl = new Unplagged_Acl($defaultNamespace->user, $registry->entitymanager);
     $accessControl = new Unplagged_AccessControl($acl, $defaultNamespace->user);
 
-    //make sure front controller is initalized
+    //make sure front controller is initalized, so that we can register the authorization plugin
     $this->bootstrap('FrontController');
-    $this->bootstrap('layout');
-    $this->bootstrap('navigation');
-
     $frontController = $this->getResource('FrontController');
     $frontController->registerPlugin($accessControl);
   }
@@ -214,6 +220,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * 
    */
   protected function _initNavigation(){
+    //$this->bootstrap('doctrine');
+    
     $config = array(
       array(
         //home icon gets set via js, because I didn't find a simple way to add a <span> here
@@ -245,7 +253,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'case',
             'action'=>'files',
-            'resource'=>'files'
+            'resource'=>'case_view_files'
           ),
           array(
             'label'=>'Public Files',
@@ -261,7 +269,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'user',
             'action'=>'files',
-            'resource'=>'files'
+            'resource'=>'files_view_private'
           )
         )
       ), array(
@@ -277,7 +285,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'document_fragment',
         'action'=>'list',
-        'resource'=>'document_fragment'
+        'resource'=>'document_fragment_list'
       ), array(
         'label'=>'Administration',
         'title'=>'Administration',
@@ -299,7 +307,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $layout = $this->getResource('layout');
     $view = $layout->getView();
     $defaultNamespace = new Zend_Session_Namespace('Default');
-    $view->navigation($container)->setAcl(Unplagged_Acl::constructFromUser($defaultNamespace->user))->setRole($defaultNamespace->user->getRole());
+    $registry = Zend_Registry::getInstance();
+    $acl = new Unplagged_Acl($defaultNamespace->user, $registry->entitymanager);
+    $view->navigation($container)->setAcl($acl)->setRole($defaultNamespace->user->getRole());
 
     Zend_Registry::set('Zend_Navigation', $container);
   }

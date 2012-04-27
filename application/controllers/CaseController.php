@@ -88,6 +88,9 @@ class CaseController extends Unplagged_Controller_Action{
     $this->view->paginator = $paginator;
   }
 
+  /**
+   * @todo is this unused? could be because of the change to the case selection in frontend 
+   */
   public function autocompleteAliasAction(){
     $input = new Zend_Filter_Input(array('term'=>'Alpha'), null, $this->_getAllParams());
 

@@ -91,7 +91,8 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
       'image',
       'notification',
       'comment',
-      'activity_stream_public'
+      'activity_stream_public',
+      'files_view_private'
       );
     
     $this->permissions = $defaultPermissions;
