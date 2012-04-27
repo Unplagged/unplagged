@@ -1,27 +1,34 @@
 <?php
-    $this->title = $this->translate("List of fragments");
-    $this->headTitle($this->title);
+$this->title = $this->translate("List of fragments");
+$this->headTitle($this->title);
 ?>
 <table cellpadding="0" cellspacing="0" class="default"> 
-  <tr>
-    <th><?php echo $this->translate("Title"); ?></th>
-    <th style="width: 70px;"><?php echo $this->translate("Page from"); ?></th>
-    <th style="width: 70px;"><?php echo $this->translate("Page to"); ?></th>
-    <th style="width: 100px;"><?php echo $this->translate("Source"); ?></th>
-    <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
-  </tr>
-  <?php $i = 0; ?>
-  <?php if($this->paginator): ?>
-  <?php foreach($this->paginator as $fragment): ?>
-  <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
-    <td><a href="<?php echo $fragment->getDirectLink(); ?>"><?php echo $fragment->getTitle(); ?></a></td>
-    <td><?php echo $fragment->getPlag()->getPageFrom()->getPageNumber(); ?></td>
-    <td><?php echo $fragment->getPlag()->getPageTo()->getPageNumber(); ?></td>
-    <td><a href="<?php echo "/document_page/list/id/" . $fragment->getSource()->getPageFrom()->getDocument()->getId(); ?>"><?php echo $fragment->getSource()->getPageFrom()->getDocument()->getTitle(); ?></a></td>
-    <td><?php echo $this->partial('partials/action-dropdown.phtml', array('actions' => $fragment->actions)); ?></td>
-  </tr>
-  <?php endforeach; ?>
-  <?php endif; ?>
+  <thead>
+    <tr>
+      <th><?php echo $this->translate("Title"); ?></th>
+      <th style="width: 70px;"><?php echo $this->translate("Page from"); ?></th>
+      <th style="width: 70px;"><?php echo $this->translate("Page to"); ?></th>
+      <th style="width: 100px;"><?php echo $this->translate("Source"); ?></th>
+      <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if(count($this->paginator)): ?>
+      <?php foreach($this->paginator as $fragment): ?>
+        <tr>
+          <td data-label="<?php echo $this->translate("Title"); ?>"><a href="<?php echo $fragment->getDirectLink(); ?>"><?php echo $fragment->getTitle(); ?></a></td>
+          <td data-label="<?php echo $this->translate("Page from"); ?>"><?php echo $fragment->getPlag()->getPageFrom()->getPageNumber(); ?></td>
+          <td data-label="<?php echo $this->translate("Page to"); ?>"><?php echo $fragment->getPlag()->getPageTo()->getPageNumber(); ?></td>
+          <td data-label="<?php echo $this->translate("Source"); ?>"><a href="<?php echo "/document_page/list/id/" . $fragment->getSource()->getPageFrom()->getDocument()->getId(); ?>"><?php echo $fragment->getSource()->getPageFrom()->getDocument()->getTitle(); ?></a></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>"><?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$fragment->actions)); ?></td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr>
+        <td colspan="5" class="no-label"><?php echo $this->translate("No fragments found."); ?></td>
+      </tr>
+    <?php endif; ?>
+  </tbody>
 </table>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
 

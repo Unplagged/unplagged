@@ -25,7 +25,7 @@
  * @Entity 
  * @Table(name="actions")
  */
-class Application_Model_Action {
+class Application_Model_Action{
 
   /**
    * The id is an unique identifier for each notification action.
@@ -44,6 +44,14 @@ class Application_Model_Action {
   private $name;
 
   /**
+   * A unique name for the notification action.
+   * @var string The name of the notification action.
+   * 
+   * @Column(type="string", length=32)
+   */
+  private $title;
+
+  /**
    * A description for the notification action.
    * @var string The description.
    * 
@@ -55,7 +63,11 @@ class Application_Model_Action {
     if(isset($data["name"])){
       $this->name = $data["name"];
     }
-    
+
+    if(isset($data["title"])){
+      $this->title = $data["title"];
+    }
+
     if(isset($data["description"])){
       $this->description = $data["description"];
     }
@@ -64,13 +76,17 @@ class Application_Model_Action {
   public function getId(){
     return $this->id;
   }
-  
+
   public function getName(){
     return $this->name;
   }
-  
+
   public function getDescription(){
     return $this->description;
+  }
+
+  public function getTitle(){
+    return $this->title;
   }
 
 }

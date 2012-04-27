@@ -84,28 +84,18 @@ class CaseController extends Unplagged_Controller_Action{
     $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
+    
+    // generate the action dropdown for each fragment
+    foreach($paginator as $case):
+      $case->actions = array();
 
+      $action['link'] = '/case/edit/id/' . $case->getId();
+      $action['title'] = 'Edit case';
+      $action['icon'] = 'images/icons/pencil.png';
+      $case->actions[] = $action;
+    endforeach;
+    
     $this->view->paginator = $paginator;
-  }
-
-  /**
-   * @todo is this unused? could be because of the change to the case selection in frontend 
-   */
-  public function autocompleteAliasAction(){
-    $input = new Zend_Filter_Input(array('term'=>'Alpha'), null, $this->_getAllParams());
-
-    $qb = $this->_em->createQueryBuilder();
-    $qb->add('select', "c.id AS value, c.alias AS label")
-        ->add('from', 'Application_Model_Case c')
-        ->where("c.alias LIKE '%" . $input->term . "%'");
-    $qb->setMaxResults(5);
-
-    $dbresults = $qb->getQuery()->getResult();
-    $results = array();
-    foreach($dbresults as $key=>$value){
-      $results[] = $value;
-    }
-    $this->_helper->json($results);
   }
 
   public function filesAction(){

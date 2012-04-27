@@ -44,14 +44,7 @@ class NotificationController extends Unplagged_Controller_Action{
 
     $this->view->paginator = $paginator;
   }
-
-  /**
-   * Displays a list with all activities related to a user.
-   */
-  public function listAction(){
-  
-  }
-  
+ 
   public function commentsAction() {
     $input = new Zend_Filter_Input(array('source'=>'Digits'), null, $this->_getAllParams());
     $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);

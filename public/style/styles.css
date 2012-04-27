@@ -675,9 +675,12 @@ table.default tr {
   background-color: #f9f9f9;
 }
 
-table.default tr:hover,
-table.default tr.even:hover{
-  background: #fbf8e9;
+table.default tr:nth-child(odd) {
+  background-color: #fafafa;
+}
+
+table.default tr:hover{
+  background-color: #fbf8e9;
   -o-transition: all 0.1s ease-in-out;
   -webkit-transition: all 0.1s ease-in-out;
   -moz-transition: all 0.1s ease-in-out;
@@ -694,17 +697,14 @@ table.default td {
   vertical-align: middle;
 }
 
-table.default tr.even {
-  background-color: #f7f7f7;
-}
 
-
-div[role=main] a {
+/* @todo: removed [role=main] to fix the bug with blue links instead of white ones */
+div a {
   color: #226e87;
   text-decoration: none;
 }
 
-div[role=main] a:hover {
+div a:hover {
   text-decoration: underline;
 }
 
@@ -1301,6 +1301,7 @@ smork-btn a:active { top: 1px; }
 }
 #activity-stream .activity .title-wrapper .title {
   padding-left: 20px;
+  display: inline-block;
 }
 
 #activity-stream .activity .title-wrapper h4 {
@@ -1969,7 +1970,7 @@ ins {
 }
 
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 500px) {
   
   .user-box{
     position: static;
@@ -2009,6 +2010,81 @@ ins {
   header[role=banner] .navigation {
     text-align: center;
   }
+  
+  		/* Force table to not be like tables anymore */
+		table.default, table.default thead, table.default tbody, table.default th, table.default td, table.default tr { 
+			display: block; 
+		}
+		
+		/* Hide table headers (but not display: none;, for accessibility) */
+		table.default thead tr { 
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+    table.default tr {
+      margin-bottom: 15px;
+    }
+		table.default td { 
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee; 
+			position: relative;
+      padding-left: 50%;
+		}
+    table.default td.no-label {
+      padding-left: 5px;
+    }
+		
+		table.default td:before { 
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 6px;
+			left: 6px;
+			width: 45%; 
+			padding-right: 10px; 
+			white-space: nowrap;
+      content: attr(data-label);
+      font-weight: bold;
+    }
+    nav .navigation {
+      margin: 45px 0 0 0;
+    }
+    nav .navigation li a {
+      font-size: 12pt;
+      padding: 5px 0 7px 0;
+    }
+    nav .navigation li {
+      display: block;
+      margin: 0 0 2px 0;
+        -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+    }
+    nav .navigation li:hover > ul { 
+ -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+    }
+    nav .navigation li > ul {
+      position: static;
+      border: 0;
+      padding: 0;
+      margin: 0;
+     
+    }
+    nav .navigation li > ul li {
+      border: 0;  
+      background-color: #f7f7f7;
+    }
+    
+    nav .navigation li > ul li a {
+      border: 0;
+    }
+        nav .navigation li > ul li:hover {
+      background-color: #f7f7f7;
+    }
 }
 
 /* ==|== print styles ======================================================= */

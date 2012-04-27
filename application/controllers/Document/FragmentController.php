@@ -71,7 +71,7 @@ class Document_FragmentController extends Unplagged_Controller_Action{
       if($result){
         // log fragment creation
         $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        //Unplagged_Helper::notify("fragment_created", $fragment, $user);
+        Unplagged_Helper::notify("fragment_created", $result, $user);
 
         $this->_helper->flashMessenger->addMessage('The fragment was created successfully.');
         $this->_helper->redirector('list', 'document_fragment');
@@ -125,8 +125,9 @@ class Document_FragmentController extends Unplagged_Controller_Action{
 
         if($result){
           // log fragment creation
+          // log fragment creation
           $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-          //Unplagged_Helper::notify("fragment_created", $fragment, $user);
+          Unplagged_Helper::notify("fragment_updated", $result, $user);
 
           $this->_helper->flashMessenger->addMessage('The fragment was updated successfully.');
           $this->_helper->redirector('list', 'document_fragment');
@@ -281,7 +282,7 @@ class Document_FragmentController extends Unplagged_Controller_Action{
       $this->_em->persist($fragment);
       $this->_em->flush();
 
-      return true;
+      return $fragment;
     }else{
       foreach($modifyForm->getElement("candidateBibTex")->getDecorators() as $decorator){
         $display = $formData['candidateDocument'] == "new" ? "block" : "none";

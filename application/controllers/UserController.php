@@ -284,6 +284,8 @@ class UserController extends Unplagged_Controller_Action{
       // send form to view
       $this->view->profileForm = $profileForm;
     }
+        Zend_Layout::getMvcInstance()->sidebar = null;
+    Zend_Layout::getMvcInstance()->cases = null;
   }
 
   /**
