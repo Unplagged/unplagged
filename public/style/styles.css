@@ -573,6 +573,13 @@ nav#right-nav {
   width: 36.5625%; /* 351px/960px */
   max-width: 450px;
 }
+nav#right-nav .barcode {
+  display: block;
+  margin-top: 10px;
+}
+nav#right-nav .barcode img {
+  max-width: 95%;
+}
 nav#right-nav h4 {
   margin: 0 0 5px 0;
   padding: 0;
