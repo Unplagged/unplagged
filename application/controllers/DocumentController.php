@@ -81,6 +81,26 @@ class DocumentController extends Unplagged_Controller_Action{
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
+    // generate the action dropdown for each file
+    foreach($paginator as $document):
+      $document->actions = array();
+
+      $action['link'] = '/document/edit/id/' . $document->getId();
+      $action['title'] = 'Edit case';
+      $action['icon'] = 'images/icons/pencil.png';
+      $document->actions[] = $action;
+
+      $action['link'] = '/document/detect-plagiarism/id/' . $document->getId();
+      $action['title'] = 'Detect plagiarism';
+      $action['icon'] = 'images/icons/eye.png';
+      $document->actions[] = $action;
+
+      $action['link'] = '/document/delete/id/' . $document->getId();
+      $action['title'] = 'Delete';
+      $action['icon'] = 'images/icons/delete.png';
+      $document->actions[] = $action;
+    endforeach;
+
     $this->view->paginator = $paginator;
 
     Zend_Layout::getMvcInstance()->sidebar = null;

@@ -51,7 +51,7 @@ class Document_FragmentController extends Unplagged_Controller_Action{
     // @todo remove, jsut for now to have something, it should be changed to explode("\n",...  
     $plagText = $fragment->getPlag()->getText();
     $sourceText = $fragment->getSource()->getText();
-    
+
     $this->view->plagLines = explode("\n", $plagText);
     $this->view->sourceLines = explode("\n", $sourceText);
 
@@ -151,8 +151,23 @@ class Document_FragmentController extends Unplagged_Controller_Action{
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
+    // generate the action dropdown for each fragment
+    foreach($paginator as $fragment):
+      $fragment->actions = array();
+
+      $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
+      $action['title'] = 'Edit fragment';
+      $action['icon'] = 'images/icons/pencil.png';
+      $fragment->actions[] = $action;
+
+      $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
+      $action['title'] = 'Remove fragment';
+      $action['icon'] = 'images/icons/delete.png';
+      $fragment->actions[] = $action;
+    endforeach;
+
     $this->view->paginator = $paginator;
-    
+
     Zend_Layout::getMvcInstance()->sidebar = null;
     Zend_Layout::getMvcInstance()->versionableId = null;
   }

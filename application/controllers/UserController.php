@@ -24,6 +24,14 @@
  */
 class UserController extends Unplagged_Controller_Action{
 
+  public function init(){
+    parent::init();
+    $this->auth = Zend_Auth::getInstance();
+
+    Zend_Layout::getMvcInstance()->sidebar = 'default';
+    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
+  }
+
   public function indexAction(){
     
   }
@@ -71,7 +79,7 @@ class UserController extends Unplagged_Controller_Action{
 
   public function filesAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
-    
+
     $this->setTitle('Personal Files');
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
@@ -80,11 +88,51 @@ class UserController extends Unplagged_Controller_Action{
     $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($userFiles->toArray()));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
+    
+    // generate the action dropdown for each file
+    // @todo: use centralised method for all three file lists
+    foreach($paginator as $file):
+      $file->actions = array();
 
+      if($file->getIsTarget()){
+        $action['link'] = '/file/unset-target/id/' . $file->getId();
+        $action['title'] = 'Unset target';
+        $action['icon'] = 'images/icons/page_find.png';
+        $file->actions[] = $action;
+      }else{
+        $action['link'] = '/file/set-target/id/' . $file->getId();
+        $action['title'] = 'Set target';
+        $action['icon'] = 'images/icons/page.png';
+        $file->actions[] = $action;
+      }
+      $action['link'] = '/file/parse/id/' . $file->getId();
+      $action['title'] = 'Parse';
+      $action['icon'] = 'images/icons/page_gear.png';
+      $file->actions[] = $action;
+
+      $action['link'] = '/file/download/id/' . $file->getId();
+      $action['title'] = 'Download';
+      $action['icon'] = 'images/icons/disk.png';
+      $file->actions[] = $action;
+
+      $action['link'] = '/file/delete/id/' . $file->getId();
+      $action['title'] = 'Delete';
+      $action['icon'] = 'images/icons/delete.png';
+      $file->actions[] = $action;
+
+        $action['link'] = '/case/add-file/id/' . $file->getId();
+        $action['title'] = 'Add to current case';
+        $action['icon'] = 'images/icons/package_add.png';
+        $file->actions[] = $action;
+      
+    endforeach;
+    
     $this->view->paginator = $paginator;
 
     //change the view to the one from the file controller
     $this->_helper->viewRenderer->renderBySpec('list', array('controller'=>'file'));
+    Zend_Layout::getMvcInstance()->sidebar = null;
+    Zend_Layout::getMvcInstance()->cases = null;
   }
 
   public function addFileAction(){
@@ -96,7 +144,7 @@ class UserController extends Unplagged_Controller_Action{
     $user->addFile($file);
     $this->_em->persist($user);
     $this->_em->flush();
-    
+
     $this->redirectToLastPage();
   }
 

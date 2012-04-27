@@ -1,0 +1,7 @@
+<ul class="action-list left-dropout">
+  <?php foreach($this->actions as $action): ?>
+    <li>
+      <a href="<?php echo $action['link']; ?>" title="<?php echo $this->translate($action['title']); ?>"><img class="icon" src="<?php echo $this->baseUrl($action['icon']); ?>" alt="" /></a>
+    </li>
+  <?php endforeach; ?>
+</ul>

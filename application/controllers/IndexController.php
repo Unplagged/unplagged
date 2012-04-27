@@ -27,7 +27,6 @@ class IndexController extends Unplagged_Controller_Action{
     
     Zend_Layout::getMvcInstance()->sidebar = 'default';
     Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
-    
   }
 
   public function indexAction(){

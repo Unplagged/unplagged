@@ -30,6 +30,9 @@ class AuthController extends Unplagged_Controller_Action{
   public function init(){
     parent::init();
     $this->auth = Zend_Auth::getInstance();
+    
+    Zend_Layout::getMvcInstance()->sidebar = 'default';
+    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
   }
 
   /**

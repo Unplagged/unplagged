@@ -1,6 +1,4 @@
-<?php
-
-?>
+<?php ?>
 <table cellpadding="0" cellspacing="0" class="default">
   <thead>
     <tr>
@@ -11,52 +9,23 @@
     </tr>
   <thead>
   <tbody>
-  <?php $i = 0; ?>
-  <?php foreach($this->paginator as $file): ?>
-    <tr <?php echo ($i++ % 2 == 0) ? 'class="even"' : ""; ?>>
-      <td>
-          <img class="icon" src="<?php echo $this->baseUrl('images/icons/' . Unplagged_Helper::getFileIconByExtension($file->getExtension()));?>" />
-      </td>
-      <td>
-          <a <?php if($file->isImage()){ echo 'class="picture"'; } ?> href="<?php echo $this->baseUrl('/image/show/id/' . $file->getId());?>">          
-              <?php echo $file->getFilename(); ?>
+    <?php $i = 0; ?>
+    <?php foreach($this->paginator as $file): ?>
+      <tr <?php echo ($i++ % 2 == 0) ? 'class="even"' : ""; ?>>
+        <td>
+          <img class="icon" src="<?php echo $this->baseUrl('images/icons/' . Unplagged_Helper::getFileIconByExtension($file->getExtension())); ?>" />
+        </td>
+        <td>
+          <a <?php if($file->isImage()){
+      echo 'class="picture"';
+    } ?> href="<?php echo $this->baseUrl('/image/show/id/' . $file->getId()); ?>">          
+  <?php echo $file->getFilename(); ?>
           </a>
-      </td>
-      <td><?php echo $file->getCreated()->format('Y-m-d'); ?></td>
-      <td>
-        <ul class="action-list left-dropout">
-        <?php if($file->getIsTarget()): ?>
-          <li>
-            <a href="<?php echo "/file/unset-target/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Unset target"); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page_find.png'); ?>" alt="" /></a>
-          </li>
-        <?php else: ?>
-          <li>
-            <a href="<?php echo "/file/set-target/id/" . $file->getId(); ?>" class="target" title="<?php echo $this->translate("Set target"); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page.png'); ?>" alt="" /></a>
-          </li>
-        <?php endif; ?>
-          <li>
-            <a href="<?php echo "/file/parse/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Parse"); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/page_gear.png'); ?>" alt="" /></a>
-          </li>
-          <li>
-            <a href="<?php echo "/file/download/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Download"); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/disk.png'); ?>" /></a>
-          </li>
-          <li>
-            <a href="<?php echo "/file/delete/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Delete"); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" alt="" /></a>
-          </li>
-        <?php if(Zend_Controller_Front::getInstance()->getRequest()->getControllerName() !== 'user'): ?>
-          <li>
-            <a href="<?php echo "/user/add-file/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Add to personal files"); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/basket_put.png'); ?>" alt=""/></a>
-          </li>
-        <?php endif; ?>
-        <?php if(Zend_Controller_Front::getInstance()->getRequest()->getControllerName() !== 'case'): ?>
-          <li>
-            <a href="<?php echo "/case/add-file/id/" . $file->getId(); ?>" title="<?php echo $this->translate("Add to current case"); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/package_add.png'); ?>" alt="" /></a>
-          </li>
-          <?php endif; ?>
-        </ul>
-      </td>
-    </tr>
-  <?php endforeach; ?>
+        </td>
+        <td><?php echo $file->getCreated()->format('Y-m-d'); ?></td>
+        <td><?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$file->actions)); ?></td>
+      </tr>
+<?php endforeach; ?>
   </tbody>
 </table>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
