@@ -57,10 +57,12 @@ function createDirectory($directory){
   $fullPath = BASE_PATH . DIRECTORY_SEPARATOR . $directory;
   if(!is_dir($fullPath)){
     mkdir($fullPath);
-    chmod($fullPath, 0755);
 
+    chmod($fullPath, 0777);
     return true;
   }
+
+  chmod($fullPath, 0777);
 
   return false;
 }

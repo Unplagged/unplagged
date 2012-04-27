@@ -266,6 +266,18 @@ class Application_Model_Case extends Application_Model_Base{
   public function getRoles(){
     return $this->defaultRoles;  
   }
+  
+  /**
+   * Return the percentage of plagiarism in this case.
+   * //@todo: For now it returns only random values.
+   * 
+   * @return percentage value of plagiarism 
+   */
+  public function getPlagiarismPercentage(){
+    $rand = rand(0, 100);
+
+    return $rand;
+  }
 }
 
 ?>

@@ -411,7 +411,7 @@ header[role=banner] {
   position: relative;
   top: -80px;
   margin-bottom: -60px;
-  background: url('../images/header.png') no-repeat right top #40C0E9;
+  background: url('../images/header_font.png') no-repeat right top #40C0E9;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -424,6 +424,16 @@ header[role=banner] h1 {
   position: relative;
   top: 15px;
   left: 20px;
+}
+
+header[role=banner] #beta-patch {
+  background: url('../images/beta_patch.png') no-repeat left top;
+  display: inline-block;
+  width: 102px;
+  height: 103px;
+  position: absolute;
+  right: -1px;
+  top: -3px;
 }
 
 .pagewrap {
@@ -566,6 +576,13 @@ nav#right-nav {
   float: right;
   width: 36.5625%; /* 351px/960px */
   max-width: 450px;
+}
+nav#right-nav .barcode {
+  display: block;
+  margin-top: 10px;
+}
+nav#right-nav .barcode img {
+  max-width: 95%;
 }
 nav#right-nav h4 {
   margin: 0 0 5px 0;

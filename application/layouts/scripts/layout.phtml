@@ -54,7 +54,7 @@ $cases = $results;
         echo $this->partial('partials/sidebars/document_tools.phtml', array("documentId" => $this->layout()->versionableId));
         break;
       default:
-        echo $this->partial('partials/sidebars/default.phtml');
+        echo $this->partial('partials/sidebars/default.phtml', array("cases" => $this->layout()->cases));
     }
   } //echo $partial;
   ?>
