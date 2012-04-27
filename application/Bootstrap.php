@@ -106,7 +106,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $defaultNamespace = new Zend_Session_Namespace('Default');
     
     if(!$defaultNamespace->user){
-      $guestRole = new Application_Model_User_GuestRole();
+      //we need the entity manager, so make sure this is created prior
+      $this->bootstrap('doctrine');
+      $registry = Zend_Registry::getInstance();
+      $guestRole = $registry->entitymanager->getRepository('Application_Model_User_GuestRole')->findOneByRoleId('guest');
       
       //temporary until set in the db
       $guestRole->addPermission('case_view_public');
@@ -238,14 +241,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'notification',
         'action'=>'recent-activity',
-        'resource'=>'notification'
+        'resource'=>'notification_recent-activity'
       ), array(
         'label'=>'Files',
         'title'=>'Files',
         'module'=>'default',
         'controller'=>'file',
         'action'=>'list',
-        'resource'=>'files_view_public',
+        'resource'=>'file_list',
         'pages'=>array(
           array(
             'label'=>'Case Files',
@@ -253,7 +256,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'case',
             'action'=>'files',
-            'resource'=>'case_view_files'
+            'resource'=>'case_files'
           ),
           array(
             'label'=>'Public Files',
@@ -261,7 +264,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'file',
             'action'=>'list',
-            'resource'=>'files_view_public'
+            'resource'=>'file_list'
           ),
           array(
             'label'=>'Personal Files',
@@ -269,7 +272,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'user',
             'action'=>'files',
-            'resource'=>'files_view_private'
+            'resource'=>'user_files'
           )
         )
       ), array(
@@ -278,7 +281,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'document',
         'action'=>'list',
-        'resource'=>'document'
+        'resource'=>'document_list'
       ), array(
         'label'=>'Fragments',
         'title'=>'Fragments',

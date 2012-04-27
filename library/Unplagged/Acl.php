@@ -29,43 +29,13 @@ class Unplagged_Acl extends Zend_Acl{
     $this->addRole($user->getRole());
     
     $permissions = $user->getRole()->getPermissions();
+    $resources = $em->getRepository('Application_Model_Permission')->findAll();
     
-    $resources = array(
-      'auth'  
-    );
-    
-    $this->add(new Zend_Acl_Resource('auth'));
-    $this->add(new Zend_Acl_Resource('auth_login'));
-    $this->add(new Zend_Acl_Resource('logout'), 'auth');
-    $this->add(new Zend_Acl_Resource('user'));
-    $this->add(new Zend_Acl_Resource('user_recover-password'));
-    $this->add(new Zend_Acl_Resource('register'), 'user');
-    $this->add(new Zend_Acl_Resource('edit-profile'), 'user');
-    $this->add(new Zend_Acl_Resource('error'));
-    $this->add(new Zend_Acl_Resource('error_error'));
-    $this->add(new Zend_Acl_Resource('index'));
-    $this->add(new Zend_Acl_Resource('index_index'));
-    $this->add(new Zend_Acl_Resource('document'));
-    $this->add(new Zend_Acl_Resource('list'), 'document');
-    $this->add(new Zend_Acl_Resource('simtext'), 'document');
-    $this->add(new Zend_Acl_Resource('response-plagiarism'), 'document');
-    $this->add(new Zend_Acl_Resource('files'));
-    $this->add(new Zend_Acl_Resource('files_view_private'));
-    $this->add(new Zend_Acl_Resource('file'));
-    $this->add(new Zend_Acl_Resource('file_list'));
-    $this->add(new Zend_Acl_Resource('case_view_files'));
-    $this->add(new Zend_Acl_Resource('googlesearch'));
-    $this->add(new Zend_Acl_Resource('case'));
-    $this->add(new Zend_Acl_Resource('case_create'));
-    $this->add(new Zend_Acl_Resource('case_list'));
-    $this->add(new Zend_Acl_Resource('document_page'));
-    $this->add(new Zend_Acl_Resource('document_fragment'));
-    $this->add(new Zend_Acl_Resource('document_fragment_list'));
-    $this->add(new Zend_Acl_Resource('image'));
-    $this->add(new Zend_Acl_Resource('notification'));
-    $this->add(new Zend_Acl_Resource('notification_recent-activity'));
-    $this->add(new Zend_Acl_Resource('comment'));
-    $this->add(new Zend_Acl_Resource('activity_stream_public'));
+    foreach($resources as $resource){
+      if(!$this->has($resource->getName())){
+        $this->add(new Zend_Acl_Resource($resource->getName()));
+      }
+    }
 
     foreach($permissions as $permission){
       $resource = new Zend_Acl_Resource($permission);
@@ -74,14 +44,6 @@ class Unplagged_Acl extends Zend_Acl{
       }
       $this->allow($user->getRole(), $permission);  
     }
-    
-    $this->allow($user->getRole(), 'user_register');
-    $this->allow($user->getRole(), 'user_recover-password');
-    $this->allow($user->getRole(), 'notification_recent-activity');
-    $this->allow($user->getRole(), 'document_fragment_list');
-    $this->allow($user->getRole(), 'case_list');
-    $this->allow($user->getRole(), 'case_create');
-    $this->allow($user->getRole(), 'index_index');
     
     return $this;
   }

@@ -106,6 +106,7 @@ class AuthController extends Unplagged_Controller_Action{
     $this->auth->clearIdentity();
     Zend_Session::forgetMe();
     unset($this->_defaultNamespace->userId);
+    unset($this->_defaultNamespace->user);
   }
 
 }

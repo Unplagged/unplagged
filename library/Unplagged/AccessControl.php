@@ -42,7 +42,7 @@ class Unplagged_AccessControl extends Zend_Controller_Plugin_Abstract{
       $bootstrap->bootstrap('layout');
       $layout = $bootstrap->getResource('layout');
       $view = $layout->getView();
-      $view->navigation()->setRole('user');
+      $view->navigation()->setRole($role);
     } else {
 
       //For this example, we will use the controller as the resource:

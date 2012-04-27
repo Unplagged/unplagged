@@ -27,19 +27,9 @@
  */
 class Application_Model_User_GuestRole extends Application_Model_User_Role{
 
-  public function getRoleId(){
-    return 'guest';
-  }
-
-  public function getPermissions(){
-    return array(
-      'index',
-      'error',
-      'case',
-      'activity_stream_public',
-      'files_view_public',
-      'user_register'
-    );  
+  public function __construct(){
+    $this->roleId = 'guest'; 
+    $this->permissions = array();
   }
 }
 ?>

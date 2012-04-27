@@ -42,10 +42,22 @@ $basicResources = array();
 //if we have later on, this probably needs to be included into the 
 //permission name
 foreach($front->getControllerDirectory() as $module=>$path){
-  foreach(scandir($path) as $file){
+  recursiveDirectories($path);
+}
 
-    if(strstr($file, "Controller.php") !== false){
-      include_once $path . DIRECTORY_SEPARATOR . $file;
+/**
+ * Include all *Controller.php files from the given path and it's subdirectories.
+ * @param string $path 
+ */
+function recursiveDirectories($path){
+  $content = scandir($path);
+  foreach($content as $directoryContent){
+    if($directoryContent !== '..' && $directoryContent !== '.' && is_dir($path . DIRECTORY_SEPARATOR . $directoryContent)){
+      recursiveDirectories($path . DIRECTORY_SEPARATOR . $directoryContent);  
+    } else {
+      if(strstr($path . DIRECTORY_SEPARATOR . $directoryContent, "Controller.php") !== false){
+        include_once $path . DIRECTORY_SEPARATOR . $directoryContent;
+      }
     }
   }
 }
@@ -59,7 +71,7 @@ foreach(get_declared_classes() as $class){
     foreach(get_class_methods($class) as $action){
 
       if(strstr($action, "Action") !== false){
-        $actionWithHyphens = preg_replace_callback ('/([A-Z])/', create_function('$matches','return \'-\' . strtolower($matches[1]);'), substr($action, 0, -6));
+        $actionWithHyphens = preg_replace_callback('/([A-Z])/', create_function('$matches', 'return \'-\' . strtolower($matches[1]);'), substr($action, 0, -6));
         $basicResources[] = $controller . '_' . $actionWithHyphens;
       }
     }
@@ -74,5 +86,27 @@ foreach($basicResources as $resource){
     $em->persist($permission);
   }
 }
+
+//create the guest users role
+$element = $em->getRepository('Application_Model_User_GuestRole')->findOneByRoleId('guest');
+if(empty($element)){
+  $guestRole = new Application_Model_User_GuestRole();
+  
+  $defaultPermissions = array(
+      'auth_login',
+      'auth_logout',
+      'index_index',
+      'error_error',
+      'case_list',
+      'file_list',
+      'user_register'
+    );
+  
+  foreach($defaultPermissions as $permission){
+    $guestRole->addPermission($permission);
+  }
+  $em->persist($guestRole);
+}
+
 $em->flush();
 ?>
