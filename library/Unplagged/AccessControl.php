@@ -1,7 +1,21 @@
 <?php
 
 /**
- * File for class {@link AccessControl}.
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -12,34 +26,34 @@
 class Unplagged_AccessControl extends Zend_Controller_Plugin_Abstract{
 
   private $acl = null;
+  private $user = null;
 
-  public function __construct(Zend_Acl $acl){
+  public function __construct(Zend_Acl $acl, Application_Model_User $user){
     $this->acl = $acl;
+    $this->user = $user;
   }
 
   public function preDispatch(Zend_Controller_Request_Abstract $request){
-
-//As in the earlier example, authed users will have the role user
-    $role = 'guest';
+    
+    $role = $this->user->getRole()->getRoleId();
     if(Zend_Auth::getInstance()->hasIdentity()){
-      $role = 'user';
-
       $front = Zend_Controller_Front::getInstance();
       $bootstrap = $front->getParam('bootstrap');
       $bootstrap->bootstrap('layout');
       $layout = $bootstrap->getResource('layout');
       $view = $layout->getView();
-      $view->navigation()->setRole('user');
-    }
+      $view->navigation()->setRole($role);
+    } else {
 
-    //For this example, we will use the controller as the resource:
-    $resource = $request->getControllerName();
-    $action = $request->getActionName();
-    
-    if(!$this->acl->isAllowed($role, $resource, $action)){
-      //If the user has no access we send him elsewhere by changing the request
-      $request->setControllerName('auth')
-          ->setActionName('login');
+      //For this example, we will use the controller as the resource:
+      $resource = $request->getControllerName();
+      $action = $request->getActionName();
+
+      if($this->acl->has($resource . '_' . $action) && !$this->acl->isAllowed($role, $resource . '_' . $action)){
+        //If the user has no access we send him elsewhere by changing the request
+        $request->setControllerName('auth')
+            ->setActionName('login');
+      }
     }
   }
 

@@ -108,16 +108,19 @@ class Application_Model_Case extends Application_Model_Base{
   private $collaborators;
   
   /**
-   * ManyToMany(targetEntity="Application_Model_User_Role_InheritableRole") 
+   * @ManyToMany(targetEntity="Application_Model_User_InheritableRole") 
    */
-  private $roles;
+  private $defaultRoles;
 
-  public function __construct($name = null, $alias = null, $abbreviation = null){
+  public function __construct($name = null, $alias = null, $abbreviation = null, ArrayCollection $defaultRoles = null){
     $this->documents = new ArrayCollection();
     $this->files = new ArrayCollection();
     $this->tags = new ArrayCollection();
     $this->collaborators = new ArrayCollection();
-    $this->role = new ArrayCollection();
+    if(!$defaultRoles){
+      $defaultRoles = new ArrayCollection();
+    }
+    $this->defaultRoles = $defaultRoles;
     $this->name = $name;
     $this->alias = $alias;
     $this->abbreviation = $abbreviation;
@@ -261,7 +264,7 @@ class Application_Model_Case extends Application_Model_Base{
   } 
   
   public function getRoles(){
-    return $this->roles;  
+    return $this->defaultRoles;  
   }
   
   /**

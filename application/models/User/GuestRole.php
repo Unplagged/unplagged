@@ -20,32 +20,16 @@
 
 /**
  *
- * @author Dominik Horb <dominik.horb@googlemail.com>
+ * 
+ * @author Unplagged
+ * 
+ * @Entity
  */
-class Unplagged_Acl extends Zend_Acl{
+class Application_Model_User_GuestRole extends Application_Model_User_Role{
 
-  public function __construct($user, $em){
-    
-    $this->addRole($user->getRole());
-    
-    $permissions = $user->getRole()->getPermissions();
-    $resources = $em->getRepository('Application_Model_Permission')->findAll();
-    
-    foreach($resources as $resource){
-      if(!$this->has($resource->getName())){
-        $this->add(new Zend_Acl_Resource($resource->getName()));
-      }
-    }
-
-    foreach($permissions as $permission){
-      $resource = new Zend_Acl_Resource($permission);
-      if(!$this->has($resource)){
-        $this->add($resource);
-      }
-      $this->allow($user->getRole(), $permission);  
-    }
-    
-    return $this;
+  public function __construct(){
+    $this->roleId = 'guest'; 
+    $this->permissions = array();
   }
 }
 ?>

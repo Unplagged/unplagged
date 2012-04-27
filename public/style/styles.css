@@ -369,6 +369,10 @@ header[role=toolbar] a:hover{
   min-width: 100px;
 }
 
+.user-menu.dropdown-button li a{
+  padding-left: 8px;
+}
+
 .case-settings-box {
   float: right;
 }

@@ -19,7 +19,7 @@
  */
 
 /**
- * This class bundles some common functions used by many of the Unplagged controllers.
+ * This class bundles common functions used by many of the Unplagged controllers.
  * 
  * @author Unplagged
  */
@@ -49,18 +49,20 @@ abstract class Unplagged_Controller_Action extends Zend_Controller_Action{
 
   /**
    * Looks up the session data and redirects the user to the page that was visited before. 
+   * 
+   * If the last url is the same as the current the default page is the activity stream.
    */
   protected function redirectToLastPage(){
     $historySessionNamespace = new Zend_Session_Namespace('history');
-    
+
     //check if the last url is the same as the current to avoid infinite loop
     if($historySessionNamespace->last !== $this->getRequest()->getRequestUri()){
       $this->_helper->viewRenderer->setNoRender(true);
       $this->_redirect($historySessionNamespace->last);
-    } else {
+    }else{
       //if we don't know where the user wants to go, the default is the
       //activity stream
-      $this->_helper->redirector('recent-activity', 'notification');  
+      $this->_helper->redirector('recent-activity', 'notification');
     }
   }
 

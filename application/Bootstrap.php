@@ -88,10 +88,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * Initalizes the flash messenger.
    */
   protected function _initMessenger(){
-    $flashMsgHelper = new Zend_Controller_Action_Helper_FlashMessenger();
-    Zend_Controller_Action_HelperBroker::addHelper($flashMsgHelper);
+    $flashMessenger = new Zend_Controller_Action_Helper_FlashMessenger();
+    Zend_Controller_Action_HelperBroker::addHelper($flashMessenger);
 
-    $messages = $flashMsgHelper->getMessages();
+    $messages = $flashMessenger->getMessages();
     $this->bootstrap('layout');
     $view = $this->getResource('layout')->getView();
 
@@ -99,19 +99,46 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   }
 
   /**
+   * If no user is logged in, the guest user is set as default.
+   */
+  protected function _initGuest(){
+    
+    $defaultNamespace = new Zend_Session_Namespace('Default');
+    
+    if(!$defaultNamespace->user){
+      //we need the entity manager, so make sure this is created prior
+      $this->bootstrap('doctrine');
+      $registry = Zend_Registry::getInstance();
+      $guestRole = $registry->entitymanager->getRepository('Application_Model_User_GuestRole')->findOneByRoleId('guest');
+      
+      //temporary until set in the db
+      $guestRole->addPermission('case_view_public');
+      $guestRole->addPermission('index');
+      $guestRole->addPermission('case');
+      
+      //store the user in the session
+      $defaultNamespace->user = new Application_Model_User(array('role'=>$guestRole));
+    }
+  }
+
+  /**
    * 
    */
   protected function _initAccessControl(){
+    //make sure at least the rights for the guest user are set if nobody logged in yet
+    $this->bootstrap('guest');
+    //we also need the entity manager, so make sure this is created prior
+    $this->bootstrap('doctrine');
+    
+    //initalize the current users ACL
+    $defaultNamespace = new Zend_Session_Namespace('Default');
+    $registry = Zend_Registry::getInstance();
+    $acl = new Unplagged_Acl($defaultNamespace->user, $registry->entitymanager);
+    $accessControl = new Unplagged_AccessControl($acl, $defaultNamespace->user);
 
-    $acl = new Unplagged_Acl();
-    $accessControl = new Unplagged_AccessControl($acl);
-
-    //make sure front controller is initalized
+    //make sure front controller is initalized, so that we can register the authorization plugin
     $this->bootstrap('FrontController');
-    $this->bootstrap('layout');
-    $this->bootstrap('navigation');
     $frontController = $this->getResource('FrontController');
-
     $frontController->registerPlugin($accessControl);
   }
 
@@ -122,7 +149,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $frontController = $this->getResource('FrontController');
     $frontController->registerPlugin(new Unplagged_UrlHistory());
   }
-  
+
   /**
    * Initalize the view.
    * @author Dennis De Cock
@@ -196,10 +223,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * 
    */
   protected function _initNavigation(){
+    //$this->bootstrap('doctrine');
     
     $config = array(
       array(
-        //home icon gets set via js, because I didn't find a simple way to do add a <span> here
+        //home icon gets set via js, because I didn't find a simple way to add a <span> here
         'label'=>'Home',
         'title'=>'Home',
         'module'=>'default',
@@ -213,14 +241,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'notification',
         'action'=>'recent-activity',
-        'resource'=>'notification'
+        'resource'=>'notification_recent-activity'
       ), array(
         'label'=>'Files',
         'title'=>'Files',
         'module'=>'default',
         'controller'=>'file',
         'action'=>'list',
-        'resource'=>'files',
+        'resource'=>'file_list',
         'pages'=>array(
           array(
             'label'=>'Case Files',
@@ -228,7 +256,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'case',
             'action'=>'files',
-            'resource'=>'files'
+            'resource'=>'case_files'
           ),
           array(
             'label'=>'Public Files',
@@ -236,7 +264,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'file',
             'action'=>'list',
-            'resource'=>'files'
+            'resource'=>'file_list'
           ),
           array(
             'label'=>'Personal Files',
@@ -244,7 +272,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'user',
             'action'=>'files',
-            'resource'=>'files'
+            'resource'=>'user_files'
           )
         )
       ), array(
@@ -253,14 +281,27 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'document',
         'action'=>'list',
-        'resource'=>'document'
+        'resource'=>'document_list'
       ), array(
         'label'=>'Fragments',
         'title'=>'Fragments',
         'module'=>'default',
         'controller'=>'document_fragment',
         'action'=>'list',
-        'resource'=>'document_fragment'
+        'resource'=>'document_fragment_list'
+      ), array(
+        'label'=>'Administration',
+        'title'=>'Administration',
+        'uri'=>'#',
+        'pages'=>array(
+          array(
+            'label'=>'Cases',
+            'title'=>'Cases',
+            'module'=>'default',
+            'controller'=>'case',
+            'action'=>'list'
+          )
+        )
       )
     );
 
@@ -268,8 +309,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $this->bootstrap('layout');
     $layout = $this->getResource('layout');
     $view = $layout->getView();
-    $view->navigation($container)->setAcl(new Unplagged_Acl())->setRole('guest');
-    
+    $defaultNamespace = new Zend_Session_Namespace('Default');
+    $registry = Zend_Registry::getInstance();
+    $acl = new Unplagged_Acl($defaultNamespace->user, $registry->entitymanager);
+    $view->navigation($container)->setAcl($acl)->setRole($defaultNamespace->user->getRole());
+
     Zend_Registry::set('Zend_Navigation', $container);
   }
 
@@ -280,12 +324,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       }
     }
   }
-  
-  protected function _initAutoloadCrons() {
+
+  protected function _initAutoloadCrons(){
     $autoloader = new Zend_Loader_Autoloader_Resource(array(
-        'namespace' => 'Cron_',
-        'basePath'  => APPLICATION_PATH . '/../scripts/jobs/',
-    ));
+          'namespace'=>'Cron_',
+          'basePath'=>APPLICATION_PATH . '/../scripts/jobs/',
+        ));
   }
 
 }

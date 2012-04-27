@@ -306,17 +306,6 @@ class UserController extends Unplagged_Controller_Action{
     $this->redirectToLastPage();
   }
 
-  public function resetCurrentCaseAction(){
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-
-    $user->unsetCurrentCase();
-    $this->_em->persist($user);
-    $this->_em->flush();
-
-    $result["response"] = "200";
-    $this->_helper->json($result);
-  }
-
   /**
    * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
    * @param String from If defined it selects only users of a specific rank.

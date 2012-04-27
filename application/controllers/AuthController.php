@@ -81,12 +81,10 @@ class AuthController extends Unplagged_Controller_Action{
 
       if($result->isValid()){
         $defaultNamespace = new Zend_Session_Namespace('Default');
-        $defaultNamespace->userId = $result->getIdentity();
+        $defaultNamespace->user = $result->getIdentity();
+        $defaultNamespace->userId = $result->getIdentity()->getId();
 
         $this->_helper->flashMessenger->addMessage('You were logged in successfully.');
-        //@todo I know it's not perfect right now, because the activity stream isn't reached this way, but I think 
-        //it's overall a better experience when you clicked a bookmark or link and then get redirected to the login,
-        //to reach the actually requested page after this and not be always thrown to the activity stream
         $this->redirectToLastPage();
       }else{
         $this->_helper->flashMessenger->addMessage('Login failed.');
@@ -111,6 +109,7 @@ class AuthController extends Unplagged_Controller_Action{
     $this->auth->clearIdentity();
     Zend_Session::forgetMe();
     unset($this->_defaultNamespace->userId);
+    unset($this->_defaultNamespace->user);
   }
 
 }
