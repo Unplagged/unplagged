@@ -26,7 +26,7 @@ Content: <br />
   <?php $lines = explode('<br />', $this->page->getContent()); ?>
   <ol>
     <?php foreach($lines as $line): ?>
-      <li><?php echo htmlentities($line, ENT_NOQUOTES); ?></li>
+      <li><?php echo htmlentities($line, ENT_COMPAT, 'UTF-8'); ?></li>
     <?php endforeach; ?>
   </ol>
 </div>
