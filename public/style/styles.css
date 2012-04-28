@@ -1209,6 +1209,10 @@ smork-btn a:active { top: 1px; }
   background: url(/images/icons/textfield.png) no-repeat left;
 }
 
+.create-fragment-icon, .create-fragment-icon:visited {
+  background: url(/images/icons/textfield_add.png) no-repeat left;
+}
+
 .file-icon, .file-icon:visited {
   background: url(/images/icons/disk.png) no-repeat left;
 }
