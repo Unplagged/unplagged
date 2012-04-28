@@ -54,7 +54,7 @@ class Cron_Document_Parser extends Cron_Base{
       
       if($document instanceof Application_Model_Document){
         // update document
-        $document->setState(self::$em->getRepository('Application_Model_State')->findOneByName("document_parsed"));
+        $document->setState(self::$em->getRepository('Application_Model_State')->findOneByName("parsed"));
 
         // update task
         $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
