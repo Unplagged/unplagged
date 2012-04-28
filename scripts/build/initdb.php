@@ -170,7 +170,7 @@ if(!($em->getRepository('Application_Model_State')->findOneByName("report_error"
   $state = new Application_Model_State($data);
   $em->persist($state);
 }
-if(!($em->getRepository('Application_Model_State')->findOneByName("file_parsed"))){
+if(!($em->getRepository('Application_Model_State')->findOneByName("parsed"))){
   unset($data);
   $data["name"] = "parsed";
   $data["title"] = "parsed";
