@@ -31,8 +31,10 @@
 class Unplagged_UrlHistory extends Zend_Controller_Plugin_Abstract{
 
   public function postDispatch(Zend_Controller_Request_Abstract $request){
-    $historySessionNamespace = new Zend_Session_Namespace('history');
-    $historySessionNamespace->last = $request->getRequestUri();
+    if(!$request->isXmlHttpRequest()){
+      $historySessionNamespace = new Zend_Session_Namespace('history');
+      $historySessionNamespace->last = $request->getRequestUri();
+    }
   }
 
 }
