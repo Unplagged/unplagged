@@ -65,7 +65,7 @@ class Cron_Document_Parser extends Cron_Base{
         self::$em->flush();
 
         // notification
-        $user = $task->getUser();
+        $user = $task->getInitiator();
         Unplagged_Helper::notify("document_created", $document, $user);
       }
     }
