@@ -1194,7 +1194,7 @@ smork-btn a:active { top: 1px; }
 }
 
 .case-icon, .case-icon:visited {
-  background: url(/images/icons/book.png) no-repeat left;
+  background: url(/images/icons/package.png) no-repeat left;
 }
 
 .comment-icon, .comment-icon:visited {
@@ -1202,7 +1202,11 @@ smork-btn a:active { top: 1px; }
 }
 
 .document-icon, .document-icon:visited {
-  background: url(/images/icons/script.png) no-repeat left;
+  background: url(/images/icons/book.png) no-repeat left;
+}
+
+.fragment-icon, .fragment-icon:visited {
+  background: url(/images/icons/textfield.png) no-repeat left;
 }
 
 .file-icon, .file-icon:visited {
