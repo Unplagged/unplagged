@@ -21,7 +21,7 @@
 /**
  * This class handles actions related to pages within a document
  */
-class Document_PageController extends Unplagged_Controller_Action{
+class Document_PageController extends Unplagged_Controller_Versionable{
 
   public function init(){
     parent::init();
@@ -315,10 +315,20 @@ class Document_PageController extends Unplagged_Controller_Action{
         Unplagged_Helper::notify("case_created", $case, $user);
        */
 
-      return true;
+      return $task;
     }
 
     return false;
+  }
+  
+    /**
+   * Compares two version of a fragment. 
+   */
+  public function changelogAction(){
+    parent::changelogAction();
+    
+    $this->setTitle("Changelog of page");
+    Zend_Layout::getMvcInstance()->sidebar = 'page-tools';
   }
 
 }

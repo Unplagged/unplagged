@@ -21,7 +21,7 @@
 /**
  * This controller handles fragment related stuff.
  */
-class Document_FragmentController extends Unplagged_Controller_Action{
+class Document_FragmentController extends Unplagged_Controller_Versionable{
 
   public function init(){
     parent::init();
@@ -63,9 +63,27 @@ class Document_FragmentController extends Unplagged_Controller_Action{
    * Handles the creation of a new fragment. 
    */
   public function createAction(){
-    $modifyForm = new Application_Form_Document_Fragment_Modify();
+    $input = new Zend_Filter_Input(array('page'=>'Digits', 'content'=>'StripTags'), null, $this->_getAllParams());
+    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->page);
 
-    if($this->_request->isPost()){
+    $modifyForm = new Application_Form_Document_Fragment_Modify();
+    if($page){
+      $modifyForm->getElement("candidateDocument")->setValue($page->getDocument()->getId());
+      foreach($modifyForm->getElement("candidateBibTex")->getDecorators() as $decorator){
+        $decorator->setOption('style', 'display: none');
+      }
+      // remove white spaces of content
+      $contentLines = explode("\n", $input->content);
+      foreach($contentLines as $i => $contentLine) {
+        $contentLines[$i] = trim($contentLine);
+      }
+      $input->content = implode("\n", $contentLines);
+      $modifyForm->getElement("candidateText")->setValue($input->content);
+      $modifyForm->getElement("candidatePageFrom")->setValue($page->getPageNumber());
+      $modifyForm->getElement("candidatePageTo")->setValue($page->getPageNumber());
+    }
+
+    if($this->_request->isPost() && empty($input->page)) {
       $result = $this->handleModifyData($modifyForm);
 
       if($result){
@@ -173,61 +191,13 @@ class Document_FragmentController extends Unplagged_Controller_Action{
     Zend_Layout::getMvcInstance()->versionableId = null;
   }
 
-  public function diffAction(){
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+  /**
+   * Compares two version of a fragment. 
+   */
+  public function changelogAction(){
+    parent::changelogAction();
 
-    $query = $this->_em->createQuery("SELECT v FROM Application_Model_Versionable_Version v WHERE v.versionable = :versionable");
-    $query->setParameter("versionable", $input->id);
-    $versions = $query->getResult();
-
-    $params["versions"] = array();
-    foreach($versions as $version){
-      $params["versions"][$version->getId()] = "Version " . $version->getVersion();
-    }
-    $params["action"] = "/document_fragment/diff/id/" . $input->id;
-
-    // create the form
-    $diffVersionsForm = new Application_Form_Versionable_Diff($params);
-
-    // form has been submitted through post request
-    if($this->_request->isPost()){
-      $formData = $this->_request->getPost();
-
-      // if the form doesn't validate, pass to view and return
-      if($diffVersionsForm->isValid($formData)){
-        $firstVersionId = $this->getRequest()->getParam('firstVersion');
-        $secondVersionId = $this->getRequest()->getParam('secondVersion');
-
-        $firstVersion = $this->_em->getRepository('Application_Model_Versionable_Version')->findOneById($firstVersionId);
-        $secondVersion = $this->_em->getRepository('Application_Model_Versionable_Version')->findOneById($secondVersionId);
-
-        // @todo, just to have some data for now
-        $firstData = $firstVersion->getData();
-        $secondData = $secondVersion->getData();
-
-        if(!empty($firstData) && !empty($secondData)){
-          // @todo remove, jsut for now to have something
-          $a = str_split(json_encode($firstData), 20);
-          $b = str_split(json_encode($secondData), 20);
-
-          // options for generating the diff
-          $options = array(
-            'ignoreWhitespace'=>true,
-            'ignoreCase'=>true,
-            'context'=>1000
-          );
-
-          $diff = new Diff($a, $b, $options);
-          $renderer = new Diff_Renderer_Html_Array();
-        }
-
-        if(!empty($diff)){
-          $this->view->diff = Unplagged_Helper::formatDiff($diff->Render($renderer), $firstVersion->getVersion(), $secondVersion->getVersion());
-        }
-      }
-    }
-
-    $this->view->diffVersionsForm = $diffVersionsForm;
+    $this->setTitle("Changelog of fragments");
     Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
   }
 

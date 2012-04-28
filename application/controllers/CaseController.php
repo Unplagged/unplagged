@@ -34,6 +34,10 @@ class CaseController extends Unplagged_Controller_Action{
       $result = $this->handleModifyData($modifyForm);
 
       if($result){
+        // notification
+        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+        Unplagged_Helper::notify("case_created", $result, $user);
+
         $this->_helper->flashMessenger->addMessage('The case was created successfully.');
         $this->_helper->redirector('list', 'case');
       }
@@ -62,6 +66,10 @@ class CaseController extends Unplagged_Controller_Action{
         $result = $this->handleModifyData($modifyForm, $case);
 
         if($result){
+          // notification
+          $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          Unplagged_Helper::notify("case_updated", $result, $user);
+
           $this->_helper->flashMessenger->addMessage('The case was updated successfully.');
           $this->_helper->redirector('list', 'case');
         }
@@ -84,7 +92,7 @@ class CaseController extends Unplagged_Controller_Action{
     $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
-    
+
     // generate the action dropdown for each fragment
     foreach($paginator as $case):
       $case->actions = array();
@@ -94,7 +102,7 @@ class CaseController extends Unplagged_Controller_Action{
       $action['icon'] = 'images/icons/pencil.png';
       $case->actions[] = $action;
     endforeach;
-    
+
     $this->view->paginator = $paginator;
   }
 
@@ -155,7 +163,7 @@ class CaseController extends Unplagged_Controller_Action{
 
       //change the view to the one from the file controller
       $this->_helper->viewRenderer->renderBySpec('list', array('controller'=>'file'));
-    } else {
+    }else{
       $this->_helper->flashMessenger->addMessage('You need to select a case first, before you can view files of in a case.');
       $this->redirectToLastPage();
     }
@@ -174,6 +182,9 @@ class CaseController extends Unplagged_Controller_Action{
     $this->_em->flush();
 
     $this->_helper->viewRenderer->setNoRender(true);
+
+    $this->_helper->flashMessenger->addMessage('The file was added to your current case.');
+    $this->redirectToLastPage();
   }
 
   private function handleModifyData(Application_Form_Case_Modify $modifyForm, Application_Model_Case $case = null){
@@ -224,11 +235,7 @@ class CaseController extends Unplagged_Controller_Action{
       $this->_em->persist($case);
       $this->_em->flush();
 
-      // notification
-      $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-      Unplagged_Helper::notify("case_created", $case, $user);
-
-      return true;
+      return $case;
     }
 
     return false;

@@ -9,7 +9,9 @@
 $(document).ready(function(){
  
   // submit the case selection on change of the dropdown
-  $('.case-settings-box select').chosen({allow_single_deselect: true}).change(function(){
+  $('.case-settings-box select').chosen({
+    allow_single_deselect: true
+  }).change(function(){
     $(this).closest('form').submit();  
   });
   
@@ -57,20 +59,20 @@ $(document).ready(function(){
           'source': sourceId,
           'format': 'json'
         }, function(data) {
-        if(!data.errorcode) {
-          comments.html("");
-          $.each(data, function() {
-            addComment(this, comments);
-          });
-          loading.slideUp(800, function() {
-            comments.slideDown(300);
-          });
-        } else {
-        comments.html('<div class="comment">' + data.message + '</div>');
-          loading.slideUp(800, function() {
-            comments.slideDown(300);
-          });
-        }
+          if(!data.errorcode) {
+            comments.html("");
+            $.each(data, function() {
+              addComment(this, comments);
+            });
+            loading.slideUp(800, function() {
+              comments.slideDown(300);
+            });
+          } else {
+            comments.html('<div class="comment">' + data.message + '</div>');
+            loading.slideUp(800, function() {
+              comments.slideDown(300);
+            });
+          }
         }, "json");
       });
 
@@ -84,27 +86,27 @@ $(document).ready(function(){
 
     var target = $(this).closest('.comments-wrapper').children(".comments");
     if(text.val()) {
-        $.post('/comment/create', {
-          'source': source.val(),
-          'text': text.val()
-        }, function(data) {
-          text.val("");
-          addComment(data, target)
-        }, "json");
+      $.post('/comment/create', {
+        'source': source.val(),
+        'text': text.val()
+      }, function(data) {
+        text.val("");
+        addComment(data, target)
+      }, "json");
     }
     return false;
   });
   
   function addComment(data, target) {
     var tpl = '<div class="comment">' +
-            '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
-            '<div class="details">' +
-            '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
-            '<span class="date">' + data.created + '</span>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
-            target.append(tpl);
+    '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
+    '<div class="details">' +
+    '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
+    ' <span class="date">' + data.created + '</span>' +
+    '</div>' +
+    '</div>' +
+    '</div>';
+    target.append(tpl);
   }
   
   //make dropdown out of the action icons
@@ -123,6 +125,37 @@ $(document).ready(function(){
   //wrap home menu button, so that icon gets shown
   var homeButton = $('#header .navigation .home');
   homeButton.wrapInner('<span class="ir"/>');
+  
+  // executes a simtext comparison
+  function compareTexts() {
+    $.ajax({
+      url: "/simtext/ajax",
+      data: {
+        left: $("textarea#candidateText").val(),
+        right: $("textarea#sourceText").val()
+      }
+    }).done(
+      function(data){
+        $("div#compared_source_Text").empty();
+        $("div#compared_source_Text").html(data)
+      }
+      );
+    return false;
+  }
+  $("textarea#candidateText, textarea#sourceText").keyup(function(){
+    compareTexts();
+  });
+  compareTexts();
+  
+  // creates a new fragment based on selected text
+  $('.create-fragment').click(function() {
+    var selectedText = window.getSelection().getRangeAt(0).toString();;
+
+    $('#fragment-content').val(selectedText);
+    $('#fragment-create').submit();
+
+    return false;
+  });
 });
 
 /**
@@ -161,7 +194,7 @@ $(function() {
 });
 
 $(function() {
-   $('a.picture').lightBox();
+  $('a.picture').lightBox();
 });
 
 

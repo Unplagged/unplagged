@@ -29,3 +29,10 @@ $this->headTitle($this->title);
 </div>
 
 <?php echo $this->translate("Note"); ?>: <?php echo $this->fragment->getNote(); ?>
+<div>
+  <div class="smork-btn light">
+    <a href="#" for="comments-wrapper-<?php echo $this->fragment->getId(); ?>" class="toggle-comments"><span class="comments-icon">Show comments</span></a>
+  </div>
+  <br /><br />
+  <?php echo $this->partial('partials/comments.phtml', array('sourceId'=>$this->fragment->getId(), 'hidden'=>true)); ?>
+</div>

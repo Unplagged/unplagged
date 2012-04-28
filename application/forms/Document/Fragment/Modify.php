@@ -1,19 +1,4 @@
 <?php
-require_once(realpath(dirname(__FILE__)) . "/../../../../scripts/jobs/Document/Page/Compare_text.php");
-DEFINE("AJAX_CALL",'$.ajax(
-            {
-                url: "../simtext/ajax",
-                data: {
-                    left: $("textarea#candidateText").val(),
-                    right: $("textarea#sourceText").val()
-                }
-            }).done(
-                function(data){
-                    $("div#compared_source_Text").empty();
-                    $("div#compared_source_Text").html(data)
-                }
-            )');
-
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -113,7 +98,6 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form {
         $candidateLineToElement->setLabel("Line to");
         $candidateLineToElement->setRequired(true);  
         $candidateTextElement = new Zend_Form_Element_Textarea('candidateText');
-        $candidateTextElement->setAttrib('onchange', AJAX_CALL);
         $candidateTextElement->setLabel("Text");
 
         // source group
@@ -141,7 +125,6 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form {
 
         $sourceTextElement = new Zend_Form_Element_Textarea('sourceText');
         $sourceTextElement->setLabel('Text');
-        $sourceTextElement->setAttrib('onchange', AJAX_CALL);
 
         $sourceBibTexElement = new Zend_Form_Element_Textarea('sourceBibTex');
         $sourceBibTexElement->setLabel("Source BiBTex");
@@ -207,7 +190,7 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form {
         );
 
         $this->addElement(
-                'hidden', 'candidate', array(
+            'hidden', 'simtext', array(
             'required' => false,
             'ignore' => true,
             'autoInsertNotEmptyValidator' => false,
@@ -215,35 +198,13 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form {
                 array(
                     'HtmlTag', array(
                         'tag' => 'div',
-                        'id' => 'compared_candidate_Text',
-                        'class' => 'wmd-panel',
-                        'style' => ' float:left; width = "500 px"'
+                        'id' => 'compared_source_Text'
                     )
                 )
             )
                 )
         );
-        $this->candidate->clearValidators();
-
-        $this->addElement(
-                'hidden', 'source', array(
-            'required' => false,
-            'ignore' => true,
-            'autoInsertNotEmptyValidator' => false,
-            'decorators' => array(
-                array(
-                    'HtmlTag', array(
-                        'tag' => 'div',
-                        'id' => 'compared_source_Text',
-                        'class' => 'wmd-panel',
-                        'style' => ' width = "500 px"'
-                    )
-                )
-            )
-                )
-        );
-        $this->source->clearValidators();
-
+        
         $this->addElements(array(
             $submitElement
         ));

@@ -33,7 +33,7 @@ class CommentController extends Unplagged_Controller_Action{
    * Handles the creation of a new comment. 
    */
   public function createAction(){
-    $input = new Zend_Filter_Input(array('source'=>'Digits', 'title'=>'Alpha', 'text'=>'Alpha'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('source'=>'Digits', 'title'=>'Alpha', 'text'=>'StripTags'), null, $this->_getAllParams());
 
     $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);

@@ -100,7 +100,7 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
   }
 
   public function getDirectName(){
-    return "fragment";
+    return $this->getTitle();
   }
 
   public function getDirectLink(){

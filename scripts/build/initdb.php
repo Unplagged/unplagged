@@ -61,6 +61,14 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("case_created
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
+if(!($em->getRepository('Application_Model_Action')->findOneByName("case_updated"))){
+  unset($data);
+  $data["name"] = "case_updated";
+  $data["title"] = "Case %s was updated";
+  $data["description"] = "The case was updated.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
 if(!($em->getRepository('Application_Model_Action')->findOneByName("file_uploaded"))){
   unset($data);
   $data["name"] = "file_uploaded";
@@ -85,7 +93,7 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("fragment_upd
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
-if(!($em->getRepository('Application_Model_Action')->findOneByName("document_parsed"))){
+if(!($em->getRepository('Application_Model_Action')->findOneByName("document_created"))){
   unset($data);
   $data["name"] = "document_created";
   $data["title"] = "Document %s was created";

@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once(realpath(dirname(__FILE__)) . "/../../Base.php");
-require_once(realpath(dirname(__FILE__)) . "/Compare_text.php");
 
 /**
  * This class represents a cronjob for parsing larger files into documents using OCR.
@@ -60,18 +59,17 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
         foreach($pages as $page){
           $right = $page->getContent();
-         // $right = "Die autonomistische Theorie von Rabel hat in vielen LÃ¤ndern AnhÃ¤nger gefunden[FN 62]. Jedoch war Rabel selbst sich darÃ¼ber im klaren, daÃŸ die Bildung von international gÃ¼ltigen Begriffen auf rechtsvergleichender Grundlage mit erheblichen Schwierigkeiten verbunden ist. Aber auf den Einwand, der Richter werde kaum in der Lage sein, in jedem einzelnen Fall rechts vergleichende Forschungen auf breiter Grundlage vorzunehmen, hat Rabel schon in seinem Aufsatz von 1931 geantwortet: â€žVon den Richtern dÃ¼rfen wir nur empirische BeitrÃ¤ge erwarten, Vergleiche des eigenen Rechts mit einzelnen fremden Rechten, in der Regel nur mit einem einzigen.â€œ [FN 63] [FN 62] 62 Es seien erwÃ¤hnt Beckett ... ";
-
-          $simtextResult = compare($left,$right,4); // do simtext with left and right
+          
+          $simtextResult = Unplagged_CompareText::compare($left,$right,4); // do simtext with left and right
           
           // if simtext found something on that page, append it to the report
-          if(!empty($simtextResult)){
+          if(strpos($simtextResult, "fragmark-") !== false){
             $content .= "<div style='clear:both;padding-top:10px;'><b>Document " . $document->getTitle() . " - Page " . $page->getPageNumber() . "</b><br />";
             $content .= $simtextResult . "<br /><br /></div>";
           }
         }
       }
-        var_dump($content);
+      
       // update report
       $report->setContent($content);
       $report->setState(self::$em->getRepository('Application_Model_State')->findOneByName("report_generated"));
