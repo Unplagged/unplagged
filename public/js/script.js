@@ -128,18 +128,20 @@ $(document).ready(function(){
   
   // executes a simtext comparison
   function compareTexts() {
-    $.ajax({
-      url: "/simtext/ajax",
-      data: {
-        left: $("textarea#candidateText").val(),
-        right: $("textarea#sourceText").val()
-      }
-    }).done(
-      function(data){
-        $("div#compared_source_Text").empty();
-        $("div#compared_source_Text").html(data)
-      }
-      );
+    if($("textarea#candidateText").length != 0) {
+      $.ajax({
+        url: "/simtext/ajax",
+        data: {
+          left: $("textarea#candidateText").val(),
+          right: $("textarea#sourceText").val()
+        }
+      }).done(
+        function(data){
+          $("div#compared_source_Text").empty();
+          $("div#compared_source_Text").html(data)
+        }
+        );
+    }
     return false;
   }
   $("textarea#candidateText, textarea#sourceText").keyup(function(){
@@ -149,7 +151,8 @@ $(document).ready(function(){
   
   // creates a new fragment based on selected text
   $('.create-fragment').click(function() {
-    var selectedText = window.getSelection().getRangeAt(0).toString();;
+    var selectedText = window.getSelection().getRangeAt(0).toString();
+    ;
 
     $('#fragment-content').val(selectedText);
     $('#fragment-create').submit();
