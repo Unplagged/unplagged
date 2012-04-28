@@ -170,6 +170,14 @@ if(!($em->getRepository('Application_Model_State')->findOneByName("report_error"
   $state = new Application_Model_State($data);
   $em->persist($state);
 }
+if(!($em->getRepository('Application_Model_State')->findOneByName("file_parsed"))){
+  unset($data);
+  $data["name"] = "parsed";
+  $data["title"] = "parsed";
+  $data["description"] = "The document was parsed.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
 
 // 4) fragment types
 if(!($em->getRepository('Application_Model_Document_Fragment_Type')->findOneByName("UnbekannteQuelle"))){

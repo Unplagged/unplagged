@@ -2,20 +2,33 @@
 $this->title = $this->translate("Page details");
 $this->headTitle($this->title);
 ?>
+previous page – next page
 Document: <?php echo $this->page->getDocument()->getTitle(); ?><br />
 Page number: <?php echo $this->page->getPageNumber(); ?><br />
 
 Content: <br />
+
+<div style="text-align: right;">
+  <?php if(!empty($this->prevPageLink)): ?>
+    <a href="<?php echo $this->prevPageLink ?>"><?php echo $this->translate("previous page"); ?></a>
+  <?php else: ?>
+    <?php echo $this->translate("previous page"); ?>
+  <?php endif; ?>
+  –
+  <?php if(!empty($this->nextPageLink)): ?>
+    <a href="<?php echo $this->nextPageLink ?>"><?php echo $this->translate("next page"); ?></a>
+  <?php else: ?>
+    <?php echo $this->translate("next page"); ?>
+  <?php endif; ?>
+</div>
+
 <div class="document-page">
-  <?php 
-  $lines = explode('<br />', $this->page->getContent());
-  
-  ?>
+  <?php $lines = explode('<br />', $this->page->getContent()); ?>
   <ol>
-  <?php foreach($lines as $line): ?>
-    <li><?php echo $line; ?></li>
-  <?php endforeach; ?>
-</ol>
+    <?php foreach($lines as $line): ?>
+      <li><?php echo $line; ?></li>
+    <?php endforeach; ?>
+  </ol>
 </div>
 
 

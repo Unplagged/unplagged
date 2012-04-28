@@ -81,6 +81,31 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
         $this->view->page = $page;
+        
+        // next page
+        $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber > :pageNumber ORDER BY p.pageNumber ASC');
+        $query->setParameter("document", $page->getDocument()->getId());
+        $query->setParameter("pageNumber", $page->getPageNumber());
+        $query->setMaxResults(1);
+        
+        $nextPage = $query->getResult();
+        if($nextPage) {
+          $nextPage = $nextPage[0];
+          $this->view->nextPageLink = '/document_page/show/id/' . $nextPage->getId();
+        }
+        
+        // previous page
+        $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber < :pageNumber ORDER BY p.pageNumber DESC');
+        $query->setParameter("document", $page->getDocument()->getId());
+        $query->setParameter("pageNumber", $page->getPageNumber());
+        $query->setMaxResults(1);
+        
+        $prevPage = $query->getResult();
+        if($prevPage) {
+          $prevPage = $prevPage[0];
+          $this->view->prevPageLink = '/document_page/show/id/' . $prevPage->getId();
+        }
+        
       }
     }
   }

@@ -6,6 +6,8 @@ $this->headTitle($this->title);
   <thead>
     <tr>
       <th><?php echo $this->translate("Title"); ?></th>
+      <th><?php echo $this->translate("Pages"); ?></th>
+      <th><?php echo $this->translate("State"); ?></th>
       <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
     </tr>
   </thead>
@@ -13,8 +15,18 @@ $this->headTitle($this->title);
     <?php if(count($this->paginator)): ?>
       <?php foreach($this->paginator as $document): ?>
         <tr>
-          <td data-label="<?php echo $this->translate("Title"); ?>"><a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
-          <td data-label="<?php echo $this->translate("Actions"); ?>"><?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$document->actions)); ?></td>
+          <?php if($document->getState()->getName() == 'parsed'): ?>
+            <td data-label="<?php echo $this->translate("Title"); ?>"><a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
+          <?php else: ?>
+            <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $document->getTitle(); ?></td>
+          <?php endif; ?>
+          <td data-label="<?php echo $this->translate("Pages"); ?>"><?php echo $document->getPages()->count(); ?></a></td>
+          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $document->getState()->getTitle(); ?></a></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>">
+            <?php if($document->getState()->getName() == 'parsed'): ?>
+              <?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$document->actions)); ?>
+            <?php endif; ?>
+          </td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>

@@ -86,7 +86,7 @@ class DocumentController extends Unplagged_Controller_Action{
       $document->actions = array();
 
       $action['link'] = '/document/edit/id/' . $document->getId();
-      $action['title'] = 'Edit case';
+      $action['title'] = 'Edit document';
       $action['icon'] = 'images/icons/pencil.png';
       $document->actions[] = $action;
 
@@ -96,7 +96,7 @@ class DocumentController extends Unplagged_Controller_Action{
       $document->actions[] = $action;
 
       $action['link'] = '/document/delete/id/' . $document->getId();
-      $action['title'] = 'Delete';
+      $action['title'] = 'Delete document';
       $action['icon'] = 'images/icons/delete.png';
       $document->actions[] = $action;
     endforeach;
