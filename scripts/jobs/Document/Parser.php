@@ -40,18 +40,18 @@ class Cron_Document_Parser extends Cron_Base{
 
     if($tasks){
       $task = $tasks[0];
-      
+
       $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
       self::$em->persist($task);
       self::$em->flush();
-      
+
       $document = $task->getRessource();
       $file = $document->getOriginalFile();
 
       $language = "eng";
       $parser = Unplagged_Parser::factory($file->getMimeType());
       $document = $parser->parseToDocument($file, $language, $document);
-      
+
       if($document instanceof Application_Model_Document){
         // update document
         $document->setState(self::$em->getRepository('Application_Model_State')->findOneByName("parsed"));
@@ -63,6 +63,10 @@ class Cron_Document_Parser extends Cron_Base{
         self::$em->persist($task);
 
         self::$em->flush();
+
+        // notification
+        $user = $task->getUser();
+        Unplagged_Helper::notify("document_created", $document, $user);
       }
     }
   }
