@@ -124,7 +124,7 @@ class Unplagged_Mailer{
     
     $footerText = "\r" . "\n";
     $footerText .= 'Your team of ' . "\r" . "\n";
-    $footerText .= $config->default->portalName;
+    $footerText .= $config->default->senderName;
     
     return $footerText;
   }

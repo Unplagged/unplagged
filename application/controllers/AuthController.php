@@ -30,7 +30,7 @@ class AuthController extends Unplagged_Controller_Action{
   public function init(){
     parent::init();
     $this->auth = Zend_Auth::getInstance();
-    
+
     Zend_Layout::getMvcInstance()->sidebar = 'default';
     Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
   }
@@ -80,19 +80,25 @@ class AuthController extends Unplagged_Controller_Action{
       $result = $this->auth->authenticate($adapter);
 
       if($result->isValid()){
-        $defaultNamespace = new Zend_Session_Namespace('Default');
-        $defaultNamespace->user = $result->getIdentity();
-        $defaultNamespace->userId = $result->getIdentity()->getId();
+        if($result->getIdentity()->getState()->getName() == 'user_activated'){
+          $defaultNamespace = new Zend_Session_Namespace('Default');
+          $defaultNamespace->user = $result->getIdentity();
+          $defaultNamespace->userId = $result->getIdentity()->getId();
 
-        $this->_helper->flashMessenger->addMessage('You were logged in successfully.');
-        $this->redirectToLastPage();
+          $this->_helper->flashMessenger->addMessage('You were logged in successfully.');
+          $this->redirectToLastPage();
+        }else{
+          $this->logout();
+          $this->_helper->flashMessenger->addMessage('Your account is not yet verified.');
+          $this->_helper->redirector('login', 'auth');
+        }
       }else{
         $this->_helper->flashMessenger->addMessage('Login failed.');
         $this->_helper->redirector('login', 'auth');
       }
     }
   }
-  
+
   /**
    * Logs the user off. The identity is removed and the session is cleared.
    */
@@ -101,7 +107,7 @@ class AuthController extends Unplagged_Controller_Action{
     $this->_helper->flashMessenger->addMessage('You were logged off successfully.');
     $this->redirectToLastPage();
   }
-  
+
   /**
    * Clears all session data that was stored for the current user. 
    */
