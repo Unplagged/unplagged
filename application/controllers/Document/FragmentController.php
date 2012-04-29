@@ -74,7 +74,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       }
       // remove white spaces of content
       $contentLines = explode("\n", $input->content);
-      foreach($contentLines as $i => $contentLine) {
+      foreach($contentLines as $i=>$contentLine){
         $contentLines[$i] = trim($contentLine);
       }
       $input->content = implode("\n", $contentLines);
@@ -83,7 +83,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $modifyForm->getElement("candidatePageTo")->setValue($page->getPageNumber());
     }
 
-    if($this->_request->isPost() && empty($input->page)) {
+    if($this->_request->isPost() && empty($input->page)){
       $result = $this->handleModifyData($modifyForm);
 
       if($result){
@@ -273,16 +273,20 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     if($documentId == "new"){
       $title = "Document " . time();
       $state = $this->_em->getRepository('Application_Model_State')->findOneByName("parsed");
-      $data["document"] = new Application_Model_Document(array("title"=>$title, "bibtex"=>$bibtex, 'state'=> $state));
+      $data["document"] = new Application_Model_Document(array("title"=>$title, "bibtex"=>$bibtex, 'state'=>$state));
       $this->_em->persist($data["document"]);
 
       $data["pageFrom"] = new Application_Model_Document_Page(array("pageNumber"=>$pageFrom));
-      $data["pageTo"] = new Application_Model_Document_Page(array("pageNumber"=>$pageTo));
       $this->_em->persist($data["pageFrom"]);
-      $this->_em->persist($data["pageTo"]);
-
       $data["document"]->addPage($data["pageFrom"]);
-      $data["document"]->addPage($data["pageTo"]);
+
+      if($pageFrom != $pageTo){
+        $data["pageTo"] = new Application_Model_Document_Page(array("pageNumber"=>$pageTo));
+        $this->_em->persist($data["pageTo"]);
+        $data["document"]->addPage($data["pageTo"]);
+      } else {
+        $data["pageTo"] = $data["pageFrom"];
+      }
     }else{
       $data["document"] = $this->_em->getRepository('Application_Model_Document')->findOneById($documentId);
       $data["pageFrom"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneBy(array("document"=>$documentId, "pageNumber"=>$pageFrom));
