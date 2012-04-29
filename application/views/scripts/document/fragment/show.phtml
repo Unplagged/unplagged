@@ -6,80 +6,26 @@ $this->headTitle($this->title);
 <?php echo $this->translate("Name"); ?>: <?php echo $this->fragment->getTitle(); ?><br />
 <?php echo $this->translate("Type"); ?>: <?php echo $this->fragment->getType()->getName(); ?><br/>
 <?php echo $this->translate("Source"); ?>: //<br/>
-
-<div>
-  
-
-<form>
-    Compare with no color
-    <input type="checkbox" name="compare" value="1" />
-    <input type="submit" name="formSubmit" value="Compare" />
-</form>
-
-
-<?php 
-			
-		define("ORIGINAL_LEFT_TEXT",$this->plagLines[0]);
-		define("ORIGINAL_RIGHT_TEXT",$this->sourceLines[0]);
-		
-		$markedLeftText = $this->plagLines;
-		$markedRightText = $this->sourceLines;
-		
-		$compare = $_REQUEST['compare'];
-		
-	?>
-	
-	<?php
-		
-		if(isset($compare) && $compare=="1") {
-		//if($compare=="1") {
-			//var_dump($this->plagLines);
-			//add color to the left and right text colums 
-			$left = ORIGINAL_LEFT_TEXT;//$origLeftText[0];
-			$right = ORIGINAL_RIGHT_TEXT;//$origRightText[0];
-			$result = Unplagged_CompareText::compare($left,$right,4,1);
-			
-			$markedLeftText[0]  = $result["list1"];
-			$markedRightText[0]  = $result["list2"];
-			
-		} 
-		
-		else {
-			//$deleteHtmlTagLeft = strip_tags(ORIGINAL_LEFT_TEXT);
-			//$deleteHtmlTagRight = strip_tags(ORIGINAL_RIGHT_TEXT);
-		
-			$markedLeftText[0]  = ORIGINAL_LEFT_TEXT;//$origLeftText;
-			$markedRightText[0]  = ORIGINAL_RIGHT_TEXT;//$origRightText;
-			
-		} 
-?>
-	
 <div class="document-page diff clearfix">
   <div class="src-wrapper">
     <h3><?php echo $this->translate("Fragment"); ?></h3>
     <p>From: page <?php echo $this->plag->getPageFrom()->getPageNumber(); ?>, line <?php echo $this->source->getLineFrom(); ?></p>
     <p>To: page <?php echo $this->plag->getPageTo()->getPageNumber(); ?>, line <?php echo $this->source->getLineTo(); ?></p>    <ol>
-	
-	<?php foreach($markedLeftText as $plagLine){ ?> 
+      <?php foreach($this->plagLines as $plagLine){ ?> 
         <li><?php echo $plagLine; ?></li>
       <?php } ?>
-	  
     </ol>
-</div>	
-	
+  </div>
   <div class="src-wrapper">
     <h3><?php echo $this->translate("Source"); ?></h3>
     <p>From: page <?php echo $this->source->getPageFrom()->getPageNumber(); ?>, line <?php echo $this->source->getLineFrom(); ?></p>
     <p>To: page <?php echo $this->source->getPageTo()->getPageNumber(); ?>, line <?php echo $this->source->getLineTo(); ?></p>
-      <?php foreach($markedRightText as $sourceLine){ ?> 
     <ol>
+      <?php foreach($this->sourceLines as $sourceLine){ ?> 
         <li><?php echo $sourceLine; ?></li>
       <?php } ?>
     </ol>
   </div>
- 
- 
-  
 </div>
 
 <?php echo $this->translate("Note"); ?>: <?php echo $this->fragment->getNote(); ?>

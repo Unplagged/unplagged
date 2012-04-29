@@ -237,8 +237,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $data = $this->handleDocumentCreation($formData['candidateDocument'], $formData['candidatePageFrom'], $formData['candidatePageTo'], $formData['candidateBibTex']);
       $data["lineFrom"] = $formData['candidateLineFrom'];
       $data["lineTo"] = $formData['candidateLineTo'];
-      //$data["text"] = $formData['candidateText'];
-	  $data["text"] = $formData['hiddenCandidate'];
+      $data["text"] = $formData['candidateText'];
       $fragment->setPlag(new Application_Model_Document_Fragment_Partial($data));
 
       // source partial
@@ -246,8 +245,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $data = $this->handleDocumentCreation($formData['sourceDocument'], $formData['sourcePageFrom'], $formData['sourcePageTo'], $formData['sourceBibTex']);
       $data["lineFrom"] = $formData['sourceLineFrom'];
       $data["lineTo"] = $formData['sourceLineTo'];
-      //$data["text"] = $formData['sourceText'];
-	  $data["text"] = $formData['hiddenSource'];
+      $data["text"] = $formData['sourceText'];
       $fragment->setSource(new Application_Model_Document_Fragment_Partial($data));
 
       // write back to persistence manager and flush it

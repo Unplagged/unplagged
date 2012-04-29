@@ -108,7 +108,7 @@ class SimtextController extends Unplagged_Controller_Action{
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender();
 
-    echo Unplagged_CompareText::compare($input->left, $input->right, 4, 0);
+    echo Unplagged_CompareText::compare($input->left, $input->right, 4);
   }
 
 }

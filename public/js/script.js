@@ -80,7 +80,6 @@ $(document).ready(function(){
     return false;
   });
   
-  
   $(".write-comment").click(function(){
     var source = $(this).closest(".write-comment-box").children("input[name='sourceId']");
     var text = $(this).closest(".write-comment-box").children("input[name='text']");
