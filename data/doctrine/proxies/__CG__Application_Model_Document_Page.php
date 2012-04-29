@@ -177,7 +177,7 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'version', 'auditLog', 'pageNumber', 'content', 'document', 'detectionReports', 'originalFile');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'notifications', 'version', 'auditLog', 'pageNumber', 'content', 'document', 'detectionReports', 'originalFile');
     }
 
     public function __clone()

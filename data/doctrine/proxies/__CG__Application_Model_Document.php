@@ -153,7 +153,7 @@ class Application_Model_Document extends \Application_Model_Document implements 
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'title', 'bibtex', 'pages', 'fragments', 'state', 'originalFile');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'notifications', 'title', 'bibtex', 'pages', 'fragments', 'state', 'originalFile');
     }
 
     public function __clone()

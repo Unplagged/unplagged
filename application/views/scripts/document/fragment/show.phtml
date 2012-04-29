@@ -12,7 +12,7 @@ $this->headTitle($this->title);
 
 <form>
     Compare with no color
-    <input type="checkbox" name="compare" value="1" />
+    <input type="checkbox" name="compare" value="1" checked="checked"/>
     <input type="submit" name="formSubmit" value="Compare" />
 </form>
 
@@ -31,7 +31,7 @@ $this->headTitle($this->title);
 	
 	<?php
 		
-		if(isset($compare) && $compare=="1") {
+		if(isset($formSubmit) && $compare=="1") {
 		//if($compare=="1") {
 			//var_dump($this->plagLines);
 			//add color to the left and right text colums 
