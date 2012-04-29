@@ -148,7 +148,7 @@ class DocumentController extends Unplagged_Controller_Action{
           $detector = Unplagged_Detector::factory();
 
           $data["user"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-          ;
+
           $data["page"] = $page;
           $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName("report_running");
           $data["servicename"] = $detector->getServiceName();

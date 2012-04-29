@@ -272,7 +272,8 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     if($documentId == "new"){
       $title = "Document " . time();
-      $data["document"] = new Application_Model_Document(array("title"=>$title, "bibtex"=>$bibtex));
+      $state = $this->_em->getRepository('Application_Model_State')->findOneByName("parsed");
+      $data["document"] = new Application_Model_Document(array("title"=>$title, "bibtex"=>$bibtex, 'state'=> $state));
       $this->_em->persist($data["document"]);
 
       $data["pageFrom"] = new Application_Model_Document_Page(array("pageNumber"=>$pageFrom));
