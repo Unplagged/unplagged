@@ -201,8 +201,8 @@ class DocumentController extends Unplagged_Controller_Action{
       $this->_em->persist($report);
       $this->_em->flush();
 
-      // send registration mail
-      Unplagged_Mailer::sendDetectionReportAvailable($report);
+      // create notification
+      Unplagged_Helper::notify("simtext_report_created", $report, $report->getUser());
     }
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
@@ -222,11 +222,7 @@ class DocumentController extends Unplagged_Controller_Action{
       $this->_em->persist($document);
       $this->_em->flush();
 
-      /*      // notification @todo: add notification
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        Unplagged_Helper::notify("case_created", $case, $user);
-       */
-      return true;
+      return $document;
     }
 
     return false;
