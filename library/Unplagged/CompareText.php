@@ -4,9 +4,9 @@ class Unplagged_CompareText{
 
   private static $delimiter = " ";
   private static $lineBreaks = array("<br />", "<br>", "\n");
-  
-  public static function compare($left, $right, $minlength){
-    
+
+  public static function compare($left, $right, $minlength, $outputType = "html"){
+
     $left = str_replace(Unplagged_CompareText::$lineBreaks, "____ ", $left);
     $right = str_replace(Unplagged_CompareText::$lineBreaks, "____ ", $right);
 
@@ -16,7 +16,11 @@ class Unplagged_CompareText{
 
     $comparedTexts = Unplagged_CompareText::compareText($documents, $minlength);
 
-    return Unplagged_CompareText::markTexts($comparedTexts, $listLeft, $listRight);
+    if($outputType == "plain"){
+      return Unplagged_CompareText::getMarkedTexts($comparedTexts, $listLeft, $listRight);
+    }
+    
+    return Unplagged_CompareText::getHtml($comparedTexts, $listLeft, $listRight);
   }
 
   private static function compareText($documents, $min_run_length){
@@ -90,30 +94,7 @@ class Unplagged_CompareText{
     return $final_match_list;
   }
 
-//
-///*$text1="Aus diesen Teilplänen für Beschaffung, Fertigung, Absatz, Investitionen, Forschung und Entwicklung, Personal, Finanzen und aus der Ergebnisplanung mit Planbilanzen sowie Plan-Gewinn- und Verlustrechnungen gewinnt der Vorstand die notwendige Zielorientierung für die Leitung der Gesellschaft. Somit gehört es zur Gesamtverantwortung aller Vorstandsmitglieder, sowohl eine strategische Mehljahresplanung als auch eine operative Einjahresplanung zu erstellen, die auf der Basis realistischer Prämissen die Budgetziele vorgibt [FN 241].";*/
-//
-//$text1="Die autonomistische Theorie RABELS hat in vielen Ländern Anhänger gefunden. [FN 19]. Jedoch war er sich selbst darüber im klaren, daß die Bildung von international gültigen Begriffen auf rechtsvergleichender Grundlage ein langer Weg mit erheblichen Schwierigkeiten ist. Auf den Einwand, der Richter werde kaum in der Lage sein, in jedem einzelnen Fall rechtsvergleichende Forschung auf breiter Grundlage vorzunehmen, hat RABEL schon 1931 in seinem Aufsatz geantwortet: „Von den Richtern dürfen wir nur empirische Beiträge erwarten, [Vergleiche des eigenen Rechts mit einzelnen fremden Rechten, in der Regel nur mit einem einzigen“. [FN 20]] [FN 19] Viele Jahre später hat RABEL die Ansichten seiner Anhänger in seinem Conflict of Laws I, S. 44ff., kurz zusammengefaßt niedergelegt.";
-//
-////$text1 = "test1 test2 test3 test4 test5 test6 test7 test8 test9 test10";// test1 test2 test3 test4 test5 test6 test7 test8 test9 test10";
-//
-///*$text2="Es gehört zu den wichtigsten Pflichten des Vorstands, sowohl eine - strategische - Mehrjahresplanung als auch eine - operative - Einjahresplanung zu erstellen, die auf der Basis realistischer Prämissen die Budgetziele vorgibt [FN 6]. Aus den Teilplänen für Beschaffung, Fertigung, Absatz, Investitionen, Forschung und Entwicklung, Personal, Finanzen und aus der Ergebnisplanung mit Planbilanzen sowie Plan-Gewinn- und Verlustrechnungen gewinnt der Vorstand die notwendige Zielorientierung für die Leitung der Gesellschaft.";*/
-//
-//$text2="Die autonomistische Theorie von Rabel hat in vielen Ländern Anhänger gefunden[FN 62]. Jedoch war Rabel selbst sich darüber im klaren, daß die Bildung von international gültigen Begriffen auf rechtsvergleichender Grundlage mit erheblichen Schwierigkeiten verbunden ist. Aber auf den Einwand, der Richter werde kaum in der Lage sein, in jedem einzelnen Fall rechts vergleichende Forschungen auf breiter Grundlage vorzunehmen, hat Rabel schon in seinem Aufsatz von 1931 geantwortet: „Von den Richtern dürfen wir nur empirische Beiträge erwarten, Vergleiche des eigenen Rechts mit einzelnen fremden Rechten, in der Regel nur mit einem einzigen.“ [FN 63]
-// [FN 62] 62 Es seien erwähnt Beckett ...";
-//
-////$text2 = "test1 test2 test3 test4 test5a test6 test7 test8 test9";// test1 test2 test3 test4 test5 test6 test7 test8 test9 test10";
-//
-//
-//var_dump($list1);
-//echo BREAKLINE;
-// documents must look like:
-//[
-//  ["c", "Ergebnis", "Aus", 113 mehr...], 
-//  ["Es", "gehrt", "zu", 79 mehr...]
-//]
-
-  private static function markTexts($comparedTexts, $list1, $list2){
+  private static function getHtml($comparedTexts, $list1, $list2){
     /* Colors have css classes "fragmark1" to "fragmark9" */
     $col = 0;
     $nr_col = 9;
@@ -131,6 +112,26 @@ class Unplagged_CompareText{
     $newlist2 = str_replace("____", "<br />", implode(" ", $list2));
 
     return "<div class=\"diff clearfix\"><div class=\"src-wrapper\">" . $newlist1 . "</div>" . "<div class=\"src-wrapper\">" . $newlist2 . "</div></div>";
+  }
+
+  private static function getMarkedTexts($comparedTexts, $list1, $list2){
+    /* Colors have css classes "fragmark1" to "fragmark9" */
+    $col = 0;
+    $nr_col = 9;
+    for($i = 0; $i < sizeof($comparedTexts); $i++){
+      $res = $comparedTexts[$i];
+      $list1[$res[3]] = "<span class=\"fragmark-$col\">" . $list1[$res[3]];
+      $list1[$res[3] + $res[4] - 1] = $list1[$res[3] + $res[4] - 1] . "</span>";
+
+      $list2[$res[1]] = "<span class=\"fragmark-$col\">" . $list2[$res[1]];
+      $list2[$res[1] + $res[4] - 1] = $list2[$res[1] + $res[4] - 1] . "</span>";
+
+      $col = ($col + 1) % $nr_col;
+    }
+    $newlist1 = str_replace("____", "<br />", implode(" ", $list1));
+    $newlist2 = str_replace("____", "<br />", implode(" ", $list2));
+
+    return array("left"=>$newlist1, "right"=>$newlist2);
   }
 
 }

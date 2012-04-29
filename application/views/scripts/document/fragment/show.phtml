@@ -2,6 +2,25 @@
 $this->title = $this->translate("Fragment");
 $this->headTitle($this->title);
 ?>
+<form method="post">
+    Compare with no color
+    <input type="checkbox" name="compare" value="1" <?php if(!empty($_POST['compare']) && $_POST['compare'] == 1){ echo "checked=\"checked\""; } ?>/>
+    <input type="submit" name="formSubmit" value="Compare" />
+</form>
+
+<?php 
+		$compare = !empty($_POST['compare']) ? $_POST['compare'] : null;
+
+		if(empty($compare)) {
+			$left = implode("<br>", $this->plagLines);
+			$right = implode("<br>", $this->sourceLines);
+			$result = Unplagged_CompareText::compare($left,$right,4,"plain");
+
+      $this->plagLines = explode("<br />", $result["left"]);
+      $this->sourceLines = explode("<br />", $result["right"]);
+		} 
+?>
+
 <br/>
 <?php echo $this->translate("Name"); ?>: <?php echo $this->fragment->getTitle(); ?><br />
 <?php echo $this->translate("Type"); ?>: <?php echo $this->fragment->getType()->getName(); ?><br/>
