@@ -144,7 +144,7 @@ class Application_Model_Document_Fragment_Partial extends \Application_Model_Doc
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'notifications', 'lineFrom', 'characterFrom', 'lineTo', 'characterTo', 'text', 'pageFrom', 'pageTo');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'lineFrom', 'characterFrom', 'lineTo', 'characterTo', 'text', 'pageFrom', 'pageTo');
     }
 
     public function __clone()

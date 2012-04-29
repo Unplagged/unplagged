@@ -74,7 +74,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       }
       // remove white spaces of content
       $contentLines = explode("\n", $input->content);
-      foreach($contentLines as $i => $contentLine) {
+      foreach($contentLines as $i=>$contentLine){
         $contentLines[$i] = trim($contentLine);
       }
       $input->content = implode("\n", $contentLines);
@@ -83,7 +83,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $modifyForm->getElement("candidatePageTo")->setValue($page->getPageNumber());
     }
 
-    if($this->_request->isPost() && empty($input->page)) {
+    if($this->_request->isPost() && empty($input->page)){
       $result = $this->handleModifyData($modifyForm);
 
       if($result){
@@ -124,8 +124,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $modifyForm->getElement("candidateLineFrom")->setValue($fragment->getPlag()->getLineFrom());
       $modifyForm->getElement("candidatePageTo")->setValue($fragment->getPlag()->getPageTo()->getPageNumber());
       $modifyForm->getElement("candidateLineTo")->setValue($fragment->getPlag()->getLineTo());
-	  $htmlTagdeleteLeft = strip_tags($fragment->getPlag()->getText());
-      $modifyForm->getElement("candidateText")->setValue($htmlTagdeleteLeft);//$fragment->getPlag()->getText());
+      $modifyForm->getElement("candidateText")->setValue($fragment->getPlag()->getText());
 
       $modifyForm->getElement("sourceDocument")->setValue($fragment->getSource()->getPageFrom()->getDocument()->getId());
       foreach($modifyForm->getElement("sourceBibTex")->getDecorators() as $decorator){
@@ -135,8 +134,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $modifyForm->getElement("sourceLineFrom")->setValue($fragment->getSource()->getLineFrom());
       $modifyForm->getElement("sourcePageTo")->setValue($fragment->getSource()->getPageTo()->getPageNumber());
       $modifyForm->getElement("sourceLineTo")->setValue($fragment->getSource()->getLineTo());
-	  $htmlTagdeleteRight = strip_tags($fragment->getSource()->getText());
-      $modifyForm->getElement("sourceText")->setValue($htmlTagdeleteRight);//$fragment->getSource()->getText());
+      $modifyForm->getElement("sourceText")->setValue($fragment->getSource()->getText());
 
       $modifyForm->getElement("submit")->setLabel("Save fragment");
 
@@ -277,16 +275,20 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     if($documentId == "new"){
       $title = "Document " . time();
       $state = $this->_em->getRepository('Application_Model_State')->findOneByName("parsed");
-      $data["document"] = new Application_Model_Document(array("title"=>$title, "bibtex"=>$bibtex, 'state'=> $state));
+      $data["document"] = new Application_Model_Document(array("title"=>$title, "bibtex"=>$bibtex, 'state'=>$state));
       $this->_em->persist($data["document"]);
 
       $data["pageFrom"] = new Application_Model_Document_Page(array("pageNumber"=>$pageFrom));
-      $data["pageTo"] = new Application_Model_Document_Page(array("pageNumber"=>$pageTo));
       $this->_em->persist($data["pageFrom"]);
-      $this->_em->persist($data["pageTo"]);
-
       $data["document"]->addPage($data["pageFrom"]);
-      $data["document"]->addPage($data["pageTo"]);
+
+      if($pageFrom != $pageTo){
+        $data["pageTo"] = new Application_Model_Document_Page(array("pageNumber"=>$pageTo));
+        $this->_em->persist($data["pageTo"]);
+        $data["document"]->addPage($data["pageTo"]);
+      } else {
+        $data["pageTo"] = $data["pageFrom"];
+      }
     }else{
       $data["document"] = $this->_em->getRepository('Application_Model_Document')->findOneById($documentId);
       $data["pageFrom"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneBy(array("document"=>$documentId, "pageNumber"=>$pageFrom));
