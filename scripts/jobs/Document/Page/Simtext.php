@@ -60,7 +60,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
         foreach($pages as $page){
           $right = $page->getContent();
 
-          $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
+          $simtextResult = Unplagged_CompareText::compare($left, $right, 4, 0); // do simtext with left and right
           // if simtext found something on that page, append it to the report
           if(strpos($simtextResult, "fragmark-") !== false){
             $content .= "<div style='clear:both;padding-top:10px;'><b>Document " . $document->getTitle() . " - Page " . $page->getPageNumber() . "</b><br />";
