@@ -65,36 +65,39 @@ class Unplagged_Detector_PlagAware{
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-    curl_setopt($ch,CURLOPT_POST,count($fields));
-    curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
+    curl_setopt($ch, CURLOPT_POST, count($fields));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
 
     $output = curl_exec($ch);
     $info = curl_getinfo($ch);
     curl_close($ch);
-    
-    if($output == "Success: Text submitted") {
+
+    if($output == "Success: Text submitted"){
       return true;
-    } else {
+    }else{
       return false;
     }
   }
-  
+
   /**
    * Handle the response, when the detection is finished.
    */
-  public function handleResult(&$result) {
+  public function handleResult($result){
     $report = $this->_em->getRepository('Application_Model_Document_Page_DetectionReport')->findOneById($result["report"]);
-    
-    $percentage = !empty($result["result"]) ? $result["result"] : 0;
-    $content = !empty($result["status"]) ? "Status: " . $result["status"] : null;
 
-    $report->setPercentage($percentage);
-    $report->setContent($content);
-    $report->setState("finished");
-    
-    return $report;
+    if($report){
+      $percentage = !empty($result["result"]) ? $result["result"] : 0;
+      $content = !empty($result["status"]) ? "Status: " . $result["status"] : null;
+
+      $report->setPercentage($percentage);
+      $report->setContent($content);
+      $report->setState($this->_em->getRepository('Application_Model_State')->findOneByName("report_generated"));
+
+      return $report;
+    }
+    return false;
   }
-  
+
   public function getServiceName(){
     return $this->serviceName;
   }

@@ -101,6 +101,14 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("document_cre
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
+if(!($em->getRepository('Application_Model_Action')->findOneByName("simtext_report_created"))){
+  unset($data);
+  $data["name"] = "simtext_report_created";
+  $data["title"] = "Simtext report %s was created";
+  $data["description"] = "The chosen files were compared, the report is available now.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
 
 // 2) init user states
 if(!($em->getRepository('Application_Model_State')->findOneByName("user_registered"))){

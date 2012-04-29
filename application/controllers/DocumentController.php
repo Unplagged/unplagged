@@ -150,7 +150,7 @@ class DocumentController extends Unplagged_Controller_Action{
           $data["user"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
           ;
           $data["page"] = $page;
-          $data["state"] = "running";
+          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName("report_running");
           $data["servicename"] = $detector->getServiceName();
 
           $report = new Application_Model_Document_Page_DetectionReport($data);
@@ -193,17 +193,17 @@ class DocumentController extends Unplagged_Controller_Action{
    * Initializes an automated plagiarism detection.
    */
   public function responsePlagiarismAction(){
-    $input = new Zend_Filter_Input(array('detector'=>'Alpha'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('detector'=>'Alnum', 'report'=>'Alnum', 'result'=>'Alnum', 'status'=>'Alnum'), null, $this->_getAllParams());
+  
+    $detector = Unplagged_Detector::factory($input->detector);
+    $report = $detector->handleResult(array('report' => $input->report, 'result' => $input->result, 'status'=> $input->status));
+    if($report) {
+      $this->_em->persist($report);
+      $this->_em->flush();
 
-    $detector = Unplagged_Detector::factory($$input->detector);
-    $report = $detector->handleResult($input);
-
-    $this->_em->persist($report);
-    $this->_em->flush();
-
-    // send registration mail
-    Unplagged_Mailer::sendDetectionReportAvailable($report);
-
+      // send registration mail
+      Unplagged_Mailer::sendDetectionReportAvailable($report);
+    }
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }

@@ -148,7 +148,7 @@ class Application_Model_Document_Page_SimtextReport extends Application_Model_Ba
 
     
   public function getDirectName(){
-    return "detection report";
+    return $this->getTitle();
   }
 
   public function getDirectLink(){

@@ -101,7 +101,8 @@ if(empty($element)){
       'file_list',
       'user_register',
       'user_verify',
-      'user_recover-password'
+      'user_recover-password',
+      'document_response-plagiarism'
     );
   
   foreach($defaultPermissions as $permission){

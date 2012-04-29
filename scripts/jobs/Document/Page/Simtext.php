@@ -41,11 +41,11 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
     if($tasks){
       $task = $tasks[0];
-      
+
       $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
       self::$em->persist($task);
       self::$em->flush();
-      
+
       $report = $task->getRessource();
 
       // generate the simtext result
@@ -59,9 +59,8 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
         foreach($pages as $page){
           $right = $page->getContent();
-          
-          $simtextResult = Unplagged_CompareText::compare($left,$right,4); // do simtext with left and right
-          
+
+          $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
           // if simtext found something on that page, append it to the report
           if(strpos($simtextResult, "fragmark-") !== false){
             $content .= "<div style='clear:both;padding-top:10px;'><b>Document " . $document->getTitle() . " - Page " . $page->getPageNumber() . "</b><br />";
@@ -69,7 +68,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
           }
         }
       }
-      
+
       // update report
       $report->setContent($content);
       $report->setState(self::$em->getRepository('Application_Model_State')->findOneByName("report_generated"));
@@ -81,6 +80,10 @@ class Cron_Document_Page_Simtext extends Cron_Base{
       self::$em->persist($task);
 
       self::$em->flush();
+
+      // notification
+      $user = $task->getInitiator();
+      Unplagged_Helper::notify("simtext_report_created", $report, $user);
     }
   }
 

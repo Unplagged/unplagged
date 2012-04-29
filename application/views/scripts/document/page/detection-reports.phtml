@@ -19,7 +19,7 @@
     <td><?php echo $report->getPercentage(); ?></td>
     <td><?php echo $report->getServicename(); ?></td>
     <td><?php echo $report->getCreated()->format('Y-m-d'); ?></td>
-    <td><?php echo $report->getState(); ?></td>
+    <td><?php echo $report->getState()->getTitle(); ?></td>
   </tr>
   <?php endforeach; ?>
 </table>
