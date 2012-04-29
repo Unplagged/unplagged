@@ -3,9 +3,13 @@
 class Unplagged_CompareText{
 
   private static $delimiter = " ";
-  private static $breakline = "<br/>";
-
+  private static $lineBreaks = array("<br />", "<br>", "\n");
+  
   public static function compare($left, $right, $minlength){
+    
+    $left = str_replace(Unplagged_CompareText::$lineBreaks, "____ ", $left);
+    $right = str_replace(Unplagged_CompareText::$lineBreaks, "____ ", $right);
+
     $listLeft = explode(Unplagged_CompareText::$delimiter, $left);
     $listRight = explode(Unplagged_CompareText::$delimiter, $right);
     $documents = array(array_values($listLeft), array_values($listRight));
@@ -123,8 +127,8 @@ class Unplagged_CompareText{
 
       $col = ($col + 1) % $nr_col;
     }
-    $newlist1 = nl2br(implode(" ", $list1));
-    $newlist2 = nl2br(implode(" ", $list2));
+    $newlist1 = str_replace("____", "<br />", implode(" ", $list1));
+    $newlist2 = str_replace("____", "<br />", implode(" ", $list2));
 
     return "<div class=\"diff clearfix\"><div class=\"src-wrapper\">" . $newlist1 . "</div>" . "<div class=\"src-wrapper\">" . $newlist2 . "</div></div>";
   }

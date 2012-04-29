@@ -6,7 +6,6 @@ $this->headTitle($this->title);
   <thead>
     <tr>
       <th style="width: 250px;"><?php echo $this->translate("Title"); ?></th>
-      <th><?php echo $this->translate("Date"); ?></th>
       <th><?php echo $this->translate("State"); ?></th>
     </tr>
   </thead>
@@ -19,7 +18,6 @@ $this->headTitle($this->title);
           <?php }else{ ?>
             <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $report->getTitle(); ?></td>
           <?php } ?>
-          <td data-label="<?php echo $this->translate("Date"); ?>"><?php //echo $report->getCreated()->format('Y-m-d');   ?></td>
           <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $report->getState()->getTitle(); ?></td>
         </tr>
       <?php endforeach; ?>

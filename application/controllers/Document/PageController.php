@@ -164,8 +164,8 @@ class Document_PageController extends Unplagged_Controller_Versionable{
             $this->_em->flush();
 
             $this->_helper->flashMessenger->addMessage('The de-hyphenation was processed successfully.');
-            $params = array('id'=>$page->getDocument()->getId());
-            $this->_helper->redirector('list', 'document_page', '', $params);
+            $params = array('id'=>$page->getId());
+            $this->_helper->redirector('show', 'document_page', '', $params);
           }
         }
         $this->view->deHyphenForm = $deHyphenForm;
@@ -199,8 +199,8 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $this->_em->flush();
 
         $this->_helper->flashMessenger->addMessage('The document page was updated successfully.');
-        $params = array('id'=>$page->getDocument()->getId());
-        $this->_helper->redirector('list', 'document_page', '', $params);
+        $params = array('id'=>$page->getId());
+        $this->_helper->redirector('show', 'document_page', '', $params);
       }
     }
 
