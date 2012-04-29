@@ -45,7 +45,7 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
    * The lines in the document.
    * 
    * @ManyToOne(targetEntity="Application_Model_Document_Fragment_Type")
-   * @JoinColumn(name="fragment_type_id", referencedColumnName="id")
+   * @JoinColumn(name="fragment_type_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $type;
 

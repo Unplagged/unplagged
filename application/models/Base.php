@@ -78,6 +78,13 @@ abstract class Application_Model_Base{
    */
   private $comments;
   
+   /**
+   * The notifications related to this object.
+   * 
+   * @OneToMany(targetEntity="Application_Model_Notification", mappedBy="source")
+   */
+  private $notifications;
+  
   public function __construct(){
     $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
   }

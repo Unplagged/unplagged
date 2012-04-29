@@ -45,7 +45,7 @@ class Application_Model_Notification extends Application_Model_Base{
   /**
    * The element this notification is related to.
    *
-   * @ManyToOne(targetEntity="Application_Model_Base")
+   * @ManyToOne(targetEntity="Application_Model_Base", inversedBy="notifications")
    * @JoinColumn(name="source_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $source;
