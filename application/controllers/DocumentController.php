@@ -202,7 +202,7 @@ class DocumentController extends Unplagged_Controller_Action{
       $this->_em->flush();
 
       // create notification
-      Unplagged_Helper::notify("simtext_report_created", $report, $report->getUser());
+      Unplagged_Helper::notify("detection_report_created", $report, $report->getUser());
     }
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);

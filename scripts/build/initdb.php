@@ -109,7 +109,14 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("simtext_repo
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
-
+if(!($em->getRepository('Application_Model_Action')->findOneByName("detection_report_created"))){
+  unset($data);
+  $data["name"] = "detection_report_created";
+  $data["title"] = "Detection report %s was created";
+  $data["description"] = "The report for the automatic plagiarism detection on the document is available now.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
 // 2) init user states
 if(!($em->getRepository('Application_Model_State')->findOneByName("user_registered"))){
   unset($data);
