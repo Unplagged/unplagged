@@ -124,9 +124,6 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
   }
 
   public function getTitle(){
-    if(!$this->getPlag()) {
-      return "";
-    }
     return "ABC" . $this->getPlag()->getPageFrom()->getPageNumber();
   }
 
