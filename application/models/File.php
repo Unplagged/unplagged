@@ -30,6 +30,8 @@
  */
 class Application_Model_File extends Application_Model_Base{
 
+  const ICON_CLASS = 'file-icon';
+  
   /**
    * The date when the file was modified.
    * @var string The latest modification date.
@@ -193,10 +195,6 @@ class Application_Model_File extends Application_Model_Base{
 
   public function getDirectLink(){
     return "/file/show/id/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return "file-icon";
   }
 
   public function toArray(){

@@ -30,6 +30,8 @@
  */
 class Application_Model_Tag extends Application_Model_Base{
 
+  const ICON_CLASS = 'tag-icon';
+
   /**
    * The title.
    * @var string The title.
@@ -42,7 +44,8 @@ class Application_Model_Tag extends Application_Model_Base{
   /**
    * Constructor.
    */
-  public function __construct(){ 
+  public function __construct(){
+    
   }
 
   /**
@@ -75,10 +78,6 @@ class Application_Model_Tag extends Application_Model_Base{
 
   public function getDirectLink(){
     return "/tag/show/id/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return "tag-icon";
   }
 
 }

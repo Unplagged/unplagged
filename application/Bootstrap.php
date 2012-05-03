@@ -164,9 +164,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * @return Zend_Registry
    */
   protected function _initTranslate(){
+    $registry = Zend_Registry::getInstance();
     $locale = new Zend_Locale('de_DE');
 
-    $registry = Zend_Registry::getInstance();
     $registry->set('Zend_Locale', $locale);
 
     $translate = new Zend_Translate('csv', BASE_PATH . '/data/languages/de.csv', 'de');

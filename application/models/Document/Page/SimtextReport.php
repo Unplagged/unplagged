@@ -28,6 +28,8 @@
  */
 class Application_Model_Document_Page_SimtextReport extends Application_Model_Base{
 
+  const ICON_CLASS = 'report-icon';
+  
   /**
    * The current state of the report.
    * 
@@ -153,10 +155,6 @@ class Application_Model_Document_Page_SimtextReport extends Application_Model_Ba
 
   public function getDirectLink(){
     return "/document_page/simtext-reports/id/" . $this->page->getId() . "/show/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return "report-icon";
   }
 
 }

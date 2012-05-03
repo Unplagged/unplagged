@@ -27,6 +27,8 @@
  */
 class Application_Model_Document_Page extends Application_Model_Versionable{
 
+  const ICON_CLASS = 'page-icon';
+  
   /**
    * The page number in the origional document.
    * @var integer The page number.
@@ -125,10 +127,6 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
 
   public function getDirectLink(){
     return "/document_page/show/id/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return "page-icon";
   }
 
   /**

@@ -52,6 +52,8 @@
  */
 abstract class Application_Model_Base{
 
+  const ICON_CLASS = null;
+  
   /**
    * @Id
    * @GeneratedValue
@@ -67,7 +69,7 @@ abstract class Application_Model_Base{
    * @Column(type="datetime")
    */
   protected $created;
-  
+
   /**
    * The base element comments.
    * 
@@ -77,26 +79,31 @@ abstract class Application_Model_Base{
    * @JoinColumn(name="comment_id", referencedColumnName="id")
    */
   private $comments;
-  
-   /**
+
+  /**
    * The notifications related to this object.
    * 
    * @OneToMany(targetEntity="Application_Model_Notification", mappedBy="source")
+   * 
+   * @todo private without getter and setter?
    */
   private $notifications;
-  
+
   public function __construct(){
     $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
   }
-  
-  public function getId() {
+
+  public function getId(){
     return $this->id;
   }
-  
+
+  /**
+   * @todo do we really need setId? I thought this would always be handled by doctrine, which uses reflection
+   */
   public function setId($id){
     $this->id = $id;
   }
-    
+
   /**
    * Sets the creation time to the current time, if it is null.
    * This will normally be auto called the first time the object is persisted by doctrine.
@@ -108,26 +115,34 @@ abstract class Application_Model_Base{
       $this->created = new DateTime("now");
     }
   }
-  
+
   /**
    * Returns a direct link to an element by id. 
    */
   abstract public function getDirectLink();
-  
+
   /**
    * Returns the title or name of the specific object of the element. 
    */
   abstract public function getDirectName();
-  
+
   /**
    * Returns a class for a direct link icon of this element. 
    */
-  abstract public function getIconClass();
-  
+  public function getIconClass(){
+    $childClass = get_called_class();
+    
+    if($childClass::ICON_CLASS !== null){
+      return $childClass::ICON_CLASS; 
+    }
+    
+    throw new UnexpectedValueException('Please make sure to initalize the ICON_CLASS constant in ' . $childClass . '.');
+  }
+
   public function getComments(){
     return $this->comments;
   }
-  
+
   public function getCreated(){
     return $this->created;
   }

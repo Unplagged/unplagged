@@ -27,6 +27,8 @@
  */
 class Application_Model_User extends Application_Model_Base{
 
+  const ICON_CLASS = 'user-icon';
+  
   /**
    * @var string The date when this user got last modified.
    * 
@@ -47,13 +49,6 @@ class Application_Model_User extends Application_Model_Base{
    * @Column(type="string", length=255)
    */
   private $encryptedPassword;
-
-  /**
-   * @var Application_Model_User_Role 
-   * 
-   * @OneToOne(targetEntity="Application_Model_User_Role", cascade={"persist"})
-   */
-  private $role;
 
   /**
    * @var string The email the user set up to login to the private area.
@@ -92,6 +87,13 @@ class Application_Model_User extends Application_Model_Base{
   private $state;
 
   /**
+   * @var Application_Model_User_Role 
+   * 
+   * @OneToOne(targetEntity="Application_Model_User_Role", cascade={"persist", "remove"})
+   */
+  private $role;
+
+  /**
    * @var Application_Model_File
    * 
    * @ManyToOne(targetEntity="Application_Model_File")
@@ -115,6 +117,13 @@ class Application_Model_User extends Application_Model_Base{
    *      )
    */
   private $files;
+  
+  /**
+   * @var The personal settings of the user, e. g. the prefered language.
+   * 
+   * OneToMany(targetEntity="Application_Model_Setting") 
+   */
+  private $settings;
 
   public function __construct($data = array()){
     if(isset($data['username'])){
@@ -146,14 +155,18 @@ class Application_Model_User extends Application_Model_Base{
     }
 
     $this->files = new \Doctrine\Common\Collections\ArrayCollection();
-    
-    if(isset($data['role']) && $data['role'] instanceof Application_Model_User_Role ){
-      $this->role = $data['role'];  
-    } else {
+
+    if(isset($data['role']) && $data['role'] instanceof Application_Model_User_Role){
+      $this->role = $data['role'];
+    }else{
       $this->role = new Application_Model_User_Role();
     }
   }
-
+  
+  public function getUpdated(){
+    return $this->updated;
+  }
+  
   /**
    * Sets the time of the last update to the current time.
    * 
@@ -163,36 +176,44 @@ class Application_Model_User extends Application_Model_Base{
     $this->updated = new DateTime('now');
   }
 
-  public function getId(){
-    return $this->id;
-  }
-
-  public function getUpdated(){
-    return $this->updated;
-  }
-
   public function getUsername(){
     return $this->username;
+  }
+  
+  public function getFirstname(){
+    return $this->firstname;
+  }
+
+  public function setFirstname($firstname){
+    $this->firstname = $firstname;
+  }
+  
+  public function getLastname(){
+    return $this->lastname;
+  }
+
+  public function setLastname($lastname){
+    $this->lastname = $lastname;
   }
 
   public function getPassword(){
     return $this->encryptedPassword;
   }
 
+  public function setPassword($password){
+    $this->encryptedPassword = $password;
+  }
+
   public function getEmail(){
     return $this->email;
   }
 
-  public function getFirstname(){
-    return $this->firstname;
-  }
-
-  public function getLastname(){
-    return $this->lastname;
-  }
-
   public function getVerificationHash(){
     return $this->verificationHash;
+  }
+  
+  public function setVerificationHash($verificationHash){
+    $this->verificationHash = $verificationHash;
   }
 
   public function getState(){
@@ -203,14 +224,6 @@ class Application_Model_User extends Application_Model_Base{
     $this->state = $state;
   }
 
-  public function setFirstname($firstname){
-    $this->firstname = $firstname;
-  }
-
-  public function setLastname($lastname){
-    $this->lastname = $lastname;
-  }
-
   public function getCurrentCase(){
     return $this->currentCase;
   }
@@ -219,13 +232,6 @@ class Application_Model_User extends Application_Model_Base{
     $this->currentCase = $currentCase;
   }
 
-  public function unsetCurrentCase(){
-    $this->currentCase = null;
-  }
-
-  public function setPassword($password){
-    $this->encryptedPassword = $password;
-  }
 
   public function addFile(Application_Model_File $file){
     return $this->files->add($file);
@@ -251,10 +257,10 @@ class Application_Model_User extends Application_Model_Base{
     }
   }
 
-  public function setVerificationHash($verificationHash){
-    $this->verificationHash = $verificationHash;
-  }
-
+  /**
+   *
+   * @todo Would probably be better to handle the default somewhere else to keep this class clean
+   */
   public function getAvatar(){
     if(empty($this->avatar)){
       return '/images/default-avatar.png';
@@ -268,11 +274,8 @@ class Application_Model_User extends Application_Model_Base{
   }
 
   public function getDirectLink(){
+    
     return '/user/show/id/' . $this->id;
-  }
-
-  public function getIconClass(){
-    return 'user-icon';
   }
 
   public function toArray(){
@@ -284,9 +287,9 @@ class Application_Model_User extends Application_Model_Base{
 
     return $result;
   }
-  
+
   public function getRole(){
-    return $this->role;  
+    return $this->role;
   }
 
 }

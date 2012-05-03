@@ -26,6 +26,8 @@
  */
 class Application_Model_Versionable_Version extends Application_Model_Base{
 
+  const ICON_CLASS = '';
+  
   /**
    * @Column(type="integer")
    */
@@ -53,10 +55,6 @@ class Application_Model_Versionable_Version extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    
-  }
-
-  public function getIconClass(){
     
   }
 
