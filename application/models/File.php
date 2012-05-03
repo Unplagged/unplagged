@@ -1,4 +1,5 @@
 <?php
+namespace model;
 
 /**
  * Unplagged - The plagiarism detection cockpit.
@@ -23,7 +24,6 @@
  * It defines also the structure of the database table for the ORM.
  *
  * @author Benjamin Oertel <mail@benjaminoertel.com>
- * @version 1.0
  * 
  * @Entity 
  * @Table(name="files")
