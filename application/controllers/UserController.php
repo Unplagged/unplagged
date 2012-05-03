@@ -218,7 +218,7 @@ class UserController extends Unplagged_Controller_Action{
             $this->_helper->flashMessenger->addMessage('There was already a password recovery request for this account.');
             $this->_helper->redirector('recover-password', 'user');
           }else{
-            Unplagged_Mailer::sendPasswordRecoveryMail($user);
+            //Unplagged_Mailer::sendPasswordRecoveryMail($user);
             Unplagged_Helper::notify("user_requested_password", $user, $user);
 
             $this->_helper->flashMessenger->addMessage('An E-Mail has been sent to your address, follow the instructions in this mail.');

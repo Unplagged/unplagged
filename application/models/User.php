@@ -51,7 +51,7 @@ class Application_Model_User extends Application_Model_Base{
    * 
    * @Column(type="string", length=255)
    */
-  private $password;
+  private $encryptedPassword;
 
   /**
    *
@@ -128,7 +128,7 @@ class Application_Model_User extends Application_Model_Base{
     }
 
     if(isset($data["password"])){
-      $this->password = $data["password"];
+      $this->encryptedPassword = $data["password"];
     }
 
     if(isset($data["email"])){
@@ -182,7 +182,7 @@ class Application_Model_User extends Application_Model_Base{
   }
 
   public function getPassword(){
-    return $this->password;
+    return $this->encryptedPassword;
   }
 
   public function getEmail(){
@@ -230,7 +230,7 @@ class Application_Model_User extends Application_Model_Base{
   }
 
   public function setPassword($password){
-    $this->password = $password;
+    $this->encryptedPassword = $password;
   }
 
   public function addFile(Application_Model_File $file){
