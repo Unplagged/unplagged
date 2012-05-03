@@ -1983,32 +1983,45 @@ ins {
   
   .user-box{
     position: static;
+    padding-left: 0;
+    width: 100%;
+    float: left;
   }
   
   .case-settings-box {
-    float: none;
+    float: right;
     margin-bottom: 5px;
+    width: 100%;
+    margin-top: -26px;
+  }
+  
+  .case-settings-box > a {
+    display: none;
   }
   
   .case-settings-box form {
-    width: 100%;
+    min-width: 150px;
+    width: 50%;
+    float: right;
   }
   
   .case-settings-box .chzn-container {
     width: 100% !important;
   }
   
-  .user-box {
-    width: 160px;
+  .user-box .dropdown-button {
+    width: 50%;
+    min-width: 150px;
+    float: right;
   }
   
-  .user-box .dropdown-button {
-    width: 100%;
+  .user-box .avatar { 
+    position: static;
+    float: left;
+    margin-right: 10px;
   }
   
   header[role=toolbar] .content {
-    width: 220px;
-    max-width: 220px;
   }
   
   header[role=banner] h1 {
