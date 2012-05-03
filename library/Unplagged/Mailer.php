@@ -61,7 +61,7 @@ class Unplagged_Mailer{
   
   /*
    * is integrated into notification system now
-   * 
+   */ 
   public static function sendPasswordRecoveryMail(Application_Model_User $user){
     $config = Zend_Registry::get('config');
 
@@ -83,7 +83,7 @@ class Unplagged_Mailer{
     $mail->send();
 
     return true;
-  }*/
+  }
 
   /**
    * Sends a detection report finished mail.
