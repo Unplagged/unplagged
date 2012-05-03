@@ -130,10 +130,6 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
     //return "/document-page-position/show/id/" . $this->id;
   }
 
-  public function getIconClass(){
-    //return "document-icon";
-  }
-
   public function getPageFrom(){
     return $this->pageFrom;
   }

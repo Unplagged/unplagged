@@ -24,8 +24,7 @@
  * 
  * It defines also the structure of the database table for the ORM.
  *
- * @author Benjamin Oertel <benjamin.oertel@me.com>
- * @version 1.0
+ * @author Unplagged
  * 
  * @Entity 
  * @HasLifeCycleCallbacks
@@ -34,45 +33,38 @@
  * @DiscriminatorColumn(name="type", type="string") 
  * @DiscriminatorMap({ 
  *  "case" = "Application_Model_Case"
- * ,"file" = "Application_Model_File"
- * ,"user" = "Application_Model_User"
- * ,"document" = "Application_Model_Document"
- * ,"document_page" = "Application_Model_Document_Page"
- * ,"detection_report" = "Application_Model_Document_Page_DetectionReport"
  * ,"comment" = "Application_Model_Comment"
- * ,"tag" = "Application_Model_Tag"
- * ,"notification" = "Application_Model_Notification"
- * ,"document_fragment" = "Application_Model_Document_Fragment"
- * ,"versionable_version" = "Application_Model_Versionable_Version"
- * ,"document_fragment_partial" = "Application_Model_Document_Fragment_Partial"
- * ,"simtext_report" = "Application_Model_Document_Page_SimtextReport"
  * ,"cron_task" = "Application_Model_Task"
+ * ,"detection_report" = "Application_Model_Document_Page_DetectionReport"
+ * ,"document" = "Application_Model_Document"
+ * ,"document_fragment" = "Application_Model_Document_Fragment"
+ * ,"document_fragment_partial" = "Application_Model_Document_Fragment_Partial"
+ * ,"document_page" = "Application_Model_Document_Page"
+ * ,"file" = "Application_Model_File"
+ * ,"notification" = "Application_Model_Notification"
+ * ,"simtext_report" = "Application_Model_Document_Page_SimtextReport"
+ * ,"tag" = "Application_Model_Tag"
+ * ,"user" = "Application_Model_User"
+ * ,"versionable_version" = "Application_Model_Versionable_Version"
  * })
- * 
  */
 abstract class Application_Model_Base{
 
-  const ICON_CLASS = null;
+  const ICON_CLASS = '';
   
   /**
-   * @Id
-   * @GeneratedValue
-   * @Column(type="integer") 
+   * @Id @GeneratedValue @Column(type="integer") 
    */
   protected $id;
 
   /**
-   * The date and time when the object was created initially.
-   * 
-   * @var string The inital persistence date and time.
+   * @var string The date and time when the object was created initially.
    * 
    * @Column(type="datetime")
    */
   protected $created;
 
-  /**
-   * The base element comments.
-   * 
+  /** 
    * @var string The base element comments.
    * 
    * @OneToMany(targetEntity="Application_Model_Comment", mappedBy="source")
@@ -81,7 +73,7 @@ abstract class Application_Model_Base{
   private $comments;
 
   /**
-   * The notifications related to this object.
+   * @var ArrayCollection The notifications related to this object.
    * 
    * @OneToMany(targetEntity="Application_Model_Notification", mappedBy="source")
    * 
@@ -127,7 +119,14 @@ abstract class Application_Model_Base{
   abstract public function getDirectName();
 
   /**
-   * Returns a class for a direct link icon of this element. 
+   * Returns a class name for a direct link icon of this element. When no icon is used the return will be an
+   * empty string.
+   * 
+   * An extending class is supposed to set the ICON_CLASS constant like this:
+   * 
+   * <code>
+   * const ICON_CLASS = 'my-icon-class';
+   * </code>
    */
   public function getIconClass(){
     $childClass = get_called_class();
@@ -135,8 +134,6 @@ abstract class Application_Model_Base{
     if($childClass::ICON_CLASS !== null){
       return $childClass::ICON_CLASS; 
     }
-    
-    throw new UnexpectedValueException('Please make sure to initalize the ICON_CLASS constant in ' . $childClass . '.');
   }
 
   public function getComments(){

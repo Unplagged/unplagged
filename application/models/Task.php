@@ -27,8 +27,6 @@
  */
 class Application_Model_Task extends Application_Model_Base{
 
-  const ICON_CLASS = '';
-
   /**
    * @ManyToOne(targetEntity="Application_Model_User")
    * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
