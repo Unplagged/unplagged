@@ -31,5 +31,4 @@ class Unplagged_Detector{
   }
 
 }
-
 ?>

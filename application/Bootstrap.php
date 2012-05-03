@@ -111,11 +111,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       $registry = Zend_Registry::getInstance();
       $guestRole = $registry->entitymanager->getRepository('Application_Model_User_GuestRole')->findOneByRoleId('guest');
       
-      //temporary until set in the db
-      $guestRole->addPermission('case_view_public');
-      $guestRole->addPermission('index');
-      $guestRole->addPermission('case');
-      
       //store the user in the session
       $defaultNamespace->user = new Application_Model_User(array('role'=>$guestRole));
     }

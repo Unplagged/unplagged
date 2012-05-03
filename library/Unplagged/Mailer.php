@@ -11,7 +11,7 @@ class Unplagged_Mailer{
    * Sends a registration mail to a specific user to verify the users email address.
    * 
    * @Application_Model_User $user The user the mail sent to.
-   * 3
+   * 
    * @return Whether the mail was sent or not.
    */
   public static function sendRegistrationMail(Application_Model_User $user){

@@ -109,7 +109,7 @@ $(document).ready(function(){
   
   //make dropdown out of the action icons
   function wrapActions(){
-    var dropdownButton = $('<div class="dropdown-button" />');
+    var dropdownButton = $('<div class="dropdown-button left-dropout" />');
     $('.action-list').addClass('').wrap(dropdownButton).parent().prepend('<button class="button">Select action<span class="arrow-down"></span></button>');
     $('.action-list a').each(function(){
       var currentAction = $(this);
