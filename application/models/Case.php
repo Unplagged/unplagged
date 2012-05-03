@@ -1,5 +1,4 @@
 <?php
-namespace model;
 
 /**
  * Unplagged - The plagiarism detection cockpit.
