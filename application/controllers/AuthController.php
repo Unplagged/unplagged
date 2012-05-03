@@ -74,7 +74,7 @@ class AuthController extends Unplagged_Controller_Action{
 
     if($loginForm->isValid($formData)){
       $username = $this->getRequest()->getParam('username');
-      $password = Unplagged_Helper::hashString($this->getRequest()->getParam('password'));
+      $password = $this->getRequest()->getParam('password');
 
       $adapter = new Unplagged_Auth_Adapter_Doctrine($this->_em, 'Application_Model_User', 'username', 'password', $username, $password);
       $result = $this->auth->authenticate($adapter);

@@ -37,7 +37,7 @@ class UserController extends Unplagged_Controller_Action{
   }
 
   /**
-   * Displays a form for registering a user.
+   * Handles the registration data or displays a form for registering a user.
    */
   public function registerAction(){
     // create the form
@@ -45,36 +45,40 @@ class UserController extends Unplagged_Controller_Action{
 
     // form has been submitted through post request
     if($this->_request->isPost()){
-      $formData = $this->_request->getPost();
-
-      // if the form doesn't validate, pass to view and return
-      if($registerForm->isValid($formData)){
-        // create new user object
-        $data = array();
-        $data["username"] = $this->getRequest()->getParam('username');
-        $data["password"] = Unplagged_Helper::hashString($this->getRequest()->getParam('password'));
-        $data["email"] = $this->getRequest()->getParam('email');
-        $data["verificationHash"] = Unplagged_Helper::generateRandomHash();
-        $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
-        $user = new Application_Model_User($data);
-
-        // write back to persistence manager and flush it
-        $this->_em->persist($user);
-        $this->_em->flush();
-
-        // log registration
-        Unplagged_Helper::notify("user_registered", $user, $user);
-
-        // send registration mail
-        Unplagged_Mailer::sendRegistrationMail($user);
-
-        $this->_helper->flashMessenger->addMessage('In order to finish your registration, please check your E-Mails.');
-        $this->_helper->redirector('index', 'index');
-      }
+      $this->handleRegistration($registerForm);
     }
-
+    
     // send form to view
     $this->view->registerForm = $registerForm;
+  }
+
+  private function handleRegistration(Application_Form_User_Register $registerForm){
+    $formData = $this->_request->getPost();
+
+    // if the form doesn't validate, pass to view and return
+    if($registerForm->isValid($formData)){
+      // create new user object
+      $data = array();
+      $data["username"] = $this->getRequest()->getParam('username');
+      $data["password"] = Unplagged_Helper::hashString($this->getRequest()->getParam('password'));
+      $data["email"] = $this->getRequest()->getParam('email');
+      $data["verificationHash"] = Unplagged_Helper::generateRandomHash();
+      $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
+      $user = new Application_Model_User($data);
+
+      // write back to persistence manager and flush it
+      $this->_em->persist($user);
+      $this->_em->flush();
+
+      // log registration
+      Unplagged_Helper::notify("user_registered", $user, $user);
+
+      // send registration mail
+      Unplagged_Mailer::sendRegistrationMail($user);
+
+      $this->_helper->flashMessenger->addMessage('In order to finish your registration, please check your E-Mails.');
+      $this->_helper->redirector('index', 'index');
+    }
   }
 
   public function filesAction(){
@@ -88,7 +92,7 @@ class UserController extends Unplagged_Controller_Action{
     $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($userFiles->toArray()));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
-    
+
     // generate the action dropdown for each file
     // @todo: use centralised method for all three file lists
     foreach($paginator as $file):
@@ -120,13 +124,13 @@ class UserController extends Unplagged_Controller_Action{
       $action['icon'] = 'images/icons/delete.png';
       $file->actions[] = $action;
 
-        $action['link'] = '/case/add-file/id/' . $file->getId();
-        $action['title'] = 'Add to current case';
-        $action['icon'] = 'images/icons/package_add.png';
-        $file->actions[] = $action;
-      
+      $action['link'] = '/case/add-file/id/' . $file->getId();
+      $action['title'] = 'Add to current case';
+      $action['icon'] = 'images/icons/package_add.png';
+      $file->actions[] = $action;
+
     endforeach;
-    
+
     $this->view->paginator = $paginator;
 
     //change the view to the one from the file controller
@@ -275,9 +279,9 @@ class UserController extends Unplagged_Controller_Action{
           // write back to persistence manage and flush it
           $this->_em->persist($user);
           $this->_em->flush();
-          
+
           Unplagged_Helper::notify("user_updated_profile", $user, $user);
-          
+
           $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
           $this->_helper->redirector('index', 'index');
         }
@@ -286,7 +290,7 @@ class UserController extends Unplagged_Controller_Action{
       // send form to view
       $this->view->profileForm = $profileForm;
     }
-        Zend_Layout::getMvcInstance()->sidebar = null;
+    Zend_Layout::getMvcInstance()->sidebar = null;
     Zend_Layout::getMvcInstance()->cases = null;
   }
 

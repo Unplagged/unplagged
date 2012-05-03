@@ -78,15 +78,18 @@ class Unplagged_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface{
   public function authenticate(){
     $authEntity = $this->entityManager->getRepository($this->authEntityName)
         ->findOneBy(array(
-      $this->authIdentityField=>$this->identity,
-      $this->authCredentialField=>$this->credential
+      $this->authIdentityField=>$this->identity
         ));
 
     if($authEntity !== null){
-      return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $authEntity);
-    }else{
-      return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null);
+      $passwordHash = $authEntity->getPassword();
+
+      if($authEntity !== null && Unplagged_Helper::checkStringAndHash($this->credential, $passwordHash)){
+        return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $authEntity);
+      }
     }
+
+    return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null);
   }
 
 }

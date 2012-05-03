@@ -49,7 +49,7 @@ class Application_Model_User extends Application_Model_Base{
    * The password the user set up to login to the private area.
    * @var string The password.
    * 
-   * @Column(type="string", length=32)
+   * @Column(type="string", length=255)
    */
   private $password;
 
@@ -112,11 +112,6 @@ class Application_Model_User extends Application_Model_Base{
    * @JoinColumn(name="current_case_id", referencedColumnName="id")
    */
   private $currentCase;
-
-  /**
-   * @Column(type="string", length=255)
-   */
-  private $salt = '';
 
   /**
    * @ManyToMany(targetEntity="Application_Model_File") 

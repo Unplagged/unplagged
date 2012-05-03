@@ -237,7 +237,7 @@ p {
   height: 2px;
   display: block;
   bottom: -2px;
-  z-index: 700; /* must be higher than the button, but lower than case selection box(chosen plugin styling at 999) */
+  z-index: 1000; 
 }
 
 .dropdown-button li a{
@@ -1990,7 +1990,6 @@ ins {
   
   .case-settings-box {
     float: right;
-    margin-bottom: 5px;
     width: 100%;
     margin-top: -26px;
   }
@@ -2000,8 +1999,8 @@ ins {
   }
   
   .case-settings-box form {
-    min-width: 150px;
-    width: 50%;
+    min-width: 160px;
+    width: 60%;
     float: right;
   }
   
@@ -2010,15 +2009,14 @@ ins {
   }
   
   .user-box .dropdown-button {
-    width: 50%;
-    min-width: 150px;
+    width: 60%;
+    min-width: 160px;
     float: right;
   }
   
   .user-box .avatar { 
     position: static;
     float: left;
-    margin-right: 10px;
   }
   
   header[role=toolbar] .content {
