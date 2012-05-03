@@ -61,6 +61,14 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("case_created
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
+if(!($em->getRepository('Application_Model_Action')->findOneByName("case_updated"))){
+  unset($data);
+  $data["name"] = "case_updated";
+  $data["title"] = "Case %s was updated";
+  $data["description"] = "The case was updated.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
 if(!($em->getRepository('Application_Model_Action')->findOneByName("file_uploaded"))){
   unset($data);
   $data["name"] = "file_uploaded";
@@ -85,7 +93,7 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("fragment_upd
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
-if(!($em->getRepository('Application_Model_Action')->findOneByName("document_parsed"))){
+if(!($em->getRepository('Application_Model_Action')->findOneByName("document_created"))){
   unset($data);
   $data["name"] = "document_created";
   $data["title"] = "Document %s was created";
@@ -93,7 +101,22 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("document_par
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
-
+if(!($em->getRepository('Application_Model_Action')->findOneByName("simtext_report_created"))){
+  unset($data);
+  $data["name"] = "simtext_report_created";
+  $data["title"] = "Simtext report %s was created";
+  $data["description"] = "The chosen files were compared, the report is available now.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
+if(!($em->getRepository('Application_Model_Action')->findOneByName("detection_report_created"))){
+  unset($data);
+  $data["name"] = "detection_report_created";
+  $data["title"] = "Detection report %s was created";
+  $data["description"] = "The report for the automatic plagiarism detection on the document is available now.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
 // 2) init user states
 if(!($em->getRepository('Application_Model_State')->findOneByName("user_registered"))){
   unset($data);
@@ -159,6 +182,14 @@ if(!($em->getRepository('Application_Model_State')->findOneByName("report_error"
   $data["name"] = "report_error";
   $data["title"] = "error";
   $data["description"] = "There was an error, the report could not be generated.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+if(!($em->getRepository('Application_Model_State')->findOneByName("parsed"))){
+  unset($data);
+  $data["name"] = "parsed";
+  $data["title"] = "parsed";
+  $data["description"] = "The document was parsed.";
   $state = new Application_Model_State($data);
   $em->persist($state);
 }

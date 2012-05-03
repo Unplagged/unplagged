@@ -133,7 +133,7 @@ class Application_Model_Document extends Application_Model_Base{
   }
 
   public function getDirectLink(){
-    return "/document/show/id/" . $this->id;
+    return "/document_page/list/id/" . $this->id;
   }
 
   public function getIconClass(){

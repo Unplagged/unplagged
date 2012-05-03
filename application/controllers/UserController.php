@@ -275,7 +275,9 @@ class UserController extends Unplagged_Controller_Action{
           // write back to persistence manage and flush it
           $this->_em->persist($user);
           $this->_em->flush();
-
+          
+          Unplagged_Helper::notify("user_updated_profile", $user, $user);
+          
           $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
           $this->_helper->redirector('index', 'index');
         }

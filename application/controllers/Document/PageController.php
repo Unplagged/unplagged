@@ -21,7 +21,7 @@
 /**
  * This class handles actions related to pages within a document
  */
-class Document_PageController extends Unplagged_Controller_Action{
+class Document_PageController extends Unplagged_Controller_Versionable{
 
   public function init(){
     parent::init();
@@ -81,6 +81,31 @@ class Document_PageController extends Unplagged_Controller_Action{
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
         $this->view->page = $page;
+        
+        // next page
+        $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber > :pageNumber ORDER BY p.pageNumber ASC');
+        $query->setParameter("document", $page->getDocument()->getId());
+        $query->setParameter("pageNumber", $page->getPageNumber());
+        $query->setMaxResults(1);
+        
+        $nextPage = $query->getResult();
+        if($nextPage) {
+          $nextPage = $nextPage[0];
+          $this->view->nextPageLink = '/document_page/show/id/' . $nextPage->getId();
+        }
+        
+        // previous page
+        $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber < :pageNumber ORDER BY p.pageNumber DESC');
+        $query->setParameter("document", $page->getDocument()->getId());
+        $query->setParameter("pageNumber", $page->getPageNumber());
+        $query->setMaxResults(1);
+        
+        $prevPage = $query->getResult();
+        if($prevPage) {
+          $prevPage = $prevPage[0];
+          $this->view->prevPageLink = '/document_page/show/id/' . $prevPage->getId();
+        }
+        
       }
     }
   }
@@ -139,8 +164,8 @@ class Document_PageController extends Unplagged_Controller_Action{
             $this->_em->flush();
 
             $this->_helper->flashMessenger->addMessage('The de-hyphenation was processed successfully.');
-            $params = array('id'=>$page->getDocument()->getId());
-            $this->_helper->redirector('list', 'document_page', '', $params);
+            $params = array('id'=>$page->getId());
+            $this->_helper->redirector('show', 'document_page', '', $params);
           }
         }
         $this->view->deHyphenForm = $deHyphenForm;
@@ -174,8 +199,8 @@ class Document_PageController extends Unplagged_Controller_Action{
         $this->_em->flush();
 
         $this->_helper->flashMessenger->addMessage('The document page was updated successfully.');
-        $params = array('id'=>$page->getDocument()->getId());
-        $this->_helper->redirector('list', 'document_page', '', $params);
+        $params = array('id'=>$page->getId());
+        $this->_helper->redirector('show', 'document_page', '', $params);
       }
     }
 
@@ -315,10 +340,20 @@ class Document_PageController extends Unplagged_Controller_Action{
         Unplagged_Helper::notify("case_created", $case, $user);
        */
 
-      return true;
+      return $task;
     }
 
     return false;
+  }
+  
+    /**
+   * Compares two version of a fragment. 
+   */
+  public function changelogAction(){
+    parent::changelogAction();
+    
+    $this->setTitle("Changelog of page");
+    Zend_Layout::getMvcInstance()->sidebar = 'page-tools';
   }
 
 }

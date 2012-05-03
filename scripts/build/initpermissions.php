@@ -99,7 +99,10 @@ if(empty($element)){
       'error_error',
       'case_list',
       'file_list',
-      'user_register'
+      'user_register',
+      'user_verify',
+      'user_recover-password',
+      'document_response-plagiarism'
     );
   
   foreach($defaultPermissions as $permission){

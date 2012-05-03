@@ -267,6 +267,8 @@ class FileController extends Unplagged_Controller_Action{
           if(empty($document)){
             $this->_helper->flashMessenger->addMessage('The file could not be parsed.');
           }else{
+            $document->setState($this->_em->getRepository('Application_Model_State')->findOneByName('parsed'));
+            
             $this->_em->persist($document);
             $this->_em->flush();
             $this->_helper->flashMessenger->addMessage('The file was successfully parsed.');

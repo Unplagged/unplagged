@@ -59,13 +59,9 @@ class Unplagged_Mailer{
     return true;
   }
   
-    /**
-   * Sends a password recovery mail to a specific user.
+  /*
+   * is integrated into notification system now
    * 
-   * @Application_Model_User $user The user the mail sent to.
-   * 
-   * @return Whether the mail was sent or not.
-   */
   public static function sendPasswordRecoveryMail(Application_Model_User $user){
     $config = Zend_Registry::get('config');
 
@@ -87,7 +83,7 @@ class Unplagged_Mailer{
     $mail->send();
 
     return true;
-  }
+  }*/
 
   /**
    * Sends a detection report finished mail.
@@ -124,7 +120,7 @@ class Unplagged_Mailer{
     
     $footerText = "\r" . "\n";
     $footerText .= 'Your team of ' . "\r" . "\n";
-    $footerText .= $config->default->portalName;
+    $footerText .= $config->default->senderName;
     
     return $footerText;
   }
