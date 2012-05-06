@@ -164,7 +164,7 @@ class CaseController extends Unplagged_Controller_Action{
       //change the view to the one from the file controller
       $this->_helper->viewRenderer->renderBySpec('list', array('controller'=>'file'));
     }else{
-      $this->_helper->flashMessenger->addMessage('You need to select a case first, before you can view files of in a case.');
+      $this->_helper->FlashMessenger(array('error'=>'You need to select a case first, before you can view files of it.'));
       $this->redirectToLastPage();
     }
   }
