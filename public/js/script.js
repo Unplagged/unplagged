@@ -152,52 +152,55 @@ $(document).ready(function(){
   // creates a new fragment based on selected text
   $('.create-fragment').click(function() {
     var selectedText = window.getSelection().getRangeAt(0).toString();
-    ;
 
     $('#fragment-content').val(selectedText);
     $('#fragment-create').submit();
 
     return false;
   });
-});
+  
+  /**
+  * The pagination plugin.
+  */
+  $(function() {            
+    $(".pagination a").live("click", function() {
+      var href = $(this).attr("href");
+      if(href) {
+        var substr = href.split('/');
+        var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
 
-/**
- * The pagination plugin.
- */
-$(function() {            
-  $(".pagination a").live("click", function() {
-    var href = $(this).attr("href");
-    if(href) {
-      var substr = href.split('/');
-      var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
-
-      window.location.hash = hash;
-    }
-    return false;
-  });
-    
-  $(window).bind('hashchange', function(){
-    var newHash = window.location.hash.substring(1);
-        
-    if (newHash) {
-      var substr = newHash.split('/');
-      var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
-            
-      var url = window.location.pathname;
-      if(url.charAt(url.length-1) != '/') {
-        url += '/';
+        window.location.hash = hash;
       }
-      url += hash;
-      $("#main-wrapper").load(url + " .main");
-    };
-        
+      return false;
+    });
+
+    $(window).bind('hashchange', function(){
+      var newHash = window.location.hash.substring(1);
+
+      if (newHash) {
+        var substr = newHash.split('/');
+        var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
+
+        var url = window.location.pathname;
+        if(url.charAt(url.length-1) != '/') {
+          url += '/';
+        }
+        url += hash;
+        $("#main-wrapper").load(url + " .main", function(){
+          //this callback is not the nicest way, but currently the only way to make sure, that those things 
+          //still work in ajax content
+          wrapActions();
+          $('a.picture').lightBox();
+        });
+      }
+
+    });
+
+    $(window).trigger('hashchange');
   });
-    
-  $(window).trigger('hashchange');
+
+    $('a.picture').lightBox();
 });
 
-$(function() {
-  $('a.picture').lightBox();
-});
 
 
