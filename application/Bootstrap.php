@@ -102,15 +102,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * If no user is logged in, the guest user is set as default.
    */
   protected function _initGuest(){
-    
+
     $defaultNamespace = new Zend_Session_Namespace('Default');
-    
+
     if(!$defaultNamespace->user){
       //we need the entity manager, so make sure this is created prior
       $this->bootstrap('doctrine');
       $registry = Zend_Registry::getInstance();
       $guestRole = $registry->entitymanager->getRepository('Application_Model_User_GuestRole')->findOneByRoleId('guest');
-      
+
       //store the user in the session
       $defaultNamespace->user = new Application_Model_User(array('role'=>$guestRole));
     }
@@ -124,7 +124,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $this->bootstrap('guest');
     //we also need the entity manager, so make sure this is created prior
     $this->bootstrap('doctrine');
-    
+
     //initalize the current users ACL
     $defaultNamespace = new Zend_Session_Namespace('Default');
     $registry = Zend_Registry::getInstance();
@@ -168,20 +168,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     //takes the browser language as default
     $locale = new Zend_Locale();
     $registry->set('Zend_Locale', $locale);
-    
+
     $translate = null;
+
+    $languageString = $locale->getLanguage();
+    $translationFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $languageString . '.csv';
     
-    //check if a language file for the requested language exists
-    foreach($locale->getBrowser() as $languageString=>$qValue){
-      $translationFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $languageString . '.csv';
- 
-      if(file_exists($translationFilePath)){
-        $translate = new Zend_Translate('csv', $translationFilePath, $languageString);
-        break;
-      }
-    }
-    
-    if($translate){
+    //try to load a file
+    if(file_exists($translationFilePath)){
+      $translate = new Zend_Translate('csv', $translationFilePath, $languageString);
       $registry->set('Zend_Translate', $translate);
     }
 
@@ -230,7 +225,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    */
   protected function _initNavigation(){
     //$this->bootstrap('doctrine');
-    
+
     $config = array(
       array(
         //home icon gets set via js, because I didn't find a simple way to add a <span> here
