@@ -38,7 +38,7 @@ class CaseController extends Unplagged_Controller_Action{
         $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
         Unplagged_Helper::notify("case_created", $result, $user);
 
-        $this->_helper->flashMessenger->addMessage('The case was created successfully.');
+        $this->_helper->FlashMessenger(array('success'=>'The case was created successfully.'));
         $this->_helper->redirector('list', 'case');
       }
     }
@@ -70,7 +70,7 @@ class CaseController extends Unplagged_Controller_Action{
           $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
           Unplagged_Helper::notify("case_updated", $result, $user);
 
-          $this->_helper->flashMessenger->addMessage('The case was updated successfully.');
+          $this->_helper->FlashMessenger(array('success'=>'The case was updated successfully.'));
           $this->_helper->redirector('list', 'case');
         }
       }

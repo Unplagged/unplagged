@@ -85,15 +85,15 @@ class AuthController extends Unplagged_Controller_Action{
           $defaultNamespace->user = $result->getIdentity();
           $defaultNamespace->userId = $result->getIdentity()->getId();
 
-          $this->_helper->flashMessenger->addMessage('You were logged in successfully.');
+          $this->_helper->FlashMessenger(array('info'=>'You were logged in successfully.'));
           $this->redirectToLastPage();
         }else{
           $this->logout();
-          $this->_helper->flashMessenger->addMessage('Your account is not yet verified.');
+          $this->_helper->FlashMessenger(array('error'=>'Your account is not yet verified.'));
           $this->_helper->redirector('login', 'auth');
         }
       }else{
-        $this->_helper->flashMessenger->addMessage('Login failed.');
+        $this->_helper->FlashMessenger(array('error'=>'Login failed.'));
         $this->_helper->redirector('login', 'auth');
       }
     }
@@ -104,7 +104,7 @@ class AuthController extends Unplagged_Controller_Action{
    */
   public function logoutAction(){
     $this->logout();
-    $this->_helper->flashMessenger->addMessage('You were logged off successfully.');
+    $this->_helper->FlashMessenger(array('info'=>'You were logged off successfully.'));
     $this->redirectToLastPage();
   }
 
