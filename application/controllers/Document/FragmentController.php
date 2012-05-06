@@ -47,7 +47,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $this->view->fragment = $fragment;
     $this->view->plag = $fragment->getPlag();
     $this->view->source = $fragment->getSource();
-    
+
     $this->view->content = $fragment->getContent('list', true);
 
     /* // @todo remove, jsut for now to have something, it should be changed to explode("\n",...  
@@ -94,7 +94,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
         Unplagged_Helper::notify("fragment_created", $result, $user);
 
         $this->_helper->flashMessenger->addMessage('The fragment was created successfully.');
-        $params = array('id'=>$fragment->getId());
+        $params = array('id'=>$result->getId());
         $this->_helper->redirector('show', 'document_fragment', '', $params);
       }
     }
@@ -235,10 +235,18 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $fragment->setType($this->_em->getRepository('Application_Model_Document_Fragment_Type')->findOneById($formData['type']));
 
       // partials
-      $partial = $this->_em->getRepository('Application_Model_Document_Fragment_Partial')->findOneById($formData['candidateId']);
+      if($fragment && $fragment->getPlag()){
+        $partial = $this->_em->getRepository('Application_Model_Document_Fragment_Partial')->findOneById($fragment->getPlag()->getId());
+      }else{
+        $partial = new Application_Model_Document_Fragment_Partial();
+      }
       $fragment->setPlag($this->handlelPartialCreation($partial, $formData['candidateLineFrom'], $formData['candidateLineTo']));
 
-      $partial = $this->_em->getRepository('Application_Model_Document_Fragment_Partial')->findOneById($formData['sourceId']);
+      if($fragment && $fragment->getSource()){
+        $partial = $this->_em->getRepository('Application_Model_Document_Fragment_Partial')->findOneById($fragment->getSource()->getId());
+      }else{
+        $partial = new Application_Model_Document_Fragment_Partial();
+      }
       $fragment->setSource($this->handlelPartialCreation($partial, $formData['sourceLineFrom'], $formData['sourceLineTo']));
 
       // write back to persistence manager and flush it
@@ -273,7 +281,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     return $partial;
   }
-  
+
   /**
    * Adds select options to the form in order to show the same dropdown options after page reload
    * which were added through ajax only. Also needed for Zend Haystack validator on select elements.
@@ -292,24 +300,28 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $modifyForm->getElement($prefix . 'PageTo')->addMultioption($page->getId(), $page->getPageNumber());
     }
 
-    $modifyForm->getElement($prefix . 'PageFrom')->setValue($formData[$prefix . 'PageFrom']);
-    $modifyForm->getElement($prefix . 'PageTo')->setValue($formData[$prefix . 'PageTo']);
+    if(!empty($formData[$prefix . 'PageFrom'])){
+      $modifyForm->getElement($prefix . 'PageFrom')->setValue($formData[$prefix . 'PageFrom']);
 
-    // initialise line from select
-    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageFrom']);
-    foreach($page->getLines() as $line){
-      $modifyForm->getElement($prefix . 'LineFrom')->addMultioption($line->getId(), $line->getLineNumber());
+      // initialise line from select
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageFrom']);
+      foreach($page->getLines() as $line){
+        $modifyForm->getElement($prefix . 'LineFrom')->addMultioption($line->getId(), $line->getLineNumber());
+      }
+      $modifyForm->getElement($prefix . 'LineFrom')->setValue($formData[$prefix . 'LineFrom']);
     }
 
-    $modifyForm->getElement($prefix . 'LineFrom')->setValue($formData[$prefix . 'LineFrom']);
+    if(!empty($formData[$prefix . 'PageTo'])){
+      $modifyForm->getElement($prefix . 'PageTo')->setValue($formData[$prefix . 'PageTo']);
 
-    // initialise line to select
-    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageTo']);
-    foreach($page->getLines() as $line){
-      $modifyForm->getElement($prefix . 'LineTo')->addMultioption($line->getId(), $line->getLineNumber());
+      // initialise line to select
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageTo']);
+      foreach($page->getLines() as $line){
+        $modifyForm->getElement($prefix . 'LineTo')->addMultioption($line->getId(), $line->getLineNumber());
+      }
+
+      $modifyForm->getElement($prefix . 'LineTo')->setValue($formData[$prefix . 'LineTo']);
     }
-
-    $modifyForm->getElement($prefix . 'LineTo')->setValue($formData[$prefix . 'LineTo']);
   }
 
 }
