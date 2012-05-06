@@ -19,14 +19,14 @@
  */
 
 /**
- * This controller class handles all the login and logout behaviour.
+ * 
  *
  * @author Unplagged Development Team
  */
 class NotificationController extends Unplagged_Controller_Action{
 
   public function indexAction(){
-      $this->_helper->redirector('recent-activity', 'notification');
+    $this->_helper->redirector('recent-activity', 'notification');
   }
 
   /**
@@ -44,23 +44,24 @@ class NotificationController extends Unplagged_Controller_Action{
 
     $this->view->paginator = $paginator;
   }
- 
-  public function commentsAction() {
+
+  public function commentsAction(){
     $input = new Zend_Filter_Input(array('source'=>'Digits'), null, $this->_getAllParams());
     $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
-    
-    if($source) {
+
+    if($source){
       $query = $this->_em->createQuery("SELECT c FROM Application_Model_Comment c");
       $result = $query->getArrayResult();
 
       $this->_helper->json($result);
-    } else {
+    }else{
       $result = array();
       $result["errorcode"] = 400;
       $result["message"] = "No comments available.";
-      
+
       $this->_helper->json($result);
     }
   }
 
 }
+?>

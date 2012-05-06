@@ -123,7 +123,7 @@ $(document).ready(function(){
   wrapActions();
   
   //wrap home menu button, so that icon gets shown
-  var homeButton = $('#header .navigation .home');
+  var homeButton = $('header[role=banner] .navigation .home');
   homeButton.wrapInner('<span class="ir"/>');
   
   // executes a simtext comparison

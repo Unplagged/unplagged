@@ -85,6 +85,14 @@ p {
 
 /* ==|== reusable styles ======================================================= */
 
+.chromeframe { 
+  margin: auto;
+  width: 90%;
+  margin: 0 auto; 
+  padding: 0.2em 0; 
+  min-width: 240px; 
+}
+
 .avatar,
 .avatar-small{
   width: 50px;
@@ -427,7 +435,7 @@ header[role=banner] h1 {
   left: 20px;
 }
 
-header[role=banner] #beta-patch {
+.beta-patch {
   background: url('../images/beta_patch.png') no-repeat left top;
   display: inline-block;
   width: 102px;
@@ -479,12 +487,6 @@ footer[role=contentinfo]{
   border-top-right-radius: 3px;
   vertical-align: top;
   position: relative;
-}
-
-/* zoom: 1 to make the inline-block work */
-.ie7 .navigation li {
-  display: inline;
-  zoom: 1;
 }
 
 .navigation li:hover, .navigation li.active {

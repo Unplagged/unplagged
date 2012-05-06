@@ -51,7 +51,8 @@ class FileController extends Unplagged_Controller_Action{
           } */
 
         $newName = $this->_request->getPost('newName');
-
+        $description = $this->_request->getPost('description');
+        
         // collect file information
         $fileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
         $fileExt = pathinfo($adapter->getFileName(), PATHINFO_EXTENSION);
@@ -64,8 +65,9 @@ class FileController extends Unplagged_Controller_Action{
         $data["mimetype"] = $adapter->getMimeType('filepath');
         $data["filename"] = !empty($newName) ? $newName . "." . $fileExt : $fileName;
         $data["extension"] = $fileExt;
-        $data["location"] = "application" . DIRECTORY_SEPARATOR . "storage" . DIRECTORY_SEPARATOR . "files";
-
+        $data["location"] = 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
+        $data['description'] = $description;
+        
         $file = new Application_Model_File($data);
         $this->_em->persist($file);
         $this->_em->flush();
@@ -88,8 +90,6 @@ class FileController extends Unplagged_Controller_Action{
           $this->_em->flush();
 
           $this->_helper->flashMessenger->addMessage('File could not be uploaded.');
-
-          //$messages = $adapter->getMessages();
         }
       }
     }else{
@@ -113,7 +113,7 @@ class FileController extends Unplagged_Controller_Action{
 
     // generate the action dropdown for each file
     // @todo: use centralised method for all three file lists
-    foreach($paginator as $file):
+    foreach($paginator as $file){
       $file->actions = array();
 
       if($file->getIsTarget()){
@@ -153,17 +153,23 @@ class FileController extends Unplagged_Controller_Action{
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
 
-    endforeach;
+    }
 
     $this->view->paginator = $paginator;
   }
 
+  /**
+   * Enables 
+   */
   public function downloadAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
+        // disable view
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
         $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
 
         // set headers
@@ -180,9 +186,9 @@ class FileController extends Unplagged_Controller_Action{
         $this->_helper->redirector('list', 'file');
       }
     }
-    // disable view
-    $this->view->layout()->disableLayout();
-    $this->_helper->viewRenderer->setNoRender(true);
+
+    $this->_helper->flashMessenger->addMessage('The file couldn\'t be found.');
+    $this->_helper->redirector('list', 'file');
   }
 
   public function setTargetAction(){
@@ -268,7 +274,7 @@ class FileController extends Unplagged_Controller_Action{
             $this->_helper->flashMessenger->addMessage('The file could not be parsed.');
           }else{
             $document->setState($this->_em->getRepository('Application_Model_State')->findOneByName('parsed'));
-            
+
             $this->_em->persist($document);
             $this->_em->flush();
             $this->_helper->flashMessenger->addMessage('The file was successfully parsed.');
@@ -313,5 +319,4 @@ class FileController extends Unplagged_Controller_Action{
   }
 
 }
-
 ?>

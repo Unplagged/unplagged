@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * The class represents a base class for any type of item that can receive 
  * comments or can be the source of a notification.
@@ -82,7 +84,7 @@ abstract class Application_Model_Base{
   private $notifications;
 
   public function __construct(){
-    $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->comments = new ArrayCollection();
   }
 
   public function getId(){
@@ -122,7 +124,7 @@ abstract class Application_Model_Base{
    * Returns a class name for a direct link icon of this element. When no icon is used the return will be an
    * empty string.
    * 
-   * An extending class is supposed to set the ICON_CLASS constant like this:
+   * An extending class is supposed to set the ICON_CLASS constant like this inside the classes scope:
    * 
    * <code>
    * const ICON_CLASS = 'my-icon-class';

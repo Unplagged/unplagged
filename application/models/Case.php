@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Doctrine\Common\Collections\ArrayCollection;  // good idea, but does not work on my machine in base class
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- *
+ * A case is one of the most important model classes of the Unplagged system.
  * 
  * 
  * @Entity

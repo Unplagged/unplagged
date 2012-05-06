@@ -93,6 +93,13 @@ class Application_Model_File extends Application_Model_Base{
   private $isTarget = false;
 
   /**
+   * @var string
+   *  
+   * @Column(type="text")
+   */
+  private $description = '';
+  
+  /**
    * Method auto-called when object is updated in database.
    * 
    * @PrePersist
@@ -120,6 +127,10 @@ class Application_Model_File extends Application_Model_Base{
 
     if(isset($data["extension"])){
       $this->extension = $data["extension"];
+    }
+    
+    if(isset($data['description'])){
+      $this->description = $data['description'];
     }
   }
 
@@ -165,6 +176,11 @@ class Application_Model_File extends Application_Model_Base{
     return $this->location;
   }
 
+  /**
+   * @todo relying on some constant in a model file isn't the best idea in my opinion, better would be to store the whole 
+   * path I think. This would only stop users from moving the installation of Unplagged around easily, but that shouldn't
+   * be that bad.
+   */
   public function getAbsoluteLocation(){
     return BASE_PATH . DIRECTORY_SEPARATOR . $this->location;
   }
@@ -209,5 +225,12 @@ class Application_Model_File extends Application_Model_Base{
 
     return $result;
   }
-
+  
+  public function getDescription(){
+    return $this->description;  
+  }
+  
+  public function setDescription($description){
+    $this->description = $description;
+  }
 }

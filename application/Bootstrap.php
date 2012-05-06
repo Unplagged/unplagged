@@ -241,9 +241,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'label'=>'Files',
         'title'=>'Files',
         'module'=>'default',
-        'controller'=>'user',
-        'action'=>'files',
-        'resource'=>'user_files',
+        'controller'=>'file',
+        'action'=>'upload',
+        'resource'=>'file_upload',
         'pages'=>array(
           array(
             'label'=>'Case Files',

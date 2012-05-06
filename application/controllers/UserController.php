@@ -47,7 +47,7 @@ class UserController extends Unplagged_Controller_Action{
     if($this->_request->isPost()){
       $this->handleRegistration($registerForm);
     }
-    
+
     // send form to view
     $this->view->registerForm = $registerForm;
   }
@@ -57,28 +57,35 @@ class UserController extends Unplagged_Controller_Action{
 
     // if the form doesn't validate, pass to view and return
     if($registerForm->isValid($formData)){
-      // create new user object
-      $data = array();
-      $data["username"] = $this->getRequest()->getParam('username');
-      $data["password"] = Unplagged_Helper::hashString($this->getRequest()->getParam('password'));
-      $data["email"] = $this->getRequest()->getParam('email');
-      $data["verificationHash"] = Unplagged_Helper::generateRandomHash();
-      $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
-      $user = new Application_Model_User($data);
-
-      // write back to persistence manager and flush it
-      $this->_em->persist($user);
-      $this->_em->flush();
+      $user = $this->createNewUserFromFormData($formData);
 
       // log registration
-      Unplagged_Helper::notify("user_registered", $user, $user);
-
+      Unplagged_Helper::notify('user_registered', $user, $user);
       // send registration mail
       Unplagged_Mailer::sendRegistrationMail($user);
 
       $this->_helper->flashMessenger->addMessage('In order to finish your registration, please check your E-Mails.');
       $this->_helper->redirector('index', 'index');
+    }else{
+      //set filled and valid data into the form
+      $registerForm->populate($this->_request->getPost());
     }
+  }
+
+  private function createNewUserFromFormData(array $formData){
+    $data = array();
+    $data['username'] = $formData['username'];
+    $data['password'] = Unplagged_Helper::hashString($formData['password']);
+    $data['email'] = $formData['email'];
+    $data['verificationHash'] = Unplagged_Helper::generateRandomHash();
+    $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
+    $user = new Application_Model_User($data);
+
+    // write back to persistence manager and flush it
+    $this->_em->persist($user);
+    $this->_em->flush();
+    
+    return $user;
   }
 
   public function filesAction(){
@@ -95,7 +102,7 @@ class UserController extends Unplagged_Controller_Action{
 
     // generate the action dropdown for each file
     // @todo: use centralised method for all three file lists
-    foreach($paginator as $file):
+    foreach($paginator as $file){
       $file->actions = array();
 
       if($file->getIsTarget()){
@@ -128,8 +135,7 @@ class UserController extends Unplagged_Controller_Action{
       $action['title'] = 'Add to current case';
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
-
-    endforeach;
+    }
 
     $this->view->paginator = $paginator;
 
@@ -319,7 +325,7 @@ class UserController extends Unplagged_Controller_Action{
    * @param String from If defined it selects only users of a specific rank.
    */
   public function autocompleteNamesAction(){
-    // @todo clean inpit
+    // @todo clean input
     $search_string = $this->_getParam('term');
     // user ids to skip
     $skipIds = $this->_getParam('skip');
