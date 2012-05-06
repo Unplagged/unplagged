@@ -9,7 +9,10 @@
 $(document).ready(function(){
   // lined textareas
   $("textarea").numberfy();
-    
+
+  $('.alert').prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');
+  $().alert()
+ 
   // submit the case selection on change of the dropdown
   $('.case-settings-box select').chosen({
     allow_single_deselect: true

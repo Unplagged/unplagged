@@ -2,9 +2,6 @@
 $this->title = $this->translate("Recent activity");
 $this->headTitle($this->title);
 ?>
-
-<?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
-
 <div id="activity-stream">
 <?php foreach($this->paginator as $notification): ?>
   <div class="activity-item">

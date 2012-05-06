@@ -161,6 +161,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   /**
    * Generate registry and initalize language support.
    * 
+   * The translation files are assumed to be in the /data/languages directory and named with the ISO language code and
+   * an ending of '.csv', i. e. 'de.csv' for german.
+   * 
    * @return Zend_Registry
    */
   protected function _initTranslate(){
@@ -174,7 +177,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $languageString = $locale->getLanguage();
     $translationFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $languageString . '.csv';
     
-    //try to load a file
+    //try to load the language file
     if(file_exists($translationFilePath)){
       $translate = new Zend_Translate('csv', $translationFilePath, $languageString);
       $registry->set('Zend_Translate', $translate);

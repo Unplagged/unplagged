@@ -1,7 +1,11 @@
 <?php if(!empty($this->flashMessages)): ?>
-  <ul class="flash-messages">
-    <?php foreach($this->flashMessages as $value): ?>
-      <li><?php echo $this->translate($value); ?></li>
-    <?php endforeach; ?>
-  </ul>
+  <?php foreach($this->flashMessages as $messages): ?>
+    <?php if(is_array($messages)): ?>
+      <?php foreach($messages as $class=>$value): ?>
+        <div class="alert fade in <?php echo 'alert-' . $class; ?>"><?php echo $this->translate($value); ?></div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <div class="alert fade in"><?php echo $this->translate($messages); ?></div>
+    <?php endif; ?>
+  <?php endforeach; ?>
 <?php endif; ?>

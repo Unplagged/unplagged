@@ -1239,55 +1239,22 @@ smork-btn a:active { top: 1px; }
 }
 
 /* pagination controls */
-.pagination {
-  margin: 10px 0;
-  list-style-type: none;
-  text-align: right;
-  line-height: 20px;
-  cursor: default;
+.pagination ul {
+  margin-top: 0;
 }
 
-.pagination li {
+.pagination-numbers {
+  margin: 0;
+  line-height:36px;
   display: inline-block;
-  height: 20px;
-  border: 1px #f3f2f2 solid;
-  margin-right: 3px;
+  vertical-align: middle;
 }
 
-.pagination li:last-child{
-  margin-right: 0;
-}
-
-.pagination a {
-  text-decoration: none;
-  color: #555;
-  background-color: #f7f6f6;
-  display: block;
-  padding: 0 7px;
-}
-
-.pagination .numbers {
-  background-color: #FFFFFF;
-  margin-top: 3px;
-  border: 1px #FFFFFF solid;
-}
-
-.pagination .numbers:hover {
+.pagination-numbers:hover {
   background-color: #FFFFFF;
 }
-.pagination .disabled {
-  color: #d8d7d7;
-}
 
-.pagination a:hover {
-  background-color: #dddcdc;
-}
-
-.pagination a.active {
-  background-color: #484c51;
-  color: #ffffff;
-  cursor: pointer;
-}
+.pagination a{ cursor: pointer; }
 
 #activity-stream {
 
