@@ -7,7 +7,9 @@
  */
 
 $(document).ready(function(){
- 
+  // lined textareas
+  $("textarea").numberfy();
+    
   // submit the case selection on change of the dropdown
   $('.case-settings-box select').chosen({
     allow_single_deselect: true
@@ -126,28 +128,46 @@ $(document).ready(function(){
   var homeButton = $('#header .navigation .home');
   homeButton.wrapInner('<span class="ir"/>');
   
-  // executes a simtext comparison
+  // executes a simtext comparison in fragment modify form
   function compareTexts() {
-    if($("textarea#candidateText").length != 0) {
-      $.ajax({
-        url: "/simtext/ajax",
-        data: {
-          left: $("textarea#candidateText").val(),
-          right: $("textarea#sourceText").val()
+    if($("#candidateLineFrom").length != 0) {
+      $.post("/document_page/compare", {
+        candidateLineFrom: $("#candidateLineFrom").val(),
+        candidateLineTo: $("#candidateLineTo").val(),
+        sourceLineFrom: $("#sourceLineFrom").val(),
+        sourceLineTo: $("#sourceLineTo").val(),
+        highlight: true
+      }, function(response) {
+        if($('#candidateText').length == 0) {
+          $('#fieldset-candidateGroup').append('<div id="candidateText" class="src-wrapper"/>');
+          $('#fieldset-sourceGroup').append('<div id="sourceText" class="src-wrapper"/>');
         }
-      }).done(
-        function(data){
-          $("div#compared_source_Text").empty();
-          $("div#compared_source_Text").html(data)
-        }
-        );
+        $('#candidateText').html(response.data.plag);
+        $('#sourceText').html(response.data.source);
+      }, "json");
     }
     return false;
   }
-  $("textarea#candidateText, textarea#sourceText").keyup(function(){
+  $("#candidateLineFrom, #candidateLineTo, #sourceLineFrom, #sourceLineTo").change(function(){
     compareTexts();
   });
   compareTexts();
+  
+  // executes a simtext comparison on fragment show page
+  function compareFragmentTexts(fragmentId, highlight) {
+    $.post("/document_page/compare", {
+      fragment: fragmentId,
+      highlight: highlight
+    }, function(response) {
+      $('#candidateText').html(response.data.plag);
+      $('#sourceText').html(response.data.source);
+    }, "json");
+    
+    return false;
+  }
+  $("#compareWithNoColor").change(function(){
+    compareFragmentTexts($(this).val(), $(this).attr('checked'));
+  });
   
   // creates a new fragment based on selected text
   $('.create-fragment').click(function() {
@@ -159,6 +179,81 @@ $(document).ready(function(){
 
     return false;
   });
+  
+  // fragment creation form
+  $("#candidateDocument").change(function(el){
+    updateDocumentPages($(this).val(), ['#candidatePageFrom', '#candidatePageTo']);
+  });
+  $("#sourceDocument").change(function(){
+    updateDocumentPages($(this).val(), ['#sourcePageFrom', '#sourcePageTo']);
+  });
+  
+  function updateDocumentPages(documentId, targetElements) {
+    $.post('/document/read', {
+      'id': documentId
+    }, function(response) {
+      if(response.statuscode == 200) {
+        // clear the targets
+        $.each(targetElements, function(index, targetId) {
+          $('' + targetId).html('');
+        });
+    
+        $.each(response.data.pages, function(index, page) {
+          $.each(targetElements, function(targetIndex, targetId) {
+            $('' + targetId).append($("<option/>", {
+              value: page.id, 
+              text: page.pageNumber
+            }));
+          });
+        });
+        
+        $.each(targetElements, function(index, targetId) {
+          // select first element
+          $('' + targetId + ' option:first-child').attr("selected", "selected");
+          $('' + targetId).change();
+        });
+      } else {
+      // @todo: handle error
+      }
+    }, "json");
+  }
+  
+  $("#candidatePageFrom").change(function(){
+    updatePageLines($(this).val(), ['#candidateLineFrom']);
+  });
+  $("#candidatePageTo").change(function(){
+    updatePageLines($(this).val(), ['#candidateLineTo']);
+  });
+  $("#sourcePageFrom").change(function(){
+    updatePageLines($(this).val(), ['#sourceLineFrom']);
+  });
+  $("#sourcePageTo").change(function(){
+    updatePageLines($(this).val(), ['#sourceLineTo']);
+  });
+  
+  function updatePageLines(pageId, targetElements) {
+    $.post('/document_page/read', {
+      'id': pageId
+    }, function(response) {
+      if(response.statuscode == 200) {
+        // clear the targets
+        $.each(targetElements, function(index, targetId) {
+          $('' + targetId).html('');
+        });
+    
+        $.each(response.data.lines, function(index, line) {
+          $.each(targetElements, function(targetIndex, targetId) {
+            $('' + targetId).append($("<option/>", {
+              value: line.id, 
+              text: line.lineNumber
+            }));
+          });
+        });
+      } else {
+      // @todo: handle error
+      }
+    }, "json");
+  }
 });
 
 /**

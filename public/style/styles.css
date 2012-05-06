@@ -751,9 +751,11 @@ div a:hover {
 {
   width: 90%;
   max-width: 500px;
-  height: 250px;
-  max-height: 250px;
+  height: 150px;
+  resize: none;
   margin-bottom: 15px;
+  white-space: nowrap;
+  overflow: scroll scroll;
 }
 
 .zend_form textarea.auto
@@ -948,7 +950,7 @@ smork-btn a:active { top: 1px; }
 .document-page .page-line.empty label {
   margin-left: 30px;
 }
-.document-page ol {
+.src-wrapper ol {
   background:#EBECED;
   overflow:auto;
   font-family:"Courier New",Courier,mono;
@@ -956,7 +958,7 @@ smork-btn a:active { top: 1px; }
   padding:0 3.1em;
 }
 
-.document-page ol li {
+.src-wrapper li {
   background: white;
   font-size:small;
   padding-left: 3px;
@@ -2111,3 +2113,53 @@ ins {
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3 { page-break-after: avoid; }
 }
+
+#line_numbers {clear:both; float: left; text-align: right}
+
+/*
+.linedwrap {
+	border: 1px solid #c0c0c0;
+	padding: 3px;
+}
+
+.linedtextarea {
+	padding: 0px;
+	margin: 0px;
+}
+
+.linedtextarea textarea, .linedwrap .codelines .lineno {
+	font-size: 10pt;
+	font-family: monospace;
+	line-height: normal !important;
+}
+
+.linedtextarea textarea {
+	padding-right:0.3em;
+	padding-top:0.3em;
+	border: 0;
+}
+
+.linedwrap .lines {
+	margin-top: 0px;
+	width: 50px;
+	float: left;
+	overflow: hidden;
+	border-right: 1px solid #c0c0c0;
+	margin-right: 10px;
+}
+
+.linedwrap .codelines {
+	padding-top: 5px;
+}
+
+.linedwrap .codelines .lineno {
+	color:#AAAAAA;
+	padding-right: 0.5em;
+	padding-top: 0.0em;
+	text-align: right;
+	white-space: nowrap;
+}
+
+.linedwrap .codelines .lineselect {
+	color: red;
+}*/

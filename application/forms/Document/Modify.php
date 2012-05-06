@@ -38,7 +38,9 @@ class Application_Form_Document_Modify extends Zend_Form{
     $titleElement->addValidator('stringLength', false, array(2, 64));
     $titleElement->setRequired(true);
 
-
+    $bibTexElement = new Zend_Form_Element_Textarea('bibTex');
+    $bibTexElement->setLabel("BiBTex");
+        
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Create document');
     $submitElement->setIgnore(true);
@@ -46,10 +48,11 @@ class Application_Form_Document_Modify extends Zend_Form{
     $submitElement->removeDecorator('DtDdWrapper');
 
     $this->addElements(array(
-      $titleElement
+       $titleElement
+      ,$bibTexElement
     ));
 
-    $this->addDisplayGroup(array('title')
+    $this->addDisplayGroup(array('title', 'bibTex')
         , 'generalGroup'
         , array('legend'=>'Document Information')
     );

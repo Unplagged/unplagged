@@ -17,9 +17,9 @@ $this->headTitle($this->title);
       <?php foreach($this->paginator as $fragment): ?>
         <tr>
           <td data-label="<?php echo $this->translate("Title"); ?>"><a href="<?php echo $fragment->getDirectLink(); ?>"><?php echo $fragment->getTitle(); ?></a></td>
-          <td data-label="<?php echo $this->translate("Page from"); ?>"><?php echo $fragment->getPlag()->getPageFrom()->getPageNumber(); ?></td>
-          <td data-label="<?php echo $this->translate("Page to"); ?>"><?php echo $fragment->getPlag()->getPageTo()->getPageNumber(); ?></td>
-          <td data-label="<?php echo $this->translate("Source"); ?>"><a href="<?php echo "/document_page/list/id/" . $fragment->getSource()->getPageFrom()->getDocument()->getId(); ?>"><?php echo $fragment->getSource()->getPageFrom()->getDocument()->getTitle(); ?></a></td>
+          <td data-label="<?php echo $this->translate("Page from"); ?>"><?php echo $fragment->getPlag()->getLineFrom()->getPage()->getPageNumber(); ?></td>
+          <td data-label="<?php echo $this->translate("Page to"); ?>"><?php echo $fragment->getPlag()->getLineTo()->getPage()->getPageNumber(); ?></td>
+          <td data-label="<?php echo $this->translate("Source"); ?>"><a href="<?php echo "/document_page/list/id/" . $fragment->getSource()->getLineFrom()->getPage()->getDocument()->getId(); ?>"><?php echo $fragment->getSource()->getLineFrom()->getPage()->getDocument()->getTitle(); ?></a></td>
           <td data-label="<?php echo $this->translate("Actions"); ?>"><?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$fragment->actions)); ?></td>
         </tr>
       <?php endforeach; ?>

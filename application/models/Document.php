@@ -40,7 +40,7 @@ class Application_Model_Document extends Application_Model_Base{
   private $title;
 
   /**
-   * The lines in the document.
+   * The pages in the document.
    * 
    * @OneToMany(targetEntity="Application_Model_Document_Page", mappedBy="document")
    * @OrderBy({"pageNumber" = "ASC"})
@@ -60,7 +60,7 @@ class Application_Model_Document extends Application_Model_Base{
    * 
    * @Column(type="text", nullable=true)
    */
-  private $bibtex;
+  private $bibTex;
 
   /**
    * The current state of the report.
@@ -106,8 +106,8 @@ class Application_Model_Document extends Application_Model_Base{
     return $this->title;
   }
 
-  public function getBibtex(){
-    return $this->bibtex;
+  public function getBibTex(){
+    return $this->bibTex;
   }
 
   public function getPages(){
@@ -155,4 +155,22 @@ class Application_Model_Document extends Application_Model_Base{
   public function getOriginalFile(){
     return $this->originalFile;
   }
+  
+  public function setBibTex($bibTex){
+    $this->bibTex = $bibTex;
+  }
+  
+  public function toArray() {
+    $data["id"] = $this->id;
+    $data["bibTex"] = $this->bibTex;
+    $data["pages"] = array();
+    
+    foreach($this->pages as $page){
+      $data["pages"][] = $page->toArray();
+    }
+    
+    return $data;
+  }
+  
+
 }

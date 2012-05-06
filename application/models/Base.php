@@ -47,6 +47,7 @@
  * ,"document_fragment_partial" = "Application_Model_Document_Fragment_Partial"
  * ,"simtext_report" = "Application_Model_Document_Page_SimtextReport"
  * ,"cron_task" = "Application_Model_Task"
+ * ,"document_page_line" = "Application_Model_Document_Page_Line"
  * })
  * 
  */

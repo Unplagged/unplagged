@@ -54,10 +54,10 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::getTitle();
     }
 
-    public function getBibtex()
+    public function getBibTex()
     {
         $this->__load();
-        return parent::getBibtex();
+        return parent::getBibTex();
     }
 
     public function getPages()
@@ -126,6 +126,18 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::getOriginalFile();
     }
 
+    public function setBibTex($bibTex)
+    {
+        $this->__load();
+        return parent::setBibTex($bibTex);
+    }
+
+    public function toArray()
+    {
+        $this->__load();
+        return parent::toArray();
+    }
+
     public function setId($id)
     {
         $this->__load();
@@ -153,7 +165,7 @@ class Application_Model_Document extends \Application_Model_Document implements 
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'title', 'bibtex', 'pages', 'fragments', 'state', 'originalFile');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'originalFile');
     }
 
     public function __clone()
