@@ -5,22 +5,21 @@ class Unplagged_CompareText{
   private static $delimiter = " ";
   private static $lineBreaks = array("<br />", "<br>", "\n");
 
-  public static function compare($left, $right, $minlength, $outputType = "html"){
+  public static function compare($listLeft, $listRight, $minlength, $inputType = 'array'){
+    // remove line breaks – replace them by spaces
+    if($inputType == 'array'){
+      $tmpLeft = implode(Unplagged_CompareText::$delimiter, $listLeft);
+      $tmpRight = implode(Unplagged_CompareText::$delimiter, $listRight);
+    }
 
-    $left = str_replace(Unplagged_CompareText::$lineBreaks, "____ ", $left);
-    $right = str_replace(Unplagged_CompareText::$lineBreaks, "____ ", $right);
+    $wordsLeft = explode(Unplagged_CompareText::$delimiter, $tmpLeft);
+    $wordsRight = explode(Unplagged_CompareText::$delimiter, $tmpRight);
 
-    $listLeft = explode(Unplagged_CompareText::$delimiter, $left);
-    $listRight = explode(Unplagged_CompareText::$delimiter, $right);
-    $documents = array(array_values($listLeft), array_values($listRight));
+    $documents = array(array_values($wordsLeft), array_values($wordsRight));
 
     $comparedTexts = Unplagged_CompareText::compareText($documents, $minlength);
 
-    if($outputType == "plain"){
-      return Unplagged_CompareText::getMarkedTexts($comparedTexts, $listLeft, $listRight);
-    }
-    
-    return Unplagged_CompareText::getHtml($comparedTexts, $listLeft, $listRight);
+    return Unplagged_CompareText::getMarkedTexts($comparedTexts, $wordsLeft, $wordsRight, $listLeft, $listRight);
   }
 
   private static function compareText($documents, $min_run_length){
@@ -36,7 +35,7 @@ class Unplagged_CompareText{
       $doc_len = sizeof($doc);
       $documents_len[$doc_idx] = $doc_len;
 
-      // If the word is smaller than than the min_run_length, do not analyse it
+      // If the word is smaller than the min_run_length, do not analyse it
       if($tokens <= 0){
         continue;
       }
@@ -94,44 +93,98 @@ class Unplagged_CompareText{
     return $final_match_list;
   }
 
-  private static function getHtml($comparedTexts, $list1, $list2){
-    /* Colors have css classes "fragmark1" to "fragmark9" */
+  private static function getMarkedTexts($comparedTexts, $wordsLeft, $wordsRight, &$listLeft, &$listRight){
+    // Colors have css classes "fragmark1" to "fragmark9"
     $col = 0;
     $nr_col = 9;
+    
     for($i = 0; $i < sizeof($comparedTexts); $i++){
       $res = $comparedTexts[$i];
-      $list1[$res[3]] = "<span class=\"fragmark-$col\">" . $list1[$res[3]];
-      $list1[$res[3] + $res[4] - 1] = $list1[$res[3] + $res[4] - 1] . "</span>";
+      $wordsLeft[$res[3]] = "<span class=\"fragmark-$col\">" . $wordsLeft[$res[3]];
+      $wordsLeft[$res[3] + $res[4] - 1] = $wordsLeft[$res[3] + $res[4] - 1] . "</span>";
 
-      $list2[$res[1]] = "<span class=\"fragmark-$col\">" . $list2[$res[1]];
-      $list2[$res[1] + $res[4] - 1] = $list2[$res[1] + $res[4] - 1] . "</span>";
+      $wordsRight[$res[1]] = "<span class=\"fragmark-$col\">" . $wordsRight[$res[1]];
+      $wordsRight[$res[1] + $res[4] - 1] = $wordsRight[$res[1] + $res[4] - 1] . "</span>";
 
       $col = ($col + 1) % $nr_col;
     }
-    $newlist1 = str_replace("____", "<br />", implode(" ", $list1));
-    $newlist2 = str_replace("____", "<br />", implode(" ", $list2));
+    
+    // At this point the text is exploded word by word, now the line breaks have to be added again, as in the original document
+    $resultLeft = Unplagged_CompareText::addLinebreaks($listLeft, $wordsLeft);
+    $resultRight = Unplagged_CompareText::addLinebreaks($listRight, $wordsRight);
 
-    return "<div class=\"diff clearfix\"><div class=\"src-wrapper\">" . $newlist1 . "</div>" . "<div class=\"src-wrapper\">" . $newlist2 . "</div></div>";
+    return array("left"=>$resultLeft, "right"=>$resultRight);
   }
 
-  private static function getMarkedTexts($comparedTexts, $list1, $list2){
-    /* Colors have css classes "fragmark1" to "fragmark9" */
-    $col = 0;
-    $nr_col = 9;
-    for($i = 0; $i < sizeof($comparedTexts); $i++){
-      $res = $comparedTexts[$i];
-      $list1[$res[3]] = "<span class=\"fragmark-$col\">" . $list1[$res[3]];
-      $list1[$res[3] + $res[4] - 1] = $list1[$res[3] + $res[4] - 1] . "</span>";
+  /**
+   * Adds line numbers and linebreaks again to the result.
+   * 
+   * @param type $originalLines
+   * @param type $originalWords
+   * 
+   * @return array marked lines 
+   */
+  private function addLinebreaks($originalLines, $originalWords){
+    $result = array();
+    $offset = 0;
 
-      $list2[$res[1]] = "<span class=\"fragmark-$col\">" . $list2[$res[1]];
-      $list2[$res[1] + $res[4] - 1] = $list2[$res[1] + $res[4] - 1] . "</span>";
+    $openInNextLine = '';
+    foreach($originalLines as $lineNumber=>$lineContent){
+      $wordsInLineCount = count(explode(" ", $lineContent));
 
-      $col = ($col + 1) % $nr_col;
+      $words = array();
+      for($i = $offset; $i < $offset + $wordsInLineCount; $i++){
+        $words[] = $originalWords[$i];
+      }
+
+      $lineContent = $openInNextLine . implode(" ", $words);
+      
+      // close opened fragmark tags and determine which tags were closed that have to be opened in next line
+      $lineContent = Unplagged_CompareText::closeTags($lineContent, $openInNextLine);
+
+      $result[$lineNumber] = $lineContent;
+      $offset += $wordsInLineCount;
     }
-    $newlist1 = str_replace("____", "<br />", implode(" ", $list1));
-    $newlist2 = str_replace("____", "<br />", implode(" ", $list2));
 
-    return array("left"=>$newlist1, "right"=>$newlist2);
+    return $result;
+  }
+
+  /**
+   * close all open xhtml tags at the end of the string
+   *
+   * @param string $html
+   * @return string
+   * @author Milian <mail@mili.de>
+   */
+  private function closeTags($html, &$openInNextLine){
+    $openInNextLine = '';
+    $closedHtml = '';
+
+    #put all opened tags into an array
+    preg_match_all('#<([a-z]+)(?: .*)?(?<![/|/ ])>#iU', $html, $resultTags);
+    preg_match_all('#<(span(?: .*))?(?<![/|/ ])>#iU', $html, $resultTagsWithAttributes);
+
+    $openedtags = $resultTags[1];   #put all closed tags into an array
+    preg_match_all('#</([a-z]+)>#iU', $html, $resultTags);
+    $closedtags = $resultTags[1];
+    $len_opened = count($openedtags);
+
+    // all tags are closed
+    if(count($closedtags) == $len_opened){
+      return $html;
+    }
+
+    $openedtags = array_reverse($openedtags);
+
+    # close tags
+    for($i = 0; $i < $len_opened; $i++){
+      if(!in_array($openedtags[$i], $closedtags)){
+        $openInNextLine .= '<' . $resultTagsWithAttributes[1][$i] . '>';
+        $closedHtml .= '</span>';
+      }else{
+        unset($closedtags[array_search($openedtags[$i], $closedtags)]);
+      }
+    } return $html . $closedHtml;
   }
 
 }

@@ -2,48 +2,26 @@
 $this->title = $this->translate("Fragment");
 $this->headTitle($this->title);
 ?>
-<form method="post">
-    Compare with no color
-    <input type="checkbox" name="compare" value="1" <?php if(!empty($_POST['compare']) && $_POST['compare'] == 1){ echo "checked=\"checked\""; } ?>/>
-    <input type="submit" name="formSubmit" value="Compare" />
-</form>
 
-<?php 
-		$compare = !empty($_POST['compare']) ? $_POST['compare'] : null;
-
-		if(empty($compare)) {
-			$left = implode("<br>", $this->plagLines);
-			$right = implode("<br>", $this->sourceLines);
-			$result = Unplagged_CompareText::compare($left,$right,4,"plain");
-
-      $this->plagLines = explode("<br />", $result["left"]);
-      $this->sourceLines = explode("<br />", $result["right"]);
-		} 
-?>
-
-<br/>
 <?php echo $this->translate("Name"); ?>: <?php echo $this->fragment->getTitle(); ?><br />
 <?php echo $this->translate("Type"); ?>: <?php echo $this->fragment->getType()->getName(); ?><br/>
 <?php echo $this->translate("Source"); ?>: //<br/>
+<div style="text-align: right; padding-top: 15px; padding-bottom: 5px;">
+<label for="compareWithNoColor">Compare with no color</label>
+<input type="checkbox" name="compare" id="compareWithNoColor" checked="checked" value="<?php echo $this->fragment->getId(); ?>" />
+</div>
 <div class="document-page diff clearfix">
   <div class="src-wrapper">
     <h3><?php echo $this->translate("Fragment"); ?></h3>
-    <p>From: page <?php echo $this->plag->getPageFrom()->getPageNumber(); ?>, line <?php echo $this->source->getLineFrom(); ?></p>
-    <p>To: page <?php echo $this->plag->getPageTo()->getPageNumber(); ?>, line <?php echo $this->source->getLineTo(); ?></p>    <ol>
-      <?php foreach($this->plagLines as $plagLine){ ?> 
-        <li><?php echo $plagLine; ?></li>
-      <?php } ?>
-    </ol>
+    <p>From: page <?php echo $this->plag->getLineFrom()->getPage()->getPageNumber(); ?>, line <?php echo $this->plag->getLineFrom()->getLineNumber(); ?></p>
+    <p>To: page <?php echo $this->plag->getLineTo()->getPage()->getPageNumber(); ?>, line <?php echo $this->plag->getLineTo()->getLineNumber(); ?></p>    
+    <div id="candidateText"><?php echo $this->content['plag']; ?></div>
   </div>
   <div class="src-wrapper">
     <h3><?php echo $this->translate("Source"); ?></h3>
-    <p>From: page <?php echo $this->source->getPageFrom()->getPageNumber(); ?>, line <?php echo $this->source->getLineFrom(); ?></p>
-    <p>To: page <?php echo $this->source->getPageTo()->getPageNumber(); ?>, line <?php echo $this->source->getLineTo(); ?></p>
-    <ol>
-      <?php foreach($this->sourceLines as $sourceLine){ ?> 
-        <li><?php echo $sourceLine; ?></li>
-      <?php } ?>
-    </ol>
+    <p>From: page <?php echo $this->source->getLineFrom()->getPage()->getPageNumber(); ?>, line <?php echo $this->source->getLineFrom()->getLineNumber(); ?></p>
+    <p>To: page <?php echo $this->source->getLineTo()->getPage()->getPageNumber(); ?>, line <?php echo $this->source->getLineTo()->getLineNumber(); ?></p>
+    <div id="sourceText"><?php echo $this->content['source']; ?></div>
   </div>
 </div>
 

@@ -72,12 +72,6 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
         return parent::getPageNumber();
     }
 
-    public function getContent()
-    {
-        $this->__load();
-        return parent::getContent();
-    }
-
     public function getDocument()
     {
         $this->__load();
@@ -88,12 +82,6 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
     {
         $this->__load();
         return parent::setPageNumber($pageNumber);
-    }
-
-    public function setContent($content)
-    {
-        $this->__load();
-        return parent::setContent($content);
     }
 
     public function getDirectName()
@@ -118,6 +106,42 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
     {
         $this->__load();
         return parent::getPlagiarismPercentage();
+    }
+
+    public function getLines()
+    {
+        $this->__load();
+        return parent::getLines();
+    }
+
+    public function addLine(\Application_Model_Document_Page_Line $line)
+    {
+        $this->__load();
+        return parent::addLine($line);
+    }
+
+    public function removeLine(\Application_Model_Document_Page_Line $line)
+    {
+        $this->__load();
+        return parent::removeLine($line);
+    }
+
+    public function removeLineByIndex($lineId)
+    {
+        $this->__load();
+        return parent::removeLineByIndex($lineId);
+    }
+
+    public function getContent($returnType = 'list')
+    {
+        $this->__load();
+        return parent::getContent($returnType);
+    }
+
+    public function setContent($content, $inputType = 'text')
+    {
+        $this->__load();
+        return parent::setContent($content, $inputType);
     }
 
     public function logVersion()
@@ -177,7 +201,7 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'version', 'auditLog', 'pageNumber', 'content', 'document', 'detectionReports', 'originalFile');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'notifications', 'version', 'auditLog', 'pageNumber', 'document', 'detectionReports', 'originalFile', 'lines');
     }
 
     public function __clone()

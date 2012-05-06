@@ -22,15 +22,9 @@ Content: <br />
   <?php endif; ?>
 </div>
 
-<div class="document-page">
-  <?php $lines = explode('<br />', $this->page->getContent()); ?>
-  <ol>
-    <?php foreach($lines as $line): ?>
-      <li><?php echo htmlentities($line, ENT_COMPAT, 'UTF-8'); ?></li>
-    <?php endforeach; ?>
-  </ol>
+<div class="document-page src-wrapper">
+  <?php echo $this->page->getContent("list"); ?>
 </div>
-
 
 <?php // @todo: think about a better way to open a new page with post data in jquery ?>
 <form method="post" action="/document_fragment/create" id="fragment-create">

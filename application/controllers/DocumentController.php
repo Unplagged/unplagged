@@ -48,6 +48,7 @@ class DocumentController extends Unplagged_Controller_Action{
       $modifyForm->setAction("/document/edit/id/" . $input->id);
 
       $modifyForm->getElement("title")->setValue($document->getTitle());
+      $modifyForm->getElement("bibTex")->setValue($document->getBibTex());
       $modifyForm->getElement("submit")->setLabel("Save document");
 
       if($this->_request->isPost()){
@@ -217,6 +218,7 @@ class DocumentController extends Unplagged_Controller_Action{
     if($modifyForm->isValid($formData)){
 
       $document->setTitle($formData['title']);
+      $document->setBibTex($formData['bibTex']);
 
       // write back to persistence manager and flush it
       $this->_em->persist($document);
@@ -226,6 +228,33 @@ class DocumentController extends Unplagged_Controller_Action{
     }
 
     return false;
+  }
+  
+  /**
+   * Returns all pages in the document . 
+   */
+  public function readAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
+      if($document){
+        $response["statuscode"] = 200;
+        $response["data"] = $document->toArray();
+      }else{
+        $response["statuscode"] = 404;
+        $response["statusmessage"] = "No document by that id found.";
+      }
+    } else {
+      $response["statuscode"] = 405;
+      $response["statusmessage"] = "Required parameter id is missing.";
+    }
+
+    $this->getResponse()->appendBody(json_encode($response));
+    
+    // disable view
+    $this->view->layout()->disableLayout();
+    $this->_helper->viewRenderer->setNoRender(true);
   }
 
 }

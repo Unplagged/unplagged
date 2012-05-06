@@ -48,6 +48,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * ,"tag" = "Application_Model_Tag"
  * ,"user" = "Application_Model_User"
  * ,"versionable_version" = "Application_Model_Versionable_Version"
+ * ,"document_page_line" = "Application_Model_Document_Page_Line"
  * })
  */
 abstract class Application_Model_Base{

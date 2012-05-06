@@ -75,10 +75,6 @@ class Unplagged_Mailer{
     return true;
   }
 
-  /*
-   * is integrated into notification system now
-   */
-
   public static function sendPasswordRecoveryMail(Application_Model_User $user){
     $config = Zend_Registry::get('config');
 

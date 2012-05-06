@@ -33,15 +33,8 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
 
   /**
    *
-   * @ManyToOne(targetEntity="Application_Model_Document_Page")
-   * @JoinColumn(name="page_from_id", referencedColumnName="id", onDelete="CASCADE")
-   */
-  private $pageFrom;
-
-  /**
-   * The line position.
-   * 
-   * @Column(type="integer", length=64)
+   * @ManyToOne(targetEntity="Application_Model_Document_Page_Line")
+   * @JoinColumn(name="line_from_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $lineFrom;
 
@@ -54,15 +47,8 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
 
   /**
    *
-   * @ManyToOne(targetEntity="Application_Model_Document_Page")
-   * @JoinColumn(name="page_to_id", referencedColumnName="id", onDelete="CASCADE")
-   */
-  private $pageTo;
-
-  /**
-   * The line position.
-   * 
-   * @Column(type="integer", length=64)
+   * @ManyToOne(targetEntity="Application_Model_Document_Page_Line")
+   * @JoinColumn(name="line_to_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $lineTo;
 
@@ -73,28 +59,13 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
    */
   private $characterTo = 1;
 
-  /**
-   * The text.
-   * 
-   * @Column(type="text")
-   */
-  private $text;
-
   public function __construct(array $data = null){
-    if(isset($data["pageFrom"])){
-      $this->pageFrom = $data["pageFrom"];
-    }
-
     if(isset($data["lineFrom"])){
       $this->lineFrom = $data["lineFrom"];
     }
 
     if(isset($data["characterFrom"])){
       $this->characterFrom = $data["characterFrom"];
-    }
-
-    if(isset($data["pageTo"])){
-      $this->pageTo = $data["pageTo"];
     }
 
     if(isset($data["lineTo"])){
@@ -104,20 +75,13 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
     if(isset($data["characterTo"])){
       $this->characterTo = $data["characterTo"];
     }
-
-    if(isset($data["text"])){
-      $this->text = $data["text"];
-    }
   }
 
   public function toArray(){
-    $data["pageFrom"] = $this->pageFrom->toArray();
-    $data["lineFrom"] = $this->lineFrom;
+    $data["lineFrom"] = $this->lineFrom->toArray();
     $data["characterFrom"] = $this->characterFrom;
-    $data["pageTo"] = $this->pageTo->toArray();
-    $data["lineTo"] = $this->lineTo;
+    $data["lineTo"] = $this->lineTo->toArray();
     $data["characterTo"] = $this->characterTo;
-    $data["text"] = $this->text;
 
     return $data;
   }
@@ -130,8 +94,8 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
     //return "/document-page-position/show/id/" . $this->id;
   }
 
-  public function getPageFrom(){
-    return $this->pageFrom;
+  public function getIconClass(){
+    //return "document-icon";
   }
 
   public function getLineFrom(){
@@ -142,10 +106,6 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
     return $this->characterFrom;
   }
 
-  public function getPageTo(){
-    return $this->pageTo;
-  }
-
   public function getLineTo(){
     return $this->lineTo;
   }
@@ -154,8 +114,49 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
     return $this->characterTo;
   }
 
-  public function getText(){
-    return $this->text;
+  public function setLineFrom($lineFrom){
+    $this->lineFrom = $lineFrom;
+  }
+
+  public function setLineTo($lineTo){
+    $this->lineTo = $lineTo;
+  }
+
+  public function setCharacterFrom($characterFrom){
+    $this->characterFrom = $characterFrom;
+  }
+
+  public function setCharacterTo($characterTo){
+    $this->characterTo = $characterTo;
+  }
+
+  public function getContent(){
+    $startPageNumber = $this->lineFrom->getPage()->getPageNumber();
+    $endPageNumber = $this->lineTo->getPage()->getPageNumber();
+
+    $result = array();
+    foreach($this->lineFrom->getPage()->getDocument()->getPages() as $page){
+      if($page->getPageNumber() > $endPageNumber){
+        break;
+      }
+
+      // iterate over all the pages in between start and end page
+      if($page->getPageNumber() >= $startPageNumber){
+        foreach($page->getLines() as $line){
+          // iterate over all the pages in between start and end page
+          if($page->getPageNumber() != $startPageNumber || $line->getLineNumber() >= $this->lineFrom->getLineNumber()){
+              $result[$line->getLineNumber()] = $line->getContent();
+          }
+
+          // if linenumber on last page is bigger than the last line number
+          if($page->getPageNumber() == $endPageNumber && $line->getLineNumber() == $this->lineTo->getLineNumber()){
+            break;
+          }
+        }
+      }
+    }
+
+    return $result;
   }
 
 }

@@ -35,11 +35,10 @@ class Unplagged_Parser_Page_TesseractParser implements Unplagged_Parser_Page_Par
       $outputFileLocation .= '.txt';
 
       unset($data);
-      $data["content"] = nl2br(file_get_contents($outputFileLocation));
-      $data["content"] = str_replace("\r\n", "", $data["content"]);
-      $data["content"] = str_replace("\n", "", $data["content"]);
-
-      $page = new Application_Model_Document_Page($data);
+      $lineContent = explode("\n", file_get_contents($outputFileLocation));
+      $page = new Application_Model_Document_Page();
+      $page->setContent($lineContent, "array");
+      
       // remove the ocr-scanned document, because it is stored in the database now
       unlink($outputFileLocation);
 

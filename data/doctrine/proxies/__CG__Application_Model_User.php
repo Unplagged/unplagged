@@ -249,7 +249,7 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'updated', 'username', 'password', 'email', 'firstname', 'lastname', 'verificationHash', 'salt', 'role', 'state', 'avatar', 'currentCase', 'files');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'notifications', 'updated', 'username', 'password', 'email', 'firstname', 'lastname', 'verificationHash', 'salt', 'role', 'state', 'avatar', 'currentCase', 'files');
     }
 
     public function __clone()

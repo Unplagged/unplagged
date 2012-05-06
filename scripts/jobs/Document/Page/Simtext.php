@@ -50,7 +50,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
       // generate the simtext result
       $content = "";
-      $left = $report->getPage()->getContent();
+      $left = $report->getPage()->getContent('array');
 
       $documents = $report->getDocuments();
       foreach($documents as $documentId){
@@ -58,13 +58,47 @@ class Cron_Document_Page_Simtext extends Cron_Base{
         $pages = $document->getPages();
 
         foreach($pages as $page){
-          $right = $page->getContent();
+          $right = $page->getContent('array');
+
+          foreach($left as $lineNumber=>$lineContent){
+            $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
+          }
+
+          foreach($right as $lineNumber=>$lineContent){
+            $right[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
+          }
 
           $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
+
+          $left = $simtextResult['left'];
+          $right = $simtextResult['right'];
+
+          foreach($left as $lineNumber=>$lineContent){
+            $left[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+          }
+
+          foreach($right as $lineNumber=>$lineContent){
+            $right[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+          }
+
+          $result['left'] = '<ol>' . implode("\n", $left) . '</ol>';
+          $result['right'] = '<ol>' . implode("\n", $right) . '</ol>';
+
           // if simtext found something on that page, append it to the report
-          if(strpos($simtextResult, "fragmark-") !== false){
+          if(strpos($result['left'], "fragmark-") !== false){
             $content .= "<div style='clear:both;padding-top:10px;'><b>Document " . $document->getTitle() . " - Page " . $page->getPageNumber() . "</b><br />";
-            $content .= $simtextResult . "<br /><br /></div>";
+
+            $content .= '<div class="document-page diff clearfix">
+                        <div class="src-wrapper">
+                          <h3>Left</h3>
+                          <div id="candidateText">' . $result['left'] . '</div>
+                        </div>
+                        <div class="src-wrapper">
+                          <h3>Right</h3>
+                          <div id="sourceText">' . $result['right'] . '</div>
+                        </div>
+                      </div>';
+            $content .= '</div>';
           }
         }
       }
