@@ -165,14 +165,25 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    */
   protected function _initTranslate(){
     $registry = Zend_Registry::getInstance();
-    $locale = new Zend_Locale('de_DE');
-
+    //takes the browser language as default
+    $locale = new Zend_Locale();
     $registry->set('Zend_Locale', $locale);
-
-    $translate = new Zend_Translate('csv', BASE_PATH . '/data/languages/de.csv', 'de');
-    //$translate->addTranslation(APPLICATION_PATH . '/../languages/de.csv', 'de'); //TODO: add automatically lang support
-
-    $registry->set('Zend_Translate', $translate);
+    
+    $translate = null;
+    
+    //check if a language file for the requested language exists
+    foreach($locale->getBrowser() as $languageString=>$qValue){
+      $translationFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $languageString . '.csv';
+ 
+      if(file_exists($translationFilePath)){
+        $translate = new Zend_Translate('csv', $translationFilePath, $languageString);
+        break;
+      }
+    }
+    
+    if($translate){
+      $registry->set('Zend_Translate', $translate);
+    }
 
     // translate standard zend framework messages
     $translator = new Zend_Translate(
