@@ -113,7 +113,7 @@ $(document).ready(function(){
   
   //make dropdown out of the action icons
   function wrapActions(){
-    var dropdownButton = $('<div class="dropdown-button" />');
+    var dropdownButton = $('<div class="dropdown-button left-dropout" />');
     $('.action-list').addClass('').wrap(dropdownButton).parent().prepend('<button class="button">Select action<span class="arrow-down"></span></button>');
     $('.action-list a').each(function(){
       var currentAction = $(this);
@@ -125,7 +125,7 @@ $(document).ready(function(){
   wrapActions();
   
   //wrap home menu button, so that icon gets shown
-  var homeButton = $('#header .navigation .home');
+  var homeButton = $('header[role=banner] .navigation .home');
   homeButton.wrapInner('<span class="ir"/>');
   
   // executes a simtext comparison in fragment modify form

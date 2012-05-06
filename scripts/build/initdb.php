@@ -283,5 +283,15 @@ if(!($em->getRepository('Application_Model_State')->findOneByName("task_running"
   $em->persist($state);
 }
 
+//default settings
+if(!($em->getRepository('Application_Model_Setting')->findOneBySettingKey("language"))){
+  unset($data);
+  $setting = new Application_Model_Setting();
+  $setting->setSettingKey('language');
+  $setting->setValue('de_DE');
+  $em->persist($setting);
+}
+
+
 $em->flush();
 ?>

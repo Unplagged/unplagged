@@ -19,22 +19,24 @@
  */
 
 /**
- * Handles stuff related to images.
+ * This controller provides functionality to access images that are not
+ * public, i. e. where a user needs the right permission for the file.
+ * 
  * @author Unplagged
  */
 class ImageController extends Unplagged_Controller_Action{
 
   public function init(){
     parent::init();
-    
+
     $this->_helper->viewRenderer->setNoRender(true);
     $this->_helper->layout()->disableLayout();
   }
 
-  public function indexAction(){
-    
-  }
-
+  /**
+   * Sends the requested image file with the appropriate content-type, in order to get browsers to display it like
+   * a really downloaded image in a publicly accessible folder. 
+   */
   public function showAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
@@ -43,23 +45,23 @@ class ImageController extends Unplagged_Controller_Action{
       if($file){
         $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
 
-        if($file->getExtension() == 'jpg' || $file->getExtension() == 'jpeg' || $file->getExtension() == 'gif' || $file->getExtension() == 'png' || $file->getExtension() == 'tiff'){
-          header("Content-type: image/" . $file->getExtension());
-        }else{
-          header("Content-type: " . $file->getMimeType());
-        }
+        $allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
 
+        $response = $this->getResponse();
+        
+        if(in_array($file->getExtension(), $allowedExtensions)){
+          $response->setHeader('Content-type', 'image/' . $file->getExtension());
+        }else{
+          $response->setHeader('Content-type', $file->getMimeType());
+        }
+        
         readfile($downloadPath);
       }else{
         $this->_helper->flashMessenger->addMessage('No file found.');
         $this->_helper->redirector('list', 'file');
       }
     }
-    // disable view
-    $this->view->layout()->disableLayout();
-    $this->_helper->viewRenderer->setNoRender(true);
   }
 
 }
-
 ?>

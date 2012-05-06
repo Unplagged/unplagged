@@ -24,7 +24,6 @@
  * @Entity
  * @Table(name="versionables") 
  * @HasLifeCycleCallbacks
- * 
  */
 abstract class Application_Model_Versionable extends Application_Model_Base{
 
@@ -89,5 +88,4 @@ abstract class Application_Model_Versionable extends Application_Model_Base{
   }
 
 }
-
 ?>

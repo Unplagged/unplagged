@@ -85,6 +85,14 @@ p {
 
 /* ==|== reusable styles ======================================================= */
 
+.chromeframe { 
+  margin: auto;
+  width: 90%;
+  margin: 0 auto; 
+  padding: 0.2em 0; 
+  min-width: 240px; 
+}
+
 .avatar,
 .avatar-small{
   width: 50px;
@@ -227,6 +235,7 @@ p {
   right: 0;
 }
 
+
 .dropdown-button .button.hoverable:hover:after, .dropdown-button.hover .button:after {
   content: "";
   position: absolute;
@@ -236,7 +245,7 @@ p {
   height: 2px;
   display: block;
   bottom: -2px;
-  z-index: 700; /* must be higher than the button, but lower than case selection box(chosen plugin styling at 999) */
+  z-index: 1000; 
 }
 
 .dropdown-button li a{
@@ -426,7 +435,7 @@ header[role=banner] h1 {
   left: 20px;
 }
 
-header[role=banner] #beta-patch {
+.beta-patch {
   background: url('../images/beta_patch.png') no-repeat left top;
   display: inline-block;
   width: 102px;
@@ -478,12 +487,6 @@ footer[role=contentinfo]{
   border-top-right-radius: 3px;
   vertical-align: top;
   position: relative;
-}
-
-/* zoom: 1 to make the inline-block work */
-.ie7 .navigation li {
-  display: inline;
-  zoom: 1;
 }
 
 .navigation li:hover, .navigation li.active {
@@ -1984,32 +1987,43 @@ ins {
   
   .user-box{
     position: static;
+    padding-left: 0;
+    width: 100%;
+    float: left;
   }
   
   .case-settings-box {
-    float: none;
-    margin-bottom: 5px;
+    float: right;
+    width: 100%;
+    margin-top: -26px;
+  }
+  
+  .case-settings-box > a {
+    display: none;
   }
   
   .case-settings-box form {
-    width: 100%;
+    min-width: 160px;
+    width: 60%;
+    float: right;
   }
   
   .case-settings-box .chzn-container {
     width: 100% !important;
   }
   
-  .user-box {
-    width: 160px;
+  .user-box .dropdown-button {
+    width: 60%;
+    min-width: 160px;
+    float: right;
   }
   
-  .user-box .dropdown-button {
-    width: 100%;
+  .user-box .avatar { 
+    position: static;
+    float: left;
   }
   
   header[role=toolbar] .content {
-    width: 220px;
-    max-width: 220px;
   }
   
   header[role=banner] h1 {

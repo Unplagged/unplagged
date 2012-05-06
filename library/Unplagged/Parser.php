@@ -15,7 +15,7 @@ class Unplagged_Parser{
   private static $mimeMappings = array(
     'image/tif' => 'Document_ImageParser'
     , 'image/tiff' => 'Document_ImageParser'
-    //@todo sprobably not the best idea to push all octet-stream through tesseract, but will work for now
+    //@todo probably not the best idea to push all octet-stream through tesseract, but will work for now
     , 'application/octet-stream' => 'Document_ImageParser'
     , 'image/jpeg' => 'Document_ImageParser'
     , 'image/gif' => 'Document_ImageParser'

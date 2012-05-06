@@ -38,5 +38,4 @@ class Unplagged_UrlHistory extends Zend_Controller_Plugin_Abstract{
   }
 
 }
-
 ?>

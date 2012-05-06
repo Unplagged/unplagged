@@ -16,12 +16,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- Modernizr needs to stay in the head to work properly -->
-    <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.0.6.min.js'); ?>"></script>
+    <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.5.3.min.js'); ?>"></script>
   </head>
   <body>
+    <!-- Prompt IE 7 and lower users to install Chrome Frame. -->
+    <!--[if lt IE 8]><p class=chromeframe><?php echo $this->translate('Your browser is');?><em> <?php echo $this->translate('ancient!'); ?></em> <a href="http://browsehappy.com/"><?php echo $this->translate('Upgrade to a different browser'); ?></a> <?php echo $this->translate('or'); ?> <a href="http://www.google.com/chromeframe/?redirect=true"><?php echo $this->translate('install Google Chrome Frame'); ?></a> <?php echo $this->translate('to experience this site.'); ?></p><![endif]-->
     <header role="toolbar">
       <div class="content clearfix">
         <?php if(Zend_Auth::getInstance()->hasIdentity() && $this->me): ?>
+          <div class="user-box">
+            <img class="avatar" src="<?php echo $this->me->getAvatar(); ?>" />
+            <div class="dropdown-button hoverable user-menu">
+              <a class="button" href="/user/edit"><?php echo $this->me->getUsername(); ?><span class="arrow-down"></span></a>
+              <ul>
+                <li><a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a></li>
+                <li><a href="/user/edit"><?php echo $this->translate("Edit Profile"); ?></a></li>
+              </ul>
+            </div>
+          </div>
           <div class="case-settings-box clearfix">
             <?php
             $currentLabel = '';
@@ -44,16 +56,6 @@
               <button class="button">Ok</button>  
             </form>
           </div>
-          <div class="user-box">
-            <img class="avatar" src="<?php echo $this->me->getAvatar(); ?>" />
-            <div class="dropdown-button hoverable user-menu">
-              <a class="button" href="/user/edit"><?php echo $this->me->getUsername(); ?><span class="arrow-down"></span></a>
-              <ul>
-                <li><a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a></li>
-                <li><a href="/user/edit"><?php echo $this->translate("Edit Profile"); ?></a></li>
-              </ul>
-            </div>
-          </div>
         <?php else: ?>
           <div class="login-register-box">
             <a href="/user/register"><?php echo $this->translate("Register now"); ?></a>
@@ -63,16 +65,9 @@
         <?php endif; ?>
       </div>
     </header>
-    <div id="page" class="pagewrap">
-      <header role="banner" id="header" class="clearfix">
-        <div id="beta-patch"></div>
+    <div class="pagewrap">
+      <header role="banner" class="clearfix">
+        <div class="beta-patch"></div>
         <h1 class="ir">Unplagged - The Plagiarism Detection Cockpit</h1>
-        <?php
-          $controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
-          $page = $this->navigation()->findOneByController($controller); /* @var $page Zend_Navigation_Page */
-          if ( $page ) {
-            $page->setActive();
-          }
-         ?>
         <nav><?php echo $this->navigation()->menu(); ?></nav>
       </header>

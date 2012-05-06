@@ -30,6 +30,8 @@
  */
 class Application_Model_Notification extends Application_Model_Base{
 
+  const ICON_CLASS = 'notification-icon';
+  
   /**
    * @ManyToOne(targetEntity="Application_Model_User")
    * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
@@ -82,10 +84,6 @@ class Application_Model_Notification extends Application_Model_Base{
 
   public function getDirectLink(){
     return "/notification/show/id/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return "notification-icon";
   }
 
   public function getTitle(){

@@ -30,6 +30,8 @@
  */
 class Application_Model_Comment extends Application_Model_Base{
 
+  const ICON_CLASS = 'comment-icon';
+  
   /**
    * @ManyToOne(targetEntity="Application_Model_User")
    * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
@@ -119,10 +121,6 @@ class Application_Model_Comment extends Application_Model_Base{
   
   public function getDirectLink(){
     return "/comment/show/id/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return "comment-icon";
   }
 
   public function toArray(){

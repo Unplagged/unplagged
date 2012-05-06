@@ -33,6 +33,8 @@ use DoctrineExtensions\Versionable\Versionable;
  */
 class Application_Model_Document_Fragment extends Application_Model_Versionable{
 
+  const ICON_CLASS = 'fragment-icon';
+  
   /**
    * The note.
    * @var string The note.
@@ -105,10 +107,6 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
 
   public function getDirectLink(){
     return "/document_fragment/show/id/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return "fragment-icon";
   }
 
   public function getPlag(){

@@ -1,9 +1,23 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+require_once BASE_PATH . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'phpass-0.3' . DIRECTORY_SEPARATOR . 'PasswordHash.php';
 
 class Unplagged_Helper{
 
@@ -14,7 +28,6 @@ class Unplagged_Helper{
    */
   public static function generateRandomHash(){
     return substr(md5(uniqid(rand())), 0, 32);
-    ;
   }
 
   /**
@@ -27,8 +40,13 @@ class Unplagged_Helper{
    * @todo we need to change this md5 isn't secure at all, normally this needs salting and at least sha256, better would
    * be to use bcrypt or phpass
    */
-  public static function hashString($string){
-    return md5($string);
+  public static function hashString($pass){
+    $hashCostLog2 = 10;
+    $hashPortable = false;
+    $hasher = new PasswordHash($hashCostLog2, $hashPortable);
+    $hash = $hasher->HashPassword($pass);
+
+    return $hash;
   }
 
   /**
@@ -39,8 +57,16 @@ class Unplagged_Helper{
    * 
    * @return Whether the string matches the hash or not.
    */
-  public static function checkStringAndHash($string, $hash){
-    return $hash == $this->hashString($string);
+  public static function checkStringAndHash($pass, $hash){
+    $hashCostLog2 = 10;
+    $hashPortable = false;
+    $hasher = new PasswordHash($hashCostLog2, $hashPortable);
+
+    if($hasher->CheckPassword($pass, $hash)){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   /**
@@ -112,44 +138,43 @@ class Unplagged_Helper{
     return str_pad($pageNumber, 3, '0', STR_PAD_LEFT);
   }
 
-  public function formatDiff($diff, $baseVersion, $changeVersion) {
-    if(empty($diff)) {
+  public function formatDiff($diff, $baseVersion, $changeVersion){
+    if(empty($diff)){
       return "<br />No difference";
     }
-    
+
     $diff = $diff[0];
-    
+
     $baseResult = "";
     $changedResult = "";
-    
+
     $baseResult .= "<div class=\"document-page diff clearfix\"><div class=\"src-wrapper\"><h3>Version " . $baseVersion . "</h3><ol>";
     $changedResult .= "<div class=\"src-wrapper\"><h3>Version " . $changeVersion . "</h3><ol>";
-    foreach($diff as $lines) {
+    foreach($diff as $lines){
       $base = $lines["base"];
       $change = $lines["changed"];
-      
+
       $iterator = count($base["lines"]) > count($change["lines"]) ? $base["lines"] : $change["lines"];
-      foreach($iterator as $key => $line) {
+      foreach($iterator as $key=>$line){
         $baseText = !empty($base["lines"][$key]) ? $base["lines"][$key] : "";
         $changeText = !empty($change["lines"][$key]) ? $change["lines"][$key] : "";
-        
+
         if(empty($baseText))
           $changeText = "<ins>" . $changeText . "</ins>";
-        
+
         $baseResult .= "<li>" . $baseText . "</li>";
-        
+
         if(empty($changeText))
           $changeText = "<del>" . $changeText . "</del>";
-        
+
         $changedResult .= "<li>" . $changeText . "</li>";
       }
     }
     $baseResult .= "</ol></div>";
     $changedResult .= "</ol></div></div>";
-   
+
     return $baseResult . $changedResult;
   }
 
 }
-
 ?>

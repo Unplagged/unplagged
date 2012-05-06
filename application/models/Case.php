@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Doctrine\Common\Collections\ArrayCollection;  // good idea, but does not work on my machine in base class
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- *
+ * A case is one of the most important model classes of the Unplagged system.
  * 
  * 
  * @Entity
@@ -30,6 +30,8 @@ use Doctrine\Common\Collections\ArrayCollection;  // good idea, but does not wor
  */
 class Application_Model_Case extends Application_Model_Base{
 
+  const ICON_CLASS = 'case-icon';
+  
   /**
    * The "real" name of the case, under which it will get published later on.
    * 
@@ -228,10 +230,6 @@ class Application_Model_Case extends Application_Model_Base{
 
   public function getDirectLink(){
     return "/case/show/id/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return "case-icon";
   }
 
   public function toArray(){

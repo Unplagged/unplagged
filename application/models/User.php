@@ -27,74 +27,59 @@
  */
 class Application_Model_User extends Application_Model_Base{
 
+  const ICON_CLASS = 'user-icon';
+  
   /**
-   * The date when this user got last modified.
-   * 
-   * @var string The latest modification date.
+   * @var string The date when this user got last modified.
    * 
    * @Column(type="datetime", nullable=true)
    */
   private $updated;
 
   /**
-   * The username, the user defined as an alias for the account.
-   * 
-   * @var string The username.
+   * @var string The username, the user defined as an alias for the account.
    * 
    * @Column(type="string", length=255, unique=true)
    */
   private $username;
 
   /**
-   * The password the user set up to login to the private area.
-   * @var string The password.
+   * @var string The password the user set up to login to the private area in an encrypted version.
    * 
-   * @Column(type="string", length=32)
+   * @Column(type="string", length=255)
    */
-  private $password;
+  private $encryptedPassword;
 
   /**
-   *
-   * @var type 
+   * @var string The email the user set up to login to the private area.
    * 
-   * @OneToOne(targetEntity="Application_Model_User_Role", cascade={"persist"})
-   */
-  private $role;
-
-  /**
-   * The email the user set up to login to the private area.
-   * @var string The email address.
-   * 
-   * @Column(type="string", length=32, unique=true)
+   * @Column(type="string", length=255, unique=true)
    */
   private $email;
 
   /**
-   * The users firstname.
-   * @var string The firstname.
+   * @var string The users firstname.
    * 
    * @Column(type="string", length=64, nullable=true)
    */
   private $firstname;
 
   /**
-   * The users lastname.
-   * @var string The lastname.
+   * @var string The users lastname.
    * 
    * @Column(type="string", length=64, nullable=true)
    */
   private $lastname;
 
   /**
-   * The users registration hash, used to verify the account.
-   * @var string The registration hash.
+   * @var string The users registration hash, used to verify the account.
    * 
    * @Column(type="string", length=32, unique=true)
    */
   private $verificationHash;
 
   /**
-   * The current state of the user.
+   * @var Application_Model_State The current state of the user.
    * 
    * @ManyToOne(targetEntity="Application_Model_State")
    * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
@@ -102,21 +87,27 @@ class Application_Model_User extends Application_Model_Base{
   private $state;
 
   /**
+   * @var Application_Model_User_Role 
+   * 
+   * @OneToOne(targetEntity="Application_Model_User_Role", cascade={"persist", "remove"})
+   */
+  private $role;
+
+  /**
+   * @var Application_Model_File
+   * 
    * @ManyToOne(targetEntity="Application_Model_File")
    * @JoinColumn(name="user_avatar_id", referencedColumnName="id")
    */
   private $avatar;
 
   /**
+   * @var Application_Model_Case
+   * 
    * @ManyToOne(targetEntity="Application_Model_Case")
    * @JoinColumn(name="current_case_id", referencedColumnName="id")
    */
   private $currentCase;
-
-  /**
-   * @Column(type="string", length=255)
-   */
-  private $salt = '';
 
   /**
    * @ManyToMany(targetEntity="Application_Model_File") 
@@ -126,84 +117,103 @@ class Application_Model_User extends Application_Model_Base{
    *      )
    */
   private $files;
+  
+  /**
+   * @var The personal settings of the user, e. g. the prefered language.
+   * 
+   * OneToMany(targetEntity="Application_Model_Setting") 
+   */
+  private $settings;
 
   public function __construct($data = array()){
-    if(isset($data["username"])){
-      $this->username = $data["username"];
+    if(isset($data['username'])){
+      $this->username = $data['username'];
     }
 
-    if(isset($data["password"])){
-      $this->password = $data["password"];
+    if(isset($data['password'])){
+      $this->encryptedPassword = $data['password'];
     }
 
-    if(isset($data["email"])){
-      $this->email = $data["email"];
+    if(isset($data['email'])){
+      $this->email = $data['email'];
     }
 
-    if(isset($data["firstname"])){
-      $this->firstname = $data["firstname"];
+    if(isset($data['firstname'])){
+      $this->firstname = $data['firstname'];
     }
 
-    if(isset($data["lastname"])){
-      $this->lastname = $data["lastname"];
+    if(isset($data['lastname'])){
+      $this->lastname = $data['lastname'];
     }
 
-    if(isset($data["verificationHash"])){
-      $this->verificationHash = $data["verificationHash"];
+    if(isset($data['verificationHash'])){
+      $this->verificationHash = $data['verificationHash'];
     }
 
-    if(isset($data["state"])){
-      $this->state = $data["state"];
+    if(isset($data['state'])){
+      $this->state = $data['state'];
     }
 
     $this->files = new \Doctrine\Common\Collections\ArrayCollection();
-    
-    if(isset($data['role']) && $data['role'] instanceof Application_Model_User_Role ){
-      $this->role = $data['role'];  
-    } else {
+
+    if(isset($data['role']) && $data['role'] instanceof Application_Model_User_Role){
+      $this->role = $data['role'];
+    }else{
       $this->role = new Application_Model_User_Role();
     }
   }
-
+  
+  public function getUpdated(){
+    return $this->updated;
+  }
+  
   /**
    * Sets the time of the last update to the current time.
    * 
    * @PreUpdate
    */
   public function updated(){
-    $this->updated = new DateTime("now");
-  }
-
-  public function getId(){
-    return $this->id;
-  }
-
-  public function getUpdated(){
-    return $this->updated;
+    $this->updated = new DateTime('now');
   }
 
   public function getUsername(){
     return $this->username;
   }
+  
+  public function getFirstname(){
+    return $this->firstname;
+  }
+
+  public function setFirstname($firstname){
+    $this->firstname = $firstname;
+  }
+  
+  public function getLastname(){
+    return $this->lastname;
+  }
+
+  public function setLastname($lastname){
+    $this->lastname = $lastname;
+  }
 
   public function getPassword(){
-    return $this->password;
+    return $this->encryptedPassword;
+  }
+
+  public function setPassword($password){
+    $this->encryptedPassword = $password;
   }
 
   public function getEmail(){
     return $this->email;
   }
 
-  public function getFirstname(){
-    return $this->firstname;
-  }
-
-  public function getLastname(){
-    return $this->lastname;
-  }
-
   public function getVerificationHash(){
     return $this->verificationHash;
+  }
+  
+  public function setVerificationHash($verificationHash){
+    $this->verificationHash = $verificationHash;
   }
 
   public function getState(){
@@ -214,14 +224,6 @@ class Application_Model_User extends Application_Model_Base{
     $this->state = $state;
   }
 
-  public function setFirstname($firstname){
-    $this->firstname = $firstname;
-  }
-
-  public function setLastname($lastname){
-    $this->lastname = $lastname;
-  }
-
   public function getCurrentCase(){
     return $this->currentCase;
   }
@@ -230,13 +232,6 @@ class Application_Model_User extends Application_Model_Base{
     $this->currentCase = $currentCase;
   }
 
-  public function unsetCurrentCase(){
-    $this->currentCase = null;
-  }
-
-  public function setPassword($password){
-    $this->password = $password;
-  }
 
   public function addFile(Application_Model_File $file){
     return $this->files->add($file);
@@ -262,16 +257,16 @@ class Application_Model_User extends Application_Model_Base{
     }
   }
 
-  public function setVerificationHash($verificationHash){
-    $this->verificationHash = $verificationHash;
-  }
-
+  /**
+   *
+   * @todo Would probably be better to handle the default somewhere else to keep this class clean
+   */
   public function getAvatar(){
     if(empty($this->avatar)){
-      return "/images/default-avatar.png";
+      return '/images/default-avatar.png';
     }
 
-    return "/image/view/" . $this->avatar->getId();
+    return '/image/view/' . $this->avatar->getId();
   }
 
   public function getDirectName(){
@@ -279,29 +274,22 @@ class Application_Model_User extends Application_Model_Base{
   }
 
   public function getDirectLink(){
-    return "/user/show/id/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return "user-icon";
+    
+    return '/user/show/id/' . $this->id;
   }
 
   public function toArray(){
     $result = array();
 
-    $result["id"] = $this->id;
-    $result["username"] = $this->username;
-    $result["avatar"] = $this->getAvatar();
+    $result['id'] = $this->id;
+    $result['username'] = $this->username;
+    $result['avatar'] = $this->getAvatar();
 
     return $result;
   }
 
-  public function getSalt(){
-    return $this->salt;
-  }
-  
   public function getRole(){
-    return $this->role;  
+    return $this->role;
   }
 
 }
