@@ -162,8 +162,10 @@ class FileController extends Unplagged_Controller_Action{
    * Enables 
    */
   public function downloadAction(){
+    var_dump($this->_getAllParams());
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
+    var_dump($input);
+    die('hier');
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
@@ -180,7 +182,7 @@ class FileController extends Unplagged_Controller_Action{
         header("Content-type: " . $file->getMimeType());
         header("Content-Transfer-Encoding: binary");
 
-        readfile($downloadPath);
+        readfile_chunked($downloadPath);
       }else{
         $this->_helper->FlashMessenger('No file found.');
         $this->_helper->redirector('list', 'file');
@@ -191,6 +193,31 @@ class FileController extends Unplagged_Controller_Action{
     $this->_helper->redirector('list', 'file');
   }
 
+  private function readfile_chunked($filename,$retbytes=true) { 
+   $chunksize = 1*(1024*1024); // how many bytes per chunk 
+   $buffer = ''; 
+   $cnt =0; 
+   // $handle = fopen($filename, 'rb'); 
+   $handle = fopen($filename, 'rb'); 
+   if ($handle === false) { 
+       return false; 
+   } 
+   while (!feof($handle)) { 
+       $buffer = fread($handle, $chunksize); 
+       echo $buffer; 
+       ob_flush(); 
+       flush(); 
+       if ($retbytes) { 
+           $cnt += strlen($buffer); 
+       } 
+   } 
+       $status = fclose($handle); 
+   if ($retbytes && $status) { 
+       return $cnt; // return num. bytes delivered like readfile() does. 
+   } 
+   return $status; 
+}
+  
   public function setTargetAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
