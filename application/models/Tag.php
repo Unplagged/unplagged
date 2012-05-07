@@ -30,7 +30,7 @@
  */
 class Application_Model_Tag extends Application_Model_Base{
 
-  const ICON_CLASS = 'tag-icon';
+  const ICON_CLASS = 'icon-tag';
 
   /**
    * The title.

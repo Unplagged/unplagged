@@ -30,6 +30,4 @@ $this->headTitle($this->title);
 </table> 
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
 
-<div class="smork-btn">
-  <a href="/case/create"><span class="create-case-icon"><?php echo $this->translate("Create a new case"); ?></span></a>
-</div>
+<a class="btn btn-primary" href="/case/create"><i class="icon-create-case"></i><?php echo $this->translate("Create a new case"); ?></a>

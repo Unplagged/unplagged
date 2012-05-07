@@ -30,7 +30,7 @@
  */
 class Application_Model_Notification extends Application_Model_Base{
 
-  const ICON_CLASS = 'notification-icon';
+  const ICON_CLASS = 'icon-notification';
   
   /**
    * @ManyToOne(targetEntity="Application_Model_User")

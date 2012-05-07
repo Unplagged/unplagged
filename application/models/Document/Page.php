@@ -27,7 +27,7 @@
  */
 class Application_Model_Document_Page extends Application_Model_Versionable{
 
-  const ICON_CLASS = 'page-icon';
+  const ICON_CLASS = 'icon-page';
   
   /**
    * The page number in the origional document.
@@ -67,7 +67,7 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
    */
   private $lines;
 
-  public function __construct($data){
+  public function __construct($data = null){
     parent::__construct();
 
     if(isset($data["file"])){
@@ -200,7 +200,7 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
   public function setContent($content, $inputType = 'text'){
     $lines = array();
     if($inputType == 'text'){
-      $lines = explode("\r\n", $content);
+      $lines = explode("\n", $content);
     }
     else if($inputType == 'htmltext'){
       $lines = explode("<br />", $content);
@@ -208,7 +208,7 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     else if($inputType == 'array') {
       $lines = $content;
     }
-    
+
     $lineNumbers = array();
     foreach($lines as $key=>$value){
       $lineNumbers[$key + 1] = $key + 1;

@@ -40,7 +40,7 @@ $(document).ready(function(){
   });
   
   
-  $(".toggle-comments").click(function() {
+  $(".toggle-comments").live('click', function() {
     var targetId = $(this).attr("for");
     var target = $("#" + targetId);
     var comments = target.children(".comments");
@@ -48,14 +48,14 @@ $(document).ready(function(){
     var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
 
     if(target.is(':visible')) {
-      $(this).html("<span class=\"comments-icon\">Show comments</span>");
+      $(this).html("<i class=\"icon-comments\"></i>Show comments");
       $(this).removeClass("expanded");
       
       target.slideUp(800, function() {
         comments.html("");
       });
     } else {
-      $(this).html("<span class=\"comments-icon\">Hide comments</span>");
+      $(this).html("<i class=\"icon-comments\"></i>Hide comments");
       $(this).addClass("expanded");
       target.show();
       comments.hide();
@@ -85,7 +85,14 @@ $(document).ready(function(){
     return false;
   });
   
-  $(".write-comment").click(function(){
+  // sends comment when return key is pressed in input field
+  $('.comment-field').live('keyup', function(e) {
+    if(e.keyCode == 13) {
+       $(this).parent().children('.write-comment').click();
+    }
+  });
+  
+  $(".write-comment").live('click', function(){
     var source = $(this).closest(".write-comment-box").children("input[name='sourceId']");
     var text = $(this).closest(".write-comment-box").children("input[name='text']");
 
@@ -168,7 +175,7 @@ $(document).ready(function(){
     
     return false;
   }
-  $("#compareWithNoColor").change(function(){
+  $("#compare-with-no-color").change(function(){
     compareFragmentTexts($(this).val(), $(this).attr('checked'));
   });
   

@@ -30,7 +30,7 @@
  */
 class Application_Model_File extends Application_Model_Base{
 
-  const ICON_CLASS = 'file-icon';
+  const ICON_CLASS = 'icon-file';
   
   /**
    * The date when the file was modified.
