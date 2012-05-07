@@ -847,6 +847,8 @@ dl.zend_form dd dt {
   background-image:     -ms-linear-gradient(top, #f5f5f5, #eee);
   background-image:      -o-linear-gradient(top, #f5f5f5, #eee); 
   background-image:         linear-gradient(top, #f5f5f5, #eee);
+  font-size: 13px;
+  line-height: 18px;
 }
 
 .zend_form input[type='submit'],
