@@ -85,20 +85,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   }
 
   /**
-   * Initalizes the flash messenger.
-   */
-  protected function _initMessenger(){
-    $flashMessenger = new Zend_Controller_Action_Helper_FlashMessenger();
-    Zend_Controller_Action_HelperBroker::addHelper($flashMessenger);
-
-    $messages = $flashMessenger->getMessages();
-    $this->bootstrap('layout');
-    $view = $this->getResource('layout')->getView();
-
-    $view->assign('messages', $messages);
-  }
-
-  /**
    * If no user is logged in, the guest user is set as default.
    */
   protected function _initGuest(){
