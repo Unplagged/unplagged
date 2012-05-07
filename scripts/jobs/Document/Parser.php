@@ -58,7 +58,8 @@ class Cron_Document_Parser extends Cron_Base{
 
         // update task
         $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
-
+        $task->setProgressPercentage(100);
+        
         self::$em->persist($document);
         self::$em->persist($task);
 
