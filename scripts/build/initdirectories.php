@@ -25,8 +25,6 @@ defined('BASE_PATH')
 //make sure to include them in the right order, so that dependencies occur beforehand
 //i. e. /data -> /data/uploads
 $directories = array(
-  'application' . DIRECTORY_SEPARATOR . 'storage', //@deprecated
-  'application' . DIRECTORY_SEPARATOR . 'files', //@deprecated
   'data',
   'data' . DIRECTORY_SEPARATOR . 'uploads',
   'data' . DIRECTORY_SEPARATOR . 'logs',

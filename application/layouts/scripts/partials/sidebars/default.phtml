@@ -1,6 +1,8 @@
 <nav id="right-nav">
-  <h4><?php echo $this->translate("Latest cases"); ?></h4>
-  <ul>
+  <ul class="nav nav-list">
+    <li class="nav-header">
+  <?php echo $this->translate("Latest cases"); ?></li>
+  
     <?php foreach ($this->cases as $case): ?>
     <li>
       <a href="#"><?php echo $case->getPublishableName(); ?> <span class="count"><?php echo $case->getPlagiarismPercentage(); ?> %</span>

@@ -55,7 +55,7 @@ function recursiveDirectories($path){
     if($directoryContent !== '..' && $directoryContent !== '.' && is_dir($path . DIRECTORY_SEPARATOR . $directoryContent)){
       recursiveDirectories($path . DIRECTORY_SEPARATOR . $directoryContent);  
     } else {
-      if(strstr($path . DIRECTORY_SEPARATOR . $directoryContent, "Controller.php") !== false){
+      if(strstr($path . DIRECTORY_SEPARATOR . $directoryContent, 'Controller.php') !== false){
         include_once $path . DIRECTORY_SEPARATOR . $directoryContent;
       }
     }
@@ -66,11 +66,11 @@ function recursiveDirectories($path){
 foreach(get_declared_classes() as $class){
   if(is_subclass_of($class, 'Zend_Controller_Action')){
 
-    $controller = strtolower(substr($class, 0, strpos($class, "Controller")));
+    $controller = strtolower(substr($class, 0, strpos($class, 'Controller')));
 
     foreach(get_class_methods($class) as $action){
 
-      if(strstr($action, "Action") !== false){
+      if(strstr($action, 'Action') !== false){
         $actionWithHyphens = preg_replace_callback('/([A-Z])/', create_function('$matches', 'return \'-\' . strtolower($matches[1]);'), substr($action, 0, -6));
         $basicResources[] = $controller . '_' . $actionWithHyphens;
       }
