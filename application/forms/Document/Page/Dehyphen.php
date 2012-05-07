@@ -31,23 +31,32 @@ class Application_Form_Document_Page_Dehyphen extends Zend_Form{
    */
   public function init(){
     $this->setMethod('post');
-
-    foreach($this->pageLines as $lineNumber=>$pageLine){
+    
+    $elements = array();
+    foreach($this->pageLines as $lineNumber => $pageLine){
+      $elements[] = $lineNumber;
       if(($pageLine["hasHyphen"])){
         $this->addElement('Checkbox', $lineNumber . "", array('belongsTo'=>'pageLine', 'decorators'=>array(
             array('ViewHelper'),
             array('Label', array('placement'=>'APPEND', 'separator'=>' ')),
-            array('HtmlTag', array('tag'=>'div', 'class'=>'page-line highlight'))
-            )))->$lineNumber->setLabel($pageLine["content"]);
+            array('HtmlTag', array('tag'=>'li', 'class'=>'page-line highlight'))
+            ))
+            )->$lineNumber->setLabel($pageLine["content"]);
       }else{
         $this->addElement('Hidden', $lineNumber . "", array('belongsTo'=>'pageLine', 'decorators'=>array(
             array('ViewHelper'),
             array('Label', array('placement'=>'APPEND', 'separator'=>' ')),
-            array('HtmlTag', array('tag'=>'div', 'class'=>'page-line empty'))
+            array('HtmlTag', array('tag'=>'li', 'class'=>'page-line empty'))
             )))->$lineNumber->setLabel($pageLine["content"]);
       }
     }
-
+    $this->addDisplayGroup($elements, 'lines', array("legend" => "Page content"));
+    $this->lines->setDecorators(array(
+        'FormElements',
+        array('HtmlTag', array('tag' => 'ol')),
+        'Fieldset'
+    ));
+    
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('De-hyphen');
     $submitElement->setOptions(array('class'=>'btn btn-primary'));

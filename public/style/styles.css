@@ -725,7 +725,20 @@ table.default .progress {
 .zend_form dt {
   margin: 5px 0 2px 0;
 }
+.src-wrapper .zend_form ol {
+  padding-top: 15px;
+  padding-bottom: 1px;
+  margin-bottom: 15px;
+}
+.src-wrapper .zend_form ol label {
+  margin-bottom: 0;
+  display: inline;
+}
 
+.src-wrapper .zend_form ol li.page-line input {
+  float: right;
+  margin-right: -25px;
+}
 .zend_form label {
   font-weight: normal;
 }
@@ -856,7 +869,7 @@ dl.zend_form dd dt {
   border-top: 0;
 }
 
-.document-page .highlight {
+.src-wrapper li.highlight {
   background-color: #fefabf;
 }
 

@@ -118,13 +118,13 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $this->view->page = $page;
 
         $lines = $page->getContent("array");
+        
         $pageLines = array();
-        foreach($lines as $lineNumber=>$content){
-          $pageLine["content"] = !empty($content) ? $content : ' ';
+        foreach($lines as $lineNumber => $content){
+          $pageLine["content"] = !empty($content) ? trim($content) : ' ';
           $pageLine["hasHyphen"] = (substr($pageLine["content"], -1) == "-");
           $pageLines[] = $pageLine;
         }
-
         // create form
         $deHyphenForm = new Application_Form_Document_Page_Dehyphen(array('pageLines'=>$pageLines));
 
