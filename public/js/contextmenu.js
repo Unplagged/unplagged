@@ -27,7 +27,7 @@ $(document).ready(function(){
   //we only use it when the class show-contextmenu is present
   $('.show-contextmenu')
   .attr('title', 'Tip: Use Contextmenu')
-  .attr('data-content', 'You can mark words with a leftclick and the open a contexmenu on right click')
+  .attr('data-content', 'You can mark words with a leftclick and then open a contexmenu on right click.')
   .popover({
     placement: 'top'
   }).bind('contextmenu', showCustomContextmenu);
