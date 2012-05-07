@@ -25,15 +25,12 @@ $(document).ready(function(){
   
   //to make it possible to show the contextmenu only on certain elements, 
   //we only use it when the class show-contextmenu is present
-  $('.show-contextmenu .main')
+  $('.show-contextmenu')
   .attr('title', 'Tip: Use Contextmenu')
   .attr('data-content', 'You can mark words with a leftclick and the open a contexmenu on right click')
   .popover({
     placement: 'top'
-  })
-  .bind('contextmenu', showCustomContextmenu).mouseover(function(){
-    
-    });
+  }).bind('contextmenu', showCustomContextmenu);
 
   //we probably only need mouseup, because then we know that the selection is finished
   $('.show-contextmenu').bind('mouseup', clickHandler);

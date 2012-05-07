@@ -10,6 +10,7 @@ $(document).ready(function(){
   // lined textareas
   $("textarea").numberfy();
 
+  $('.dropdown-toggle').dropdown();
   $('.alert').prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');
   $().alert()
  
@@ -88,7 +89,7 @@ $(document).ready(function(){
   // sends comment when return key is pressed in input field
   $('.comment-field').live('keyup', function(e) {
     if(e.keyCode == 13) {
-       $(this).parent().children('.write-comment').click();
+      $(this).parent().children('.write-comment').click();
     }
   });
   
@@ -120,19 +121,6 @@ $(document).ready(function(){
     '</div>';
     target.append(tpl);
   }
-  
-  //make dropdown out of the action icons
-  function wrapActions(){
-    var dropdownButton = $('<div class="dropdown-button left-dropout" />');
-    $('.action-list').addClass('').wrap(dropdownButton).parent().prepend('<button class="button">Select action<span class="arrow-down"></span></button>');
-    $('.action-list a').each(function(){
-      var currentAction = $(this);
-      var title = currentAction.attr('title');
-      currentAction.removeAttr('title');
-      currentAction.append('<span>' + title + '</span>');
-    });
-  }
-  wrapActions();
   
   //wrap home menu button, so that icon gets shown
   var homeButton = $('header[role=banner] .navigation .home');
@@ -304,5 +292,5 @@ $(document).ready(function(){
     $(window).trigger('hashchange');
   });
 
-    $('a.picture').lightBox();
+  $('a.picture').lightBox();
 });

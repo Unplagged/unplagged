@@ -3,7 +3,7 @@ $this->title = $this->translate('Page') . ' ' . $this->page->getPageNumber() . '
 $this->headTitle($this->title);
 ?>
 
-<div class="document-page src-wrapper">
+<div class="document-page src-wrapper show-contextmenu">
   <?php echo $this->page->getContent('list'); ?>
 </div>
 <ul class="pager">
