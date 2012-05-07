@@ -28,7 +28,7 @@
  */
 class Application_Model_Document_Page_DetectionReport extends Application_Model_Base{
 
-  const ICON_CLASS = 'report-icon';
+  const ICON_CLASS = 'icon-report';
   
   /**
    * The percentage of plagiarism in this page.

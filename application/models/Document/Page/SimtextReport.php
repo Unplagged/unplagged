@@ -28,7 +28,7 @@
  */
 class Application_Model_Document_Page_SimtextReport extends Application_Model_Base{
 
-  const ICON_CLASS = 'report-icon';
+  const ICON_CLASS = 'icon-report';
   
   /**
    * The current state of the report.

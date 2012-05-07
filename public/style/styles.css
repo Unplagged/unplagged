@@ -12,13 +12,13 @@ body, button, input, select, textarea { font-family: sans-serif; color: #222; }
 
 ::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
 ::selection { background: #fe57a1; color: #fff; text-shadow: none; }
-
+/*
 a { color: #00e; }
 a:visited { color: #551a8b; }
 a:hover { color: #06e; }
 a:focus { outline: thin dotted; }
 a:hover, a:active { outline: 0; }
-
+*/
 abbr[title] { border-bottom: 1px dotted; }
 b, strong { font-weight: bold; }
 blockquote { margin: 1em 40px; }
@@ -34,7 +34,7 @@ small { font-size: 85%; }
 sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
 sup { top: -0.5em; }
 sub { bottom: -0.25em; }
-ul, ol { margin: 1em 0; padding: 0 0 0 40px; }
+/*ul, ol { margin: 1em 0; padding: 0 0 0 40px; }*/
 dd { margin: 0 0 0 40px; }
 nav ul, nav ol { list-style: none; list-style-image: none; margin: 0; padding: 0; }
 img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
@@ -655,14 +655,13 @@ nav#right-nav ul li a .count {
 table.default {
   width: 100%;
   background-color: #fbfbfb;
-  margin: 20px 0 0 0;
+  margin: 20px 0 10px 0;
   font-size: 10pt;
 }
 
 table.default th,
 .default-container h3,
 .diff h3{
-  /*background-color: #efefef;*/
   color: #666666;
   text-align: left;
   padding: 8px 5px 8px 15px;
@@ -716,18 +715,6 @@ table.default td {
   vertical-align: middle;
   height: 23px;
 }
-
-
-/* @todo: removed [role=main] to fix the bug with blue links instead of white ones */
-div a {
-  color: #226e87;
-  text-decoration: none;
-}
-
-div a:hover {
-  text-decoration: underline;
-}
-
 
 /* zend form */
 .zend_form,
@@ -851,76 +838,6 @@ dl.zend_form dd dt {
   line-height: 18px;
 }
 
-.zend_form input[type='submit'],
-.zend_form input[type='submit']:visited,
-.smork-btn a,
-.smork-btn a:visited {
-  background: #484C51;
-  background: -moz-linear-gradient(top, #5d6062 0%, #484C51 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5d6062), color-stop(100%,#484C51));
-  background: -webkit-linear-gradient(top, #5d6062 0%,#484C51 100%);
-  background: -o-linear-gradient(top, #5d6062 0%,#484C51 100%);
-  background: -ms-linear-gradient(top, #5d6062 0%,#484C51 100%);
-  background: linear-gradient(top, #5d6062 0%,#484C51 100%);
-  border: 0;
-  display: inline-block; 
-  padding: 6px 12px; 
-  font-size: 12px;
-  line-height: 12px;
-  color: #fff;
-  text-decoration: none;
-  -moz-border-radius: 5px; 
-  -webkit-border-radius: 5px; 
-  -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);  
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-  text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
-  position: relative;
-  cursor: pointer;
-  margin-bottom: 3px;
-  margin-top: 10px;
-}
-
-.zend_form input[type='submit']:hover,
-.smork-btn a:hover { 
-  background: #484C51;
-  background: -moz-linear-gradient(top, #494b4e 0%, #3d4046 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#494b4e), color-stop(100%,#3d4046));
-  background: -webkit-linear-gradient(top, #494b4e 0%,#3d4046 100%);
-  background: -o-linear-gradient(top, #494b4e 0%,#3d4046 100%);
-  background: -ms-linear-gradient(top, #494b4e 0%,#3d4046 100%);
-  background: linear-gradient(top, #494b4e 0%,#3d4046 100%);
-  color: #fff;
-}
-
-.smork-btn.light a,
-.smork-btn.light a:visited {
-  background: #484C51;
-  background: -moz-linear-gradient(top, #efefef 0%, #dfdddd 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#efefef), color-stop(100%,#dfdddd));
-  background: -webkit-linear-gradient(top, #efefef 0%,#dfdddd 100%);
-  background: -o-linear-gradient(top, #efefef 0%,#dfdddd 100%);
-  background: -ms-linear-gradient(top, #efefef 0%,#dfdddd 100%);
-  background: linear-gradient(top, #efefef 0%,#dfdddd 100%);
-  color: #323232;
-}
-
-.smork-btn.light a:hover { 
-  background: #484C51;
-  background: -moz-linear-gradient(top, #494b4e 0%, #3d4046 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#494b4e), color-stop(100%,#3d4046));
-  background: -webkit-linear-gradient(top, #494b4e 0%,#3d4046 100%);
-  background: -o-linear-gradient(top, #494b4e 0%,#3d4046 100%);
-  background: -ms-linear-gradient(top, #494b4e 0%,#3d4046 100%);
-  background: linear-gradient(top, #494b4e 0%,#3d4046 100%);
-  color: #fff;
-}
-
-
-.zend_form input[type='submit']:active,
-smork-btn a:active { top: 1px; }
-
 .zend_form .two-column-form {
   float: left;
   width: 50%;
@@ -992,101 +909,6 @@ smork-btn a:active { top: 1px; }
 
 
 
-
-/* dataTables */
-.dataTables_wrapper {
-  font-size: 16px;
-  margin-bottom: 25px;
-}
-
-.dataTables_wrapper	.ui-widget-header
-{
-  background: none;
-  border: 0;
-  font-weight: normal;
-}
-
-.dataTables_wrapper	.ui-state-default,
-.dataTables_wrapper	.ui-widget-content .ui-state-default,
-.dataTables_wrapper	.ui-widget-header .ui-state-default
-{
-  border: 0;
-}
-.dataTables_wrapper .css_right {
-  float: right;
-}
-
-.dataTables_wrapper tr td,
-.dataTables_wrapper tr th  {
-  background-image: url(/images/td_30.png);
-  background-repeat: repeat-x;
-  border-bottom: 1px #dad9d9 solid;
-  padding: 0 5px;
-  vertical-align: middle;
-  height: 26px;
-}
-.dataTables_wrapper tr th div  {
-  height: 20px;
-  overflow: hidden;
-}
-.dataTables_wrapper tr td span
-{
-  width: 300px;
-  display: block;
-  height: 20px;
-  overflow: hidden;
-}	
-.dataTables_wrapper tr.odd td {
-  background-image: url(/images/td_30_odd.png);
-  background-repeat: repeat-x;
-}
-
-.dataTables_length, 
-.dataTables_info {
-  margin: 5px 0 0 10px;
-  width: 290px;
-  float: left;
-  text-align: left;
-}
-.dataTables_info
-{
-  width: 490px;
-}
-.dataTables_processing {
-  width: 610px;
-  text-align: center;
-  float: left;
-  margin-top: 0;
-  font-weight: regular;
-}
-.dataTables_filter, 
-.dataTables_paginate {
-  margin: 5px 10px 0 0;
-  width: 80px;
-  float: right;
-  text-align: right;
-}
-.dataTables_paginate a {
-  padding: 4px 4px;
-  background-color: none;
-}
-.dataTables_filter
-{
-  width: 280px;
-}
-.dataTables_wrapper input
-{
-  background: #ffffff;
-  width: 140px;
-  padding: 2px 5px 3px;
-  text-decoration: none;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border: 1px solid #c0c0c0;
-  position: relative;
-  font-size: 14px;
-  margin-bottom: 5px;
-}
 .ui-menu .ui-menu-item a.over {
   line-height: 49px;
 }
@@ -1189,75 +1011,74 @@ smork-btn a:active { top: 1px; }
   font-size: 9pt;
 }
 
-.smork-btn {
-  display: inline-block;
+/* icons */
+.btn i,
+.activity i{ 
+  background-size: 14px 14px;
+  background-repeat: no-repeat;
+  margin-right: 5px;
 }
-.smork-btn a span, .smork-btn:visited a span,
-.activity-item a span{
-  padding: 1px 0 1px 22px;
-}
-
-.upload-icon, .upload-icon:visited {
-  background: url(/images/icons/page_white_get.png) no-repeat left;
-}
-
-.create-case-icon, .create-case-icon:visited {
-  background: url(/images/icons/book_add.png) no-repeat left;
+.icon-upload {
+  background: url(/images/icons/page_white_get.png);
 }
 
-.simtext-compare-icon, .simtext-compare-icon:visited {
-  background: url(/images/icons/page_copy.png) no-repeat left;
+.icon-create-case {
+  background: url(/images/icons/book_add.png);
 }
 
-.comments-icon, .comments-icon:visited {
-  background: url(/images/icons/comments.png) no-repeat left;
+.icon-simtext-compare {
+  background: url(/images/icons/page_copy.png);
 }
 
-.user-icon, .user-icon:visited {
-  background: url(/images/icons/user.png) no-repeat left;
+.icon-comments {
+  background: url(/images/icons/comments.png);
 }
 
-.case-icon, .case-icon:visited {
-  background: url(/images/icons/package.png) no-repeat left;
+.icon-user {
+  background: url(/images/icons/user.png);
 }
 
-.comment-icon, .comment-icon:visited {
-  background: url(/images/icons/comment.png) no-repeat left;
+.icon-case{
+  background: url(/images/icons/package.png);
 }
 
-.document-icon, .document-icon:visited {
-  background: url(/images/icons/book.png) no-repeat left;
+.icon-comment {
+  background: url(/images/icons/comment.png);
 }
 
-.fragment-icon, .fragment-icon:visited {
-  background: url(/images/icons/textfield.png) no-repeat left;
+.icon-document {
+  background: url(/images/icons/book.png);
 }
 
-.create-fragment-icon, .create-fragment-icon:visited {
-  background: url(/images/icons/textfield_add.png) no-repeat left;
+.icon-fragment {
+  background: url(/images/icons/textfield.png);
 }
 
-.file-icon, .file-icon:visited {
-  background: url(/images/icons/disk.png) no-repeat left;
+.icon-create-fragment {
+  background: url(/images/icons/textfield_add.png);
 }
 
-.notification-icon, .notification-icon:visited {
-  background: url(/images/icons/clock.png) no-repeat left;
+.icon-file {
+  background: url(/images/icons/disk.png);
 }
 
-.tag-icon, .tag-icon:visited {
-  background: url(/images/icons/tag_blue.png) no-repeat left;
+.icon-notification{
+  background: url(/images/icons/clock.png);
 }
 
-.document-page-icon, .document-page-icon:visited {
-  background: url(/images/icons/page.png) no-repeat left;
+.icon-tag{
+  background: url(/images/icons/tag_blue.png);
 }
 
-.report-icon, .report-icon:visited {
-  background: url(/images/icons/report.png) no-repeat left;
+.icon-document-page {
+  background: url(/images/icons/page.png);
 }
 
-/* pagination controls */
+.icon-report {
+  background: url(/images/icons/report.png);
+}
+
+/* pagination controls
 .pagination ul {
   margin-top: 0;
 }
@@ -1274,7 +1095,7 @@ smork-btn a:active { top: 1px; }
 }
 
 .pagination a{ cursor: pointer; }
-
+*/
 #activity-stream {
 
 }
@@ -1299,7 +1120,6 @@ smork-btn a:active { top: 1px; }
   padding-top: 5px;
 }
 #activity-stream .activity .title-wrapper .title {
-  padding-left: 20px;
   display: inline-block;
 }
 
@@ -2121,50 +1941,5 @@ ins {
 
 #line_numbers {clear:both; float: left; text-align: right}
 
-/*
-.linedwrap {
-	border: 1px solid #c0c0c0;
-	padding: 3px;
-}
 
-.linedtextarea {
-	padding: 0px;
-	margin: 0px;
-}
-
-.linedtextarea textarea, .linedwrap .codelines .lineno {
-	font-size: 10pt;
-	font-family: monospace;
-	line-height: normal !important;
-}
-
-.linedtextarea textarea {
-	padding-right:0.3em;
-	padding-top:0.3em;
-	border: 0;
-}
-
-.linedwrap .lines {
-	margin-top: 0px;
-	width: 50px;
-	float: left;
-	overflow: hidden;
-	border-right: 1px solid #c0c0c0;
-	margin-right: 10px;
-}
-
-.linedwrap .codelines {
-	padding-top: 5px;
-}
-
-.linedwrap .codelines .lineno {
-	color:#AAAAAA;
-	padding-right: 0.5em;
-	padding-top: 0.0em;
-	text-align: right;
-	white-space: nowrap;
-}
-
-.linedwrap .codelines .lineselect {
-	color: red;
-}*/
+@media (max-width:767px){body{padding-left:0;padding-right:0;}}

@@ -45,9 +45,7 @@ class Application_Form_User_Password_Recover extends Zend_Form{
 
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Recover password');
-    $submitElement->setIgnore(true);
-    $submitElement->setAttrib('class', 'submit');
-    $submitElement->removeDecorator('DtDdWrapper');
+    $submitElement->setOptions(array('class'=>'btn btn-primary'));
 
     $this->addElements(array(
       $emailElement

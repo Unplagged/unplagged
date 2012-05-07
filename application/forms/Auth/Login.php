@@ -49,9 +49,7 @@ class Application_Form_Auth_Login extends Zend_Form{
 
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Log in');
-    $submitElement->setIgnore(true);
-    $submitElement->setAttrib('class', 'submit');
-    $submitElement->removeDecorator('DtDdWrapper');
+    $submitElement->setOptions(array('class'=>'btn btn-primary'));
 
     $this->addElements(array(
       $usernameElement

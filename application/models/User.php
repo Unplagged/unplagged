@@ -27,7 +27,7 @@
  */
 class Application_Model_User extends Application_Model_Base{
 
-  const ICON_CLASS = 'user-icon';
+  const ICON_CLASS = 'icon-user';
   
   /**
    * @var string The date when this user got last modified.

@@ -26,6 +26,5 @@
 </table>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
 
-<div class="smork-btn">
-  <a href="/file/upload"><span class="upload-icon"><?php echo $this->translate("Upload a file"); ?></span></a>
-</div>
+<a class="btn btn-primary" href="/file/upload"><i class="icon-upload"></i><?php echo $this->translate("Upload a file"); ?></a>
+

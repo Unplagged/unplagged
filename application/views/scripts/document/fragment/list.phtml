@@ -32,6 +32,4 @@ $this->headTitle($this->title);
 </table>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
 
-<div class="smork-btn">
-  <a href="/document_fragment/create"><span class="create-fragment-icon"><?php echo $this->translate("Create a fragment"); ?></span></a>
-</div>
+<a class="btn btn-primary" href="/document_fragment/create"><i class="icon-create-fragment"></i><?php echo $this->translate("Create a fragment"); ?></span></a>

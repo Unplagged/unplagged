@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Application_Model_Case extends Application_Model_Base{
 
-  const ICON_CLASS = 'case-icon';
+  const ICON_CLASS = 'icon-case';
   
   /**
    * The "real" name of the case, under which it will get published later on.

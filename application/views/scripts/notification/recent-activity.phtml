@@ -10,12 +10,10 @@ $this->headTitle($this->title);
       <div class="details">
         <div class="title-wrapper">
           <h4>
-            <span class="title <?php echo $notification->getSource()->getIconClass(); ?>"><?php echo sprintf($notification->getTitle(), "<a href=\"" . $notification->getSource()->getDirectLink() . "\">" . $notification->getSource()->getDirectName() . "</a>"); ?></span> <span class="user"><?php echo $notification->getUser()->getUsername();?>, <?php echo Unplagged_Helper::humanTiming($notification->getCreated()); ?> </span>
+            <span class="title"><i class="<?php echo $notification->getSource()->getIconClass(); ?>"></i><?php echo sprintf($notification->getTitle(), "<a href=\"" . $notification->getSource()->getDirectLink() . "\">" . $notification->getSource()->getDirectName() . "</a>"); ?></span> <span class="user"><?php echo $notification->getUser()->getUsername();?>, <?php echo Unplagged_Helper::humanTiming($notification->getCreated()); ?> </span>
           </h4>
           <div class="links"  style="text-align: right">
-          <div class="smork-btn light">
-            <a href="#" for="comments-wrapper-<?php echo $notification->getId(); ?>" class="toggle-comments"><span class="comments-icon">Show comments</span></a>
-          </div>
+            <a class="btn toggle-comments" href="#" for="comments-wrapper-<?php echo $notification->getId(); ?>" class="toggle-comments"><i class="icon-comments"></i>Show comments</a>
         </div>
         </div>
         <p><?php echo $notification->getMessage(); ?></p>

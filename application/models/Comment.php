@@ -30,7 +30,7 @@
  */
 class Application_Model_Comment extends Application_Model_Base{
 
-  const ICON_CLASS = 'comment-icon';
+  const ICON_CLASS = 'icon-comment';
   
   /**
    * @ManyToOne(targetEntity="Application_Model_User")
