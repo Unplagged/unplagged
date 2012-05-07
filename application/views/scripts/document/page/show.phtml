@@ -1,12 +1,11 @@
 <?php
-$this->title = $this->translate("Page details");
+$this->title = $this->translate('Page') . ' ' . $this->page->getPageNumber() . ' ' . $this->translate('of') . ' "' . $this->page->getDocument()->getTitle() . '"';
 $this->headTitle($this->title);
 ?>
-Document: <?php echo $this->page->getDocument()->getTitle(); ?><br />
-Page number: <?php echo $this->page->getPageNumber(); ?><br />
 
-Content: <br />
-
+<div class="document-page src-wrapper">
+  <?php echo $this->page->getContent('list'); ?>
+</div>
 <ul class="pager">
   <?php if(!empty($this->prevPageLink)): ?>
   <li class="previous"><a href="<?php echo $this->prevPageLink ?>"><?php echo $this->translate("previous page"); ?></a></li>
@@ -19,10 +18,6 @@ Content: <br />
     <li class="next disabled"><a href=""><?php echo $this->translate('Next page'); ?></a></li>
   <?php endif; ?>
 </ul>
-
-<div class="document-page src-wrapper">
-  <?php echo $this->page->getContent('list'); ?>
-</div>
 
 <?php // @todo: think about a better way to open a new page with post data in jquery ?>
 <form method="post" action="/document_fragment/create" id="fragment-create">
