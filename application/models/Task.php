@@ -70,6 +70,14 @@ class Application_Model_Task extends Application_Model_Base{
    * @Column(type="text", nullable=true)
    */
   private $log;
+  
+  /**
+   * The current progress in percent of the task.
+   * @var string The current progress in percent of the task.
+   * 
+   * @Column(type="integer")
+   */
+  private $progressPercentage = 0;
 
   public function __construct($data = array()){
     if(isset($data["initiator"])){
@@ -132,6 +140,16 @@ class Application_Model_Task extends Application_Model_Base{
   public function setLog($log){
     $this->log = $log;
   }
+  
+  public function getProgressPercentage(){
+    return $this->progressPercentage;
+  }
+
+  public function setProgressPercentage($progressPercentage){
+    $this->progressPercentage = $progressPercentage;
+  }
+
+
 
 }
 ?>

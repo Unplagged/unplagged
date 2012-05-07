@@ -711,6 +711,10 @@ table.default td {
   height: 23px;
 }
 
+table.default .progress {
+  margin-bottom: 0;
+}
+
 /* zend form */
 .zend_form,
 .zend_form  dd {
