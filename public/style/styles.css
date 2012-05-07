@@ -85,12 +85,28 @@ p {
 
 /* ==|== reusable styles ======================================================= */
 
-.chromeframe { 
+.top-alert .alert{ 
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
   margin: auto;
   width: 90%;
   margin: 0 auto; 
-  padding: 0.2em 0; 
   min-width: 240px; 
+  border-left: 0;
+  border-right: 0;
+}
+
+.top-alert .close {
+  right: 0;
+}
+
+.top-alert p {
+  margin-bottom: 0;
 }
 
 .avatar,
@@ -273,10 +289,11 @@ p {
   position:absolute;
   z-index:10000;
   color:black;
-  background-color:#40bfe8;
+  background-color:white;
   list-style-type: none;
   margin: 0;
   padding: 10px;
+  border: 1px solid #40bfe8;
 }
 
 .contextmenu li{
@@ -1928,6 +1945,11 @@ ins {
   }
   
   header[role=toolbar] .content {
+    margin: 0 10px;
+    width: auto;
+  }
+  
+  .top-alert .alert{ 
     margin: 0 10px;
     width: auto;
   }
