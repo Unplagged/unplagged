@@ -59,7 +59,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
         $document = self::$em->getRepository('Application_Model_Document')->findOneById($documentId);
         $pagesCount += $document->getPages()->count();
       }
-
+      
       $i = 0;
       $documents = $report->getDocuments();
       foreach($documents as $documentId){
@@ -113,8 +113,8 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
           $perc = round($i * 1.0 / $pagesCount * 100 / 10) * 10;
           $task->setProgressPercentage($perc);
-          $this->_em->persist($task);
-          $this->_em->flush();
+          self::$em->persist($task);
+          self::$em->flush();
         }
       }
 
