@@ -53,6 +53,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
       $left = $report->getPage()->getContent('array');
 
       // count the pages to compare
+      $documents = $report->getDocuments();
       $pagesCount = 0;
       foreach($documents as $documentId){
         $document = self::$em->getRepository('Application_Model_Document')->findOneById($documentId);
