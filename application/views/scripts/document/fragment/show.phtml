@@ -27,7 +27,7 @@ $this->headTitle($this->title);
 
 <?php echo $this->translate("Note"); ?>: <?php echo $this->fragment->getNote(); ?>
 <div>
-    <a class="btn" href="#" for="comments-wrapper-<?php echo $this->fragment->getId(); ?>" class="toggle-comments"><i class="icon-comments"></i>Show comments/a>
+    <a class="btn" href="#" for="comments-wrapper-<?php echo $this->fragment->getId(); ?>" class="toggle-comments"><i class="icon-comments"></i>Show comments</a>
   <br /><br />
   <?php echo $this->partial('partials/comments.phtml', array('sourceId'=>$this->fragment->getId(), 'hidden'=>true)); ?>
 </div>
