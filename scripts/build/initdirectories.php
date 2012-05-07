@@ -29,11 +29,11 @@ $directories = array(
   'data' . DIRECTORY_SEPARATOR . 'uploads',
   'data' . DIRECTORY_SEPARATOR . 'logs',
   'data' . DIRECTORY_SEPARATOR . 'cache',
+  'data' . DIRECTORY_SEPARATOR . 'doctrine',
+  'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR . 'proxies',
   'temp',
   'temp' . DIRECTORY_SEPARATOR . 'ocr',
-  'temp' . DIRECTORY_SEPARATOR . 'imagemagick',
-  'data' . DIRECTORY_SEPARATOR . 'doctrine',
-  'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR . 'proxies'
+  'temp' . DIRECTORY_SEPARATOR . 'imagemagick'
 );
 
 echo 'Creating directories' . PHP_EOL;

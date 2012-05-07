@@ -2,28 +2,26 @@
 $this->title = $this->translate("Page details");
 $this->headTitle($this->title);
 ?>
-previous page – next page
 Document: <?php echo $this->page->getDocument()->getTitle(); ?><br />
 Page number: <?php echo $this->page->getPageNumber(); ?><br />
 
 Content: <br />
 
-<div style="text-align: right;">
+<ul class="pager">
   <?php if(!empty($this->prevPageLink)): ?>
-    <a href="<?php echo $this->prevPageLink ?>"><?php echo $this->translate("previous page"); ?></a>
+  <li class="previous"><a href="<?php echo $this->prevPageLink ?>"><?php echo $this->translate("previous page"); ?></a></li>
   <?php else: ?>
-    <?php echo $this->translate("previous page"); ?>
+    <li class="previous disabled"><a href=""><?php echo $this->translate('Previous page'); ?></a></li>
   <?php endif; ?>
-  –
   <?php if(!empty($this->nextPageLink)): ?>
-    <a href="<?php echo $this->nextPageLink ?>"><?php echo $this->translate("next page"); ?></a>
+  <li class="next"><a href="<?php echo $this->nextPageLink ?>"><?php echo $this->translate("next page"); ?></a></li>
   <?php else: ?>
-    <?php echo $this->translate("next page"); ?>
+    <li class="next disabled"><a href=""><?php echo $this->translate('Next page'); ?></a></li>
   <?php endif; ?>
-</div>
+</ul>
 
 <div class="document-page src-wrapper">
-  <?php echo $this->page->getContent("list"); ?>
+  <?php echo $this->page->getContent('list'); ?>
 </div>
 
 <?php // @todo: think about a better way to open a new page with post data in jquery ?>

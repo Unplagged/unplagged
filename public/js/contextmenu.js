@@ -13,9 +13,9 @@ $(document).ready(function(){
    */
   function addContextMenu(){
     var contextMenuElement = '<ul id="contextmenu" class="contextmenu">' + 
-            '<li><a class="menu">Google-Suchwörter löschen</a></li>' +
-            '<li><a id="googleSearch" class="menu">Google Suche</a></li>' +
-          '</ul>';
+    '<li><a class="menu">Google-Suchwörter löschen</a></li>' +
+    '<li><a id="googleSearch" class="menu">Google Suche</a></li>' +
+    '</ul>';
     $('body').append(contextMenuElement);
   }
   
@@ -25,86 +25,84 @@ $(document).ready(function(){
   
   //to make it possible to show the contextmenu only on certain elements, 
   //we only use it when the class show-contextmenu is present
-  $('.show-contextmenu').bind('contextmenu', showCustomContextmenu).mouseover(function(){
+  $('.show-contextmenu .main')
+  .attr('title', 'Tip: Use Contextmenu')
+  .attr('data-content', 'You can mark words with a leftclick and the open a contexmenu on right click')
+  .popover({
+    placement: 'top'
+  })
+  .bind('contextmenu', showCustomContextmenu).mouseover(function(){
     
-  });
+    });
 
   //we probably only need mouseup, because then we know that the selection is finished
   $('.show-contextmenu').bind('mouseup', clickHandler);
   $('.show-contextmenu').click(function(){
-      contextMenuElement.hide();
+    contextMenuElement.hide();
   });
 
   //mouse enter should have better performance then mousemove, because it should only get called once
   contextMenuElement.mouseenter(function(){
-      contextMenu = true;
+    contextMenu = true;
   });
   
   contextMenuElement.mouseout(function(){
-      contextMenu = false;
+    contextMenu = false;
   });
 
   function showCustomContextmenu(ev)
   {  
-    if (searchBuffer != '') {
-        // if searchBuffer is not empty, it means that the user has selected a word
-        // => show our context menu.
-        x = (document.all) ? window.event.x + document.body.scrollLeft : ev.pageX;
-        y = (document.all) ? window.event.y + document.body.scrollTop : ev.pageY;
-        var scrollTop = document.body.scrollTop ? document.body.scrollTop : document.documentElement.scrollTop;
-        var scrollLeft = document.body.scrollLeft ? document.body.scrollLeft : document.documentElement.scrollLeft;
+      // if searchBuffer is not empty, it means that the user has selected a word
+      // => show our context menu.
+      x = (document.all) ? window.event.x + document.body.scrollLeft : ev.pageX;
+      y = (document.all) ? window.event.y + document.body.scrollTop : ev.pageY;
+      var scrollTop = document.body.scrollTop ? document.body.scrollTop : document.documentElement.scrollTop;
+      var scrollLeft = document.body.scrollLeft ? document.body.scrollLeft : document.documentElement.scrollLeft;
 
-        contextMenuElement.css({
-          'left': ev.clientX + scrollLeft + 'px',
-          'top': ev.clientY + scrollTop + 'px',
-          'display': 'block'
-        });
+      contextMenuElement.css({
+        'left': ev.clientX + scrollLeft + 'px',
+        'top': ev.clientY + scrollTop + 'px',
+        'display': 'block'
+      });
 
-        // avoid showing default contextMenu
-        return false;
-    } else {
-        //@todo if we place the show-contextmenu class carefully, I would say it would be better for the UI,
-        //if we don't show the normal contextmenu at all on those elements, to don't confuse the user
-      
-        // if searchBuffer is empty, show normal context menu.
-        return true;
-    }
+      // avoid showing default contextMenu
+      return false;
   }
 
   function clickHandler(event)
   {
-      // if click on contextmenu or 'right' click, we do not need to save the selection
-      // in the searchBuffer
-      if (!contextMenu && event.which === 1) {
+    // if click on contextmenu or 'right' click, we do not need to save the selection
+    // in the searchBuffer
+    if (!contextMenu && event.which === 1) {
         
-          var selectedText = getSelectedText();
-          //shouldn't be possible to get undefined or ' ' now, because the 
-          //function always returns '' and is trimmed now
-          if (selectedText != ''){
-              searchBuffer += ' ' + selectedText;
-              updateGoogleSearchText();
-          }
+      var selectedText = getSelectedText();
+      //shouldn't be possible to get undefined or ' ' now, because the 
+      //function always returns '' and is trimmed now
+      if (selectedText != ''){
+        searchBuffer += ' ' + selectedText;
+        updateGoogleSearchText();
       }
+    }
   }
 
   function getSelectedText()
   {
-      var text = '';
+    var text = '';
 
-      if (window.getSelection)
-      {
-          text = window.getSelection().toString();
-      }
-      else if (document.getSelection)
-      {
-          text = document.getSelection();
-      }
-      else if (document.selection)
-      {
-          text = document.selection.createRange().text;
-      }
+    if (window.getSelection)
+    {
+      text = window.getSelection().toString();
+    }
+    else if (document.getSelection)
+    {
+      text = document.getSelection();
+    }
+    else if (document.selection)
+    {
+      text = document.selection.createRange().text;
+    }
 
-      return $.trim(text);
+    return $.trim(text);
   }
 
   function copyToClipboard(s) {
@@ -113,31 +111,18 @@ $(document).ready(function(){
     }
   }
 
-  function deleteSearchWords()
-  {
-      searchBuffer = "";
-      updateGoogleSearchText();
+  function deleteSearchWords(){
+    searchBuffer = "";
+    updateGoogleSearchText();
   }
 
-  function googleSearch()
-  {
-      cleanSearchBuffer();
-      window.open('http://www.google.de/search?q='+searchBuffer, '_newTab');
-      searchBuffer = '';
-      updateGoogleSearchText();
+  function googleSearch(){
+    window.open('http://www.google.de/search?q='+searchBuffer, '_newTab');
+    searchBuffer = '';
+    updateGoogleSearchText();
   }
 
-  function updateGoogleSearchText()
-  {
-      document.getElementById('googleSearch').innerHTML = "GoogleSuche nach: '" + searchBuffer + "'";
-  }
-
-  /**
-   * @todo does this really do anything? replacing empty string with empty string seems somehow unnecessary
-   */
-  function cleanSearchBuffer()
-  {
-    searchBuffer = searchBuffer.replace(' ',' ');
-    searchBuffer = searchBuffer.replace(' ',' ');
+  function updateGoogleSearchText(){
+    document.getElementById('googleSearch').innerHTML = "GoogleSuche nach: '" + searchBuffer + "'";
   }
 });
