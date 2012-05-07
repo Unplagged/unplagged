@@ -6,10 +6,11 @@ $this->headTitle($this->title);
 <?php echo $this->translate("Name"); ?>: <?php echo $this->fragment->getTitle(); ?><br />
 <?php echo $this->translate("Type"); ?>: <?php echo $this->fragment->getType()->getName(); ?><br/>
 <?php echo $this->translate("Source"); ?>: //<br/>
-<div style="text-align: right; padding-top: 15px; padding-bottom: 5px;">
-<label for="compareWithNoColor">Compare with no color</label>
-<input type="checkbox" name="compare" id="compareWithNoColor" checked="checked" value="<?php echo $this->fragment->getId(); ?>" />
-</div>
+
+<label for="compare-with-no-color" class="checkbox">
+<input type="checkbox" name="compare" id="compare-with-no-color" checked="checked" value="<?php echo $this->fragment->getId(); ?>" />
+Compare with no color</label>
+
 <div class="document-page diff clearfix">
   <div class="src-wrapper">
     <h3><?php echo $this->translate("Fragment"); ?></h3>

@@ -175,7 +175,7 @@ $(document).ready(function(){
     
     return false;
   }
-  $("#compareWithNoColor").change(function(){
+  $("#compare-with-no-color").change(function(){
     compareFragmentTexts($(this).val(), $(this).attr('checked'));
   });
   

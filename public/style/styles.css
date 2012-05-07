@@ -78,11 +78,6 @@ h2 {
   font-size: 17pt;
 }
 
-p {
-  font-size: 11pt;
-  line-height: 14pt;
-}
-
 /* ==|== reusable styles ======================================================= */
 
 .top-alert .alert{ 
@@ -843,13 +838,6 @@ dl.zend_form dd dt {
   width: 50%;
 }
 
-.flash-messages {
-  list-style-type: none;
-  background: #fefabf;
-  margin-top: 0;
-  padding: 6px;
-}
-
 .document-page {
   border: 1px #bbbbbb solid;
   margin: 10px 0;
@@ -1078,24 +1066,6 @@ dl.zend_form dd dt {
   background: url(/images/icons/report.png);
 }
 
-/* pagination controls
-.pagination ul {
-  margin-top: 0;
-}
-
-.pagination-numbers {
-  margin: 0;
-  line-height:36px;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.pagination-numbers:hover {
-  background-color: #FFFFFF;
-}
-
-.pagination a{ cursor: pointer; }
-*/
 #activity-stream {
 
 }
@@ -1306,13 +1276,14 @@ ins {
 .diff .src-wrapper {
   width: 50%;
   float: left;
-  background: #EBECED;
+  
 }
 
 .src-wrapper p {
   margin: 0;
   padding: 2px 5px 2px 15px;
   font-size: 10pt;
+  background: #EBECED;
 }
 
 
