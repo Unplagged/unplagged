@@ -35,7 +35,7 @@ class SimtextController extends Unplagged_Controller_Action{
     $simForm = new Application_Form_Simtext_Analyse;
     $request = $this->getRequest();
     if($request->isPost()){
-      $this->_helper->flashMessenger->addMessage('Text analyse running');
+      $this->_helper->FlashMessenger('The Text analysis is running');
       //$query = $this->_em->createQuery('SELECT f FROM Application_Model_File f');//WHERE filename=\'a.txt\'');
       //$text1 = $query->getResult();
 
@@ -52,30 +52,27 @@ class SimtextController extends Unplagged_Controller_Action{
         // create file in report directory
         //$reportfile = fopen($report_path, 'w') or die("can't open file");
         //$reporter_name = "test.txt";
-        $this->_helper->flashMessenger->addMessage($file1_path);
-        $this->_helper->flashMessenger->addMessage($file2_path);
-        $this->_helper->flashMessenger->addMessage($report_path);
+        $this->_helper->FlashMessenger($file1_path);
+        $this->_helper->FlashMessenger($file2_path);
+        $this->_helper->FlashMessenger($report_path);
 
         // running simtext and return a report file
         $simtext = new Unplagged_Simtext_SimtextRun();
         $report = $simtext->runSimtext($file1_path, $file2_path, $report_path);
 
-        //$this->_helper->flashMessenger->addMessage($report);
-
         if(empty($report)){
-          $this->_helper->flashMessenger->addMessage('The report could not be created.');
+          $this->_helper->FlashMessenger('The report could not be created.');
         }else{
           //$this->_em->persist($report);
           //$this->_em->flush();
-          $this->_helper->flashMessenger->addMessage('The report was successfully created.');
+          $this->_helper->FlashMessenger('The report was successfully created.');
           $this->_helper->redirector('compare', 'simtext');
 
           // close file stream
           //fclose($reportfile);
         }
       }else{
-        //$this->_helper->flashMessenger->addMessage($text1);
-        $this->_helper->flashMessenger->addMessage('Comparing failed');
+        $this->_helper->FlashMessenger('Comparing failed');
         $this->_helper->redirector('compare', 'simtext');
       }
     }

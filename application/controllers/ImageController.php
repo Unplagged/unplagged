@@ -57,7 +57,7 @@ class ImageController extends Unplagged_Controller_Action{
         
         readfile($downloadPath);
       }else{
-        $this->_helper->flashMessenger->addMessage('No file found.');
+        $this->_helper->FlashMessenger('No file found.');
         $this->_helper->redirector('list', 'file');
       }
     }

@@ -159,7 +159,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
             $this->_em->persist($page);
             $this->_em->flush();
 
-            $this->_helper->flashMessenger->addMessage('The de-hyphenation was processed successfully.');
+            $this->_helper->FlashMessenger(array('success'=>'The de-hyphenation was processed successfully.'));
             $params = array('id'=>$page->getId());
             $this->_helper->redirector('show', 'document_page', '', $params);
           }
@@ -194,7 +194,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $this->_em->persist($page);
         $this->_em->flush();
 
-        $this->_helper->flashMessenger->addMessage('The document page was updated successfully.');
+        $this->_helper->FlashMessenger(array('info'=>'The document page was updated successfully.'));
         $params = array('id'=>$page->getId());
         $this->_helper->redirector('show', 'document_page', '', $params);
       }
@@ -213,11 +213,11 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $this->_em->remove($page);
         $this->_em->flush();
       }else{
-        $this->_helper->flashMessenger->addMessage('Page does not exist.');
+        $this->_helper->FlashMessenger('Page does not exist.');
       }
     }
 
-    $this->_helper->flashMessenger->addMessage('The document page was deleted successfully.');
+    $this->_helper->FlashMessenger(array('info'=>'The document page was deleted successfully.'));
     $params = array('id'=>$page->getDocument()->getId());
     $this->_helper->redirector('list', 'document_page', '', $params);
 
@@ -293,7 +293,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $result = $this->handleSimtextData($simtextForm, $page);
 
         if($result){
-          $this->_helper->flashMessenger->addMessage('The simtext process was started, you will be notified, whenever it is finished.');
+          $this->_helper->FlashMessenger('The simtext process was started, you will be notified, when it finished.');
           $this->_helper->redirector('simtext-reports', 'document_page', '', array('id'=>$input->id));
         }
       }

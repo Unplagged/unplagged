@@ -134,7 +134,7 @@ class Unplagged_Helper{
     }
   }
 
-  public function formatDocumentPageNumber($pageNumber){
+  public static function formatDocumentPageNumber($pageNumber){
     return str_pad($pageNumber, 3, '0', STR_PAD_LEFT);
   }
 

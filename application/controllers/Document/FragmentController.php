@@ -93,7 +93,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
         $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
         Unplagged_Helper::notify("fragment_created", $result, $user);
 
-        $this->_helper->flashMessenger->addMessage('The fragment was created successfully.');
+        $this->_helper->FlashMessenger('The fragment was created successfully.');
         $params = array('id'=>$result->getId());
         $this->_helper->redirector('show', 'document_fragment', '', $params);
       }
@@ -129,7 +129,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
           $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
           Unplagged_Helper::notify("fragment_updated", $result, $user);
 
-          $this->_helper->flashMessenger->addMessage('The fragment was updated successfully.');
+          $this->_helper->FlashMessenger('The fragment was updated successfully.');
           $params = array('id'=>$fragment->getId());
           $this->_helper->redirector('show', 'document_fragment', '', $params);
         }
@@ -207,11 +207,11 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
         $this->_em->remove($document);
         $this->_em->flush();
       }else{
-        $this->_helper->flashMessenger->addMessage('The fragment does not exist.');
+        $this->_helper->FlashMessenger('The fragment does not exist.');
       }
     }
 
-    $this->_helper->flashMessenger->addMessage('The fragment was deleted successfully.');
+    $this->_helper->FlashMessenger('The fragment was deleted successfully.');
     $this->_helper->redirector('list', 'document_fragment');
 
     // disable view

@@ -83,13 +83,13 @@ class FileController extends Unplagged_Controller_Action{
           $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
           Unplagged_Helper::notify("file_uploaded", $file, $user);
 
-          $this->_helper->flashMessenger->addMessage('File was uploaded successfully.');
+          $this->_helper->FlashMessenger(array('success'=>'File was uploaded successfully.'));
           $this->_helper->redirector('list', 'file');
         }else{
           $this->_em->remove($file);
           $this->_em->flush();
 
-          $this->_helper->flashMessenger->addMessage('File could not be uploaded.');
+          $this->_helper->FlashMessenger(array('error'=>'File could not be uploaded.'));
         }
       }
     }else{
@@ -182,12 +182,12 @@ class FileController extends Unplagged_Controller_Action{
 
         readfile($downloadPath);
       }else{
-        $this->_helper->flashMessenger->addMessage('No file found.');
+        $this->_helper->FlashMessenger('No file found.');
         $this->_helper->redirector('list', 'file');
       }
     }
 
-    $this->_helper->flashMessenger->addMessage('The file couldn\'t be found.');
+    $this->_helper->FlashMessenger('The file couldn\'t be found.');
     $this->_helper->redirector('list', 'file');
   }
 
@@ -217,7 +217,7 @@ class FileController extends Unplagged_Controller_Action{
         $this->_em->persist($file);
         $this->_em->flush();
       }else{
-        $this->_helper->flashMessenger->addMessage('No file found.');
+        $this->_helper->FlashMessenger('No file found.');
       }
     }
 
@@ -236,14 +236,14 @@ class FileController extends Unplagged_Controller_Action{
 
     if(empty($input->id)){
       // show error message
-      $this->_helper->flashMessenger->addMessage('The fileId has to be set.');
+      $this->_helper->FlashMessenger('The fileId has to be set.');
     }else{
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       $language = "eng";
 
       if(empty($file)){
         // show error message
-        $this->_helper->flashMessenger->addMessage('No file found by that id.');
+        $this->_helper->FlashMessenger('No file found by that id.');
       }else{
         // pdfs will e generated through cron
         if($file->getExtension() == "pdf"){
@@ -263,7 +263,7 @@ class FileController extends Unplagged_Controller_Action{
           $this->_em->persist($task);
           $this->_em->flush();
 
-          $this->_helper->flashMessenger->addMessage('The file will be generated now, you will be notified asap.');
+          $this->_helper->FlashMessenger('The file will be generated now, you will be notified as soon as possible.');
 
           // images will be parsed directly
         }else{
@@ -271,13 +271,13 @@ class FileController extends Unplagged_Controller_Action{
 
           $document = $parser->parseToDocument($file, $language);
           if(empty($document)){
-            $this->_helper->flashMessenger->addMessage('The file could not be parsed.');
+            $this->_helper->FlashMessenger(array('error'=>'The file could not be parsed.'));
           }else{
             $document->setState($this->_em->getRepository('Application_Model_State')->findOneByName('parsed'));
 
             $this->_em->persist($document);
             $this->_em->flush();
-            $this->_helper->flashMessenger->addMessage('The file was successfully parsed.');
+            $this->_helper->FlashMessenger(array('success'=>'The file was successfully parsed.'));
           }
         }
       }
@@ -302,12 +302,12 @@ class FileController extends Unplagged_Controller_Action{
           // remove database record
           $this->_em->remove($file);
           $this->_em->flush();
-          $this->_helper->flashMessenger->addMessage('The file was deleted successfully.');
+          $this->_helper->FlashMessenger('The file was deleted successfully.');
         }else{
-          $this->_helper->flashMessenger->addMessage('The file could not be deleted.');
+          $this->_helper->FlashMessenger('The file could not be deleted.');
         }
       }else{
-        $this->_helper->flashMessenger->addMessage('The file does not exist.');
+        $this->_helper->FlashMessenger('The file does not exist.');
       }
     }
 

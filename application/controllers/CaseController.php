@@ -183,7 +183,7 @@ class CaseController extends Unplagged_Controller_Action{
 
     $this->_helper->viewRenderer->setNoRender(true);
 
-    $this->_helper->flashMessenger->addMessage('The file was added to your current case.');
+    $this->_helper->FlashMessenger('The file was added to your current case.');
     $this->redirectToLastPage();
   }
 

@@ -64,7 +64,7 @@ class UserController extends Unplagged_Controller_Action{
       // send registration mail
       Unplagged_Mailer::sendRegistrationMail($user);
 
-      $this->_helper->flashMessenger->addMessage('In order to finish your registration, please check your E-Mails.');
+      $this->_helper->FlashMessenger('In order to finish your registration, please check your E-Mails.');
       $this->_helper->redirector('index', 'index');
     }else{
       //set filled and valid data into the form
@@ -171,7 +171,7 @@ class UserController extends Unplagged_Controller_Action{
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
     if(empty($user) || $user->getState()->getName() != 'user_registered'){
-      $this->_helper->flashMessenger->addMessage('Verification failed.');
+      $this->_helper->FlashMessenger('Verification failed.');
       $this->_helper->redirector('index', 'index');
     }else{
       $user->setState($this->_em->getRepository('Application_Model_State')->findOneByName('user_activated'));
@@ -187,7 +187,7 @@ class UserController extends Unplagged_Controller_Action{
       // send registration mail
       Unplagged_Mailer::sendActivationMail($user);
 
-      $this->_helper->flashMessenger->addMessage('Verification finished successfully.');
+      $this->_helper->FlashMessenger('Verification finished successfully.');
       $this->_helper->redirector('index', 'index');
     }
   }
@@ -221,13 +221,13 @@ class UserController extends Unplagged_Controller_Action{
           $lastNotification = $this->_em->getRepository('Application_Model_Notification')->findOneBy(array("action"=>$lastNotificationAction->getId(), "user"=>$user->getId()));
 
           if($lastNotification && ($lastNotification->getCreated()->getTimestamp() > time() - NOTIFICATIONS_TIME_INTERVAL)){
-            $this->_helper->flashMessenger->addMessage('There was already a password recovery request for this account.');
+            $this->_helper->FlashMessenger('There was already a password recovery request for this account.');
             $this->_helper->redirector('recover-password', 'user');
           }else{
             Unplagged_Mailer::sendPasswordRecoveryMail($user);
             Unplagged_Helper::notify("user_requested_password", $user, $user);
 
-            $this->_helper->flashMessenger->addMessage('An E-Mail has been sent to your address, follow the instructions in this mail.');
+            $this->_helper->FlashMessenger('An E-Mail has been sent to your address, follow the instructions in this mail.');
             $this->_helper->redirector('index', 'index');
           }
           // reset the password to the new one
@@ -240,7 +240,7 @@ class UserController extends Unplagged_Controller_Action{
           $this->_em->persist($user);
           $this->_em->flush();
 
-          $this->_helper->flashMessenger->addMessage('Your password has been reset successfully, you can login now.');
+          $this->_helper->FlashMessenger('Your password has been reset successfully, you can login now.');
           $this->_helper->redirector('login', 'auth');
         }
       }
@@ -263,10 +263,10 @@ class UserController extends Unplagged_Controller_Action{
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($input->id);
     if(empty($user)){
-      $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
+      $this->_helper->FlashMessenger('User Profile saved successfully.');
       $this->_helper->redirector('index', 'index');
     }elseif($this->_defaultNamespace->userId != $input->id){
-      $this->_helper->flashMessenger->addMessage('No permission to edit other users.');
+      $this->_helper->FlashMessenger('No permission to edit other users.');
       $this->_helper->redirector('index', 'index');
     }else{
       // display the form with user data pre-loaded
@@ -288,7 +288,7 @@ class UserController extends Unplagged_Controller_Action{
 
           Unplagged_Helper::notify("user_updated_profile", $user, $user);
 
-          $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
+          $this->_helper->FlashMessenger('User Profile saved successfully.');
           $this->_helper->redirector('index', 'index');
         }
       }
@@ -375,7 +375,7 @@ class UserController extends Unplagged_Controller_Action{
         $this->_em->flush();
 
         $this->_helper->redirector('logout', 'auth');
-        $this->_helper->flashMessenger->addMessage('User Profile removed successfully.');
+        $this->_helper->FlashMessenger('User Profile removed successfully.');
         $this->_helper->redirector('index', 'index');
       }
     }

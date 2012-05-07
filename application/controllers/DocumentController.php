@@ -55,7 +55,7 @@ class DocumentController extends Unplagged_Controller_Action{
         $result = $this->handleModifyData($modifyForm, $document);
 
         if($result){
-          $this->_helper->flashMessenger->addMessage('The document was updated successfully.');
+          $this->_helper->FlashMessenger(array('success'=>'The document was updated successfully.'));
           $params = array('id'=>$document->getId());
           $this->_helper->redirector('list', 'document_page', '', $params);
         }
@@ -120,11 +120,11 @@ class DocumentController extends Unplagged_Controller_Action{
         $this->_em->remove($document);
         $this->_em->flush();
       }else{
-        $this->_helper->flashMessenger->addMessage('The document does not exist.');
+        $this->_helper->FlashMessenger('The document does not exist.');
       }
     }
 
-    $this->_helper->flashMessenger->addMessage('The document was deleted successfully.');
+    $this->_helper->FlashMessenger(array('success'=>'The document was deleted successfully.'));
     $this->_helper->redirector('list', 'document');
 
     // disable view
@@ -176,16 +176,16 @@ class DocumentController extends Unplagged_Controller_Action{
         $errorText = 'The detection could not be started for the following pages: %s, please try again later.';
 
         if(!empty($successPagesStr)){
-          $this->_helper->flashMessenger->addMessage(sprintf($successText, $successPagesStr));
+          $this->_helper->FlashMessenger(array('success'=>sprintf($successText, $successPagesStr)));
         }
         if(!empty($errorPagesStr)){
-          $this->_helper->flashMessenger->addMessage(sprintf($errorText, $errorPagesStr));
+          $this->_helper->FlashMessenger(array('error'=>sprintf($errorText, $errorPagesStr)));
         }
       }else{
-        $this->_helper->flashMessenger->addMessage("Dcument does not exist.");
+        $this->_helper->FlashMessenger('Dcument does not exist.');
       }
     }else{
-      $this->_helper->flashMessenger->addMessage("No document selected.");
+      $this->_helper->FlashMessenger('No document selected.');
     }
     $this->_helper->redirector('list', 'document');
   }
