@@ -36,14 +36,14 @@ class CaseController extends Unplagged_Controller_Action{
       if($result){
         // notification
         $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        Unplagged_Helper::notify("case_created", $result, $user);
+        Unplagged_Helper::notify('case_created', $result, $user);
 
         $this->_helper->FlashMessenger(array('success'=>'The case was created successfully.'));
         $this->_helper->redirector('list', 'case');
       }
     }
 
-    $this->view->title = "Create case";
+    $this->view->title = 'Create case';
     $this->view->modifyForm = $modifyForm;
     $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
   }

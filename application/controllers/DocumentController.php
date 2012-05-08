@@ -101,17 +101,17 @@ class DocumentController extends Unplagged_Controller_Action{
       $document->actions = array();
 
       $action['link'] = '/document/edit/id/' . $document->getId();
-      $action['title'] = 'Edit document';
+      $action['label'] = 'Edit document';
       $action['icon'] = 'images/icons/pencil.png';
       $document->actions[] = $action;
 
       $action['link'] = '/document/detect-plagiarism/id/' . $document->getId();
-      $action['title'] = 'Detect plagiarism';
+      $action['label'] = 'Detect plagiarism';
       $action['icon'] = 'images/icons/eye.png';
       $document->actions[] = $action;
 
       $action['link'] = '/document/delete/id/' . $document->getId();
-      $action['title'] = 'Delete document';
+      $action['label'] = 'Delete document';
       $action['icon'] = 'images/icons/delete.png';
       $document->actions[] = $action;
     endforeach;
