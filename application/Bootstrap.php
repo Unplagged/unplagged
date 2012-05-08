@@ -45,6 +45,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $defaultNamespace = new Zend_Session_Namespace('Default');
     $registry = Zend_Registry::getInstance();
     $acl = new Unplagged_Acl($defaultNamespace->user, $registry->entitymanager);
+    $registry = Zend_Registry::getInstance();
+    $registry->set('Acl', $acl);
     $accessControl = new Unplagged_AccessControl($acl, $defaultNamespace->user);
 
     //make sure front controller is initalized, so that we can register the authorization plugin
@@ -261,7 +263,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $view = $layout->getView();
     $defaultNamespace = new Zend_Session_Namespace('Default');
     $registry = Zend_Registry::getInstance();
-    $acl = new Unplagged_Acl($defaultNamespace->user, $registry->entitymanager);
+    $acl = $registry->get('Acl');
     $view->navigation($container)->setAcl($acl)->setRole($defaultNamespace->user->getRole());
 
     Zend_Registry::set('Zend_Navigation', $container);
