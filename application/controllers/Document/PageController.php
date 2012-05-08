@@ -118,13 +118,13 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $this->view->page = $page;
 
         $lines = $page->getContent("array");
+        
         $pageLines = array();
-        foreach($lines as $lineNumber=>$content){
-          $pageLine["content"] = !empty($content) ? $content : ' ';
+        foreach($lines as $lineNumber => $content){
+          $pageLine["content"] = !empty($content) ? trim($content) : ' ';
           $pageLine["hasHyphen"] = (substr($pageLine["content"], -1) == "-");
           $pageLines[] = $pageLine;
         }
-
         // create form
         $deHyphenForm = new Application_Form_Document_Page_Dehyphen(array('pageLines'=>$pageLines));
 
@@ -270,6 +270,22 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
         $paginator->setCurrentPageNumber($input->page);
 
+        foreach($paginator as $report):
+          if($report->getState()->getName() == 'task_scheduled'){
+            // find the associated task and get percentage
+            $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
+            $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
+            if(!$task){
+              $percentage = 0;
+            }else{
+              $percentage = $task->getProgressPercentage();
+            }
+            $report->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
+          }else{
+            $report->outputState = $report->getState()->getTitle();
+          }
+        endforeach;
+
         $this->view->paginator = $paginator;
         $this->render('simtext/list-reports');
       }
@@ -386,15 +402,19 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     }else{
       $fragment = new Application_Model_Document_Fragment();
 
-      $partial = new Application_Model_Document_Fragment_Partial();
+      if($input->candidateLineFrom && $input->candidateLineTo) {
+        $partial = new Application_Model_Document_Fragment_Partial();
       $partial->setLineFrom($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->candidateLineFrom));
       $partial->setLineTo($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->candidateLineTo));
       $fragment->setPlag($partial);
-
+      }
+      
+      if($input->sourceLineFrom && $input->sourceLineTo) {
       $partial = new Application_Model_Document_Fragment_Partial();
       $partial->setLineFrom($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->sourceLineFrom));
       $partial->setLineTo($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->sourceLineTo));
       $fragment->setSource($partial);
+      }
     }
 
     $content = $fragment->getContent('list', !empty($input->highlight));

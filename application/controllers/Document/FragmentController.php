@@ -295,32 +295,39 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     // initialise page select
     $document = $this->_em->getRepository('Application_Model_Document')->findOneById($formData[$prefix . 'Document']);
-    foreach($document->getPages() as $page){
-      $modifyForm->getElement($prefix . 'PageFrom')->addMultioption($page->getId(), $page->getPageNumber());
-      $modifyForm->getElement($prefix . 'PageTo')->addMultioption($page->getId(), $page->getPageNumber());
-    }
+    if($document){
+      foreach($document->getPages() as $page){
+        $modifyForm->getElement($prefix . 'PageFrom')->addMultioption($page->getId(), $page->getPageNumber());
+        $modifyForm->getElement($prefix . 'PageTo')->addMultioption($page->getId(), $page->getPageNumber());
 
-    if(!empty($formData[$prefix . 'PageFrom'])){
-      $modifyForm->getElement($prefix . 'PageFrom')->setValue($formData[$prefix . 'PageFrom']);
-
-      // initialise line from select
-      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageFrom']);
-      foreach($page->getLines() as $line){
-        $modifyForm->getElement($prefix . 'LineFrom')->addMultioption($line->getId(), $line->getLineNumber());
-      }
-      $modifyForm->getElement($prefix . 'LineFrom')->setValue($formData[$prefix . 'LineFrom']);
-    }
-
-    if(!empty($formData[$prefix . 'PageTo'])){
-      $modifyForm->getElement($prefix . 'PageTo')->setValue($formData[$prefix . 'PageTo']);
-
-      // initialise line to select
-      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageTo']);
-      foreach($page->getLines() as $line){
-        $modifyForm->getElement($prefix . 'LineTo')->addMultioption($line->getId(), $line->getLineNumber());
+        $modifyForm->getElement($prefix . 'PageFrom')->setAttrib('disabled', null);
+        $modifyForm->getElement($prefix . 'PageTo')->setAttrib('disabled', null);
       }
 
-      $modifyForm->getElement($prefix . 'LineTo')->setValue($formData[$prefix . 'LineTo']);
+      if(!empty($formData[$prefix . 'PageFrom'])){
+        $modifyForm->getElement($prefix . 'PageFrom')->setValue($formData[$prefix . 'PageFrom']);
+
+        // initialise line from select
+        $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageFrom']);
+        foreach($page->getLines() as $line){
+          $modifyForm->getElement($prefix . 'LineFrom')->addMultioption($line->getId(), $line->getLineNumber());
+        }
+        $modifyForm->getElement($prefix . 'LineFrom')->setValue($formData[$prefix . 'LineFrom']);
+        $modifyForm->getElement($prefix . 'LineFrom')->setAttrib('disabled', null);
+      }
+
+      if(!empty($formData[$prefix . 'PageTo'])){
+        $modifyForm->getElement($prefix . 'PageTo')->setValue($formData[$prefix . 'PageTo']);
+
+        // initialise line to select
+        $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageTo']);
+        foreach($page->getLines() as $line){
+          $modifyForm->getElement($prefix . 'LineTo')->addMultioption($line->getId(), $line->getLineNumber());
+        }
+
+        $modifyForm->getElement($prefix . 'LineTo')->setValue($formData[$prefix . 'LineTo']);
+        $modifyForm->getElement($prefix . 'LineTo')->setAttrib('disabled', null);
+      }
     }
   }
 

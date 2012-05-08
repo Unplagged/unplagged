@@ -147,8 +147,8 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
 
   public function getContent($returnType = 'list', $highlight = true){
 
-    $plagLines = $this->plag->getContent();
-    $sourceLines = $this->source->getContent();
+    $plagLines = !empty($this->plag) ? $this->plag->getContent() : array();
+    $sourceLines = !empty($this->source) ? $this->source->getContent() : array();
 
     // convert tags to htmlentities, before simtext is called
     if($returnType != 'array' && $returnType != 'text'){

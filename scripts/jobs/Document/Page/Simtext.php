@@ -52,12 +52,22 @@ class Cron_Document_Page_Simtext extends Cron_Base{
       $content = "";
       $left = $report->getPage()->getContent('array');
 
+      // count the pages to compare
+      $documents = $report->getDocuments();
+      $pagesCount = 0;
+      foreach($documents as $documentId){
+        $document = self::$em->getRepository('Application_Model_Document')->findOneById($documentId);
+        $pagesCount += $document->getPages()->count();
+      }
+      
+      $i = 0;
       $documents = $report->getDocuments();
       foreach($documents as $documentId){
         $document = self::$em->getRepository('Application_Model_Document')->findOneById($documentId);
         $pages = $document->getPages();
 
         foreach($pages as $page){
+          $i++;
           $right = $page->getContent('array');
 
           foreach($left as $lineNumber=>$lineContent){
@@ -100,6 +110,11 @@ class Cron_Document_Page_Simtext extends Cron_Base{
                       </div>';
             $content .= '</div>';
           }
+
+          $perc = round($i * 1.0 / $pagesCount * 100 / 10) * 10;
+          $task->setProgressPercentage($perc);
+          self::$em->persist($task);
+          self::$em->flush();
         }
       }
 
@@ -109,7 +124,8 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
       // update task
       $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
-
+      $task->setProgressPercentage(100);
+      
       self::$em->persist($report);
       self::$em->persist($task);
 

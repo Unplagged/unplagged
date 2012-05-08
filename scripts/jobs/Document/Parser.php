@@ -50,7 +50,7 @@ class Cron_Document_Parser extends Cron_Base{
 
       $language = "eng";
       $parser = Unplagged_Parser::factory($file->getMimeType());
-      $document = $parser->parseToDocument($file, $language, $document);
+      $document = $parser->parseToDocument($file, $language, $document, $task);
 
       if($document instanceof Application_Model_Document){
         // update document
@@ -58,7 +58,8 @@ class Cron_Document_Parser extends Cron_Base{
 
         // update task
         $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
-
+        $task->setProgressPercentage(100);
+        
         self::$em->persist($document);
         self::$em->persist($task);
 
@@ -69,6 +70,10 @@ class Cron_Document_Parser extends Cron_Base{
         Unplagged_Helper::notify("document_created", $document, $user);
       }
     }
+  }
+  
+  private static function update(){
+    
   }
 
 }

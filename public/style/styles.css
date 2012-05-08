@@ -711,6 +711,10 @@ table.default td {
   height: 23px;
 }
 
+table.default .progress {
+  margin-bottom: 0;
+}
+
 /* zend form */
 .zend_form,
 .zend_form  dd {
@@ -721,7 +725,25 @@ table.default td {
 .zend_form dt {
   margin: 5px 0 2px 0;
 }
+.src-wrapper .zend_form ol {
+  padding-top: 15px;
+  padding-bottom: 1px;
+  margin-bottom: 15px;
+}
+.src-wrapper .zend_form ol label {
+  margin-bottom: 0;
+  display: inline;
+}
 
+.zend_form .single-column-form {
+   clear: left;
+   padding-top: 15px
+}
+
+.src-wrapper .zend_form ol li.page-line input {
+  float: right;
+  margin-right: -25px;
+}
 .zend_form label {
   font-weight: normal;
 }
@@ -852,7 +874,7 @@ dl.zend_form dd dt {
   border-top: 0;
 }
 
-.document-page .highlight {
+.src-wrapper li.highlight {
   background-color: #fefabf;
 }
 

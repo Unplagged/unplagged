@@ -84,6 +84,20 @@ class DocumentController extends Unplagged_Controller_Action{
 
     // generate the action dropdown for each file
     foreach($paginator as $document):
+      if($document->getState()->getName() == 'task_scheduled') {
+        // find the associated task and get percentage
+        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
+        $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource' => $document->getId(), 'state' => $state));
+        if(!$task) {
+          $percentage = 0;
+        } else {
+          $percentage = $task->getProgressPercentage();
+        }
+        $document->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
+      } else {
+        $document->outputState = $document->getState()->getTitle();
+      }
+      
       $document->actions = array();
 
       $action['link'] = '/document/edit/id/' . $document->getId();
@@ -133,7 +147,7 @@ class DocumentController extends Unplagged_Controller_Action{
   }
 
   /**
-   * Initializes an automated plagiarism detection.
+   * Initialises an automated plagiarism detection.
    */
   public function detectPlagiarismAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());

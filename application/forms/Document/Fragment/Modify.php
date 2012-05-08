@@ -74,43 +74,54 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
     // candidate group    
     $candidateDocumentElement = new Zend_Form_Element_Select('candidateDocument');
     $candidateDocumentElement->setLabel("Document");
+    $candidateDocumentElement->addMultiOption('', 'Please choose...');
+
     $candidateDocumentElement->addMultiOptions($this->documents);
 
     $candidatePageFromElement = new Zend_Form_Element_Select('candidatePageFrom');
     $candidatePageFromElement->setLabel("Page from");
+    $candidatePageFromElement->setAttrib('disabled', 'disabled');
     $candidatePageFromElement->setRequired(true);
 
     $candidateLineFromElement = new Zend_Form_Element_Select('candidateLineFrom');
     $candidateLineFromElement->setLabel("Line from");
+    $candidateLineFromElement->setAttrib('disabled', 'disabled');
     $candidateLineFromElement->setRequired(true);
 
     $candidatePageToElement = new Zend_Form_Element_Select('candidatePageTo');
     $candidatePageToElement->setLabel("Page to");
+    $candidatePageToElement->setAttrib('disabled', 'disabled');
     $candidatePageToElement->setRequired(true);
     
     $candidateLineToElement = new Zend_Form_Element_Select('candidateLineTo');
     $candidateLineToElement->setLabel("Line to");
+    $candidateLineToElement->setAttrib('disabled', 'disabled');
     $candidateLineToElement->setRequired(true);
 
     // source group
     $sourceDocumentElement = new Zend_Form_Element_Select('sourceDocument');
     $sourceDocumentElement->setLabel("Document");
+    $sourceDocumentElement->addMultiOption('', 'Please choose...');
     $sourceDocumentElement->addMultiOptions($this->documents);
 
     $sourcePageFromElement = new Zend_Form_Element_Select('sourcePageFrom');
     $sourcePageFromElement->setLabel("Page from");
+    $sourcePageFromElement->setAttrib('disabled', 'disabled');
     $sourcePageFromElement->setRequired(true);
 
     $sourceLineFromElement = new Zend_Form_Element_Select('sourceLineFrom');
     $sourceLineFromElement->setLabel("Line from");
+    $sourceLineFromElement->setAttrib('disabled', 'disabled');
     $sourceLineFromElement->setRequired(true);
 
     $sourcePageToElement = new Zend_Form_Element_Select('sourcePageTo');
     $sourcePageToElement->setLabel("Page to");
+    $sourcePageToElement->setAttrib('disabled', 'disabled');
     $sourcePageToElement->setRequired(true);
     
     $sourceLineToElement = new Zend_Form_Element_Select('sourceLineTo');
     $sourceLineToElement->setLabel("Line to");
+    $sourceLineToElement->setAttrib('disabled', 'disabled');
     $sourceLineToElement->setRequired(true);
 
 
@@ -164,10 +175,24 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
         , 'sourceGroup'
         , array('legend'=>'Source Information', 'class'=>'two-column-form')
     );
-
-    $this->addElements(array(
+    
+        $this->addElements(array(
       $submitElement
     ));
+        
+    $this->addDisplayGroup(array(
+        'submit'
+        )
+        , 'submitGroup'
+        , array('class'=>'single-column-form')
+    );
+    $this->submitGroup->setDecorators(array(
+        'FormElements',
+        array('HtmlTag', array('tag' => 'div')),
+        'Fieldset'
+    ));
+
+
   }
 
 }
