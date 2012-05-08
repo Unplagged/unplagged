@@ -735,6 +735,11 @@ table.default .progress {
   display: inline;
 }
 
+.zend_form .single-column-form {
+   clear: left;
+   padding-top: 15px
+}
+
 .src-wrapper .zend_form ol li.page-line input {
   float: right;
   margin-right: -25px;

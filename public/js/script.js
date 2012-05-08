@@ -112,13 +112,13 @@ $(document).ready(function(){
   
   function addComment(data, target) {
     var tpl = '<div class="comment">' +
-    '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
-    '<div class="details">' +
-    '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
-    ' <span class="date">' + data.created + '</span>' +
-    '</div>' +
-    '</div>' +
-    '</div>';
+      '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
+      '<div class="details">' +
+      '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
+      ' <span class="date">' + data.created + '</span>' +
+      '</div>' +
+      '</div>' +
+      '</div>';
     target.append(tpl);
   }
   
@@ -179,9 +179,11 @@ $(document).ready(function(){
   
   // fragment creation form
   $("#candidateDocument").change(function(el){
+    $('#candidateText').html('');
     updateDocumentPages($(this).val(), ['#candidatePageFrom', '#candidatePageTo']);
   });
   $("#sourceDocument").change(function(){
+    $('#sourceText').html('');
     updateDocumentPages($(this).val(), ['#sourcePageFrom', '#sourcePageTo']);
   });
   
@@ -192,7 +194,9 @@ $(document).ready(function(){
       if(response.statuscode == 200) {
         // clear the targets
         $.each(targetElements, function(index, targetId) {
+          // clear the targets
           $('' + targetId).html('');
+          $('' + targetId).removeAttr('disabled');
         });
     
         $.each(response.data.pages, function(index, page) {
@@ -210,7 +214,11 @@ $(document).ready(function(){
           $('' + targetId).change();
         });
       } else {
-      // @todo: handle error
+        $.each(targetElements, function(index, targetId) {
+          $('' + targetId).html('');
+          $('' + targetId).attr('disabled', 'disabled');
+          $('' + targetId).change();
+        });
       }
     }, "json");
   }
@@ -233,9 +241,10 @@ $(document).ready(function(){
       'id': pageId
     }, function(response) {
       if(response.statuscode == 200) {
-        // clear the targets
         $.each(targetElements, function(index, targetId) {
+          // clear the targets
           $('' + targetId).html('');
+          $('' + targetId).removeAttr('disabled');
         });
     
         $.each(response.data.lines, function(index, line) {
@@ -247,14 +256,17 @@ $(document).ready(function(){
           });
         });
       } else {
-      // @todo: handle error
+        $.each(targetElements, function(index, targetId) {
+          $('' + targetId).html('');
+          $('' + targetId).attr('disabled', 'disabled');
+        });
       }
     }, "json");
   }
   
   /**
-  * The pagination plugin.
-  */
+   * The pagination plugin.
+   */
   $(function() {            
     $(".pagination a").live("click", function() {
       var href = $(this).attr("href");

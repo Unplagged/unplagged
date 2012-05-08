@@ -402,15 +402,19 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     }else{
       $fragment = new Application_Model_Document_Fragment();
 
-      $partial = new Application_Model_Document_Fragment_Partial();
+      if($input->candidateLineFrom && $input->candidateLineTo) {
+        $partial = new Application_Model_Document_Fragment_Partial();
       $partial->setLineFrom($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->candidateLineFrom));
       $partial->setLineTo($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->candidateLineTo));
       $fragment->setPlag($partial);
-
+      }
+      
+      if($input->sourceLineFrom && $input->sourceLineTo) {
       $partial = new Application_Model_Document_Fragment_Partial();
       $partial->setLineFrom($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->sourceLineFrom));
       $partial->setLineTo($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->sourceLineTo));
       $fragment->setSource($partial);
+      }
     }
 
     $content = $fragment->getContent('list', !empty($input->highlight));
