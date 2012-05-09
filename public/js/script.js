@@ -9,6 +9,7 @@
 $(document).ready(function(){
   // lined textareas
   $("textarea").numberfy();
+  $('.tooltip-toggle').tooltip();
 
   $('.dropdown-toggle').dropdown();
   $('.alert').prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');
@@ -20,6 +21,16 @@ $(document).ready(function(){
   }).change(function(){
     $(this).closest('form').submit();  
   });
+  
+  //select all for de-hyphen area
+  $('.de-hyphen form').css('position', 'relative').append('<a class="select-all" href="">Select all</a>');
+  var selectAllLink = $('.select-all');
+  selectAllLink.css({position: 'absolute', right: 0, bottom: 0}).toggle(function(){
+    $(this).text('Deselect all').parents('form').find('input[type=checkbox]').attr('checked', true);
+  }, function(){
+    $(this).text('Select all').parents('form').find('input[type=checkbox]').attr('checked', false);
+  });
+  
   
   // if js is enabled we only want to open the menu on click, the other behaviour is
   // just a fallback for non-js users

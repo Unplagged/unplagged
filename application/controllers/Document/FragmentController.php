@@ -167,12 +167,12 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $fragment->actions = array();
 
       $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
-      $action['title'] = 'Edit fragment';
+      $action['label'] = 'Edit fragment';
       $action['icon'] = 'images/icons/pencil.png';
       $fragment->actions[] = $action;
 
       $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
-      $action['title'] = 'Remove fragment';
+      $action['label'] = 'Remove fragment';
       $action['icon'] = 'images/icons/delete.png';
       $fragment->actions[] = $action;
     endforeach;

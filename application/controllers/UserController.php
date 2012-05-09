@@ -107,32 +107,32 @@ class UserController extends Unplagged_Controller_Action{
 
       if($file->getIsTarget()){
         $action['link'] = '/file/unset-target/id/' . $file->getId();
-        $action['title'] = 'Unset target';
+        $action['label'] = 'Unset target';
         $action['icon'] = 'images/icons/page_find.png';
         $file->actions[] = $action;
       }else{
         $action['link'] = '/file/set-target/id/' . $file->getId();
-        $action['title'] = 'Set target';
+        $action['label'] = 'Set target';
         $action['icon'] = 'images/icons/page.png';
         $file->actions[] = $action;
       }
       $action['link'] = '/file/parse/id/' . $file->getId();
-      $action['title'] = 'Parse';
+      $action['label'] = 'Parse';
       $action['icon'] = 'images/icons/page_gear.png';
       $file->actions[] = $action;
 
       $action['link'] = '/file/download/id/' . $file->getId();
-      $action['title'] = 'Download';
+      $action['label'] = 'Download';
       $action['icon'] = 'images/icons/disk.png';
       $file->actions[] = $action;
 
       $action['link'] = '/file/delete/id/' . $file->getId();
-      $action['title'] = 'Delete';
+      $action['label'] = 'Delete';
       $action['icon'] = 'images/icons/delete.png';
       $file->actions[] = $action;
 
       $action['link'] = '/case/add-file/id/' . $file->getId();
-      $action['title'] = 'Add to current case';
+      $action['label'] = 'Add to current case';
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
     }
