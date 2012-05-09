@@ -51,9 +51,9 @@ class Application_Form_File_Upload extends Zend_Form{
     ));
 
     $this->addDisplayGroup(array(
-      'description'
+       'newName'
       ,'filepath'
-      , 'newName'
+      ,'description'
         )
         , 'fileGroup'
         , array('legend'=>'File Information')

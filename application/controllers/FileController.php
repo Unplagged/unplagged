@@ -52,7 +52,7 @@ class FileController extends Unplagged_Controller_Action{
 
         $newName = $this->_request->getPost('newName');
         $description = $this->_request->getPost('description');
-        
+
         // collect file information
         $fileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
         $fileExt = pathinfo($adapter->getFileName(), PATHINFO_EXTENSION);
@@ -67,7 +67,7 @@ class FileController extends Unplagged_Controller_Action{
         $data["extension"] = $fileExt;
         $data["location"] = 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
         $data['description'] = $description;
-        
+
         $file = new Application_Model_File($data);
         $this->_em->persist($file);
         $this->_em->flush();
@@ -152,7 +152,6 @@ class FileController extends Unplagged_Controller_Action{
       $action['title'] = 'Add to current case';
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
-
     }
 
     $this->view->paginator = $paginator;
@@ -185,10 +184,10 @@ class FileController extends Unplagged_Controller_Action{
         $this->_helper->FlashMessenger('No file found.');
         $this->_helper->redirector('list', 'file');
       }
+    }else{
+      $this->_helper->FlashMessenger('The file couldn\'t be found.');
+      $this->_helper->redirector('list', 'file');
     }
-
-    $this->_helper->FlashMessenger('The file couldn\'t be found.');
-    $this->_helper->redirector('list', 'file');
   }
 
   public function setTargetAction(){
@@ -319,4 +318,5 @@ class FileController extends Unplagged_Controller_Action{
   }
 
 }
+
 ?>
