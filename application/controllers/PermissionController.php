@@ -25,7 +25,20 @@
  */
 class PermissionController extends Unplagged_Controller_Action{
 
-  
+  public function editGuestAction(){
+    $guestRole = $this->_em->getRepository('Application_Model_User_GuestRole')->findOneByRoleId('guest'); 
+    var_dump($guestRole->getPermissions());
+  }
 
+  
+  public function editRoleAction(){
+    $roleId = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+  }
+  
+  public function listAction(){
+    $inheritableRoles = $this->_em->getRepository('Application_Model_User_InheritableRole')->findAll();
+    
+    var_dump($inheritableRoles);
+  }
 }
 ?>

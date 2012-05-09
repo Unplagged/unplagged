@@ -49,7 +49,7 @@ class Unplagged_AccessControl extends Zend_Controller_Plugin_Abstract{
       $resource = $request->getControllerName();
       $action = $request->getActionName();
 
-      if($this->acl->has($resource . '_' . $action) && !$this->acl->isAllowed($role, $resource . '_' . $action)){
+      if($this->acl->has('controller_' . $resource . '_' . $action) && !$this->acl->isAllowed($role, 'controller_' . $resource . '_' . $action)){
         //If the user has no access we send him elsewhere by changing the request
         $request->setControllerName('auth')
             ->setActionName('login');

@@ -72,7 +72,7 @@ foreach(get_declared_classes() as $class){
 
       if(strstr($action, 'Action') !== false){
         $actionWithHyphens = preg_replace_callback('/([A-Z])/', create_function('$matches', 'return \'-\' . strtolower($matches[1]);'), substr($action, 0, -6));
-        $basicResources[] = $controller . '_' . $actionWithHyphens;
+        $basicResources[] = 'controller_' . $controller . '_' . $actionWithHyphens;
       }
     }
   }
@@ -93,16 +93,16 @@ if(empty($element)){
   $guestRole = new Application_Model_User_GuestRole();
   
   $defaultPermissions = array(
-      'auth_login',
-      'auth_logout',
-      'index_index',
-      'error_error',
-      'case_list',
-      'file_list',
-      'user_register',
-      'user_verify',
-      'user_recover-password',
-      'document_response-plagiarism'
+      'controller_auth_login',
+      'controller_auth_logout',
+      'controller_index_index',
+      'controller_error_error',
+      'controller_case_list',
+      'controller_file_list',
+      'controller_user_register',
+      'controller_user_verify',
+      'controller_user_recover-password',
+      'controller_document_response-plagiarism'
     );
   
   foreach($defaultPermissions as $permission){

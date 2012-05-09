@@ -72,74 +72,74 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
 
     //allow everything for now, since we don't have a mechanism to edit the permissions
     $defaultPermissions = array(
-      "auth_index",
-      "auth_login",
-      "auth_logout",
-      "case_index",
-      "case_create",
-      "case_edit",
-      "case_list",
-      "case_autocomplete-alias",
-      "case_files",
-      "case_add-file",
-      "comment_index",
-      "comment_create",
-      "comment_list",
-      "document_fragment_index",
-      "document_fragment_show",
-      "document_fragment_create",
-      "document_fragment_edit",
-      "document_fragment_list",
-      "document_fragment_diff",
-      "document_fragment_delete",
-      "document_page_index",
-      "document_page_list",
-      "document_page_detection-reports",
-      "document_page_show",
-      "document_page_de-hyphen",
-      "document_page_edit",
-      "document_page_delete",
-      "document_page_stopwords",
-      "document_page_simtext-reports",
-      "document_page_simtext",
-      "document_index",
-      "document_edit",
-      "document_list",
-      "document_delete",
-      "document_detect-plagiarism",
-      "document_response-plagiarism",
-      "error_error",
-      "file_index",
-      "file_upload",
-      "file_list",
-      "file_download",
-      "file_set-target",
-      "file_unset-target",
-      "file_parse",
-      "file_delete",
-      "image_index",
-      "image_show",
-      "index_index",
-      "notification_index",
-      "notification_recent-activity",
-      "notification_list",
-      "notification_comments",
-      "simtext_index",
-      "simtext_compare",
-      "simtext_download-report",
-      "simtext_ajax",
-      "tag_index",
-      "tag_autocomplete-titles",
-      "user_index",
-      "user_register",
-      "user_files",
-      "user_add-file",
-      "user_verify",
-      "user_recover-password",
-      "user_edit",
-      "user_set-current-case",
-      "user_autocomplete-names",
-      "user_remove-account"
+      "controller_auth_index",
+      "controller_auth_login",
+      "controller_auth_logout",
+      "controller_case_index",
+      "controller_case_create",
+      "controller_case_edit",
+      "controller_case_list",
+      "controller_case_autocomplete-alias",
+      "controller_case_files",
+      "controller_case_add-file",
+      "controller_comment_index",
+      "controller_comment_create",
+      "controller_comment_list",
+      "controller_document_fragment_index",
+      "controller_document_fragment_show",
+      "controller_document_fragment_create",
+      "controller_document_fragment_edit",
+      "controller_document_fragment_list",
+      "controller_document_fragment_diff",
+      "controller_document_fragment_delete",
+      "controller_document_page_index",
+      "controller_document_page_list",
+      "controller_document_page_detection-reports",
+      "controller_document_page_show",
+      "controller_document_page_de-hyphen",
+      "controller_document_page_edit",
+      "controller_document_page_delete",
+      "controller_document_page_stopwords",
+      "controller_document_page_simtext-reports",
+      "controller_document_page_simtext",
+      "controller_document_index",
+      "controller_document_edit",
+      "controller_document_list",
+      "controller_document_delete",
+      "controller_document_detect-plagiarism",
+      "controller_document_response-plagiarism",
+      "controller_error_error",
+      "controller_file_index",
+      "controller_file_upload",
+      "controller_file_list",
+      "controller_file_download",
+      "controller_file_set-target",
+      "controller_file_unset-target",
+      "controller_file_parse",
+      "controller_file_delete",
+      "controller_image_index",
+      "controller_image_show",
+      "controller_index_index",
+      "controller_notification_index",
+      "controller_notification_recent-activity",
+      "controller_notification_list",
+      "controller_notification_comments",
+      "controller_simtext_index",
+      "controller_simtext_compare",
+      "controller_simtext_download-report",
+      "controller_simtext_ajax",
+      "controller_tag_index",
+      "controller_tag_autocomplete-titles",
+      "controller_user_index",
+      "controller_user_register",
+      "controller_user_files",
+      "controller_user_add-file",
+      "controller_user_verify",
+      "controller_user_recover-password",
+      "controller_user_edit",
+      "controller_user_set-current-case",
+      "controller_user_autocomplete-names",
+      "controller_user_remove-account"
     );
 
     $this->permissions = $defaultPermissions;
@@ -156,9 +156,28 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     
     return $this->roleId;
   }
+  
+  public function setRoleId($roleId){
+    $this->roleId = $roleId;  
+  }
 
+  /**
+   *
+   * @return array
+   */
   public function getPermissions(){
-    return $this->permissions;
+    $permissions = array();
+    
+    $inheritedRoles = $this->getInheritedRoles();
+    
+    if(count($inheritedRoles)>0){
+      foreach($this->getInheritedRoles() as $inheritedRole){
+        $permissions = array_merge ($inheritedRole->getPermissions(), $permissions); 
+      }
+    }
+    $permissions = array_merge($permissions, $this->permissions);
+    
+    return $permissions;
   }
 
   public function addPermission($permission){

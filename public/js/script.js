@@ -23,12 +23,12 @@ $(document).ready(function(){
   });
   
   //select all for de-hyphen area
-  $('.de-hyphen form').css('position', 'relative').append('<a class="select-all" href="">Select all</a>');
+  $('.de-hyphen form').css('position', 'relative').append('<a class="select-all" href="">Deselect all</a>');
   var selectAllLink = $('.select-all');
   selectAllLink.css({position: 'absolute', right: 0, bottom: 0}).toggle(function(){
-    $(this).text('Deselect all').parents('form').find('input[type=checkbox]').attr('checked', true);
-  }, function(){
     $(this).text('Select all').parents('form').find('input[type=checkbox]').attr('checked', false);
+  }, function(){
+    $(this).text('Deselect all').parents('form').find('input[type=checkbox]').attr('checked', true);
   });
   
   

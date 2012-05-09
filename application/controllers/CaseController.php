@@ -188,17 +188,25 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
   private function handleModifyData(Application_Form_Case_Modify $modifyForm, Application_Model_Case $case = null){
-    if(!($case)){
-      $case = new Application_Model_Case();
-    }
 
     $formData = $this->_request->getPost();
     if($modifyForm->isValid($formData)){
+      if(!($case)){
+        $case = new Application_Model_Case();
+        $case->setName($formData['name']);
+        $case->setAbbreviation($formData['abbreviation']);
+        $case->setAlias($formData['alias']);
+        //flush here, so that we can use the id
+        $this->_em->persist($case);
+        $this->_em->flush();
+        
+        $this->initBasicRolesForCase($case);
+      }else{
 
-      $case->setName($formData['name']);
-      $case->setAlias($formData['alias']);
-      $case->setAbbreviation($formData['abbreviation']);
-
+        $case->setAlias($formData['alias']);
+        $case->setName($formData['name']);
+        $case->setAbbreviation($formData['abbreviation']);
+      }
       /*
         // add the collaborators
         $case->clearCollaborators();
@@ -241,6 +249,13 @@ class CaseController extends Unplagged_Controller_Action{
     return false;
   }
 
-}
+  private function initBasicRolesForCase(Application_Model_Case $case){
+    $adminRole = new Application_Model_User_InheritableRole();
+    $adminRole->setRoleId('admin_case-' . $case->getId());
+    $adminRole->addPermission('model_case-' . $case->getId() . '_*');
+    
+    $case->addDefaultRole($adminRole);
+  }
 
+}
 ?>
