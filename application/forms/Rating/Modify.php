@@ -41,7 +41,7 @@ class Application_Form_Rating_Modify extends Zend_Form{
     $reasonElement->setLabel("Reason");
 
     $submitElement = new Zend_Form_Element_Submit('submit');
-    $submitElement->setLabel('Save rating');
+    $submitElement->setLabel('Create rating');
     $submitElement->setOptions(array('class'=>'btn btn-primary'));
 
     $this->addElements(array(

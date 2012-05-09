@@ -26,17 +26,18 @@
 class RatingController extends Unplagged_Controller_Action{
 
   public function indexAction(){
+    
   }
 
   /**
    * Handles the creation of a new rating. 
    */
   public function createAction(){
-    $input = new Zend_Filter_Input(array('source'=>'Digits'), null, $this->_getAllParams());
-    
+    $input = new Zend_Filter_Input(array('source'=>'Digits', 'redirect'=>'StringTrim'), null, $this->_getAllParams());
+
     $modifyForm = new Application_Form_Rating_Modify();
-    $modifyForm->setAction("/document_fragment/rate/source/" . $input->source);
-    
+    $modifyForm->setAction('/document_fragment/rate/source/' . $input->source);
+
     if($this->_request->isPost()){
       $result = $this->handleModifyData($modifyForm);
 
@@ -45,25 +46,59 @@ class RatingController extends Unplagged_Controller_Action{
         //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
         //Unplagged_Helper::notify("case_created", $result, $user);
 
-        $this->_helper->FlashMessenger(array('success'=>'The rating was added successfully.'));
-        //$this->_helper->redirector('list', 'case');
+        $this->_helper->FlashMessenger(array('success'=>'Your rating was added successfully.'));
+        $this->_redirect($input->redirect);
       }
     }
-    
+
     $this->view->modifyForm = $modifyForm;
     $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'rating'));
   }
-  
+
+  /**
+   * Handles the edit of an existing rating. 
+   */
+  public function editAction(){
+    $input = new Zend_Filter_Input(array('source'=>'Digits', 'id'=>'Digits', 'redirect'=>'StringTrim'), null, $this->_getAllParams());
+
+    $rating = $this->_em->getRepository('Application_Model_Rating')->findOneById($input->id);
+    if($rating){
+      $modifyForm = new Application_Form_Rating_Modify();
+      $modifyForm->setAction('/document_fragment/rate/id/' . $input->id . '/source/' . $input->source);
+
+      $modifyForm->getElement("rating")->setValue($rating->getRating() ? '1' : '0');
+      $modifyForm->getElement("reason")->setValue($rating->getReason());
+      
+      $modifyForm->getElement("submit")->setLabel("Save rating");
+      
+      if($this->_request->isPost()){
+        $result = $this->handleModifyData($modifyForm, $rating);
+
+        if($result){
+          // notification
+          //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          //Unplagged_Helper::notify("case_created", $result, $user);
+
+          $this->_helper->FlashMessenger(array('success'=>'Your rating was edited successfully.'));
+          $this->_redirect($input->redirect);
+        }
+      }
+
+      $this->view->modifyForm = $modifyForm;
+      $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'rating'));
+    }
+  }
+
   private function handleModifyData(Application_Form_Rating_Modify $modifyForm, Application_Model_Rating $rating = null){
     $input = new Zend_Filter_Input(array('source'=>'Digits'), null, $this->_getAllParams());
 
     if(!($rating)){
       $rating = new Application_Model_Rating();
     }
-    
+
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
     $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
-    
+
     $formData = $this->_request->getPost();
     if($modifyForm->isValid($formData)){
 

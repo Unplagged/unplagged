@@ -1027,14 +1027,26 @@ dl.zend_form dd dt {
   font-size: 9pt;
 }
 
+.rating-approval {
+  background-color: #effbe9;
+}
+
+.rating-decline {
+  background-color: #fbf1e9;
+}
+
 /* icons */
 .btn i,
-.activity i{ 
+.activity i,
+.accordion i{ 
   background-repeat: no-repeat;
   margin-right: 5px;
 }
 .icon-fam {
     background-size: 14px 14px;
+}
+.icon-edit {
+  background: url(/images/icons/pencil.png);
 }
 .icon-upload {
   background: url(/images/icons/page_white_get.png);
@@ -1740,6 +1752,10 @@ ins {
 .fragmark-7 { background-color: #b8b8ff; }
 .fragmark-8 { background-color: #f5cf9f; }
 .fragmark-9 { background-color: #a5e6ed; }
+
+.float-right {
+  float: right;
+}
 
 /* ==|== media queries ====================================================== */
 
