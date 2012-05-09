@@ -66,12 +66,6 @@ class Application_Model_Document_Fragment_Partial extends \Application_Model_Doc
         return parent::getIconClass();
     }
 
-    public function getPageFrom()
-    {
-        $this->__load();
-        return parent::getPageFrom();
-    }
-
     public function getLineFrom()
     {
         $this->__load();
@@ -82,12 +76,6 @@ class Application_Model_Document_Fragment_Partial extends \Application_Model_Doc
     {
         $this->__load();
         return parent::getCharacterFrom();
-    }
-
-    public function getPageTo()
-    {
-        $this->__load();
-        return parent::getPageTo();
     }
 
     public function getLineTo()
@@ -102,17 +90,38 @@ class Application_Model_Document_Fragment_Partial extends \Application_Model_Doc
         return parent::getCharacterTo();
     }
 
-    public function getText()
+    public function setLineFrom($lineFrom)
     {
         $this->__load();
-        return parent::getText();
+        return parent::setLineFrom($lineFrom);
+    }
+
+    public function setLineTo($lineTo)
+    {
+        $this->__load();
+        return parent::setLineTo($lineTo);
+    }
+
+    public function setCharacterFrom($characterFrom)
+    {
+        $this->__load();
+        return parent::setCharacterFrom($characterFrom);
+    }
+
+    public function setCharacterTo($characterTo)
+    {
+        $this->__load();
+        return parent::setCharacterTo($characterTo);
+    }
+
+    public function getContent()
+    {
+        $this->__load();
+        return parent::getContent();
     }
 
     public function getId()
     {
-        if ($this->__isInitialized__ === false) {
-            return (int) $this->_identifier["id"];
-        }
         $this->__load();
         return parent::getId();
     }
@@ -144,7 +153,7 @@ class Application_Model_Document_Fragment_Partial extends \Application_Model_Doc
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'lineFrom', 'characterFrom', 'lineTo', 'characterTo', 'text', 'pageFrom', 'pageTo');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'notifications', 'characterFrom', 'characterTo', 'lineFrom', 'lineTo');
     }
 
     public function __clone()

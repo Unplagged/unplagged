@@ -42,22 +42,16 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
     }
 
     
-    public function updated()
-    {
-        $this->__load();
-        return parent::updated();
-    }
-
-    public function getId()
-    {
-        $this->__load();
-        return parent::getId();
-    }
-
     public function getUpdated()
     {
         $this->__load();
         return parent::getUpdated();
+    }
+
+    public function updated()
+    {
+        $this->__load();
+        return parent::updated();
     }
 
     public function getUsername()
@@ -66,22 +60,16 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::getUsername();
     }
 
-    public function getPassword()
-    {
-        $this->__load();
-        return parent::getPassword();
-    }
-
-    public function getEmail()
-    {
-        $this->__load();
-        return parent::getEmail();
-    }
-
     public function getFirstname()
     {
         $this->__load();
         return parent::getFirstname();
+    }
+
+    public function setFirstname($firstname)
+    {
+        $this->__load();
+        return parent::setFirstname($firstname);
     }
 
     public function getLastname()
@@ -90,10 +78,40 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::getLastname();
     }
 
+    public function setLastname($lastname)
+    {
+        $this->__load();
+        return parent::setLastname($lastname);
+    }
+
+    public function getPassword()
+    {
+        $this->__load();
+        return parent::getPassword();
+    }
+
+    public function setPassword($password)
+    {
+        $this->__load();
+        return parent::setPassword($password);
+    }
+
+    public function getEmail()
+    {
+        $this->__load();
+        return parent::getEmail();
+    }
+
     public function getVerificationHash()
     {
         $this->__load();
         return parent::getVerificationHash();
+    }
+
+    public function setVerificationHash($verificationHash)
+    {
+        $this->__load();
+        return parent::setVerificationHash($verificationHash);
     }
 
     public function getState()
@@ -108,18 +126,6 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::setState($state);
     }
 
-    public function setFirstname($firstname)
-    {
-        $this->__load();
-        return parent::setFirstname($firstname);
-    }
-
-    public function setLastname($lastname)
-    {
-        $this->__load();
-        return parent::setLastname($lastname);
-    }
-
     public function getCurrentCase()
     {
         $this->__load();
@@ -130,18 +136,6 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
     {
         $this->__load();
         return parent::setCurrentCase($currentCase);
-    }
-
-    public function unsetCurrentCase()
-    {
-        $this->__load();
-        return parent::unsetCurrentCase();
-    }
-
-    public function setPassword($password)
-    {
-        $this->__load();
-        return parent::setPassword($password);
     }
 
     public function addFile(\Application_Model_File $file)
@@ -174,12 +168,6 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::hasFiles();
     }
 
-    public function setVerificationHash($verificationHash)
-    {
-        $this->__load();
-        return parent::setVerificationHash($verificationHash);
-    }
-
     public function getAvatar()
     {
         $this->__load();
@@ -198,28 +186,22 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::getDirectLink();
     }
 
-    public function getIconClass()
-    {
-        $this->__load();
-        return parent::getIconClass();
-    }
-
     public function toArray()
     {
         $this->__load();
         return parent::toArray();
     }
 
-    public function getSalt()
-    {
-        $this->__load();
-        return parent::getSalt();
-    }
-
     public function getRole()
     {
         $this->__load();
         return parent::getRole();
+    }
+
+    public function getId()
+    {
+        $this->__load();
+        return parent::getId();
     }
 
     public function setId($id)
@@ -232,6 +214,12 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
     {
         $this->__load();
         return parent::created();
+    }
+
+    public function getIconClass()
+    {
+        $this->__load();
+        return parent::getIconClass();
     }
 
     public function getComments()
@@ -249,7 +237,7 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'notifications', 'updated', 'username', 'password', 'email', 'firstname', 'lastname', 'verificationHash', 'salt', 'role', 'state', 'avatar', 'currentCase', 'files');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'notifications', 'updated', 'username', 'encryptedPassword', 'email', 'firstname', 'lastname', 'verificationHash', 'state', 'role', 'avatar', 'currentCase', 'files');
     }
 
     public function __clone()

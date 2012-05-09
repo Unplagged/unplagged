@@ -96,12 +96,6 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::getDirectLink();
     }
 
-    public function getIconClass()
-    {
-        $this->__load();
-        return parent::getIconClass();
-    }
-
     public function setTitle($title)
     {
         $this->__load();
@@ -148,6 +142,12 @@ class Application_Model_Document extends \Application_Model_Document implements 
     {
         $this->__load();
         return parent::created();
+    }
+
+    public function getIconClass()
+    {
+        $this->__load();
+        return parent::getIconClass();
     }
 
     public function getComments()

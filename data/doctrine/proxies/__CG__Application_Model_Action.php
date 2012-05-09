@@ -60,10 +60,16 @@ class Application_Model_Action extends \Application_Model_Action implements \Doc
         return parent::getDescription();
     }
 
+    public function getTitle()
+    {
+        $this->__load();
+        return parent::getTitle();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'name', 'description');
+        return array('__isInitialized__', 'id', 'name', 'title', 'description');
     }
 
     public function __clone()

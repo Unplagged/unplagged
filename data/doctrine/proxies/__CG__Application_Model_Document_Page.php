@@ -96,12 +96,6 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
         return parent::getDirectLink();
     }
 
-    public function getIconClass()
-    {
-        $this->__load();
-        return parent::getIconClass();
-    }
-
     public function getPlagiarismPercentage()
     {
         $this->__load();
@@ -184,6 +178,12 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
     {
         $this->__load();
         return parent::created();
+    }
+
+    public function getIconClass()
+    {
+        $this->__load();
+        return parent::getIconClass();
     }
 
     public function getComments()
