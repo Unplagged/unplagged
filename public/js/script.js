@@ -23,12 +23,16 @@ $(document).ready(function(){
   });
   
   //select all for de-hyphen area
-  $('.de-hyphen form').css('position', 'relative').append('<a class="select-all" href="">Select all</a>');
+  $('.de-hyphen form').css('position', 'relative').append('<a class="btn select-all" href=""><i class="icon-ok-circle"></i>Select all</a>');
   var selectAllLink = $('.select-all');
-  selectAllLink.css({position: 'absolute', right: 0, bottom: 0}).toggle(function(){
-    $(this).text('Deselect all').parents('form').find('input[type=checkbox]').attr('checked', true);
+  selectAllLink.css({
+    position: 'absolute', 
+    right: 0, 
+    bottom: 0
+  }).toggle(function(){
+    $(this).html('<i class="icon-remove-circle"></i>Deselect all').parents('form').find('input[type=checkbox]').attr('checked', true);
   }, function(){
-    $(this).text('Select all').parents('form').find('input[type=checkbox]').attr('checked', false);
+    $(this).html('<i class="icon-ok-circle"></i>Select all').parents('form').find('input[type=checkbox]').attr('checked', false);
   });
   
   
@@ -60,14 +64,14 @@ $(document).ready(function(){
     var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
 
     if(target.is(':visible')) {
-      $(this).html("<i class=\"icon-comments\"></i>Show comments");
+      $(this).html("<i class=\"icon-comments icon-fam\"></i>Show comments");
       $(this).removeClass("expanded");
       
       target.slideUp(800, function() {
         comments.html("");
       });
     } else {
-      $(this).html("<i class=\"icon-comments\"></i>Hide comments");
+      $(this).html("<i class=\"icon-comments icon-fam\"></i>Hide comments");
       $(this).addClass("expanded");
       target.show();
       comments.hide();
@@ -123,13 +127,13 @@ $(document).ready(function(){
   
   function addComment(data, target) {
     var tpl = '<div class="comment">' +
-      '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
-      '<div class="details">' +
-      '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
-      ' <span class="date">' + data.created + '</span>' +
-      '</div>' +
-      '</div>' +
-      '</div>';
+    '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
+    '<div class="details">' +
+    '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
+    ' <span class="date">' + data.created + '</span>' +
+    '</div>' +
+    '</div>' +
+    '</div>';
     target.append(tpl);
   }
   
@@ -174,8 +178,20 @@ $(document).ready(function(){
     
     return false;
   }
-  $("#compare-with-no-color").change(function(){
-    compareFragmentTexts($(this).val(), $(this).attr('checked'));
+  
+  $(".compare-with-color").click(function(){
+    var btn = $(this);
+    
+    if(btn.attr('data-colors') == 'true') {
+      btn.attr('data-colors', 'false');
+      compareFragmentTexts(btn.attr('data-value'), 'false');
+      btn.html('<i class="icon-ok-circle"></i>Show colors');
+    } else {
+      btn.attr('data-colors', 'true');
+      compareFragmentTexts(btn.attr('data-value'), 'true');
+      btn.html('<i class="icon-remove-circle"></i>Hide colors');
+    }
+    return false;
   });
   
   // creates a new fragment based on selected text

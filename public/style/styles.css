@@ -1030,9 +1030,11 @@ dl.zend_form dd dt {
 /* icons */
 .btn i,
 .activity i{ 
-  background-size: 14px 14px;
   background-repeat: no-repeat;
   margin-right: 5px;
+}
+.icon-fam {
+    background-size: 14px 14px;
 }
 .icon-upload {
   background: url(/images/icons/page_white_get.png);
