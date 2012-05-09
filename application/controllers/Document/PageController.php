@@ -417,7 +417,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       }
     }
 
-    $content = $fragment->getContent('list', !empty($input->highlight));
+    $content = $fragment->getContent('list', $input->highlight == 'true');
 
     $response['statuscode'] = 200;
     $response['data']['plag'] = $content['plag'];

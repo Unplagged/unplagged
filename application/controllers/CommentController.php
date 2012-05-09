@@ -82,5 +82,4 @@ class CommentController extends Unplagged_Controller_Action{
       $this->_helper->json($result);
     }
   }
-
 }

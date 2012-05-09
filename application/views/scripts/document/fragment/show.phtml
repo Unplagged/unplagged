@@ -1,34 +1,52 @@
 <?php
-$this->title = $this->translate("Fragment");
+$this->title = $this->fragment->getTitle();
 $this->headTitle($this->title);
 ?>
 
-<?php echo $this->translate("Name"); ?>: <?php echo $this->fragment->getTitle(); ?><br />
+<h3>Details</h3>
 <?php echo $this->translate("Type"); ?>: <?php echo $this->fragment->getType()->getName(); ?><br/>
-<?php echo $this->translate("Source"); ?>: //<br/>
+<?php echo $this->translate("Note"); ?>: <?php echo $this->fragment->getNote(); ?>
 
-<label for="compare-with-no-color" class="checkbox">
-<input type="checkbox" name="compare" id="compare-with-no-color" checked="checked" value="<?php echo $this->fragment->getId(); ?>" />
-Compare with no color</label>
 
 <div class="document-page diff clearfix">
   <div class="src-wrapper">
-    <h3><?php echo $this->translate("Fragment"); ?></h3>
+    <h4><?php echo $this->translate("Fragment"); ?></h4>
     <p>From: page <?php echo $this->plag->getLineFrom()->getPage()->getPageNumber(); ?>, line <?php echo $this->plag->getLineFrom()->getLineNumber(); ?></p>
     <p>To: page <?php echo $this->plag->getLineTo()->getPage()->getPageNumber(); ?>, line <?php echo $this->plag->getLineTo()->getLineNumber(); ?></p>    
     <div id="candidateText"><?php echo $this->content['plag']; ?></div>
   </div>
   <div class="src-wrapper">
-    <h3><?php echo $this->translate("Source"); ?></h3>
+    <h4><?php echo $this->translate("Source"); ?></h4>
     <p>From: page <?php echo $this->source->getLineFrom()->getPage()->getPageNumber(); ?>, line <?php echo $this->source->getLineFrom()->getLineNumber(); ?></p>
     <p>To: page <?php echo $this->source->getLineTo()->getPage()->getPageNumber(); ?>, line <?php echo $this->source->getLineTo()->getLineNumber(); ?></p>
     <div id="sourceText"><?php echo $this->content['source']; ?></div>
   </div>
 </div>
+<div style="text-align: right">
+<a href="#" class="btn compare-with-color" data-colors="true" data-value="<?php echo $this->fragment->getId(); ?>"><i class="icon-remove-circle"></i>Hide colors</a>
+</div>
 
-<?php echo $this->translate("Note"); ?>: <?php echo $this->fragment->getNote(); ?>
+<h3>Ratings</h3>
+<div class="accordion" id="ratings-accordion">
+  <?php foreach($this->ratings as $rating): ?>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#ratings-accordion" href="#collapse<?php echo $rating->getId(); ?>">
+          <?php echo $rating->getUser()->getUsername(); ?> <?php echo $rating->getRating() ? 'Approve' : 'Decline'; ?>
+        </a>
+      </div>
+      <div id="collapse<?php echo $rating->getId(); ?>" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <?php echo $rating->getReason(); ?>
+        </div>
+      </div>
+    </div>
+  <?php endforeach; ?>
+  <a class="btn" href="/document_fragment/rate/source/<?php echo $this->fragment->getId(); ?>"><i class="icon-rate icon-fam"></i>Approve / decline</a>
+</div>
+<h3>Comments</h3>
 <div>
-    <a class="btn toggle-comments" href="#" for="comments-wrapper-<?php echo $this->fragment->getId(); ?>"><i class="icon-comments"></i>Show comments</a>
+  <a class="btn toggle-comments" href="#" for="comments-wrapper-<?php echo $this->fragment->getId(); ?>"><i class="icon-comments icon-fam"></i>Show comments</a>
   <br /><br />
   <?php echo $this->partial('partials/comments.phtml', array('sourceId'=>$this->fragment->getId(), 'hidden'=>true)); ?>
 </div>

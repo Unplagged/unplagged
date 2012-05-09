@@ -50,13 +50,8 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     $this->view->content = $fragment->getContent('list', true);
 
-    /* // @todo remove, jsut for now to have something, it should be changed to explode("\n",...  
-      $plagText = $fragment->getPlag()->getText();
-      $sourceText = $fragment->getSource()->getText();
-
-      $this->view->plagLines = explode("\n", $plagText);
-      $this->view->sourceLines = explode("\n", $sourceText);
-     */
+    $this->view->ratings = $this->_em->getRepository("Application_Model_Rating")->findBySource($input->id);
+   
     Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
@@ -218,6 +213,13 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
+  
+  public function rateAction() {
+    $this->view->title = "Rate fragment";
+    
+    $this->_forward('create', 'rating'); 
+  }
+
 
   private function handleModifyData(Application_Form_Document_Fragment_Modify $modifyForm, Application_Model_Document_Fragment $fragment = null){
     if(!($fragment)){
@@ -258,7 +260,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     return false;
   }
-
+  
   /**
    * Creates a partial of a fragment (candidate or source part).
    * 
