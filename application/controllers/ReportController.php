@@ -19,18 +19,67 @@ class ReportController extends Unplagged_Controller_Versionable{
     //$page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->page);
 
      $modifyForm = new Application_Form_Report_Modify();
-   
-    if($this->_request->isPost()){// && empty($input->page)){
+	 
+	 
+		$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+		
+		// get current case
+		$currentCase = $user->getCurrentCase();
+		//$this->_helper->flashMessenger->addMessage( $currentCase);
+		
+		// get current case name
+		$case = $currentCase->getPublishableName();
+	 
+	 $modifyForm->getElement("case")->setValue($case);
+	 
+	 $formData = $this->_request->getPost();
+    //if($this->_request->isPost()){// && empty($input->page)){
+	
+	if($modifyForm->isValid($formData)){
    	 require_once(BASE_PATH.'/library/dompdf/dompdf_config.inc.php');
-		 //require_once('C:/xampp/unplagged/library/dompdf/dompdf_config.inc.php');
 		 spl_autoload_register('DOMPDF_autoload');
 		
-		$html = 
-	      '<html><body>'.
-	      '<p>Put your html here, or generate it with your favourite '.
-	      'templating system.</p>'.
-	      '</body></html>';
+		$casename =  $formData['case'];
+		$note = $formData['note'];
 		
+		// get files of current case
+		//$files = $currentCase->getFiles();
+		//$files = $user->getFiles();
+		//$documents = array();
+		
+		// foreach($files as $file) {
+			
+			
+			// if( $file->getIsTarget()){
+				// $this->_helper->flashMessenger->addMessage( $file->getId());
+				// $fileId = $file->getId();
+				
+				// $query = $this->_em->createQuery("SELECT d FROM Application_Model_Document d WHERE d.originalFile = $fileId");
+				// //$query = $this->_em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
+				// $documents = $query->getResult();
+				
+			// }
+		// }
+				// // get documents of target file
+		// foreach($documents as $document){
+				// //$this->_helper->flashMessenger->addMessage( $document->getId());
+					
+				// // get bibtex
+				// $bibTex .= $document->getBibTex();
+				// $this->_helper->flashMessenger->addMessage($bibTex);
+					
+				// // get fragments
+				// //$fragments = $document->getFragments();
+				
+				
+		// }
+		
+		$query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f");
+		//$query = $this->_em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
+		$fragments = $query->getResult();
+		
+		$html = Unplagged_HtmlLayout::htmlLayout($casename,$note,$fragments);
+			      
 		$dompdf = new DOMPDF();
 		$dompdf->set_paper('a4', 'portrait');
 		$dompdf->load_html($html);
@@ -40,7 +89,7 @@ class ReportController extends Unplagged_Controller_Versionable{
 		//$dompdf->stream($filename);
 		$output = $dompdf->output();
 		 file_put_contents($filename, $output);
-	 
+	 		
       if($filename){
     
         $this->_helper->flashMessenger->addMessage('The report was created successfully.');
@@ -84,5 +133,6 @@ class ReportController extends Unplagged_Controller_Versionable{
     Zend_Layout::getMvcInstance()->sidebar = null;
     Zend_Layout::getMvcInstance()->versionableId = null;
   }
+  
 }
 ?>

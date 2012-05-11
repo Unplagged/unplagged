@@ -71,12 +71,18 @@ class Application_Form_Report_Modify extends Zend_Form {
 
         $this->setMethod('post');
         $this->setAction("/report/create");
+		
+		$caseElement = new Zend_Form_Element_Text('case');
+		$caseElement->setLabel("Case");
+		$caseElement->addValidator('regex', false, array('/^[a-z0-9‗צהüגבאיטס]/i'));
+		$caseElement->addValidator('stringLength', false, array(2, 64));
+		$caseElement->setRequired(true);
 
         // general group
-        $caseElement = new Zend_Form_Element_Select('case');
-        $caseElement->setLabel("Case");
-        $caseElement->addMultiOptions($this->cases);
-        $caseElement->setRequired(true);
+        // $caseElement = new Zend_Form_Element_Select('case');
+        // $caseElement->setLabel("Case");
+        // $caseElement->addMultiOptions($this->cases);
+        // $caseElement->setRequired(true);
 
         $noteElement = new Zend_Form_Element_Textarea('note');
         $noteElement->setLabel("Note");
@@ -100,14 +106,14 @@ class Application_Form_Report_Modify extends Zend_Form {
 
         $this->addElements(array(
             $caseElement
-			, $fragmentElement
+			//, $fragmentElement
             , $noteElement
             
         ));
 
         $this->addDisplayGroup(array(
             'case'
-			, 'fragment'
+			//, 'fragment'
             , 'note'
                 )
                 , 'generalGroup'
