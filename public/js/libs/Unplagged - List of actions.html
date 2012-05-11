@@ -1,0 +1,322 @@
+<!doctype html>
+<!--[if lte IE 7]> <html class="no-js ie7 oldie"> <![endif]-->
+<!--[if IE 8]> <html class="no-js ie8 oldie"> <![endif]-->
+<!--[if IE 9]> <html class="no-js ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <!-- Design based on http://www.premiumpixels.com/ -->
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Unplagged - List of actions</title>    <link href="/style/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/style/flick/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/style/jquery.lightbox-0.5.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/style/styles.css" media="screen" rel="stylesheet" type="text/css" >    <!-- Modernizr needs to stay in the head to work properly -->
+    <script src="/js/libs/modernizr-2.5.3.min.js"></script>
+  </head>
+  <body>
+    <noscript><div class="alert-danger top-alert"><div class="alert alert-danger"><h4 class="alert-heading">Attention!</h4><p>Unfortunately JavaScript is currently not supported or is disabled in your browser. Please enable JavaScript for full functionality.</p></div></div></noscript>
+    <!-- Prompt IE 7 and lower users to install Chrome Frame. -->
+    <!--[if lt IE 8]><div class="alert-danger top-alert"><div class="alert alert-danger"><p>Your browser is<em> ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p></div></div><![endif]-->
+    <header role="toolbar">
+      <div class="content clearfix">
+                  <div class="user-box">
+            <img class="avatar" src="/images/default-avatar.png" />
+            <div class="dropdown-button hoverable user-menu">
+              <a class="button" href="/user/edit">benjamin<span class="arrow-down"></span></a>
+              <ul>
+                <li><a href="/auth/logout">Logout</a></li>
+                <li><a href="/user/edit">Edit Profile</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="case-settings-box clearfix">
+                                    <a href="/case/edit/id/17">Edit Case</a>
+                        <form class="current-case" method="POST" action="/user/set-current-case">
+              <select data-placeholder="Select a Case" name="case">
+                  <option></option>
+                                  <option selected value="17">Undercover</option>
+                              </select>
+              <button class="button">Ok</button>  
+            </form>
+          </div>
+              </div>
+    </header>
+    <div class="pagewrap">
+      <header role="banner" class="clearfix">
+        <div class="beta-patch"></div>
+        <h1 class="ir">Unplagged - The Plagiarism Detection Cockpit</h1>
+        <nav><ul class="navigation">
+    <li>
+        <a title="Home" class="home" href="/">Home</a>
+    </li>
+    <li>
+        <a title="Activity" href="/notification/recent-activity">Activity</a>
+    </li>
+    <li>
+        <a title="Files" href="/file/upload">Files</a>
+        <ul>
+            <li>
+                <a title="Case Files" href="/case/files">Case Files</a>
+            </li>
+            <li>
+                <a title="Public Files" href="/file/list">Public Files</a>
+            </li>
+            <li>
+                <a title="Personal Files" href="/user/files">Personal Files</a>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <a title="Documents" href="/document/list">Documents</a>
+    </li>
+    <li>
+        <a title="Fragments" href="/document_fragment/list">Fragments</a>
+    </li>
+    <li>
+        <a title="Administration" href="#">Administration</a>
+        <ul>
+            <li>
+                <a title="Cases" href="/case/list">Cases</a>
+            </li>
+        </ul>
+    </li>
+</ul></nav>
+      </header><div role="main" class="clearfix">
+    <!--<div class="breadcrumbs">
+      </div>-->
+  <h2>List of actions</h2>
+  <div class="main">
+    <div id="main-wrapper">
+      <div >
+        <table cellpadding="0" cellspacing="0" class="default"> 
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th style="width: 200px;">Name</th>
+      <th style="width: 100px;">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+                  <tr>
+          <td data-label="Name">User %s registered</td>
+          <td data-label="Title">user_registered</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/1" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">User %s updated the own profile.</td>
+          <td data-label="Title">user_updated_profile</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/2" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">User %s verified</td>
+          <td data-label="Title">user_verified</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/3" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">User %s requested password</td>
+          <td data-label="Title">user_requested_password</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/4" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">Case %s was created</td>
+          <td data-label="Title">case_created</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/5" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">Case %s was updated</td>
+          <td data-label="Title">case_updated</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/6" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">File %s was uploaded</td>
+          <td data-label="Title">file_uploaded</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/7" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">Fragment %s was created</td>
+          <td data-label="Title">fragment_created</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/8" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">Fragment %s was updated</td>
+          <td data-label="Title">fragment_updated</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/9" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">Document %s was created</td>
+          <td data-label="Title">document_created</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/10" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">Simtext report %s was created</td>
+          <td data-label="Title">simtext_report_created</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/11" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">Detection report %s was created</td>
+          <td data-label="Title">detection_report_created</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/12" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">Parse file %s</td>
+          <td data-label="Title">file_parse</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/13" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+              <tr>
+          <td data-label="Name">Simtext page %s</td>
+          <td data-label="Title">page_simtext</td>
+          <td data-label="Actions"><div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <ul class="dropdown-menu pull-right">
+          <li>
+        <a  href="/setting/edit-action/id/14" ><img class="icon" src="/images/icons/pencil.png" alt="" /> Edit action</a>
+      </li>
+      </ul>
+</div></td>
+        </tr>
+            </tbody>
+</table> 
+  <div class="pagination pagination-right">
+    <ul>
+    <li class="pagination-numbers disabled"><a>1 - 14 of 14</a></li>
+
+      <!-- First page link -->
+              <li class="disabled"><a>|«</a></li>
+      
+      <!-- Previous page link -->
+              <li class="disabled"><a>«</a></li>
+      
+      <!-- Numbered page links -->
+                        <li class="active"><a>1</a></li>
+              
+      <!-- Next page link -->
+              <li class="disabled">
+          <a>»</a>
+        </li>
+      
+      <!-- Last page link -->
+              <li class="disabled"><a>&raquo;|</a></li>
+      
+    </ul>
+  </div>
+
+<a class="btn btn-primary" href="/case/create"><i class="icon-create-case icon-fam"></i>Create a new action</a>
+      </div>
+    </div>
+  </div>
+  </div>
+
+      <footer role="contentinfo">
+        <a href="">Imprint</a>
+      </footer>
+    </div>    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+    
+        <script defer src="/js/libs/jquery-ui-1.8.17.custom.min.js"></script>
+
+    <script defer src="/js/libs/numberfy.js"></script>
+    <script defer src="/js/libs/jquery.autosize.js"></script>
+
+    <script defer src="/js/libs/jquery.lightbox-0.5.min.js"></script>
+    <script defer src="/js/libs/bootstrap.min.js"></script>
+    
+        <script defer src="/js/plugins.js"></script>
+    <script defer src="/js/script.js"></script>
+    
+        <script defer src="/js/contextmenu.js"></script>
+</body>
+</html>
+</body>
+</html>

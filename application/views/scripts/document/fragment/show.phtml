@@ -71,9 +71,9 @@ $this->headTitle($this->title);
 <a class="btn" href="/document_fragment/rate/source/<?php echo $this->fragment->getId(); ?>"><i class="icon-rate icon-fam"></i>Approve / decline</a>
 </p>
 <?php } ?>
-<h3>Comments</h3>
+<h3>Conversation</h3>
 <div>
-  <a class="btn toggle-comments" href="#" for="comments-wrapper-<?php echo $this->fragment->getId(); ?>"><i class="icon-comments icon-fam"></i>Show comments</a>
+  <a class="btn toggle-comments" href="#" for="comments-wrapper-<?php echo $this->fragment->getId(); ?>"><i class="icon-comments icon-fam"></i>Show conversation</a>
   <br /><br />
   <?php echo $this->partial('partials/comments.phtml', array('sourceId'=>$this->fragment->getId(), 'hidden'=>true)); ?>
 </div>

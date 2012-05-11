@@ -250,6 +250,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'case',
             'action'=>'list'
+          ),
+          array(
+            'label'=>'States',
+            'title'=>'States',
+            'module'=>'default',
+            'controller'=>'setting',
+            'action'=>'list-states'
+          ),
+          array(
+            'label'=>'Actions',
+            'title'=>'Actions',
+            'module'=>'default',
+            'controller'=>'setting',
+            'action'=>'list-actions'
           )
         )
       )

@@ -9,7 +9,7 @@ $this->headTitle($this->title);
       <th style="width: 70px;"><?php echo $this->translate("Page from"); ?></th>
       <th style="width: 70px;"><?php echo $this->translate("Page to"); ?></th>
       <th style="width: 100px;"><?php echo $this->translate("Source"); ?></th>
-      <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
+      <th class="fit-content"><?php echo $this->translate("Actions"); ?></th>
     </tr>
   </thead>
   <tbody>
@@ -20,7 +20,7 @@ $this->headTitle($this->title);
           <td data-label="<?php echo $this->translate("Page from"); ?>"><?php echo $fragment->getPlag()->getLineFrom()->getPage()->getPageNumber(); ?></td>
           <td data-label="<?php echo $this->translate("Page to"); ?>"><?php echo $fragment->getPlag()->getLineTo()->getPage()->getPageNumber(); ?></td>
           <td data-label="<?php echo $this->translate("Source"); ?>"><a href="<?php echo "/document_page/list/id/" . $fragment->getSource()->getLineFrom()->getPage()->getDocument()->getId(); ?>"><?php echo $fragment->getSource()->getLineFrom()->getPage()->getDocument()->getTitle(); ?></a></td>
-          <td data-label="<?php echo $this->translate("Actions"); ?>"><?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$fragment->actions)); ?></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>" class="fit-content"><?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$fragment->actions)); ?></td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
