@@ -388,5 +388,9 @@ class UserController extends Unplagged_Controller_Action{
     // send form to view
     $this->view->removalForm = $removalForm;
   }
+  
+  public function editRoleAction() {
+    $this->view->roleForm = new Application_Form_User_Role();
+  }
 
 }

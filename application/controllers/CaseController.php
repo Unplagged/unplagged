@@ -79,6 +79,7 @@ class CaseController extends Unplagged_Controller_Action{
       $this->view->modifyForm = $modifyForm;
       $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
     }else{
+      $this->_helper->FlashMessenger(array('error'=>'The specified case does not exist.'));
       $this->_helper->redirector('list', 'case');
     }
   }

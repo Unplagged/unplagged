@@ -51,7 +51,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
 
       $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
       if($document){
-        $this->view->document = $document;
+        $this->view->title = 'Document: ' . $document->getTitle();
       }
     }
 
@@ -81,30 +81,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
         $this->view->page = $page;
-
-        // next page
-        $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber > :pageNumber ORDER BY p.pageNumber ASC');
-        $query->setParameter("document", $page->getDocument()->getId());
-        $query->setParameter("pageNumber", $page->getPageNumber());
-        $query->setMaxResults(1);
-
-        $nextPage = $query->getResult();
-        if($nextPage){
-          $nextPage = $nextPage[0];
-          $this->view->nextPageLink = '/document_page/show/id/' . $nextPage->getId();
-        }
-
-        // previous page
-        $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber < :pageNumber ORDER BY p.pageNumber DESC');
-        $query->setParameter("document", $page->getDocument()->getId());
-        $query->setParameter("pageNumber", $page->getPageNumber());
-        $query->setMaxResults(1);
-
-        $prevPage = $query->getResult();
-        if($prevPage){
-          $prevPage = $prevPage[0];
-          $this->view->prevPageLink = '/document_page/show/id/' . $prevPage->getId();
-        }
+        $this->initPageView($page, '/document_page/show');
       }
     }
   }
@@ -115,12 +92,10 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     if(!empty($input->id)){
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
-        $this->view->page = $page;
-
         $lines = $page->getContent("array");
-        
+
         $pageLines = array();
-        foreach($lines as $lineNumber => $content){
+        foreach($lines as $lineNumber=>$content){
           $pageLine["content"] = !empty($content) ? trim($content) : ' ';
           $pageLine["hasHyphen"] = (substr($pageLine["content"], -1) == "-");
           $pageLines[] = $pageLine;
@@ -166,6 +141,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         }
         $this->view->deHyphenForm = $deHyphenForm;
       }
+      $this->initPageView($page, '/document_page/de-hyphen');
     }
   }
 
@@ -201,7 +177,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     }
 
     $this->view->editForm = $editForm;
-    $this->view->page = $page;
+    $this->initPageView($page, '/document_page/edit');
   }
 
   public function deleteAction(){
@@ -248,7 +224,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $lines = preg_replace($reg, "<span class='stopword'>$1</span>", $lines);
 
         $this->view->stopWordContent = $lines;
-        $this->view->page = $page;
+        $this->initPageView($page, '/document_page/stopwords');
       }
     }
   }
@@ -314,7 +290,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         }
       }
 
-      $this->view->title = "Create case";
+      $this->initPageView($page, '/document_page/simtext');
       $this->view->simtextForm = $simtextForm;
       $this->render('simtext/create');
     }
@@ -402,18 +378,18 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     }else{
       $fragment = new Application_Model_Document_Fragment();
 
-      if($input->candidateLineFrom && $input->candidateLineTo) {
+      if($input->candidateLineFrom && $input->candidateLineTo){
         $partial = new Application_Model_Document_Fragment_Partial();
-      $partial->setLineFrom($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->candidateLineFrom));
-      $partial->setLineTo($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->candidateLineTo));
-      $fragment->setPlag($partial);
+        $partial->setLineFrom($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->candidateLineFrom));
+        $partial->setLineTo($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->candidateLineTo));
+        $fragment->setPlag($partial);
       }
-      
-      if($input->sourceLineFrom && $input->sourceLineTo) {
-      $partial = new Application_Model_Document_Fragment_Partial();
-      $partial->setLineFrom($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->sourceLineFrom));
-      $partial->setLineTo($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->sourceLineTo));
-      $fragment->setSource($partial);
+
+      if($input->sourceLineFrom && $input->sourceLineTo){
+        $partial = new Application_Model_Document_Fragment_Partial();
+        $partial->setLineFrom($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->sourceLineFrom));
+        $partial->setLineTo($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->sourceLineTo));
+        $fragment->setSource($partial);
       }
     }
 
@@ -428,6 +404,37 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     // disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
+  }
+
+  private function initPageView(Application_Model_Document_Page $page, $pageLink = '/document_page/show'){
+    // next page
+    $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber > :pageNumber ORDER BY p.pageNumber ASC');
+    $query->setParameter("document", $page->getDocument()->getId());
+    $query->setParameter("pageNumber", $page->getPageNumber());
+    $query->setMaxResults(1);
+
+    $nextPage = $query->getResult();
+    if($nextPage){
+      $nextPage = $nextPage[0];
+      $this->view->nextPageLink = $pageLink . '/id/' . $nextPage->getId();
+    }
+
+    // previous page
+    $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber < :pageNumber ORDER BY p.pageNumber DESC');
+    $query->setParameter("document", $page->getDocument()->getId());
+    $query->setParameter("pageNumber", $page->getPageNumber());
+    $query->setMaxResults(1);
+
+    $prevPage = $query->getResult();
+    if($prevPage){
+      $prevPage = $prevPage[0];
+      $this->view->prevPageLink = $pageLink . '/id/' . $prevPage->getId();
+    }
+
+    $lastPage = $page->getDocument()->getPages()->last();
+
+    $this->view->title = 'Document: ' . $page->getDocument()->getTitle();
+    $this->view->subtitle = 'Page ' . $page->getPageNumber() . ' of ' . $lastPage->getPageNumber();
   }
 
 }

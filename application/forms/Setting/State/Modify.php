@@ -21,36 +21,40 @@
 /**
  * 
  */
-class Application_Form_Document_Page_Modify extends Zend_Form{
+class Application_Form_Setting_State_Modify extends Zend_Form{
 
   /**
-   * Creates the form to add/edit a document page.
+   * Creates the form to add/edit an action.
    * @see Zend_Form::init()
    */
   public function init(){
     $this->setMethod('post');
+    $this->setAction("/setting/create-state");
 
-    $pageNumberElement = new Zend_Form_Element_Text('pageNumber');
-    $pageNumberElement->setLabel("Seitenzahl");
-    $pageNumberElement->addValidator('regex', false, array('/^[0-9]/i'));
-    $pageNumberElement->setRequired(true);
+    $nameElement = new Zend_Form_Element_Text('name');
+    $nameElement->setLabel("Internal name");
+    $nameElement->setRequired(true);
 
-    $contentElement = new Zend_Form_Element_Textarea('content');
-    $contentElement->setLabel("Content");
-    $contentElement->setOptions(array('class'=>'line-numbers big'));
+    $titleElement = new Zend_Form_Element_Text('title');
+    $titleElement->setLabel("Title");
+    $titleElement->setRequired(true);
+    
+    $descriptionElement = new Zend_Form_Element_Textarea('description');
+    $descriptionElement->setLabel("Description");
 
     $submitElement = new Zend_Form_Element_Submit('submit');
-    $submitElement->setLabel('Save page');
+    $submitElement->setLabel('Create state');
     $submitElement->setOptions(array('class'=>'btn btn-primary'));
 
     $this->addElements(array(
-      $pageNumberElement
-      , $contentElement
+        $nameElement
+      , $titleElement
+      , $descriptionElement
     ));
 
-    $this->addDisplayGroup(array('pageNumber', 'content')
-        , 'detailsGroup'
-        , array('legend'=>'Page details')
+    $this->addDisplayGroup(array('name', 'title', 'description')
+        , 'settingGroup'
+        , array('legend'=>'Settings')
     );
 
     $this->addElements(array(
