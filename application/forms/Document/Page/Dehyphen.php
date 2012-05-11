@@ -41,7 +41,7 @@ class Application_Form_Document_Page_Dehyphen extends Zend_Form{
             array('Label', array('placement'=>'APPEND', 'separator'=>' ')),
             array('HtmlTag', array('tag'=>'li', 'class'=>'page-line highlight'))
             ))
-            )->$lineNumber->setLabel($pageLine["content"]);
+            )->$lineNumber->setLabel($pageLine["content"])->setChecked(true);
       }else{
         $this->addElement('Hidden', $lineNumber . "", array('belongsTo'=>'pageLine', 'decorators'=>array(
             array('ViewHelper'),

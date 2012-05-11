@@ -1,6 +1,5 @@
 <?php
-
-/**
+/*
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
  *  
@@ -17,25 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-/**
- *
- * 
- * @author Unplagged
- */
-class AdminController extends Unplagged_Controller_Action{
-
-  public function indexAction(){
-    
-  }
-  
-  public function listUsersAction(){
-    
-  }
-  
-  public function editUserAction(){
-    
-  }
-
-}
 ?>
+<?php echo $this->editForm; ?>
+<!--<form action="" method="POST">
+  <?php foreach($this->allPermissions as $controllerName=>$permissions): ?>
+    <div class="well">
+      <h3><?php echo $controllerName; ?></h3>
+        <?php foreach($permissions as $permission): ?>
+      <span class="test">
+          <a type="checkbox" name="<?php echo $permission; ?>"type="button" class="btn" data-toggle="button" value="<?php echo $permission; ?>"><?php echo $permission; ?></a>
+      </span>
+        <?php endforeach; ?>
+    </div>
+  <?php endforeach; ?>
+  <button class="btn btn-primary">Submit</button>
+</form>-->

@@ -38,6 +38,10 @@
  */
 class Application_Model_User_Role implements Zend_Acl_Role_Interface{
 
+  const TYPE_GLOBAL = 'global';
+  const TYPE_CASE = 'case';
+  const TYPE_USER = 'user';
+  
   /**
    * @Id
    * @GeneratedValue
@@ -52,14 +56,29 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
 
   /**
    * A list of all the permissions that are allowed for an owner of this role.
-   * @Column(type="array")
+   *
+   * @ManyToMany(targetEntity="Application_Model_Permission")
+   * @JoinTable(name="role_has_permission",
+   *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id")}
+   *      )
    */
   protected $permissions;
 
   /**
+   *
+   * @ManyToMany(targetEntity="Application_Model_Permission")
+   * @JoinTable(name="role_permission_blacklist",
+   *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id")}
+   *      )
+   */
+  protected $blacklist;
+  
+  /**
    * Stores the roles this role is extending.
    * 
-   * @ManyToMany(targetEntity="Application_Model_User_InheritableRole")
+   * @ManyToMany(targetEntity="Application_Model_User_Role")
    * @JoinTable(name="role_inherits",
    *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
    *      inverseJoinColumns={@JoinColumn(name="inherited_role_id", referencedColumnName="id")}
@@ -67,82 +86,21 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    */
   protected $inheritedRoles;
 
-  public function __construct(){
+  /**
+   * @var string
+   * 
+   * @Column(type="string")
+   */
+  protected $type;
+  
+  public function __construct($type = null){
     $this->inheritedRoles = new \Doctrine\Common\Collections\ArrayCollection();
-
-    //allow everything for now, since we don't have a mechanism to edit the permissions
-    $defaultPermissions = array(
-      "auth_index",
-      "auth_login",
-      "auth_logout",
-      "case_index",
-      "case_create",
-      "case_edit",
-      "case_list",
-      "case_autocomplete-alias",
-      "case_files",
-      "case_add-file",
-      "comment_index",
-      "comment_create",
-      "comment_list",
-      "document_fragment_index",
-      "document_fragment_show",
-      "document_fragment_create",
-      "document_fragment_edit",
-      "document_fragment_list",
-      "document_fragment_diff",
-      "document_fragment_delete",
-      "document_page_index",
-      "document_page_list",
-      "document_page_detection-reports",
-      "document_page_show",
-      "document_page_de-hyphen",
-      "document_page_edit",
-      "document_page_delete",
-      "document_page_stopwords",
-      "document_page_simtext-reports",
-      "document_page_simtext",
-      "document_index",
-      "document_edit",
-      "document_list",
-      "document_delete",
-      "document_detect-plagiarism",
-      "document_response-plagiarism",
-      "error_error",
-      "file_index",
-      "file_upload",
-      "file_list",
-      "file_download",
-      "file_set-target",
-      "file_unset-target",
-      "file_parse",
-      "file_delete",
-      "image_index",
-      "image_show",
-      "index_index",
-      "notification_index",
-      "notification_recent-activity",
-      "notification_list",
-      "notification_comments",
-      "simtext_index",
-      "simtext_compare",
-      "simtext_download-report",
-      "simtext_ajax",
-      "tag_index",
-      "tag_autocomplete-titles",
-      "user_index",
-      "user_register",
-      "user_files",
-      "user_add-file",
-      "user_verify",
-      "user_recover-password",
-      "user_edit",
-      "user_set-current-case",
-      "user_autocomplete-names",
-      "user_remove-account"
-    );
-
-    $this->permissions = $defaultPermissions;
+    $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+    if($type===null){
+      $this->type = self::TYPE_USER;
+    } else {
+      $this->type = $type;
+    }
   }
 
   public function getId(){
@@ -156,12 +114,46 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     
     return $this->roleId;
   }
-
-  public function getPermissions(){
-    return $this->permissions;
+  
+  public function setRoleId($roleId){
+    $this->roleId = $roleId;  
   }
 
-  public function addPermission($permission){
+  public function getInheritedPermissions(){
+    $permissions = array();
+    
+    $inheritedRoles = $this->getInheritedRoles();
+    
+    if($inheritedRoles->count()>0){
+      foreach($this->getInheritedRoles() as $inheritedRole){
+        $permissions = array_merge ($inheritedRole->getPermissions(), $permissions); 
+      }
+    }
+    
+    return $permissions;
+  }
+  
+  /**
+   * Returns all permissions of this Role including the inherited.
+   * 
+   * @return array
+   */
+  public function getPermissions(){
+    $inheritedPermissions = $this->getInheritedPermissions();
+    $permissions = array_merge($inheritedPermissions, $this->permissions->toArray());
+    return $permissions;
+  }
+
+  /**
+   * Returns only the explicitly set permissions for the current object.
+   * 
+   * @return array
+   */
+  public function getBasicPermissions(){
+    return $this->permissions->toArray(); 
+  }
+  
+  public function addPermission(Application_Model_Permission $permission){
     $this->permissions[] = $permission;
   }
 
@@ -173,5 +165,8 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     return $this->inheritedRoles;
   }
 
+  public function getType(){
+    return $this->type;
+  }
 }
 ?>

@@ -20,32 +20,39 @@
 
 /**
  *
- * @author Dominik Horb <dominik.horb@googlemail.com>
  */
 class Unplagged_Acl extends Zend_Acl{
 
-  public function __construct($user, $em){
-    
+  public function __construct(Application_Model_User $user, $em){
+
     $this->addRole($user->getRole());
-    
-    $permissions = $user->getRole()->getPermissions();
+
+
     $resources = $em->getRepository('Application_Model_Permission')->findAll();
-    
+
     foreach($resources as $resource){
       if(!$this->has($resource->getName())){
-        $this->add(new Zend_Acl_Resource($resource->getName()));
+        $this->add($resource);
       }
     }
-
+    $this->deny($user->getRole());
+    
+    $permissions = $user->getRole()->getPermissions();
     foreach($permissions as $permission){
-      $resource = new Zend_Acl_Resource($permission);
+      $resource = $permission;
       if(!$this->has($resource)){
         $this->add($resource);
       }
-      $this->allow($user->getRole(), $permission);  
+
+      // asterisk means everything is allowed
+      if($permission->getName() === '*'){
+        $this->allow($user->getRole());
+        break;
+      }else{
+        $this->allow($user->getRole(), $permission);
+      }
     }
-    
-    return $this;
   }
+
 }
 ?>

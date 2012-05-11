@@ -219,7 +219,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
           'sind', 'soll', 'sollen', 'sollst', 'sollt', 'sonst', 'soweit', 'sowie', 'und', 'unser', 'unsere', 'unter', 'vom', 'von',
           'vor', 'wann', 'warum', 'was', 'weiter', 'weitere', 'wenn', 'wer', 'werde', 'werden', 'werdet', 'weshalb', 'wie', 'wieder',
           'wieso', 'wir', 'wird', 'wirst', 'wo', 'woher', 'wohin', 'zu', 'zum', 'zur', 'über');
-        $reg = '/(' . implode('|', $words) . ')/i';
+        $reg = '/(?<=\s)(' . implode('|', $words) . ')(?=\s)/';
         $lines = $page->getContent("list");
         $lines = preg_replace($reg, "<span class='stopword'>$1</span>", $lines);
 

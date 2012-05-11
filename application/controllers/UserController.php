@@ -29,7 +29,7 @@ class UserController extends Unplagged_Controller_Action{
     $this->auth = Zend_Auth::getInstance();
 
     Zend_Layout::getMvcInstance()->sidebar = 'default';
-    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
+    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository('Application_Model_Case')->findAll();
   }
 
   public function indexAction(){
@@ -61,7 +61,6 @@ class UserController extends Unplagged_Controller_Action{
 
       // log registration
       Unplagged_Helper::notify('user_registered', $user, $user);
-      // send registration mail
       Unplagged_Mailer::sendRegistrationMail($user);
 
       $this->_helper->FlashMessenger('In order to finish your registration, please check your E-Mails.');
@@ -81,6 +80,13 @@ class UserController extends Unplagged_Controller_Action{
     $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
     $user = new Application_Model_User($data);
 
+    //set all permissions as allowed for now
+    $allPermissions = $this->_em->getRepository('Application_Model_Permission')->findAll();
+    foreach($allPermissions as $permission){
+      $user->getRole()->addPermission($permission);  
+    }
+    
+    
     // write back to persistence manager and flush it
     $this->_em->persist($user);
     $this->_em->flush();

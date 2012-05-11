@@ -31,7 +31,7 @@
  * @Table(name="permissions")
  * @UniqueEntity("name")
  */
-class Application_Model_Permission{
+class Application_Model_Permission implements Zend_Acl_Resource_Interface{
 
   /**
    * @Id
@@ -45,18 +45,33 @@ class Application_Model_Permission{
    */
   private $name;
 
-  public function __construct($name){
+  /**
+   * @Column(type="string", length=255, nullable=true)
+   */
+  private $type = '';
+  
+  public function __construct($name, $type=''){
 
     if(is_string($name) && trim($name) !== ''){
       $this->name = $name;
     }else{
       throw new InvalidArgumentException('The argument $name must be a string');
     }
+    
+    $this->type = $type;
   }
 
   public function getName(){
     return $this->name;
   }
 
+  public function getType(){
+    return $this->type;  
+  }
+  
+  public function getResourceId(){
+    return $this->name;  
+  }
+  
 }
 ?>

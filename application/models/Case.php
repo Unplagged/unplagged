@@ -110,18 +110,16 @@ class Application_Model_Case extends Application_Model_Base{
   private $collaborators;
   
   /**
-   * @ManyToMany(targetEntity="Application_Model_User_InheritableRole") 
+   * @ManyToMany(targetEntity="Application_Model_User_InheritableRole", cascade={"persist", "remove"}) 
    */
   private $defaultRoles;
 
-  public function __construct($name = null, $alias = null, $abbreviation = null, ArrayCollection $defaultRoles = null){
+  public function __construct($name = null, $alias = null, $abbreviation = null){
     $this->documents = new ArrayCollection();
     $this->files = new ArrayCollection();
     $this->tags = new ArrayCollection();
     $this->collaborators = new ArrayCollection();
-    if(!$defaultRoles){
-      $defaultRoles = new ArrayCollection();
-    }
+    $defaultRoles = new ArrayCollection();
     $this->defaultRoles = $defaultRoles;
     $this->name = $name;
     $this->alias = $alias;
@@ -134,7 +132,7 @@ class Application_Model_Case extends Application_Model_Base{
    * @PreUpdate
    */
   public function updated(){
-    $this->updated = new DateTime("now");
+    $this->updated = new DateTime('now');
   }
 
   /**
@@ -158,7 +156,7 @@ class Application_Model_Case extends Application_Model_Base{
   public function getPublishableName(){
     $publishableName = $this->getAlias();
 
-    if($this->getState() == 'public'){
+    if($this->getState() === 'public'){
       $publishableName = $this->getName();
     }
 
@@ -275,6 +273,14 @@ class Application_Model_Case extends Application_Model_Base{
     $rand = rand(0, 100);
 
     return $rand;
+  }
+  
+  public function addDefaultRole(Application_Model_User_InheritableRole $role){
+    $this->defaultRoles->add($role);
+  }
+  
+  public function getDefaultRoles(){
+    return $this->defaultRoles;  
   }
 }
 

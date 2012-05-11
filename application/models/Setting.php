@@ -48,8 +48,15 @@ class Application_Model_Setting{
    * 
    * @Column(type="string", length=255)
    */
-  private $value;
+  private $value = '';
 
+  /**
+   * @var string A label for display purposes.
+   * 
+   * @Column(type="string", length=255)
+   */
+  private $label = '';
+  
   public function getSettingKey(){
     return $this->settingKey;
   }
@@ -64,6 +71,14 @@ class Application_Model_Setting{
 
   public function setValue($value){
     $this->value = $value;  
+  }
+  
+  public function getLabel(){
+    return $this->label;  
+  }
+  
+  public function setLabel($label){
+    $this->label = $label;  
   }
 }
 ?>

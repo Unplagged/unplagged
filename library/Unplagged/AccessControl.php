@@ -34,23 +34,41 @@ class Unplagged_AccessControl extends Zend_Controller_Plugin_Abstract{
   }
 
   public function preDispatch(Zend_Controller_Request_Abstract $request){
+
+    $role = $this->user->getRole();
+
+    $front = Zend_Controller_Front::getInstance();
+    $bootstrap = $front->getParam('bootstrap');
+    $bootstrap->bootstrap('layout');
+    $layout = $bootstrap->getResource('layout');
+
+    //set the role in the view, so that the navigation is displayed appropriately
+    $view = $layout->getView();
+    $view->navigation()->setRole($role);
+
+    //For this example, we will use the controller as the resource:
+    $resource = $request->getControllerName();
+    $action = $request->getActionName();
+
+    $resourceKey = $resource . '_' . $action;
     
-    $role = $this->user->getRole()->getRoleId();
-    if(Zend_Auth::getInstance()->hasIdentity()){
-      $front = Zend_Controller_Front::getInstance();
-      $bootstrap = $front->getParam('bootstrap');
-      $bootstrap->bootstrap('layout');
-      $layout = $bootstrap->getResource('layout');
-      $view = $layout->getView();
-      $view->navigation()->setRole($role);
-    } else {
-
-      //For this example, we will use the controller as the resource:
-      $resource = $request->getControllerName();
-      $action = $request->getActionName();
-
-      if($this->acl->has($resource . '_' . $action) && !$this->acl->isAllowed($role, $resource . '_' . $action)){
-        //If the user has no access we send him elsewhere by changing the request
+    $allowAlways = array(
+      'auth_login',
+      'user_register',
+      'auth_logout',
+      'user_verify',
+      'user_recover-password'
+    );
+    
+    if(!in_array($resourceKey, $allowAlways) && ($this->acl->has($resourceKey) && !$this->acl->isAllowed($role, $resourceKey))){
+      //If the user has no access we send him elsewhere by changing the request
+      if(Zend_Auth::getInstance()->hasIdentity()){
+        $request->setControllerName('index');
+        $request->setActionName('empty');
+        $flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
+        
+        $flashMessenger->addMessage('You are not allowed to access this page.');
+      }else {
         $request->setControllerName('auth')
             ->setActionName('login');
       }
