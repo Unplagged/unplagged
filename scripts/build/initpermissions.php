@@ -107,8 +107,6 @@ if(empty($element)){
     'auth_logout',
     'index_index',
     'error_error',
-    'case_list',
-    'file_list',
     'user_register',
     'user_verify',
     'user_recover-password',

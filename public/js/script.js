@@ -332,4 +332,38 @@ $(document).ready(function(){
   });
 
   $('a.picture').lightBox();
+  
+  // turns checkboxes in forms into single toggle elements
+  $('input[type="checkbox"].btn').each(function(index) {
+    var element = $(this);
+    var classes = element.attr('class');
+
+    // get label value and hide the element afterwards
+    var label = $('#' + element.attr('id') + '-label label').text();
+    $('#' + element.attr('id') + '-label').hide();
+    $('#' + element.attr('id') + '-element').hide();
+    
+    if(element.is(':checked')){
+      classes += ' active';
+    }
+    
+    // insert the new bootstrap-based element
+    element.parent().parent().append('<a class="' + classes + '" data-toggle="button" data-checkbox="' + element.attr('id') + '">' + label + '</a>');
+    
+  });
+  
+  $('.btn[data-toggle="button"]').click(function(){
+    var id = $(this).attr('data-checkbox');
+    var cb = $('#' + id);
+    
+    cb.attr('checked', !cb.is(':checked'));
+    
+    if(cb.hasClass('inherited')){
+      if($(this).hasClass('btn-primary')) {
+        $(this).removeClass('btn-primary');
+      } else {
+        $(this).addClass('btn-primary');
+      }
+    }
+  });
 });

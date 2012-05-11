@@ -54,16 +54,20 @@ class Unplagged_AccessControl extends Zend_Controller_Plugin_Abstract{
     
     $allowAlways = array(
       'auth_login',
-      'auth_register',
-      'notification_recent-activity',
-      'permission_list',
-      'permission_edit-role'
+      'user_register',
+      'auth_logout',
+      'user_verify',
+      'user_recover-password'
     );
     
     if(!in_array($resourceKey, $allowAlways) && ($this->acl->has($resourceKey) && !$this->acl->isAllowed($role, $resourceKey))){
       //If the user has no access we send him elsewhere by changing the request
       if(Zend_Auth::getInstance()->hasIdentity()){
-          
+        $request->setControllerName('index');
+        $request->setActionName('empty');
+        $flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
+        
+        $flashMessenger->addMessage('You are not allowed to access this page.');
       }else {
         $request->setControllerName('auth')
             ->setActionName('login');

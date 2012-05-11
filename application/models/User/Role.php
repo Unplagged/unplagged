@@ -63,12 +63,22 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id")}
    *      )
    */
-  public $permissions;
+  protected $permissions;
 
+  /**
+   *
+   * @ManyToMany(targetEntity="Application_Model_Permission")
+   * @JoinTable(name="role_permission_blacklist",
+   *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id")}
+   *      )
+   */
+  protected $blacklist;
+  
   /**
    * Stores the roles this role is extending.
    * 
-   * @ManyToMany(targetEntity="Application_Model_User_InheritableRole")
+   * @ManyToMany(targetEntity="Application_Model_User_Role")
    * @JoinTable(name="role_inherits",
    *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
    *      inverseJoinColumns={@JoinColumn(name="inherited_role_id", referencedColumnName="id")}
@@ -116,7 +126,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     
     if($inheritedRoles->count()>0){
       foreach($this->getInheritedRoles() as $inheritedRole){
-        $permissions = array_merge ($inheritedRole->getPermissions()->toArray(), $permissions); 
+        $permissions = array_merge ($inheritedRole->getPermissions(), $permissions); 
       }
     }
     

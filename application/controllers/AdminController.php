@@ -25,7 +25,17 @@
  */
 class AdminController extends Unplagged_Controller_Action{
 
+  public function indexAction(){
+    
+  }
   
+  public function listUsersAction(){
+    
+  }
+  
+  public function editUserAction(){
+    
+  }
 
 }
 ?>

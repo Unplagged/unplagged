@@ -33,28 +33,30 @@ use \Doctrine\Common\ClassLoader;
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
   /**
+   * Makes sure that only authorized users can see certain parts of the application.
    * 
+   * It's probably the best if this is called right up front, to make sure nobody can access
+   * something accidentally somehow.
    */
   protected function _initAccessControl(){
     //we need the entity manager, so make sure this is created prior
     $this->bootstrap('doctrine');
-    //make sure at least the rights for the guest user are set if nobody logged in yet
-    $this->bootstrap('guest');
+    //make sure at least the guest user is set if nobody logged in yet
+    $this->bootstrap('user');
+
+    $registry = Zend_Registry::getInstance();
 
     //initalize the current users ACL
-    $defaultNamespace = new Zend_Session_Namespace('Default');
-    $registry = Zend_Registry::getInstance();
-    $acl = new Unplagged_Acl($defaultNamespace->user, $registry->entitymanager);
-    $registry = Zend_Registry::getInstance();
-    $registry->set('Acl', $acl);
-    $accessControl = new Unplagged_AccessControl($acl, $defaultNamespace->user);
+    $acl = new Unplagged_Acl($registry->user, $registry->entitymanager);
+    $registry->acl = $acl;
+    $accessControl = new Unplagged_AccessControl($acl, $registry->user);
 
     //make sure front controller is initalized, so that we can register the authorization plugin
     $this->bootstrap('FrontController');
     $frontController = $this->getResource('FrontController');
     $frontController->registerPlugin($accessControl);
   }
-  
+
   /**
    * @todo does this do anything? 
    */
@@ -124,17 +126,23 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   }
 
   /**
-   * If no user is logged in, the guest user is set as default.
+   * Stores the current user in the registry.
+   * 
+   * If no user is logged in, the guest user is set as a default.
    */
-  protected function _initGuest(){
+  protected function _initUser(){
+    $registry = $registry = Zend_Registry::getInstance();
     $defaultNamespace = new Zend_Session_Namespace('Default');
-    
-    if(!$defaultNamespace->user){
-      $registry = Zend_Registry::getInstance();
+
+    if(!$defaultNamespace->userId || $defaultNamespace->userId === 'guest'){
       $guestId = $registry->entitymanager->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-role-id');
       $guestRole = $registry->entitymanager->getRepository('Application_Model_User_Role')->findOneById($guestId->getValue());
-      //store the user in the session
-      $defaultNamespace->user = new Application_Model_User(array('role'=>$guestRole));
+
+      $registry->user = new Application_Model_User(array('role'=>$guestRole));
+      $defaultNamespace->userId = 'guest';
+    }else{
+      $currentUser = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
+      $registry->set('user', $currentUser);
     }
   }
 
@@ -245,6 +253,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'label'=>'Administration',
         'title'=>'Administration',
         'uri'=>'#',
+        'resource'=>'admin_index',
         'pages'=>array(
           array(
             'label'=>'Cases',
@@ -270,10 +279,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $this->bootstrap('layout');
     $layout = $this->getResource('layout');
     $view = $layout->getView();
-    $defaultNamespace = new Zend_Session_Namespace('Default');
     $registry = Zend_Registry::getInstance();
-    $acl = $registry->get('Acl');
-    $view->navigation($container)->setAcl($acl)->setRole($defaultNamespace->user->getRole());
+    $view->navigation($container)->setAcl($registry->acl)->setRole($registry->user->getRole());
 
     Zend_Registry::set('Zend_Navigation', $container);
   }
@@ -328,7 +335,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $view->headTitle()->setSeparator(' - ')->append($defaultConfig['applicationName']);
     return $view;
   }
-  
+
   /**
    * @todo seems unused
    */
