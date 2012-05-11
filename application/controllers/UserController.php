@@ -86,7 +86,6 @@ class UserController extends Unplagged_Controller_Action{
       $user->getRole()->addPermission($permission);  
     }
     
-    
     // write back to persistence manager and flush it
     $this->_em->persist($user);
     $this->_em->flush();

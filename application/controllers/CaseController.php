@@ -252,7 +252,6 @@ class CaseController extends Unplagged_Controller_Action{
   private function initBasicRolesForCase(Application_Model_Case $case){
     $adminRole = new Application_Model_User_InheritableRole();
     $adminRole->setRoleId('admin_case-' . $case->getId());
-    $adminRole->addPermission('model_case-' . $case->getId() . '_*');
     
     $case->addDefaultRole($adminRole);
   }

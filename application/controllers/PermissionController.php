@@ -30,6 +30,10 @@ class PermissionController extends Unplagged_Controller_Action{
     $rolePermissions = $this->_em->getRepository('Application_Model_User_Role')->findOneById($input->id);
     $this->setTitle('Permissions for ' . $rolePermissions->getRoleId());
 
+    if($this->_request->isPost()){
+      
+    }
+    
     //@todo findAll could be overkill here, as we currently only use those of type 'action'
     $allPermissions = $this->_em->getRepository('Application_Model_Permission')->findAll();
 
