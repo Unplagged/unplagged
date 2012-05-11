@@ -80,6 +80,13 @@ class UserController extends Unplagged_Controller_Action{
     $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
     $user = new Application_Model_User($data);
 
+    //set all permissions as allowed for now
+    $allPermissions = $this->_em->getRepository('Application_Model_Permission')->findAll();
+    foreach($allPermissions as $permission){
+      $user->getRole()->addPermission($permission);  
+    }
+    
+    
     // write back to persistence manager and flush it
     $this->_em->persist($user);
     $this->_em->flush();
