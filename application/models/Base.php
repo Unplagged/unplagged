@@ -160,5 +160,15 @@ abstract class Application_Model_Base{
   public function getCreated(){
     return $this->created;
   }
+  
+    
+  public function isRatedByUser($user) {
+    foreach($this->ratings as $rating) {
+      if($rating->getUser()->getId() == $user->getId()) {
+        return true;
+      }
+    }
+    return false;
+  }
 
 }
