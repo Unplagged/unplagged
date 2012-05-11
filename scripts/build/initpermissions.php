@@ -38,6 +38,13 @@ $front = $application->getBootstrap()->getResource('FrontController');
 
 $basicResources = array();
 
+//first permission is allow everything
+$allowAll = $em->getRepository('Application_Model_Permission')->findOneByName('*');
+if(!$allowAll){
+  $allowAll = new Application_Model_Permission('*');
+  $em->persist($allowAll);
+}
+
 //find all controllers and include them; we currently have no modules, 
 //if we have later on, this probably needs to be included into the 
 //permission name
@@ -53,8 +60,8 @@ function recursiveDirectories($path){
   $content = scandir($path);
   foreach($content as $directoryContent){
     if($directoryContent !== '..' && $directoryContent !== '.' && is_dir($path . DIRECTORY_SEPARATOR . $directoryContent)){
-      recursiveDirectories($path . DIRECTORY_SEPARATOR . $directoryContent);  
-    } else {
+      recursiveDirectories($path . DIRECTORY_SEPARATOR . $directoryContent);
+    }else{
       if(strstr($path . DIRECTORY_SEPARATOR . $directoryContent, 'Controller.php') !== false){
         include_once $path . DIRECTORY_SEPARATOR . $directoryContent;
       }
@@ -72,7 +79,7 @@ foreach(get_declared_classes() as $class){
 
       if(strstr($action, 'Action') !== false){
         $actionWithHyphens = preg_replace_callback('/([A-Z])/', create_function('$matches', 'return \'-\' . strtolower($matches[1]);'), substr($action, 0, -6));
-        $basicResources[] = 'controller_' . $controller . '_' . $actionWithHyphens;
+        $basicResources[] = $controller . '_' . $actionWithHyphens;
       }
     }
   }
@@ -82,33 +89,73 @@ foreach(get_declared_classes() as $class){
 foreach($basicResources as $resource){
   $permission = $em->getRepository('Application_Model_Permission')->findOneByName($resource);
   if(empty($permission)){
-    $permission = new Application_Model_Permission($resource);
+    $permission = new Application_Model_Permission($resource, 'action');
     $em->persist($permission);
   }
 }
+//make sure the permission are already in the db, so we can retrieve some
+$em->flush();
 
 //create the guest users role
-$element = $em->getRepository('Application_Model_User_GuestRole')->findOneByRoleId('guest');
+$element = $em->getRepository('Application_Model_User_Role')->findOneByRoleId('guest');
 if(empty($element)){
-  $guestRole = new Application_Model_User_GuestRole();
-  
+  $guestRole = new Application_Model_User_Role(Application_Model_User_Role::TYPE_GLOBAL);
+  $guestRole->setRoleId('guest');
+
   $defaultPermissions = array(
-      'controller_auth_login',
-      'controller_auth_logout',
-      'controller_index_index',
-      'controller_error_error',
-      'controller_case_list',
-      'controller_file_list',
-      'controller_user_register',
-      'controller_user_verify',
-      'controller_user_recover-password',
-      'controller_document_response-plagiarism'
-    );
-  
-  foreach($defaultPermissions as $permission){
-    $guestRole->addPermission($permission);
+    'auth_login',
+    'auth_logout',
+    'index_index',
+    'error_error',
+    'case_list',
+    'file_list',
+    'user_register',
+    'user_verify',
+    'user_recover-password',
+    'document_response-plagiarism'
+  );
+
+  foreach($defaultPermissions as $permissionName){
+    $permission = $em->getRepository('Application_Model_Permission')->findOneByName($permissionName);
+
+    if($permission){
+      $guestRole->addPermission($permission);
+    }
   }
   $em->persist($guestRole);
+  //flush here to have access to the id
+  $em->flush();
+
+  $guestSetting = $em->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
+  if(!$guestSetting){
+    $guestSetting = new Application_Model_Setting();
+    $guestSetting->setSettingKey('guest-role-id');
+  }
+  $guestSetting->setValue($guestRole->getId());
+
+  $em->persist($guestSetting);
+}
+
+//create the admin user role
+$element = $em->getRepository('Application_Model_User_Role')->findOneByRoleId('admin');
+if(!$element){
+  $adminRole = new Application_Model_User_InheritableRole(Application_Model_User_Role::TYPE_GLOBAL);
+  $adminRole->setRoleId('admin');
+
+  $adminRole->addPermission($allowAll);
+
+  $em->persist($adminRole);
+  //flush here to have access to the id
+  $em->flush();
+
+  $adminSetting = $em->getRepository('Application_Model_Setting')->findOneBySettingKey('admin-role-id');
+  if(!$adminSetting){
+    $adminSetting = new Application_Model_Setting();
+    $adminSetting->setSettingKey('admin-role-id');
+  }
+  $adminSetting->setValue($adminRole->getId());
+
+  $em->persist($adminSetting);
 }
 
 $em->flush();

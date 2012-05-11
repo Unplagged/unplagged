@@ -29,7 +29,7 @@ class UserController extends Unplagged_Controller_Action{
     $this->auth = Zend_Auth::getInstance();
 
     Zend_Layout::getMvcInstance()->sidebar = 'default';
-    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
+    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository('Application_Model_Case')->findAll();
   }
 
   public function indexAction(){
@@ -61,7 +61,6 @@ class UserController extends Unplagged_Controller_Action{
 
       // log registration
       Unplagged_Helper::notify('user_registered', $user, $user);
-      // send registration mail
       Unplagged_Mailer::sendRegistrationMail($user);
 
       $this->_helper->FlashMessenger('In order to finish your registration, please check your E-Mails.');

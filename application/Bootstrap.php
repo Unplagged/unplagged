@@ -131,8 +131,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     
     if(!$defaultNamespace->user){
       $registry = Zend_Registry::getInstance();
-      $guestRole = $registry->entitymanager->getRepository('Application_Model_User_GuestRole')->findOneByRoleId('guest');
-
+      $guestId = $registry->entitymanager->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-role-id');
+      $guestRole = $registry->entitymanager->getRepository('Application_Model_User_Role')->findOneById($guestId->getValue());
       //store the user in the session
       $defaultNamespace->user = new Application_Model_User(array('role'=>$guestRole));
     }
@@ -193,14 +193,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'notification',
         'action'=>'recent-activity',
-        'resource'=>'controller_notification_recent-activity'
+        'resource'=>'notification_recent-activity'
       ), array(
         'label'=>'Files',
         'title'=>'Files',
         'module'=>'default',
         'controller'=>'file',
         'action'=>'upload',
-        'resource'=>'controller_file_upload',
+        'resource'=>'file_upload',
         'pages'=>array(
           array(
             'label'=>'Case Files',
@@ -208,7 +208,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'case',
             'action'=>'files',
-            'resource'=>'controller_case_files'
+            'resource'=>'case_files'
           ),
           array(
             'label'=>'Public Files',
@@ -216,7 +216,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'file',
             'action'=>'list',
-            'resource'=>'controller_file_list'
+            'resource'=>'file_list'
           ),
           array(
             'label'=>'Personal Files',
@@ -224,7 +224,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'user',
             'action'=>'files',
-            'resource'=>'controller_user_files'
+            'resource'=>'user_files'
           )
         )
       ), array(
@@ -233,14 +233,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'document',
         'action'=>'list',
-        'resource'=>'controller_document_list'
+        'resource'=>'document_list'
       ), array(
         'label'=>'Fragments',
         'title'=>'Fragments',
         'module'=>'default',
         'controller'=>'document_fragment',
         'action'=>'list',
-        'resource'=>'controller_document_fragment_list'
+        'resource'=>'document_fragment_list'
       ), array(
         'label'=>'Administration',
         'title'=>'Administration',
@@ -252,15 +252,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'case',
             'action'=>'list',
-            'resource'=>'controller_case_list'
+            'resource'=>'case_list'
           ),
           array(
             'label'=>'Roles',
             'title'=>'Roles',
             'module'=>'default',
             'controller'=>'permission',
-            'action'=>'list'//,
-            //'resource'=>'controller_permission_list'
+            'action'=>'list',
+            'resource'=>'permission_list'
           )
         )
       )

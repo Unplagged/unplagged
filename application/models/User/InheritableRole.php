@@ -34,7 +34,7 @@
 class Application_Model_User_InheritableRole extends Application_Model_User_Role{
 
   public function getInheritedRoles(){
-    return array();  
+    return new \Doctrine\Common\Collections\ArrayCollection();  
   }
   
   /**

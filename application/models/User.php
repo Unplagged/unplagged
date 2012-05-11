@@ -121,7 +121,7 @@ class Application_Model_User extends Application_Model_Base{
   /**
    * @var The personal settings of the user, e. g. the prefered language.
    * 
-   * OneToMany(targetEntity="Application_Model_Setting") 
+   * @ManyToOne(targetEntity="Application_Model_Setting") 
    */
   private $settings;
 
@@ -228,10 +228,9 @@ class Application_Model_User extends Application_Model_Base{
     return $this->currentCase;
   }
 
-  public function setCurrentCase($currentCase){
+  public function setCurrentCase(Application_Model_Case $currentCase = null){
     $this->currentCase = $currentCase;
   }
-
 
   public function addFile(Application_Model_File $file){
     return $this->files->add($file);
@@ -250,15 +249,10 @@ class Application_Model_User extends Application_Model_Base{
   }
 
   public function hasFiles(){
-    if($this->files->count() > 0){
-      return true;
-    }else{
-      return false;
-    }
+    return $this->files->count() > 0;
   }
 
   /**
-   *
    * @todo Would probably be better to handle the default somewhere else to keep this class clean
    */
   public function getAvatar(){
@@ -274,7 +268,6 @@ class Application_Model_User extends Application_Model_Base{
   }
 
   public function getDirectLink(){
-    
     return '/user/show/id/' . $this->id;
   }
 
@@ -292,4 +285,7 @@ class Application_Model_User extends Application_Model_Base{
     return $this->role;
   }
 
+  public function getSettings(){
+    return $this->settings;  
+  }
 }
