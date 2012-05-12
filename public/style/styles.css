@@ -809,9 +809,9 @@ table.default .progress {
   font-size: 10pt;
   color: #555;
   text-align: left;
-    margin-top: -13px;
-    margin-bottom: -18px;
-
+    /* This looks very weird on many forms, what was the purpose? */
+    /*margin-top: -13px;
+    margin-bottom: -18px;*/
 }
 
 .zend_form fieldset dl {
