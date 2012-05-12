@@ -8,7 +8,7 @@
 
 $(document).ready(function(){
   // lined textareas
-  $("textarea").numberfy();
+  $("textarea.line-numbers").numberfy();
   $('.tooltip-toggle').tooltip();
 
   $('.dropdown-toggle').dropdown();
@@ -64,14 +64,14 @@ $(document).ready(function(){
     var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
 
     if(target.is(':visible')) {
-      $(this).html("<i class=\"icon-comments icon-fam\"></i>Show comments");
+      $(this).html("<i class=\"icon-comments icon-fam\"></i>Show conversation");
       $(this).removeClass("expanded");
       
       target.slideUp(800, function() {
         comments.html("");
       });
     } else {
-      $(this).html("<i class=\"icon-comments icon-fam\"></i>Hide comments");
+      $(this).html("<i class=\"icon-comments icon-fam\"></i>Hide conversation");
       $(this).addClass("expanded");
       target.show();
       comments.hide();
@@ -195,7 +195,7 @@ $(document).ready(function(){
   });
   
   // creates a new fragment based on selected text
-  $('.create-fragment').click(function() {
+  $('.create-fragment').live('click', function() {
     var selectedText = window.getSelection().getRangeAt(0).toString();
 
     $('#fragment-content').val(selectedText);
@@ -343,12 +343,12 @@ $(document).ready(function(){
     $('#' + element.attr('id') + '-label').hide();
     $('#' + element.attr('id') + '-element').hide();
     
-    if(element.is(':checked')){
-      classes += ' active';
-    }
     
     // insert the new bootstrap-based element
     element.parent().parent().append('<a class="' + classes + '" data-toggle="button" data-checkbox="' + element.attr('id') + '">' + label + '</a>');
+    if(element.is(':checked')){
+      $('a[data-checkbox="' + element.attr('id') + '"]').trigger('click').addClass('active');
+    }
     
   });
   

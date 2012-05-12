@@ -141,8 +141,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       $registry->user = new Application_Model_User(array('role'=>$guestRole));
       $defaultNamespace->userId = 'guest';
     }else{
-      $currentUser = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
-      $registry->set('user', $currentUser);
+      $registry->user = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
     }
   }
 
@@ -277,6 +276,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'controller'=>'permission',
             'action'=>'list',
             'resource'=>'permission_list'
+          ),
+          array(
+            'label'=>'States',
+            'title'=>'States',
+            'module'=>'default',
+            'controller'=>'setting',
+            'action'=>'list-states'
+          ),
+          array(
+            'label'=>'Actions',
+            'title'=>'Actions',
+            'module'=>'default',
+            'controller'=>'setting',
+            'action'=>'list-actions'
           )
         )
       )
@@ -315,8 +328,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       $registry->set('Zend_Translate', $translate);
     }
 
-    // translate standard zend framework messages
-    $translator = new Zend_Translate(
+    //translate standard zend framework messages and supress errors, which occur when language was not found
+    //should default to english
+    $translator = @new Zend_Translate(
             array(
               'adapter'=>'array',
               'content'=>BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages',

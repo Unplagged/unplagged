@@ -88,5 +88,16 @@ class Application_Model_Action{
   public function getTitle(){
     return $this->title;
   }
+  
+  public function setName($name){
+    $this->name = $name;
+  }
 
+  public function setTitle($title){
+    $this->title = $title;
+  }
+
+  public function setDescription($description){
+    $this->description = $description;
+  }
 }

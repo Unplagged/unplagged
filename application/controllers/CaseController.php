@@ -79,6 +79,7 @@ class CaseController extends Unplagged_Controller_Action{
       $this->view->modifyForm = $modifyForm;
       $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
     }else{
+      $this->_helper->FlashMessenger(array('error'=>'The specified case does not exist.'));
       $this->_helper->redirector('list', 'case');
     }
   }
@@ -252,7 +253,6 @@ class CaseController extends Unplagged_Controller_Action{
   private function initBasicRolesForCase(Application_Model_Case $case){
     $adminRole = new Application_Model_User_InheritableRole();
     $adminRole->setRoleId('admin_case-' . $case->getId());
-    $adminRole->addPermission('model_case-' . $case->getId() . '_*');
     
     $case->addDefaultRole($adminRole);
   }

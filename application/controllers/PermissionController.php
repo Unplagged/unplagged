@@ -28,8 +28,9 @@ class PermissionController extends Unplagged_Controller_Action{
   public function editRoleAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
     $rolePermissions = $this->_em->getRepository('Application_Model_User_Role')->findOneById($input->id);
-    $this->setTitle('Permissions for ' . $rolePermissions->getRoleId());
 
+
+    $this->setTitle('Permissions for ' . $rolePermissions->getRoleId());
     //@todo findAll could be overkill here, as we currently only use those of type 'action'
     $allPermissions = $this->_em->getRepository('Application_Model_Permission')->findAll();
 
@@ -45,12 +46,12 @@ class PermissionController extends Unplagged_Controller_Action{
         $outputPermissions[$controllerName][substr($permissionName, $controllerNameEnd + 1)] = array('allowed'=>false, 'inherited'=>false);
       }
     }
-    
+
     //set all permissions that this role got as active and inherited
     foreach($rolePermissions->getPermissions() as $allowedPermission){
       if($allowedPermission->getName() === '*'){
-        foreach($outputPermissions as $permissionGroupKey => $permissionGroup){
-          foreach($permissionGroup as $outputPermissionKey => $outputPermission){
+        foreach($outputPermissions as $permissionGroupKey=>$permissionGroup){
+          foreach($permissionGroup as $outputPermissionKey=>$outputPermission){
             $outputPermissions[$permissionGroupKey][$outputPermissionKey]['allowed'] = true;
           }
         }
@@ -59,8 +60,8 @@ class PermissionController extends Unplagged_Controller_Action{
         $permissionGroupName = substr($allowedPermission->getName(), 0, $permissionGroupNameEnd);
 
         if(isset($outputPermissions[$permissionGroupName])){
-          $permissionName = substr($allowedPermission->getName(), $permissionGroupNameEnd+1);
-          
+          $permissionName = substr($allowedPermission->getName(), $permissionGroupNameEnd + 1);
+
           if(isset($outputPermissions[$permissionGroupName][$permissionName])){
             $outputPermissions[$permissionGroupName][$permissionName]['allowed'] = true;
             $outputPermissions[$permissionGroupName][$permissionName]['inherited'] = true;
@@ -68,12 +69,12 @@ class PermissionController extends Unplagged_Controller_Action{
         }
       }
     }
-    
+
     //remove the inherited flag for every permission that this role got on it's own
     foreach($rolePermissions->getBasicPermissions() as $basicPermissions){
       if($basicPermissions->getName() === '*'){
-        foreach($outputPermissions as $permissionGroupKey => $permissionGroup){
-          foreach($permissionGroup as $outputPermissionKey => $outputPermission){
+        foreach($outputPermissions as $permissionGroupKey=>$permissionGroup){
+          foreach($permissionGroup as $outputPermissionKey=>$outputPermission){
             $outputPermissions[$permissionGroupKey][$outputPermissionKey]['inherited'] = false;
           }
         }
@@ -82,8 +83,8 @@ class PermissionController extends Unplagged_Controller_Action{
         $permissionGroupName = substr($basicPermissions->getName(), 0, $permissionGroupNameEnd);
 
         if(isset($outputPermissions[$permissionGroupName])){
-          $permissionName = substr($basicPermissions->getName(), $permissionGroupNameEnd+1);
-          
+          $permissionName = substr($basicPermissions->getName(), $permissionGroupNameEnd + 1);
+
           if(isset($outputPermissions[$permissionGroupName][$permissionName])){
 
             $outputPermissions[$permissionGroupName][$permissionName]['inherited'] = false;
@@ -93,8 +94,49 @@ class PermissionController extends Unplagged_Controller_Action{
     }
 
     $editForm = new Application_Form_Permission_EditRole(array('permissions'=>$outputPermissions));
-    $this->view->allPermissions = $outputPermissions;
-    $this->view->editForm = $editForm;
+
+    if($this->_request->isPost()){
+      $success = $this->handleEditData($editForm, $rolePermissions);
+
+      if($success){
+        $this->_helper->FlashMessenger(array('success'=>'The role was updated successfully.'));
+      }else{
+        $this->_helper->FlashMessenger(array('error'=>'An error occured while updating the role.'));
+      }
+
+      $this->_helper->redirector('list', 'permission');
+    }else{
+      $this->view->allPermissions = $outputPermissions;
+      $this->view->editForm = $editForm;
+    }
+  }
+
+  public function handleEditData(Application_Form_Permission_EditRole $editForm, Application_Model_User_Role $role){
+    $formData = $this->_request->getPost();
+    if($editForm->isValid($formData)){
+
+      foreach($formData as $permissionGroup){
+        if(is_array($permissionGroup)){
+          foreach($permissionGroup as $permissionName=>$value){
+            $permission = $this->_em->getRepository('Application_Model_Permission')->findOneByName($permissionName);
+            if($permission){
+              if($value === '1'){
+                $role->addPermission($permission);
+              }else{
+                $role->removePermission($permission);
+              }
+            }
+          }
+        }
+      }
+
+      $this->_em->persist($role);
+      $this->_em->flush();
+
+      return true;
+    }
+
+    return false;
   }
 
   public function listAction(){
@@ -107,7 +149,8 @@ class PermissionController extends Unplagged_Controller_Action{
     $paginator->setCurrentPageNumber($input->page);
 
     $this->view->paginator = $paginator;
-
+    
+    $this->setTitle('Roles');
     //var_dump($inheritableRoles);
     Zend_Layout::getMvcInstance()->sidebar = null;
   }
