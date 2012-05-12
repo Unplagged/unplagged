@@ -111,7 +111,8 @@ class PermissionController extends Unplagged_Controller_Action{
     $paginator->setCurrentPageNumber($input->page);
 
     $this->view->paginator = $paginator;
-
+    
+    $this->setTitle('Roles');
     //var_dump($inheritableRoles);
     Zend_Layout::getMvcInstance()->sidebar = null;
   }

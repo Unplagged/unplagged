@@ -49,8 +49,8 @@ class Application_Form_Permission_EditRole extends Zend_Form{
      $this->addDisplayGroup($elements, $groupLabel, array('legend'=>$groupLabel));
     }
     $submitElement = new Zend_Form_Element_Submit('submit');
-    $submitElement->setLabel('Save');
-    $submitElement->setOptions(array('class'=>'btn'));
+    $submitElement->setLabel('Save Role');
+    $submitElement->setOptions(array('class'=>'btn btn-primary'));
 
     $this->addElements(array($submitElement));
   }
