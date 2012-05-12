@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -27,14 +28,14 @@ class Application_Form_Report_Modify extends Zend_Form {
 
     private $cases = array();
     private $fragments = array();
-	private $documents = array();
+    private $documents = array();
 
     public function __construct() {
         $em = Zend_Registry::getInstance()->entitymanager;
 
         $query = $em->createQuery("SELECT t FROM Application_Model_Case t");
         $cases = $query->getResult();
-		//$cases = $this->getCurrentCase()->getPublishableName();
+        //$cases = $this->getCurrentCase()->getPublishableName();
 
         $params["cases"] = array();
         foreach ($cases as $case) {
@@ -48,13 +49,13 @@ class Application_Form_Report_Modify extends Zend_Form {
         foreach ($fragments as $fragment) {
             $params["fragments"][$fragment->getId()] = $fragment->getTitle();
         }
-		
-		$params["documents"] = array();
-	    foreach($documents as $document){
-	      $params["documents"][$document->getId()] = $document->getTitle();
-	    }
 
-	    $this->documents = $params['documents'];
+        $params["documents"] = array();
+       /* foreach ($documents as $document) {
+            $params["documents"][$document->getId()] = $document->getTitle();
+        }*/
+
+        $this->documents = $params['documents'];
 
         $this->cases = $params['cases'];
         $this->fragments = $params['fragments'];
@@ -71,12 +72,12 @@ class Application_Form_Report_Modify extends Zend_Form {
 
         $this->setMethod('post');
         $this->setAction("/report/create");
-		
-		$caseElement = new Zend_Form_Element_Text('case');
-		$caseElement->setLabel("Case");
-		$caseElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
-		$caseElement->addValidator('stringLength', false, array(2, 64));
-		$caseElement->setRequired(true);
+
+        $caseElement = new Zend_Form_Element_Text('case');
+        $caseElement->setLabel("Case");
+        $caseElement->addValidator('regex', false, array('/^[a-z0-9ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]/i'));
+        $caseElement->addValidator('stringLength', false, array(2, 64));
+        $caseElement->setRequired(true);
 
         // general group
         // $caseElement = new Zend_Form_Element_Select('case');
@@ -86,17 +87,17 @@ class Application_Form_Report_Modify extends Zend_Form {
 
         $noteElement = new Zend_Form_Element_Textarea('note');
         $noteElement->setLabel("Note");
-		
-		$fragmentElement = new Zend_Form_Element_Multiselect('fragment');
+
+        $fragmentElement = new Zend_Form_Element_Multiselect('fragment');
         $fragmentElement->setLabel("Fragment");
         $fragmentElement->addMultiOptions($this->fragments);
-		$fragmentElement->addValidator('regex', false, array('/^[0-9]/i'));
+        $fragmentElement->addValidator('regex', false, array('/^[0-9]/i'));
         $fragmentElement->setRequired(true);
-		
+
         $noteElement = new Zend_Form_Element_Textarea('note');
         $noteElement->setLabel("Note");
 
- 
+
 
         $submitElement = new Zend_Form_Element_Submit('submit');
         $submitElement->setLabel('Create report');
@@ -106,22 +107,21 @@ class Application_Form_Report_Modify extends Zend_Form {
 
         $this->addElements(array(
             $caseElement
-			//, $fragmentElement
+            //, $fragmentElement
             , $noteElement
-            
         ));
 
         $this->addDisplayGroup(array(
             'case'
-			//, 'fragment'
+            //, 'fragment'
             , 'note'
                 )
                 , 'generalGroup'
                 , array('legend' => 'General Information')
         );
 
-       
-        
+
+
         $this->addElements(array(
             $submitElement
         ));
