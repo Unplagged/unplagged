@@ -19,11 +19,28 @@
  */
 
 /**
- * This class can be used to store a list of permissions to certain resources.
+ * This class can be used to store a list of permissions to certain resources, which are identified by a simple string.
+ * 
+ * It is able to "inherit" an unlimited number of InheritableRoles, this means it has all permissions that are also set
+ * for the inherited role. Please note that changes that are made to the inherited role will also change the permissions
+ * that were made for this role.
+ * 
+ * @todo We could think about adding a blacklist of permissions later on, so that admin could refuse certain permissions
+ * to the user even if an inherited role changes and allows it.
  * 
  * @author Unplagged
+ * 
+ * @Entity
+ * @table(name="roles")
+ * @InheritanceType("SINGLE_TABLE")
+ * @DiscriminatorColumn(name="discr", type="string")
+ * @DiscriminatorMap({"user_role" = "Application_Model_User_Role", "user_guest_role" = "Application_Model_User_GuestRole", "user_inheritable_role" = "Application_Model_User_InheritableRole"})
  */
 class Application_Model_User_Role implements Zend_Acl_Role_Interface{
+
+  const TYPE_GLOBAL = 'global';
+  const TYPE_CASE = 'case';
+  const TYPE_USER = 'user';
   
   /**
    * @Id
@@ -31,45 +48,125 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    * @Column(type="integer") 
    */
   protected $id;
-  
+
+  /**
+   * @Column(type="string", nullable=true, unique=true)
+   */
+  protected $roleId;
+
   /**
    * A list of all the permissions that are allowed for an owner of this role.
-   * 
-   * @var ArrayCollection
-   * 
-   * ManyToMany(targetEntity
+   *
+   * @ManyToMany(targetEntity="Application_Model_Permission")
+   * @JoinTable(name="role_has_permission",
+   *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id")}
+   *      )
    */
-  private $permissions;
+  protected $permissions;
+
+  /**
+   *
+   * @ManyToMany(targetEntity="Application_Model_Permission")
+   * @JoinTable(name="role_permission_blacklist",
+   *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id")}
+   *      )
+   */
+  protected $blacklist;
   
   /**
    * Stores the roles this role is extending.
    * 
    * @ManyToMany(targetEntity="Application_Model_User_Role")
+   * @JoinTable(name="role_inherits",
+   *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="inherited_role_id", referencedColumnName="id")}
+   *      )
    */
-  private $inheritedRoles;
+  protected $inheritedRoles;
 
-  public function __construct(){
-    $this->inheritedRoles = new \Doctrine\Common\Collections\ArrayCollection();
-  }
+  /**
+   * @var string
+   * 
+   * @Column(type="string")
+   */
+  protected $type;
   
-  public function getId() {
+  public function __construct($type = null){
+    $this->inheritedRoles = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+    if($type===null){
+      $this->type = self::TYPE_USER;
+    } else {
+      $this->type = $type;
+    }
+  }
+
+  public function getId(){
     return $this->id;
   }
-  
+
   public function getRoleId(){
-    return $this->getId();
+    if($this->roleId === null){
+      $this->roleId = (string) $this->getId();
+    }
+    
+    return $this->roleId;
   }
   
+  public function setRoleId($roleId){
+    $this->roleId = $roleId;  
+  }
+
+  public function getInheritedPermissions(){
+    $permissions = array();
+    
+    $inheritedRoles = $this->getInheritedRoles();
+    
+    if($inheritedRoles->count()>0){
+      foreach($this->getInheritedRoles() as $inheritedRole){
+        $permissions = array_merge ($inheritedRole->getPermissions(), $permissions); 
+      }
+    }
+    
+    return $permissions;
+  }
+  
+  /**
+   * Returns all permissions of this Role including the inherited.
+   * 
+   * @return array
+   */
   public function getPermissions(){
-    return $this->permissions;  
+    $inheritedPermissions = $this->getInheritedPermissions();
+    $permissions = array_merge($inheritedPermissions, $this->permissions->toArray());
+    return $permissions;
+  }
+
+  /**
+   * Returns only the explicitly set permissions for the current object.
+   * 
+   * @return array
+   */
+  public function getBasicPermissions(){
+    return $this->permissions->toArray(); 
   }
   
+  public function addPermission(Application_Model_Permission $permission){
+    $this->permissions[] = $permission;
+  }
+
   public function addInheritedRole(Unplagged_Model_User_InheritableRole $inheritedRole){
     $this->inheritedRoles->add($inheritedRole);
   }
-  
+
   public function getInheritedRoles(){
-    return $this->inheritedRoles;  
+    return $this->inheritedRoles;
+  }
+
+  public function getType(){
+    return $this->type;
   }
 }
 ?>

@@ -1,18 +1,6 @@
-<?php
-$this->title = $this->translate("Stopwords Highlighting");
-$this->headTitle($this->title);
-?>
+<?php $this->headTitle($this->title); ?>
+<h3><?php echo $this->subtitle; ?> <small>Stopwords highlighting</small></h3>
 
-Document: <?php echo $this->page->getDocument()->getTitle(); ?><br />
-Page number: <?php echo $this->page->getPageNumber(); ?><br />
+<div class="document-page src-wrapper"><?php echo $this->stopWordContent; ?></div>
 
-Content: <br />
-<div class="document-page"><?php
- $lines = explode('<br />', $this->stopWordContent);
- ?>
-<ol>
- <?php foreach($lines as $line): ?>
-   <li><?php echo $line; ?></li>
-   <?php endforeach; ?>
- </ol>
-</div>
+<?php echo $this->partial('partials/next-prev-paginator.phtml', array('prevLink'=>$this->prevPageLink, 'nextLink'=>$this->nextPageLink)); ?>

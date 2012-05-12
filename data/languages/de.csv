@@ -36,7 +36,7 @@ Case Information;Fall Informationen
 Documents;Dokumente
 List of documents;Liste von Dokumenten
 Uploaded;Hochgeladen
-Edit Cases;Fälle bearbeiten
+Edit Case;Fall bearbeiten
 Case you're working on;Ihr aktueller Fall
 Logout;Ausloggen
 of;von
@@ -45,3 +45,14 @@ You were logged in successfully.;Sie wurden erfolgreich eingeloggt.
 Register;Registrieren
 Imprint;Impressum
 Select a Case;Fall auswählen
+
+Your browser is;Ihr Browser ist
+ancient!;veraltet!
+Upgrade to a different browser;Bitte updaten Sie auf einen neueren Browser
+install Google Chrome Frame;installieren Sie Google Chrome Frame
+to experience this site.;um diese Seite in vollständiger Qualität zu sehen.
+
+Unfortunately JavaScript is currently not supported or is disabled in your browser. Please enable JavaScript for full functionality.;Leider wird JavaScript in Ihrem Browser nicht unterstützt oder ist deaktiviert. Bitte aktivieren Sie JavaScript für die vollständige Funktionalität.
+Attention!;Achtung!
+
+Page;Seite

@@ -1,26 +1,31 @@
 <?php
-    $this->title = $this->translate("List of simtext reports");
-    $this->headTitle($this->title);
+$this->title = $this->translate("List of simtext reports");
+$this->headTitle($this->title);
 ?>
-    <table cellpadding="0" cellspacing="0" class="default"> 
-  <tr>
-    <th style="width: 250px;"><?php echo $this->translate("Title"); ?></th>
-    <th><?php echo $this->translate("Date"); ?></th>
-    <th><?php echo $this->translate("State"); ?></th>
-  </tr>
-  <?php 
-  $i = 0;
-  foreach($this->paginator as $report): 
-    ?>
-  <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
-    <?php if($report->getState()->getName() == "report_generated") { ?>
-    <td><a href="<?php echo $report->getDirectLink(); ?>"><?php echo $report->getTitle(); ?></a></td>
-    <?php } else { ?>
-    <td><?php echo $report->getTitle(); ?></td>
-    <?php } ?>
-    <td><?php //echo $report->getCreated()->format('Y-m-d'); ?></td>
-    <td><?php echo $report->getState()->getTitle(); ?></td>
-  </tr>
-  <?php endforeach; ?>
+<table cellpadding="0" cellspacing="0" class="default"> 
+  <thead>
+    <tr>
+      <th style="width: 250px;"><?php echo $this->translate("Title"); ?></th>
+      <th><?php echo $this->translate("State"); ?></th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if(count($this->paginator)): ?>
+      <?php foreach($this->paginator as $report): ?>
+        <tr>
+          <?php if($report->getState()->getName() == "report_generated"){ ?>
+            <td data-label="<?php echo $this->translate("Title"); ?>"><a href="<?php echo $report->getDirectLink(); ?>"><?php echo $report->getTitle(); ?></a></td>
+          <?php }else{ ?>
+            <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $report->getTitle(); ?></td>
+          <?php } ?>
+          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $report->outputState; ?></td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr>
+        <td colspan="4" class="no-label"><?php echo $this->translate("No reports found."); ?></td>
+      </tr>
+    <?php endif; ?>
+  </tbody>
 </table>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>

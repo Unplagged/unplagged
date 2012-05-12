@@ -21,7 +21,7 @@
 /**
  * This controller handles fragment related stuff.
  */
-class Document_FragmentController extends Unplagged_Controller_Action{
+class Document_FragmentController extends Unplagged_Controller_Versionable{
 
   public function init(){
     parent::init();
@@ -43,18 +43,22 @@ class Document_FragmentController extends Unplagged_Controller_Action{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
 
     $this->view->fragment = $fragment;
     $this->view->plag = $fragment->getPlag();
     $this->view->source = $fragment->getSource();
 
-    // @todo remove, jsut for now to have something, it should be changed to explode("\n",...  
-    $plagText = $fragment->getPlag()->getText();
-    $sourceText = $fragment->getSource()->getText();
-    
-    $this->view->plagLines = explode("\n", $plagText);
-    $this->view->sourceLines = explode("\n", $sourceText);
+    $this->view->content = $fragment->getContent('list', true);
 
+    $this->view->ratings = $this->_em->getRepository("Application_Model_Rating")->findBySource($input->id);
+
+    $this->view->meId = $this->_defaultNamespace->userId;
+    
+    // check if the current user already rated this fragment
+    $this->view->fragmentIsRated = $fragment->isRatedByUser($user);
+        
+    
     Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
@@ -63,18 +67,37 @@ class Document_FragmentController extends Unplagged_Controller_Action{
    * Handles the creation of a new fragment. 
    */
   public function createAction(){
-    $modifyForm = new Application_Form_Document_Fragment_Modify();
+    $input = new Zend_Filter_Input(array('page'=>'Digits', 'content'=>'StripTags'), null, $this->_getAllParams());
+    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->page);
 
-    if($this->_request->isPost()){
+    $modifyForm = new Application_Form_Document_Fragment_Modify();
+    if($page){
+      $modifyForm->getElement("candidateDocument")->setValue($page->getDocument()->getId());
+      foreach($modifyForm->getElement("candidateBibTex")->getDecorators() as $decorator){
+        $decorator->setOption('style', 'display: none');
+      }
+      // remove white spaces of content
+      $contentLines = explode("\n", $input->content);
+      foreach($contentLines as $i=>$contentLine){
+        $contentLines[$i] = trim($contentLine);
+      }
+      $input->content = implode("\n", $contentLines);
+      $modifyForm->getElement("candidateText")->setValue($input->content);
+      $modifyForm->getElement("candidatePageFrom")->setValue($page->getPageNumber());
+      $modifyForm->getElement("candidatePageTo")->setValue($page->getPageNumber());
+    }
+
+    if($this->_request->isPost() && empty($input->page)){
       $result = $this->handleModifyData($modifyForm);
 
       if($result){
         // log fragment creation
         $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        //Unplagged_Helper::notify("fragment_created", $fragment, $user);
+        Unplagged_Helper::notify("fragment_created", $result, $user);
 
-        $this->_helper->flashMessenger->addMessage('The fragment was created successfully.');
-        $this->_helper->redirector('list', 'document_fragment');
+        $this->_helper->FlashMessenger('The fragment was created successfully.');
+        $params = array('id'=>$result->getId());
+        $this->_helper->redirector('show', 'document_fragment', '', $params);
       }
     }
 
@@ -98,26 +121,6 @@ class Document_FragmentController extends Unplagged_Controller_Action{
       $modifyForm->getElement("type")->setValue($fragment->getType()->getId());
       $modifyForm->getElement("note")->setValue($fragment->getNote());
 
-      $modifyForm->getElement("candidateDocument")->setValue($fragment->getPlag()->getPageFrom()->getDocument()->getId());
-      foreach($modifyForm->getElement("candidateBibTex")->getDecorators() as $decorator){
-        $decorator->setOption('style', 'display: none');
-      }
-      $modifyForm->getElement("candidatePageFrom")->setValue($fragment->getPlag()->getPageFrom()->getPageNumber());
-      $modifyForm->getElement("candidateLineFrom")->setValue($fragment->getPlag()->getLineFrom());
-      $modifyForm->getElement("candidatePageTo")->setValue($fragment->getPlag()->getPageTo()->getPageNumber());
-      $modifyForm->getElement("candidateLineTo")->setValue($fragment->getPlag()->getLineTo());
-      $modifyForm->getElement("candidateText")->setValue($fragment->getPlag()->getText());
-
-      $modifyForm->getElement("sourceDocument")->setValue($fragment->getSource()->getPageFrom()->getDocument()->getId());
-      foreach($modifyForm->getElement("sourceBibTex")->getDecorators() as $decorator){
-        $decorator->setOption('style', 'display: none');
-      }
-      $modifyForm->getElement("sourcePageFrom")->setValue($fragment->getSource()->getPageFrom()->getPageNumber());
-      $modifyForm->getElement("sourceLineFrom")->setValue($fragment->getSource()->getLineFrom());
-      $modifyForm->getElement("sourcePageTo")->setValue($fragment->getSource()->getPageTo()->getPageNumber());
-      $modifyForm->getElement("sourceLineTo")->setValue($fragment->getSource()->getLineTo());
-      $modifyForm->getElement("sourceText")->setValue($fragment->getSource()->getText());
-
       $modifyForm->getElement("submit")->setLabel("Save fragment");
 
       if($this->_request->isPost()){
@@ -126,11 +129,26 @@ class Document_FragmentController extends Unplagged_Controller_Action{
         if($result){
           // log fragment creation
           $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-          //Unplagged_Helper::notify("fragment_created", $fragment, $user);
+          Unplagged_Helper::notify("fragment_updated", $result, $user);
 
-          $this->_helper->flashMessenger->addMessage('The fragment was updated successfully.');
-          $this->_helper->redirector('list', 'document_fragment');
+          $this->_helper->FlashMessenger('The fragment was updated successfully.');
+          $params = array('id'=>$fragment->getId());
+          $this->_helper->redirector('show', 'document_fragment', '', $params);
         }
+      }else{
+        $formData['candidateDocument'] = $fragment->getPlag()->getLineFrom()->getPage()->getDocument()->getId();
+        $formData['candidatePageFrom'] = $fragment->getPlag()->getLineFrom()->getPage()->getId();
+        $formData['candidatePageTo'] = $fragment->getPlag()->getLineTo()->getPage()->getId();
+        $formData['candidateLineFrom'] = $fragment->getPlag()->getLineFrom()->getId();
+        $formData['candidateLineTo'] = $fragment->getPlag()->getLineTo()->getId();
+        $this->initalisePartial($modifyForm, 'candidate', $formData);
+
+        $formData['sourceDocument'] = $fragment->getSource()->getLineFrom()->getPage()->getDocument()->getId();
+        $formData['sourcePageFrom'] = $fragment->getSource()->getLineFrom()->getPage()->getId();
+        $formData['sourcePageTo'] = $fragment->getSource()->getLineTo()->getPage()->getId();
+        $formData['sourceLineFrom'] = $fragment->getSource()->getLineFrom()->getId();
+        $formData['sourceLineTo'] = $fragment->getSource()->getLineTo()->getId();
+        $this->initalisePartial($modifyForm, 'source', $formData);
       }
 
       $this->view->title = "Edit fragment";
@@ -151,67 +169,34 @@ class Document_FragmentController extends Unplagged_Controller_Action{
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
+    // generate the action dropdown for each fragment
+    foreach($paginator as $fragment):
+      $fragment->actions = array();
+
+      $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
+      $action['label'] = 'Edit fragment';
+      $action['icon'] = 'images/icons/pencil.png';
+      $fragment->actions[] = $action;
+
+      $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
+      $action['label'] = 'Remove fragment';
+      $action['icon'] = 'images/icons/delete.png';
+      $fragment->actions[] = $action;
+    endforeach;
+
     $this->view->paginator = $paginator;
-    
+
     Zend_Layout::getMvcInstance()->sidebar = null;
     Zend_Layout::getMvcInstance()->versionableId = null;
   }
 
-  public function diffAction(){
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+  /**
+   * Compares two version of a fragment. 
+   */
+  public function changelogAction(){
+    parent::changelogAction();
 
-    $query = $this->_em->createQuery("SELECT v FROM Application_Model_Versionable_Version v WHERE v.versionable = :versionable");
-    $query->setParameter("versionable", $input->id);
-    $versions = $query->getResult();
-
-    $params["versions"] = array();
-    foreach($versions as $version){
-      $params["versions"][$version->getId()] = "Version " . $version->getVersion();
-    }
-    $params["action"] = "/document_fragment/diff/id/" . $input->id;
-
-    // create the form
-    $diffVersionsForm = new Application_Form_Versionable_Diff($params);
-
-    // form has been submitted through post request
-    if($this->_request->isPost()){
-      $formData = $this->_request->getPost();
-
-      // if the form doesn't validate, pass to view and return
-      if($diffVersionsForm->isValid($formData)){
-        $firstVersionId = $this->getRequest()->getParam('firstVersion');
-        $secondVersionId = $this->getRequest()->getParam('secondVersion');
-
-        $firstVersion = $this->_em->getRepository('Application_Model_Versionable_Version')->findOneById($firstVersionId);
-        $secondVersion = $this->_em->getRepository('Application_Model_Versionable_Version')->findOneById($secondVersionId);
-
-        // @todo, just to have some data for now
-        $firstData = $firstVersion->getData();
-        $secondData = $secondVersion->getData();
-
-        if(!empty($firstData) && !empty($secondData)){
-          // @todo remove, jsut for now to have something
-          $a = str_split(json_encode($firstData), 20);
-          $b = str_split(json_encode($secondData), 20);
-
-          // options for generating the diff
-          $options = array(
-            'ignoreWhitespace'=>true,
-            'ignoreCase'=>true,
-            'context'=>1000
-          );
-
-          $diff = new Diff($a, $b, $options);
-          $renderer = new Diff_Renderer_Html_Array();
-        }
-
-        if(!empty($diff)){
-          $this->view->diff = Unplagged_Helper::formatDiff($diff->Render($renderer), $firstVersion->getVersion(), $secondVersion->getVersion());
-        }
-      }
-    }
-
-    $this->view->diffVersionsForm = $diffVersionsForm;
+    $this->setTitle("Changelog of fragments");
     Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
   }
 
@@ -224,16 +209,31 @@ class Document_FragmentController extends Unplagged_Controller_Action{
         $this->_em->remove($document);
         $this->_em->flush();
       }else{
-        $this->_helper->flashMessenger->addMessage('The fragment does not exist.');
+        $this->_helper->FlashMessenger('The fragment does not exist.');
       }
     }
 
-    $this->_helper->flashMessenger->addMessage('The fragment was deleted successfully.');
+    $this->_helper->FlashMessenger('The fragment was deleted successfully.');
     $this->_helper->redirector('list', 'document_fragment');
 
     // disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
+  }
+
+  public function rateAction(){
+    $input = new Zend_Filter_Input(array('source'=>'Digits', 'id'=>'Digits'), null, $this->_getAllParams());
+
+    $params = array('redirect'=>'document_fragment/show/id/' . $input->source);
+
+    if($input->id){
+      $this->view->title = "Edit fragment rating";
+      $params['id'] = $input->id;
+      $this->_forward('edit', 'rating', '', $params);
+    }else{
+      $this->view->title = "Rate fragment";
+      $this->_forward('create', 'rating', '', $params);
+    }
   }
 
   private function handleModifyData(Application_Form_Document_Fragment_Modify $modifyForm, Application_Model_Document_Fragment $fragment = null){
@@ -242,67 +242,110 @@ class Document_FragmentController extends Unplagged_Controller_Action{
     }
 
     $formData = $this->_request->getPost();
+
+    $this->initalisePartial($modifyForm, 'candidate', $formData);
+    $this->initalisePartial($modifyForm, 'source', $formData);
+
     if($modifyForm->isValid($formData)){
 
       $fragment->setNote($formData['note']);
       $fragment->setType($this->_em->getRepository('Application_Model_Document_Fragment_Type')->findOneById($formData['type']));
 
-      // candidate partial
-      $data = $this->handleDocumentCreation($formData['candidateDocument'], $formData['candidatePageFrom'], $formData['candidatePageTo'], $formData['candidateBibTex']);
-      $data["lineFrom"] = $formData['candidateLineFrom'];
-      $data["lineTo"] = $formData['candidateLineTo'];
-      $data["text"] = $formData['candidateText'];
-      $fragment->setPlag(new Application_Model_Document_Fragment_Partial($data));
+      // partials
+      if($fragment && $fragment->getPlag()){
+        $partial = $this->_em->getRepository('Application_Model_Document_Fragment_Partial')->findOneById($fragment->getPlag()->getId());
+      }else{
+        $partial = new Application_Model_Document_Fragment_Partial();
+      }
+      $fragment->setPlag($this->handlelPartialCreation($partial, $formData['candidateLineFrom'], $formData['candidateLineTo']));
 
-      // source partial
-      unset($data);
-      $data = $this->handleDocumentCreation($formData['sourceDocument'], $formData['sourcePageFrom'], $formData['sourcePageTo'], $formData['sourceBibTex']);
-      $data["lineFrom"] = $formData['sourceLineFrom'];
-      $data["lineTo"] = $formData['sourceLineTo'];
-      $data["text"] = $formData['sourceText'];
-      $fragment->setSource(new Application_Model_Document_Fragment_Partial($data));
+      if($fragment && $fragment->getSource()){
+        $partial = $this->_em->getRepository('Application_Model_Document_Fragment_Partial')->findOneById($fragment->getSource()->getId());
+      }else{
+        $partial = new Application_Model_Document_Fragment_Partial();
+      }
+      $fragment->setSource($this->handlelPartialCreation($partial, $formData['sourceLineFrom'], $formData['sourceLineTo']));
 
       // write back to persistence manager and flush it
       $this->_em->persist($fragment);
       $this->_em->flush();
 
-      return true;
-    }else{
-      foreach($modifyForm->getElement("candidateBibTex")->getDecorators() as $decorator){
-        $display = $formData['candidateDocument'] == "new" ? "block" : "none";
-        $decorator->setOption('style', 'display: ' . $display);
-      }
-      foreach($modifyForm->getElement("sourceBibTex")->getDecorators() as $decorator){
-        $display = $formData['sourceDocument'] == "new" ? "block" : "none";
-        $decorator->setOption('style', 'display: ' . $display);
-      }
+      return $fragment;
     }
 
     return false;
   }
 
-  private function handleDocumentCreation($documentId, $pageFrom, $pageTo, $bibtex){
-    $data = array();
-
-    if($documentId == "new"){
-      $title = "Document " . time();
-      $data["document"] = new Application_Model_Document(array("title"=>$title, "bibtex"=>$bibtex));
-      $this->_em->persist($data["document"]);
-
-      $data["pageFrom"] = new Application_Model_Document_Page(array("pageNumber"=>$pageFrom));
-      $data["pageTo"] = new Application_Model_Document_Page(array("pageNumber"=>$pageTo));
-      $this->_em->persist($data["pageFrom"]);
-      $this->_em->persist($data["pageTo"]);
-
-      $data["document"]->addPage($data["pageFrom"]);
-      $data["document"]->addPage($data["pageTo"]);
-    }else{
-      $data["document"] = $this->_em->getRepository('Application_Model_Document')->findOneById($documentId);
-      $data["pageFrom"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneBy(array("document"=>$documentId, "pageNumber"=>$pageFrom));
-      $data["pageTo"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneBy(array("document"=>$documentId, "pageNumber"=>$pageFrom));
+  /**
+   * Creates a partial of a fragment (candidate or source part).
+   * 
+   * @param Application_Model_Document_Fragment_Partial $partial
+   * @param type $lineFromId
+   * @param type $lineToId
+   * @param type $characterFrom
+   * @param type $characterTo
+   * @return \Application_Model_Document_Fragment_Partial 
+   */
+  private function handlelPartialCreation($partial = null, $lineFromId, $lineToId, $characterFrom = 1, $characterTo = 1){
+    if(!($partial)){
+      $partial = new Application_Model_Document_Fragment_Partial();
     }
 
-    return $data;
+    $partial->setLineFrom($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($lineFromId));
+    $partial->setCharacterFrom($characterFrom);
+    $partial->setLineTo($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($lineToId));
+    $partial->setCharacterTo($characterTo);
+
+    return $partial;
+  }
+
+  /**
+   * Adds select options to the form in order to show the same dropdown options after page reload
+   * which were added through ajax only. Also needed for Zend Haystack validator on select elements.
+   * 
+   * @param type $modifyForm
+   * @param type $prefix
+   * @param type $formData 
+   */
+  private function initalisePartial(&$modifyForm, $prefix, &$formData){
+    $modifyForm->getElement($prefix . 'Document')->setValue($formData[$prefix . 'Document']);
+
+    // initialise page select
+    $document = $this->_em->getRepository('Application_Model_Document')->findOneById($formData[$prefix . 'Document']);
+    if($document){
+      foreach($document->getPages() as $page){
+        $modifyForm->getElement($prefix . 'PageFrom')->addMultioption($page->getId(), $page->getPageNumber());
+        $modifyForm->getElement($prefix . 'PageTo')->addMultioption($page->getId(), $page->getPageNumber());
+
+        $modifyForm->getElement($prefix . 'PageFrom')->setAttrib('disabled', null);
+        $modifyForm->getElement($prefix . 'PageTo')->setAttrib('disabled', null);
+      }
+
+      if(!empty($formData[$prefix . 'PageFrom'])){
+        $modifyForm->getElement($prefix . 'PageFrom')->setValue($formData[$prefix . 'PageFrom']);
+
+        // initialise line from select
+        $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageFrom']);
+        foreach($page->getLines() as $line){
+          $modifyForm->getElement($prefix . 'LineFrom')->addMultioption($line->getId(), $line->getLineNumber());
+        }
+        $modifyForm->getElement($prefix . 'LineFrom')->setValue($formData[$prefix . 'LineFrom']);
+        $modifyForm->getElement($prefix . 'LineFrom')->setAttrib('disabled', null);
+      }
+
+      if(!empty($formData[$prefix . 'PageTo'])){
+        $modifyForm->getElement($prefix . 'PageTo')->setValue($formData[$prefix . 'PageTo']);
+
+        // initialise line to select
+        $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageTo']);
+        foreach($page->getLines() as $line){
+          $modifyForm->getElement($prefix . 'LineTo')->addMultioption($line->getId(), $line->getLineNumber());
+        }
+
+        $modifyForm->getElement($prefix . 'LineTo')->setValue($formData[$prefix . 'LineTo']);
+        $modifyForm->getElement($prefix . 'LineTo')->setAttrib('disabled', null);
+      }
+    }
   }
 
 }

@@ -1,53 +1,59 @@
 <?php
 
 /**
- * Zend_Auth_Adapter_Doctrine 
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Implements Zend_Auth_Adapter_Interface to be used in conjuction with a Doctrine managed database. 
  * 
  * This class is based on {@link http://nopaste.info/9ebe309daf_nl.html}
- * @author TheQ 
- * @package auth 
+ * 
+ * @author TheQ, Unplagged 
  */
 class Unplagged_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface{
 
   /**
-   * The Entity/Classname which holds authentication data 
-   * @var string 
+   * @var string The Entity/Classname which holds  the authentication data .
    */
   private $authEntityName;
 
   /**
-   * The Field/Variable name which represents identity e.g. username 
-   * @var string 
+   * @var string The Field/Variable name which represents the users identity e.g. username.
    */
   private $authIdentityField;
 
   /**
-   * The Field/Variable name which represents credential e.g. password 
-   * @var string 
+   * @var string The Field/Variable name which represents the users credentials e.g. the password.
    */
   private $authCredentialField;
 
   /**
-   * The identity to be checked 
-   * @var string 
+   * @var string The identity to be checked, normally the username.
    */
   private $identity;
 
   /**
-   * The credentials to be checked 
-   * @var string 
+   * @var string The credentials to be checked, e.g. the password.
    */
   private $credential;
 
-  /**
-   * Instance of an EntityManager 
-   * @var  
-   */
   private $entityManager;
 
-  /**
-   * Constructor. 
-   */
   public function __construct($em = null, $authEntityName = null, $authIdentityField = null, $authCredentialField = null, $identity = null, $credential = null){
     $this->authEntityName = $authEntityName;
     $this->authIdentityField = $authIdentityField;
@@ -58,110 +64,23 @@ class Unplagged_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface{
   }
 
   /**
-   * (non-PHPdoc) 
    * @see Zend_Auth_Adapter_Interface::authenticate() 
    */
   public function authenticate(){
     $authEntity = $this->entityManager->getRepository($this->authEntityName)
         ->findOneBy(array(
-      $this->authIdentityField=>$this->identity,
-      $this->authCredentialField=>$this->credential
+      $this->authIdentityField=>$this->identity
         ));
+
     if($authEntity !== null){
-      return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $authEntity->getId());
-    }else{
-      return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null);
+      $passwordHash = $authEntity->getPassword();
+
+      if($authEntity !== null && Unplagged_Helper::checkStringAndHash($this->credential, $passwordHash)){
+        return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $authEntity);
+      }
     }
-  }
 
-  /**
-   * @return string 
-   */
-  public function getAuthEntityName(){
-    return $this->authEntityName;
-  }
-
-  /**
-   * @return string 
-   */
-  public function getAuthIdentityField(){
-    return $this->authIdentityField;
-  }
-
-  /**
-   * @return string 
-   */
-  public function getAuthCredentialField(){
-    return $this->authCredentialField;
-  }
-
-  /**
-   * @return string 
-   */
-  public function getIdentity(){
-    return $this->identity;
-  }
-
-  /**
-   * @return string 
-   * Enter description here ... 
-   */
-  public function getCredential(){
-    return $this->credential;
-  }
-
-  /**
-   * @param string $authEntityName 
-   * @return BJ_Auth_Adapter_Doctrine 
-   */
-  public function setAuthEntityName($authEntityName){
-    $this->authEntityName = $authEntityName;
-    return $this;
-  }
-
-  /**
-   * @param string $authIdentityField 
-   * @return BJ_Auth_Adapter_Doctrine 
-   */
-  public function setAuthIdentityField($authIdentityField){
-    $this->authIdentityField = $authIdentityField;
-    return $this;
-  }
-
-  /**
-   * @param string $authCredentialField 
-   * @return BJ_Auth_Adapter_Doctrine 
-   */
-  public function setAuthCredentialField($authCredentialField){
-    $this->authCredentialField = $authCredentialField;
-    return $this;
-  }
-
-  /**
-   * @param string $identity 
-   * @return BJ_Auth_Adapter_Doctrine 
-   */
-  public function setIdentity($identity){
-    $this->identity = $identity;
-    return $this;
-  }
-
-  /**
-   * @param string $credential 
-   * @return BJ_Auth_Adapter_Doctrine 
-   */
-  public function setCredential($credential){
-    $this->credential = $credential;
-    return $this;
-  }
-
-  /**
-   * @param $em 
-   * @return BJ_Auth_Adapter_Doctrine 
-   */
-  public function setEntityManager($em){
-    $this->entityManager = $em;
-    return $this;
+    return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null);
   }
 
 }

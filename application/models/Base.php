@@ -18,14 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * The class represents a base class for any type of item that can receive 
  * comments or can be the source of a notification.
  * 
  * It defines also the structure of the database table for the ORM.
  *
- * @author Benjamin Oertel <benjamin.oertel@me.com>
- * @version 1.0
+ * @author Unplagged
  * 
  * @Entity 
  * @HasLifeCycleCallbacks
@@ -34,43 +35,40 @@
  * @DiscriminatorColumn(name="type", type="string") 
  * @DiscriminatorMap({ 
  *  "case" = "Application_Model_Case"
- * ,"file" = "Application_Model_File"
- * ,"user" = "Application_Model_User"
- * ,"document" = "Application_Model_Document"
- * ,"document_page" = "Application_Model_Document_Page"
- * ,"detection_report" = "Application_Model_Document_Page_DetectionReport"
  * ,"comment" = "Application_Model_Comment"
- * ,"tag" = "Application_Model_Tag"
- * ,"notification" = "Application_Model_Notification"
- * ,"document_fragment" = "Application_Model_Document_Fragment"
- * ,"versionable_version" = "Application_Model_Versionable_Version"
- * ,"document_fragment_partial" = "Application_Model_Document_Fragment_Partial"
- * ,"simtext_report" = "Application_Model_Document_Page_SimtextReport"
  * ,"cron_task" = "Application_Model_Task"
+ * ,"detection_report" = "Application_Model_Document_Page_DetectionReport"
+ * ,"document" = "Application_Model_Document"
+ * ,"document_fragment" = "Application_Model_Document_Fragment"
+ * ,"document_fragment_partial" = "Application_Model_Document_Fragment_Partial"
+ * ,"document_page" = "Application_Model_Document_Page"
+ * ,"file" = "Application_Model_File"
+ * ,"notification" = "Application_Model_Notification"
+ * ,"simtext_report" = "Application_Model_Document_Page_SimtextReport"
+ * ,"tag" = "Application_Model_Tag"
+ * ,"user" = "Application_Model_User"
+ * ,"versionable_version" = "Application_Model_Versionable_Version"
+ * ,"document_page_line" = "Application_Model_Document_Page_Line"
+ * ,"rating" = "Application_Model_Rating"
  * })
- * 
  */
 abstract class Application_Model_Base{
 
+  const ICON_CLASS = '';
+  
   /**
-   * @Id
-   * @GeneratedValue
-   * @Column(type="integer") 
+   * @Id @GeneratedValue @Column(type="integer") 
    */
   protected $id;
 
   /**
-   * The date and time when the object was created initially.
-   * 
-   * @var string The inital persistence date and time.
+   * @var string The date and time when the object was created initially.
    * 
    * @Column(type="datetime")
    */
   protected $created;
-  
-  /**
-   * The base element comments.
-   * 
+
+  /** 
    * @var string The base element comments.
    * 
    * @OneToMany(targetEntity="Application_Model_Comment", mappedBy="source")
@@ -78,18 +76,39 @@ abstract class Application_Model_Base{
    */
   private $comments;
   
+    /** 
+   * @var string The base element ratings.
+   * 
+   * @OneToMany(targetEntity="Application_Model_Rating", mappedBy="source")
+   * @JoinColumn(name="rating_id", referencedColumnName="id")
+   */
+  private $ratings;
+
+  /**
+   * @var ArrayCollection The notifications related to this object.
+   * 
+   * @OneToMany(targetEntity="Application_Model_Notification", mappedBy="source")
+   * 
+   * @todo private without getter and setter?
+   */
+  private $notifications;
+
   public function __construct(){
-    $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->comments = new ArrayCollection();
+    $this->ratings = new ArrayCollection();
   }
-  
-  public function getId() {
+
+  public function getId(){
     return $this->id;
   }
-  
+
+  /**
+   * @todo do we really need setId? I thought this would always be handled by doctrine, which uses reflection
+   */
   public function setId($id){
     $this->id = $id;
   }
-    
+
   /**
    * Sets the creation time to the current time, if it is null.
    * This will normally be auto called the first time the object is persisted by doctrine.
@@ -101,28 +120,55 @@ abstract class Application_Model_Base{
       $this->created = new DateTime("now");
     }
   }
-  
+
   /**
    * Returns a direct link to an element by id. 
    */
   abstract public function getDirectLink();
-  
+
   /**
    * Returns the title or name of the specific object of the element. 
    */
   abstract public function getDirectName();
-  
+
   /**
-   * Returns a class for a direct link icon of this element. 
+   * Returns a class name for a direct link icon of this element. When no icon is used the return will be an
+   * empty string.
+   * 
+   * An extending class is supposed to set the ICON_CLASS constant like this inside the classes scope:
+   * 
+   * <code>
+   * const ICON_CLASS = 'my-icon-class';
+   * </code>
    */
-  abstract public function getIconClass();
-  
+  public function getIconClass(){
+    $childClass = get_called_class();
+    
+    if($childClass::ICON_CLASS !== null){
+      return $childClass::ICON_CLASS; 
+    }
+  }
+
   public function getComments(){
     return $this->comments;
   }
   
+  public function getRatings(){
+    return $this->ratings;
+  }
+
   public function getCreated(){
     return $this->created;
+  }
+  
+    
+  public function isRatedByUser($user) {
+    foreach($this->ratings as $rating) {
+      if($rating->getUser()->getId() == $user->getId()) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

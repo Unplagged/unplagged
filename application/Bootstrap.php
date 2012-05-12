@@ -17,60 +17,54 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+require_once('Doctrine' . DIRECTORY_SEPARATOR . 'Common' . DIRECTORY_SEPARATOR . 'ClassLoader.php');
+
+use \Doctrine\Common\ClassLoader;
 
 /**
  * This class is the starting point for the Unplagged application and initalizes 
  * all base components.
  *
+ * Please remember that all the '_init*' methods are called alphabetically, so make sure to explicitly bootstrap
+ * all dependencies in methods that deviate from this order.
+ * 
  * @author Unplagged
  */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
   /**
-   * Initialize auto loader of Doctrine to get the database connection.
+   * Makes sure that only authorized users can see certain parts of the application.
    * 
-   * @author Jan Oliver Oelerich (http://www.oelerich.org/?p=193)
-   * @return Doctrine_Manager
+   * It's probably the best if this is called right up front, to make sure nobody can access
+   * something accidentally somehow.
    */
-  public function _initDoctrine(){
-    require_once('Doctrine' . DIRECTORY_SEPARATOR . 'Common' . DIRECTORY_SEPARATOR . 'ClassLoader.php');
-
-    $doctrineConfig = $this->getOption('doctrine');
-
-    $classLoader = new \Doctrine\Common\ClassLoader('Doctrine', BASE_PATH . DIRECTORY_SEPARATOR . 'library');
-    $classLoader->register();
-
-    $classLoader = new \Doctrine\Common\ClassLoader('models', APPLICATION_PATH);
-    $classLoader->register();
-
-    $classLoader = new \Doctrine\Common\ClassLoader('proxies', BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR);
-    $classLoader->register();
-
-    $config = new \Doctrine\ORM\Configuration();
-    $driverImpl = $config->newDefaultAnnotationDriver(APPLICATION_PATH . "/models");
-    $config->setMetadataDriverImpl($driverImpl);
-
-    //$cache = new \Doctrine\Common\Cache\ArrayCache;
-    //$config->setMetadataCacheImpl($cache);
-    //$config->setQueryCacheImpl($cache);
-
-    $config->setProxyDir(BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR . 'proxies');
-    $config->setProxyNamespace('Proxies');
-
-    $connectionOptions = array(
-      'driver'=>$doctrineConfig['conn']['driv'],
-      'user'=>$doctrineConfig['conn']['user'],
-      'password'=>$doctrineConfig['conn']['pass'],
-      'dbname'=>$doctrineConfig['conn']['dbname'],
-      'host'=>$doctrineConfig['conn']['host']
-    );
-
-    $em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
+  protected function _initAccessControl(){
+    //we need the entity manager, so make sure this is created prior
+    $this->bootstrap('doctrine');
+    //make sure at least the guest user is set if nobody logged in yet
+    $this->bootstrap('user');
 
     $registry = Zend_Registry::getInstance();
-    $registry->entitymanager = $em;
 
-    return $em;
+    //initalize the current users ACL
+    $acl = new Unplagged_Acl($registry->user, $registry->entitymanager);
+    $registry->acl = $acl;
+    $accessControl = new Unplagged_AccessControl($acl, $registry->user);
+
+    //make sure front controller is initalized, so that we can register the authorization plugin
+    $this->bootstrap('FrontController');
+    $frontController = $this->getResource('FrontController');
+    $frontController->registerPlugin($accessControl);
+  }
+
+  /**
+   * @todo does this do anything? 
+   */
+  protected function _initAutoloadCrons(){
+    $autoloader = new Zend_Loader_Autoloader_Resource(array(
+          'namespace'=>'Cron_',
+          'basePath'=>APPLICATION_PATH . '/../scripts/jobs/',
+        ));
   }
 
   /**
@@ -85,34 +79,71 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   }
 
   /**
-   * Initalizes the flash messenger.
+   * Initializes the Doctrine EntityManager.
+   * 
+   * Based on Jan Oliver Oelerich (http://www.oelerich.org/?p=193).
+   * 
+   * @todo enable Caching
+   * @return EntityManager
    */
-  protected function _initMessenger(){
-    $flashMsgHelper = new Zend_Controller_Action_Helper_FlashMessenger();
-    Zend_Controller_Action_HelperBroker::addHelper($flashMsgHelper);
+  public function _initDoctrine(){
+    $classLoader = new ClassLoader('Doctrine', BASE_PATH . DIRECTORY_SEPARATOR . 'library');
+    $classLoader->register();
+    $classLoader = new ClassLoader('models', APPLICATION_PATH);
+    $classLoader->register();
+    $classLoader = new ClassLoader('proxies', BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR);
+    $classLoader->register();
 
-    $messages = $flashMsgHelper->getMessages();
-    $this->bootstrap('layout');
-    $view = $this->getResource('layout')->getView();
+    $config = new \Doctrine\ORM\Configuration();
+    $driverImpl = $config->newDefaultAnnotationDriver(APPLICATION_PATH . DIRECTORY_SEPARATOR . 'models');
+    $config->setMetadataDriverImpl($driverImpl);
 
-    $view->assign('messages', $messages);
+    $config->setProxyDir(BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'doctrine');
+    $config->setProxyNamespace('Proxies');
+
+    $connectionOptions = $this->loadDatabaseConnectionCredentials();
+    $em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
+    $registry = Zend_Registry::getInstance();
+    $registry->entitymanager = $em;
+
+    return $em;
   }
 
   /**
-   * 
+   * Loads the database connection credentials from the config file.
    */
-  protected function _initAccessControl(){
+  private function loadDatabaseConnectionCredentials(){
+    $doctrineConfig = $this->getOption('doctrine');
+    $connectionOptions = array(
+      'driver'=>$doctrineConfig['conn']['driv'],
+      'user'=>$doctrineConfig['conn']['user'],
+      'password'=>$doctrineConfig['conn']['pass'],
+      'dbname'=>$doctrineConfig['conn']['dbname'],
+      'host'=>$doctrineConfig['conn']['host']
+    );
 
-    $acl = new Unplagged_Acl();
-    $accessControl = new Unplagged_AccessControl($acl);
+    return $connectionOptions;
+  }
 
-    //make sure front controller is initalized
-    $this->bootstrap('FrontController');
-    $this->bootstrap('layout');
-    $this->bootstrap('navigation');
-    $frontController = $this->getResource('FrontController');
+  /**
+   * Stores the current user in the registry.
+   * 
+   * If no user is logged in, the guest user is set as a default.
+   */
+  protected function _initUser(){
+    $registry = $registry = Zend_Registry::getInstance();
+    $defaultNamespace = new Zend_Session_Namespace('Default');
 
-    $frontController->registerPlugin($accessControl);
+    if(!$defaultNamespace->userId || $defaultNamespace->userId === 'guest'){
+      $guestId = $registry->entitymanager->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-role-id');
+      $guestRole = $registry->entitymanager->getRepository('Application_Model_User_Role')->findOneById($guestId->getValue());
+
+      $registry->user = new Application_Model_User(array('role'=>$guestRole));
+      $defaultNamespace->userId = 'guest';
+    }else{
+      $currentUser = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
+      $registry->set('user', $currentUser);
+    }
   }
 
   /**
@@ -121,49 +152,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   protected function _initHistory(){
     $frontController = $this->getResource('FrontController');
     $frontController->registerPlugin(new Unplagged_UrlHistory());
-  }
-  
-  /**
-   * Initalize the view.
-   * @author Dennis De Cock
-   */
-  protected function _initView(){
-    $defaultConfig = $this->getOption('default');
-
-    $view = new Zend_View();
-
-    $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
-    $view->headTitle()->setSeparator(' - ')->append($defaultConfig['applicationName']);
-  }
-
-  /**
-   * Generate registry and initalize language support.
-   * 
-   * @return Zend_Registry
-   */
-  protected function _initTranslate(){
-    $locale = new Zend_Locale('de_DE');
-
-    $registry = Zend_Registry::getInstance();
-    $registry->set('Zend_Locale', $locale);
-
-    $translate = new Zend_Translate('csv', BASE_PATH . '/data/languages/de.csv', 'de');
-    //$translate->addTranslation(APPLICATION_PATH . '/../languages/de.csv', 'de'); //TODO: add automatically lang support
-
-    $registry->set('Zend_Translate', $translate);
-
-    // translate standard zend framework messages
-    $translator = new Zend_Translate(
-            array(
-              'adapter'=>'array',
-              'content'=>BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages',
-              'locale'=>$locale,
-              'scan'=>Zend_Translate::LOCALE_FILENAME
-            )
-    );
-    Zend_Validate_Abstract::setDefaultTranslator($translator);
-
-    return $registry;
   }
 
   /**
@@ -185,7 +173,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     }
 
    */
-    $writer = new Zend_Log_Writer_Stream(BASE_PATH . "/data/logs/unplagged.log");
+    $writer = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/unplagged.log');
     $logger = new Zend_Log($writer);
     //   $logger = $this->getResource('Log');
     // assert($logger != null);
@@ -196,10 +184,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * 
    */
   protected function _initNavigation(){
-    
+
     $config = array(
       array(
-        //home icon gets set via js, because I didn't find a simple way to do add a <span> here
+        //home icon gets set via js, because I didn't find a simple way to add a <span> here
         'label'=>'Home',
         'title'=>'Home',
         'module'=>'default',
@@ -213,14 +201,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'notification',
         'action'=>'recent-activity',
-        'resource'=>'notification'
+        'resource'=>'notification_recent-activity'
       ), array(
         'label'=>'Files',
         'title'=>'Files',
         'module'=>'default',
         'controller'=>'file',
-        'action'=>'list',
-        'resource'=>'files',
+        'action'=>'upload',
+        'resource'=>'file_upload',
         'pages'=>array(
           array(
             'label'=>'Case Files',
@@ -228,7 +216,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'case',
             'action'=>'files',
-            'resource'=>'files'
+            'resource'=>'case_files'
           ),
           array(
             'label'=>'Public Files',
@@ -236,7 +224,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'file',
             'action'=>'list',
-            'resource'=>'files'
+            'resource'=>'file_list'
           ),
           array(
             'label'=>'Personal Files',
@@ -244,7 +232,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'user',
             'action'=>'files',
-            'resource'=>'files'
+            'resource'=>'user_files'
           )
         )
       ), array(
@@ -253,14 +241,51 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'document',
         'action'=>'list',
-        'resource'=>'document'
+        'resource'=>'document_list'
       ), array(
         'label'=>'Fragments',
         'title'=>'Fragments',
         'module'=>'default',
         'controller'=>'document_fragment',
         'action'=>'list',
-        'resource'=>'document_fragment'
+        'resource'=>'document_fragment_list'
+      ), array(
+        'label'=>'Administration',
+        'title'=>'Administration',
+        'uri'=>'#',
+        'resource'=>'admin_index',
+        'pages'=>array(
+          array(
+            'label'=>'Cases',
+            'title'=>'Cases',
+            'module'=>'default',
+            'controller'=>'case',
+            'action'=>'list',
+            'resource'=>'case_list'
+          ),
+          array(
+            'label'=>'Roles',
+            'title'=>'Roles',
+            'module'=>'default',
+            'controller'=>'permission',
+            'action'=>'list',
+            'resource'=>'permission_list'
+          ),
+          array(
+            'label'=>'States',
+            'title'=>'States',
+            'module'=>'default',
+            'controller'=>'setting',
+            'action'=>'list-states'
+          ),
+          array(
+            'label'=>'Actions',
+            'title'=>'Actions',
+            'module'=>'default',
+            'controller'=>'setting',
+            'action'=>'list-actions'
+          )
+        )
       )
     );
 
@@ -268,24 +293,72 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $this->bootstrap('layout');
     $layout = $this->getResource('layout');
     $view = $layout->getView();
-    $view->navigation($container)->setAcl(new Unplagged_Acl())->setRole('guest');
-    
+    $registry = Zend_Registry::getInstance();
+    $view->navigation($container)->setAcl($registry->acl)->setRole($registry->user->getRole());
+
     Zend_Registry::set('Zend_Navigation', $container);
   }
 
+  /**
+   * Generate registry and initalize language support.
+   * 
+   * The translation files are assumed to be in the /data/languages directory and named with the ISO language code and
+   * an ending of '.csv', i. e. 'de.csv' for german.
+   * 
+   * @return Zend_Registry
+   */
+  protected function _initTranslate(){
+    $registry = Zend_Registry::getInstance();
+    //takes the browser language as default
+    $locale = new Zend_Locale();
+    $registry->set('Zend_Locale', $locale);
+
+    $languageString = $locale->getLanguage();
+    $translationFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $languageString . '.csv';
+
+    //try to load the language file
+    if(file_exists($translationFilePath)){
+      $translate = new Zend_Translate('csv', $translationFilePath, $languageString);
+      $registry->set('Zend_Translate', $translate);
+    }
+
+    // translate standard zend framework messages
+    $translator = new Zend_Translate(
+            array(
+              'adapter'=>'array',
+              'content'=>BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages',
+              'locale'=>$locale,
+              'scan'=>Zend_Translate::LOCALE_FILENAME
+            )
+    );
+    Zend_Validate_Abstract::setDefaultTranslator($translator);
+
+    return $registry;
+  }
+
+  /**
+   * Initalizes the view.
+   *
+   * As the default resource plugin is overkill, simply overwrite it here with a smaller method.
+   */
+  protected function _initView(){
+    $view = new Zend_View();
+
+    $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
+    $defaultConfig = $this->getOption('default');
+    $view->headTitle()->setSeparator(' - ')->append($defaultConfig['applicationName']);
+    return $view;
+  }
+
+  /**
+   * @todo seems unused
+   */
   protected function setConstants($constants){
     foreach($constants as $key=>$value){
       if(!defined($key)){
         define($key, $value);
       }
     }
-  }
-  
-  protected function _initAutoloadCrons() {
-    $autoloader = new Zend_Loader_Autoloader_Resource(array(
-        'namespace' => 'Cron_',
-        'basePath'  => APPLICATION_PATH . '/../scripts/jobs/',
-    ));
   }
 
 }

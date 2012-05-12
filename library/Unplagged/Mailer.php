@@ -1,17 +1,33 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * 
+ */
 class Unplagged_Mailer{
 
   /**
    * Sends a registration mail to a specific user to verify the users email address.
    * 
    * @Application_Model_User $user The user the mail sent to.
-   * 3
+   * 
    * @return Whether the mail was sent or not.
    */
   public static function sendRegistrationMail(Application_Model_User $user){
@@ -46,7 +62,7 @@ class Unplagged_Mailer{
 
     $bodyText = 'Thanks for verifying your account.' . "\r" . "\n" . "\r" . "\n";
     $bodyText .= 'You now can use our website. ' . "\r" . "\n";
-    
+
     $bodyText .= Unplagged_Mailer::getFooter();
 
     $mail = new Zend_Mail('utf-8');
@@ -58,20 +74,13 @@ class Unplagged_Mailer{
 
     return true;
   }
-  
-    /**
-   * Sends a password recovery mail to a specific user.
-   * 
-   * @Application_Model_User $user The user the mail sent to.
-   * 
-   * @return Whether the mail was sent or not.
-   */
+
   public static function sendPasswordRecoveryMail(Application_Model_User $user){
     $config = Zend_Registry::get('config');
 
     $bodyText = 'You or someone else started a password recovery for the account associated with' . "\r" . "\n";
     $bodyText .= 'this E-Mail address. If it wasn\'t you, simply ignore this mail. ' . "\r" . "\n" . "\r" . "\n";
-    
+
     $bodyText .= 'Otherwise click the following link: ' . "\r" . "\n";
     $bodyText .= $config->link->passwordRecovery . $user->getVerificationHash() . "\r" . "\n" . "\r" . "\n";
 
@@ -106,7 +115,7 @@ class Unplagged_Mailer{
     $bodyText = 'There is a plagiarism detection report available.' . "\r" . "\n" . "\r" . "\n";
     $bodyText .= 'Document. ' . $documentTitle . "\r" . "\n";
     $bodyText .= 'Page. ' . $pageNumber . "\r" . "\n";
-    
+
     $bodyText .= Unplagged_Mailer::getFooter();
 
     $mail = new Zend_Mail('utf-8');
@@ -118,17 +127,16 @@ class Unplagged_Mailer{
 
     return true;
   }
-  
-  private static function getFooter() {
+
+  private static function getFooter(){
     $config = Zend_Registry::get('config');
-    
+
     $footerText = "\r" . "\n";
     $footerText .= 'Your team of ' . "\r" . "\n";
-    $footerText .= $config->default->portalName;
-    
+    $footerText .= $config->default->senderName;
+
     return $footerText;
   }
 
 }
-
 ?>

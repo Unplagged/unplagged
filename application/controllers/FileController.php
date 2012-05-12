@@ -51,6 +51,7 @@ class FileController extends Unplagged_Controller_Action{
           } */
 
         $newName = $this->_request->getPost('newName');
+        $description = $this->_request->getPost('description');
 
         // collect file information
         $fileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
@@ -64,7 +65,8 @@ class FileController extends Unplagged_Controller_Action{
         $data["mimetype"] = $adapter->getMimeType('filepath');
         $data["filename"] = !empty($newName) ? $newName . "." . $fileExt : $fileName;
         $data["extension"] = $fileExt;
-        $data["location"] = "application" . DIRECTORY_SEPARATOR . "storage" . DIRECTORY_SEPARATOR . "files";
+        $data["location"] = 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
+        $data['description'] = $description;
 
         $file = new Application_Model_File($data);
         $this->_em->persist($file);
@@ -81,15 +83,13 @@ class FileController extends Unplagged_Controller_Action{
           $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
           Unplagged_Helper::notify("file_uploaded", $file, $user);
 
-          $this->_helper->flashMessenger->addMessage('File was uploaded successfully.');
+          $this->_helper->FlashMessenger(array('success'=>'File was uploaded successfully.'));
           $this->_helper->redirector('list', 'file');
         }else{
           $this->_em->remove($file);
           $this->_em->flush();
 
-          $this->_helper->flashMessenger->addMessage('File could not be uploaded.');
-
-          //$messages = $adapter->getMessages();
+          $this->_helper->FlashMessenger(array('error'=>'File could not be uploaded.'));
         }
       }
     }else{
@@ -101,7 +101,7 @@ class FileController extends Unplagged_Controller_Action{
 
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
-    
+
     $this->setTitle('Public Files');
 
     $query = $this->_em->createQuery("SELECT f FROM Application_Model_File f");
@@ -111,15 +111,66 @@ class FileController extends Unplagged_Controller_Action{
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
+    // generate the action dropdown for each file
+    // @todo: use centralised method for all three file lists
+    foreach($paginator as $file){
+      $file->actions = array();
+
+      if($file->getIsTarget()){
+        $action['link'] = '/file/unset-target/id/' . $file->getId();
+        $action['label'] = 'Unset target';
+        $action['icon'] = 'images/icons/page_find.png';
+        $file->actions[] = $action;
+      }else{
+        $action['link'] = '/file/set-target/id/' . $file->getId();
+        $action['label'] = 'Set target';
+        $action['icon'] = 'images/icons/page.png';
+        $file->actions[] = $action;
+      }
+      $parseAction['link'] = '/file/parse/id/' . $file->getId();
+      $parseAction['title'] = 'Parsing big files can take very long, you will be notified when this action is finalized.';
+      $parseAction['name'] = 'parse';
+      $parseAction['label'] = 'Parse';
+      $parseAction['icon'] = 'images/icons/page_gear.png';
+      $file->actions[] = $parseAction;
+
+      $action['link'] = '/file/download/id/' . $file->getId();
+      $action['label'] = 'Download';
+      $action['icon'] = 'images/icons/disk.png';
+      $file->actions[] = $action;
+
+      $action['link'] = '/file/delete/id/' . $file->getId();
+      $action['label'] = 'Delete';
+      $action['icon'] = 'images/icons/delete.png';
+      $file->actions[] = $action;
+
+      $action['link'] = '/user/add-file/id/' . $file->getId();
+      $action['label'] = 'Add to personal files';
+      $action['icon'] = 'images/icons/basket_put.png';
+      $file->actions[] = $action;
+
+
+      $action['link'] = '/case/add-file/id/' . $file->getId();
+      $action['label'] = 'Add to current case';
+      $action['icon'] = 'images/icons/package_add.png';
+      $file->actions[] = $action;
+    }
+
     $this->view->paginator = $paginator;
   }
 
+  /**
+   * Enables 
+   */
   public function downloadAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
+        // disable view
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
         $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
 
         // set headers
@@ -132,15 +183,16 @@ class FileController extends Unplagged_Controller_Action{
 
         readfile($downloadPath);
       }else{
-        $this->_helper->flashMessenger->addMessage('No file found.');
+        $this->_helper->FlashMessenger('No file found.');
         $this->_helper->redirector('list', 'file');
       }
+    }else{
+      $this->_helper->FlashMessenger('The file couldn\'t be found.');
+      $this->_helper->redirector('list', 'file');
     }
-    // disable view
-    $this->view->layout()->disableLayout();
-    $this->_helper->viewRenderer->setNoRender(true);
   }
 
+  
   public function setTargetAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
@@ -152,7 +204,7 @@ class FileController extends Unplagged_Controller_Action{
 
     $this->targetAction($input->id, false);
   }
-  
+
   /**
    * Handles setting and unsetting a file as the target file of a case.
    * @param Integer $fileId
@@ -167,7 +219,7 @@ class FileController extends Unplagged_Controller_Action{
         $this->_em->persist($file);
         $this->_em->flush();
       }else{
-        $this->_helper->flashMessenger->addMessage('No file found.');
+        $this->_helper->FlashMessenger('No file found.');
       }
     }
 
@@ -186,24 +238,49 @@ class FileController extends Unplagged_Controller_Action{
 
     if(empty($input->id)){
       // show error message
-      $this->_helper->flashMessenger->addMessage('The fileId has to be set.');
+      $this->_helper->FlashMessenger('The fileId has to be set.');
     }else{
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       $language = "eng";
 
       if(empty($file)){
         // show error message
-        $this->_helper->flashMessenger->addMessage('No file found by that id.');
+        $this->_helper->FlashMessenger('No file found by that id.');
       }else{
-        $parser = Unplagged_Parser::factory($file->getMimeType());
+        // pdfs will e generated through cron
+        if($file->getExtension() == "pdf"){
+          $data["title"] = $file->getFilename();
+          $data["originalFile"] = $file;
+          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+          $document = new Application_Model_Document($data);
 
-        $document = $parser->parseToDocument($file, $language);
-        if(empty($document)){
-          $this->_helper->flashMessenger->addMessage('The file could not be parsed.');
-        }else{
-          $this->_em->persist($document);
+          // start task
+          $data = array();
+          $data["initiator"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          $data["ressource"] = $document;
+          $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('file_parse');
+          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+          $task = new Application_Model_Task($data);
+
+          $this->_em->persist($task);
           $this->_em->flush();
-          $this->_helper->flashMessenger->addMessage('The file was successfully parsed.');
+
+          $this->_helper->FlashMessenger('The file will be generated now, you will be notified as soon as possible.');
+
+          // images will be parsed directly
+        }else{
+          $parser = Unplagged_Parser::factory($file->getMimeType());
+
+          $document = $parser->parseToDocument($file, $language);
+          if(empty($document)){
+            $this->_helper->FlashMessenger(array('error'=>'The file could not be parsed.'));
+          }else{
+            $document->setState($this->_em->getRepository('Application_Model_State')->findOneByName('parsed'));
+
+            $this->_em->persist($document);
+            $this->_em->flush();
+            $this->_helper->FlashMessenger(array('success'=>'The file was successfully parsed.'));
+          }
         }
       }
     }
@@ -227,12 +304,12 @@ class FileController extends Unplagged_Controller_Action{
           // remove database record
           $this->_em->remove($file);
           $this->_em->flush();
-          $this->_helper->flashMessenger->addMessage('The file was deleted successfully.');
+          $this->_helper->FlashMessenger('The file was deleted successfully.');
         }else{
-          $this->_helper->flashMessenger->addMessage('The file could not be deleted.');
+          $this->_helper->FlashMessenger('The file could not be deleted.');
         }
       }else{
-        $this->_helper->flashMessenger->addMessage('The file does not exist.');
+        $this->_helper->FlashMessenger('The file does not exist.');
       }
     }
 

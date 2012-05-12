@@ -25,29 +25,35 @@ class Application_Form_File_Upload extends Zend_Form{
 
   public function init(){
     $this->setName('file');
-    $this->setAction("");
+    //$this->setAction("");
     $this->setAttrib('enctype', 'multipart/form-data');
 
     //Zend_Form_Element_File & SubmitButton
     $elementfile = new Zend_Form_Element_File('filepath');
-    $elementfile->setLabel('Dateipfad:')->setRequired(true);
+    $elementfile->setLabel('Path:')->setRequired(true);
 
+    $descriptionElement = new Zend_Form_Element_Textarea('description');
+    $descriptionElement->setLabel('Description:');
+    
     $elementnewname = new Zend_Form_Element_Text('newName');
-    $elementnewname->setLabel('Neuer Dateiname:');
+    $elementnewname->setLabel('New Filename:');
 
     $elementsubmit = new Zend_Form_Element_Submit('submit');
-
-    $elementsubmit->setLabel('Datei hochladen');
+    $elementsubmit->setOptions(array('class'=>'btn btn-primary'));
+    
+    $elementsubmit->setLabel('Upload File');
     $elementsubmit->removeDecorator('DtDdWrapper');
 
     $this->addElements(array(
-      $elementfile
+      $descriptionElement
+      ,$elementfile
       , $elementnewname
     ));
 
     $this->addDisplayGroup(array(
-      'filepath'
-      , 'newName'
+       'newName'
+      ,'filepath'
+      ,'description'
         )
         , 'fileGroup'
         , array('legend'=>'File Information')

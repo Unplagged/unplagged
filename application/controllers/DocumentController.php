@@ -25,6 +25,15 @@
  */
 class DocumentController extends Unplagged_Controller_Action{
 
+  public function init(){
+    parent::init();
+
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    Zend_Layout::getMvcInstance()->sidebar = 'document-tools';
+    Zend_Layout::getMvcInstance()->versionableId = $input->id;
+  }
+
   public function indexAction(){
     $this->_helper->redirector('list', 'document');
   }
@@ -39,20 +48,22 @@ class DocumentController extends Unplagged_Controller_Action{
       $modifyForm->setAction("/document/edit/id/" . $input->id);
 
       $modifyForm->getElement("title")->setValue($document->getTitle());
+      $modifyForm->getElement("bibTex")->setValue($document->getBibTex());
       $modifyForm->getElement("submit")->setLabel("Save document");
 
       if($this->_request->isPost()){
         $result = $this->handleModifyData($modifyForm, $document);
 
         if($result){
-          $this->_helper->flashMessenger->addMessage('The document was updated successfully.');
-          $this->_helper->redirector('list', 'document');
+          $this->_helper->FlashMessenger(array('success'=>'The document was updated successfully.'));
+          $params = array('id'=>$document->getId());
+          $this->_helper->redirector('list', 'document_page', '', $params);
         }
       }
 
-      $this->view->title = "Edit case";
+      $this->view->title = "Edit document";
       $this->view->modifyForm = $modifyForm;
-      $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
+      $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document'));
     }else{
       $this->_helper->redirector('list', 'document');
     }
@@ -71,7 +82,44 @@ class DocumentController extends Unplagged_Controller_Action{
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
+    // generate the action dropdown for each file
+    foreach($paginator as $document):
+      if($document->getState()->getName() == 'task_scheduled') {
+        // find the associated task and get percentage
+        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
+        $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource' => $document->getId(), 'state' => $state));
+        if(!$task) {
+          $percentage = 0;
+        } else {
+          $percentage = $task->getProgressPercentage();
+        }
+        $document->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
+      } else {
+        $document->outputState = $document->getState()->getTitle();
+      }
+      
+      $document->actions = array();
+
+      $action['link'] = '/document/edit/id/' . $document->getId();
+      $action['label'] = 'Edit document';
+      $action['icon'] = 'images/icons/pencil.png';
+      $document->actions[] = $action;
+
+      $action['link'] = '/document/detect-plagiarism/id/' . $document->getId();
+      $action['label'] = 'Detect plagiarism';
+      $action['icon'] = 'images/icons/eye.png';
+      $document->actions[] = $action;
+
+      $action['link'] = '/document/delete/id/' . $document->getId();
+      $action['label'] = 'Delete document';
+      $action['icon'] = 'images/icons/delete.png';
+      $document->actions[] = $action;
+    endforeach;
+
     $this->view->paginator = $paginator;
+
+    Zend_Layout::getMvcInstance()->sidebar = null;
+    Zend_Layout::getMvcInstance()->versionableId = null;
   }
 
   /**
@@ -86,11 +134,11 @@ class DocumentController extends Unplagged_Controller_Action{
         $this->_em->remove($document);
         $this->_em->flush();
       }else{
-        $this->_helper->flashMessenger->addMessage('The document does not exist.');
+        $this->_helper->FlashMessenger('The document does not exist.');
       }
     }
 
-    $this->_helper->flashMessenger->addMessage('The document was deleted successfully.');
+    $this->_helper->FlashMessenger(array('success'=>'The document was deleted successfully.'));
     $this->_helper->redirector('list', 'document');
 
     // disable view
@@ -99,7 +147,7 @@ class DocumentController extends Unplagged_Controller_Action{
   }
 
   /**
-   * Initializes an automated plagiarism detection.
+   * Initialises an automated plagiarism detection.
    */
   public function detectPlagiarismAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
@@ -115,9 +163,9 @@ class DocumentController extends Unplagged_Controller_Action{
           $detector = Unplagged_Detector::factory();
 
           $data["user"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-          ;
+
           $data["page"] = $page;
-          $data["state"] = "running";
+          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName("report_running");
           $data["servicename"] = $detector->getServiceName();
 
           $report = new Application_Model_Document_Page_DetectionReport($data);
@@ -142,16 +190,16 @@ class DocumentController extends Unplagged_Controller_Action{
         $errorText = 'The detection could not be started for the following pages: %s, please try again later.';
 
         if(!empty($successPagesStr)){
-          $this->_helper->flashMessenger->addMessage(sprintf($successText, $successPagesStr));
+          $this->_helper->FlashMessenger(array('success'=>sprintf($successText, $successPagesStr)));
         }
         if(!empty($errorPagesStr)){
-          $this->_helper->flashMessenger->addMessage(sprintf($errorText, $errorPagesStr));
+          $this->_helper->FlashMessenger(array('error'=>sprintf($errorText, $errorPagesStr)));
         }
       }else{
-        $this->_helper->flashMessenger->addMessage("Dcument does not exist.");
+        $this->_helper->FlashMessenger('Dcument does not exist.');
       }
     }else{
-      $this->_helper->flashMessenger->addMessage("No document selected.");
+      $this->_helper->FlashMessenger('No document selected.');
     }
     $this->_helper->redirector('list', 'document');
   }
@@ -160,17 +208,17 @@ class DocumentController extends Unplagged_Controller_Action{
    * Initializes an automated plagiarism detection.
    */
   public function responsePlagiarismAction(){
-    $input = new Zend_Filter_Input(array('detector'=>'Alpha'), null, $this->_getAllParams());
-    
-    $detector = Unplagged_Detector::factory($$input->detector);
-    $report = $detector->handleResult($input);
+    $input = new Zend_Filter_Input(array('detector'=>'Alnum', 'report'=>'Alnum', 'result'=>'Alnum', 'status'=>'Alnum'), null, $this->_getAllParams());
+  
+    $detector = Unplagged_Detector::factory($input->detector);
+    $report = $detector->handleResult(array('report' => $input->report, 'result' => $input->result, 'status'=> $input->status));
+    if($report) {
+      $this->_em->persist($report);
+      $this->_em->flush();
 
-    $this->_em->persist($report);
-    $this->_em->flush();
-
-    // send registration mail
-    Unplagged_Mailer::sendDetectionReportAvailable($report);
-
+      // create notification
+      Unplagged_Helper::notify("detection_report_created", $report, $report->getUser());
+    }
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
@@ -184,19 +232,43 @@ class DocumentController extends Unplagged_Controller_Action{
     if($modifyForm->isValid($formData)){
 
       $document->setTitle($formData['title']);
+      $document->setBibTex($formData['bibTex']);
 
       // write back to persistence manager and flush it
       $this->_em->persist($document);
       $this->_em->flush();
 
-      /*      // notification @todo: add notification
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        Unplagged_Helper::notify("case_created", $case, $user);
-       */
-      return true;
+      return $document;
     }
-    
+
     return false;
+  }
+  
+  /**
+   * Returns all pages in the document . 
+   */
+  public function readAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
+      if($document){
+        $response["statuscode"] = 200;
+        $response["data"] = $document->toArray();
+      }else{
+        $response["statuscode"] = 404;
+        $response["statusmessage"] = "No document by that id found.";
+      }
+    } else {
+      $response["statuscode"] = 405;
+      $response["statusmessage"] = "Required parameter id is missing.";
+    }
+
+    $this->getResponse()->appendBody(json_encode($response));
+    
+    // disable view
+    $this->view->layout()->disableLayout();
+    $this->_helper->viewRenderer->setNoRender(true);
   }
 
 }

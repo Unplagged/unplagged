@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Doctrine\Common\Collections\ArrayCollection;  // good idea, but does not work on my machine in base class
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- *
+ * A case is one of the most important model classes of the Unplagged system.
  * 
  * 
  * @Entity
@@ -30,6 +30,8 @@ use Doctrine\Common\Collections\ArrayCollection;  // good idea, but does not wor
  */
 class Application_Model_Case extends Application_Model_Base{
 
+  const ICON_CLASS = 'icon-case';
+  
   /**
    * The "real" name of the case, under which it will get published later on.
    * 
@@ -108,16 +110,17 @@ class Application_Model_Case extends Application_Model_Base{
   private $collaborators;
   
   /**
-   * ManyToMany(targetEntity="Application_Model_User_Role_InheritableRole") 
+   * @ManyToMany(targetEntity="Application_Model_User_InheritableRole", cascade={"persist", "remove"}) 
    */
-  private $roles;
+  private $defaultRoles;
 
   public function __construct($name = null, $alias = null, $abbreviation = null){
     $this->documents = new ArrayCollection();
     $this->files = new ArrayCollection();
     $this->tags = new ArrayCollection();
     $this->collaborators = new ArrayCollection();
-    $this->role = new ArrayCollection();
+    $defaultRoles = new ArrayCollection();
+    $this->defaultRoles = $defaultRoles;
     $this->name = $name;
     $this->alias = $alias;
     $this->abbreviation = $abbreviation;
@@ -129,7 +132,7 @@ class Application_Model_Case extends Application_Model_Base{
    * @PreUpdate
    */
   public function updated(){
-    $this->updated = new DateTime("now");
+    $this->updated = new DateTime('now');
   }
 
   /**
@@ -153,7 +156,7 @@ class Application_Model_Case extends Application_Model_Base{
   public function getPublishableName(){
     $publishableName = $this->getAlias();
 
-    if($this->getState() == 'public'){
+    if($this->getState() === 'public'){
       $publishableName = $this->getName();
     }
 
@@ -227,10 +230,6 @@ class Application_Model_Case extends Application_Model_Base{
     return "/case/show/id/" . $this->id;
   }
 
-  public function getIconClass(){
-    return "case-icon";
-  }
-
   public function toArray(){
     $result = array();
 
@@ -261,7 +260,27 @@ class Application_Model_Case extends Application_Model_Base{
   } 
   
   public function getRoles(){
-    return $this->roles;  
+    return $this->defaultRoles;  
+  }
+  
+  /**
+   * Return the percentage of plagiarism in this case.
+   * //@todo: For now it returns only random values.
+   * 
+   * @return percentage value of plagiarism 
+   */
+  public function getPlagiarismPercentage(){
+    $rand = rand(0, 100);
+
+    return $rand;
+  }
+  
+  public function addDefaultRole(Application_Model_User_InheritableRole $role){
+    $this->defaultRoles->add($role);
+  }
+  
+  public function getDefaultRoles(){
+    return $this->defaultRoles;  
   }
 }
 

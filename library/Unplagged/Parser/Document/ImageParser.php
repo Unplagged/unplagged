@@ -13,39 +13,71 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
   public function __construct(){
     $this->_em = Zend_Registry::getInstance()->entitymanager;
   }
-  
-  public function parseToDocument(Application_Model_File $file, $language){
+
+  public function parseToDocument(Application_Model_File $file, $language, Application_Model_Document $document = null, Application_Model_Task &$task = null){
     try{
       $inputFileLocation = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
       $imagemagickTempPath = TEMP_PATH . DIRECTORY_SEPARATOR . 'imagemagick';
-      $outputFileLocation = $imagemagickTempPath . DIRECTORY_SEPARATOR . $file->getId() . '.tif';
-      
+
+      if($file->getExtension() == "pdf"){
+        $outputFileLocation = $imagemagickTempPath . DIRECTORY_SEPARATOR . $file->getId() . '-%d.tif';
+      }else{
+        $outputFileLocation = $imagemagickTempPath . DIRECTORY_SEPARATOR . $file->getId() . '.tif';
+      }
       $adapter = new Unplagged_Parser_Document_ImagemagickAdapter($inputFileLocation, $outputFileLocation);
       $adapter->execute();
 
-      // init document
-      $data["file"] = $file;
-      $data["title"] = $file->getFilename();
-      
-      
-      $fileData = array('filename'=>$file->getId() . '.tif', 'extension' => 'tif', 'mimeType' =>'image/tiff' , 'location'=>'temp/imagemagick');
-      $tempFile = new Application_Model_File($fileData);
-      $tempFile->setId($file->getId());
-      
-      $document = new Application_Model_Document($data);
-      
+      // create the document
+      if(!$document){
+        $data["file"] = $file;
+        $data["title"] = $file->getFilename();
+        $document = new Application_Model_Document($data);
+      }
       $parser = new Unplagged_Parser_Page_TesseractParser();
-      // for loop over pages
 
-        $page = $parser->parseToPage($tempFile, $language);
-        $page->setPageNumber(1);
-        $document->addPage($page);
-        $this->_em->persist($page);
+      $pagesCount = 1;
+      // iterate over converted files and ocr them
+      $handler = opendir($imagemagickTempPath);
+      while($tifFile = readdir($handler)){
+        if($tifFile != "." && $tifFile != ".."){
+          if(preg_match('/' . $file->getId() . '(-(\d)*){0,1}.tif/', $tifFile)){
+            $pagesCount++;
+          }
+        }
+      }
 
-        // remove the converted imaged, because it should be in the database now
-        unset($outputFileLocation);
-      // end for loop
-      
+      $i = 1;
+      $handler = opendir($imagemagickTempPath);
+      while($tifFile = readdir($handler)){
+        if($tifFile != "." && $tifFile != ".."){
+          if(preg_match('/' . $file->getId() . '(-(\d)*){0,1}.tif/', $tifFile)){
+            // for loop over pages
+            $fileData = array('filename'=>$tifFile, 'extension'=>'tif', 'mimeType'=>'image/tiff', 'location'=>'temp/imagemagick');
+            $tempFile = new Application_Model_File($fileData);
+            $tempFile->setId($file->getId());
+
+            $page = $parser->parseToPage($tempFile, $language);
+            $page->setPageNumber($i);
+            $document->addPage($page);
+
+            $this->_em->persist($page);
+
+            // remove the converted imaged, because it should be in the database now
+            $tifPath = $imagemagickTempPath . DIRECTORY_SEPARATOR . $tifFile;
+            unlink($tifPath);
+
+            if($task){
+              $perc = round($i * 1.0 / $pagesCount * 100 / 10) * 10;
+              $task->setProgressPercentage($perc);
+              $this->_em->persist($task);
+              $this->_em->flush();
+            }
+            
+            $i++;
+          }
+        }
+      }
+
       $this->_em->persist($document);
       $this->_em->flush();
 
@@ -55,6 +87,7 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
       return null;
     }
   }
-  
+
 }
+
 ?>

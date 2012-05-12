@@ -53,16 +53,14 @@ class Application_Form_Document_Page_Simtext extends Zend_Form{
     $titleElement->setRequired(true);
     
     $documentsElement = new Zend_Form_Element_Multiselect('documents');
-    $documentsElement->setLabel("Documents");
+    $documentsElement->setLabel("What document do you want this page to compare to?");
     $documentsElement->addMultiOptions($this->documents);
     $documentsElement->addValidator('regex', false, array('/^[0-9]/i'));
     $documentsElement->setRequired(true);
 
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Simtext page');
-    $submitElement->setIgnore(true);
-    $submitElement->setAttrib('class', 'submit');
-    $submitElement->removeDecorator('DtDdWrapper');
+    $submitElement->setOptions(array('class'=>'btn btn-primary'));
 
     $this->addElements(array(
        $titleElement

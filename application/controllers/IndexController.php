@@ -26,84 +26,19 @@ class IndexController extends Unplagged_Controller_Action{
     parent::init();
     
     Zend_Layout::getMvcInstance()->sidebar = 'default';
+    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
   }
 
   public function indexAction(){
     //Zend_Registry::get('Log')->debug('Index');
-    
-    /*
-    // partial 1
-    $data["page"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneById(21);
-    $data["linePos"] = 1;
-    $data["characterPos"] = 1;
-    $posStart = new Application_Model_Document_Page_Position($data);
-    $this->_em->persist($posStart);
-    
-    unset($data);
-    $data["page"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneById(21);
-    $data["linePos"] = 5;
-    $data["characterPos"] = 10;
-    $posEnd = new Application_Model_Document_Page_Position($data);
-    $this->_em->persist($posEnd);
-    
-    unset($data);
-    $data["title"] = "Hello World";
-    $data["posStart"] = $posStart;
-    $data["posEnd"] = $posEnd;
-    $partialPlag = new Application_Model_Document_Fragment_Partial($data);
-    
-    
-    // partial 2
-    $data["page"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneById(21);
-    $data["linePos"] = 1;
-    $data["characterPos"] = 1;
-    $posStart = new Application_Model_Document_Page_Position($data);
-    $this->_em->persist($posStart);
-    
-    unset($data);
-    $data["page"] = $this->_em->getRepository('Application_Model_Document_Page')->findOneById(21);
-    $data["linePos"] = 5;
-    $data["characterPos"] = 10;
-    $posEnd = new Application_Model_Document_Page_Position($data);
-    $this->_em->persist($posEnd);
-    
-    unset($data);
-    $data["title"] = "Hello World 2";
-    $data["posStart"] = $posStart;
-    $data["posEnd"] = $posEnd;
-    $partialSource = new Application_Model_Document_Fragment_Partial($data);
-    
-    
-    // fragment
-    unset($data);
-    $data["plag"] = $partialPlag; 
-    $data["source"] = $partialSource;
-    $data["title"] = "my fragment";
-
-    $fragment = new Application_Model_Document_Fragment($data);
-    $this->_em->persist($fragment);
-    $this->_em->flush(); 
-    */
-
-    
-
-    
-    // update a fragment
-   // $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById(3238);    
-   // $fragment->setTitle(rand(0,10000));
-   // $this->_em->persist($fragment);
-   // $this->_em->flush();
-    
-    /*
-    //$post = new Application_Model_BlogPost();
-    $post = $this->_em->getRepository('Application_Model_BlogPost')->findOneById(1);
-    $post->setTitle(rand(0,10000));
-    $post->setBody("test");
-     $this->_em->persist($post);
-    $this->_em->flush();
-     */
-     
   }
 
+  /**
+   * Used to render an empty page when the user is not allowed to access the actual data. 
+   */
+  public function emptyAction(){
+    $this->_helper->viewRenderer->setNoRender(true);
+    Zend_Layout::getMvcInstance()->sidebar = null;
+  }
 
 }

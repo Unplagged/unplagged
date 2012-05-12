@@ -25,14 +25,14 @@
  * @Entity 
  * @Table(name="cron_tasks")
  */
-class Application_Model_Task extends Application_Model_Base {
-  
+class Application_Model_Task extends Application_Model_Base{
+
   /**
    * @ManyToOne(targetEntity="Application_Model_User")
    * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $initiator;
-  
+
   /**
    * The date when the cron finished.
    * @var string The cron job end date.
@@ -40,7 +40,7 @@ class Application_Model_Task extends Application_Model_Base {
    * @Column(type="datetime", nullable=true)
    */
   private $endDate;
-  
+
   /**
    * The current state of the task.
    * 
@@ -48,7 +48,7 @@ class Application_Model_Task extends Application_Model_Base {
    * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $state;
-  
+
   /**
    * The action that has to be executed by this task.
    * 
@@ -56,13 +56,13 @@ class Application_Model_Task extends Application_Model_Base {
    * @JoinColumn(name="action_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $action;
-  
+
   /**
    * @ManyToOne(targetEntity="Application_Model_Base", cascade={"persist"})
    * @JoinColumn(name="ressource_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $ressource;
-  
+
   /**
    * The log message returned by the cron.
    * @var string The log message returned by the cron execution.
@@ -71,6 +71,14 @@ class Application_Model_Task extends Application_Model_Base {
    */
   private $log;
   
+  /**
+   * The current progress in percent of the task.
+   * @var string The current progress in percent of the task.
+   * 
+   * @Column(type="integer")
+   */
+  private $progressPercentage = 0;
+
   public function __construct($data = array()){
     if(isset($data["initiator"])){
       $this->initiator = $data["initiator"];
@@ -88,17 +96,15 @@ class Application_Model_Task extends Application_Model_Base {
       $this->ressource = $data["ressource"];
     }
   }
-  
+
   public function getDirectLink(){
     
   }
+
   public function getDirectName(){
     
   }
-  public function getIconClass(){
-    
-  }
-  
+
   public function getInitiator(){
     return $this->initiator;
   }
@@ -122,7 +128,7 @@ class Application_Model_Task extends Application_Model_Base {
   public function getLog(){
     return $this->log;
   }
-  
+
   public function setEndDate($endDate){
     $this->endDate = $endDate;
   }
@@ -134,9 +140,16 @@ class Application_Model_Task extends Application_Model_Base {
   public function setLog($log){
     $this->log = $log;
   }
+  
+  public function getProgressPercentage(){
+    return $this->progressPercentage;
+  }
+
+  public function setProgressPercentage($progressPercentage){
+    $this->progressPercentage = $progressPercentage;
+  }
 
 
 
 }
-
 ?>

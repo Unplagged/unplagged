@@ -22,204 +22,263 @@
  * The controller class handles all the user transactions as rights requests and user management.
  *
  */
-class UserController extends Unplagged_Controller_Action {
+class UserController extends Unplagged_Controller_Action{
 
-    public function indexAction() {
-        
+  public function init(){
+    parent::init();
+    $this->auth = Zend_Auth::getInstance();
+
+    Zend_Layout::getMvcInstance()->sidebar = 'default';
+    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository('Application_Model_Case')->findAll();
+  }
+
+  public function indexAction(){
+    
+  }
+
+  /**
+   * Handles the registration data or displays a form for registering a user.
+   */
+  public function registerAction(){
+    // create the form
+    $registerForm = new Application_Form_User_Register();
+
+    // form has been submitted through post request
+    if($this->_request->isPost()){
+      $this->handleRegistration($registerForm);
     }
 
-    /**
-     * Displays a form for registering a user.
-     */
-    public function registerAction() {
-        // create the form
-        $registerForm = new Application_Form_User_Register();
+    // send form to view
+    $this->view->registerForm = $registerForm;
+  }
 
-        // form has been submitted through post request
-        if ($this->_request->isPost()) {
-            $formData = $this->_request->getPost();
+  private function handleRegistration(Application_Form_User_Register $registerForm){
+    $formData = $this->_request->getPost();
 
-            // if the form doesn't validate, pass to view and return
-            if ($registerForm->isValid($formData)) {
-                // create new user object
-                $data = array();
-                $data["username"] = $this->getRequest()->getParam('username');
-                $data["password"] = Unplagged_Helper::hashString($this->getRequest()->getParam('password'));
-                $data["email"] = $this->getRequest()->getParam('email');
-                $data["verificationHash"] = Unplagged_Helper::generateRandomHash();
-                $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
-                $user = new Application_Model_User($data);
+    // if the form doesn't validate, pass to view and return
+    if($registerForm->isValid($formData)){
+      $user = $this->createNewUserFromFormData($formData);
 
-                // write back to persistence manager and flush it
-                $this->_em->persist($user);
-                $this->_em->flush();
+      // log registration
+      Unplagged_Helper::notify('user_registered', $user, $user);
+      Unplagged_Mailer::sendRegistrationMail($user);
 
-                // log registration
-                Unplagged_Helper::notify("user_registered", $user, $user);
+      $this->_helper->FlashMessenger('In order to finish your registration, please check your E-Mails.');
+      $this->_helper->redirector('index', 'index');
+    }else{
+      //set filled and valid data into the form
+      $registerForm->populate($this->_request->getPost());
+    }
+  }
 
-                // send registration mail
-                Unplagged_Mailer::sendRegistrationMail($user);
+  private function createNewUserFromFormData(array $formData){
+    $data = array();
+    $data['username'] = $formData['username'];
+    $data['password'] = Unplagged_Helper::hashString($formData['password']);
+    $data['email'] = $formData['email'];
+    $data['verificationHash'] = Unplagged_Helper::generateRandomHash();
+    $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
+    $user = new Application_Model_User($data);
 
-                $this->_helper->flashMessenger->addMessage('In order to finish your registration, please check your E-Mails.');
-                $this->_helper->redirector('index', 'index');
-            }
-        }
+    //set all permissions as allowed for now
+    $allPermissions = $this->_em->getRepository('Application_Model_Permission')->findAll();
+    foreach($allPermissions as $permission){
+      $user->getRole()->addPermission($permission);  
+    }
+    
+    // write back to persistence manager and flush it
+    $this->_em->persist($user);
+    $this->_em->flush();
+    
+    return $user;
+  }
 
-        // send form to view
-        $this->view->registerForm = $registerForm;
+  public function filesAction(){
+    $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
+
+    $this->setTitle('Personal Files');
+
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $userFiles = $user->getFiles();
+
+    $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($userFiles->toArray()));
+    $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+    $paginator->setCurrentPageNumber($input->page);
+
+    // generate the action dropdown for each file
+    // @todo: use centralised method for all three file lists
+    foreach($paginator as $file){
+      $file->actions = array();
+
+      if($file->getIsTarget()){
+        $action['link'] = '/file/unset-target/id/' . $file->getId();
+        $action['label'] = 'Unset target';
+        $action['icon'] = 'images/icons/page_find.png';
+        $file->actions[] = $action;
+      }else{
+        $action['link'] = '/file/set-target/id/' . $file->getId();
+        $action['label'] = 'Set target';
+        $action['icon'] = 'images/icons/page.png';
+        $file->actions[] = $action;
+      }
+      $action['link'] = '/file/parse/id/' . $file->getId();
+      $action['label'] = 'Parse';
+      $action['icon'] = 'images/icons/page_gear.png';
+      $file->actions[] = $action;
+
+      $action['link'] = '/file/download/id/' . $file->getId();
+      $action['label'] = 'Download';
+      $action['icon'] = 'images/icons/disk.png';
+      $file->actions[] = $action;
+
+      $action['link'] = '/file/delete/id/' . $file->getId();
+      $action['label'] = 'Delete';
+      $action['icon'] = 'images/icons/delete.png';
+      $file->actions[] = $action;
+
+      $action['link'] = '/case/add-file/id/' . $file->getId();
+      $action['label'] = 'Add to current case';
+      $action['icon'] = 'images/icons/package_add.png';
+      $file->actions[] = $action;
     }
 
-    public function filesAction() {
-        $input = new Zend_Filter_Input(array('page' => 'Digits'), null, $this->_getAllParams());
+    $this->view->paginator = $paginator;
 
-        $this->setTitle('Personal Files');
+    //change the view to the one from the file controller
+    $this->_helper->viewRenderer->renderBySpec('list', array('controller'=>'file'));
+    Zend_Layout::getMvcInstance()->sidebar = null;
+    Zend_Layout::getMvcInstance()->cases = null;
+  }
 
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        $userFiles = $user->getFiles();
+  public function addFileAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($userFiles->toArray()));
-        $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-        $paginator->setCurrentPageNumber($input->page);
+    $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
 
-        $this->view->paginator = $paginator;
+    $user->addFile($file);
+    $this->_em->persist($user);
+    $this->_em->flush();
 
-        //change the view to the one from the file controller
-        $this->_helper->viewRenderer->renderBySpec('list', array('controller' => 'file'));
+    $this->redirectToLastPage();
+  }
+
+  /**
+   * Verifies a user by a given hash in database.
+   */
+  public function verifyAction(){
+    $input = new Zend_Filter_Input(array('hash'=>'Alnum'), null, $this->_getAllParams());
+
+    // if no valid verification hash is set
+    if(empty($input->hash)){
+      $this->_helper->redirector('index', 'index');
     }
 
-    public function addFileAction() {
-        $input = new Zend_Filter_Input(array('id' => 'Digits'), null, $this->_getAllParams());
+    $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
+    if(empty($user) || $user->getState()->getName() != 'user_registered'){
+      $this->_helper->FlashMessenger('Verification failed.');
+      $this->_helper->redirector('index', 'index');
+    }else{
+      $user->setState($this->_em->getRepository('Application_Model_State')->findOneByName('user_activated'));
+      $user->setVerificationHash(Unplagged_Helper::generateRandomHash());
 
-        $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+      // write back to persistence manage and flush it
+      $this->_em->persist($user);
+      $this->_em->flush();
 
-        $user->addFile($file);
-        $this->_em->persist($user);
-        $this->_em->flush();
+      // notification
+      Unplagged_Helper::notify("user_verified", $user, $user);
 
-        $this->redirectToLastPage();
+      // send registration mail
+      Unplagged_Mailer::sendActivationMail($user);
+
+      $this->_helper->FlashMessenger('Verification finished successfully.');
+      $this->_helper->redirector('index', 'index');
+    }
+  }
+
+  /**
+   * Recovers a users password
+   */
+  public function recoverPasswordAction(){
+    $input = new Zend_Filter_Input(array('hash'=>'Alnum'), null, $this->_getAllParams());
+
+    $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
+
+    if(empty($user)){
+      $recoverForm = new Application_Form_User_Password_Recover();
+    }else{
+      $recoverForm = new Application_Form_User_Password_Reset($input->hash);
     }
 
-    /**
-     * Verifies a user by a given hash in database.
-     */
-    public function verifyAction() {
-        $input = new Zend_Filter_Input(array('hash' => 'Alnum'), null, $this->_getAllParams());
+    // form has been submitted through post request
+    if($this->_request->isPost()){
+      $formData = $this->_request->getPost();
 
-        // if no valid verification hash is set
-        if (empty($input->hash)) {
+      // if the form doesn't validate, pass to view and return
+      if($recoverForm->isValid($formData)){
+        // send a recovery mail to the user associated with this e-mail address.
+        if(empty($user)){
+          $email = $this->getRequest()->getParam('email');
+          $user = $this->_em->getRepository('Application_Model_User')->findOneByEmail($email);
+
+          $lastNotificationAction = $this->_em->getRepository('Application_Model_Action')->findOneByName("user_requested_password");
+          $lastNotification = $this->_em->getRepository('Application_Model_Notification')->findOneBy(array("action"=>$lastNotificationAction->getId(), "user"=>$user->getId()));
+
+          if($lastNotification && ($lastNotification->getCreated()->getTimestamp() > time() - NOTIFICATIONS_TIME_INTERVAL)){
+            $this->_helper->FlashMessenger('There was already a password recovery request for this account.');
+            $this->_helper->redirector('recover-password', 'user');
+          }else{
+            Unplagged_Mailer::sendPasswordRecoveryMail($user);
+            Unplagged_Helper::notify("user_requested_password", $user, $user);
+
+            $this->_helper->FlashMessenger('An E-Mail has been sent to your address, follow the instructions in this mail.');
             $this->_helper->redirector('index', 'index');
+          }
+          // reset the password to the new one
+        }else{
+          $password = $this->getRequest()->getParam('password');
+          $user->setPassword(Unplagged_Helper::hashString($password));
+          $user->setVerificationHash(Unplagged_Helper::generateRandomHash());
+
+          // write back to persistence manager and flush it
+          $this->_em->persist($user);
+          $this->_em->flush();
+
+          $this->_helper->FlashMessenger('Your password has been reset successfully, you can login now.');
+          $this->_helper->redirector('login', 'auth');
         }
-
-        $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
-        if (empty($user) || $user->getState()->getName() != 'user_registered') {
-            $this->_helper->flashMessenger->addMessage('Verification failed.');
-            $this->_helper->redirector('index', 'index');
-        } else {
-            $user->setState($this->_em->getRepository('Application_Model_State')->findOneByName('user_activated'));
-            $user->setVerificationHash(Unplagged_Helper::generateRandomHash());
-
-            // write back to persistence manage and flush it
-            $this->_em->persist($user);
-            $this->_em->flush();
-
-            // notification
-            Unplagged_Helper::notify("user_verified", $user, $user);
-
-            // send registration mail
-            Unplagged_Mailer::sendActivationMail($user);
-
-            $this->_helper->flashMessenger->addMessage('Verification finished successfully.');
-            $this->_helper->redirector('index', 'index');
-        }
+      }
     }
 
-    /**
-     * Recovers a users password
-     */
-    public function recoverPasswordAction() {
-        $input = new Zend_Filter_Input(array('hash' => 'Alnum'), null, $this->_getAllParams());
+    // send form to view
+    $this->view->recoverForm = $recoverForm;
+  }
 
-        $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
+  /**
+   * Displays a form for editing a user profile.
+   */
+  public function editAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-        if (empty($user)) {
-            $recoverForm = new Application_Form_User_Password_Recover();
-        } else {
-            $recoverForm = new Application_Form_User_Password_Reset($input->hash);
-        }
-
-        // form has been submitted through post request
-        if ($this->_request->isPost()) {
-            $formData = $this->_request->getPost();
-
-            // if the form doesn't validate, pass to view and return
-            if ($recoverForm->isValid($formData)) {
-                // send a recovery mail to the user associated with this e-mail address.
-                if (empty($user)) {
-                    $email = $this->getRequest()->getParam('email');
-                    $user = $this->_em->getRepository('Application_Model_User')->findOneByEmail($email);
-
-                    $lastNotificationAction = $this->_em->getRepository('Application_Model_Action')->findOneByName("user_requested_password");
-                    $lastNotification = $this->_em->getRepository('Application_Model_Notification')->findOneBy(array("action" => $lastNotificationAction->getId(), "user" => $user->getId()));
-
-                    if ($lastNotification && ($lastNotification->getCreated()->getTimestamp() > time() - NOTIFICATIONS_TIME_INTERVAL)) {
-                        $this->_helper->flashMessenger->addMessage('There was already a password recovery request for this account.');
-                        $this->_helper->redirector('recover-password', 'user');
-                    } else {
-                        Unplagged_Mailer::sendPasswordRecoveryMail($user);
-                        Unplagged_Helper::notify("user_requested_password", $user, $user);
-
-                        $this->_helper->flashMessenger->addMessage('An E-Mail has been sent to your address, follow the instructions in this mail.');
-                        $this->_helper->redirector('index', 'index');
-                    }
-                    // reset the password to the new one
-                } else {
-                    $password = $this->getRequest()->getParam('password');
-                    $user->setPassword(Unplagged_Helper::hashString($password));
-                    $user->setVerificationHash(Unplagged_Helper::generateRandomHash());
-
-                    // write back to persistence manager and flush it
-                    $this->_em->persist($user);
-                    $this->_em->flush();
-
-                    $this->_helper->flashMessenger->addMessage('Your password has been reset successfully, you can login now.');
-                    $this->_helper->redirector('login', 'auth');
-                }
-            }
-        }
-
-        // send form to view
-        $this->view->recoverForm = $recoverForm;
+    // if either the user is not logged in or no valid user id is defined
+    if(empty($input->id)){
+      $input->id = $this->_defaultNamespace->userId;
     }
 
-    /**
-     * Displays a form for editing a user profile.
-     */
-    public function editAction() {
-        echo "editAction";
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($input->id);
+    if(empty($user)){
+      $this->_helper->FlashMessenger('User Profile saved successfully.');
+      $this->_helper->redirector('index', 'index');
+    }elseif($this->_defaultNamespace->userId != $input->id){
+      $this->_helper->FlashMessenger('No permission to edit other users.');
+      $this->_helper->redirector('index', 'index');
+    }else{
+      // display the form with user data pre-loaded
+      $profileForm = new Application_Form_User_Profile($input->id);
 
-        $input = new Zend_Filter_Input(array('id' => 'Digits'), null, $this->_getAllParams());
-        // print_r($input);
-        // if either the user is not logged in or no valid user id is defined
-        if (empty($input->id)) {
-            $input->id = $this->_defaultNamespace->userId;
-        }
-
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($input->id);
-        if (empty($user)) {
-            $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
-            $this->_helper->redirector('index', 'index');
-        } elseif ($this->_defaultNamespace->userId != $input->id) {
-            $this->_helper->flashMessenger->addMessage('No permission to edit other users.');
-            $this->_helper->redirector('index', 'index');
-        } else {
-            // display the form with user data pre-loaded
-            $profileForm = new Application_Form_User_Profile($input->id);
-
-            echo "profileForm"; //bis hier wenn ich auf edit profil klicke
-            // form has been submitted through post request
-
-            if ($this->_request->isPost()) {
+      // form has been submitted through post request
+      if ($this->_request->isPost()) {
                 $formData = $this->_request->getPost();
 
                 // if the form doesn't validate, pass to view and return
@@ -259,7 +318,7 @@ class UserController extends Unplagged_Controller_Action {
                     $user->setLastname($this->getRequest()->getParam('lastname'));
                     var_dump($file);
                    // $user->setAvatar($file->getId());//alt
-                     
+                     Unplagged_Helper::notify("user_updated_profile", $user, $user);
                     // write back to persistence manage and flush it
                     $this->_em->persist($user);
                     $this->_em->flush();
@@ -269,104 +328,99 @@ class UserController extends Unplagged_Controller_Action {
                 }
             }
 
-            // send form to view
-            $this->view->profileForm = $profileForm;
-        }
+      // send form to view
+      $this->view->profileForm = $profileForm;
+    }
+    Zend_Layout::getMvcInstance()->sidebar = null;
+    Zend_Layout::getMvcInstance()->cases = null;
+  }
+
+  /**
+   * Sets the current Case of this User based on the request parameter 'case' if the user has
+   * the permission for the case. 
+   */
+  public function setCurrentCaseAction(){
+    $input = new Zend_Filter_Input(array('case'=>'Digits'), null, $this->_getAllParams());
+
+    $case = null;
+    if($input->case){
+      $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->case);
+    }
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $user->setCurrentCase($case);
+
+    $this->_em->persist($user);
+    $this->_em->flush();
+
+    $this->redirectToLastPage();
+  }
+
+  /**
+   * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
+   * @param String from If defined it selects only users of a specific rank.
+   */
+  public function autocompleteNamesAction(){
+    // @todo clean input
+    $search_string = $this->_getParam('term');
+    // user ids to skip
+    $skipIds = $this->_getParam('skip');
+
+    // no self select possible
+    //$skipIds .= ", " . $this->_defaultNamespace->userId;
+    if(substr($skipIds, 0, 1) == ","){
+      $skipIds = substr($skip_userids, 1);
     }
 
-    /**
-     * Sets the current Case of this User based on the request parameter 'case' if the user has
-     * the permission for the case. 
-     */
-    public function setCurrentCaseAction() {
-        $input = new Zend_Filter_Input(array('hash' => 'Digits'), null, $this->_getAllParams());
+    if($skipIds != ""){
+      $skipIds = " AND u.id NOT IN (" . $skipIds . ")";
+    }
 
-        $case = null;
-        if ($input->id) {
-            $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
-        }
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        $user->setCurrentCase($case);
+    $qb = $this->_em->createQueryBuilder();
+    $qb->add('select', "CONCAT(CONCAT(u.firstname, ' '), u.lastname) AS name, u.id AS value")
+        ->add('from', 'Application_Model_User u')
+        ->where("CONCAT(CONCAT(u.firstname, ' '), u.lastname) LIKE '%" . $search_string . "%' " . $skipIds);
+    $qb->setMaxResults(5);
 
-        $this->_em->persist($user);
+    $dbresults = $qb->getQuery()->getResult();
+    $results = array();
+    foreach($dbresults as $key=>$value){
+      $results[] = $value;
+    }
+    $this->_helper->json($results);
+  }
+
+  /**
+   * Removes the own user account.
+   */
+  public function removeAccountAction(){
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    // display the form with user data pre-loaded
+    $removalForm = new Application_Form_User_Remove();
+
+    // form has been submitted through post request
+    if($this->_request->isPost()){
+      $formData = $this->_request->getPost();
+
+      // if the form doesn't validate, pass to view and return
+      if($removalForm->isValid($formData)){
+
+        // @todo: handle mail
+        // write back to persistence manage and flush it
+        $this->_em->remove($user);
         $this->_em->flush();
 
-        $this->redirectToLastPage();
+        $this->_helper->redirector('logout', 'auth');
+        $this->_helper->FlashMessenger('User Profile removed successfully.');
+        $this->_helper->redirector('index', 'index');
+      }
     }
 
-    public function resetCurrentCaseAction() {
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-
-        $user->unsetCurrentCase();
-        $this->_em->persist($user);
-        $this->_em->flush();
-
-        $result["response"] = "200";
-        $this->_helper->json($result);
-    }
-
-    /**
-     * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
-     * @param String from If defined it selects only users of a specific rank.
-     */
-    public function autocompleteNamesAction() {
-        // @todo clean inpit
-        $search_string = $this->_getParam('term');
-        // user ids to skip
-        $skipIds = $this->_getParam('skip');
-
-        // no self select possible
-        //$skipIds .= ", " . $this->_defaultNamespace->userId;
-        if (substr($skipIds, 0, 1) == ",") {
-            $skipIds = substr($skip_userids, 1);
-        }
-
-        if ($skipIds != "") {
-            $skipIds = " AND u.id NOT IN (" . $skipIds . ")";
-        }
-
-        $qb = $this->_em->createQueryBuilder();
-        $qb->add('select', "CONCAT(CONCAT(u.firstname, ' '), u.lastname) AS name, u.id AS value")
-                ->add('from', 'Application_Model_User u')
-                ->where("CONCAT(CONCAT(u.firstname, ' '), u.lastname) LIKE '%" . $search_string . "%' " . $skipIds);
-        $qb->setMaxResults(5);
-
-        $dbresults = $qb->getQuery()->getResult();
-        $results = array();
-        foreach ($dbresults as $key => $value) {
-            $results[] = $value;
-        }
-        $this->_helper->json($results);
-    }
-
-    /**
-     * Removes the own user account.
-     */
-    public function removeAccountAction() {
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        // display the form with user data pre-loaded
-        $removalForm = new Application_Form_User_Remove();
-
-        // form has been submitted through post request
-        if ($this->_request->isPost()) {
-            $formData = $this->_request->getPost();
-
-            // if the form doesn't validate, pass to view and return
-            if ($removalForm->isValid($formData)) {
-
-                // @todo: handle mail
-                // write back to persistence manage and flush it
-                $this->_em->remove($user);
-                $this->_em->flush();
-
-                $this->_helper->redirector('logout', 'auth');
-                $this->_helper->flashMessenger->addMessage('User Profile removed successfully.');
-                $this->_helper->redirector('index', 'index');
-            }
-        }
-
-        // send form to view
-        $this->view->removalForm = $removalForm;
-    }
+    // send form to view
+    $this->view->removalForm = $removalForm;
+  }
+  
+  public function editRoleAction() {
+    $this->view->roleForm = new Application_Form_User_Role();
+  }
 
 }

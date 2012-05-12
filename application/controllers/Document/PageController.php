@@ -21,7 +21,7 @@
 /**
  * This class handles actions related to pages within a document
  */
-class Document_PageController extends Unplagged_Controller_Action{
+class Document_PageController extends Unplagged_Controller_Versionable{
 
   public function init(){
     parent::init();
@@ -51,12 +51,12 @@ class Document_PageController extends Unplagged_Controller_Action{
 
       $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
       if($document){
-        $this->view->document = $document;
+        $this->view->title = 'Document: ' . $document->getTitle();
       }
     }
 
-    Zend_Layout::getMvcInstance()->sidebar = null;
-    Zend_Layout::getMvcInstance()->versionableId = null;
+    Zend_Layout::getMvcInstance()->sidebar = "document-tools";
+    Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 
   public function detectionReportsAction(){
@@ -81,6 +81,7 @@ class Document_PageController extends Unplagged_Controller_Action{
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
         $this->view->page = $page;
+        $this->initPageView($page, '/document_page/show');
       }
     }
   }
@@ -91,18 +92,14 @@ class Document_PageController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
-        $this->view->page = $page;
+        $lines = $page->getContent("array");
 
-        $lines = explode("<br />", $page->getContent());
         $pageLines = array();
-        foreach($lines as $line){
-          $line = htmlspecialchars($line);
-
-          $pageLine["content"] = empty($line) ? " " : $line;
+        foreach($lines as $lineNumber=>$content){
+          $pageLine["content"] = !empty($content) ? trim($content) : ' ';
           $pageLine["hasHyphen"] = (substr($pageLine["content"], -1) == "-");
           $pageLines[] = $pageLine;
         }
-
         // create form
         $deHyphenForm = new Application_Form_Document_Page_Dehyphen(array('pageLines'=>$pageLines));
 
@@ -131,20 +128,20 @@ class Document_PageController extends Unplagged_Controller_Action{
               $lineContent[] = $pageLines[$lineNumber]["content"];
             }
 
-            $pageContent = implode("<br />", $lineContent);
-            $page->setContent($pageContent);
+            $page->setContent($lineContent, "array");
 
             // write back to persistence manager and flush it
             $this->_em->persist($page);
             $this->_em->flush();
 
-            $this->_helper->flashMessenger->addMessage('The de-hyphenation was processed successfully.');
-            $params = array('id'=>$page->getDocument()->getId());
-            $this->_helper->redirector('list', 'document_page', '', $params);
+            $this->_helper->FlashMessenger(array('success'=>'The de-hyphenation was processed successfully.'));
+            $params = array('id'=>$page->getId());
+            $this->_helper->redirector('show', 'document_page', '', $params);
           }
         }
         $this->view->deHyphenForm = $deHyphenForm;
       }
+      $this->initPageView($page, '/document_page/de-hyphen');
     }
   }
 
@@ -156,31 +153,31 @@ class Document_PageController extends Unplagged_Controller_Action{
     $editForm->setAction("/document_page/edit/id/" . $input->id);
 
     $editForm->getElement("pageNumber")->setValue($page->getPageNumber());
-    $editForm->getElement("content")->setValue(str_replace("<br />", "\n", $page->getContent()));
+    $editForm->getElement("content")->setValue($page->getContent("text"));
 
     if($this->_request->isPost()){
       $formData = $this->_request->getPost();
 
       if($editForm->isValid($formData)){
         $page->setPageNumber($formData["pageNumber"]);
-
-        $formData["content"] = nl2br($formData["content"]);
-        $formData["content"] = str_replace("\r\n", "", $formData["content"]);
-        $formData["content"] = str_replace("\n", "", $formData["content"]);
-        $page->setContent($formData["content"]);
-
+        /*
+          $formData["content"] = nl2br($formData["content"]);
+          $formData["content"] = str_replace("\r\n", "", $formData["content"]);
+          $formData["content"] = str_replace("\n", "", $formData["content"]); */
+        $page->setContent($formData["content"], "text");
+#
         // write back to persistence manager and flush it
         $this->_em->persist($page);
         $this->_em->flush();
 
-        $this->_helper->flashMessenger->addMessage('The document page was updated successfully.');
-        $params = array('id'=>$page->getDocument()->getId());
-        $this->_helper->redirector('list', 'document_page', '', $params);
+        $this->_helper->FlashMessenger(array('info'=>'The document page was updated successfully.'));
+        $params = array('id'=>$page->getId());
+        $this->_helper->redirector('show', 'document_page', '', $params);
       }
     }
 
     $this->view->editForm = $editForm;
-    $this->view->page = $page;
+    $this->initPageView($page, '/document_page/edit');
   }
 
   public function deleteAction(){
@@ -192,11 +189,11 @@ class Document_PageController extends Unplagged_Controller_Action{
         $this->_em->remove($page);
         $this->_em->flush();
       }else{
-        $this->_helper->flashMessenger->addMessage('Page does not exist.');
+        $this->_helper->FlashMessenger('Page does not exist.');
       }
     }
 
-    $this->_helper->flashMessenger->addMessage('The document page was deleted successfully.');
+    $this->_helper->FlashMessenger(array('info'=>'The document page was deleted successfully.'));
     $params = array('id'=>$page->getDocument()->getId());
     $this->_helper->redirector('list', 'document_page', '', $params);
 
@@ -222,12 +219,12 @@ class Document_PageController extends Unplagged_Controller_Action{
           'sind', 'soll', 'sollen', 'sollst', 'sollt', 'sonst', 'soweit', 'sowie', 'und', 'unser', 'unsere', 'unter', 'vom', 'von',
           'vor', 'wann', 'warum', 'was', 'weiter', 'weitere', 'wenn', 'wer', 'werde', 'werden', 'werdet', 'weshalb', 'wie', 'wieder',
           'wieso', 'wir', 'wird', 'wirst', 'wo', 'woher', 'wohin', 'zu', 'zum', 'zur', 'über');
-        $reg = '/(' . implode('|', $words) . ')/i';
-        $lines = $page->getContent();
+        $reg = '/(?<=\s)(' . implode('|', $words) . ')(?=\s)/';
+        $lines = $page->getContent("list");
         $lines = preg_replace($reg, "<span class='stopword'>$1</span>", $lines);
 
         $this->view->stopWordContent = $lines;
-        $this->view->page = $page;
+        $this->initPageView($page, '/document_page/stopwords');
       }
     }
   }
@@ -238,7 +235,7 @@ class Document_PageController extends Unplagged_Controller_Action{
     if(!empty($input->show)){
       $report = $this->_em->getRepository('Application_Model_Document_Page_SimtextReport')->findOneById($input->show);
       $this->view->report = $report;
-      
+
       $this->render('simtext/show');
     }else{
       if(!empty($input->id)){
@@ -249,13 +246,26 @@ class Document_PageController extends Unplagged_Controller_Action{
         $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
         $paginator->setCurrentPageNumber($input->page);
 
+        foreach($paginator as $report):
+          if($report->getState()->getName() == 'task_scheduled'){
+            // find the associated task and get percentage
+            $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
+            $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
+            if(!$task){
+              $percentage = 0;
+            }else{
+              $percentage = $task->getProgressPercentage();
+            }
+            $report->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
+          }else{
+            $report->outputState = $report->getState()->getTitle();
+          }
+        endforeach;
+
         $this->view->paginator = $paginator;
         $this->render('simtext/list-reports');
       }
     }
-
-    Zend_Layout::getMvcInstance()->sidebar = null;
-    Zend_Layout::getMvcInstance()->versionableId = null;
   }
 
   /**
@@ -275,19 +285,19 @@ class Document_PageController extends Unplagged_Controller_Action{
         $result = $this->handleSimtextData($simtextForm, $page);
 
         if($result){
-          $this->_helper->flashMessenger->addMessage('The simtext process was started, you will be notified, whenever it is finished.');          
+          $this->_helper->FlashMessenger('The simtext process was started, you will be notified, when it finished.');
           $this->_helper->redirector('simtext-reports', 'document_page', '', array('id'=>$input->id));
         }
       }
 
-      $this->view->title = "Create case";
+      $this->initPageView($page, '/document_page/simtext');
       $this->view->simtextForm = $simtextForm;
       $this->render('simtext/create');
     }
   }
 
   private function handleSimtextData(Application_Form_Document_Page_Simtext $simtextForm, Application_Model_Document_Page $page){
-   if(!($page)){
+    if(!($page)){
       $page = new Application_Model_Document_Page();
     }
 
@@ -318,10 +328,113 @@ class Document_PageController extends Unplagged_Controller_Action{
         Unplagged_Helper::notify("case_created", $case, $user);
        */
 
-      return true;
+      return $task;
     }
 
     return false;
+  }
+
+  /**
+   * Compares two version of a fragment. 
+   */
+  public function changelogAction(){
+    parent::changelogAction();
+
+    $this->setTitle("Changelog of page");
+    Zend_Layout::getMvcInstance()->sidebar = 'page-tools';
+  }
+
+  /**
+   * Returns all lines in the document . 
+   */
+  public function readAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
+      if($page){
+        $response["statuscode"] = 200;
+        $response["data"] = $page->toArray();
+      }else{
+        $response["statuscode"] = 404;
+        $response["statusmessage"] = "No page by that id found.";
+      }
+    }else{
+      $response["statuscode"] = 405;
+      $response["statusmessage"] = "Required parameter id is missing.";
+    }
+
+    $this->getResponse()->appendBody(json_encode($response));
+
+    // disable view
+    $this->view->layout()->disableLayout();
+    $this->_helper->viewRenderer->setNoRender(true);
+  }
+
+  public function compareAction(){
+    $input = new Zend_Filter_Input(array('fragment'=>'Digits', 'highlight'=>'Alpha', 'candidateLineFrom'=>'Digits', 'candidateLineTo'=>'Digits', 'sourceLineFrom'=>'Digits', 'sourceLineTo'=>'Digits'), null, $this->_getAllParams());
+    if($input->fragment){
+      $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->fragment);
+    }else{
+      $fragment = new Application_Model_Document_Fragment();
+
+      if($input->candidateLineFrom && $input->candidateLineTo){
+        $partial = new Application_Model_Document_Fragment_Partial();
+        $partial->setLineFrom($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->candidateLineFrom));
+        $partial->setLineTo($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->candidateLineTo));
+        $fragment->setPlag($partial);
+      }
+
+      if($input->sourceLineFrom && $input->sourceLineTo){
+        $partial = new Application_Model_Document_Fragment_Partial();
+        $partial->setLineFrom($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->sourceLineFrom));
+        $partial->setLineTo($this->_em->getRepository('Application_Model_Document_Page_Line')->findOneById($input->sourceLineTo));
+        $fragment->setSource($partial);
+      }
+    }
+
+    $content = $fragment->getContent('list', $input->highlight == 'true');
+
+    $response['statuscode'] = 200;
+    $response['data']['plag'] = $content['plag'];
+    $response['data']['source'] = $content['source'];
+
+    $this->getResponse()->appendBody(json_encode($response));
+
+    // disable view
+    $this->view->layout()->disableLayout();
+    $this->_helper->viewRenderer->setNoRender(true);
+  }
+
+  private function initPageView(Application_Model_Document_Page $page, $pageLink = '/document_page/show'){
+    // next page
+    $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber > :pageNumber ORDER BY p.pageNumber ASC');
+    $query->setParameter("document", $page->getDocument()->getId());
+    $query->setParameter("pageNumber", $page->getPageNumber());
+    $query->setMaxResults(1);
+
+    $nextPage = $query->getResult();
+    if($nextPage){
+      $nextPage = $nextPage[0];
+      $this->view->nextPageLink = $pageLink . '/id/' . $nextPage->getId();
+    }
+
+    // previous page
+    $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber < :pageNumber ORDER BY p.pageNumber DESC');
+    $query->setParameter("document", $page->getDocument()->getId());
+    $query->setParameter("pageNumber", $page->getPageNumber());
+    $query->setMaxResults(1);
+
+    $prevPage = $query->getResult();
+    if($prevPage){
+      $prevPage = $prevPage[0];
+      $this->view->prevPageLink = $pageLink . '/id/' . $prevPage->getId();
+    }
+
+    $lastPage = $page->getDocument()->getPages()->last();
+
+    $this->view->title = 'Document: ' . $page->getDocument()->getTitle();
+    $this->view->subtitle = 'Page ' . $page->getPageNumber() . ' of ' . $lastPage->getPageNumber();
   }
 
 }

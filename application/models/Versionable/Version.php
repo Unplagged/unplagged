@@ -25,7 +25,7 @@
  * @Table(name="versionable_versions") 
  */
 class Application_Model_Versionable_Version extends Application_Model_Base{
-
+  
   /**
    * @Column(type="integer")
    */
@@ -53,10 +53,6 @@ class Application_Model_Versionable_Version extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    
-  }
-
-  public function getIconClass(){
     
   }
 

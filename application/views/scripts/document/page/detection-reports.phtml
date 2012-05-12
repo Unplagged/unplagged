@@ -1,26 +1,33 @@
 <?php
-    $this->title = $this->translate("List of detection reports");
-    $this->headTitle($this->title);
+$this->title = $this->translate("List of detection reports");
+$this->headTitle($this->title);
 ?>
-    <table cellpadding="0" cellspacing="0" class="default"> 
-  <tr>
-    <th style="width: 250px;"><?php echo $this->translate("Content"); ?></th>
-    <th><?php echo $this->translate("Percentage"); ?></th>
-    <th><?php echo $this->translate("Service"); ?></th>
-    <th><?php echo $this->translate("Date"); ?></th>
-    <th><?php echo $this->translate("State"); ?></th>
-  </tr>
-  <?php 
-  $i = 0;
-  foreach($this->paginator as $report): 
-    ?>
-  <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
-    <td><?php echo $report->getContent(); ?></td>
-    <td><?php echo $report->getPercentage(); ?></td>
-    <td><?php echo $report->getServicename(); ?></td>
-    <td><?php echo $report->getCreated()->format('Y-m-d'); ?></td>
-    <td><?php echo $report->getState(); ?></td>
-  </tr>
-  <?php endforeach; ?>
+<table cellpadding="0" cellspacing="0" class="default"> 
+  <thead>
+    <tr>
+      <th style="width: 250px;"><?php echo $this->translate("Content"); ?></th>
+      <th><?php echo $this->translate("Percentage"); ?></th>
+      <th><?php echo $this->translate("Service"); ?></th>
+      <th><?php echo $this->translate("Date"); ?></th>
+      <th><?php echo $this->translate("State"); ?></th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if(count($this->paginator)): ?>
+      <?php foreach($this->paginator as $report): ?>
+        <tr>
+          <td data-label="<?php echo $this->translate("Content"); ?>"><?php echo $report->getContent(); ?></td>
+          <td data-label="<?php echo $this->translate("Percentage"); ?>"><?php echo $report->getPercentage(); ?></td>
+          <td data-label="<?php echo $this->translate("Service"); ?>"><?php echo $report->getServicename(); ?></td>
+          <td data-label="<?php echo $this->translate("Date"); ?>"><?php echo $report->getCreated()->format('Y-m-d'); ?></td>
+          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $report->getState()->getTitle(); ?></td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr>
+        <td colspan="5" class="no-label"><?php echo $this->translate("No reports found."); ?></td>
+      </tr>
+    <?php endif; ?>
+  </tbody>
 </table>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>

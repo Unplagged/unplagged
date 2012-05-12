@@ -1,12 +1,7 @@
-<?php
-    $this->title = $this->translate("List of document pages");
-    $this->headTitle($this->title);
-?>
-Document: <?php echo $this->document->getTitle(); ?>
+<?php $this->headTitle($this->title); ?>
+<h3><?php echo $this->translate("Pages overview"); ?></h3>
 
 <div class="default-container">
-<h3><?php echo $this->translate("Document pages"); ?></h3>
-
 <div class="document-page-overview">
   <?php $i = 0; ?>
   <?php foreach($this->paginator as $page): ?>

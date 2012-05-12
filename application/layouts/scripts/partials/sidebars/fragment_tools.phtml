@@ -1,6 +1,8 @@
 <nav id="right-nav">
-  <h4>Actions</h4>
-  <ul>
+  <ul class="nav nav-list">
+    <li class="nav-header">
+      Actions
+    </li>
     <li>
       <a href="<?php echo "/document_fragment/show/id/" . $this->fragmentId;     ?>">
         <img class="icon" src="<?php echo $this->baseUrl('images/icons/page.png'); ?>" title="<?php echo $this->translate("Show"); ?>" /><span><?php echo $this->translate("Show"); ?></span>
@@ -16,15 +18,8 @@
         <img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("Remove"); ?>" /><span><?php echo $this->translate("Remove"); ?></span>
       </a>
     </li>
-    <li>
-      <a href="#">
-        <img class="icon" src="<?php echo $this->baseUrl('images/icons/table_row_delete.png'); ?>" title="<?php echo $this->translate("Simtext"); ?>" /><span><?php echo $this->translate("Simtext"); ?></span>
-      </a>
-    </li>
-  </ul>
   
-  <h4>Links</h4>
-  <ul>
+  <li class="nav-header">Links</li>
     <li>
       <a href="<?php echo "/document_fragment/changelog/id/" . $this->fragmentId;     ?>">
         <img class="icon" src="<?php echo $this->baseUrl('images/icons/table_relationship.png'); ?>" title="<?php echo $this->translate("Changelog"); ?>" /><span><?php echo $this->translate("Changelog"); ?></span>

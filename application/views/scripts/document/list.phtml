@@ -1,25 +1,39 @@
 <?php
-    $this->title = $this->translate("List of documents");
-    $this->headTitle($this->title);
+$this->title = $this->translate("List of documents");
+$this->headTitle($this->title);
 ?>
 <table cellpadding="0" cellspacing="0" class="default"> 
-  <tr>
-    <th><?php echo $this->translate("Title"); ?></th>
-    <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
-  </tr>
-  <?php 
-  $i = 0;
-  if($this->paginator):?>
-  <?php foreach($this->paginator as $document): ?>
-  <tr <?php echo ($i++ %2 == 0) ? "class=\"even\"" : ""; ?>>
-    <td><a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
-    <td>
-      <a href="<?php echo "/document/edit/id/" . $document->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/pencil.png'); ?>" title="<?php echo $this->translate("Edit case"); ?>" /></a>
-      <a href="<?php echo "/document/detect-plagiarism/id/" . $document->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/eye.png'); ?>" title="<?php echo $this->translate("detect plagiarism"); ?>" /></a> 
-      <a href="<?php echo "/document/delete/id/" . $document->getId(); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("delete"); ?>" /></a>
-    </td>
-  </tr>
-  <?php endforeach; ?>
-  <?php endif; ?>
+  <thead>
+    <tr>
+      <th><?php echo $this->translate("Title"); ?></th>
+      <th><?php echo $this->translate("Pages"); ?></th>
+      <th><?php echo $this->translate("State"); ?></th>
+      <th class="fit-content"><?php echo $this->translate("Actions"); ?></th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if(count($this->paginator)): ?>
+      <?php foreach($this->paginator as $document): ?>
+        <tr>
+          <?php if($document->getState()->getName() == 'parsed'): ?>
+            <td data-label="<?php echo $this->translate("Title"); ?>"><a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
+          <?php else: ?>
+            <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $document->getTitle(); ?></td>
+          <?php endif; ?>
+          <td data-label="<?php echo $this->translate("Pages"); ?>"><?php echo $document->getPages()->count(); ?></td>
+          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $document->outputState; ?></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>" class="fit-content">
+            <?php if($document->getState()->getName() == 'parsed'): ?>
+              <?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$document->actions)); ?>
+            <?php endif; ?>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr>
+        <td colspan="4" class="no-label"><?php echo $this->translate("No documents found."); ?></td>
+      </tr>
+    <?php endif; ?>
+  </tbody>
 </table>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>

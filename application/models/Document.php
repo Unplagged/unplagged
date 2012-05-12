@@ -23,7 +23,6 @@
  * It defines also the structure of the database table for the ORM.
  *
  * @author Benjamin Oertel <mail@benjaminoertel.com>
- * @version 1.0
  * 
  * @Entity 
  * @Table(name="documents")
@@ -31,6 +30,8 @@
  */
 class Application_Model_Document extends Application_Model_Base{
 
+  const ICON_CLASS = 'icon-document';
+  
   /**
    * The title of the document.
    * @var string The title.
@@ -40,7 +41,7 @@ class Application_Model_Document extends Application_Model_Base{
   private $title;
 
   /**
-   * The lines in the document.
+   * The pages in the document.
    * 
    * @OneToMany(targetEntity="Application_Model_Document_Page", mappedBy="document")
    * @OrderBy({"pageNumber" = "ASC"})
@@ -60,7 +61,23 @@ class Application_Model_Document extends Application_Model_Base{
    * 
    * @Column(type="text", nullable=true)
    */
-  private $bibtex;
+  private $bibTex;
+
+  /**
+   * The current state of the report.
+   * 
+   * @ManyToOne(targetEntity="Application_Model_State")
+   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
+   */
+  private $state;
+  
+  /**
+   * The file the document was initially created from.
+   * 
+   * @ManyToOne(targetEntity="Application_Model_File")
+   * @JoinColumn(name="original_file_id", referencedColumnName="id", onDelete="SET NULL")
+   */
+  private $originalFile;
 
   public function __construct(array $data = null){
 
@@ -70,6 +87,12 @@ class Application_Model_Document extends Application_Model_Base{
 
     if(isset($data["bibtex"])){
       $this->bibtex = $data["bibtex"];
+    }
+    if(isset($data["state"])){
+      $this->state = $data["state"];
+    }
+    if(isset($data["originalFile"])){
+      $this->originalFile = $data["originalFile"];
     }
 
     $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
@@ -84,8 +107,8 @@ class Application_Model_Document extends Application_Model_Base{
     return $this->title;
   }
 
-  public function getBibtex(){
-    return $this->bibtex;
+  public function getBibTex(){
+    return $this->bibTex;
   }
 
   public function getPages(){
@@ -111,15 +134,40 @@ class Application_Model_Document extends Application_Model_Base{
   }
 
   public function getDirectLink(){
-    return "/document/show/id/" . $this->id;
+    return "/document_page/list/id/" . $this->id;
   }
 
-  public function getIconClass(){
-    return "document-icon";
-  }
-  
   public function setTitle($title){
     $this->title = $title;
   }
+
+  public function getState(){
+    return $this->state;
+  }
+
+  public function setState($state){
+    $this->state = $state;
+  }
+  
+  public function getOriginalFile(){
+    return $this->originalFile;
+  }
+  
+  public function setBibTex($bibTex){
+    $this->bibTex = $bibTex;
+  }
+  
+  public function toArray() {
+    $data["id"] = $this->id;
+    $data["bibTex"] = $this->bibTex;
+    $data["pages"] = array();
+    
+    foreach($this->pages as $page){
+      $data["pages"][] = $page->toArray();
+    }
+    
+    return $data;
+  }
+  
 
 }

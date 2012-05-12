@@ -30,6 +30,8 @@
  */
 class Application_Model_Notification extends Application_Model_Base{
 
+  const ICON_CLASS = 'icon-notification';
+  
   /**
    * @ManyToOne(targetEntity="Application_Model_User")
    * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
@@ -45,7 +47,7 @@ class Application_Model_Notification extends Application_Model_Base{
   /**
    * The element this notification is related to.
    *
-   * @ManyToOne(targetEntity="Application_Model_Base")
+   * @ManyToOne(targetEntity="Application_Model_Base", inversedBy="notifications")
    * @JoinColumn(name="source_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $source;
@@ -84,42 +86,12 @@ class Application_Model_Notification extends Application_Model_Base{
     return "/notification/show/id/" . $this->id;
   }
 
-  public function getIconClass(){
-    return "notification-icon";
-  }
-
   public function getTitle(){
-    switch($this->action->getName()){
-      case "user_registered":
-        return "User %s registered";
-      case "user_verified":
-        return "User %s verified";
-      case "user_requested_password":
-        return "User %s requested password";
-      case "case_created":
-        return "Case %s was created";
-      case "file_uploaded":
-        return "File %s was uploaded";
-      case "fragment_created":
-        return "Fragment %s was created";
-    }
+    return $this->action->getTitle();
   }
 
   public function getMessage(){
-    switch($this->action->getName()){
-      case "user_registered":
-        return "The user created a new account on the website.";
-      case "user_verified":
-        return "The user verified his account.";
-      case "user_requested_password":
-        return "The user requested a new password for his account.";
-      case "case_created":
-        return "A new Case was created.";
-      case "file_uploaded":
-        return "A new file was uploaded to the files area.";
-      case "fragment_created":
-        return "A new fragment was created";
-    }
+    return $this->action->getDescription();
   }
   
   /*public function getTitle(){

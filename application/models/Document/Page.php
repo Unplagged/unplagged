@@ -27,6 +27,8 @@
  */
 class Application_Model_Document_Page extends Application_Model_Versionable{
 
+  const ICON_CLASS = 'icon-page';
+  
   /**
    * The page number in the origional document.
    * @var integer The page number.
@@ -47,14 +49,7 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
    * @OneToMany(targetEntity="Application_Model_Document_Page_DetectionReport", mappedBy="page")
    * @OrderBy({"created" = "ASC"})
    */
-  protected $detectionReports;
-
-  /**
-   * The content of the page.
-   * 
-   * @Column(type="text", nullable=true)
-   */
-  private $content;
+  private $detectionReports;
 
   /**
    * The file the document was initially created from.
@@ -64,15 +59,19 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
    */
   private $originalFile;
 
-  public function __construct($data){
+  /**
+   * The lines in the document.
+   * 
+   * @OneToMany(targetEntity="Application_Model_Document_Page_Line", mappedBy="page", cascade={"persist", "remove"})
+   * @OrderBy({"lineNumber" = "ASC"})
+   */
+  private $lines;
+
+  public function __construct($data = null){
     parent::__construct();
-    
+
     if(isset($data["file"])){
       $this->originalFile = $data["file"];
-    }
-
-    if(isset($data["content"])){
-      $this->content = $data["content"];
     }
 
     if(isset($data["pageNumber"])){
@@ -80,11 +79,17 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     }
     $this->lines = new \Doctrine\Common\Collections\ArrayCollection();
   }
-  
-  public function toArray() {
-    $data["content"] = $this->content;
+
+  public function toArray(){
+    $data["id"] = $this->id;
     $data["pageNumber"] = $this->pageNumber;
+    $data["lines"] = array();
+    
+    foreach($this->lines as $line){
+      $data["lines"][] = $line->toArray();
+    }
     //@todo $data["file"] = ...
+    return $data;
   }
 
   public function getId(){
@@ -103,10 +108,6 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     return $this->pageNumber;
   }
 
-  public function getContent(){
-    return $this->content;
-  }
-
   public function getDocument(){
     return $this->document;
   }
@@ -115,20 +116,12 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     $this->pageNumber = $pageNumber;
   }
 
-  public function setContent($content){
-    $this->content = $content;
-  }
-
   public function getDirectName(){
     return "page";
   }
 
   public function getDirectLink(){
     return "/document_page/show/id/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return "page-icon";
   }
 
   /**
@@ -141,6 +134,113 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     $rand = rand(0, 11) * 10;
 
     return ($rand == 110 ? "unchecked" : $rand);
+  }
+
+  public function getLines(){
+    return $this->lines;
+  }
+
+  public function addLine(Application_Model_Document_Page_Line $line){
+    $line->setPage($this);
+    $this->lines->add($line);
+  }
+
+  public function removeLine(Application_Model_Document_Page_Line $line){
+    $this->lines->removeElement($line);
+  }
+
+  public function removeLineByIndex($lineId){
+    $this->lines->remove($lineId);
+  }
+
+  /**
+   * Return the content of all lines in the page.
+   * 
+   * @param array|string $returnType Can be list (<li>), array or text (<br /> as linebreaks)
+   * 
+   * @return string or array, as specified in the input param 
+   */
+  public function getContent($returnType = 'list'){
+    $result = array();
+
+    if($returnType == 'array' || $returnType == 'text'){
+      foreach($this->lines as $line){
+        $result[$line->getLineNumber()] = $line->getContent();
+      }
+    }else if($returnType == 'htmltext'){
+      foreach($this->lines as $line){
+        $result[$line->getLineNumber()] = htmlentities($line->getContent(), ENT_COMPAT, 'UTF-8');
+      }
+    }else{
+      foreach($this->lines as $line){
+        $result[$line->getLineNumber()] = '<li value="' . $line->getLineNumber() . '">' . htmlentities($line->getContent(), ENT_COMPAT, 'UTF-8') . '</li>';
+      }
+    }
+
+    switch($returnType){
+      case 'array':
+        return $result;
+      case 'htmltext':
+        return implode("<br />", $result);
+      case 'text':
+        return implode("\n", $result);
+      default:
+        return '<ol>' . implode("\n", $result) . '</ol>';
+    }
+  }
+
+  /**
+   * Sets the content of all lines in the page, new lines are automatically created and
+   * non-existing ones are removed.
+   * 
+   * @param string|array $content The content of the page
+   * @param string $inputType The format of the content (array, text, htmltext)
+   * @return type 
+   */
+  public function setContent($content, $inputType = 'text'){
+    $lines = array();
+    if($inputType == 'text'){
+      $lines = explode("\n", $content);
+    }
+    else if($inputType == 'htmltext'){
+      $lines = explode("<br />", $content);
+    }
+    else if($inputType == 'array') {
+      $lines = $content;
+    }
+
+    $lineNumbers = array();
+    foreach($lines as $key=>$value){
+      $lineNumbers[$key + 1] = $key + 1;
+    }
+
+    $removedLines = array();
+
+    // 1) search all lines that already exist by their line numbers and update them
+    $this->lines->filter(function($line) use (&$lineNumbers, &$lines, &$removedLines){
+          if(in_array($line->getLineNumber(), $lineNumbers)){
+            $line->setContent($lines[$line->getLineNumber() - 1]);
+            unset($lineNumbers[$line->getLineNumber()]);
+            return true;
+          }
+          $removedLines[] = $line;
+          return false;
+        });
+
+    // 2) create new lines for those that don't exist yet
+    foreach($lineNumbers as $lineNumber){
+      $data['lineNumber'] = $lineNumber;
+      $data['content'] = $lines[$lineNumber - 1];
+
+      $line = new Application_Model_Document_Page_Line($data);
+      $this->addLine($line);
+    }
+
+    // 3) remove lines that were in the page before, but not anymore
+    foreach($removedLines as $line){
+      $this->removeLine($line);
+      Zend_Registry::getInstance()->entitymanager->remove($line);
+    }
   }
 
 }

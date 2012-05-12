@@ -30,6 +30,9 @@ class AuthController extends Unplagged_Controller_Action{
   public function init(){
     parent::init();
     $this->auth = Zend_Auth::getInstance();
+
+    Zend_Layout::getMvcInstance()->sidebar = 'default';
+    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
   }
 
   /**
@@ -71,36 +74,40 @@ class AuthController extends Unplagged_Controller_Action{
 
     if($loginForm->isValid($formData)){
       $username = $this->getRequest()->getParam('username');
-      $password = Unplagged_Helper::hashString($this->getRequest()->getParam('password'));
+      $password = $this->getRequest()->getParam('password');
 
       $adapter = new Unplagged_Auth_Adapter_Doctrine($this->_em, 'Application_Model_User', 'username', 'password', $username, $password);
       $result = $this->auth->authenticate($adapter);
 
       if($result->isValid()){
-        $defaultNamespace = new Zend_Session_Namespace('Default');
-        $defaultNamespace->userId = $result->getIdentity();
+        if($result->getIdentity()->getState()->getName() == 'user_activated'){
+          $defaultNamespace = new Zend_Session_Namespace('Default');
+          $defaultNamespace->user = $result->getIdentity();
+          $defaultNamespace->userId = $result->getIdentity()->getId();
 
-        $this->_helper->flashMessenger->addMessage('You were logged in successfully.');
-        //@todo I know it's not perfect right now, because the activity stream isn't reached this way, but I think 
-        //it's overall a better experience when you clicked a bookmark or link and then get redirected to the login,
-        //to reach the actually requested page after this and not be always thrown to the activity stream
-        $this->redirectToLastPage();
+          $this->_helper->FlashMessenger(array('info'=>'You were logged in successfully.'));
+          $this->redirectToLastPage();
+        }else{
+          $this->logout();
+          $this->_helper->FlashMessenger(array('error'=>'Your account is not yet verified.'));
+          $this->_helper->redirector('login', 'auth');
+        }
       }else{
-        $this->_helper->flashMessenger->addMessage('Login failed.');
+        $this->_helper->FlashMessenger(array('error'=>'Login failed.'));
         $this->_helper->redirector('login', 'auth');
       }
     }
   }
-  
+
   /**
    * Logs the user off. The identity is removed and the session is cleared.
    */
   public function logoutAction(){
     $this->logout();
-    $this->_helper->flashMessenger->addMessage('You were logged off successfully.');
+    $this->_helper->FlashMessenger(array('info'=>'You were logged off successfully.'));
     $this->redirectToLastPage();
   }
-  
+
   /**
    * Clears all session data that was stored for the current user. 
    */
@@ -108,6 +115,7 @@ class AuthController extends Unplagged_Controller_Action{
     $this->auth->clearIdentity();
     Zend_Session::forgetMe();
     unset($this->_defaultNamespace->userId);
+    unset($this->_defaultNamespace->user);
   }
 
 }

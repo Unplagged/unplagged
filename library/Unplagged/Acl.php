@@ -1,52 +1,57 @@
 <?php
 
 /**
- * File for class {@link Acl}.
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
  *
- * @author Dominik Horb <dominik.horb@googlemail.com>
  */
 class Unplagged_Acl extends Zend_Acl{
 
-  public function __construct(){
-    $this->addRole(new Zend_Acl_Role('guest'));
-    $this->addRole(new Zend_Acl_Role('user'));
-    $this->addRole(new Zend_Acl_Role('admin'), 'user');
-    
-    $this->add(new Zend_Acl_Resource('auth'));
-    $this->add(new Zend_Acl_Resource('login'), 'auth');
-    $this->add(new Zend_Acl_Resource('logout'), 'auth');
-    $this->add(new Zend_Acl_Resource('user'));
-    $this->add(new Zend_Acl_Resource('register'), 'user');
-    $this->add(new Zend_Acl_Resource('edit-profile'), 'user');
-    $this->add(new Zend_Acl_Resource('error'));
-    $this->add(new Zend_Acl_Resource('index'));
-    $this->add(new Zend_Acl_Resource('document'));
-    $this->add(new Zend_Acl_Resource('list'), 'document');
-    $this->add(new Zend_Acl_Resource('simtext'), 'document');
-    $this->add(new Zend_Acl_Resource('response-plagiarism'), 'document');
-    $this->add(new Zend_Acl_Resource('files'));
-    $this->add(new Zend_Acl_Resource('file'));
-    $this->add(new Zend_Acl_Resource('googlesearch'));
-    $this->add(new Zend_Acl_Resource('case'));
-    $this->add(new Zend_Acl_Resource('document_page'));
-    $this->add(new Zend_Acl_Resource('document_fragment'));
-    $this->add(new Zend_Acl_Resource('image'));
-    $this->add(new Zend_Acl_Resource('notification'));
-    $this->add(new Zend_Acl_Resource('comment'));
+  public function __construct(Application_Model_User $user, $em){
 
-    $this->allow('guest', 'index');
-    $this->allow('guest', 'googlesearch');
-    $this->allow('guest', 'error');
-    $this->allow('guest', 'user', 'register');
-    $this->allow('guest', 'user', 'verify');
-    $this->allow('guest', 'user', 'recover-password');
-    $this->allow('guest', 'user', 'reset-password');
-    $this->allow('guest', 'document', 'response-plagiarism');
+    $this->addRole($user->getRole());
+
+
+    $resources = $em->getRepository('Application_Model_Permission')->findAll();
+
+    foreach($resources as $resource){
+      if(!$this->has($resource->getName())){
+        $this->add($resource);
+      }
+    }
+    $this->deny($user->getRole());
     
-    $this->allow('user', null);
+    $permissions = $user->getRole()->getPermissions();
+    foreach($permissions as $permission){
+      $resource = $permission;
+      if(!$this->has($resource)){
+        $this->add($resource);
+      }
+
+      // asterisk means everything is allowed
+      if($permission->getName() === '*'){
+        $this->allow($user->getRole());
+        break;
+      }else{
+        $this->allow($user->getRole(), $permission);
+      }
+    }
   }
 
 }

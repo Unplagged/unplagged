@@ -28,6 +28,8 @@
  */
 class Application_Model_Document_Page_DetectionReport extends Application_Model_Base{
 
+  const ICON_CLASS = 'icon-report';
+  
   /**
    * The percentage of plagiarism in this page.
    * @var integer The percentage of plagiarism.
@@ -141,15 +143,11 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
   }
 
   public function getDirectName(){
-    return "detection report";
+    return $this->getContent();
   }
 
   public function getDirectLink(){
     return "/document-page-detection-report/show/id/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return "report-icon";
   }
 
 }

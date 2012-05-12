@@ -1,7 +1,21 @@
 <?php
 
 /**
- * File for class {@link AccessControl}.
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -12,34 +26,52 @@
 class Unplagged_AccessControl extends Zend_Controller_Plugin_Abstract{
 
   private $acl = null;
+  private $user = null;
 
-  public function __construct(Zend_Acl $acl){
+  public function __construct(Zend_Acl $acl, Application_Model_User $user){
     $this->acl = $acl;
+    $this->user = $user;
   }
 
   public function preDispatch(Zend_Controller_Request_Abstract $request){
 
-//As in the earlier example, authed users will have the role user
-    $role = 'guest';
-    if(Zend_Auth::getInstance()->hasIdentity()){
-      $role = 'user';
+    $role = $this->user->getRole();
 
-      $front = Zend_Controller_Front::getInstance();
-      $bootstrap = $front->getParam('bootstrap');
-      $bootstrap->bootstrap('layout');
-      $layout = $bootstrap->getResource('layout');
-      $view = $layout->getView();
-      $view->navigation()->setRole('user');
-    }
+    $front = Zend_Controller_Front::getInstance();
+    $bootstrap = $front->getParam('bootstrap');
+    $bootstrap->bootstrap('layout');
+    $layout = $bootstrap->getResource('layout');
+
+    //set the role in the view, so that the navigation is displayed appropriately
+    $view = $layout->getView();
+    $view->navigation()->setRole($role);
 
     //For this example, we will use the controller as the resource:
     $resource = $request->getControllerName();
     $action = $request->getActionName();
+
+    $resourceKey = $resource . '_' . $action;
     
-    if(!$this->acl->isAllowed($role, $resource, $action)){
+    $allowAlways = array(
+      'auth_login',
+      'user_register',
+      'auth_logout',
+      'user_verify',
+      'user_recover-password'
+    );
+    
+    if(!in_array($resourceKey, $allowAlways) && ($this->acl->has($resourceKey) && !$this->acl->isAllowed($role, $resourceKey))){
       //If the user has no access we send him elsewhere by changing the request
-      $request->setControllerName('auth')
-          ->setActionName('login');
+      if(Zend_Auth::getInstance()->hasIdentity()){
+        $request->setControllerName('index');
+        $request->setActionName('empty');
+        $flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
+        
+        $flashMessenger->addMessage('You are not allowed to access this page.');
+      }else {
+        $request->setControllerName('auth')
+            ->setActionName('login');
+      }
     }
   }
 
