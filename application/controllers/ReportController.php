@@ -38,15 +38,15 @@ class ReportController extends Unplagged_Controller_Versionable{
 	
 	// get files of current case
 	$files = $currentCase->getFiles();
-	$fileId = 0;
+	$rfile = null;
 	
 	foreach($files as $file) {
 			if( $file->getIsTarget()){
 				//$this->_helper->flashMessenger->addMessage( $file->getId());
-				$fileId = $file->getId();
+				$rfile = $file;
 		}
 	}
-		 
+		 if($this->_request->isPost()){
 	$formData = $this->_request->getPost();
     //if($this->_request->isPost()){// && empty($input->page)){
 	
@@ -64,14 +64,14 @@ class ReportController extends Unplagged_Controller_Versionable{
 		// save report to database to get an Id
 		$data = array();
 		$data["title"] = $casename;
-	    $data["state"] = "generated";//$this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
-	    $data["user"] = $user->getId();
-	    $data["file"] = $fileId;
+	    $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('report_generated');
+	    $data["user"] = $user;
+	    $data["file"] = $rfile;
 		$data["filePath"] = $filename;
 	    $report = new Application_Model_Report($data);
 			
 		$this->_em->persist($report);
-        //$this->_em->flush();		 
+    $this->_em->flush();		 
 		 
 		
 		$html = Unplagged_HtmlLayout::htmlLayout($casename,$note,$fragments);
@@ -103,7 +103,7 @@ class ReportController extends Unplagged_Controller_Versionable{
 
 		 
     }
-	
+     }
     $this->view->title = "Create report";
     $this->view->modifyForm = $modifyForm;
     //$this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'report'));

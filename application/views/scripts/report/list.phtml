@@ -20,12 +20,12 @@ $this->headTitle($this->title);
           <?php }else{ ?>
             <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $report->getTitle(); ?></td>
           <?php } ?>
-          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $report->outputState; ?></td>
+          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $report->getState()->getTitle(); ?></td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
       <tr>
-        <td colspan="5" class="no-label"><?php echo $this->translate("No reports found."); ?></td>
+        <td colspan="4" class="no-label"><?php echo $this->translate("No reports found."); ?></td>
       </tr>
     <?php endif; ?>
   </tbody>

@@ -83,7 +83,7 @@ class Application_Model_Report extends Application_Model_Base{
     }
 	
 	if(isset($data["filePath"])){
-      $this->file = $data["filePath"];
+      $this->filePath = $data["filePath"];
     }
   }
 

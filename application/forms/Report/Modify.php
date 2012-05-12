@@ -27,7 +27,7 @@ class Application_Form_Report_Modify extends Zend_Form {
 
     private $cases = array();
     private $fragments = array();
-	private $documents = array();
+	//private $documents = array();
 
     public function __construct() {
         $em = Zend_Registry::getInstance()->entitymanager;
@@ -48,14 +48,14 @@ class Application_Form_Report_Modify extends Zend_Form {
         foreach ($fragments as $fragment) {
             $params["fragments"][$fragment->getId()] = $fragment->getTitle();
         }
-		
+		/*
 		$params["documents"] = array();
 	    foreach($documents as $document){
 	      $params["documents"][$document->getId()] = $document->getTitle();
 	    }
 
 	    $this->documents = $params['documents'];
-
+*/
         $this->cases = $params['cases'];
         $this->fragments = $params['fragments'];
 
@@ -74,7 +74,7 @@ class Application_Form_Report_Modify extends Zend_Form {
 		
 		$caseElement = new Zend_Form_Element_Text('case');
 		$caseElement->setLabel("Case");
-		$caseElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
+		$caseElement->addValidator('regex', false, array('/^[a-z0-9ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]/i'));
 		$caseElement->addValidator('stringLength', false, array(2, 64));
 		$caseElement->setRequired(true);
 
