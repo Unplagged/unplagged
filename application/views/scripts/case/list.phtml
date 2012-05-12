@@ -8,7 +8,7 @@ $this->headTitle($this->title);
       <th><?php echo $this->translate("Name"); ?></th>
       <th style="width: 110px;"><?php echo $this->translate("Alias"); ?></th>
       <th style="width: 100px;"><?php echo $this->translate("Abbreviation"); ?></th>
-      <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
+      <th class="fit-content"><?php echo $this->translate("Actions"); ?></th>
     </tr>
   </thead>
   <tbody>
@@ -18,7 +18,7 @@ $this->headTitle($this->title);
           <td data-label="<?php echo $this->translate("Name"); ?>"><?php echo $case->getName(); ?></td>
           <td data-label="<?php echo $this->translate("Alias"); ?>"><?php echo $case->getAlias(); ?></td>
           <td data-label="<?php echo $this->translate("Abbreviation"); ?>"><?php echo $case->getAbbreviation(); ?></td>
-          <td data-label="<?php echo $this->translate("Actions"); ?>"><?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$case->actions)); ?></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>" class="fit-content"><?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$case->actions)); ?></td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
@@ -30,4 +30,4 @@ $this->headTitle($this->title);
 </table> 
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
 
-<a class="btn btn-primary" href="/case/create"><i class="icon-create-case"></i><?php echo $this->translate("Create a new case"); ?></a>
+<a class="btn btn-primary" href="/case/create"><i class="icon-create-case icon-fam"></i><?php echo $this->translate("Create a new case"); ?></a>

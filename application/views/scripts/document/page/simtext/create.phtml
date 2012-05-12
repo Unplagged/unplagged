@@ -1,7 +1,4 @@
-<?php
-$this->title = $this->translate("Simtext page");
-$this->headTitle($this->title);
-?>
+<?php $this->headTitle($this->title); ?>
+<h3><?php echo $this->subtitle; ?> <small>Simtext</small></h3>
 
-<p>What document do you want this page to compare to?</p>
 <?php echo $this->simtextForm; ?>

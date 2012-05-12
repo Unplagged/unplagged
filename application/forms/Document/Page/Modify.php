@@ -37,6 +37,7 @@ class Application_Form_Document_Page_Modify extends Zend_Form{
 
     $contentElement = new Zend_Form_Element_Textarea('content');
     $contentElement->setLabel("Content");
+    $contentElement->setOptions(array('class'=>'line-numbers big'));
 
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Save page');

@@ -50,6 +50,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * ,"user" = "Application_Model_User"
  * ,"versionable_version" = "Application_Model_Versionable_Version"
  * ,"document_page_line" = "Application_Model_Document_Page_Line"
+ * ,"rating" = "Application_Model_Rating"
  * })
  */
 abstract class Application_Model_Base{
@@ -75,6 +76,14 @@ abstract class Application_Model_Base{
    * @JoinColumn(name="comment_id", referencedColumnName="id")
    */
   private $comments;
+  
+    /** 
+   * @var string The base element ratings.
+   * 
+   * @OneToMany(targetEntity="Application_Model_Rating", mappedBy="source")
+   * @JoinColumn(name="rating_id", referencedColumnName="id")
+   */
+  private $ratings;
 
   /**
    * @var ArrayCollection The notifications related to this object.
@@ -87,6 +96,7 @@ abstract class Application_Model_Base{
 
   public function __construct(){
     $this->comments = new ArrayCollection();
+    $this->ratings = new ArrayCollection();
   }
 
   public function getId(){
@@ -143,9 +153,23 @@ abstract class Application_Model_Base{
   public function getComments(){
     return $this->comments;
   }
+  
+  public function getRatings(){
+    return $this->ratings;
+  }
 
   public function getCreated(){
     return $this->created;
+  }
+  
+    
+  public function isRatedByUser($user) {
+    foreach($this->ratings as $rating) {
+      if($rating->getUser()->getId() == $user->getId()) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

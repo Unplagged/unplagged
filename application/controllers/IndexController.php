@@ -33,5 +33,12 @@ class IndexController extends Unplagged_Controller_Action{
     //Zend_Registry::get('Log')->debug('Index');
   }
 
+  /**
+   * Used to render an empty page when the user is not allowed to access the actual data. 
+   */
+  public function emptyAction(){
+    $this->_helper->viewRenderer->setNoRender(true);
+    Zend_Layout::getMvcInstance()->sidebar = null;
+  }
 
 }

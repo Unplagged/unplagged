@@ -36,14 +36,14 @@ class CaseController extends Unplagged_Controller_Action{
       if($result){
         // notification
         $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        Unplagged_Helper::notify("case_created", $result, $user);
+        Unplagged_Helper::notify('case_created', $result, $user);
 
         $this->_helper->FlashMessenger(array('success'=>'The case was created successfully.'));
         $this->_helper->redirector('list', 'case');
       }
     }
 
-    $this->view->title = "Create case";
+    $this->view->title = 'Create case';
     $this->view->modifyForm = $modifyForm;
     $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
   }
@@ -79,6 +79,7 @@ class CaseController extends Unplagged_Controller_Action{
       $this->view->modifyForm = $modifyForm;
       $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
     }else{
+      $this->_helper->FlashMessenger(array('error'=>'The specified case does not exist.'));
       $this->_helper->redirector('list', 'case');
     }
   }
@@ -98,7 +99,7 @@ class CaseController extends Unplagged_Controller_Action{
       $case->actions = array();
 
       $action['link'] = '/case/edit/id/' . $case->getId();
-      $action['title'] = 'Edit case';
+      $action['label'] = 'Edit case';
       $action['icon'] = 'images/icons/pencil.png';
       $case->actions[] = $action;
     endforeach;
@@ -128,32 +129,32 @@ class CaseController extends Unplagged_Controller_Action{
 
         if($file->getIsTarget()){
           $action['link'] = '/file/unset-target/id/' . $file->getId();
-          $action['title'] = 'Unset target';
+          $action['label'] = 'Unset target';
           $action['icon'] = 'images/icons/page_find.png';
           $file->actions[] = $action;
         }else{
           $action['link'] = '/file/set-target/id/' . $file->getId();
-          $action['title'] = 'Set target';
+          $action['label'] = 'Set target';
           $action['icon'] = 'images/icons/page.png';
           $file->actions[] = $action;
         }
         $action['link'] = '/file/parse/id/' . $file->getId();
-        $action['title'] = 'Parse';
+        $action['label'] = 'Parse';
         $action['icon'] = 'images/icons/page_gear.png';
         $file->actions[] = $action;
 
         $action['link'] = '/file/download/id/' . $file->getId();
-        $action['title'] = 'Download';
+        $action['label'] = 'Download';
         $action['icon'] = 'images/icons/disk.png';
         $file->actions[] = $action;
 
         $action['link'] = '/file/delete/id/' . $file->getId();
-        $action['title'] = 'Delete';
+        $action['label'] = 'Delete';
         $action['icon'] = 'images/icons/delete.png';
         $file->actions[] = $action;
 
         $action['link'] = '/user/add-file/id/' . $file->getId();
-        $action['title'] = 'Add to personal files';
+        $action['label'] = 'Add to personal files';
         $action['icon'] = 'images/icons/basket_put.png';
         $file->actions[] = $action;
 
@@ -188,17 +189,25 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
   private function handleModifyData(Application_Form_Case_Modify $modifyForm, Application_Model_Case $case = null){
-    if(!($case)){
-      $case = new Application_Model_Case();
-    }
 
     $formData = $this->_request->getPost();
     if($modifyForm->isValid($formData)){
+      if(!($case)){
+        $case = new Application_Model_Case();
+        $case->setName($formData['name']);
+        $case->setAbbreviation($formData['abbreviation']);
+        $case->setAlias($formData['alias']);
+        //flush here, so that we can use the id
+        $this->_em->persist($case);
+        $this->_em->flush();
+        
+        $this->initBasicRolesForCase($case);
+      }else{
 
-      $case->setName($formData['name']);
-      $case->setAlias($formData['alias']);
-      $case->setAbbreviation($formData['abbreviation']);
-
+        $case->setAlias($formData['alias']);
+        $case->setName($formData['name']);
+        $case->setAbbreviation($formData['abbreviation']);
+      }
       /*
         // add the collaborators
         $case->clearCollaborators();
@@ -241,6 +250,12 @@ class CaseController extends Unplagged_Controller_Action{
     return false;
   }
 
-}
+  private function initBasicRolesForCase(Application_Model_Case $case){
+    $adminRole = new Application_Model_User_InheritableRole();
+    $adminRole->setRoleId('admin_case-' . $case->getId());
+    
+    $case->addDefaultRole($adminRole);
+  }
 
+}
 ?>

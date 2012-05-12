@@ -1,9 +1,9 @@
 <div class="btn-group">
-  <button class="btn dropdown-toggle"><?php echo $this->translate('Action'); ?> <span class="caret"></span></button>
+  <button class="btn dropdown-toggle" data-toggle="dropdown"><?php echo $this->translate('Action'); ?> <span class="caret"></span></button>
   <ul class="dropdown-menu pull-right">
     <?php foreach($this->actions as $action): ?>
       <li>
-        <a href="<?php echo $action['link']; ?>" title="<?php echo $this->translate($action['title']); ?>"><img class="icon" src="<?php echo $this->baseUrl($action['icon']); ?>" alt="" /> <?php echo $this->translate($action['title']); ?></a>
+        <a <?php if(array_key_exists('name', $action)): ?>class="<?php echo $action['name'] . '-action'; ?> tooltip-toggle"<?php endif; ?> href="<?php echo $action['link']; ?>" <?php if(array_key_exists('title', $action)): ?>title="<?php echo $this->translate($action['title']); ?>"<?php endif; ?>><img class="icon" src="<?php echo $this->baseUrl($action['icon']); ?>" alt="" /> <?php echo $this->translate($action['label']); ?></a>
       </li>
     <?php endforeach; ?>
   </ul>

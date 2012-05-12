@@ -1,7 +1,6 @@
-<?php
-$this->title = $this->translate("Edit page");
-$this->headTitle($this->title);
-?>
-Document: <?php echo $this->page->getDocument()->getTitle(); ?><br />
+<?php $this->headTitle($this->title); ?>
+<h3><?php echo $this->subtitle; ?> <small>Edit</small></h3>
 
 <?php echo $this->editForm; ?>
+
+<?php echo $this->partial('partials/next-prev-paginator.phtml', array('prevLink'=>$this->prevPageLink, 'nextLink'=>$this->nextPageLink)); ?>

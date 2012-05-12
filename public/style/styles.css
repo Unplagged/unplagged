@@ -8,7 +8,6 @@ audio:not([controls]) { display: none; }
 
 html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
 body { margin: 0; font-size: 13px; line-height: 1.231; }
-body, button, input, select, textarea { font-family: sans-serif; color: #222; }
 
 ::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
 ::selection { background: #fe57a1; color: #fff; text-shadow: none; }
@@ -66,7 +65,6 @@ td { vertical-align: top; }
 
 body { 
   background-color: #f5f5f5;
-  font-family: Helvetica, Arial, Sans-serif;
   color: #323232;
   min-width: 240px;
 }
@@ -74,7 +72,7 @@ body {
 h2 {
   color: #40c0e9;
   margin: 0;
-  font-weight: 100;
+  font-weight: 200;
   font-size: 17pt;
 }
 
@@ -283,21 +281,13 @@ h2 {
   display:none;
   position:absolute;
   z-index:10000;
-  color:black;
-  background-color:white;
   list-style-type: none;
-  margin: 0;
-  padding: 10px;
-  border: 1px solid #40bfe8;
 }
-
-.contextmenu li{
-  margin-top: 5px;
-  cursor: pointer;
+.contextmenu li > a:hover i, .contextmenu .active > a i, .contextmenu .active > a:hover i {
+  background-image:url("/images/glyphicons-halflings-white.png");
 }
-
-.contextmenu li:first-child{
-  margin-top: 0;
+.contextmenu .google-search-for {
+  display: none;
 }
 
 .drop-area {
@@ -623,22 +613,22 @@ nav#right-nav img {
   margin-right: 5px;
 }
 
-nav#right-nav ul li a .count {
-  padding: 1px 10px;
-  border: 1px #efefef solid;
-  -webkit-border-radius: 9px;
+nav#right-nav ul li a .badge {
   float: right;
   margin-right: 15px;
 }
 
+nav#right-nav ul li a .badge-light{
+  background-color: #888C95;
+}
 
 .default-container {
   background-color: #fbfbfb;
   border-bottom: 1px #d4d4d4 solid;
 
 }
-.default-container h3,
-.diff h3{
+.default-container h4,
+.diff h4{
   -moz-border-radius: 6px 6px 0 0;
   -webkit-border-radius: 6px 6px 0 0;
   border-radius: 6px 6px 0 0;  
@@ -655,11 +645,11 @@ table.default {
 }
 
 table.default th,
-.default-container h3,
-.diff h3{
+.default-container h4,
+.diff h4{
   color: #666666;
   text-align: left;
-  padding: 8px 5px 8px 15px;
+  padding: 8px 15px 8px 15px;
   font-weight: bold;
   text-shadow: 0 1px 0 rgba(255,255,255,.5); 
   border-bottom: 1px solid #ccc;
@@ -670,6 +660,12 @@ table.default th,
   background-image:     -ms-linear-gradient(top, #f5f5f5, #eee);
   background-image:      -o-linear-gradient(top, #f5f5f5, #eee); 
   background-image:         linear-gradient(top, #f5f5f5, #eee);
+}
+
+h3 {
+  border-bottom: 1px solid #EEE;
+  margin-bottom: 10px;
+  font-weight: normal;
 }
 
 table.default th:first-child {
@@ -725,10 +721,14 @@ table.default .progress {
 .zend_form dt {
   margin: 5px 0 2px 0;
 }
+.de-hyphen {
+  padding-top: 3px;
+}
+
 .src-wrapper .zend_form ol {
   padding-top: 15px;
   padding-bottom: 1px;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
 }
 .src-wrapper .zend_form ol label {
   margin-bottom: 0;
@@ -753,7 +753,6 @@ table.default .progress {
 .zend_form select,
 .zend_form textarea
 {
-  font-family: Arial, sans-serif;
   background: #ffffff;
   max-width: 450px;
   width: 90%;
@@ -788,6 +787,11 @@ table.default .progress {
   max-height: auto;
 }
 
+.zend_form textarea.big
+{
+  height: 500px;
+}
+
 .zend_form ul.errors {
   color: red;
   background-color: #ffedf1;
@@ -805,6 +809,9 @@ table.default .progress {
   font-size: 10pt;
   color: #555;
   text-align: left;
+    margin-top: -13px;
+    margin-bottom: -18px;
+
 }
 
 .zend_form fieldset dl {
@@ -860,12 +867,19 @@ dl.zend_form dd dt {
   width: 50%;
 }
 
+.zend_form #submit {
+  margin-top: 15px;
+}
+
 .document-page {
-  border: 1px #bbbbbb solid;
+  border: 1px solid #DDD;
   margin: 10px 0;
   -moz-box-shadow: 3px;
   -webkit-box-shadow: 3px;
   box-shadow: 3px;
+  -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -border-radius: 3px;
 }
 
 .document-page.diff {
@@ -917,6 +931,10 @@ dl.zend_form dd dt {
   color:#C9C9C9;
 }
 
+.fit-content {
+  width: 1px;
+  white-space: nowrap;
+}
 
 
 .ui-menu .ui-menu-item a.over {
@@ -925,6 +943,10 @@ dl.zend_form dd dt {
 .articlePicker
 {
   width: 450px;
+}
+
+.pager {
+  margin-top: 15px;
 }
 
 .articlePicker .remove {
@@ -1021,12 +1043,29 @@ dl.zend_form dd dt {
   font-size: 9pt;
 }
 
+.rating-approval {
+  background-color: #effbe9;
+}
+
+.rating-decline {
+  background-color: #fbf1e9;
+}
+
 /* icons */
 .btn i,
-.activity i{ 
-  background-size: 14px 14px;
+.activity i,
+.accordion i{ 
   background-repeat: no-repeat;
   margin-right: 5px;
+}
+.icon-fam {
+    background-size: 14px 14px;
+}
+.icon-database-add{
+  background: url(/images/icons/database_add.png);
+}
+.icon-edit {
+  background: url(/images/icons/pencil.png);
 }
 .icon-upload {
   background: url(/images/icons/page_white_get.png);
@@ -1086,6 +1125,10 @@ dl.zend_form dd dt {
 
 .icon-report {
   background: url(/images/icons/report.png);
+}
+
+.icon-rate {
+  background: url(/images/icons/star.png);
 }
 
 #activity-stream {
@@ -1435,7 +1478,6 @@ ins {
   padding: 4px 20px 4px 5px;
   outline: 0;
   border: 1px solid #aaa;
-  font-family: sans-serif;
   font-size: 1em;
 }
 .chzn-container-single .chzn-drop {
@@ -1484,7 +1526,6 @@ ins {
   color: #666;
   background: transparent !important;
   border: 0 !important;
-  font-family: sans-serif;
   font-size: 100%;
   height: 15px;
   padding: 5px;
@@ -1728,6 +1769,14 @@ ins {
 .fragmark-7 { background-color: #b8b8ff; }
 .fragmark-8 { background-color: #f5cf9f; }
 .fragmark-9 { background-color: #a5e6ed; }
+
+.float-right {
+  float: right;
+}
+
+.btn.btn-checkbox {
+  margin-right: 20px;
+}
 
 /* ==|== media queries ====================================================== */
 

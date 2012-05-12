@@ -1,23 +1,11 @@
-<?php
-$this->title = $this->translate('Page') . ' ' . $this->page->getPageNumber() . ' ' . $this->translate('of') . ' "' . $this->page->getDocument()->getTitle() . '"';
-$this->headTitle($this->title);
-?>
+<?php $this->headTitle($this->title); ?>
+<h3><?php echo $this->subtitle; ?> <small>Show</small></h3>
 
 <div class="document-page src-wrapper show-contextmenu">
   <?php echo $this->page->getContent('list'); ?>
 </div>
-<ul class="pager">
-  <?php if(!empty($this->prevPageLink)): ?>
-  <li class="previous"><a href="<?php echo $this->prevPageLink ?>"><?php echo $this->translate("previous page"); ?></a></li>
-  <?php else: ?>
-    <li class="previous disabled"><a href=""><?php echo $this->translate('Previous page'); ?></a></li>
-  <?php endif; ?>
-  <?php if(!empty($this->nextPageLink)): ?>
-  <li class="next"><a href="<?php echo $this->nextPageLink ?>"><?php echo $this->translate("next page"); ?></a></li>
-  <?php else: ?>
-    <li class="next disabled"><a href=""><?php echo $this->translate('Next page'); ?></a></li>
-  <?php endif; ?>
-</ul>
+
+<?php echo $this->partial('partials/next-prev-paginator.phtml', array('prevLink'=>$this->prevPageLink, 'nextLink'=>$this->nextPageLink)); ?>
 
 <?php // @todo: think about a better way to open a new page with post data in jquery ?>
 <form method="post" action="/document_fragment/create" id="fragment-create">

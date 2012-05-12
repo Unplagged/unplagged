@@ -52,7 +52,7 @@ class FileController extends Unplagged_Controller_Action{
 
         $newName = $this->_request->getPost('newName');
         $description = $this->_request->getPost('description');
-        
+
         // collect file information
         $fileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
         $fileExt = pathinfo($adapter->getFileName(), PATHINFO_EXTENSION);
@@ -67,7 +67,7 @@ class FileController extends Unplagged_Controller_Action{
         $data["extension"] = $fileExt;
         $data["location"] = 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
         $data['description'] = $description;
-        
+
         $file = new Application_Model_File($data);
         $this->_em->persist($file);
         $this->_em->flush();
@@ -118,41 +118,42 @@ class FileController extends Unplagged_Controller_Action{
 
       if($file->getIsTarget()){
         $action['link'] = '/file/unset-target/id/' . $file->getId();
-        $action['title'] = 'Unset target';
+        $action['label'] = 'Unset target';
         $action['icon'] = 'images/icons/page_find.png';
         $file->actions[] = $action;
       }else{
         $action['link'] = '/file/set-target/id/' . $file->getId();
-        $action['title'] = 'Set target';
+        $action['label'] = 'Set target';
         $action['icon'] = 'images/icons/page.png';
         $file->actions[] = $action;
       }
-      $action['link'] = '/file/parse/id/' . $file->getId();
-      $action['title'] = 'Parse';
-      $action['icon'] = 'images/icons/page_gear.png';
-      $file->actions[] = $action;
+      $parseAction['link'] = '/file/parse/id/' . $file->getId();
+      $parseAction['title'] = 'Parsing big files can take very long, you will be notified when this action is finalized.';
+      $parseAction['name'] = 'parse';
+      $parseAction['label'] = 'Parse';
+      $parseAction['icon'] = 'images/icons/page_gear.png';
+      $file->actions[] = $parseAction;
 
       $action['link'] = '/file/download/id/' . $file->getId();
-      $action['title'] = 'Download';
+      $action['label'] = 'Download';
       $action['icon'] = 'images/icons/disk.png';
       $file->actions[] = $action;
 
       $action['link'] = '/file/delete/id/' . $file->getId();
-      $action['title'] = 'Delete';
+      $action['label'] = 'Delete';
       $action['icon'] = 'images/icons/delete.png';
       $file->actions[] = $action;
 
       $action['link'] = '/user/add-file/id/' . $file->getId();
-      $action['title'] = 'Add to personal files';
+      $action['label'] = 'Add to personal files';
       $action['icon'] = 'images/icons/basket_put.png';
       $file->actions[] = $action;
 
 
       $action['link'] = '/case/add-file/id/' . $file->getId();
-      $action['title'] = 'Add to current case';
+      $action['label'] = 'Add to current case';
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
-
     }
 
     $this->view->paginator = $paginator;
@@ -185,12 +186,13 @@ class FileController extends Unplagged_Controller_Action{
         $this->_helper->FlashMessenger('No file found.');
         $this->_helper->redirector('list', 'file');
       }
+    }else{
+      $this->_helper->FlashMessenger('The file couldn\'t be found.');
+      $this->_helper->redirector('list', 'file');
     }
-
-    $this->_helper->FlashMessenger('The file couldn\'t be found.');
-    $this->_helper->redirector('list', 'file');
   }
 
+  
   public function setTargetAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
@@ -319,4 +321,5 @@ class FileController extends Unplagged_Controller_Action{
   }
 
 }
+
 ?>

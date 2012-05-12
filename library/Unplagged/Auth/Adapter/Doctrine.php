@@ -28,39 +28,30 @@
 class Unplagged_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface{
 
   /**
-   * The Entity/Classname which holds  the authentication data .
-   * @var string 
+   * @var string The Entity/Classname which holds  the authentication data .
    */
   private $authEntityName;
 
   /**
-   * The Field/Variable name which represents the users identity e.g. username.
-   * @var string 
+   * @var string The Field/Variable name which represents the users identity e.g. username.
    */
   private $authIdentityField;
 
   /**
-   * The Field/Variable name which represents the users credentials e.g. the password.
-   * @var string 
+   * @var string The Field/Variable name which represents the users credentials e.g. the password.
    */
   private $authCredentialField;
 
   /**
-   * The identity to be checked, normally the user id. 
-   * @var string 
+   * @var string The identity to be checked, normally the username.
    */
   private $identity;
 
   /**
-   * The credentials to be checked, e.g. the password. 
-   * @var string 
+   * @var string The credentials to be checked, e.g. the password.
    */
   private $credential;
 
-  /**
-   * Instance of an EntityManager 
-   * @var  
-   */
   private $entityManager;
 
   public function __construct($em = null, $authEntityName = null, $authIdentityField = null, $authCredentialField = null, $identity = null, $credential = null){

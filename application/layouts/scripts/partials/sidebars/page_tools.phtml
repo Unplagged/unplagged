@@ -1,7 +1,6 @@
 <nav id="right-nav">
   <ul class="nav nav-list">
-    <li class="nav-header">
-  Actions</li>
+    <li class="nav-header">Actions</li>
     <li>
       <a href="<?php echo "/document_page/show/id/" . $this->pageId; ?>">
         <img class="icon" src="<?php echo $this->baseUrl('images/icons/page.png'); ?>" title="<?php echo $this->translate("Show"); ?>" /><span><?php echo $this->translate("Show"); ?></span>
@@ -15,11 +14,6 @@
     <li>
       <a href="<?php echo "/document_page/delete/id/" . $this->pageId; ?>">
         <img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("Remove"); ?>" /><span><?php echo $this->translate("Remove"); ?></span>
-      </a>
-    </li>
-    <li>
-      <a href="#" class="create-fragment">
-        <img class="icon" src="<?php echo $this->baseUrl('images/icons/textfield_add.png'); ?>" title="<?php echo $this->translate("Create fragment"); ?>" /><span><?php echo $this->translate("Create fragment"); ?></span>
       </a>
     </li>
     <li>
@@ -37,8 +31,7 @@
         <img class="icon" src="<?php echo $this->baseUrl('images/icons/table_row_delete.png'); ?>" title="<?php echo $this->translate("Simtext"); ?>" /><span><?php echo $this->translate("Simtext"); ?></span>
       </a>
     </li>
-    <li class="nav-header">
-  Links</li>
+    <li class="nav-header">Links</li>
     <li>
       <a href="<?php echo "/document_fragment/list/page/" . $this->pageId; ?>">
         <img class="icon" src="<?php echo $this->baseUrl('images/icons/textfield_rename.png'); ?>" title="<?php echo $this->translate("Fragments"); ?>" /><span><?php echo $this->translate("Fragments"); ?></span>

@@ -29,7 +29,7 @@ class UserController extends Unplagged_Controller_Action{
     $this->auth = Zend_Auth::getInstance();
 
     Zend_Layout::getMvcInstance()->sidebar = 'default';
-    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
+    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository('Application_Model_Case')->findAll();
   }
 
   public function indexAction(){
@@ -61,7 +61,6 @@ class UserController extends Unplagged_Controller_Action{
 
       // log registration
       Unplagged_Helper::notify('user_registered', $user, $user);
-      // send registration mail
       Unplagged_Mailer::sendRegistrationMail($user);
 
       $this->_helper->FlashMessenger('In order to finish your registration, please check your E-Mails.');
@@ -81,6 +80,12 @@ class UserController extends Unplagged_Controller_Action{
     $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
     $user = new Application_Model_User($data);
 
+    //set all permissions as allowed for now
+    $allPermissions = $this->_em->getRepository('Application_Model_Permission')->findAll();
+    foreach($allPermissions as $permission){
+      $user->getRole()->addPermission($permission);  
+    }
+    
     // write back to persistence manager and flush it
     $this->_em->persist($user);
     $this->_em->flush();
@@ -107,32 +112,32 @@ class UserController extends Unplagged_Controller_Action{
 
       if($file->getIsTarget()){
         $action['link'] = '/file/unset-target/id/' . $file->getId();
-        $action['title'] = 'Unset target';
+        $action['label'] = 'Unset target';
         $action['icon'] = 'images/icons/page_find.png';
         $file->actions[] = $action;
       }else{
         $action['link'] = '/file/set-target/id/' . $file->getId();
-        $action['title'] = 'Set target';
+        $action['label'] = 'Set target';
         $action['icon'] = 'images/icons/page.png';
         $file->actions[] = $action;
       }
       $action['link'] = '/file/parse/id/' . $file->getId();
-      $action['title'] = 'Parse';
+      $action['label'] = 'Parse';
       $action['icon'] = 'images/icons/page_gear.png';
       $file->actions[] = $action;
 
       $action['link'] = '/file/download/id/' . $file->getId();
-      $action['title'] = 'Download';
+      $action['label'] = 'Download';
       $action['icon'] = 'images/icons/disk.png';
       $file->actions[] = $action;
 
       $action['link'] = '/file/delete/id/' . $file->getId();
-      $action['title'] = 'Delete';
+      $action['label'] = 'Delete';
       $action['icon'] = 'images/icons/delete.png';
       $file->actions[] = $action;
 
       $action['link'] = '/case/add-file/id/' . $file->getId();
-      $action['title'] = 'Add to current case';
+      $action['label'] = 'Add to current case';
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
     }
@@ -382,6 +387,10 @@ class UserController extends Unplagged_Controller_Action{
 
     // send form to view
     $this->view->removalForm = $removalForm;
+  }
+  
+  public function editRoleAction() {
+    $this->view->roleForm = new Application_Form_User_Role();
   }
 
 }

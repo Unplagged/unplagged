@@ -43,6 +43,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
 
     $this->view->fragment = $fragment;
     $this->view->plag = $fragment->getPlag();
@@ -50,13 +51,14 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     $this->view->content = $fragment->getContent('list', true);
 
-    /* // @todo remove, jsut for now to have something, it should be changed to explode("\n",...  
-      $plagText = $fragment->getPlag()->getText();
-      $sourceText = $fragment->getSource()->getText();
+    $this->view->ratings = $this->_em->getRepository("Application_Model_Rating")->findBySource($input->id);
 
-      $this->view->plagLines = explode("\n", $plagText);
-      $this->view->sourceLines = explode("\n", $sourceText);
-     */
+    $this->view->meId = $this->_defaultNamespace->userId;
+    
+    // check if the current user already rated this fragment
+    $this->view->fragmentIsRated = $fragment->isRatedByUser($user);
+        
+    
     Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
@@ -172,12 +174,12 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $fragment->actions = array();
 
       $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
-      $action['title'] = 'Edit fragment';
+      $action['label'] = 'Edit fragment';
       $action['icon'] = 'images/icons/pencil.png';
       $fragment->actions[] = $action;
 
       $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
-      $action['title'] = 'Remove fragment';
+      $action['label'] = 'Remove fragment';
       $action['icon'] = 'images/icons/delete.png';
       $fragment->actions[] = $action;
     endforeach;
@@ -217,6 +219,21 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     // disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
+  }
+
+  public function rateAction(){
+    $input = new Zend_Filter_Input(array('source'=>'Digits', 'id'=>'Digits'), null, $this->_getAllParams());
+
+    $params = array('redirect'=>'document_fragment/show/id/' . $input->source);
+
+    if($input->id){
+      $this->view->title = "Edit fragment rating";
+      $params['id'] = $input->id;
+      $this->_forward('edit', 'rating', '', $params);
+    }else{
+      $this->view->title = "Rate fragment";
+      $this->_forward('create', 'rating', '', $params);
+    }
   }
 
   private function handleModifyData(Application_Form_Document_Fragment_Modify $modifyForm, Application_Model_Document_Fragment $fragment = null){

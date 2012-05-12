@@ -8,7 +8,8 @@
 
 $(document).ready(function(){
   // lined textareas
-  $("textarea").numberfy();
+  $("textarea.line-numbers").numberfy();
+  $('.tooltip-toggle').tooltip();
 
   $('.dropdown-toggle').dropdown();
   $('.alert').prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');
@@ -20,6 +21,20 @@ $(document).ready(function(){
   }).change(function(){
     $(this).closest('form').submit();  
   });
+  
+  //select all for de-hyphen area
+  $('.de-hyphen form').css('position', 'relative').append('<a class="btn select-all" href=""><i class="icon-ok-circle"></i>Deselect all</a>');
+  var selectAllLink = $('.select-all');
+  selectAllLink.css({
+    position: 'absolute', 
+    right: 0, 
+    bottom: 0
+  }).toggle(function(){
+    $(this).html('<i class="icon-ok-circle"></i>Select all').parents('form').find('input[type=checkbox]').attr('checked', false);
+  }, function(){
+    $(this).html('<i class="icon-remove-circle"></i>Deselect all').parents('form').find('input[type=checkbox]').attr('checked', true);
+  });
+  
   
   // if js is enabled we only want to open the menu on click, the other behaviour is
   // just a fallback for non-js users
@@ -49,14 +64,14 @@ $(document).ready(function(){
     var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
 
     if(target.is(':visible')) {
-      $(this).html("<i class=\"icon-comments\"></i>Show comments");
+      $(this).html("<i class=\"icon-comments icon-fam\"></i>Show conversation");
       $(this).removeClass("expanded");
       
       target.slideUp(800, function() {
         comments.html("");
       });
     } else {
-      $(this).html("<i class=\"icon-comments\"></i>Hide comments");
+      $(this).html("<i class=\"icon-comments icon-fam\"></i>Hide conversation");
       $(this).addClass("expanded");
       target.show();
       comments.hide();
@@ -112,13 +127,13 @@ $(document).ready(function(){
   
   function addComment(data, target) {
     var tpl = '<div class="comment">' +
-      '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
-      '<div class="details">' +
-      '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
-      ' <span class="date">' + data.created + '</span>' +
-      '</div>' +
-      '</div>' +
-      '</div>';
+    '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
+    '<div class="details">' +
+    '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
+    ' <span class="date">' + data.created + '</span>' +
+    '</div>' +
+    '</div>' +
+    '</div>';
     target.append(tpl);
   }
   
@@ -163,12 +178,24 @@ $(document).ready(function(){
     
     return false;
   }
-  $("#compare-with-no-color").change(function(){
-    compareFragmentTexts($(this).val(), $(this).attr('checked'));
+  
+  $(".compare-with-color").click(function(){
+    var btn = $(this);
+    
+    if(btn.attr('data-colors') == 'true') {
+      btn.attr('data-colors', 'false');
+      compareFragmentTexts(btn.attr('data-value'), 'false');
+      btn.html('<i class="icon-ok-circle"></i>Show colors');
+    } else {
+      btn.attr('data-colors', 'true');
+      compareFragmentTexts(btn.attr('data-value'), 'true');
+      btn.html('<i class="icon-remove-circle"></i>Hide colors');
+    }
+    return false;
   });
   
   // creates a new fragment based on selected text
-  $('.create-fragment').click(function() {
+  $('.create-fragment').live('click', function() {
     var selectedText = window.getSelection().getRangeAt(0).toString();
 
     $('#fragment-content').val(selectedText);
@@ -305,4 +332,38 @@ $(document).ready(function(){
   });
 
   $('a.picture').lightBox();
+  
+  // turns checkboxes in forms into single toggle elements
+  $('input[type="checkbox"].btn').each(function(index) {
+    var element = $(this);
+    var classes = element.attr('class');
+
+    // get label value and hide the element afterwards
+    var label = $('#' + element.attr('id') + '-label label').text();
+    $('#' + element.attr('id') + '-label').hide();
+    $('#' + element.attr('id') + '-element').hide();
+    
+    if(element.is(':checked')){
+      classes += ' active';
+    }
+    
+    // insert the new bootstrap-based element
+    element.parent().parent().append('<a class="' + classes + '" data-toggle="button" data-checkbox="' + element.attr('id') + '">' + label + '</a>');
+    
+  });
+  
+  $('.btn[data-toggle="button"]').click(function(){
+    var id = $(this).attr('data-checkbox');
+    var cb = $('#' + id);
+    
+    cb.attr('checked', !cb.is(':checked'));
+    
+    if(cb.hasClass('inherited')){
+      if($(this).hasClass('btn-primary')) {
+        $(this).removeClass('btn-primary');
+      } else {
+        $(this).addClass('btn-primary');
+      }
+    }
+  });
 });

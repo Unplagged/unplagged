@@ -122,7 +122,7 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
   }
 
   public function getTitle(){
-    return 'ABC' . $this->getPlag()->getLineFrom()->getPage()->getPageNumber();
+    return 'Fragment ABC' . $this->getPlag()->getLineFrom()->getPage()->getPageNumber();
   }
 
   public function getNote(){
