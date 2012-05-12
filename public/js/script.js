@@ -343,12 +343,12 @@ $(document).ready(function(){
     $('#' + element.attr('id') + '-label').hide();
     $('#' + element.attr('id') + '-element').hide();
     
-    if(element.is(':checked')){
-      classes += ' active';
-    }
     
     // insert the new bootstrap-based element
     element.parent().parent().append('<a class="' + classes + '" data-toggle="button" data-checkbox="' + element.attr('id') + '">' + label + '</a>');
+    if(element.is(':checked')){
+      $('a[data-checkbox="' + element.attr('id') + '"]').trigger('click').addClass('active');
+    }
     
   });
   
