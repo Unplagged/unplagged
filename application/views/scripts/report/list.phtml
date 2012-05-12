@@ -1,5 +1,5 @@
 <?php
-$this->title = $this->translate("List of reports");
+$this->title = $this->translate("List of final reports");
 $this->headTitle($this->title);
 ?>
 <table cellpadding="0" cellspacing="0" class="default"> 
@@ -7,20 +7,25 @@ $this->headTitle($this->title);
     <tr>
       <th><?php echo $this->translate("Title"); ?></th>
       <th style="width: 70px;"><?php echo $this->translate("Case"); ?></th>
-      <th style="width: 70px;"><?php echo $this->translate("Date"); ?></th>
-      <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
+      <th style="width: 70px;"><?php echo $this->translate("State"); ?></th>
+      <th style="width: 100px;"><?php echo $this->translate("Source"); ?></th>
     </tr>
   </thead>
    <tbody>
     <?php if(count($this->paginator)): ?>
-      <?php foreach($this->paginator as $fragment): ?>
+      <?php foreach($this->paginator as $report): ?>
         <tr>
-          
+          <?php if($report->getState()->getName() == "report_generated"){ ?>
+            <td data-label="<?php echo $this->translate("Title"); ?>"><a href="<?php echo $report->getDirectLink(); ?>"><?php echo $report->getTitle(); ?></a></td>
+          <?php }else{ ?>
+            <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $report->getTitle(); ?></td>
+          <?php } ?>
+          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $report->outputState; ?></td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
       <tr>
-        <td colspan="5" class="no-label"><?php echo $this->translate("No fragments found."); ?></td>
+        <td colspan="5" class="no-label"><?php echo $this->translate("No reports found."); ?></td>
       </tr>
     <?php endif; ?>
   </tbody>

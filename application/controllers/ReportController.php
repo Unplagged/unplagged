@@ -1,4 +1,9 @@
 <?php
+
+// include the domPdf library
+require_once(BASE_PATH.'/library/dompdf/dompdf_config.inc.php');
+spl_autoload_register('DOMPDF_autoload');
+				
 class ReportController extends Unplagged_Controller_Versionable{
 
   public function init(){
@@ -21,83 +26,84 @@ class ReportController extends Unplagged_Controller_Versionable{
      $modifyForm = new Application_Form_Report_Modify();
 	 
 	 
-		$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+	 $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
 		
-		// get current case
-		$currentCase = $user->getCurrentCase();
-		//$this->_helper->flashMessenger->addMessage( $currentCase);
-		
-		// get current case name
-		$case = $currentCase->getPublishableName();
-	 
-	 $modifyForm->getElement("case")->setValue($case);
-	 
-	 $formData = $this->_request->getPost();
+	// get current case
+	$currentCase = $user->getCurrentCase();
+	//$this->_helper->flashMessenger->addMessage( $currentCase);
+	
+	// get current case name
+	$case = $currentCase->getPublishableName();	 
+	$modifyForm->getElement("case")->setValue($case);
+	
+	// get files of current case
+	$files = $currentCase->getFiles();
+	$fileId = 0;
+	
+	foreach($files as $file) {
+			if( $file->getIsTarget()){
+				//$this->_helper->flashMessenger->addMessage( $file->getId());
+				$fileId = $file->getId();
+		}
+	}
+		 
+	$formData = $this->_request->getPost();
     //if($this->_request->isPost()){// && empty($input->page)){
 	
 	if($modifyForm->isValid($formData)){
-   	 require_once(BASE_PATH.'/library/dompdf/dompdf_config.inc.php');
-		 spl_autoload_register('DOMPDF_autoload');
-		
+				
 		$casename =  $formData['case'];
 		$note = $formData['note'];
 		
-		// get files of current case
-		//$files = $currentCase->getFiles();
-		//$files = $user->getFiles();
-		//$documents = array();
-		
-		// foreach($files as $file) {
-			
-			
-			// if( $file->getIsTarget()){
-				// $this->_helper->flashMessenger->addMessage( $file->getId());
-				// $fileId = $file->getId();
-				
-				// $query = $this->_em->createQuery("SELECT d FROM Application_Model_Document d WHERE d.originalFile = $fileId");
-				// //$query = $this->_em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
-				// $documents = $query->getResult();
-				
-			// }
-		// }
-				// // get documents of target file
-		// foreach($documents as $document){
-				// //$this->_helper->flashMessenger->addMessage( $document->getId());
-					
-				// // get bibtex
-				// $bibTex .= $document->getBibTex();
-				// $this->_helper->flashMessenger->addMessage($bibTex);
-					
-				// // get fragments
-				// //$fragments = $document->getFragments();
-				
-				
-		// }
+		$filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
+		$filename = $filepath . DIRECTORY_SEPARATOR . "Report_". $casename . ".pdf";
 		
 		$query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f");
-		//$query = $this->_em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
 		$fragments = $query->getResult();
+				
+		// save report to database to get an Id
+		$data = array();
+		$data["title"] = $casename;
+	    $data["state"] = "generated";//$this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+	    $data["user"] = $user->getId();
+	    $data["file"] = $fileId;
+		$data["filePath"] = $filename;
+	    $report = new Application_Model_Report($data);
+			
+		$this->_em->persist($report);
+        //$this->_em->flush();		 
+		 
 		
 		$html = Unplagged_HtmlLayout::htmlLayout($casename,$note,$fragments);
 			      
 		$dompdf = new DOMPDF();
 		$dompdf->set_paper('a4', 'portrait');
 		$dompdf->load_html($html);
-		$dompdf->render();
-		$filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
-		$filename = $filepath . DIRECTORY_SEPARATOR . "Brochure.pdf";
+		$dompdf->render();		
 		//$dompdf->stream($filename);
 		$output = $dompdf->output();
-		 file_put_contents($filename, $output);
-	 		
-      if($filename){
-    
-        $this->_helper->flashMessenger->addMessage('The report was created successfully.');
+		file_put_contents($filename, $output);	 				
+		
+		
+      if($output){	  
+		$this->_helper->flashMessenger->addMessage('The report was created successfully.');
 		//$this->_helper->flashMessenger->addMessage($output);
         $this->_helper->redirector('list', 'report');
       }
-    }
+	  
+	 
+		
+		// // start task
+		// // $data = array();
+		// // $data["initiator"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+		// // $data["ressource"] = $report;
+		// // $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('page_simtext');
+		// // $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+		// // $task = new Application_Model_Task($data);
 
+		 
+    }
+	
     $this->view->title = "Create report";
     $this->view->modifyForm = $modifyForm;
     //$this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'report'));
@@ -106,8 +112,8 @@ class ReportController extends Unplagged_Controller_Versionable{
 	public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
-    $query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f");
-    $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_Document_Fragment f");
+    $query = $this->_em->createQuery("SELECT r FROM Application_Model_Report r");
+    $count = $this->_em->createQuery("SELECT COUNT(r.id) FROM Application_Model_Report r");
 
     $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);

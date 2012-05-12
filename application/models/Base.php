@@ -45,6 +45,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * ,"file" = "Application_Model_File"
  * ,"notification" = "Application_Model_Notification"
  * ,"simtext_report" = "Application_Model_Document_Page_SimtextReport"
+ * ,"report" = "Application_Model_Report"
  * ,"tag" = "Application_Model_Tag"
  * ,"user" = "Application_Model_User"
  * ,"versionable_version" = "Application_Model_Versionable_Version"

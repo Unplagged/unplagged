@@ -285,7 +285,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'report',
         'action'=>'list',
-        //'resource'=>'document_list'
+        //'resource'=>'report_list'
       ),array(
         'label'=>'Administration',
         'title'=>'Administration',
