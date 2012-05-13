@@ -24,8 +24,7 @@ class ReportController extends Unplagged_Controller_Versionable{
     //$page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->page);
 
      $modifyForm = new Application_Form_Report_Modify();
-	 
-	 
+	 	 
 	 $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
 		
 	// get current case
@@ -46,7 +45,7 @@ class ReportController extends Unplagged_Controller_Versionable{
 				$rfile = $file;
 		}
 	}
-		 if($this->_request->isPost()){
+		
 	$formData = $this->_request->getPost();
     //if($this->_request->isPost()){// && empty($input->page)){
 	
@@ -90,20 +89,9 @@ class ReportController extends Unplagged_Controller_Versionable{
 		//$this->_helper->flashMessenger->addMessage($output);
         $this->_helper->redirector('list', 'report');
       }
-	  
-	 
-		
-		// // start task
-		// // $data = array();
-		// // $data["initiator"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-		// // $data["ressource"] = $report;
-		// // $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('page_simtext');
-		// // $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
-		// // $task = new Application_Model_Task($data);
-
-		 
+	   
     }
-     }
+    
     $this->view->title = "Create report";
     $this->view->modifyForm = $modifyForm;
     //$this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'report'));
@@ -119,25 +107,42 @@ class ReportController extends Unplagged_Controller_Versionable{
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
-    // // generate the action dropdown for each fragment
-    // foreach($paginator as $fragment):
-      // $fragment->actions = array();
-
-      // $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
-      // $action['title'] = 'Edit fragment';
-      // $action['icon'] = 'images/icons/pencil.png';
-      // $fragment->actions[] = $action;
-
-      // $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
-      // $action['title'] = 'Remove fragment';
-      // $action['icon'] = 'images/icons/delete.png';
-      // $fragment->actions[] = $action;
-    // endforeach;
-
     $this->view->paginator = $paginator;
 
     Zend_Layout::getMvcInstance()->sidebar = null;
     Zend_Layout::getMvcInstance()->versionableId = null;
+  }
+  
+  public function downloadAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $report = $this->_em->getRepository('Application_Model_Report')->findOneById($input->id);
+      if($report){
+        // disable view
+		
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);		
+		$report_name = "Report_" . $report->getTitle() . ".pdf";
+	    $downloadPath = $report->getFilePath();
+		
+	    // set headers
+	    header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+	    header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+	    header("Content-Description: File Transfer");
+	    header("Content-Disposition: attachment; filename=\"" . $report_name . "\"");
+	    header("Content-type: application/pdf");
+	    header("Content-Transfer-Encoding: binary");
+
+        readfile($downloadPath);
+      }else{
+        $this->_helper->FlashMessenger('No report found.');
+        $this->_helper->redirector('list', 'report');
+      }
+    }else{
+      $this->_helper->FlashMessenger('The report couldn\'t be found.');
+      $this->_helper->redirector('list', 'report');
+    }
   }
   
 }

@@ -14,9 +14,9 @@
 	  
         <tr> 
 		  <td style="width: 20px;"></td>
-          <td data-label="<?php echo $this->translate("Casename"); ?>"><a href="<?php echo $report->getDirectLink(); ?>"><?php echo $report->getTitle(); ?></a></td>
+          <td data-label="<?php echo $this->translate("Casename"); ?>"><a href="/report/download/id/<?php echo $report->getId(); ?>"><?php echo $report->getTitle(); ?></a></td>
           <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $report->getState()->getTitle();; ?></td>
-          <td data-label="<?php echo $this->translate("Source"); ?> class="fit-content""><a href=""><?php echo $report->getFile()->getFilename(); ?></td>
+          <td data-label="<?php echo $this->translate("Source"); ?> class="fit-content""><a href="<?php echo $report->getFile()->getDirectLink()?>"><?php echo $report->getFile()->getFilename(); ?></a></td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>

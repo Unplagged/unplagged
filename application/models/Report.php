@@ -46,7 +46,7 @@ class Application_Model_Report extends Application_Model_Base{
   
   
   /**
-   * @OneToOne(targetEntity="Application_Model_File", cascade={"remove"})
+   * @ManyToOne(targetEntity="Application_Model_File", cascade={"remove"})
    * @JoinColumn(name="file_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $file;
@@ -136,8 +136,12 @@ class Application_Model_Report extends Application_Model_Base{
     return $this->getTitle();
   }
 
+  public function getFilePath(){
+    return $this->filePath;
+  }
+  
   public function getDirectLink(){
-    return "/report/list/" . $this->id;
+    return "/report/list/id/" . $this->id;
   }
 
 }
