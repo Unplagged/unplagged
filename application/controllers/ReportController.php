@@ -32,7 +32,7 @@ class ReportController extends Unplagged_Controller_Versionable {
         $formData = $this->_request->getPost();
         //if($this->_request->isPost()){// && empty($input->page)){      
 
-        if ($modifyForm->isValid($formData)) {
+        if ($modifyForm->isValid($formData) && $this->_request->isPost()) {
       
             //Cron_Document_Page_Reportcreater::start();
             // Create a report_requested task
@@ -46,14 +46,8 @@ class ReportController extends Unplagged_Controller_Versionable {
             $this->_em->flush();
 
             // Inform the user that the process will be started
-            //$this->_helper->flashMessenger->addMessage('The report-generating process has been started.');
-            //$this->_helper->redirector('list', 'report');
-            
-//            if ($output) {
-//                $this->_helper->flashMessenger->addMessage('The report was created successfully.');
-//                //$this->_helper->flashMessenger->addMessage($output);
-//                $this->_helper->redirector('list', 'report');
-//            }
+            $this->_helper->flashMessenger->addMessage('The report-generating process has been started.');
+            $this->_helper->redirector('list', 'report');
         }
 
         $this->view->title = "Create report of ".$case;
@@ -65,15 +59,15 @@ class ReportController extends Unplagged_Controller_Versionable {
         $input = new Zend_Filter_Input(array('page' => 'Digits'), null, $this->_getAllParams());
         $query = $this->_em->createQuery("SELECT r FROM Application_Model_Report r");
         $count = $this->_em->createQuery("SELECT COUNT(r.id) FROM Application_Model_Report r");
-
+    
         $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
         $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
         $paginator->setCurrentPageNumber($input->page);
 
         $this->view->paginator = $paginator;
 
-        Zend_Layout::getMvcInstance()->sidebar = null;
-        Zend_Layout::getMvcInstance()->versionableId = null;
+//        Zend_Layout::getMvcInstance()->sidebar = null;
+//        Zend_Layout::getMvcInstance()->versionableId = null;
     }
 
     public function downloadAction() {
