@@ -111,6 +111,13 @@ class Unplagged_Helper{
     $em->persist($notification);
     $em->flush();
   }
+  
+  public static function jsTime(DateTime $dateTime) {
+    $result['dateTime'] = $dateTime->format('Y-m-d H:i:s');
+    $result['humanTiming'] = Unplagged_Helper::humanTiming($dateTime);
+    
+    return $result;
+  }
 
   public static function humanTiming(DateTime $dateTime){
 
