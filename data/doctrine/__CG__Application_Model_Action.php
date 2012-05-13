@@ -66,6 +66,24 @@ class Application_Model_Action extends \Application_Model_Action implements \Doc
         return parent::getTitle();
     }
 
+    public function setName($name)
+    {
+        $this->__load();
+        return parent::setName($name);
+    }
+
+    public function setTitle($title)
+    {
+        $this->__load();
+        return parent::setTitle($title);
+    }
+
+    public function setDescription($description)
+    {
+        $this->__load();
+        return parent::setDescription($description);
+    }
+
 
     public function __sleep()
     {

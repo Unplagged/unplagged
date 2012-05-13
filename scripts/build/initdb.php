@@ -274,6 +274,14 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("page_simtext
   $action = new Application_Model_Action($data);
   $em->persist($action);
 }
+if(!($em->getRepository('Application_Model_Action')->findOneByName("report_requested"))){
+  unset($data);
+  $data["name"] = "report_requested";
+  $data["title"] = "User requested a report";
+  $data["description"] = "A user requested a fragment report.";
+  $action = new Application_Model_Action($data);
+  $em->persist($action);
+}
 if(!($em->getRepository('Application_Model_State')->findOneByName("task_running"))){
   unset($data);
   $data["name"] = "task_running";
