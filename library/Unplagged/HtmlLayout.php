@@ -44,7 +44,7 @@ public static function htmlLayout($case, $note, $fragments){
 				'<p>Source Bibtext' . $bibTexSource .'</p>';
 		
 		$html .= '<p> Page from: ' . $pageFromPlag . ' to:' . $pageToPlag . '</p>'.
-				'<p> Page from: ' . $lpageFromSource . ' to:' . $pageToSource . '</p>';
+				'<p> Page from: ' . $pageFromSource . ' to:' . $pageToSource . '</p>';
 				
 		
 		$html .= '<p>Plagiarized Text </p>' . 

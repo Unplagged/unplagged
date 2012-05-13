@@ -20,61 +20,20 @@ class ReportController extends Unplagged_Controller_Versionable {
         //$page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->page);
 
         $modifyForm = new Application_Form_Report_Modify();
-
-
         $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
 
         // get current case
         $currentCase = $user->getCurrentCase();
-        //$this->_helper->flashMessenger->addMessage( $currentCase);
+        //$this->_helper->flashMessenger->addMessage( $currentCase);     
         // get current case name
         $case = $currentCase->getPublishableName();
-
         $modifyForm->getElement("case")->setValue($case);
 
         $formData = $this->_request->getPost();
-        //if($this->_request->isPost()){// && empty($input->page)){
+        //if($this->_request->isPost()){// && empty($input->page)){      
 
         if ($modifyForm->isValid($formData)) {
-//            require_once(BASE_PATH . '/library/dompdf/dompdf_config.inc.php');
-//            spl_autoload_register('DOMPDF_autoload');
-//
-//            $casename = $formData['case'];
-//            $note = $formData['note'];
-//
-//            // get files of current case
-//            //$files = $currentCase->getFiles();
-//            //$files = $user->getFiles();
-//            //$documents = array();
-//            // foreach($files as $file) {
-//            // if( $file->getIsTarget()){
-//            // $this->_helper->flashMessenger->addMessage( $file->getId());
-//            // $fileId = $file->getId();
-//            // $query = $this->_em->createQuery("SELECT d FROM Application_Model_Document d WHERE d.originalFile = $fileId");
-//            // //$query = $this->_em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
-//            // $documents = $query->getResult();
-//            // }
-//            // }
-//            // // get documents of target file
-//            // foreach($documents as $document){
-//            // //$this->_helper->flashMessenger->addMessage( $document->getId());
-//            // // get bibtex
-//            // $bibTex .= $document->getBibTex();
-//            // $this->_helper->flashMessenger->addMessage($bibTex);
-//            // // get fragments
-//            // //$fragments = $document->getFragments();
-//            // }
-//
-//            $query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f");
-//            //$query = $this->_em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
-//            $fragments = $query->getResult();
-//            $filename = Unplagged_Report::createReport($casename, $note, $fragments);          
-//            if ($filename) {
-//
-//                $this->_helper->flashMessenger->addMessage('The report was created successfully.');
-//                //$this->_helper->flashMessenger->addMessage($output);
-//                $this->_helper->redirector('list', 'report');
-//            }
+      
             //Cron_Document_Page_Reportcreater::start();
             // Create a report_requested task
             $data = array();
@@ -89,6 +48,12 @@ class ReportController extends Unplagged_Controller_Versionable {
             // Inform the user that the process will be started
             //$this->_helper->flashMessenger->addMessage('The report-generating process has been started.');
             //$this->_helper->redirector('list', 'report');
+            
+//            if ($output) {
+//                $this->_helper->flashMessenger->addMessage('The report was created successfully.');
+//                //$this->_helper->flashMessenger->addMessage($output);
+//                $this->_helper->redirector('list', 'report');
+//            }
         }
 
         $this->view->title = "Create report";
@@ -98,31 +63,49 @@ class ReportController extends Unplagged_Controller_Versionable {
 
     public function listAction() {
         $input = new Zend_Filter_Input(array('page' => 'Digits'), null, $this->_getAllParams());
-
-        $query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f");
-        $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_Document_Fragment f");
+        $query = $this->_em->createQuery("SELECT r FROM Application_Model_Report r");
+        $count = $this->_em->createQuery("SELECT COUNT(r.id) FROM Application_Model_Report r");
 
         $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
         $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
         $paginator->setCurrentPageNumber($input->page);
 
-        // // generate the action dropdown for each fragment
-        // foreach($paginator as $fragment):
-        // $fragment->actions = array();
-        // $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
-        // $action['title'] = 'Edit fragment';
-        // $action['icon'] = 'images/icons/pencil.png';
-        // $fragment->actions[] = $action;
-        // $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
-        // $action['title'] = 'Remove fragment';
-        // $action['icon'] = 'images/icons/delete.png';
-        // $fragment->actions[] = $action;
-        // endforeach;
-
         $this->view->paginator = $paginator;
 
         Zend_Layout::getMvcInstance()->sidebar = null;
         Zend_Layout::getMvcInstance()->versionableId = null;
+    }
+
+    public function downloadAction() {
+        $input = new Zend_Filter_Input(array('id' => 'Digits'), null, $this->_getAllParams());
+
+        if (!empty($input->id)) {
+            $report = $this->_em->getRepository('Application_Model_Report')->findOneById($input->id);
+            if ($report) {
+                // disable view
+
+                $this->view->layout()->disableLayout();
+                $this->_helper->viewRenderer->setNoRender(true);
+                $report_name = "Report_" . $report->getTitle() . ".pdf";
+                $downloadPath = $report->getFilePath();
+
+                // set headers
+                header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+                header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+                header("Content-Description: File Transfer");
+                header("Content-Disposition: attachment; filename=\"" . $report_name . "\"");
+                header("Content-type: application/pdf");
+                header("Content-Transfer-Encoding: binary");
+
+                readfile($downloadPath);
+            } else {
+                $this->_helper->FlashMessenger('No report found.');
+                $this->_helper->redirector('list', 'report');
+            }
+        } else {
+            $this->_helper->FlashMessenger('The report couldn\'t be found.');
+            $this->_helper->redirector('list', 'report');
+        }
     }
 
 }

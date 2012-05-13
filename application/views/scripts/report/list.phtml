@@ -1,26 +1,31 @@
 <?php
-$this->title = $this->translate("List of reports");
+$this->title = $this->translate("List of final reports");
 $this->headTitle($this->title);
 ?>
-<table cellpadding="0" cellspacing="0" class="default"> 
+<table cellpadding="0" cellspacing="0" class="default">
   <thead>
     <tr>
-      <th><?php echo $this->translate("Title"); ?></th>
-      <th style="width: 70px;"><?php echo $this->translate("Case"); ?></th>
-      <th style="width: 70px;"><?php echo $this->translate("Date"); ?></th>
-      <th style="width: 100px;"><?php echo $this->translate("Actions"); ?></th>
+      <th style="width: 20px;"></th>
+      <th><?php echo $this->translate("Report"); ?></th>
+      <th style="width: 110px;"><?php echo $this->translate("State"); ?></th>
+	  <th style="width: 110px;"><?php echo $this->translate("Source"); ?></th>
+      <th class="fit-content"><?php echo $this->translate(""); ?></th>
     </tr>
   </thead>
-   <tbody>
+  <tbody>
     <?php if(count($this->paginator)): ?>
-      <?php foreach($this->paginator as $fragment): ?>
-        <tr>
-          
+      <?php foreach($this->paginator as $report): ?>
+	  
+        <tr> 
+		  <td style="width: 20px;"></td>
+          <td data-label="<?php echo $this->translate("Report"); ?>"><a href="/report/download/id/<?php echo $report->getId(); ?>"><?php echo $report->getTitle(); ?></a></td>
+          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $report->getState()->getTitle();; ?></td>
+          <td data-label="<?php echo $this->translate("Source"); ?> class="fit-content""><a href="<?php echo $report->getFile()->getDirectLink()?>"><?php echo $report->getFile()->getFilename(); ?></a></td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
       <tr>
-        <td colspan="5" class="no-label"><?php echo $this->translate("No fragments found."); ?></td>
+        <td colspan="4" class="no-label"><?php echo $this->translate("No reports found."); ?></td>
       </tr>
     <?php endif; ?>
   </tbody>
@@ -28,3 +33,4 @@ $this->headTitle($this->title);
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
 
 <a class="btn btn-primary" href="/report/create"><i class="icon-create-fragment"></i><?php echo $this->translate("Create a report"); ?></span></a>
+
