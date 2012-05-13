@@ -1,9 +1,9 @@
-<div class="comments-wrapper" id="comments-wrapper-<?php echo $this->sourceId; ?>" <?php echo $this->hidden ? " style=\"display: none\"" : ""; ?>>
+<div class="conversation-wrapper" id="conversation-wrapper-<?php echo $this->sourceId; ?>" <?php echo $this->hidden ? " style=\"display: none\"" : ""; ?>>
   <div class="arrow-wrapper">
     <div class="arrow-down"></div>
   </div>
-  <div class="comments-loading"><img src="/images/ajax-loader.gif" alt="" /></div>
-  <div class="comments"></div>
+  <div class="conversation-loading"><img src="/images/ajax-loader.gif" alt="" /></div>
+  <div class="conversation"></div>
   <div class="write-comment-box">
     <input type="text" name="text" placeholder="Write a comment" class="comment-field" />
     <input type="hidden" name="sourceId" value="<?php echo $this->sourceId; ?>" />

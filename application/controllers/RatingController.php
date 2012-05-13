@@ -68,9 +68,9 @@ class RatingController extends Unplagged_Controller_Action{
 
       $modifyForm->getElement("rating")->setValue($rating->getRating() ? '1' : '0');
       $modifyForm->getElement("reason")->setValue($rating->getReason());
-      
+
       $modifyForm->getElement("submit")->setLabel("Save rating");
-      
+
       if($this->_request->isPost()){
         $result = $this->handleModifyData($modifyForm, $rating);
 
@@ -115,6 +115,55 @@ class RatingController extends Unplagged_Controller_Action{
     }
 
     return false;
+  }
+
+  /**
+   * Displays a list with all ratings a source.
+   */
+  public function listAction(){
+    $this->_helper->viewRenderer->setNoRender(true);
+    $this->_helper->layout->disableLayout();
+
+    $input = new Zend_Filter_Input(array('source'=>'Digits', 'returnType'=>'Alnum'), null, $this->_getAllParams());
+
+    $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
+
+    if($source){
+      $ratings = $this->_em->getRepository("Application_Model_Rating")->findBySource($input->source);
+
+      if($input->returnType == 'json'){
+        $result = array();
+      }else{
+        $this->_helper->viewRenderer->setNoRender(true);
+        $this->_helper->layout->disableLayout();
+
+        $result = $this->_request->getParam('data');
+      }
+
+      foreach($ratings as $rating){
+        $result[] = $rating->toArray(array('source'));
+      }
+
+      if($input->returnType == 'json'){
+        $this->_helper->json($result);
+      }else{
+        $this->_request->setParam('data', $result);
+        $this->_request->setParam('types', $this->_request->getParam('types'));
+        $this->_forward('conversation', 'notification', null);
+      }
+    }else{
+      if($input->type == 'json'){
+        $result = array();
+        $result["errorcode"] = 400;
+        $result["message"] = "No comments available.";
+
+        $this->_helper->json($result);
+      }else{
+        $this->_request->setParam('data', $result);
+        $this->_request->setParam('types', $this->_request->getParam('types'));
+        $this->_forward('conversation', 'notification', null);
+      }
+    }
   }
 
 }

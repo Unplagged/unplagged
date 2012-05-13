@@ -1079,7 +1079,8 @@ dl.zend_form dd dt {
   background: url(/images/icons/page_copy.png);
 }
 
-.icon-comments {
+.icon-comments,
+.icon-conversation {
   background: url(/images/icons/comments.png);
 }
 
@@ -1182,19 +1183,19 @@ dl.zend_form dd dt {
   font-size: 12px;
 }
 
-.comments-wrapper {
+.conversation-wrapper {
   background-color: #efefef;
   position: relative;
 }
 
-.comments-wrapper .arrow-wrapper  {
+.conversation-wrapper .arrow-wrapper  {
   background-color: #efefef;
   color: white;
   font-size: 12px;
   padding: 15px 10px 5px 65px;
 }
 
-.comments-wrapper .arrow-wrapper .arrow-down {
+.conversation-wrapper .arrow-wrapper .arrow-down {
   position: absolute;
   width: 0;
   border-left: 10px solid transparent;
@@ -1205,34 +1206,47 @@ dl.zend_form dd dt {
   margin-left: 15px;
 }
 
-.comments-wrapper .comment-field {
+.conversation-wrapper .comment-field {
   font-size: 10px;
   border: 1px #888C95 solid;
   width: 200px;
   padding: 4px;
 }
 
-.comments-wrapper .comments-loading {
+.conversation-wrapper .conversation-loading {
   display: none;
   padding: 10px;
   text-align: center;
 }
 
-.comments-wrapper .comments .comment,
-.comments-wrapper .write-comment-box {
+.conversation-wrapper .conversation .comment,
+.conversation-wrapper .write-comment-box {
   border-bottom: 1px white solid;
   padding: 10px 10px 10px 70px;
 }
 
-.comments-wrapper .comments .comment .image {
+.conversation-wrapper .conversation .comment .image {
   width: 50px;
   position: absolute;
 }
-.comments-wrapper .comments .comment .details {
+.conversation-wrapper .conversation .comment .details {
   margin-left: 50px;
   min-height: 40px;
 }
-.comments-wrapper .comments .comment .details .date {
+.conversation-wrapper .conversation .comment .details .date {
+  color: #a4a2a2;
+}
+
+.conversation-wrapper .conversation .rating {
+  border-bottom: 1px white solid;
+  padding: 5px 10px 5px 70px;
+}
+
+.conversation-wrapper .conversation .rating .details {
+  margin-left: 50px;
+  min-height: 20px;
+}
+.conversation-wrapper .conversation .rating .details .date {
   color: #a4a2a2;
 }
 

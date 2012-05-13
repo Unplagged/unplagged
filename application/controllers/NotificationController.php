@@ -63,5 +63,53 @@ class NotificationController extends Unplagged_Controller_Action{
     }
   }
 
+  public function conversationAction(){
+    $input = new Zend_Filter_Input(array('source'=>'Digits', 'returnType'=>'Alnum'), null, $this->_getAllParams());
+
+    $result = $this->_request->getParam('data');
+    if(!isset($result)){
+      $result = array();
+    }
+
+    // fragments
+    $types = $this->_request->getParam('types');
+    if(!isset($types)){
+      $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
+      if($source instanceof Application_Model_Document_Fragment){
+        $types = array('rating', 'comment');
+      }else{
+        $types = array('comment');
+      }
+    }
+
+    if(count($types) > 0){
+      $this->_helper->viewRenderer->setNoRender(true);
+      $this->_helper->layout->disableLayout();
+
+      $type = array_pop($types);
+
+      $this->_request->setParam('types', $types);
+      $this->_request->setParam('data', $result);
+
+      switch($type){
+        case 'comment':
+          $this->_forward('list', 'comment', null, array('source'=>$input->source));
+          break;
+        case 'rating':
+          $this->_forward('list', 'rating', null, array('source'=>$input->source));
+          break;
+      }
+    }else{
+      function date_sort($a, $b) {
+        return strcmp($a['created']['dateTime'], $b['created']['dateTime']); //only doing string comparison
+      }
+
+      usort($result, 'date_sort');
+
+      $this->_helper->json($result);
+    }
+  }
+
 }
+
 ?>
