@@ -77,8 +77,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         
         $user = self::$em->getRepository('Application_Model_User')->findOneById($userId);
         $currentCase = $user->getCurrentCase();
-        $casename = $currentCase->getName();
-        
+        $casename = $currentCase->getAlias();
         $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
         $filename = $filepath . DIRECTORY_SEPARATOR . "Report_" . $casename . ".pdf";
 
@@ -96,13 +95,14 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         self::$em->flush();
 
         $html = Unplagged_HtmlLayout::htmlLayout($casename, $note, $fragments);
-
+        
         $dompdf = new DOMPDF();
         $dompdf->set_paper('a4', 'portrait');
         $dompdf->load_html($html);
         $dompdf->render();
         //$dompdf->stream($filename);
         $output = $dompdf->output();
+        
         file_put_contents($filename, $output);
         return $filename;
     }
