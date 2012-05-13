@@ -71,7 +71,7 @@ class ReportController extends Unplagged_Controller_Versionable{
 	    $report = new Application_Model_Report($data);
 			
 		$this->_em->persist($report);
-    $this->_em->flush();		 
+		$this->_em->flush();		 
 		 
 		
 		$html = Unplagged_HtmlLayout::htmlLayout($casename,$note,$fragments);
