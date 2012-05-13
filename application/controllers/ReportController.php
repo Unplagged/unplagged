@@ -27,7 +27,7 @@ class ReportController extends Unplagged_Controller_Versionable {
         //$this->_helper->flashMessenger->addMessage( $currentCase);     
         // get current case name
         $case = $currentCase->getPublishableName();
-        $modifyForm->getElement("case")->setValue($case);
+       // $modifyForm->getElement("case")->setValue($case);
 
         $formData = $this->_request->getPost();
         //if($this->_request->isPost()){// && empty($input->page)){      
@@ -56,7 +56,7 @@ class ReportController extends Unplagged_Controller_Versionable {
 //            }
         }
 
-        $this->view->title = "Create report";
+        $this->view->title = "Create report of ".$case;
         $this->view->modifyForm = $modifyForm;
         //$this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'report'));
     }

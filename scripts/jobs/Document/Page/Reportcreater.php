@@ -58,7 +58,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
             $query = self::$em->createQuery("SELECT f FROM Application_Model_Document_Fragment f");
             $fragments = $query->getResult();
 
-            $filename = self::createReport("casename", "note", $fragments, $task->getInitiator());
+            $filename = self::createReport("note", $fragments, $task->getInitiator());
             // update task
             $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
             $task->setProgressPercentage(100);
@@ -73,17 +73,22 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         }
     }
 
-    private static function createReport($casename, $note, $fragments, $userId) {
+    private static function createReport($note, $fragments, $userId) {
+        
+        $user = self::$em->getRepository('Application_Model_User')->findOneById($userId);
+        $currentCase = $user->getCurrentCase();
+        $casename = $currentCase->getName();
+        
         $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
         $filename = $filepath . DIRECTORY_SEPARATOR . "Report_" . $casename . ".pdf";
 
-        $user = self::$em->getRepository('Application_Model_User')->findOneById($userId);
+        
         // save report to database to get an Id
         $data = array();
         $data["title"] = $casename;
         $data["state"] = self::$em->getRepository('Application_Model_State')->findOneByName('report_generated');
         $data["user"] = $user;
-        $data["file"] = self::getFiles($user->getCurrentCase());
+        $data["file"] = self::getFiles($currentCase);
         $data["filePath"] = $filename;
         $report = new Application_Model_Report($data);
 
