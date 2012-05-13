@@ -37,7 +37,8 @@ class Application_Form_Permission_EditRole extends Zend_Form{
         $checkboxElement->setLabel($permissionName);
         $class = 'btn btn-checkbox';
         if($permissionData['allowed']===true){
-          $class .= ' active';  
+          $class .= ' active'; 
+          $checkboxElement->setChecked(true);
         }
         if($permissionData['inherited']===true){
           $class .= ' btn-primary';  
