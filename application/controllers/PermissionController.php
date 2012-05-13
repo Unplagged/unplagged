@@ -122,6 +122,7 @@ class PermissionController extends Unplagged_Controller_Action{
             if($permission){
               if($value === '1'){
                 $role->addPermission($permission);
+                //die('hier');
               }else{
                 $role->removePermission($permission);
               }

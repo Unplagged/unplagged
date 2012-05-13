@@ -161,7 +161,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   
   public function removePermission(Application_Model_Permission $permission){
     if($this->permissions->contains($permission)){
-      $this->permissions->remove($permission); 
+      $this->permissions->removeElement($permission); 
     }
   }
 

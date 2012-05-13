@@ -348,6 +348,7 @@ $(document).ready(function(){
     element.parent().parent().append('<a class="' + classes + '" data-toggle="button" data-checkbox="' + element.attr('id') + '">' + label + '</a>');
     if(element.is(':checked')){
       $('a[data-checkbox="' + element.attr('id') + '"]').trigger('click').addClass('active');
+      console.log(element);
     }
     
   });
