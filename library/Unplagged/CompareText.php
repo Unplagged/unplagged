@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * This php class is inspired by the javascript program of vroniplag
+ * http://de.vroniplag.wikia.com/wiki/MediaWiki:Fragcolors/code.js
+ * the autor from the vroniplag javascript program has the username
+ * "Marcusb"
+ * 
+ */
 class Unplagged_CompareText{
 
   private static $delimiter = " ";
@@ -124,7 +130,7 @@ class Unplagged_CompareText{
    * 
    * @return array marked lines 
    */
-  private function addLinebreaks($originalLines, $originalWords){
+  private static function addLinebreaks($originalLines, $originalWords){
     $result = array();
     $offset = 0;
 
@@ -156,7 +162,7 @@ class Unplagged_CompareText{
    * @return string
    * @author Milian <mail@mili.de>
    */
-  private function closeTags($html, &$openInNextLine){
+  private static function closeTags($html, &$openInNextLine){
     $openInNextLine = '';
     $closedHtml = '';
 

@@ -109,6 +109,14 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("simtext_repo
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
+if(!($em->getRepository('Application_Model_Action')->findOneByName("report_created"))){
+  unset($data);
+  $data["name"] = "report_created";
+  $data["title"] = "report %s was created";
+  $data["description"] = "The report is available now.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
 if(!($em->getRepository('Application_Model_Action')->findOneByName("detection_report_created"))){
   unset($data);
   $data["name"] = "detection_report_created";
@@ -271,6 +279,14 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("page_simtext
   $data["name"] = "page_simtext";
   $data["title"] = "Simtext page %s";
   $data["description"] = "Create a simtext report for a single page";
+  $action = new Application_Model_Action($data);
+  $em->persist($action);
+}
+if(!($em->getRepository('Application_Model_Action')->findOneByName("report_requested"))){
+  unset($data);
+  $data["name"] = "report_requested";
+  $data["title"] = "User requested a report";
+  $data["description"] = "A user requested a fragment report.";
   $action = new Application_Model_Action($data);
   $em->persist($action);
 }

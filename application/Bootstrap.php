@@ -248,7 +248,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'controller'=>'document_fragment',
         'action'=>'list',
         'resource'=>'document_fragment_list'
-      ), array(
+      ),  array(
+        'label'=>'Reports',
+        'title'=>'Reports',
+        'module'=>'default',
+        'controller'=>'report',
+        'action'=>'list'
+//        'resource'=>'report_list'
+      ),array(
         'label'=>'Administration',
         'title'=>'Administration',
         'uri'=>'#',
