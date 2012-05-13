@@ -73,7 +73,7 @@ $this->headTitle($this->title);
 <?php } ?>
 <h3>Conversation</h3>
 <div>
-  <a class="btn toggle-comments" href="#" for="comments-wrapper-<?php echo $this->fragment->getId(); ?>"><i class="icon-comments icon-fam"></i>Show conversation</a>
+  <a class="btn toggle-conversation" href="#" for="conversation-wrapper-<?php echo $this->fragment->getId(); ?>"><i class="icon-comments icon-fam"></i>Show conversation</a>
   <br /><br />
-  <?php echo $this->partial('partials/comments.phtml', array('sourceId'=>$this->fragment->getId(), 'hidden'=>true)); ?>
+  <?php echo $this->partial('partials/conversation.phtml', array('sourceId'=>$this->fragment->getId(), 'hidden'=>true)); ?>
 </div>

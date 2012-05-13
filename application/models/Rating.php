@@ -121,6 +121,20 @@ class Application_Model_Rating extends Application_Model_Base{
     $this->rating = $rating;
   }
 
+  public function toArray($hide = array()){
+    $result = array();
 
+    $result["id"] = $this->id;
+    $result["reason"] = $this->reason;
+    $result["rating"] = $this->rating;
+    $result["user"] = $this->user->toArray();
+    if(!in_array('source', $hide)) {
+      $result["source"] = $this->source->toArray();
+    }
+    $result["created"] = Unplagged_Helper::jsTime($this->created);
+$result['type'] = 'rating';
+
+    return $result;
+  }
 
 }

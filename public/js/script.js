@@ -54,89 +54,7 @@ $(document).ready(function(){
   $(document).live('click', function(){
     $('.dropdown-button').removeClass('hover');  
   });
-  
-  
-  $(".toggle-comments").live('click', function() {
-    var targetId = $(this).attr("for");
-    var target = $("#" + targetId);
-    var comments = target.children(".comments");
-    var loading = target.children(".comments-loading");
-    var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
 
-    if(target.is(':visible')) {
-      $(this).html("<i class=\"icon-comments icon-fam\"></i>Show conversation");
-      $(this).removeClass("expanded");
-      
-      target.slideUp(800, function() {
-        comments.html("");
-      });
-    } else {
-      $(this).html("<i class=\"icon-comments icon-fam\"></i>Hide conversation");
-      $(this).addClass("expanded");
-      target.show();
-      comments.hide();
-      loading.slideDown(800, function() {
-        $.post('/comment/list', {
-          'source': sourceId,
-          'format': 'json'
-        }, function(data) {
-          if(!data.errorcode) {
-            comments.html("");
-            $.each(data, function() {
-              addComment(this, comments);
-            });
-            loading.slideUp(800, function() {
-              comments.slideDown(300);
-            });
-          } else {
-            comments.html('<div class="comment">' + data.message + '</div>');
-            loading.slideUp(800, function() {
-              comments.slideDown(300);
-            });
-          }
-        }, "json");
-      });
-
-    }
-    return false;
-  });
-  
-  // sends comment when return key is pressed in input field
-  $('.comment-field').live('keyup', function(e) {
-    if(e.keyCode == 13) {
-      $(this).parent().children('.write-comment').click();
-    }
-  });
-  
-  $(".write-comment").live('click', function(){
-    var source = $(this).closest(".write-comment-box").children("input[name='sourceId']");
-    var text = $(this).closest(".write-comment-box").children("input[name='text']");
-
-    var target = $(this).closest('.comments-wrapper').children(".comments");
-    if(text.val()) {
-      $.post('/comment/create', {
-        'source': source.val(),
-        'text': text.val()
-      }, function(data) {
-        text.val("");
-        addComment(data, target)
-      }, "json");
-    }
-    return false;
-  });
-  
-  function addComment(data, target) {
-    var tpl = '<div class="comment">' +
-    '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
-    '<div class="details">' +
-    '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
-    ' <span class="date">' + data.created + '</span>' +
-    '</div>' +
-    '</div>' +
-    '</div>';
-    target.append(tpl);
-  }
-  
   //wrap home menu button, so that icon gets shown
   var homeButton = $('header[role=banner] .navigation .home');
   homeButton.wrapInner('<span class="ir"/>');
@@ -365,5 +283,110 @@ $(document).ready(function(){
         $(this).addClass('btn-primary');
       }
     }
+  });
+  
+  // conversation
+  $(".toggle-conversation").live('click', function() {
+    var targetId = $(this).attr("for");
+    var target = $("#" + targetId);
+    var conversation = target.children(".conversation");
+    var loading = target.children(".conversation-loading");
+    var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
+
+    if(target.is(':visible')) {
+      $(this).html("<i class=\"icon-conversation icon-fam\"></i>Show conversation");
+      $(this).removeClass("expanded");
+      
+      target.slideUp(800, function() {
+        conversation.html("");
+      });
+    } else {
+      $(this).html("<i class=\"icon-conversation icon-fam\"></i>Hide conversation");
+      $(this).addClass("expanded");
+      target.show();
+      conversation.hide();
+      loading.slideDown(800, function() {
+        // get the whole conversation
+        $.post('/notification/conversation', {
+          'source': sourceId
+        }, function(data) {
+          if(!data.errorcode) {
+            conversation.html("");
+            $.each(data, function(index, value) {
+              conversation.append(renderConversation(value));
+            });
+            loading.slideUp(800, function() {
+              conversation.slideDown(300);
+            });
+          } else {
+            conversation.html('<div class="comment">' + data.message + '</div>');
+            loading.slideUp(800, function() {
+              conversation.slideDown(300);
+            });
+          }
+        }, "json");
+      });
+
+    }
+    return false;
+  });
+  
+  function renderConversation(data, target) {
+    var tpl;
+    
+    switch(data.type) {
+      case 'comment':
+        tpl = '<div class="comment">' +
+        '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
+        '<div class="details">' +
+        '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
+        ' <span class="date">' + data.created.humanTiming + '</span>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+        break;
+      case 'rating':
+        var icon = data.rating ? 'icon-thumbs-up' : 'icon-thumbs-down';
+        tpl =  '<div class="rating">' +
+        '<div class="details">' +
+        '<div class="title">' + '<i class="' + icon + '"></i> <b>' + data.user.username + '</b> rated the fragment.' + 
+        ' <span class="date">' + data.created.humanTiming + '</span>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+        break;
+    }
+    
+    if(!target) {
+      return tpl;
+    } else {
+//              console.log(target);
+
+      target.append(tpl);
+    }
+  }
+  
+  // sends comment when return key is pressed in input field
+  $('.comment-field').live('keyup', function(e) {
+    if(e.keyCode == 13) {
+      $(this).parent().children('.write-comment').click();
+    }
+  });
+  
+  $(".write-comment").live('click', function(){
+    var source = $(this).closest(".write-comment-box").children("input[name='sourceId']");
+    var text = $(this).closest(".write-comment-box").children("input[name='text']");
+
+    var target = $(this).closest('.conversation-wrapper').children(".conversation");
+    if(text.val()) {
+      $.post('/comment/create', {
+        'source': source.val(),
+        'text': text.val()
+      }, function(data) {
+        text.val("");
+        renderConversation(data, target)
+      }, "json");
+    }
+    return false;
   });
 });

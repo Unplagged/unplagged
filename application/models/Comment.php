@@ -123,18 +123,20 @@ class Application_Model_Comment extends Application_Model_Base{
     return "/comment/show/id/" . $this->id;
   }
 
-  public function toArray(){
+  public function toArray($hide = array()){
     $result = array();
 
     $result["id"] = $this->id;
     $result["text"] = $this->text;
     $result["author"] = $this->author->toArray();
-    $result["source"] = $this->source->toArray();
-    $result["created"] = Unplagged_Helper::humanTiming($this->created);
+    if(!in_array('source', $hide)) {
+      $result["source"] = $this->source->toArray();
+    }
+    $result["created"] = Unplagged_Helper::jsTime($this->created);
     if(!empty($this->title)){
       $result["title"] = $this->title;
     }
-
+$result['type'] = 'comment';
     return $result;
   }
 

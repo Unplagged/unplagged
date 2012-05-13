@@ -44,13 +44,13 @@ class CommentController extends Unplagged_Controller_Action{
       $data["source"] = $source;
       $data["title"] = $input->title;
       $data["text"] = $input->text;
-      
+
       $comment = new Application_Model_Comment($data);
       $this->_em->persist($comment);
       $this->_em->flush();
 
       $result = $comment->toArray();
-    } else {
+    }else{
       $result["errorcode"] = 500;
       $result["message"] = "Comment could not be inserted.";
     }
@@ -58,28 +58,49 @@ class CommentController extends Unplagged_Controller_Action{
   }
 
   /**
-   * Displays a list with all activities related to a user.
+   * Displays a list with all activities related to a source.
    */
   public function listAction(){
-    $input = new Zend_Filter_Input(array('source'=>'Digits'), null, $this->_getAllParams());
-    
+    $input = new Zend_Filter_Input(array('source'=>'Digits', 'returnType'=>'Alnum'), null, $this->_getAllParams());
+
     $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
 
     if($source){
       $comments = $this->_em->getRepository("Application_Model_Comment")->findBySource($input->source);
-      
-      $result = array();
-      foreach($comments as $comment) {
-        $result[] = $comment->toArray();
+
+      if($input->returnType == 'json'){
+        $result = array();
+      }else{
+        $this->_helper->viewRenderer->setNoRender(true);
+        $this->_helper->layout->disableLayout();
+
+        $result = $this->_request->getParam('data');
       }
 
-      $this->_helper->json($result);
-    }else{
-      $result = array();
-      $result["errorcode"] = 400;
-      $result["message"] = "No comments available.";
+      foreach($comments as $comment){
+        $result[] = $comment->toArray(array('source'));
+      }
 
-      $this->_helper->json($result);
+      if($input->returnType == 'json'){
+        $this->_helper->json($result);
+      }else{
+        $this->_request->setParam('data', $result);
+        $this->_request->setParam('types', $this->_request->getParam('types'));
+        $this->_forward('conversation', 'notification', null);
+      }
+    }else{
+      if($input->type == 'json'){
+        $result = array();
+        $result["errorcode"] = 400;
+        $result["message"] = "No comments available.";
+
+        $this->_helper->json($result);
+      } else {
+        $this->_request->setParam('data', $result);
+        $this->_request->setParam('types', $this->_request->getParam('types'));
+        $this->_forward('conversation', 'notification', null);
+      }
     }
   }
+
 }
