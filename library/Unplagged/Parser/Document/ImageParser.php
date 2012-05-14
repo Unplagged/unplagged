@@ -47,6 +47,7 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
       }
 
       $i = 1;
+      $prevPerc = 0; // percentage of the previous iteration
       $handler = opendir($imagemagickTempPath);
       while($tifFile = readdir($handler)){
         if($tifFile != "." && $tifFile != ".."){
@@ -68,11 +69,14 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
 
             if($task){
               $perc = round($i * 1.0 / $pagesCount * 100 / 10) * 10;
-              $task->setProgressPercentage($perc);
-              $this->_em->persist($task);
-              $this->_em->flush();
+              if($perc > $prevPerc){
+                $task->setProgressPercentage($perc);
+                $this->_em->persist($task);
+                $this->_em->flush();
+                $prevPerc = $perc;
+              }
             }
-            
+
             $i++;
           }
         }

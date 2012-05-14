@@ -93,6 +93,8 @@ abstract class Application_Model_Base{
    * @todo private without getter and setter?
    */
   private $notifications;
+  
+  protected $conversationTypes = array('comment');
 
   public function __construct(){
     $this->comments = new ArrayCollection();
@@ -162,6 +164,9 @@ abstract class Application_Model_Base{
     return $this->created;
   }
   
+  public function getConversationTypes(){
+    return $this->conversationTypes;
+  }
     
   public function isRatedByUser($user) {
     foreach($this->ratings as $rating) {

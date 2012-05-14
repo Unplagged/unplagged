@@ -64,24 +64,21 @@ class NotificationController extends Unplagged_Controller_Action{
   }
 
   public function conversationAction(){
-    $input = new Zend_Filter_Input(array('source'=>'Digits', 'returnType'=>'Alnum'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('source'=>'Digits'), null, $this->_getAllParams());
 
     $result = $this->_request->getParam('data');
     if(!isset($result)){
       $result = array();
     }
 
-    // fragments
+    // here is determined which model has which types of messages in the conversation stream
     $types = $this->_request->getParam('types');
     if(!isset($types)){
       $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
-      if($source instanceof Application_Model_Document_Fragment){
-        $types = array('rating', 'comment');
-      }else{
-        $types = array('comment');
-      }
+      $types = $source->getConversationTypes();
     }
-
+    
+    // at each step, the next type of the conversation strem types is picked and the items related to the type are selected
     if(count($types) > 0){
       $this->_helper->viewRenderer->setNoRender(true);
       $this->_helper->layout->disableLayout();
@@ -93,15 +90,16 @@ class NotificationController extends Unplagged_Controller_Action{
 
       switch($type){
         case 'comment':
-          $this->_forward('list', 'comment', null, array('source'=>$input->source));
+          $this->_forward('list', 'comment', null, array('source'=>$input->source, 'conversation' => true));
           break;
         case 'rating':
-          $this->_forward('list', 'rating', null, array('source'=>$input->source));
+          $this->_forward('list', 'rating', null, array('source'=>$input->source, 'conversation'=> true));
           break;
       }
     }else{
+      // before the result is returned, all the items are sorted by there creation date
       function date_sort($a, $b) {
-        return strcmp($a['created']['dateTime'], $b['created']['dateTime']); //only doing string comparison
+        return strcmp($a['created']['dateTime'], $b['created']['dateTime']);
       }
 
       usort($result, 'date_sort');

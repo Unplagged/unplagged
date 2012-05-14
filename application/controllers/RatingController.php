@@ -121,19 +121,14 @@ class RatingController extends Unplagged_Controller_Action{
    * Displays a list with all ratings a source.
    */
   public function listAction(){
-    $this->_helper->viewRenderer->setNoRender(true);
-    $this->_helper->layout->disableLayout();
-
-    $input = new Zend_Filter_Input(array('source'=>'Digits', 'returnType'=>'Alnum'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('source'=>'Digits', 'conversation'=>'Boolean'), null, $this->_getAllParams());
 
     $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
-
     if($source){
       $ratings = $this->_em->getRepository("Application_Model_Rating")->findBySource($input->source);
 
-      if($input->returnType == 'json'){
-        $result = array();
-      }else{
+      $result = array();
+      if($input->conversation){
         $this->_helper->viewRenderer->setNoRender(true);
         $this->_helper->layout->disableLayout();
 
@@ -143,26 +138,18 @@ class RatingController extends Unplagged_Controller_Action{
       foreach($ratings as $rating){
         $result[] = $rating->toArray(array('source'));
       }
-
-      if($input->returnType == 'json'){
-        $this->_helper->json($result);
-      }else{
-        $this->_request->setParam('data', $result);
-        $this->_request->setParam('types', $this->_request->getParam('types'));
-        $this->_forward('conversation', 'notification', null);
-      }
     }else{
-      if($input->type == 'json'){
+      if(!$input->conversation){
         $result = array();
         $result["errorcode"] = 400;
-        $result["message"] = "No comments available.";
-
-        $this->_helper->json($result);
-      }else{
-        $this->_request->setParam('data', $result);
-        $this->_request->setParam('types', $this->_request->getParam('types'));
-        $this->_forward('conversation', 'notification', null);
+        $result["message"] = "No ratings available.";
       }
+    }
+
+    if($input->conversation){
+      $this->_forward('conversation', 'notification', null, array('data'=>$result, 'types'=>$this->_request->getParam('types')));
+    }else{
+      $this->_helper->json($result);
     }
   }
 

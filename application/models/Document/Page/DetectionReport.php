@@ -61,8 +61,8 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
   private $page;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_User", cascade={"remove"})
-   * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+   * @ManyToOne(targetEntity="Application_Model_User")
+   * @JoinColumn(name="user_id", referencedColumnName="id")
    */
   protected $user;
 

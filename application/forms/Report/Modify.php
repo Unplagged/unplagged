@@ -104,7 +104,7 @@ class Application_Form_Report_Modify extends Zend_Form {
         $submitElement = new Zend_Form_Element_Submit('submit');
         $submitElement->setLabel('Create report');
         $submitElement->setIgnore(true);
-        $submitElement->setAttrib('class', 'submit');
+        $submitElement->setAttrib('class', 'btn btn-primary');
         $submitElement->removeDecorator('DtDdWrapper');
 
         $this->addElements(array(
