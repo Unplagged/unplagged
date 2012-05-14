@@ -24,9 +24,11 @@ class ReportController extends Unplagged_Controller_Versionable {
 
         // get current case
         $currentCase = $user->getCurrentCase();
+        if($currentCase){
         //$this->_helper->flashMessenger->addMessage( $currentCase);     
         // get current case name
         $case = $currentCase->getPublishableName();
+        $this->view->title = "Create report of ".$case;
        // $modifyForm->getElement("case")->setValue($case);
 
         $formData = $this->_request->getPost();
@@ -50,9 +52,16 @@ class ReportController extends Unplagged_Controller_Versionable {
             $this->_helper->redirector('list', 'report');
         }
 
-        $this->view->title = "Create report of ".$case;
+        
         $this->view->modifyForm = $modifyForm;
         //$this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'report'));
+        } else {
+            $this->_helper->flashMessenger->addMessage('You have to select a case, before you can start the report creation.');
+            //$this->view->title = "Report creation.";
+            $this->_helper->viewRenderer->setNoRender(true);
+            //$this->_helper->layout()->disableLayout();
+            Zend_Layout::getMvcInstance()->sidebar = null;
+        }
     }
 
     public function listAction() {
