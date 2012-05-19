@@ -34,26 +34,26 @@ class Application_Form_File_Upload extends Zend_Form{
 
     $descriptionElement = new Zend_Form_Element_Textarea('description');
     $descriptionElement->setLabel('Description:');
-    
+
     $elementnewname = new Zend_Form_Element_Text('newName');
     $elementnewname->setLabel('New Filename:');
 
     $elementsubmit = new Zend_Form_Element_Submit('submit');
     $elementsubmit->setOptions(array('class'=>'btn btn-primary'));
-    
+
     $elementsubmit->setLabel('Upload File');
     $elementsubmit->removeDecorator('DtDdWrapper');
 
     $this->addElements(array(
       $descriptionElement
-      ,$elementfile
+      , $elementfile
       , $elementnewname
     ));
 
     $this->addDisplayGroup(array(
-       'newName'
-      ,'filepath'
-      ,'description'
+      'newName'
+      , 'filepath'
+      , 'description'
         )
         , 'fileGroup'
         , array('legend'=>'File Information')
@@ -63,5 +63,7 @@ class Application_Form_File_Upload extends Zend_Form{
       $elementsubmit
     ));
   }
+
 }
+
 ?>

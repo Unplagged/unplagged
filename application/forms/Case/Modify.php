@@ -52,35 +52,13 @@ class Application_Form_Case_Modify extends Zend_Form{
     $abbreviationElement->setAttrib('maxLength', 5);
     $abbreviationElement->setRequired(true);
 
-    $collaborator = new Zend_Form_Element_Text('collaborator');
-    /** @todo validator doesn't exist, and required is probably not necessary */
-    //$collaborator->addValidator('Member', false, array("min" => "2", "name" => "collaborator", "skipUsersFrom" => array()));
-    //$collaborator->setRequired(true);
-    $collaborator->setLabel('Insert the names of your reviewers.');
-    $default_reviewers["readonly"] = (($this->_readonly) ? "true" : "false");
-    /* foreach($article->getReviewers() as $user)
-      {
-      $default_reviewers[$user->getId()] = "true";
-      } */
-    $collaborator->setDecorators(array(array('ViewScript', array(
-          'viewScript'=>'user/_element.phtml',
-          'callBack'=>'/user/autocomplete-names',
-          'default'=>$default_reviewers,
-          'skipAlsoUsers'=>array()
-      ))));
-
-    $tags = new Zend_Form_Element_Text('tags');
-    $tags->setLabel('Insert tags for your article.');
-    $default_tags["readonly"] = (($this->_readonly) ? "true" : "false");
-    /* foreach($case->getTags() as $tag)
-      {
-      $default_tags[$tag->getId()] = "true";
-      } */
-    $tags->setDecorators(array(array('ViewScript', array(
-          'viewScript'=>'tag/_element.phtml',
-          'callBack'=>'/tag/autocomplete-titles',
-          'default'=>$default_tags
-      ))));
+    $tagsElement = new Zend_Form_Element_Text('tags[]');
+    $tagsElement->setLabel('Tags');
+    $tagsElement->setDecorators(array(array('ViewScript', array(
+      'viewScript' => '/tag/_element.phtml',
+      'callback' => '/tag/autocomplete',
+      'disabled' => false
+    ))));
 
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Create case');
@@ -90,8 +68,7 @@ class Application_Form_Case_Modify extends Zend_Form{
       $nameElement
       , $aliasElement
       , $abbreviationElement
-      , $tags
-      , $collaborator
+      , $tagsElement
     ));
 
     $this->addDisplayGroup(array('name', 'alias', 'abbreviation', 'tags', 'collaborator')

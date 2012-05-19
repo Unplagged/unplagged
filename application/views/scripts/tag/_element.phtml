@@ -1,166 +1,38 @@
-<?php $defaultNamespace = new Zend_Session_Namespace('Default');
-$readonly = false;
-	if(key_exists("readonly", $this->default))
-	{
-		$readonly = ($this->default["readonly"] == "true");
-		unset($this->default["readonly"]);
-	}
+<?php
+// some init stuff
+$errors = $this->element->getMessages();
+$disabled = $this->disabled || false;
 ?>
-<?php echo $this->formLabel($this->element->getName(),
-                         $this->element->getLabel()) ?>
-    
-<dd><input <?php if(!empty($readonly) && $readonly) echo 'disabled="disabled"';?> id="<?php echo $this->element->getName() ?>Input" type="text" />
-<?php if(!$readonly) { ?>
-<a id="<?php echo $this->element->getName() ?>Add" class="tagPickerAdd" title="Add">+</a>
-<?php } ?>
- <?php 
- $errors = $this->element->getMessages();
- if(!empty($errors)) echo $this->formErrors($this->element->getMessages()); ?>
- <div class="hint"><?php echo $this->element->getDescription() ?></div>
-    
-<div id="<?php echo $this->element->getName() ?>s" class="tagPicker ui-helper-clearfix">
-<?php 
-	$tags = array();
-	if(!empty($_POST))
-	{
-		if(!empty($_POST[$this->element->getName()]))
-		{
-			foreach($_POST[$this->element->getName()] as $key => $value)
-			{
-				$isRemoveable = substr($value, 0, 4) == "true" ? 'true' : 'false';
-				
-				if(substr($value, 0, 4) == "true")
-					$tagid = substr($value, 4);
-				else
-					$tagid = substr($value, 5);
-					
-				$tags[$tagid] = $isRemoveable;
-			}
-		}
-	}
-	else
-	{
-		$tags = $this->default;
-	}
-	
-		foreach($tags as $id => $removeable)
-		{
-			if($readonly) $removeable = false;
-			
-			$tag = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Tag')->findOneById($id);
-			if($tag)
-			{
-				$value = $tag->getTitle();
-			}
-			else
-			{
-				if(!is_int($id))
-					$value = $id; 
-			}
-			
-			if($value)
-			{
-			?>
-			<div class="<?php echo $this->element->getName() ?>"
-				id="<?php echo $this->element->getName() ?><?php echo $id; ?>"><span><?php echo $value; ?></span>
-				<input type="hidden" value="<?php echo $removeable.$id; ?>" name="<?php echo $this->element->getName() ?>[]" />
-				<?php if($removeable == "true") { ?>
-				<a class="remove remove-<?php echo $this->element->getName() ?>" title="Remove <?php  echo $value; ?>">x</a>
-				<?php } ?>
-		 	</div>
-			<?php
-			}
-		}	
-	?>
-	</div></dd>
-<script type="text/javascript">
-//<![CDATA[
 
-$(document).ready(function(){
-	var skip_default = updateSkippedIds<?php echo $this->element->getName() ?>();
-	$('#<?php echo $this->element->getName() ?>Input').autocomplete({
-		source:  "<?php echo $this->callBack ?>?skip=" + skip_default,
-		select: function(e, ui) {
-			addField<?php echo $this->element->getName() ?>(ui.item.value, ui.item.label);
-			
-			$("#<?php echo $this->element->getName() ?>").focus();
-			updateSkippedIds<?php echo $this->element->getName() ?>();
-			return false;
-		}
-	}).keydown( function( event ) {
-		var keyCode = $.ui.keyCode;
-		if((event.keyCode === keyCode.UP || event.keyCode === keyCode.DOWN))
-			$("#<?php echo $this->element->getName() ?>Input").val("");
-  	}).data( "autocomplete" )._renderItem = function( ul, item ) {
-        return $( '<li></li>' )
-        .data( "item.autocomplete", item )
-        .append('<a><span style="margin: 17px 0 0 10px;">' + item.label + '</span></a>' )
-        .appendTo( ul );
-	 };
+<?php echo $this->formLabel($this->element->getName(), $this->element->getLabel()) ?>
+<dd>
+  <input id="<?php echo $this->element->getName() ?>" type="text" data-callback="<?php echo $this->callback; ?>" />
+  <?php
+  if(!empty($errors)){
+    echo $this->formErrors($errors);
+  }
 
-	$("#<?php echo $this->element->getName() ?>Add").click(function() {
-		addField<?php echo $this->element->getName() ?>($("#<?php echo $this->element->getName() ?>Input").val(), $("#<?php echo $this->element->getName() ?>Input").val());
-	});
-	
-	//add live handler for clicks on remove links
-	$(".remove", $("#<?php echo $this->element->getName() ?>s")).live("click", function(){
-		//remove
-		$(this).parent().remove();
-
-		var skip_ids = "";
-		$('.<?php echo $this->element->getName() ?>').each(function(){
-			skip_id = $(this).attr("id").substr('<?php echo $this->element->getName() ?>'.length);
-			skip_ids = skip_ids + ',' + skip_id;
-		});
-
-		skip_ids = skip_ids.substr(1);
-	 	$("#<?php echo $this->element->getName() ?>Input").autocomplete({
-			source: '<?php echo $this->callBack ?>?skip=' + skip_ids
-		});
-
-		return false;
-	});
-
-	function updateSkippedIds<?php echo $this->element->getName() ?>(){
-		var skip_ids = "";
-		$('.<?php echo $this->element->getName() ?>').each(function(){
-			skip_id = $(this).attr("id").substr('<?php echo $this->element->getName() ?>'.length);
-			if(!isNaN(parseInt(skip_id)))
-			{
-				skip_ids = skip_ids + ',' + skip_id;
-			}
-		});
-
-		skip_ids = skip_ids.substr(1);
-	 	$("#<?php echo $this->element->getName() ?>Input").autocomplete({
-			source: '<?php echo $this->callBack ?>?skip=' + skip_ids
-		});
-
-		return skip_ids;
-	}
-
-	function addField<?php echo $this->element->getName() ?>(value, label){
-		if(label == "")
-			return;
-		//create formatted field
-		addField = $('<div class="<?php echo $this->element->getName() ?>" id="<?php echo $this->element->getName() ?>' + value +'">');
-		c_span = $("<span>").text(label).appendTo(addField);	
-		c_input = $("<input>").attr({
-		    type: 'hidden',
-		    value: 'true' + value,
-		    name: '<?php echo $this->element->getName() ?>[]'
-		}).appendTo(addField);	
-
-		c_a = $("<a>").addClass("remove remove-<?php echo $this->element->getName() ?>").attr({
-				title: "Remove " + label
-			}).text("x").appendTo(addField);
-		
-		//add friend to friend div
-		addField.appendTo("#<?php echo $this->element->getName() ?>s");
-		$("#<?php echo $this->element->getName() ?>Input").val('');
-	}
-});
-
-
-//]]>
-</script>
+  if($this->element->getDescription()){
+    echo '<div class="hint">' . $this->element->getDescription() . '</div>';
+  }
+  ?>
+  <div class="tags" data-wrapper-for="<?php echo $this->element->getName(); ?>">
+    <?php if($this->element->getValue()){ ?>
+      <?php foreach($this->element->getValue() as $tagId): ?>
+        <?php 
+        if(is_numeric($tagId)) {
+          $tag = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Tag')->findOneById($tagId);
+        } else {
+          $tag = new Application_Model_Tag();
+          $tag->setTitle($tagId);
+          $tag->setId($tagId);
+        }
+        ?>
+        <a data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $tag->getId(); ?>" href="#" class="btn<?php echo $disabled ? ' disabled' : ''; ?>">
+          <i class="icon-tag icon-fam"></i><?php echo $tag->getTitle(); ?><?php echo!$disabled ? ' <i class="icon-remove icon-right"></i>' : ''; ?>
+          <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $tag->getId(); ?>" />
+        </a>
+      <?php endforeach; ?>
+    <?php } ?>
+  </div>  
+</dd>

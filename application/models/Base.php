@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -56,7 +55,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 abstract class Application_Model_Base{
 
   const ICON_CLASS = '';
-  
+
   /**
    * @Id @GeneratedValue @Column(type="integer") 
    */
@@ -69,15 +68,26 @@ abstract class Application_Model_Base{
    */
   protected $created;
 
-  /** 
+  /**
    * @var string The base element comments.
    * 
    * @OneToMany(targetEntity="Application_Model_Comment", mappedBy="source")
    * @JoinColumn(name="comment_id", referencedColumnName="id")
    */
   private $comments;
-  
-    /** 
+
+  /**
+   * @var string The base element comments.
+   * 
+   * @ManyToMany(targetEntity="Application_Model_Tag", cascade={"persist"})
+   * @JoinTable(name="base_has_tag",
+   *      joinColumns={@JoinColumn(name="base_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="tag_id", referencedColumnName="id")}
+   *      )
+   */
+  private $tags;
+
+  /**
    * @var string The base element ratings.
    * 
    * @OneToMany(targetEntity="Application_Model_Rating", mappedBy="source")
@@ -93,12 +103,12 @@ abstract class Application_Model_Base{
    * @todo private without getter and setter?
    */
   private $notifications;
-  
   protected $conversationTypes = array('comment');
 
   public function __construct(){
     $this->comments = new ArrayCollection();
     $this->ratings = new ArrayCollection();
+    $this->tags = new ArrayCollection();
   }
 
   public function getId(){
@@ -146,35 +156,96 @@ abstract class Application_Model_Base{
    */
   public function getIconClass(){
     $childClass = get_called_class();
-    
+
     if($childClass::ICON_CLASS !== null){
-      return $childClass::ICON_CLASS; 
+      return $childClass::ICON_CLASS;
     }
   }
 
   public function getComments(){
     return $this->comments;
   }
-  
+
   public function getRatings(){
     return $this->ratings;
+  }
+
+  public function geTags(){
+    return $this->tags;
   }
 
   public function getCreated(){
     return $this->created;
   }
-  
+
   public function getConversationTypes(){
     return $this->conversationTypes;
   }
-    
-  public function isRatedByUser($user) {
-    foreach($this->ratings as $rating) {
-      if($rating->getUser()->getId() == $user->getId()) {
+
+  public function isRatedByUser($user){
+    foreach($this->ratings as $rating){
+      if($rating->getUser()->getId() == $user->getId()){
         return true;
       }
     }
     return false;
+  }
+  
+  public function getTags(){
+    return $this->tags;
+  }
+
+  public function getTagIds(){
+    $tagIds = array();
+    foreach($this->tags as $tag){
+      $tagIds[] = $tag->getId();
+    }
+    return $tagIds;
+  }
+  
+  public function addTag(Application_Model_Tag $tag){
+    $this->tags->add($tag);
+  }
+
+  public function removeTag(Application_Model_Tag $tag){
+    $this->tags->removeElement($tag);
+  }
+
+  public function setTags($tagIds = array()){
+    $removedTags = array();
+
+    // 1) search all tags that already exist by their id
+    if(!empty($this->tags)){
+      $this->tags->filter(function($tag) use (&$tagIds, &$removedTags){
+            if(in_array($tag->getId(), $tagIds)){
+              $tagIds = array_diff($tagIds, array($tag->getId()));
+              return true;
+            }
+            $removedTags[] = $tag;
+            return false;
+          });
+    }
+
+    // 2) create new tags for those that don't exist yet
+    foreach($tagIds as $tagId){
+      if(is_numeric($tagId)){
+        $tag = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Tag')->findOneById($tagId);
+      }else{
+        $data['title'] = $tagId;
+        $tag = new Application_Model_Tag($data);
+      }
+
+      $this->addTag($tag);
+    }
+
+    // 3) remove tags that belonged to the element before, but not anymore
+    foreach($removedTags as $tag){
+      $this->removeTag($tag);
+    }
+  }
+
+  public function clearTags(){
+    $this->tags->clear();
   }
 
 }

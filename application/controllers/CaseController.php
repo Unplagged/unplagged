@@ -60,6 +60,7 @@ class CaseController extends Unplagged_Controller_Action{
       $modifyForm->getElement("name")->setValue($case->getName());
       $modifyForm->getElement("alias")->setValue($case->getAlias());
       $modifyForm->getElement("abbreviation")->setValue($case->getAbbreviation());
+      $modifyForm->getElement("tags")->setValue($case->getTagIds());
       $modifyForm->getElement("submit")->setLabel("Save case");
 
       if($this->_request->isPost()){
@@ -189,7 +190,6 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
   private function handleModifyData(Application_Form_Case_Modify $modifyForm, Application_Model_Case $case = null){
-
     $formData = $this->_request->getPost();
     if($modifyForm->isValid($formData)){
       if(!($case)){
@@ -197,49 +197,21 @@ class CaseController extends Unplagged_Controller_Action{
         $case->setName($formData['name']);
         $case->setAbbreviation($formData['abbreviation']);
         $case->setAlias($formData['alias']);
+        
         //flush here, so that we can use the id
         $this->_em->persist($case);
         $this->_em->flush();
         
         $this->initBasicRolesForCase($case);
       }else{
-
         $case->setAlias($formData['alias']);
         $case->setName($formData['name']);
         $case->setAbbreviation($formData['abbreviation']);
       }
-      /*
-        // add the collaborators
-        $case->clearCollaborators();
-        if(!empty($formData["collaborator"])){
-        foreach($formData["collaborator"] as $key=>$value){
-        $userId = preg_replace('/[^0-9]/', '', $value);
-        $collaborator = $this->_em->find('Application_Model_User', $userId);
-        $case->addReviewer($collaborator);
-        }
-        }
-
-        // add the tags
-        $case->clearTags();
-        if(!empty($formData["tags"])){
-        foreach($formData["tags"] as $key=>$value){
-        $tagId = preg_replace('/[^0-9]/', '', $value);
-        $tag = $this->_em->find('Application_Model_Tag', $tagId);
-        if(!$tag){
-        if(substr($value, 0, 4) == "true"){
-        $value = substr($value, 4);
-        }else{
-        $value = substr($value, 5);
-        }
-
-        $tag = new Application_Model_Tag();
-        $tag->setTitle($value);
-        $this->_em->persist($tag);
-        }
-        $case->addTag($tag);
-        }
-        }
-       */
+      
+      $case->setTags($formData['tags']);
+      //$case->setCollaborators($formData['collaborators'];
+      
       // write back to persistence manager and flush it
       $this->_em->persist($case);
       $this->_em->flush();

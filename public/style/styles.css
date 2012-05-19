@@ -124,7 +124,7 @@ h2 {
  * A simple button element from html like this:
  * 
  * <a class="button">The Text</a>
- */
+*/
 .button{  
   background-color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0 );   
@@ -186,7 +186,7 @@ h2 {
  *     <li>A dropdown menu item</li>
  *   </ul>
  * </div>
- */
+*/
 .dropdown-button {
   position: relative;
 }
@@ -736,8 +736,8 @@ table.default .progress {
 }
 
 .zend_form .single-column-form {
-   clear: left;
-   padding-top: 15px
+  clear: left;
+  padding-top: 15px
 }
 
 .src-wrapper .zend_form ol li.page-line input {
@@ -809,9 +809,9 @@ table.default .progress {
   font-size: 10pt;
   color: #555;
   text-align: left;
-    /* This looks very weird on many forms, what was the purpose? */
-    /*margin-top: -13px;
-    margin-bottom: -18px;*/
+  /* This looks very weird on many forms, what was the purpose? */
+  /*margin-top: -13px;
+  margin-bottom: -18px;*/
 }
 
 .zend_form fieldset dl {
@@ -878,8 +878,8 @@ dl.zend_form dd dt {
   -webkit-box-shadow: 3px;
   box-shadow: 3px;
   -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -border-radius: 3px;
+  -moz-border-radius: 3px;
+  -border-radius: 3px;
 }
 
 .document-page.diff {
@@ -1059,8 +1059,16 @@ dl.zend_form dd dt {
   margin-right: 5px;
 }
 .icon-fam {
-    background-size: 14px 14px;
+  background-size: 14px 14px;
+  -moz-background-size: 14px 14px;
+  -webkit-background-size: 14px 14px;
 }
+
+.icon-right{
+  margin-right: 0 !important;
+  margin-left: 5px;
+}
+
 .icon-database-add{
   background: url(/images/icons/database_add.png);
 }
@@ -1267,11 +1275,11 @@ dl.zend_form dd dt {
   display: inline-block;
   margin: 2px;
   border: 1px #D4D4D4 solid;
-    background-image: url(/images/notebook.png);
-    background-repeat: repeat-y;
-    background-position: -65px 0;
- line-height: 25px;
- padding: 0;
+  background-image: url(/images/notebook.png);
+  background-repeat: repeat-y;
+  background-position: -65px 0;
+  line-height: 25px;
+  padding: 0;
 }
 
 .document-overview .document a {
@@ -1355,7 +1363,7 @@ ins {
 .diff .src-wrapper {
   width: 50%;
   float: left;
-  
+
 }
 
 .src-wrapper p {
@@ -1812,37 +1820,37 @@ ins {
     width: 100%;
     max-width: 100%;
   }
-  
+
   .pagewrap {
     padding: 0 10px 10px 10px;
     width: auto;
   }
-  
+
   header[role=toolbar] {
     padding: 5px 0;
   }
-  
+
   header[role=toolbar] .content {
     margin: 0 10px;
     width: auto;
   }
-  
+
   .top-alert .alert{ 
     margin: 0 10px;
     width: auto;
   }
-  
+
   .src-wrapper {
     margin-top: 20px;
   }
-  
+
   .case-settings-box > a {
     display: block;
     float: none;
     text-align: right;
     padding-right: 0;
   }
-  
+
   .user-box {
     position: absolute;
     bottom: 0;
@@ -1851,131 +1859,131 @@ ins {
 
 
 @media only screen and (max-width: 500px) {
-  
+
   .user-box{
     position: static;
     padding-left: 0;
     width: 100%;
     float: left;
   }
-  
+
   .case-settings-box {
     float: right;
     width: 100%;
     margin-top: -26px;
   }
-  
+
   .case-settings-box > a {
     display: none;
   }
-  
+
   .case-settings-box form {
     min-width: 160px;
     width: 60%;
     float: right;
   }
-  
+
   .case-settings-box .chzn-container {
     width: 100% !important;
   }
-  
+
   .user-box .dropdown-button {
     width: 60%;
     min-width: 160px;
     float: right;
   }
-  
+
   .user-box .avatar { 
     position: static;
     float: left;
   }
-  
+
   header[role=toolbar] .content {
   }
-  
+
   header[role=banner] h1 {
     width: 100%;
     left: 0;
   }
-  
+
   header[role=banner] .navigation {
     text-align: center;
   }
-  
-  		/* Force table to not be like tables anymore */
-		table.default, table.default thead, table.default tbody, table.default th, table.default td, table.default tr { 
-			display: block; 
-		}
-		
-		/* Hide table headers (but not display: none;, for accessibility) */
-		table.default thead tr { 
-			position: absolute;
-			top: -9999px;
-			left: -9999px;
-		}
-    table.default tr {
-      margin-bottom: 15px;
-    }
-		table.default td { 
-			/* Behave  like a "row" */
-			border: none;
-			border-bottom: 1px solid #eee; 
-			position: relative;
-      padding-left: 50%;
-		}
-    table.default td.no-label {
-      padding-left: 5px;
-    }
-		
-		table.default td:before { 
-			/* Now like a table header */
-			position: absolute;
-			/* Top/left values mimic padding */
-			top: 6px;
-			left: 6px;
-			width: 45%; 
-			padding-right: 10px; 
-			white-space: nowrap;
-      content: attr(data-label);
-      font-weight: bold;
-    }
-    nav .navigation {
-      margin: 45px 0 0 0;
-    }
-    nav .navigation li a {
-      font-size: 12pt;
-      padding: 5px 0 7px 0;
-    }
-    nav .navigation li {
-      display: block;
-      margin: 0 0 2px 0;
-        -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-    }
-    nav .navigation li:hover > ul { 
- -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-    }
-    nav .navigation li > ul {
-      position: static;
-      border: 0;
-      padding: 0;
-      margin: 0;
-     
-    }
-    nav .navigation li > ul li {
-      border: 0;  
-      background-color: #f7f7f7;
-    }
-    
-    nav .navigation li > ul li a {
-      border: 0;
-    }
-        nav .navigation li > ul li:hover {
-      background-color: #f7f7f7;
-    }
+
+  /* Force table to not be like tables anymore */
+  table.default, table.default thead, table.default tbody, table.default th, table.default td, table.default tr { 
+    display: block; 
+  }
+
+  /* Hide table headers (but not display: none;, for accessibility) */
+  table.default thead tr { 
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  table.default tr {
+    margin-bottom: 15px;
+  }
+  table.default td { 
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee; 
+    position: relative;
+    padding-left: 50%;
+  }
+  table.default td.no-label {
+    padding-left: 5px;
+  }
+
+  table.default td:before { 
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    width: 45%; 
+    padding-right: 10px; 
+    white-space: nowrap;
+    content: attr(data-label);
+    font-weight: bold;
+  }
+  nav .navigation {
+    margin: 45px 0 0 0;
+  }
+  nav .navigation li a {
+    font-size: 12pt;
+    padding: 5px 0 7px 0;
+  }
+  nav .navigation li {
+    display: block;
+    margin: 0 0 2px 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+  }
+  nav .navigation li:hover > ul { 
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+  nav .navigation li > ul {
+    position: static;
+    border: 0;
+    padding: 0;
+    margin: 0;
+
+  }
+  nav .navigation li > ul li {
+    border: 0;  
+    background-color: #f7f7f7;
+  }
+
+  nav .navigation li > ul li a {
+    border: 0;
+  }
+  nav .navigation li > ul li:hover {
+    background-color: #f7f7f7;
+  }
 }
 
 /* ==|== print styles ======================================================= */
@@ -1999,3 +2007,4 @@ ins {
 
 
 @media (max-width:767px){body{padding-left:0;padding-right:0;}}
+

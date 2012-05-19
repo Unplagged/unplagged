@@ -6,7 +6,7 @@
  * the global namespace.
  */
 
-$(document).ready(function(){
+$(document).ready(function(){  
   // lined textareas
   $("textarea.line-numbers").numberfy();
   $('.tooltip-toggle').tooltip();
@@ -361,7 +361,7 @@ $(document).ready(function(){
     if(!target) {
       return tpl;
     } else {
-//              console.log(target);
+      //              console.log(target);
 
       target.append(tpl);
     }
@@ -390,4 +390,71 @@ $(document).ready(function(){
     }
     return false;
   });
+  
+  
+  // tagging stuff
+  $('input[data-callback]').autocomplete({
+    create: function(event, ui){ 
+      updateAutocompleteSource($(this).attr('id'));
+    },
+    focus: function(event, ui) {
+      return false;
+    },
+    select: function(event, ui) {      
+      var sourceId = $(this).attr('id');
+      
+      createTagElement(sourceId, ui.item.value, ui.item.label);
+      updateAutocompleteSource(sourceId);
+
+      $(this).val('');
+      return false;
+    }
+  }).live('keypress', function (e) {
+    if(e.keyCode == 13){
+      var sourceId = $(this).attr('id');      
+      createTagElement(sourceId, $(this).val(), $(this).val());
+      
+      $(this).val('');
+      return false;
+    }
+  });
+      
+  function updateAutocompleteSource(sourceId){
+    var source = $('#' + sourceId);
+    source.autocomplete('option', 'source', source.attr('data-callback') + '/skip/' + getIdsToSkip(sourceId, true));
+  }
+  
+  function createTagElement(sourceId, value, label){
+          
+    var element = '<a data-source="' + sourceId + '" data-id="' + value + '" href="#" class="btn">';
+    element += '<i class="icon-tag icon-fam"></i>' + label + '<i class="icon-remove icon-right"></i>';
+    element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" /></a> ';
+      
+    $('div[data-wrapper-for=' + sourceId + ']').append(element);
+  }
+  
+  // Gets the ids of the elements which should not be returned through autocompletion anymore.
+  function getIdsToSkip(sourceId, stringify){
+    var skipIds = [];
+    
+    $.each($('a[data-source=' + sourceId + ']'), function() {
+      var dataId = $(this).attr('data-id');
+      // is an integer
+      if(!isNaN(parseInt(dataId * 1)) && dataId.length > 0){
+        skipIds.push(dataId);
+      }
+    });
+    
+    return stringify ? skipIds.join(',') : skipIds;
+  }
+
+  $('div[data-wrapper-for] .btn[data-source]').live('click', function(){
+    var sourceId = $(this).attr('data-source');
+    
+    $(this).remove();
+    updateAutocompleteSource(sourceId);
+
+    return false;
+  });
+  
 });

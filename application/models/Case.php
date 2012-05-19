@@ -174,22 +174,6 @@ class Application_Model_Case extends Application_Model_Base{
     return $this->updated;
   }
 
-  public function addTag(Application_Model_Tag $tag){
-    return $this->tags->add($tag);
-  }
-
-  public function removeTag(Application_Model_Tag $tag){
-    return $this->tags->removeElement($tag);
-  }
-
-  public function getTags(){
-    return $this->tags;
-  }
-
-  public function clearTags(){
-    $this->tags->clear();
-  }
-
   public function addCollaborator(Application_Model_User $user){
     return $this->collaborators->add($user);
   }

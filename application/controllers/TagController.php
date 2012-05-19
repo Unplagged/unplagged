@@ -19,7 +19,7 @@
  */
 
 /**
- * The controller class handles all the user transactions as rights requests and user management.
+ * The controller class handles tag related stuff.
  *
  * @author Benjamin Oertel <mail@benjaminoertel.com>
  * @version 1.0
@@ -29,36 +29,20 @@ class TagController extends Unplagged_Controller_Action{
   public function indexAction(){
   }
 
-  /**
-   * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
-   * @param String from If defined it selects only users of a specific rank.
-   */
-  public function autocompleteTitlesAction(){
-    $search_string = $this->_getParam('term');
-    // ids to skip
-    $skipIds = $this->_getParam('skip');
-
-    // no self select possible
-    if(substr($skipIds, 0, 1) == ","){
-      $skipIds = substr($skipIds, 1);
+  public function autocompleteAction(){
+    $input = new Zend_Filter_Input(array('term'=>'Alnum', 'skip'=>'StringTrim'), null, $this->_getAllParams());
+    
+    if(!empty($input->skip)) {
+      $input->skip = ' AND t.id NOT IN (' . $input->skip . ')';
     }
-
-    if($skipIds != ""){
-      $skipIds = " AND t.id NOT IN (" . $skipIds . ")";
-    }
-
-    $qb = $this->_em->createQueryBuilder();
-    $qb->add('select', "t.title as label, t.id AS value")
-        ->add('from', 'Application_Model_Tag t')
-        ->where("t.title LIKE '%" . $search_string . "%' " . $skipIds);
-    $qb->setMaxResults(5);
-
-    $dbresults = $qb->getQuery()->getResult();
-
-    foreach($dbresults as $key=>$value){
-      $results[] = $value;
-    }
-    $this->_helper->json($results);
+    
+    // skip has to be passe in directly and can't be set as a parameter due to a doctrine bug
+    $query = $this->_em->createQuery("SELECT t.id value, t.title label FROM Application_Model_Tag t WHERE t.title LIKE :term" . $input->skip);
+    $query->setParameter('term', '%' . $input->term . '%');
+    $query->setMaxResults(5);
+    
+    $result = $query->getArrayResult();
+    $this->_helper->json($result);
   }
 
 }

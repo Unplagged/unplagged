@@ -41,11 +41,14 @@ class Application_Model_Tag extends Application_Model_Base{
    */
   private $title;
 
+  
   /**
    * Constructor.
    */
-  public function __construct(){
-    
+  public function __construct($data = array()){
+    if(isset($data["title"])){
+      $this->title = $data["title"];
+    }
   }
 
   /**
