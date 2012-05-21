@@ -7,7 +7,7 @@
     <li>
       <a href="#"><?php echo $case->getPublishableName(); ?> <span class="badge badge-light"><?php echo $case->getPlagiarismPercentage(); ?> %</span>
         <div class="barcode">
-        <img src="/images/plag_barcode.png" alt="barcode"/>
+          <?php echo $case->getBarcode(100, 35, 35, false, '%')->render(); ?>
         </div>
       </a>
     </li>

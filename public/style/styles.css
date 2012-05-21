@@ -586,7 +586,7 @@ nav#right-nav .barcode {
   display: block;
   margin-top: 10px;
 }
-nav#right-nav .barcode img {
+nav#right-nav .barcode svg {
   max-width: 95%;
 }
 nav#right-nav h4 {

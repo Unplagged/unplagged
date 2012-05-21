@@ -197,21 +197,20 @@ class CaseController extends Unplagged_Controller_Action{
         $case->setName($formData['name']);
         $case->setAbbreviation($formData['abbreviation']);
         $case->setAlias($formData['alias']);
-        
+
         //flush here, so that we can use the id
         $this->_em->persist($case);
         $this->_em->flush();
-        
+
         $this->initBasicRolesForCase($case);
       }else{
         $case->setAlias($formData['alias']);
         $case->setName($formData['name']);
         $case->setAbbreviation($formData['abbreviation']);
       }
-      
+
       $case->setTags($formData['tags']);
       //$case->setCollaborators($formData['collaborators'];
-      
       // write back to persistence manager and flush it
       $this->_em->persist($case);
       $this->_em->flush();
@@ -225,9 +224,23 @@ class CaseController extends Unplagged_Controller_Action{
   private function initBasicRolesForCase(Application_Model_Case $case){
     $adminRole = new Application_Model_User_InheritableRole();
     $adminRole->setRoleId('admin_case-' . $case->getId());
-    
+
     $case->addDefaultRole($adminRole);
   }
 
+  public function barcodeAction(){
+    $this->_helper->viewRenderer->setNoRender(true);
+    $this->_helper->layout->disableLayout();
+
+    $barcode = new Unplagged_Barcode(600, 150, 100, true);
+    echo $barcode->render();
+    
+    echo '<br /><br /><br /><br /><br />';
+    
+    $barcode = new Unplagged_Barcode(450, 35, 35, false);
+    echo $barcode->render();
+  }
+
 }
+
 ?>

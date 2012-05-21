@@ -39,7 +39,7 @@ class Application_Model_Case extends Application_Model_Base{
    * 
    * @Column(type="string") 
    */
-  private $name = '';
+  private $name;
 
   /**
    * The alias is used to show everyone who doesn't have the permission to see the real case name.
@@ -48,12 +48,12 @@ class Application_Model_Case extends Application_Model_Base{
    * 
    * @Column(type="string") 
    */
-  private $alias = '';
+  private $alias;
 
   /**
    * @var string  
    */
-  private $state = '';
+  private $state;
 
   /**
    * An abbreviation for the case.
@@ -92,15 +92,6 @@ class Application_Model_Case extends Application_Model_Base{
   private $files;
 
   /**
-   * @ManyToMany(targetEntity="Application_Model_Tag")
-   * @JoinTable(name="case_has_tag",
-   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
-   *      inverseJoinColumns={@JoinColumn(name="tag_id", referencedColumnName="id")}
-   *      )
-   */
-  private $tags;
-
-  /**
    * @ManyToMany(targetEntity="Application_Model_User")
    * @JoinTable(name="case_has_collaborator",
    *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
@@ -117,10 +108,9 @@ class Application_Model_Case extends Application_Model_Base{
   public function __construct($name = null, $alias = null, $abbreviation = null){
     $this->documents = new ArrayCollection();
     $this->files = new ArrayCollection();
-    $this->tags = new ArrayCollection();
     $this->collaborators = new ArrayCollection();
-    $defaultRoles = new ArrayCollection();
-    $this->defaultRoles = $defaultRoles;
+    $this->defaultRoles = new ArrayCollection();
+    
     $this->name = $name;
     $this->alias = $alias;
     $this->abbreviation = $abbreviation;
@@ -265,6 +255,10 @@ class Application_Model_Case extends Application_Model_Base{
   
   public function getDefaultRoles(){
     return $this->defaultRoles;  
+  }
+  
+  public function getBarcode($width, $height, $barHeight, $showLabels, $widthUnit) {
+    return new Unplagged_Barcode($width, $height, $barHeight, $showLabels, $widthUnit);    
   }
 }
 

@@ -31,6 +31,14 @@ class IndexController extends Unplagged_Controller_Action{
 
   public function indexAction(){
     //Zend_Registry::get('Log')->debug('Index');
+    $registry = Zend_Registry::getInstance();
+    $user = $registry->user;
+    
+    $case = $user->getCurrentCase();
+    if($case){
+      $this->view->currentCase = '<h4>Barcode for current case "' . $case->getPublishableName() . "'</h4>";
+      $this->view->barcode = $case->getBarcode(100, 150, 100, true, '%')->render();
+    }
   }
 
   /**
