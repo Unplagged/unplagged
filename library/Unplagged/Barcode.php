@@ -124,6 +124,7 @@ echo "data calculation took $time seconds\n";
   }
 
   private function generateBars(){
+    return;
     $x = 0;
     $barWidth = 0;
     $next = null;
@@ -142,6 +143,7 @@ echo "data calculation took $time seconds\n";
   }
 
   private function generateAxis(){
+    return;
     $labelStepsize = 10;
 
     while(true){
