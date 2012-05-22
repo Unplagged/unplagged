@@ -55,7 +55,7 @@ class Unplagged_Barcode{
     $prevPageNumber = 1;
 
     foreach($document->getPages() as $page){
-/*      $color = null;
+      $color = null;
       
       // whenever there is a gap between the last and the current page, add the pages as missing pages
       if($prevPageNumber + 1 != $page->getPageNumber()) {
@@ -80,7 +80,7 @@ class Unplagged_Barcode{
       $this->pages[$page->getPageNumber()] = $color;
 
       $prevPageNumber = $page->getPageNumber();
-   */ }
+    }
 
     $this->initWidth = count($this->pages) > 0 ? $this->width * 1.0 / count($this->pages) : 0;
   }
