@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -24,7 +25,7 @@ class IndexController extends Unplagged_Controller_Action{
 
   public function init(){
     parent::init();
-    
+
     Zend_Layout::getMvcInstance()->sidebar = 'default';
     Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
   }
@@ -33,11 +34,14 @@ class IndexController extends Unplagged_Controller_Action{
     //Zend_Registry::get('Log')->debug('Index');
     $registry = Zend_Registry::getInstance();
     $user = $registry->user;
-    
+
     $case = $user->getCurrentCase();
     if($case){
-      $this->view->currentCase = '<h4>Barcode for current case "' . $case->getPublishableName() . "'</h4>";
-      $this->view->barcode = $case->getBarcode(100, 150, 100, true, '%')->render();
+      $barcode = $case->getBarcode(100, 150, 100, true, '%');
+      if($barcode){
+        $this->view->currentCase = '<h4>Barcode for current case "' . $case->getPublishableName() . "'</h4>";
+        $this->view->barcode = $case->getBarcode(100, 150, 100, true, '%')->render();
+      }
     }
   }
 
