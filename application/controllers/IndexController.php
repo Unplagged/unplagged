@@ -29,12 +29,21 @@ class IndexController extends Unplagged_Controller_Action{
     Zend_Layout::getMvcInstance()->sidebar = 'default';
     Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
   }
-
+  private function microtime_float()
+{
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
+}
   public function indexAction(){
     //Zend_Registry::get('Log')->debug('Index');
     $registry = Zend_Registry::getInstance();
     $user = $registry->user;
 
+            $time_start = $this->microtime_float();
+
+
+
+            
     $case = $user->getCurrentCase();
     if($case){
       $barcode = $case->getBarcode(100, 150, 100, true, '%');
@@ -43,6 +52,11 @@ class IndexController extends Unplagged_Controller_Action{
         $this->view->barcode = $barcode->render();
       }
     }
+    
+    $time_end = $this->microtime_float();
+$time = $time_end - $time_start;
+
+echo "data calculation took $time seconds\n";
   }
 
   /**
