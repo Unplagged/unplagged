@@ -31,7 +31,7 @@
 class Application_Model_Document extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-document';
-  
+
   /**
    * The title of the document.
    * @var string The title.
@@ -70,7 +70,7 @@ class Application_Model_Document extends Application_Model_Base{
    * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
    */
   private $state;
-  
+
   /**
    * The file the document was initially created from.
    * 
@@ -148,26 +148,36 @@ class Application_Model_Document extends Application_Model_Base{
   public function setState($state){
     $this->state = $state;
   }
-  
+
   public function getOriginalFile(){
     return $this->originalFile;
   }
-  
+
   public function setBibTex($bibTex){
     $this->bibTex = $bibTex;
   }
-  
-  public function toArray() {
+
+  public function toArray(){
     $data["id"] = $this->id;
     $data["bibTex"] = $this->bibTex;
     $data["pages"] = array();
-    
+
     foreach($this->pages as $page){
       $data["pages"][] = $page->toArray();
     }
-    
+
     return $data;
   }
-  
+
+  public function getPlagiarismPercentage(){
+    $pagesCount = $this->pages->count();
+    $percentageSum = 0;
+
+    foreach($this->pages as $page){
+      $percentageSum += $page->getPlagiarismPercentage();
+    }
+
+    return ($pagesCount != 0) ? round($percentageSum * 1. / $pagesCount / 10) * 10 : 0;
+  }
 
 }

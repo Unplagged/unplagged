@@ -28,7 +28,7 @@
 class Application_Model_Document_Page extends Application_Model_Versionable{
 
   const ICON_CLASS = 'icon-page';
-  
+
   /**
    * The page number in the origional document.
    * @var integer The page number.
@@ -67,9 +67,21 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
    */
   private $lines;
 
+  /**
+   * Defines whether the page is disabled for being used in reports and barcodes.
+   * @var bool Whether the page is disabled or not.
+   * 
+   * @Column(type="boolean")
+   */
+  private $disabled = false;
+
   public function __construct($data = null){
     parent::__construct();
 
+    if(isset($data["disabled"])){
+      $this->disabled = $data["disabled"];
+    }
+    
     if(isset($data["file"])){
       $this->originalFile = $data["file"];
     }
@@ -84,7 +96,7 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     $data["id"] = $this->id;
     $data["pageNumber"] = $this->pageNumber;
     $data["lines"] = array();
-    
+
     foreach($this->lines as $line){
       $data["lines"][] = $line->toArray();
     }
@@ -115,6 +127,14 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
   public function setPageNumber($pageNumber){
     $this->pageNumber = $pageNumber;
   }
+  
+  public function getDisabled(){
+    return $this->disabled;
+  }
+
+  public function setDisabled($disabled){
+    $this->disabled = $disabled;
+  }
 
   public function getDirectName(){
     return "page";
@@ -122,18 +142,6 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
 
   public function getDirectLink(){
     return "/document_page/show/id/" . $this->id;
-  }
-
-  /**
-   * Return the percentage of plagiarism on this page.
-   * For now it returns only random values.
-   * 
-   * @return percentage value of plagiarism 
-   */
-  public function getPlagiarismPercentage(){
-    $rand = rand(0, 11) * 10;
-
-    return ($rand == 110 ? "unchecked" : $rand);
   }
 
   public function getLines(){
@@ -201,11 +209,9 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     $lines = array();
     if($inputType == 'text'){
       $lines = explode("\n", $content);
-    }
-    else if($inputType == 'htmltext'){
+    }else if($inputType == 'htmltext'){
       $lines = explode("<br />", $content);
-    }
-    else if($inputType == 'array') {
+    }else if($inputType == 'array'){
       $lines = $content;
     }
 
@@ -241,6 +247,71 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
       $this->removeLine($line);
       Zend_Registry::getInstance()->entitymanager->remove($line);
     }
+  }
+
+  /**
+   * Return the percentage of plagiarism on this page.
+   * 
+   * @return percentage value of plagiarism in 10-percent steps
+   */
+  public function getPlagiarismPercentage(){
+    // amount of all lines
+    $linesCount = $this->lines->count();
+    $plagCount = 0;
+
+    // amount of plagiarised lines
+    // @todo: select only approved fragments here
+    $plagLines = array();
+    $em = Zend_Registry::getInstance()->entitymanager;
+    $query = $em->createQuery('
+      SELECT f FROM Application_Model_Document_Fragment f 
+      JOIN f.plag pl
+      JOIN pl.lineFrom lfrom JOIN lfrom.page pfrom
+      JOIN pl.lineTo lto JOIN lto.page pto
+      WHERE :pn >= pfrom.pageNumber AND :pn <= pto.pageNumber');
+    $query->setParameter("pn", $this->pageNumber);
+    $fragments = $query->getResult();
+
+    foreach($fragments as $fragment){
+      $startPageNumber = $fragment->getPlag()->getLineFrom()->getPage()->getPageNumber();
+      $startLineNumber = $fragment->getPlag()->getLineFrom()->getLineNumber();
+      $endPageNumber = $fragment->getPlag()->getLineTo()->getPage()->getPageNumber();
+      $endLineNumber = $fragment->getPlag()->getLineTo()->getLineNumber();
+
+      $firstLineNumber = $this->lines->first()->getLineNumber();
+      $lastLineNumber = $this->lines->last()->getLineNumber();
+
+      // 1) page number is in between two pages, the whole page is plagiarised
+      if($startPageNumber < $this->pageNumber && $endPageNumber > $this->pageNumber){
+        $plagLines = $this->lines;
+
+        // 2) start page number and end page number are on this page
+      }elseif($startPageNumber == $this->pageNumber && $endPageNumber == $this->pageNumber){
+        $this->updatePlagLines($startLineNumber, $endLineNumber, &$plagLines);
+
+        // 3) page number is page number of start line and end page number is larger
+      }elseif($startPageNumber == $this->pageNumber && $endPageNumber > $this->pageNumber){
+        $this->updatePlagLines($startLineNumber, $lastLineNumber, &$plagLines);
+
+        // 4) page number is page number somewhere between and end page number is on the same page
+      }elseif($startPageNumber == $this->pageNumber && $endPageNumber > $this->pageNumber){
+        $this->updatePlagLines($firstLineNumber, $endLineNumber, &$plagLines);
+      }
+    }
+    $plagCount = sizeof($plagLines);
+
+    return ($plagCount != 0) ? round($plagCount * 1. / $linesCount * 10) * 10 : 0;
+  }
+
+  private function updatePlagLines($startLineNumber, $endLineNumber, &$plagLines){
+    $this->lines->filter(function($line) use (&$plagLines, &$startLineNumber, &$endLineNumber){
+          if($line->getLineNumber() >= $startLineNumber && $line->getLineNumber() <= $endLineNumber){
+            // add line number to result array
+            $plagLines[$line->getLineNumber()] = $line->getLineNumber();
+            return true;
+          }
+          return false;
+        });
   }
 
 }

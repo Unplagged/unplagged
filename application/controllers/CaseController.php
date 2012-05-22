@@ -227,20 +227,6 @@ class CaseController extends Unplagged_Controller_Action{
 
     $case->addDefaultRole($adminRole);
   }
-
-  public function barcodeAction(){
-    $this->_helper->viewRenderer->setNoRender(true);
-    $this->_helper->layout->disableLayout();
-
-    $barcode = new Unplagged_Barcode(600, 150, 100, true);
-    echo $barcode->render();
-    
-    echo '<br /><br /><br /><br /><br />';
-    
-    $barcode = new Unplagged_Barcode(450, 35, 35, false);
-    echo $barcode->render();
-  }
-
 }
 
 ?>

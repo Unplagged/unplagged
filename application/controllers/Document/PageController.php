@@ -36,6 +36,86 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     $this->_helper->redirector('list', 'document_page');
   }
 
+  /**
+   * Creates a single document page. 
+   */
+  public function createAction(){
+    $input = new Zend_Filter_Input(array('document'=>'Digits'), null, $this->_getAllParams());
+    $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->document);
+
+    $modifyForm = new Application_Form_Document_Page_Modify();
+
+    if($this->_request->isPost()){
+      $result = $this->handleModifyData($modifyForm);
+
+      if($result){
+        $result->setDocument($document);
+        $this->_em->persist($result);
+        $this->_em->flush();
+
+        // notification
+        //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+        //Unplagged_Helper::notify('case_created', $result, $user);
+
+        $this->_helper->FlashMessenger(array('success'=>'The document page was created successfully.'));
+        $params = array('id'=>$result->getId());
+        $this->_helper->redirector('show', 'document_page', '', $params);
+      }
+    }
+
+    $this->view->modifyForm = $modifyForm;
+    $this->view->title = 'Document: ' . $document->getTitle();
+    $this->view->tooltitle = 'Create';
+    $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document_page'));
+    
+    Zend_Layout::getMvcInstance()->sidebar = 'document-tools';
+    Zend_Layout::getMvcInstance()->versionableId = $input->document;
+  }
+
+  /**
+   * Edits a single document page. 
+   */
+  public function editAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
+
+    if($page){
+      $modifyForm = new Application_Form_Document_Page_Modify();
+      $modifyForm->setAction("/document_page/edit/id/" . $input->id);
+
+      $modifyForm->getElement("pageNumber")->setValue($page->getPageNumber());
+      $modifyForm->getElement("disabled")->setValue($page->getDisabled());
+      $modifyForm->getElement("content")->setValue($page->getContent("text"));
+      $modifyForm->getElement("submit")->setLabel("Save page");
+
+      if($this->_request->isPost()){
+        $result = $this->handleModifyData($modifyForm, $page);
+
+        if($result){
+          // notification
+          //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          //Unplagged_Helper::notify("case_updated", $result, $user);
+
+          $this->_helper->FlashMessenger(array('success'=>'The document page was updated successfully.'));
+          $params = array('id'=>$page->getId());
+          $this->_helper->redirector('show', 'document_page', '', $params);
+        }
+      }
+
+     // $this->view->title = "Edit page";
+      $this->view->modifyForm = $modifyForm;
+      $this->initPageView($page, '/document_page/edit');
+      $this->view->tooltitle = 'Edit';
+      $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document_page'));
+    }else{
+      $this->_helper->FlashMessenger(array('error'=>'The specified page does not exist.'));
+      $this->_helper->redirector('list', 'case');
+    }
+
+    
+  }
+
   public function listAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits', 'page'=>'Digits'), null, $this->_getAllParams());
 
@@ -145,39 +225,55 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     }
   }
 
-  public function editAction(){
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
+  private function handleModifyData(Application_Form_Document_Page_Modify $modifyForm, Application_Model_Document_Page $page = null){
+    if(!($page)){
+      $page = new Application_Model_Document_Page();
+    }
 
-    $editForm = new Application_Form_Document_Page_Modify();
-    $editForm->setAction("/document_page/edit/id/" . $input->id);
+    $formData = $this->_request->getPost();
+    if($modifyForm->isValid($formData)){
 
-    $editForm->getElement("pageNumber")->setValue($page->getPageNumber());
-    $editForm->getElement("content")->setValue($page->getContent("text"));
+      $page->setPageNumber($formData['pageNumber']);
+      $page->setDisabled($formData['disabled']);
+      $page->setContent($formData["content"], "text");
 
-    if($this->_request->isPost()){
+      // write back to persistence manager and flush it
+      $this->_em->persist($page);
+      $this->_em->flush();
+
+      return $page;
+    }
+
+    return false;
+    /*
+
+
+      $editForm = new Application_Form_Document_Page_Modify();
+      $editForm->setAction("/document_page/edit/id/" . $input->id);
+
+      $editForm->getElement("pageNumber")->setValue($page->getPageNumber());
+      $editForm->getElement("content")->setValue($page->getContent("text"));
+
+      if($this->_request->isPost()){
       $formData = $this->_request->getPost();
 
       if($editForm->isValid($formData)){
-        $page->setPageNumber($formData["pageNumber"]);
-        /*
-          $formData["content"] = nl2br($formData["content"]);
-          $formData["content"] = str_replace("\r\n", "", $formData["content"]);
-          $formData["content"] = str_replace("\n", "", $formData["content"]); */
-        $page->setContent($formData["content"], "text");
-#
-        // write back to persistence manager and flush it
-        $this->_em->persist($page);
-        $this->_em->flush();
+      $page->setPageNumber($formData["pageNumber"]);
 
-        $this->_helper->FlashMessenger(array('info'=>'The document page was updated successfully.'));
-        $params = array('id'=>$page->getId());
-        $this->_helper->redirector('show', 'document_page', '', $params);
+      $page->setContent($formData["content"], "text");
+      #
+      // write back to persistence manager and flush it
+      $this->_em->persist($page);
+      $this->_em->flush();
+
+      $this->_helper->FlashMessenger(array('info'=>'The document page was updated successfully.'));
+      $params = array('id'=>$page->getId());
+      $this->_helper->redirector('show', 'document_page', '', $params);
       }
-    }
+      }
 
-    $this->view->editForm = $editForm;
-    $this->initPageView($page, '/document_page/edit');
+      $this->view->editForm = $editForm;
+     */
   }
 
   public function deleteAction(){

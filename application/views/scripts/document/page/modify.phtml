@@ -1,6 +1,5 @@
 <?php $this->headTitle($this->title); ?>
-<h3><?php echo $this->subtitle; ?> <small>Edit</small></h3>
-
-<?php echo $this->editForm; ?>
+<h3><?php echo $this->subtitle; ?> <small><?php echo $this->tooltitle; ?></small></h3>
+<?php echo $this->modifyForm; ?>
 
 <?php echo $this->partial('partials/next-prev-paginator.phtml', array('prevLink'=>$this->prevPageLink, 'nextLink'=>$this->nextPageLink)); ?>

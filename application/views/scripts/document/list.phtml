@@ -20,7 +20,7 @@ $this->headTitle($this->title);
           <?php else: ?>
             <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $document->getTitle(); ?></td>
           <?php endif; ?>
-          <td data-label="<?php echo $this->translate("Pages"); ?>"><?php echo $document->getPages()->count(); ?></td>
+          <td data-label="<?php echo $this->translate("Pages"); ?>"><?php if($document->getPages()->last()){ echo $document->getPages()->last()->getPageNumber(); } ?></td>
           <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $document->outputState; ?></td>
           <td data-label="<?php echo $this->translate("Actions"); ?>" class="fit-content">
             <?php if($document->getState()->getName() == 'parsed'): ?>

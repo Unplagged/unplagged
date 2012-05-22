@@ -27,7 +27,6 @@ class Unplagged_Barcode{
 
   private $width;
   private $height;
-  
   private $initWidth;
   private $barHeight;
   private $showLabels;
@@ -44,19 +43,43 @@ class Unplagged_Barcode{
   private $result;
   private $x = 0;
   private $y = 0;
-  
   private $widthUnit;
 
-  public function __construct($width = 100, $height = 200, $barHeight = 100, $showLabels = true, $widthUnit = '%'){
+  public function __construct($width = 100, $height = 200, $barHeight = 100, $showLabels = true, $widthUnit = '%', Application_Model_Document $document){
     $this->widthUnit = $widthUnit;
     $this->width = $width;
     $this->height = $height;
     $this->showLabels = $showLabels;
     $this->barHeight = $barHeight;
 
-    // @todo: use real data
-    for($i = 0; $i < 460; $i++){
-      $this->pages[$i] = rand(0, 4);
+    $prevPageNumber = 1;
+    
+    foreach($document->getPages() as $page){
+      $color = null;
+      
+      // whenever there is a gap between the last and the current page, add the pages as missing pages
+      if($prevPageNumber + 1 != $page->getPageNumber()) {
+        for($i = $prevPageNumber; $i < $page->getPageNumber(); $i++){
+          $this->pages[$i] = 0;
+        }
+      }
+      
+      // page should not be in the report
+      if($page->getDisabled()) {
+        $color = 1;
+      // page has more than 75% of plagiarism
+      } elseif($page->getPlagiarismPercentage() > 75){
+        $color = 4;
+      // page has more than 50% of plagiarism
+      } elseif($page->getPlagiarismPercentage() > 50){
+        $color = 3;
+      // page has plagiarism
+      } elseif($page->getPlagiarismPercentage() > 0){
+        $color = 2;
+      }
+      $this->pages[$page->getPageNumber()] = $color;
+
+      $prevPageNumber = $page->getPageNumber();
     }
 
     $this->initWidth = $this->width * 1.0 / sizeof($this->pages);
@@ -64,7 +87,7 @@ class Unplagged_Barcode{
 
   public function render(){
     $this->result = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="width: ' . $this->width . $this->widthUnit . '; height: ' . $this->height . 'px;">' . "\n";
-    
+
     if($this->showLabels){
       $this->y += 15;
 
@@ -107,19 +130,19 @@ class Unplagged_Barcode{
 
   private function generateAxis(){
     $labelStepsize = 10;
-   
-   while(true) {
+
+    while(true){
       $count = sizeof($this->pages);
       $labelCount = floor($count / $labelStepsize);
-      
+
       // we assume a label needs 45px and 500px is the width that needs to be displayable without crossovers
-      if(45 * $labelCount > 500) {
+      if(45 * $labelCount > 500){
         $labelStepsize += 10;
         continue;
       }
       break;
-    }  
-      
+    }
+
     $label = $labelStepsize;
     $x = 0;
     while($x < ($this->width - ($this->initWidth * $labelStepsize * 2))){

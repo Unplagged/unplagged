@@ -7,7 +7,8 @@
     <li>
       <a href="#"><?php echo $case->getPublishableName(); ?> <span class="badge badge-light"><?php echo $case->getPlagiarismPercentage(); ?> %</span>
         <div class="barcode">
-          <?php echo $case->getBarcode(100, 25, 25, false, '%')->render(); ?>
+          <?php $barcode = $case->getBarcode(100, 25, 25, false, '%'); ?>
+          <?php echo ($barcode) ? $barcode->render() : '<i>no target available for barcode</i>'; ?>
         </div>
       </a>
     </li>

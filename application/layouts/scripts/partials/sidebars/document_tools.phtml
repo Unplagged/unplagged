@@ -18,6 +18,11 @@
         <img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" title="<?php echo $this->translate("Remove"); ?>" /><span><?php echo $this->translate("Remove"); ?></span>
       </a>
     </li>
+        <li>
+      <a href="<?php echo "/document_page/create/document/" . $this->documentId; ?>">
+        <img class="icon" src="<?php echo $this->baseUrl('images/icons/page_add.png'); ?>" title="<?php echo $this->translate("Add page"); ?>" /><span><?php echo $this->translate("Add page"); ?></span>
+      </a>
+    </li>
     <li>
       <a href="<?php echo "/document/detect-plagiarism/id/" . $this->documentId; ?>">
         <img class="icon" src="<?php echo $this->baseUrl('images/icons/eye.png'); ?>" title="<?php echo $this->translate("Detect Plagiarism"); ?>" /><span><?php echo $this->translate("Detect Plagiarism"); ?></span>

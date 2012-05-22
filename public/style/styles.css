@@ -71,7 +71,7 @@ body {
 
 h2 {
   color: #40c0e9;
-  margin: 0;
+  margin: 0 0 10px 0;
   font-weight: 200;
   font-size: 17pt;
 }
@@ -640,7 +640,7 @@ nav#right-nav ul li a .badge-light{
 table.default {
   width: 100%;
   background-color: #fbfbfb;
-  margin: 20px 0 10px 0;
+  margin: 0 0 10px 0;
   font-size: 10pt;
 }
 
@@ -809,9 +809,6 @@ table.default .progress {
   font-size: 10pt;
   color: #555;
   text-align: left;
-  /* This looks very weird on many forms, what was the purpose? */
-  /*margin-top: -13px;
-  margin-bottom: -18px;*/
 }
 
 .zend_form fieldset dl {
@@ -820,7 +817,8 @@ table.default .progress {
   -moz-border-radius: 0 0 6px 6px;
   -webkit-border-radius: 0 0 6px 6px;
   border-radius:  0 0 6px 6px;
-  padding: 15px 0 10px 15px;
+  padding: 5px 0 5px 15px;
+  margin-top: 0;
 }
 dl.zend_form dt {
   display: none;
@@ -836,7 +834,7 @@ dl.zend_form dd dt {
   margin: 0;
   padding: 0;
   width: 100%;
-  position: relative;
+  /*position: relative;*/
   top: 10px;
   font-weight: normal;
 
@@ -1059,8 +1057,8 @@ dl.zend_form dd dt {
   margin-right: 5px;
 }
 .icon-fam {
+  background-position: 0 0;
   background-size: 14px 14px;
-  -moz-background-size: 14px 14px;
   -webkit-background-size: 14px 14px;
 }
 
@@ -1070,74 +1068,74 @@ dl.zend_form dd dt {
 }
 
 .icon-database-add{
-  background: url(/images/icons/database_add.png);
+  background-image: url(/images/icons/database_add.png);
 }
 .icon-edit {
-  background: url(/images/icons/pencil.png);
+  background-image: url(/images/icons/pencil.png);
 }
 .icon-upload {
-  background: url(/images/icons/page_white_get.png);
+  background-image: url(/images/icons/page_white_get.png);
 }
 
 .icon-create-case {
-  background: url(/images/icons/book_add.png);
+  background-image: url(/images/icons/book_add.png);
 }
 
 .icon-simtext-compare {
-  background: url(/images/icons/page_copy.png);
+  background-image: url(/images/icons/page_copy.png);
 }
 
 .icon-comments,
 .icon-conversation {
-  background: url(/images/icons/comments.png);
+  background-image: url(/images/icons/comments.png);
 }
 
 .icon-user {
-  background: url(/images/icons/user.png);
+  background-image: url(/images/icons/user.png);
 }
 
 .icon-case{
-  background: url(/images/icons/package.png);
+  background-image: url(/images/icons/package.png);
 }
 
 .icon-comment {
-  background: url(/images/icons/comment.png);
+  background-image: url(/images/icons/comment.png);
 }
 
 .icon-document {
-  background: url(/images/icons/book.png);
+  background-image: url(/images/icons/book.png);
 }
 
 .icon-fragment {
-  background: url(/images/icons/textfield.png);
+  background-image: url(/images/icons/textfield.png);
 }
 
 .icon-create-fragment {
-  background: url(/images/icons/textfield_add.png);
+  background-image: url(/images/icons/textfield_add.png);
 }
 
 .icon-file {
-  background: url(/images/icons/disk.png);
+  background-image: url(/images/icons/disk.png);
 }
 
 .icon-notification{
-  background: url(/images/icons/clock.png);
+  background-image: url(/images/icons/clock.png);
 }
 
 .icon-tag{
-  background: url(/images/icons/tag_blue.png);
+  background-image: url(/images/icons/tag_blue.png);
 }
 
 .icon-document-page {
-  background: url(/images/icons/page.png);
+  background-image: url(/images/icons/page.png);
 }
 
 .icon-report {
-  background: url(/images/icons/report.png);
+  background-image: url(/images/icons/report.png);
 }
 
 .icon-rate {
-  background: url(/images/icons/star.png);
+  background-image: url(/images/icons/star.png);
 }
 
 #activity-stream {

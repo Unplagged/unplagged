@@ -240,10 +240,22 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::getRatings();
     }
 
+    public function geTags()
+    {
+        $this->__load();
+        return parent::geTags();
+    }
+
     public function getCreated()
     {
         $this->__load();
         return parent::getCreated();
+    }
+
+    public function getConversationTypes()
+    {
+        $this->__load();
+        return parent::getConversationTypes();
     }
 
     public function isRatedByUser($user)
@@ -252,10 +264,47 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::isRatedByUser($user);
     }
 
+    public function getTags()
+    {
+        $this->__load();
+        return parent::getTags();
+    }
+
+    public function getTagIds()
+    {
+        $this->__load();
+        return parent::getTagIds();
+    }
+
+    public function addTag(\Application_Model_Tag $tag)
+    {
+        $this->__load();
+        return parent::addTag($tag);
+    }
+
+    public function removeTag(\Application_Model_Tag $tag)
+    {
+        $this->__load();
+        return parent::removeTag($tag);
+    }
+
+    public function setTags($tagIds = array (
+))
+    {
+        $this->__load();
+        return parent::setTags($tagIds);
+    }
+
+    public function clearTags()
+    {
+        $this->__load();
+        return parent::clearTags();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'ratings', 'notifications', 'updated', 'username', 'encryptedPassword', 'email', 'firstname', 'lastname', 'verificationHash', 'state', 'role', 'avatar', 'currentCase', 'files', 'settings');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'updated', 'username', 'encryptedPassword', 'email', 'firstname', 'lastname', 'verificationHash', 'state', 'role', 'avatar', 'currentCase', 'files', 'settings');
     }
 
     public function __clone()

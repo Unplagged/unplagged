@@ -35,20 +35,24 @@ class Application_Form_Document_Page_Modify extends Zend_Form{
     $pageNumberElement->addValidator('regex', false, array('/^[0-9]/i'));
     $pageNumberElement->setRequired(true);
 
+    $disabledElement = new Zend_Form_Element_Checkbox('disabled');
+    $disabledElement->setLabel("Deaktiviert");
+    
     $contentElement = new Zend_Form_Element_Textarea('content');
     $contentElement->setLabel("Content");
     $contentElement->setOptions(array('class'=>'line-numbers big'));
 
     $submitElement = new Zend_Form_Element_Submit('submit');
-    $submitElement->setLabel('Save page');
+    $submitElement->setLabel('Create page');
     $submitElement->setOptions(array('class'=>'btn btn-primary'));
 
     $this->addElements(array(
       $pageNumberElement
+      , $disabledElement
       , $contentElement
     ));
 
-    $this->addDisplayGroup(array('pageNumber', 'content')
+    $this->addDisplayGroup(array('pageNumber', 'disabled', 'content')
         , 'detailsGroup'
         , array('legend'=>'Page details')
     );

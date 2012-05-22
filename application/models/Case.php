@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -31,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Application_Model_Case extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-case';
-  
+
   /**
    * The "real" name of the case, under which it will get published later on.
    * 
@@ -99,7 +98,7 @@ class Application_Model_Case extends Application_Model_Base{
    *      )
    */
   private $collaborators;
-  
+
   /**
    * @ManyToMany(targetEntity="Application_Model_User_InheritableRole", cascade={"persist", "remove"}) 
    */
@@ -110,7 +109,7 @@ class Application_Model_Case extends Application_Model_Base{
     $this->files = new ArrayCollection();
     $this->collaborators = new ArrayCollection();
     $this->defaultRoles = new ArrayCollection();
-    
+
     $this->name = $name;
     $this->alias = $alias;
     $this->abbreviation = $abbreviation;
@@ -216,11 +215,11 @@ class Application_Model_Case extends Application_Model_Base{
 
     return $result;
   }
-  
+
   public function getAbbreviation(){
     return $this->abbreviation;
   }
-  
+
   public function setName($name){
     $this->name = $name;
   }
@@ -231,35 +230,61 @@ class Application_Model_Case extends Application_Model_Base{
 
   public function setAbbreviation($abbreviation){
     $this->abbreviation = $abbreviation;
-  } 
-  
-  public function getRoles(){
-    return $this->defaultRoles;  
   }
-  
+
+  public function getRoles(){
+    return $this->defaultRoles;
+  }
+
   /**
    * Return the percentage of plagiarism in this case.
-   * //@todo: For now it returns only random values.
    * 
    * @return percentage value of plagiarism 
    */
   public function getPlagiarismPercentage(){
-    $rand = rand(0, 100);
+    $target = $this->getTarget();
 
-    return $rand;
+    return $target ? $target->getPlagiarismPercentage() : 0;
   }
-  
+
   public function addDefaultRole(Application_Model_User_InheritableRole $role){
     $this->defaultRoles->add($role);
   }
-  
+
   public function getDefaultRoles(){
-    return $this->defaultRoles;  
+    return $this->defaultRoles;
   }
-  
-  public function getBarcode($width, $height, $barHeight, $showLabels, $widthUnit) {
-    return new Unplagged_Barcode($width, $height, $barHeight, $showLabels, $widthUnit);    
+
+  public function getBarcode($width, $height, $barHeight, $showLabels, $widthUnit){
+    $target = $this->getTarget();
+    if($target){
+      return new Unplagged_Barcode($width, $height, $barHeight, $showLabels, $widthUnit, $target);
+    }
   }
+
+  /**
+   * @todo: This needs to be updated when we decided where to set the target (either on a file or on a document)
+   */
+  private function getTarget(){
+    $target = null;
+    foreach($this->files as $file){
+      if($file->getIsTarget()){
+        $target = $file;
+        break;
+      }
+    }
+    if($target == null){
+      return null;
+    }
+
+    $em = Zend_Registry::getInstance()->entitymanager;
+    $document = $em->getRepository('Application_Model_Document')->findOneByOriginalFile($target->getId());
+    if(!$document){
+      return null;
+    }
+    return $document;
+  }
+
 }
 
 ?>
