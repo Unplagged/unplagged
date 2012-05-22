@@ -53,7 +53,6 @@ class Unplagged_Barcode{
     $this->barHeight = $barHeight;
 
     $prevPageNumber = 1;
-        $time_start = $this->microtime_float();
 
     foreach($document->getPages() as $page){
       $color = null;
@@ -82,10 +81,7 @@ class Unplagged_Barcode{
 
       $prevPageNumber = $page->getPageNumber();
     }
-    $time_end = $this->microtime_float();
-$time = $time_end - $time_start;
 
-echo "data calculation took $time seconds\n";
     $this->initWidth = $this->width * 1.0 / sizeof($this->pages);
   }
 
@@ -95,6 +91,7 @@ echo "data calculation took $time seconds\n";
     return ((float)$usec + (float)$sec);
 }
   public function render(){
+        $time_start = $this->microtime_float();
 
 
     $this->result = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="width: ' . $this->width . $this->widthUnit . '; height: ' . $this->height . 'px;">' . "\n";
@@ -118,7 +115,10 @@ echo "data calculation took $time seconds\n";
 
     $this->result .= '</svg>';
 
+    $time_end = $this->microtime_float();
+$time = $time_end - $time_start;
 
+echo "data calculation took $time seconds\n";
 
     return $this->result;
   }
@@ -143,7 +143,6 @@ echo "data calculation took $time seconds\n";
   }
 
   private function generateAxis(){
-    return;
     $labelStepsize = 10;
 
     while(true){

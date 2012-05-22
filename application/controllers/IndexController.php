@@ -40,7 +40,7 @@ class IndexController extends Unplagged_Controller_Action{
       $barcode = $case->getBarcode(100, 150, 100, true, '%');
       if($barcode){
         $this->view->currentCase = '<h4>Barcode for current case "' . $case->getPublishableName() . "'</h4>";
-        $this->view->barcode = $case->getBarcode(100, 150, 100, true, '%')->render();
+        $this->view->barcode = $barcode->render();
       }
     }
   }
