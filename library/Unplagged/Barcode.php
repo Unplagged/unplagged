@@ -53,7 +53,7 @@ class Unplagged_Barcode{
     $this->barHeight = $barHeight;
 
     $prevPageNumber = 1;
-
+/*
     foreach($document->getPages() as $page){
       $color = null;
       
@@ -80,15 +80,15 @@ class Unplagged_Barcode{
       $this->pages[$page->getPageNumber()] = $color;
 
       $prevPageNumber = $page->getPageNumber();
-    }
+    }*/
 
-    $this->initWidth = $this->width * 1.0 / sizeof($this->pages);
+    $this->initWidth = count($this->pages) > 0 ? $this->width * 1.0 / count($this->pages) : 0;
   }
 
 
   public function render(){
     $this->result = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="width: ' . $this->width . $this->widthUnit . '; height: ' . $this->height . 'px;">' . "\n";
-
+    if(!empty($this->pages)) {
     if($this->showLabels){
       $this->y += 15;
 
@@ -105,7 +105,7 @@ class Unplagged_Barcode{
       $this->y += 20;
       $this->generateAxis();
     }
-
+    }
     $this->result .= '</svg>';
 
     return $this->result;
