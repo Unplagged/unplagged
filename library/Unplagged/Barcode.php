@@ -85,7 +85,15 @@ class Unplagged_Barcode{
     $this->initWidth = $this->width * 1.0 / sizeof($this->pages);
   }
 
+  private function microtime_float()
+{
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
+}
   public function render(){
+
+
+    $time_start = $this->microtime_float();
     $this->result = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="width: ' . $this->width . $this->widthUnit . '; height: ' . $this->height . 'px;">' . "\n";
 
     if($this->showLabels){
@@ -106,6 +114,11 @@ class Unplagged_Barcode{
     }
 
     $this->result .= '</svg>';
+
+    $time_end = $this->microtime_float();
+$time = $time_end - $time_start;
+
+echo "Calculation took $time seconds\n";
 
     return $this->result;
   }
