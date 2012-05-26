@@ -150,5 +150,11 @@ class Application_Model_Report extends Application_Model_Base{
   public function setCase($case){
     $this->case = $case;
   }
+  
+  public function setFilePath($filePath){
+    $this->filePath = $filePath;
+  }
+
+
 
 }
