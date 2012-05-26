@@ -29,7 +29,7 @@
 class Application_Model_Report extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-report';
-  
+
   /**
    * The current state of the report.
    * 
@@ -43,13 +43,12 @@ class Application_Model_Report extends Application_Model_Base{
    * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $user;
-  
-  
+
   /**
-   * @ManyToOne(targetEntity="Application_Model_File", cascade={"remove"})
-   * @JoinColumn(name="file_id", referencedColumnName="id", onDelete="CASCADE")
-   */
-  private $file;
+     * @ManyToOne(targetEntity="Application_Model_Document")
+     * @JoinColumn(name="target_document_id", referencedColumnName="id")
+     */
+  private $target;
 
   /**
    * The title of the report.
@@ -57,32 +56,37 @@ class Application_Model_Report extends Application_Model_Base{
    * @Column(type="string")
    */
   private $title;
-  
+
   /**
    * The report is saved as file
    * 
    * @Column(type="string")
    */
   private $filePath;
-  
- 
+
+  /**
+   * @ManyToOne(targetEntity="Application_Model_Case", inversedBy="reports")
+   * @JoinColumn(name="case_id", referencedColumnName="id", onDelete="CASCADE")
+   */
+  private $case;
+
   public function __construct(&$data){
-    
+
     if(isset($data["title"])){
       $this->title = $data["title"];
     }
-    
+
     if(isset($data["state"])){
       $this->state = $data["state"];
     }
     if(isset($data["user"])){
       $this->user = $data["user"];
     }
-	 if(isset($data["file"])){
-      $this->file = $data["file"];
+    if(isset($data["target"])){
+      $this->target = $data["target"];
     }
-	
-	if(isset($data["filePath"])){
+
+    if(isset($data["filePath"])){
       $this->filePath = $data["filePath"];
     }
   }
@@ -118,20 +122,19 @@ class Application_Model_Report extends Application_Model_Base{
   public function setState($state){
     $this->state = $state;
   }
-  
+
   public function getTitle(){
     return $this->title;
   }
 
-  public function getFile(){
-    return $this->file;
+  public function getTarget(){
+    return $this->target;
   }
-  
+
   public function getSource(){
     return $this->source;
   }
 
-    
   public function getDirectName(){
     return $this->getTitle();
   }
@@ -139,9 +142,13 @@ class Application_Model_Report extends Application_Model_Base{
   public function getFilePath(){
     return $this->filePath;
   }
-  
+
   public function getDirectLink(){
     return "/report/list/id/" . $this->id;
+  }
+
+  public function setCase($case){
+    $this->case = $case;
   }
 
 }

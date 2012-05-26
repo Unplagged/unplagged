@@ -1081,6 +1081,10 @@ dl.zend_form dd dt {
   background-image: url(/images/icons/book_add.png);
 }
 
+.icon-create-report {
+  background-image: url(/images/icons/report_add.png);
+}
+
 .icon-simtext-compare {
   background-image: url(/images/icons/page_copy.png);
 }

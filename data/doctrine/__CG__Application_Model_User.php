@@ -168,6 +168,12 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::hasFiles();
     }
 
+    public function hasFile(\Application_Model_File $file)
+    {
+        $this->__load();
+        return parent::hasFile($file);
+    }
+
     public function getAvatar()
     {
         $this->__load();

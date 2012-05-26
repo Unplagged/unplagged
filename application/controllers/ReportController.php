@@ -4,11 +4,6 @@ class ReportController extends Unplagged_Controller_Versionable {
 
     public function init() {
         parent::init();
-
-        $input = new Zend_Filter_Input(array('id' => 'Digits'), null, $this->_getAllParams());
-
-        Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
-        Zend_Layout::getMvcInstance()->versionableId = $input->id;
     }
 
     public function indexAction() {
@@ -65,9 +60,13 @@ class ReportController extends Unplagged_Controller_Versionable {
     }
 
     public function listAction() {
+        $case = Zend_Registry::getInstance()->user->getCurrentCase();
+      
         $input = new Zend_Filter_Input(array('page' => 'Digits'), null, $this->_getAllParams());
-        $query = $this->_em->createQuery("SELECT r FROM Application_Model_Report r");
-        $count = $this->_em->createQuery("SELECT COUNT(r.id) FROM Application_Model_Report r");
+        $query = $this->_em->createQuery("SELECT r FROM Application_Model_Report r WHERE r.case = :caseId");
+        $query->setParameter('caseId', $case->getId());
+        $count = $this->_em->createQuery("SELECT COUNT(r.id) FROM Application_Model_Report r WHERE r.case = :caseId");
+        $count->setParameter('caseId', $case->getId());
     
         $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
         $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);

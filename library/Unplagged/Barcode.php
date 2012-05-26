@@ -45,7 +45,7 @@ class Unplagged_Barcode{
   private $y = 0;
   private $widthUnit;
 
-  public function __construct($width = 100, $height = 200, $barHeight = 100, $showLabels = true, $widthUnit = '%', Application_Model_Document $document){
+  public function __construct($width = 100, $height = 200, $barHeight = 100, $showLabels = true, $widthUnit = '%', $data){
     $this->widthUnit = $widthUnit;
     $this->width = $width;
     $this->height = $height;
@@ -54,57 +54,56 @@ class Unplagged_Barcode{
 
     $prevPageNumber = 1;
 
-    foreach($document->getPages() as $page){
+    foreach($data as $page){
       $color = null;
-      
+
       // whenever there is a gap between the last and the current page, add the pages as missing pages
-      if($prevPageNumber + 1 != $page->getPageNumber()) {
-        for($i = $prevPageNumber; $i < $page->getPageNumber(); $i++){
+      if($prevPageNumber + 1 != $page['pageNumber']){
+        for($i = $prevPageNumber+1; $i < $page['pageNumber']; $i++){
           $this->pages[$i] = 0;
         }
       }
-      
+
       // page should not be in the report
-      if($page->getDisabled()) {
+      if($page['disabled'] == 'true'){
         $color = 1;
-      // page has more than 75% of plagiarism
-      } elseif($page->getPlagiarismPercentage() > 75){
+        // page has more than 75% of plagiarism
+      }elseif($page['plagPercentage'] > 75){
         $color = 4;
-      // page has more than 50% of plagiarism
-      } elseif($page->getPlagiarismPercentage() > 50){
+        // page has more than 50% of plagiarism
+      }elseif($page['plagPercentage'] > 50){
         $color = 3;
-      // page has plagiarism
-      } elseif($page->getPlagiarismPercentage() > 0){
+        // page has plagiarism
+      }elseif($page['plagPercentage'] > 0){
         $color = 2;
       }
-      $this->pages[$page->getPageNumber()] = $color;
+      $this->pages[$page['pageNumber']] = $color;
 
-      $prevPageNumber = $page->getPageNumber();
+      $prevPageNumber = $page['pageNumber'];
     }
-
+    
     $this->initWidth = count($this->pages) > 0 ? $this->width * 1.0 / count($this->pages) : 0;
   }
 
-
   public function render(){
     $this->result = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="width: ' . $this->width . $this->widthUnit . '; height: ' . $this->height . 'px;">' . "\n";
-    if(!empty($this->pages)) {
-    if($this->showLabels){
-      $this->y += 15;
+    if(!empty($this->pages)){
+      if($this->showLabels){
+        $this->y += 15;
 
-      $this->result .= '<line x1="0" y1="' . $this->y . '" x2="' . $this->width . $this->widthUnit . '" y2="' . $this->y . '" style="stroke: #000000"/>';
-      $this->y += 5;
-    }
+        $this->result .= '<line x1="0" y1="' . $this->y . '" x2="' . $this->width . $this->widthUnit . '" y2="' . $this->y . '" style="stroke: #000000"/>';
+        $this->y += 5;
+      }
 
-    $this->generateBars();
+      $this->generateBars();
 
-    if($this->showLabels){
-      $this->y += $this->barHeight + 5;
-      $this->result .= '<line x1="0" y1="' . $this->y . '" x2="' . $this->width . $this->widthUnit . '" y2="' . $this->y . '" style="stroke: #000000"/>';
+      if($this->showLabels){
+        $this->y += $this->barHeight + 5;
+        $this->result .= '<line x1="0" y1="' . $this->y . '" x2="' . $this->width . $this->widthUnit . '" y2="' . $this->y . '" style="stroke: #000000"/>';
 
-      $this->y += 20;
-      $this->generateAxis();
-    }
+        $this->y += 20;
+        $this->generateAxis();
+      }
     }
     $this->result .= '</svg>';
 
@@ -146,7 +145,7 @@ class Unplagged_Barcode{
 
     $label = $labelStepsize;
     $x = 0;
-    while($x < ($this->width - ($this->initWidth * $labelStepsize * 2))){
+    while($x < ($this->width - ($this->initWidth * $labelStepsize))){
       $x += ($this->initWidth * $labelStepsize);
       $this->result .= '<text x="' . $x . $this->widthUnit . '" y="' . $this->y . '" font-family="Arial" font-size="14" text-anchor="middle">' . $label . '</text>';
       $this->result .= '<line x1="' . $x . $this->widthUnit . '" y1="' . ($this->y - 20) . '" x2="' . $x . $this->widthUnit . '" y2="' . ($this->y - 15) . '" stroke-width="1" stroke="#000000"></line>';

@@ -34,7 +34,7 @@ class CaseController extends Unplagged_Controller_Action{
       $result = $this->handleModifyData($modifyForm);
 
       if($result){
-        // notification
+// notification
         $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
         Unplagged_Helper::notify('case_created', $result, $user);
 
@@ -67,7 +67,7 @@ class CaseController extends Unplagged_Controller_Action{
         $result = $this->handleModifyData($modifyForm, $case);
 
         if($result){
-          // notification
+// notification
           $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
           Unplagged_Helper::notify("case_updated", $result, $user);
 
@@ -95,7 +95,7 @@ class CaseController extends Unplagged_Controller_Action{
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
-    // generate the action dropdown for each fragment
+// generate the action dropdown for each fragment
     foreach($paginator as $case):
       $case->actions = array();
 
@@ -113,8 +113,7 @@ class CaseController extends Unplagged_Controller_Action{
 
     $this->setTitle('Case Files');
 
-    $userId = $this->_defaultNamespace->userId;
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($userId);
+    $user = Zend_Registry::getInstance()->user;
     $case = $user->getCurrentCase();
     if(!empty($case)){
       $caseFiles = $case->getFiles();
@@ -123,22 +122,11 @@ class CaseController extends Unplagged_Controller_Action{
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
       $paginator->setCurrentPageNumber($input->page);
 
-      // generate the action dropdown for each file
-      // @todo: use centralised method for all three file lists
+// generate the action dropdown for each file
+// @todo: use centralised method for all three file lists
       foreach($paginator as $file):
         $file->actions = array();
 
-        if($file->getIsTarget()){
-          $action['link'] = '/file/unset-target/id/' . $file->getId();
-          $action['label'] = 'Unset target';
-          $action['icon'] = 'images/icons/page_find.png';
-          $file->actions[] = $action;
-        }else{
-          $action['link'] = '/file/set-target/id/' . $file->getId();
-          $action['label'] = 'Set target';
-          $action['icon'] = 'images/icons/page.png';
-          $file->actions[] = $action;
-        }
         $action['link'] = '/file/parse/id/' . $file->getId();
         $action['label'] = 'Parse';
         $action['icon'] = 'images/icons/page_gear.png';
@@ -163,7 +151,7 @@ class CaseController extends Unplagged_Controller_Action{
 
       $this->view->paginator = $paginator;
 
-      //change the view to the one from the file controller
+//change the view to the one from the file controller
       $this->_helper->viewRenderer->renderBySpec('list', array('controller'=>'file'));
     }else{
       $this->_helper->FlashMessenger(array('error'=>'You need to select a case first, before you can view files of it.'));
@@ -175,17 +163,24 @@ class CaseController extends Unplagged_Controller_Action{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    if($file){
+      $user = Zend_Registry::getInstance()->user;
 
-    $case = $user->getCurrentCase();
+      $case = $user->getCurrentCase();
+      if(!$case->hasFile($file)){
+        $case->addFile($file);
+        $this->_em->persist($case);
+        $this->_em->flush();
 
-    $case->addFile($file);
-    $this->_em->persist($case);
-    $this->_em->flush();
-
+        $this->_helper->FlashMessenger(array('success'=>'The file was added to your current case.'));
+      }else{
+        $this->_helper->FlashMessenger(array('error'=>'The file already belongs to the current case.'));
+      }
+    }else{
+      $this->_helper->FlashMessenger(array('error'=>'The specified file does not exist.'));
+    }
+    
     $this->_helper->viewRenderer->setNoRender(true);
-
-    $this->_helper->FlashMessenger('The file was added to your current case.');
     $this->redirectToLastPage();
   }
 
@@ -211,6 +206,7 @@ class CaseController extends Unplagged_Controller_Action{
 
       $case->setTags($formData['tags']);
       //$case->setCollaborators($formData['collaborators'];
+    
       // write back to persistence manager and flush it
       $this->_em->persist($case);
       $this->_em->flush();
@@ -227,6 +223,7 @@ class CaseController extends Unplagged_Controller_Action{
 
     $case->addDefaultRole($adminRole);
   }
+
 }
 
 ?>

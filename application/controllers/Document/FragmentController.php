@@ -30,6 +30,13 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
+    
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
+    if(!$case->getTarget()) {
+      $errorText = 'In order to manage fragments, you need to set a target document on the case.';
+      $this->_helper->FlashMessenger(array('error'=>$errorText));
+      $this->_helper->redirector('list', 'document');
+    }
   }
 
   public function indexAction(){
@@ -162,8 +169,13 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
-    $query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f");
-    $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_Document_Fragment f");
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
+
+    $query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.document d WHERE d.id = :documentId");
+    $query->setParameter('documentId', $case->getTarget()->getId());
+    
+    $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_Document_Fragment f JOIN f.document d WHERE d.id = :documentId");
+    $count->setParameter('documentId', $case->getTarget()->getId());
 
     $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
@@ -266,10 +278,20 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       }
       $fragment->setSource($this->handlelPartialCreation($partial, $formData['sourceLineFrom'], $formData['sourceLineTo']));
 
+      $case = Zend_Registry::getInstance()->user->getCurrentCase();
+      $target = $case->getTarget();
+      $target->addFragment($fragment);
+            
       // write back to persistence manager and flush it
       $this->_em->persist($fragment);
+      $this->_em->persist($target);
       $this->_em->flush();
-
+      
+      // updates the barcode data
+      $case->updateBarcodeData();
+      $this->_em->persist($case);
+      $this->_em->flush();
+      
       return $fragment;
     }
 

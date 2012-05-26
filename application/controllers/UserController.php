@@ -83,13 +83,13 @@ class UserController extends Unplagged_Controller_Action{
     //set all permissions as allowed for now
     $allPermissions = $this->_em->getRepository('Application_Model_Permission')->findAll();
     foreach($allPermissions as $permission){
-      $user->getRole()->addPermission($permission);  
+      $user->getRole()->addPermission($permission);
     }
-    
+
     // write back to persistence manager and flush it
     $this->_em->persist($user);
     $this->_em->flush();
-    
+
     return $user;
   }
 
@@ -110,17 +110,6 @@ class UserController extends Unplagged_Controller_Action{
     foreach($paginator as $file){
       $file->actions = array();
 
-      if($file->getIsTarget()){
-        $action['link'] = '/file/unset-target/id/' . $file->getId();
-        $action['label'] = 'Unset target';
-        $action['icon'] = 'images/icons/page_find.png';
-        $file->actions[] = $action;
-      }else{
-        $action['link'] = '/file/set-target/id/' . $file->getId();
-        $action['label'] = 'Set target';
-        $action['icon'] = 'images/icons/page.png';
-        $file->actions[] = $action;
-      }
       $action['link'] = '/file/parse/id/' . $file->getId();
       $action['label'] = 'Parse';
       $action['icon'] = 'images/icons/page_gear.png';
@@ -154,12 +143,22 @@ class UserController extends Unplagged_Controller_Action{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    if($file){
+      $user = Zend_Registry::getInstance()->user;
 
-    $user->addFile($file);
-    $this->_em->persist($user);
-    $this->_em->flush();
+      if(!$user->hasFile($file)){
+        $user->addFile($file);
+        $this->_em->persist($user);
+        $this->_em->flush();
+        $this->_helper->FlashMessenger(array('success'=>'The file has successfully been added to your personal files.'));
+      }else{
+        $this->_helper->FlashMessenger(array('error'=>'The file already belongs to your personal files.'));
+      }
+    }else{
+      $this->_helper->FlashMessenger(array('error'=>'The specified file does not exist.'));
+    }
 
+    $this->_helper->viewRenderer->setNoRender(true);
     $this->redirectToLastPage();
   }
 
@@ -388,8 +387,8 @@ class UserController extends Unplagged_Controller_Action{
     // send form to view
     $this->view->removalForm = $removalForm;
   }
-  
-  public function editRoleAction() {
+
+  public function editRoleAction(){
     $this->view->roleForm = new Application_Form_User_Role();
   }
 

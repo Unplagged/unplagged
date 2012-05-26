@@ -28,10 +28,11 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
 
   private $types = array();
   private $documents = array();
+  private $target;
 
   public function __construct(){
     $em = Zend_Registry::getInstance()->entitymanager;
-
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
     $query = $em->createQuery("SELECT t FROM Application_Model_Document_Fragment_Type t");
     $types = $query->getResult();
 
@@ -40,7 +41,8 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
       $params["types"][$type->getId()] = $type->getName();
     }
 
-    $query = $em->createQuery("SELECT d FROM Application_Model_Document d");
+    $query = $em->createQuery("SELECT d FROM Application_Model_Document d WHERE d.case = :caseId");
+    $query->setParameter('caseId', $case->getId());
     $documents = $query->getResult();
 
     $params["documents"] = array();
@@ -50,6 +52,7 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
 
     $this->types = $params['types'];
     $this->documents = $params['documents'];
+    $this->target = $case->getTarget();
 
     parent::__construct();
   }
@@ -75,8 +78,7 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
     $candidateDocumentElement = new Zend_Form_Element_Select('candidateDocument');
     $candidateDocumentElement->setLabel("Document");
     $candidateDocumentElement->addMultiOption('', 'Please choose...');
-
-    $candidateDocumentElement->addMultiOptions($this->documents);
+    $candidateDocumentElement->addMultiOption($this->target->getId(), $this->target->getTitle());
 
     $candidatePageFromElement = new Zend_Form_Element_Select('candidatePageFrom');
     $candidatePageFromElement->setLabel("Page from");

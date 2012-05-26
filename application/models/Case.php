@@ -73,13 +73,14 @@ class Application_Model_Case extends Application_Model_Base{
   private $updated;
 
   /**
-   * @ManyToMany(targetEntity="Application_Model_Document")
-   * @JoinTable(name="case_has_document",
-   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
-   *      inverseJoinColumns={@JoinColumn(name="document_id", referencedColumnName="id")}
-   *      )
+   * @OneToMany(targetEntity="Application_Model_Document", mappedBy="case")
    */
   private $documents;
+
+  /**
+   * @OneToMany(targetEntity="Application_Model_Report", mappedBy="case")
+   */
+  private $reports;
 
   /**
    * @ManyToMany(targetEntity="Application_Model_File")
@@ -103,6 +104,23 @@ class Application_Model_Case extends Application_Model_Base{
    * @ManyToMany(targetEntity="Application_Model_User_InheritableRole", cascade={"persist", "remove"}) 
    */
   private $defaultRoles;
+
+  /**
+   * The document that is inspected in this case.
+   * 
+   * @ManyToOne(targetEntity="Application_Model_Document")
+   * @JoinColumn(name="target_document_id", referencedColumnName="id", onDelete="SET NULL")
+   */
+  private $target;
+
+  /**
+   * The data to generate the barcode from is cached here.
+   * 
+   * @var array The barcode data.
+   * 
+   * @Column(type="array", nullable=true)
+   */
+  private $barcodeData;
 
   public function __construct($name = null, $alias = null, $abbreviation = null){
     $this->documents = new ArrayCollection();
@@ -191,6 +209,10 @@ class Application_Model_Case extends Application_Model_Base{
     return $this->files;
   }
 
+  public function hasFile(Application_Model_File $file){
+    return $this->files->contains($file);
+  }
+
   public function clearFiles(){
     $this->files->clear();
   }
@@ -242,9 +264,17 @@ class Application_Model_Case extends Application_Model_Base{
    * @return percentage value of plagiarism 
    */
   public function getPlagiarismPercentage(){
-    $target = $this->getTarget();
+    if(is_array($this->barcodeData)){
+      $pagesCount = count($this->barcodeData);
+      $percentageSum = 0;
 
-    return $target ? $target->getPlagiarismPercentage() : 0;
+      foreach($this->barcodeData as $page){
+        $percentageSum += $page['plagPercentage'];
+      }
+    }else{
+      $pagesCount = 0;
+    }
+    return ($pagesCount != 0) ? round($percentageSum * 1. / $pagesCount / 10) * 10 : 0;
   }
 
   public function addDefaultRole(Application_Model_User_InheritableRole $role){
@@ -256,33 +286,58 @@ class Application_Model_Case extends Application_Model_Base{
   }
 
   public function getBarcode($width, $height, $barHeight, $showLabels, $widthUnit){
-    $target = $this->getTarget();
-    if($target){
-      return new Unplagged_Barcode($width, $height, $barHeight, $showLabels, $widthUnit, $target);
+    if($this->barcodeData){
+      return new Unplagged_Barcode($width, $height, $barHeight, $showLabels, $widthUnit, $this->barcodeData);
     }
   }
 
-  /**
-   * @todo: This needs to be updated when we decided where to set the target (either on a file or on a document)
-   */
-  private function getTarget(){
-    $target = null;
-    foreach($this->files as $file){
-      if($file->getIsTarget()){
-        $target = $file;
-        break;
-      }
-    }
-    if($target == null){
-      return null;
-    }
+  public function getTarget(){
+    return $this->target;
+  }
 
-    $em = Zend_Registry::getInstance()->entitymanager;
-    $document = $em->getRepository('Application_Model_Document')->findOneByOriginalFile($target->getId());
-    if(!$document){
-      return null;
+  public function setTarget($target){
+    $this->target = $target;
+  }
+
+  public function getBarcodeData(){
+    return $this->barcodeData;
+  }
+
+  /**
+   * Updates the data used for barcode generation. 
+   */
+  public function updateBarcodeData(){
+    if($this->target){
+      $barcodeData = array();
+      foreach($this->target->getPages() as $page){
+        $pageData = array();
+        $pageData['pageNumber'] = $page->getPageNumber();
+        $pageData['plagPercentage'] = $page->getPlagiarismPercentage();
+        $pageData['disabled'] = $page->getDisabled() ? 'true' : 'false';
+
+        $barcodeData[] = $pageData;
+      }
+
+      $this->barcodeData = $barcodeData;
     }
-    return $document;
+  }
+
+  public function getDocuments(){
+    return $this->documents;
+  }
+
+  public function addDocument(Application_Model_Document $document){
+    $document->setCase($this);
+    $this->documents->add($document);
+  }
+
+  public function getReports(){
+    return $this->reports;
+  }
+
+  public function addReport(Application_Model_Report $report){
+    $report->setCase($this);
+    $this->reports->add($report);
   }
 
 }

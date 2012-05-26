@@ -81,18 +81,6 @@ class Application_Model_File extends Application_Model_Base{
   private $extension;
 
   /**
-   * If the file is target or not
-   * @var string The file is a target.
-   * 
-   * @Column(type="boolean")
-   * 
-   * @todo maybe we should move this to the case? So that we would have an array of target files
-   * and then we could probably add here some associations to representations of this file, that were 
-   * already created
-   */
-  private $isTarget = false;
-
-  /**
    * @var string
    *  
    * @Column(type="text")
@@ -183,14 +171,6 @@ class Application_Model_File extends Application_Model_Base{
    */
   public function getAbsoluteLocation(){
     return BASE_PATH . DIRECTORY_SEPARATOR . $this->location;
-  }
-
-  public function getIsTarget(){
-    return $this->isTarget;
-  }
-
-  public function setIsTarget($isTarget){
-    $this->isTarget = $isTarget;
   }
 
   public function setLocation($location){

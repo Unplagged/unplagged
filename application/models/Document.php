@@ -70,14 +70,12 @@ class Application_Model_Document extends Application_Model_Base{
    * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
    */
   private $state;
-
+  
   /**
-   * The file the document was initially created from.
-   * 
-   * @ManyToOne(targetEntity="Application_Model_File")
-   * @JoinColumn(name="original_file_id", referencedColumnName="id", onDelete="SET NULL")
+   * @ManyToOne(targetEntity="Application_Model_Case", inversedBy="documents")
+   * @JoinColumn(name="case_id", referencedColumnName="id", onDelete="CASCADE")
    */
-  private $originalFile;
+  private $case;
 
   public function __construct(array $data = null){
 
@@ -90,9 +88,6 @@ class Application_Model_Document extends Application_Model_Base{
     }
     if(isset($data["state"])){
       $this->state = $data["state"];
-    }
-    if(isset($data["originalFile"])){
-      $this->originalFile = $data["originalFile"];
     }
 
     $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
@@ -149,10 +144,6 @@ class Application_Model_Document extends Application_Model_Base{
     $this->state = $state;
   }
 
-  public function getOriginalFile(){
-    return $this->originalFile;
-  }
-
   public function setBibTex($bibTex){
     $this->bibTex = $bibTex;
   }
@@ -179,5 +170,9 @@ class Application_Model_Document extends Application_Model_Base{
 
     return ($pagesCount != 0) ? round($percentageSum * 1. / $pagesCount / 10) * 10 : 0;
   }
-
+  
+    
+  public function setCase($case){
+    $this->case = $case;
+  }
 }

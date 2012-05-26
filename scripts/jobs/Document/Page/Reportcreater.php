@@ -52,13 +52,11 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
             $task = $tasks[0];
 
             $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
-            //self::$em->persist($task);
-            //self::$em->flush();
+            
+            $user = self::$em->getRepository('Application_Model_User')->findOneById($task->getInitiator());
+            $fragments = $user->getCurrentCase()->getTarget()->getFragments();
 
-            $query = self::$em->createQuery("SELECT f FROM Application_Model_Document_Fragment f");
-            $fragments = $query->getResult();
-
-            $filename = self::createReport("note", $fragments, $task->getInitiator());
+            $filename = self::createReport("note", $fragments, $user);
             // update task
             $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
             $task->setProgressPercentage(100);
@@ -73,27 +71,28 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         }
     }
 
-    private static function createReport($note, $fragments, $userId) {
+    private static function createReport($note, $fragments, $user) {
         
-        $user = self::$em->getRepository('Application_Model_User')->findOneById($userId);
         $currentCase = $user->getCurrentCase();
         $casename = $currentCase->getAlias();
         $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
         $filename = $filepath . DIRECTORY_SEPARATOR . "Report_" . $casename . ".pdf";
-
         
         // save report to database to get an Id
         $data = array();
         $data["title"] = $casename;
         $data["state"] = self::$em->getRepository('Application_Model_State')->findOneByName('report_generated');
         $data["user"] = $user;
-        $data["file"] = self::getFiles($currentCase);
+        $data["target"] = $user->getCurrentCase()->getTarget();
         $data["filePath"] = $filename;
         $report = new Application_Model_Report($data);
 
         self::$em->persist($report);
+        
+        $currentCase->addReport($report);
+        self::$em->persist($currentCase);
         self::$em->flush();
-
+        
         $html = Unplagged_HtmlLayout::htmlLayout($casename, $note, $fragments);
         
         $dompdf = new DOMPDF();
@@ -105,20 +104,6 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         
         file_put_contents($filename, $output);
         return $filename;
-    }
-
-    private static function getFiles($currentCase) {
-        // get files of current case
-        $files = $currentCase->getFiles();
-        $rfile = null;
-
-        foreach ($files as $file) {
-            if ($file->getIsTarget()) {
-                //$this->_helper->flashMessenger->addMessage( $file->getId());
-                $rfile = $file;
-            }
-        }
-        return $rfile;
     }
 }
 

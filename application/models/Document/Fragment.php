@@ -208,5 +208,11 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
 
     return $result;
   }
+  
+  public function setDocument($document){
+    $this->document = $document;
+  }
+
+
 
 }

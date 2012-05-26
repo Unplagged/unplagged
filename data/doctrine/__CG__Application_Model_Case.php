@@ -78,30 +78,6 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
         return parent::getUpdated();
     }
 
-    public function addTag(\Application_Model_Tag $tag)
-    {
-        $this->__load();
-        return parent::addTag($tag);
-    }
-
-    public function removeTag(\Application_Model_Tag $tag)
-    {
-        $this->__load();
-        return parent::removeTag($tag);
-    }
-
-    public function getTags()
-    {
-        $this->__load();
-        return parent::getTags();
-    }
-
-    public function clearTags()
-    {
-        $this->__load();
-        return parent::clearTags();
-    }
-
     public function addCollaborator(\Application_Model_User $user)
     {
         $this->__load();
@@ -142,6 +118,12 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
     {
         $this->__load();
         return parent::getFiles();
+    }
+
+    public function hasFile(\Application_Model_File $file)
+    {
+        $this->__load();
+        return parent::hasFile($file);
     }
 
     public function clearFiles()
@@ -216,6 +198,60 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
         return parent::getDefaultRoles();
     }
 
+    public function getBarcode($width, $height, $barHeight, $showLabels, $widthUnit)
+    {
+        $this->__load();
+        return parent::getBarcode($width, $height, $barHeight, $showLabels, $widthUnit);
+    }
+
+    public function getTarget()
+    {
+        $this->__load();
+        return parent::getTarget();
+    }
+
+    public function setTarget($target)
+    {
+        $this->__load();
+        return parent::setTarget($target);
+    }
+
+    public function getBarcodeData()
+    {
+        $this->__load();
+        return parent::getBarcodeData();
+    }
+
+    public function updateBarcodeData()
+    {
+        $this->__load();
+        return parent::updateBarcodeData();
+    }
+
+    public function getDocuments()
+    {
+        $this->__load();
+        return parent::getDocuments();
+    }
+
+    public function addDocument(\Application_Model_Document $document)
+    {
+        $this->__load();
+        return parent::addDocument($document);
+    }
+
+    public function getReports()
+    {
+        $this->__load();
+        return parent::getReports();
+    }
+
+    public function addReport(\Application_Model_Report $report)
+    {
+        $this->__load();
+        return parent::addReport($report);
+    }
+
     public function getId()
     {
         $this->__load();
@@ -252,10 +288,22 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
         return parent::getRatings();
     }
 
+    public function geTags()
+    {
+        $this->__load();
+        return parent::geTags();
+    }
+
     public function getCreated()
     {
         $this->__load();
         return parent::getCreated();
+    }
+
+    public function getConversationTypes()
+    {
+        $this->__load();
+        return parent::getConversationTypes();
     }
 
     public function isRatedByUser($user)
@@ -264,10 +312,47 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
         return parent::isRatedByUser($user);
     }
 
+    public function getTags()
+    {
+        $this->__load();
+        return parent::getTags();
+    }
+
+    public function getTagIds()
+    {
+        $this->__load();
+        return parent::getTagIds();
+    }
+
+    public function addTag(\Application_Model_Tag $tag)
+    {
+        $this->__load();
+        return parent::addTag($tag);
+    }
+
+    public function removeTag(\Application_Model_Tag $tag)
+    {
+        $this->__load();
+        return parent::removeTag($tag);
+    }
+
+    public function setTags($tagIds = array (
+))
+    {
+        $this->__load();
+        return parent::setTags($tagIds);
+    }
+
+    public function clearTags()
+    {
+        $this->__load();
+        return parent::clearTags();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'ratings', 'notifications', 'name', 'alias', 'abbreviation', 'updated', 'documents', 'files', 'tags', 'collaborators', 'defaultRoles');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'name', 'alias', 'abbreviation', 'updated', 'barcodeData', 'documents', 'reports', 'files', 'collaborators', 'defaultRoles', 'target');
     }
 
     public function __clone()

@@ -74,30 +74,34 @@ class DocumentController extends Unplagged_Controller_Action{
    */
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
-    $query = $this->_em->createQuery("SELECT d FROM Application_Model_Document d");
-    $count = $this->_em->createQuery("SELECT COUNT(d.id) FROM Application_Model_Document d");
+    $query = $this->_em->createQuery("SELECT d FROM Application_Model_Document d WHERE d.case = :caseId");
+    $query->setParameter('caseId', $case->getId());
+    $count = $this->_em->createQuery("SELECT COUNT(d.id) FROM Application_Model_Document d WHERE d.case = :caseId");
+    $count->setParameter('caseId', $case->getId());
 
     $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
+
     // generate the action dropdown for each file
     foreach($paginator as $document):
-      if($document->getState()->getName() == 'task_scheduled') {
+      if($document->getState()->getName() == 'task_scheduled'){
         // find the associated task and get percentage
         $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
-        $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource' => $document->getId(), 'state' => $state));
-        if(!$task) {
+        $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$document->getId(), 'state'=>$state));
+        if(!$task){
           $percentage = 0;
-        } else {
+        }else{
           $percentage = $task->getProgressPercentage();
         }
         $document->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
-      } else {
+      }else{
         $document->outputState = $document->getState()->getTitle();
       }
-      
+
       $document->actions = array();
 
       $action['link'] = '/document/edit/id/' . $document->getId();
@@ -114,6 +118,21 @@ class DocumentController extends Unplagged_Controller_Action{
       $action['label'] = 'Delete document';
       $action['icon'] = 'images/icons/delete.png';
       $document->actions[] = $action;
+
+      if($case->getTarget() && $case->getTarget()->getId() == $document->getId()){
+        $action['link'] = '/document/unset-target/id/' . $document->getId();
+        $action['label'] = 'Unset target';
+        $action['icon'] = 'images/icons/page_find.png';
+        $document->actions[] = $action;
+        $document->isTarget = true;
+      }else{
+        $action['link'] = '/document/set-target/id/' . $document->getId();
+        $action['label'] = 'Set target';
+        $action['icon'] = 'images/icons/page.png';
+        $document->actions[] = $action;
+        $document->isTarget = false;
+      }
+
     endforeach;
 
     $this->view->paginator = $paginator;
@@ -209,10 +228,10 @@ class DocumentController extends Unplagged_Controller_Action{
    */
   public function responsePlagiarismAction(){
     $input = new Zend_Filter_Input(array('detector'=>'Alnum', 'report'=>'Alnum', 'result'=>'Alnum', 'status'=>'Alnum'), null, $this->_getAllParams());
-  
+
     $detector = Unplagged_Detector::factory($input->detector);
-    $report = $detector->handleResult(array('report' => $input->report, 'result' => $input->result, 'status'=> $input->status));
-    if($report) {
+    $report = $detector->handleResult(array('report'=>$input->report, 'result'=>$input->result, 'status'=>$input->status));
+    if($report){
       $this->_em->persist($report);
       $this->_em->flush();
 
@@ -243,7 +262,7 @@ class DocumentController extends Unplagged_Controller_Action{
 
     return false;
   }
-  
+
   /**
    * Returns all pages in the document . 
    */
@@ -259,13 +278,54 @@ class DocumentController extends Unplagged_Controller_Action{
         $response["statuscode"] = 404;
         $response["statusmessage"] = "No document by that id found.";
       }
-    } else {
+    }else{
       $response["statuscode"] = 405;
       $response["statusmessage"] = "Required parameter id is missing.";
     }
 
     $this->getResponse()->appendBody(json_encode($response));
-    
+
+    // disable view
+    $this->view->layout()->disableLayout();
+    $this->_helper->viewRenderer->setNoRender(true);
+  }
+
+  public function setTargetAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    $this->targetAction($input->id, true);
+  }
+
+  public function unsetTargetAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    $this->targetAction($input->id, false);
+  }
+
+  /**
+   * Handles setting and unsetting the target of the current case.
+   * @param Integer $fileId
+   * @param Boolean $isTarget 
+   */
+  private function targetAction($documentId, $isTarget){
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
+
+    if(!empty($documentId)){
+      $document = null;
+      if($isTarget){
+        $document = $this->_em->getRepository('Application_Model_Document')->findOneById($documentId);
+      }
+      $case->setTarget($document);
+
+      $this->_em->persist($case);
+      $this->_em->flush();
+    }else{
+      $this->_helper->FlashMessenger('No document found.');
+    }
+
+
+    $this->_helper->redirector('list', 'document');
+
     // disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);

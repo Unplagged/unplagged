@@ -16,7 +16,7 @@ $this->headTitle($this->title);
       <?php foreach($this->paginator as $document): ?>
         <tr>
           <?php if($document->getState()->getName() == 'parsed'): ?>
-            <td data-label="<?php echo $this->translate("Title"); ?>"><a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
+            <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $document->isTarget ? '<img class="icon" src="/images/target.png" /> ' : ""; ?><a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
           <?php else: ?>
             <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $document->getTitle(); ?></td>
           <?php endif; ?>

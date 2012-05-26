@@ -116,17 +116,6 @@ class FileController extends Unplagged_Controller_Action{
     foreach($paginator as $file){
       $file->actions = array();
 
-      if($file->getIsTarget()){
-        $action['link'] = '/file/unset-target/id/' . $file->getId();
-        $action['label'] = 'Unset target';
-        $action['icon'] = 'images/icons/page_find.png';
-        $file->actions[] = $action;
-      }else{
-        $action['link'] = '/file/set-target/id/' . $file->getId();
-        $action['label'] = 'Set target';
-        $action['icon'] = 'images/icons/page.png';
-        $file->actions[] = $action;
-      }
       $parseAction['link'] = '/file/parse/id/' . $file->getId();
       $parseAction['title'] = 'Parsing big files can take very long, you will be notified when this action is finalized.';
       $parseAction['name'] = 'parse';
@@ -192,44 +181,6 @@ class FileController extends Unplagged_Controller_Action{
     }
   }
 
-  
-  public function setTargetAction(){
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
-    $this->targetAction($input->id, true);
-  }
-
-  public function unsetTargetAction(){
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
-    $this->targetAction($input->id, false);
-  }
-
-  /**
-   * Handles setting and unsetting a file as the target file of a case.
-   * @param Integer $fileId
-   * @param Boolean $isTarget 
-   */
-  private function targetAction($fileId, $isTarget){
-    if(!empty($fileId)){
-      $file = $this->_em->getRepository('Application_Model_File')->findOneById($fileId);
-      if($file){
-        $file->setIsTarget($isTarget);
-
-        $this->_em->persist($file);
-        $this->_em->flush();
-      }else{
-        $this->_helper->FlashMessenger('No file found.');
-      }
-    }
-
-    $this->_helper->redirector('list', 'file');
-
-    // disable view
-    $this->view->layout()->disableLayout();
-    $this->_helper->viewRenderer->setNoRender(true);
-  }
-
   /**
    * Parses a single file into a document using OCR. 
    */
@@ -282,6 +233,11 @@ class FileController extends Unplagged_Controller_Action{
             $this->_helper->FlashMessenger(array('success'=>'The file was successfully parsed.'));
           }
         }
+        
+        $case = Zend_Registry::getInstance()->user->getCurrentCase();
+        $case->addDocument($document);
+        $this->_em->persist($case);
+        $this->_em->flush();
       }
     }
     $this->_helper->redirector('list', 'file');

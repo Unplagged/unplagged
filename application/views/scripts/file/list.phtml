@@ -12,7 +12,7 @@
       <?php foreach($this->paginator as $file): ?>
         <tr>
           <td data-label="<?php echo $this->translate("Icon"); ?>"><img class="icon" src="<?php echo $this->baseUrl('images/icons/' . Unplagged_Helper::getFileIconByExtension($file->getExtension())); ?>" /></td>
-          <td data-label="<?php echo $this->translate("Filename"); ?>"><?php echo $file->getIsTarget() ? '<img class="icon" src="/images/target.png" />' : ""; ?> <a <?php echo $file->isImage() ? 'class="picture"' : ""; ?> href="<?php echo $this->baseUrl('/image/show/id/' . $file->getId()); ?>"><?php echo $file->getFilename(); ?></a></td>
+          <td data-label="<?php echo $this->translate("Filename"); ?>"><a <?php echo $file->isImage() ? 'class="picture"' : ""; ?> href="<?php echo $this->baseUrl('/image/show/id/' . $file->getId()); ?>"><?php echo $file->getFilename(); ?></a></td>
           <td data-label="<?php echo $this->translate("Uploaded"); ?>"><?php echo $file->getCreated()->format('Y-m-d'); ?></td>
           <td data-label="<?php echo $this->translate("Actions"); ?>" class="fit-content"><?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$file->actions)); ?></td>
         </tr>

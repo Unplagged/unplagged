@@ -251,6 +251,10 @@ class Application_Model_User extends Application_Model_Base{
   public function hasFiles(){
     return $this->files->count() > 0;
   }
+   
+  public function hasFile(Application_Model_File $file){
+    return $this->files->contains($file);
+  }
 
   /**
    * @todo Would probably be better to handle the default somewhere else to keep this class clean

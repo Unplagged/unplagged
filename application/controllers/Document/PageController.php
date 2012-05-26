@@ -240,40 +240,17 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       // write back to persistence manager and flush it
       $this->_em->persist($page);
       $this->_em->flush();
-
+         
+      // updates the barcode data
+      $case = Zend_Registry::getInstance()->user->getCurrentCase();
+      $case->updateBarcodeData();
+      $this->_em->persist($case);
+      $this->_em->flush();
+      
       return $page;
     }
 
     return false;
-    /*
-
-
-      $editForm = new Application_Form_Document_Page_Modify();
-      $editForm->setAction("/document_page/edit/id/" . $input->id);
-
-      $editForm->getElement("pageNumber")->setValue($page->getPageNumber());
-      $editForm->getElement("content")->setValue($page->getContent("text"));
-
-      if($this->_request->isPost()){
-      $formData = $this->_request->getPost();
-
-      if($editForm->isValid($formData)){
-      $page->setPageNumber($formData["pageNumber"]);
-
-      $page->setContent($formData["content"], "text");
-      #
-      // write back to persistence manager and flush it
-      $this->_em->persist($page);
-      $this->_em->flush();
-
-      $this->_helper->FlashMessenger(array('info'=>'The document page was updated successfully.'));
-      $params = array('id'=>$page->getId());
-      $this->_helper->redirector('show', 'document_page', '', $params);
-      }
-      }
-
-      $this->view->editForm = $editForm;
-     */
   }
 
   public function deleteAction(){
