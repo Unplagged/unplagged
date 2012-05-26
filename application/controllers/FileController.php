@@ -201,7 +201,7 @@ class FileController extends Unplagged_Controller_Action{
         // pdfs will e generated through cron
         if($file->getExtension() == "pdf"){
           $data["title"] = $file->getFilename();
-          $data["originalFile"] = $file;
+          $data["initialFile"] = $file;
           $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
           $document = new Application_Model_Document($data);
 

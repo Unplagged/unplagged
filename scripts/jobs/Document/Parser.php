@@ -46,7 +46,7 @@ class Cron_Document_Parser extends Cron_Base{
       self::$em->flush();
 
       $document = $task->getRessource();
-      $file = $document->getOriginalFile();
+      $file = $document->getInitialFile();
 
       $language = 'eng';
       $parser = Unplagged_Parser::factory($file->getMimeType());

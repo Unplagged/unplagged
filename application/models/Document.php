@@ -76,6 +76,14 @@ class Application_Model_Document extends Application_Model_Base{
    * @JoinColumn(name="case_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $case;
+  
+    /**
+   * The file the document was initially created from.
+   * 
+   * @ManyToOne(targetEntity="Application_Model_File")
+   * @JoinColumn(name="initial_file_id", referencedColumnName="id", onDelete="SET NULL")
+   */
+  private $initialFile;
 
   public function __construct(array $data = null){
 
@@ -88,6 +96,9 @@ class Application_Model_Document extends Application_Model_Base{
     }
     if(isset($data["state"])){
       $this->state = $data["state"];
+    }
+    if(isset($data["initialFile"])){
+      $this->initialFile = $data["initialFile"];
     }
 
     $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
@@ -174,5 +185,9 @@ class Application_Model_Document extends Application_Model_Base{
     
   public function setCase($case){
     $this->case = $case;
+  }
+  
+  public function getInitialFile(){
+    return $this->initialFile;
   }
 }
