@@ -101,7 +101,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         self::$em->flush();
         
         // after the flush, we can access the id and put a unique identifier in the report name
-        $filename = $filepath . DIRECTORY_SEPARATOR . "Report_" . $casename . "_" . $report->getId() . ".pdf";
+        $filename = $filepath . DIRECTORY_SEPARATOR . $report->getId() . ".pdf";
         $report->setFilePath($filename);
         $report->setState(self::$em->getRepository('Application_Model_State')->findOneByName('report_generated'));
 
