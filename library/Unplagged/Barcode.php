@@ -32,7 +32,7 @@ class Unplagged_Barcode{
   private $showLabels;
 
   /**
-   * - 0: Seite nicht vorhanden
+   * - 0: Seite nicht vorhanden oder kein Plagiat
    * - 1: nicht einberechnte Seiten
    * - 2: Seite enthählt Plagiat
    * - 3: mehr als 50% der Seite plagiert
@@ -76,12 +76,14 @@ class Unplagged_Barcode{
         // page has plagiarism
       }elseif($page['plagPercentage'] > 0){
         $color = 2;
+      } else {
+        $color = 0;
       }
       $this->pages[$page['pageNumber']] = $color;
 
       $prevPageNumber = $page['pageNumber'];
     }
-    
+
     $this->initWidth = count($this->pages) > 0 ? $this->width * 1.0 / count($this->pages) : 0;
   }
 
