@@ -60,7 +60,7 @@ class Application_Model_Report extends Application_Model_Base{
   /**
    * The report is saved as file
    * 
-   * @Column(type="string")
+   * @Column(type="string", nullable=true)
    */
   private $filePath;
 

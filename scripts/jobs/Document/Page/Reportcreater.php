@@ -80,7 +80,6 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         // save report to database to get an Id
         $data = array();
         $data["title"] = $casename;
-        $data["state"] = self::$em->getRepository('Application_Model_State')->findOneByName('report_generated');
         $data["user"] = $user;
         $data["target"] = $user->getCurrentCase()->getTarget();
         $report = new Application_Model_Report($data);
@@ -94,6 +93,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         // after the flush, we can access the id and put a unique identifier in the report name
         $filename = $filepath . DIRECTORY_SEPARATOR . "Report_" . $casename . "_" . $report->getId() . ".pdf";
         $report->setFilePath($filename);
+        $report->setState(self::$em->getRepository('Application_Model_State')->findOneByName('report_generated'));
 
         self::$em->persist($report);
         self::$em->flush();
