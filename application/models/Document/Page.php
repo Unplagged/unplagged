@@ -268,8 +268,9 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
       JOIN f.plag pl
       JOIN pl.lineFrom lfrom JOIN lfrom.page pfrom
       JOIN pl.lineTo lto JOIN lto.page pto
-      WHERE :pn >= pfrom.pageNumber AND :pn <= pto.pageNumber');
+      WHERE :pn >= pfrom.pageNumber AND :pn <= pto.pageNumber AND pfrom.document = :documentId');
     $query->setParameter("pn", $this->pageNumber);
+    $query->setParameter("documentId", $this->document->getId());
     $fragments = $query->getResult();
 
     foreach($fragments as $fragment){
