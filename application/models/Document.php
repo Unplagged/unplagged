@@ -51,7 +51,7 @@ class Application_Model_Document extends Application_Model_Base{
   /**
    * The fragments in the document.
    * 
-   * @OneToMany(targetEntity="Application_Model_Document_Fragment", mappedBy="fragment")
+   * @OneToMany(targetEntity="Application_Model_Document_Fragment", mappedBy="document")
    */
   private $fragments;
 

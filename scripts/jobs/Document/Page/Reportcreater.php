@@ -54,7 +54,8 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
             $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
             
             $user = self::$em->getRepository('Application_Model_User')->findOneById($task->getInitiator());
-            $fragments = $user->getCurrentCase()->getTarget()->getFragments();
+            $target = $user->getCurrentCase()->getTarget();
+            $fragments = $target->getFragments();
 
             $filename = self::createReport("note", $fragments, $user);
             // update task
@@ -77,6 +78,15 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         $casename = $currentCase->getAlias();
         $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
         
+        $html = Unplagged_HtmlLayout::htmlLayout($casename, $note, $fragments);
+        
+        $dompdf = new DOMPDF();
+        $dompdf->set_paper('a4', 'portrait');
+        $dompdf->load_html($html);
+        $dompdf->render();
+        //$dompdf->stream($filename);
+        $output = $dompdf->output();
+       
         // save report to database to get an Id
         $data = array();
         $data["title"] = $casename;
@@ -97,15 +107,6 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
 
         self::$em->persist($report);
         self::$em->flush();
-        
-        $html = Unplagged_HtmlLayout::htmlLayout($casename, $note, $fragments);
-        
-        $dompdf = new DOMPDF();
-        $dompdf->set_paper('a4', 'portrait');
-        $dompdf->load_html($html);
-        $dompdf->render();
-        //$dompdf->stream($filename);
-        $output = $dompdf->output();
         
         file_put_contents($filename, $output);
         return $filename;

@@ -131,6 +131,11 @@ class Application_Model_Case extends Application_Model_Base{
     $this->name = $name;
     $this->alias = $alias;
     $this->abbreviation = $abbreviation;
+    
+    $this->reports = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->files = new \Doctrine\Common\Collections\ArrayCollection();
+
   }
 
   /**

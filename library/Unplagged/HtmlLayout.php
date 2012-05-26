@@ -127,9 +127,10 @@ class Unplagged_HtmlLayout {
 
         // html foot
         $html .='</body></html>';
-        $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
-        $filename = $filepath . DIRECTORY_SEPARATOR . "div.html";
-        file_put_contents($filename, $html);
+        // @todo: can this be removed?
+       // $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
+       // $filename = $filepath . DIRECTORY_SEPARATOR . "div.html";
+      //  file_put_contents($filename, $html);
 
         return $html;
     }
