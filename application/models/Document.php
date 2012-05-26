@@ -59,7 +59,7 @@ class Application_Model_Document extends Application_Model_Base{
    * The bibtex information of the document.
    * @var string The bibtex information.
    * 
-   * @Column(type="text", nullable=true)
+   * @Column(type="array", nullable=true)
    */
   private $bibTex;
 
@@ -85,16 +85,17 @@ class Application_Model_Document extends Application_Model_Base{
       $this->title = $data["title"];
     }
 
-    if(isset($data["bibtex"])){
-      $this->bibtex = $data["bibtex"];
-    }
+    // if(isset($data["bibtex"])){
+      // $this->bibTex = $data["bibtex"];
+    // }
     if(isset($data["state"])){
       $this->state = $data["state"];
     }
     if(isset($data["originalFile"])){
       $this->originalFile = $data["originalFile"];
     }
-
+	
+	$this->bibTex = new \Doctrine\Common\Collections\ArrayCollection();
     $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
     $this->fragments = new \Doctrine\Common\Collections\ArrayCollection();
   }
@@ -153,9 +154,30 @@ class Application_Model_Document extends Application_Model_Base{
     return $this->originalFile;
   }
   
-  public function setBibTex($bibTex){
-    $this->bibTex = $bibTex;
-  }
+  // public function setBibTex($_bibTex){
+	// $bibTex = $this->bibTex;
+	// $bibTex['kuerzel']= $_bibTex['kuerzel'];
+	// $bibTex['autor']= $_bibTex['autor'];
+	// $bibTex['titel']= $_bibTex['titel'];
+	// $bibTex['zeitschrift']= $_bibTex['zeitschrift'];
+	// $bibTex['sammlung']= $_bibTex['sammlung'];
+	// $bibTex['hrsg']= $_bibTex['hrsg'];
+	// $bibTex['beteiligte']= $_bibTex['beteiligte'];
+	// $bibTex['ort']= $_bibTex['ort'];
+	// $bibTex['verlag']= $_bibTex['verlag'];
+	// $bibTex['ausgabe']= $_bibTex['ausgabe'];
+	// $bibTex['jahr']= $_bibTex['jahr'];
+	// $bibTex['monat']= $_bibTex['monat'];
+	// $bibTex['tag']= $_bibTex['tag'];
+	// $bibTex['nummer']= $_bibTex['nummer'];
+	// $bibTex['seiten']= $_bibTex['seiten'];
+	// $bibTex['umfang']= $_bibTex['umfang'];
+	// $bibTex['reihe']= $_bibTex['reihe'];
+	// $bibTex['anmerkung']= $_bibTex['anmerkung'];
+	// $bibTex['isbn']= $_bibTex['isbn'];
+	// $bibTex['url']= $_bibTex['url'];
+  // }
+  
   
   public function toArray() {
     $data["id"] = $this->id;
@@ -169,5 +191,86 @@ class Application_Model_Document extends Application_Model_Base{
     return $data;
   }
   
+	// function to set bibtex data
+	
+	public function setBibTexKuerzel ($kuerzel){
+		$this->bibTex['kuerzel'] = $kuerzel;
+	}
+	
+	public function setBibTexAutor ($autor){
+		$this->bibTex['autor'] = $autor;
+	}
+	
+	public function setBibTexTitel ($titel){
+		$this->bibTex['titel'] = $titel;
+	}
+	
+	public function setBibTexZeitschrift ($zeitschrift){
+		$this->bibTex['zeitschrift'] = $zeitschrift;
+	}
+	
+	public function setBibTexSammlung ($sammlung){
+		$this->bibTex['sammlung'] = $sammlung;
+	}
+	
+	public function setBibTexHrsg ($hrsg){
+		$this->bibTex['hrsg'] = $hrsg;
+	}
+	
+	public function setBibTexBeteiligte ($beteiligte){
+		$this->bibTex['beteiligte'] = $beteiligte;
+	}
+	
+	public function setBibTexOrt ($ort){
+		$this->bibTex['ort'] = $ort;
+	}
+	
+	public function setBibTexVerlag ($verlag){
+		$this->bibTex['verlag'] = $verlag;
+	}
+		
+	public function setBibTexAusgabe ($ausgabe){
+		$this->bibTex['ausgabe'] = $ausgabe;
+	}
+	
+	public function setBibTexJahr ($jahr){
+		$this->bibTex['jahr'] = $jahr;
+	}
+	
+	public function setBibTexMonat ($monat){
+		$this->bibTex['monat'] = $monat;
+	}
+	
+	public function setBibTexTag($tag){
+		$this->bibTex['tag'] = $tag;
+	}
+	
+	public function setBibTexNummer ($nummer){
+		$this->bibTex['nummer'] = $nummer;
+	}
+	
+	public function setBibTexSeiten ($seiten){
+		$this->bibTex['seiten'] = $seiten;
+	}
+	
+	public function setBibTexUmfang ($umfang){
+		$this->bibTex['umfang'] = $umfang;
+	}
+	
+	public function setBibTexReihe ($reihe){
+		$this->bibTex['reihe'] = $reihe;
+	}
+	
+	public function setBibTexAnmerkung ($anmerkung){
+		$this->bibTex['anmerkung'] = $anmerkung;
+	}
+	
+	public function setBibTexIsbn ($isbn){
+		$this->bibTex['isbn'] = $isbn;
+	}
+	
+	public function setBibTexUrl ($url){
+		$this->bibTex['url'] = $url;
+	}
 
 }

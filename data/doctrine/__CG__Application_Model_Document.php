@@ -162,10 +162,22 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::getRatings();
     }
 
+    public function geTags()
+    {
+        $this->__load();
+        return parent::geTags();
+    }
+
     public function getCreated()
     {
         $this->__load();
         return parent::getCreated();
+    }
+
+    public function getConversationTypes()
+    {
+        $this->__load();
+        return parent::getConversationTypes();
     }
 
     public function isRatedByUser($user)
@@ -174,10 +186,47 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::isRatedByUser($user);
     }
 
+    public function getTags()
+    {
+        $this->__load();
+        return parent::getTags();
+    }
+
+    public function getTagIds()
+    {
+        $this->__load();
+        return parent::getTagIds();
+    }
+
+    public function addTag(\Application_Model_Tag $tag)
+    {
+        $this->__load();
+        return parent::addTag($tag);
+    }
+
+    public function removeTag(\Application_Model_Tag $tag)
+    {
+        $this->__load();
+        return parent::removeTag($tag);
+    }
+
+    public function setTags($tagIds = array (
+))
+    {
+        $this->__load();
+        return parent::setTags($tagIds);
+    }
+
+    public function clearTags()
+    {
+        $this->__load();
+        return parent::clearTags();
+    }
+
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'originalFile');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'originalFile');
     }
 
     public function __clone()
