@@ -77,27 +77,22 @@ class Application_Form_Document_Fragment_Modify extends Zend_Form{
     // candidate group    
     $candidateDocumentElement = new Zend_Form_Element_Select('candidateDocument');
     $candidateDocumentElement->setLabel("Document");
-    $candidateDocumentElement->addMultiOption('', 'Please choose...');
     $candidateDocumentElement->addMultiOption($this->target->getId(), $this->target->getTitle());
 
     $candidatePageFromElement = new Zend_Form_Element_Select('candidatePageFrom');
     $candidatePageFromElement->setLabel("Page from");
-    $candidatePageFromElement->setAttrib('disabled', 'disabled');
     $candidatePageFromElement->setRequired(true);
 
     $candidateLineFromElement = new Zend_Form_Element_Select('candidateLineFrom');
     $candidateLineFromElement->setLabel("Line from");
-    $candidateLineFromElement->setAttrib('disabled', 'disabled');
     $candidateLineFromElement->setRequired(true);
 
     $candidatePageToElement = new Zend_Form_Element_Select('candidatePageTo');
     $candidatePageToElement->setLabel("Page to");
-    $candidatePageToElement->setAttrib('disabled', 'disabled');
     $candidatePageToElement->setRequired(true);
     
     $candidateLineToElement = new Zend_Form_Element_Select('candidateLineTo');
     $candidateLineToElement->setLabel("Line to");
-    $candidateLineToElement->setAttrib('disabled', 'disabled');
     $candidateLineToElement->setRequired(true);
 
     // source group

@@ -103,6 +103,7 @@ abstract class Application_Model_Base{
    * @todo private without getter and setter?
    */
   private $notifications;
+  
   protected $conversationTypes = array('comment');
 
   public function __construct(){

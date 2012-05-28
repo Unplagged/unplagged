@@ -30,9 +30,9 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
-    
+
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
-    if(!$case->getTarget()) {
+    if(!$case->getTarget()){
       $errorText = 'In order to manage fragments, you need to set a target document on the case.';
       $this->_helper->FlashMessenger(array('error'=>$errorText));
       $this->_helper->redirector('list', 'document');
@@ -61,11 +61,11 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $this->view->ratings = $this->_em->getRepository("Application_Model_Rating")->findBySource($input->id);
 
     $this->view->meId = $this->_defaultNamespace->userId;
-    
+
     // check if the current user already rated this fragment
     $this->view->fragmentIsRated = $fragment->isRatedByUser($user);
-        
-    
+
+
     Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
@@ -74,25 +74,26 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
    * Handles the creation of a new fragment. 
    */
   public function createAction(){
-    $input = new Zend_Filter_Input(array('page'=>'Digits', 'content'=>'StripTags'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('page'=>'Digits', 'startLine'=>'Digits', 'endLine'=>'Digits'), null, $this->_getAllParams());
+
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
+
     $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->page);
+    $startline = $this->_em->getRepository('Application_Model_Document_Page_Line')->findOneBy(array('lineNumber'=>$input->startLine, 'page'=>$input->page));
+    $endline = $this->_em->getRepository('Application_Model_Document_Page_Line')->findOneBy(array('lineNumber'=>$input->endLine, 'page'=>$input->page));
+
+    $formData['candidateDocument'] = $case->getTarget()->getId();
 
     $modifyForm = new Application_Form_Document_Fragment_Modify();
-    if($page){
+    if($page && $startline && $endline){
       $modifyForm->getElement("candidateDocument")->setValue($page->getDocument()->getId());
-      foreach($modifyForm->getElement("candidateBibTex")->getDecorators() as $decorator){
-        $decorator->setOption('style', 'display: none');
-      }
-      // remove white spaces of content
-      $contentLines = explode("\n", $input->content);
-      foreach($contentLines as $i=>$contentLine){
-        $contentLines[$i] = trim($contentLine);
-      }
-      $input->content = implode("\n", $contentLines);
-      $modifyForm->getElement("candidateText")->setValue($input->content);
-      $modifyForm->getElement("candidatePageFrom")->setValue($page->getPageNumber());
-      $modifyForm->getElement("candidatePageTo")->setValue($page->getPageNumber());
+
+      $formData['candidatePageFrom'] = $page->getId();
+      $formData['candidatePageTo'] = $page->getId();
+      $formData['candidateLineFrom'] = $startline->getId();
+      $formData['candidateLineTo'] = $endline->getId();
     }
+    $this->initalisePartial($modifyForm, 'candidate', $formData);
 
     if($this->_request->isPost() && empty($input->page)){
       $result = $this->handleModifyData($modifyForm);
@@ -173,7 +174,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     $query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.document d WHERE d.id = :documentId");
     $query->setParameter('documentId', $case->getTarget()->getId());
-    
+
     $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_Document_Fragment f JOIN f.document d WHERE d.id = :documentId");
     $count->setParameter('documentId', $case->getTarget()->getId());
 
@@ -281,17 +282,17 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $case = Zend_Registry::getInstance()->user->getCurrentCase();
       $target = $case->getTarget();
       $target->addFragment($fragment);
-            
+
       // write back to persistence manager and flush it
       $this->_em->persist($fragment);
       $this->_em->persist($target);
       $this->_em->flush();
-      
+
       // updates the barcode data
       $case->updateBarcodeData();
       $this->_em->persist($case);
       $this->_em->flush();
-      
+
       return $fragment;
     }
 
@@ -335,6 +336,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     // initialise page select
     $document = $this->_em->getRepository('Application_Model_Document')->findOneById($formData[$prefix . 'Document']);
     if($document){
+      $firstPage = $document->getPages()->first();
       foreach($document->getPages() as $page){
         $modifyForm->getElement($prefix . 'PageFrom')->addMultioption($page->getId(), $page->getPageNumber());
         $modifyForm->getElement($prefix . 'PageTo')->addMultioption($page->getId(), $page->getPageNumber());
@@ -343,27 +345,41 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
         $modifyForm->getElement($prefix . 'PageTo')->setAttrib('disabled', null);
       }
 
+      // 1) page from and lines
       if(!empty($formData[$prefix . 'PageFrom'])){
         $modifyForm->getElement($prefix . 'PageFrom')->setValue($formData[$prefix . 'PageFrom']);
 
         // initialise line from select
         $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageFrom']);
-        foreach($page->getLines() as $line){
-          $modifyForm->getElement($prefix . 'LineFrom')->addMultioption($line->getId(), $line->getLineNumber());
-        }
+      }else{
+        $page = $firstPage;
+      }
+
+      foreach($page->getLines() as $line){
+        $modifyForm->getElement($prefix . 'LineFrom')->addMultioption($line->getId(), $line->getLineNumber());
+      }
+
+      if(!empty($formData[$prefix . 'PageFrom'])){
         $modifyForm->getElement($prefix . 'LineFrom')->setValue($formData[$prefix . 'LineFrom']);
         $modifyForm->getElement($prefix . 'LineFrom')->setAttrib('disabled', null);
       }
 
+      
+      // 2) page to and lines
       if(!empty($formData[$prefix . 'PageTo'])){
         $modifyForm->getElement($prefix . 'PageTo')->setValue($formData[$prefix . 'PageTo']);
 
         // initialise line to select
         $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($formData[$prefix . 'PageTo']);
-        foreach($page->getLines() as $line){
-          $modifyForm->getElement($prefix . 'LineTo')->addMultioption($line->getId(), $line->getLineNumber());
-        }
+      }else{
+        $page = $firstPage;
+      }
+      
+      foreach($page->getLines() as $line){
+        $modifyForm->getElement($prefix . 'LineTo')->addMultioption($line->getId(), $line->getLineNumber());
+      }
 
+      if(!empty($formData[$prefix . 'PageTo'])){
         $modifyForm->getElement($prefix . 'LineTo')->setValue($formData[$prefix . 'LineTo']);
         $modifyForm->getElement($prefix . 'LineTo')->setAttrib('disabled', null);
       }

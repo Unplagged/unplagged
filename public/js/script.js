@@ -114,19 +114,26 @@ $(document).ready(function(){
   
   // creates a new fragment based on selected text
   $('.create-fragment').live('click', function() {
-    var selectedText = window.getSelection().getRangeAt(0).toString();
-
-    $('#fragment-content').val(selectedText);
+    var startLine = '';
+    var endLine = '';
+    
+    if (document.selection) {
+      startLine = document.selection.createRange().parentElement();
+    } else {
+      var selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        startLine = selection.getRangeAt(0).startContainer.parentNode;
+        endLine = selection.getRangeAt(0).endContainer.parentNode;
+      }
+    }
+    
+    $('#fragment-start-line').val($(startLine).attr('value'));
+    $('#fragment-end-line').val($(endLine).attr('value'));
     $('#fragment-create').submit();
 
     return false;
   });
   
-  // fragment creation form
-  $("#candidateDocument").change(function(el){
-    $('#candidateText').html('');
-    updateDocumentPages($(this).val(), ['#candidatePageFrom', '#candidatePageTo']);
-  });
   $("#sourceDocument").change(function(){
     $('#sourceText').html('');
     updateDocumentPages($(this).val(), ['#sourcePageFrom', '#sourcePageTo']);
