@@ -457,4 +457,13 @@ $(document).ready(function(){
     return false;
   });
   
+    $(".fileupload").uploadify({
+        height        : 20,
+        swf           : '/uploadify.swf',
+        uploader      : '/uploadify.php',
+        width         : 80, 
+        buttonClass : 'btn',
+        buttonText : 'Select File'
+    });
+  
 });

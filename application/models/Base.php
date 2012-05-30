@@ -170,10 +170,6 @@ abstract class Application_Model_Base{
     return $this->ratings;
   }
 
-  public function geTags(){
-    return $this->tags;
-  }
-
   public function getCreated(){
     return $this->created;
   }

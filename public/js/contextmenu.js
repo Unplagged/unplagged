@@ -3,10 +3,9 @@ $(document).ready(function(){
   addContextMenu();
   
   var searchBuffer='';
-  // defines whether the click was on the contextmenu or not
+  // tells whether the click was on the contextmenu or not
   var contextMenu = false;
-  var contextMenuSelector = '#contextmenu';
-  var contextMenuElement = $(contextMenuSelector);
+  var contextMenuElement = $('#contextmenu');
   
   /**
    * Adds the html for the context menu to the body.

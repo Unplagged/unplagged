@@ -1,15 +1,10 @@
 <?php
-
 $sidebar = $this->layout()->sidebar;
 
 $defaultNamespace = new Zend_Session_Namespace('Default');
-$em = Zend_Registry::getInstance()->entitymanager;
-if($defaultNamespace->userId){
-  $me = $em->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
-}else{
-  $me = null;
-}
+$me = Zend_Registry::getInstance()->user;
 
+$em = Zend_Registry::getInstance()->entitymanager;
 // had to remove function because it somehow was included twice here
 $qb = $em->createQueryBuilder();
 $qb->add('select', "c.id AS value, c.alias AS label")
@@ -33,7 +28,7 @@ $cases = $results;
   <h2><?php echo $this->escape($this->title); ?></h2>
   <div class="main">
     <div id="main-wrapper">
-      <div <?php if(!empty($sidebar)) echo "id=\"main\""; ?>>
+      <div <?php if(!empty($sidebar)) echo 'id="main"'; ?>>
         <?php
         // content from each view, the rest of this page is global to all views
         echo $this->layout()->content;

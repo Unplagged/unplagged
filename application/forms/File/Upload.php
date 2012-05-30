@@ -29,8 +29,9 @@ class Application_Form_File_Upload extends Zend_Form{
     $this->setAttrib('enctype', 'multipart/form-data');
 
     //Zend_Form_Element_File & SubmitButton
-    $elementfile = new Zend_Form_Element_File('filepath');
+    $elementfile = new Zend_Form_Element_File('filepath[]');
     $elementfile->setLabel('Path:')->setRequired(true);
+    $elementfile->setOptions(array('class'=>'fileupload', 'multiple'=>'multiple', 'data-url'=>'server/php/'));
 
     $descriptionElement = new Zend_Form_Element_Textarea('description');
     $descriptionElement->setLabel('Description:');

@@ -65,7 +65,7 @@ class FileController extends Unplagged_Controller_Action{
         $data["mimetype"] = $adapter->getMimeType('filepath');
         $data["filename"] = !empty($newName) ? $newName . "." . $fileExt : $fileName;
         $data["extension"] = $fileExt;
-        $data["location"] = 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
+        $data["location"] = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
         $data['description'] = $description;
 
         $file = new Application_Model_File($data);
@@ -93,7 +93,7 @@ class FileController extends Unplagged_Controller_Action{
         }
       }
     }else{
-      // wenn nicht hochgeladen
+      //prefill the form if some error occured
       $uploadform->populate($this->_request->getPost());
     }
     $this->view->form = $uploadform;
