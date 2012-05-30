@@ -72,61 +72,17 @@ class Application_Form_Report_Modify extends Zend_Form {
         $pageExistsValidator = new Unplagged_Validate_RecordExists('Application_Model_Document_Page', 'pageNumber', array("document" => 6));
 
         $this->setMethod('post');
-        $this->setAction("/report/create");
+        $this->setAction("/report/list");
 
-
-       /* $caseElement = new Zend_Form_Element_Text('case');
-        $caseElement->setLabel("Case");
-        $caseElement->addValidator('regex', false, array('/^[a-z0-9����������]/i'));
-        $caseElement->addValidator('stringLength', false, array(2, 64));
-        $caseElement->setRequired(true);*/
-
-        // general group
-        // $caseElement = new Zend_Form_Element_Select('case');
-        // $caseElement->setLabel("Case");
-        // $caseElement->addMultiOptions($this->cases);
-        // $caseElement->setRequired(true);
-
-        $noteElement = new Zend_Form_Element_Textarea('note');
-        $noteElement->setLabel("Note");
-
-        $fragmentElement = new Zend_Form_Element_Multiselect('fragment');
-        $fragmentElement->setLabel("Fragment");
-        $fragmentElement->addMultiOptions($this->fragments);
-        $fragmentElement->addValidator('regex', false, array('/^[0-9]/i'));
-        $fragmentElement->setRequired(true);
-
-        $noteElement = new Zend_Form_Element_Textarea('note');
-        $noteElement->setLabel("Note");
-
-
-
-        $submitElement = new Zend_Form_Element_Submit('submit');
+       /* $submitElement = new Zend_Form_Element_Submit('submit');
         $submitElement->setLabel('Create report');
         $submitElement->setIgnore(true);
         $submitElement->setAttrib('class', 'btn btn-primary');
-        $submitElement->removeDecorator('DtDdWrapper');
-
-        $this->addElements(array(
-           // $caseElement
-            //, $fragmentElement
-            
-            $noteElement
-        ));
-
-        $this->addDisplayGroup(array(
-            //'case'
-            //, 'fragment'
-             
-            'note'
-                )
-                , 'generalGroup'
-                , array('legend' => 'General Information')
-        );
+        $submitElement->removeDecorator('DtDdWrapper');       
 
         $this->addElements(array(
             $submitElement
-        ));
+        ));*/
     }
 
 }

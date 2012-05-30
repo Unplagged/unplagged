@@ -138,6 +138,12 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::setCase($case);
     }
 
+    public function getInitialFile()
+    {
+        $this->__load();
+        return parent::getInitialFile();
+    }
+
     public function setId($id)
     {
         $this->__load();
@@ -232,7 +238,7 @@ class Application_Model_Document extends \Application_Model_Document implements 
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'case');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'case', 'initialFile');
     }
 
     public function __clone()

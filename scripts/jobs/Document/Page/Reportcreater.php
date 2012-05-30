@@ -19,6 +19,7 @@
  */
 require_once(realpath(dirname(__FILE__)) . "/../../Base.php");
 require_once(BASE_PATH . '/library/dompdf/dompdf_config.inc.php');
+require_once(BASE_PATH . '/library/html2pdf/html2pdf.class.php');
 spl_autoload_register('DOMPDF_autoload');
 
 /**
@@ -52,7 +53,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
             $task = $tasks[0];
 
             $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
-            
+
             $user = self::$em->getRepository('Application_Model_User')->findOneById($task->getInitiator());
             $target = $user->getCurrentCase()->getTarget();
             $fragments = $target->getFragments();
@@ -73,20 +74,23 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
     }
 
     private static function createReport($note, $fragments, $user) {
-        
+
         $currentCase = $user->getCurrentCase();
         $casename = $currentCase->getAlias();
         $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
-        
+
         $html = Unplagged_HtmlLayout::htmlLayout($casename, $note, $fragments);
-        
-        $dompdf = new DOMPDF();
-        $dompdf->set_paper('a4', 'portrait');
-        $dompdf->load_html($html);
-        $dompdf->render();
-        //$dompdf->stream($filename);
-        $output = $dompdf->output();
-       
+
+        $html2pdf = new HTML2PDF('P', 'A4', 'fr');
+        $html2pdf->writeHTML("<page><h1>TEST 123</h1></page>");
+        $html2pdf->Output('./example.pdf', 'F');
+
+//        $dompdf = new DOMPDF();
+//        $dompdf->set_paper('a4', 'portrait');
+//        $dompdf->load_html($html);
+//        $dompdf->render();
+//        //$dompdf->stream($filename);
+//        $output = $dompdf->output();
         // save report to database to get an Id
         $data = array();
         $data["title"] = $casename;
@@ -96,10 +100,10 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
 
         self::$em->persist($report);
         $currentCase->addReport($report);
-        
+
         self::$em->persist($currentCase);
         self::$em->flush();
-        
+
         // after the flush, we can access the id and put a unique identifier in the report name
         $filename = $filepath . DIRECTORY_SEPARATOR . $report->getId() . ".pdf";
         $report->setFilePath($filename);
@@ -107,10 +111,11 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
 
         self::$em->persist($report);
         self::$em->flush();
-        
+
         file_put_contents($filename, $output);
         return $filename;
     }
+
 }
 
 Cron_Document_Page_Reportcreater::init();
