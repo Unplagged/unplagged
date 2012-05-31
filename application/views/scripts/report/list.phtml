@@ -15,7 +15,7 @@ $this->headTitle($this->title);
       <?php foreach($this->paginator as $report): ?>
 
         <tr> 
-          <td data-label="<?php echo $this->translate("Report"); ?>"><a href="/report/download/id/<?php echo $report->getId(); ?>"><?php echo $report->getTitle(); ?></a></td>
+          <td data-label="<?php echo $this->translate("Report"); ?>"><a href="/report/download/id/<?php echo $report->getId(); ?>"><?php echo $report->getTitle() . '_' . $report->getCreated()->format("Y-m-d"); ?></a></td>
           <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $report->getState()->getTitle(); ?></td>
           <td data-label="<?php echo $this->translate("Source"); ?>">
             <?php
