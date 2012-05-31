@@ -101,7 +101,6 @@ class Application_Model_Document extends Application_Model_Base{
       $this->initialFile = $data["initialFile"];
     }
 	
-	//$this->bibTex = new \Doctrine\Common\Collections\ArrayCollection();
     $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
     $this->fragments = new \Doctrine\Common\Collections\ArrayCollection();
   }
