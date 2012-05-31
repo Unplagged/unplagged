@@ -29,74 +29,152 @@ class FileController extends Unplagged_Controller_Action{
 
   public function uploadAction(){
     $uploadform = new Application_Form_File_Upload();
+
     if($this->_request->isPost()){
-      if($uploadform->isValid(($this->_request->getPost()))){
-        $adapter = new Zend_File_Transfer_Adapter_Http();
-        $adapter->setOptions(array('useByteString'=>false));
+      $post = $this->_request->getPost();
+      if($uploadform->isValid($post)){
+        $this->storeUpload();
+      }
+    } else {
+      $this->view->form = $uploadform;
+    }
+  }
 
-        // Maximal 20MB = 20480000
-        // $adapter->setMaxFileSize(20480000);
-        //$adapter->addValidator('NotEmpty');
-        // Nur JPEG, PNG, und GIFs
-        //$adapter->addValidator('Extension', true, array('png,gif,tif,jpg, tiff', 'messages'=>'<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.'));
-        //muss mit der gruppe geklärt werden
-        //Neither APC nor uploadprogress extension installed 
-        /* $adapterprogressbar = new Zend_ProgressBar_Adapter_Console();
-          $adapterupload = Zend_File_Transfer_Adapter_Http::getProgress($adapterprogressbar);
+  /**
+    * Based on upload.php from Plupload.
+    *
+    * Copyright 2009, Moxiecode Systems AB
+    * Released under GPL License.
+    *
+    * License: http://www.plupload.com/license
+    * Contributing: http://www.plupload.com/contributing
+    */
+  private function storeUpload(){
 
-          $adapterupload = null;
-          while (!$adapterupload['done'])
-          {
-          $adapterupload = Zend_File_Transfer_Adapter_Http::getProgress($adapterupload);
-          } */
+    $adapter = new Zend_File_Transfer();
+    $fileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
+    $fileExtension = pathinfo($adapter->getFileName(), PATHINFO_EXTENSION);
 
-        $newName = $this->_request->getPost('newName');
-        $description = $this->_request->getPost('description');
+    $targetDir = BASE_PATH . DIRECTORY_SEPARATOR . 'temp';
 
-        // collect file information
-        $fileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
-        $fileExt = pathinfo($adapter->getFileName(), PATHINFO_EXTENSION);
+    // 5 minutes execution time
+    @set_time_limit(5 * 60);
 
-        // store file in database to get an id
-        $data = array();
-        $data["size"] = $adapter->getFileSize('filepath');
-        //if the mime type is always application/octet-stream, then the 
-        //mime magic and fileinfo extensions are probably not installed
-        $data["mimetype"] = $adapter->getMimeType('filepath');
-        $data["filename"] = !empty($newName) ? $newName . "." . $fileExt : $fileName;
-        $data["extension"] = $fileExt;
-        $data["location"] = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
-        $data['description'] = $description;
+    $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
+    $chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
 
-        $file = new Application_Model_File($data);
-        $this->_em->persist($file);
+    // Make sure the fileName is unique but only if chunking is disabled
+    if($chunks < 2 && file_exists($targetDir . DIRECTORY_SEPARATOR . $fileName)){
+      $ext = strrpos($fileName, '.');
+      $fileName_a = substr($fileName, 0, $ext);
+
+      $count = 1;
+      while(file_exists($targetDir . DIRECTORY_SEPARATOR . $fileName_a . '_' . $count . $fileExtension)){
+        $count++;
+      }
+
+      $fileName = $fileName_a . '_' . $count . $fileExtension;
+    }
+
+    $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
+
+    // Look for the content type header
+    if(isset($_SERVER["HTTP_CONTENT_TYPE"]))
+      $contentType = $_SERVER["HTTP_CONTENT_TYPE"];
+
+    if(isset($_SERVER["CONTENT_TYPE"]))
+      $contentType = $_SERVER["CONTENT_TYPE"];
+
+    // Handle non multipart uploads older WebKit versions didn't support multipart in HTML5
+    if(strpos($contentType, "multipart") !== false){
+      if(isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])){
+        // Open temp file
+        $out = fopen("{$filePath}.part", $chunk == 0 ? "wb" : "ab");
+        if($out){
+          // Read binary input stream and append it to temp file
+          $in = fopen($_FILES['file']['tmp_name'], "rb");
+
+          if($in){
+            while($buff = fread($in, 4096))
+              fwrite($out, $buff);
+          } else
+            die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+          fclose($in);
+          fclose($out);
+          @unlink($_FILES['file']['tmp_name']);
+        } else
+          die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
+      } else
+        die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}');
+    } else{
+      // Open temp file
+      $out = fopen("{$filePath}.part", $chunk == 0 ? "wb" : "ab");
+      if($out){
+        // Read binary input stream and append it to temp file
+        $in = fopen("php://input", "rb");
+
+        if($in){
+          while($buff = fread($in, 4096))
+            fwrite($out, $buff);
+        } else
+          die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+
+        fclose($in);
+        fclose($out);
+      } else
+        die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
+    }
+
+    // Check if file has been uploaded
+    if(!$chunks || $chunk == $chunks - 1){
+      // Strip the temp .part suffix off 
+      rename("{$filePath}.part", $filePath);
+      $fileinfo = fileinfo($filePath);
+      var_dump($fileinfo);
+      $newName = $this->_request->getPost('newName');
+      $description = $this->_request->getPost('description');
+
+      // collect file information
+      // store file in database to get an id
+      $data = array();
+      $data["size"] = $adapter->getFileSize();
+      //if the mime type is always application/octet-stream, then the 
+      //mime magic and fileinfo extensions are probably not installed
+      $data["mimetype"] = $adapter->getMimeType();
+      $data["filename"] = !empty($newName) ? $newName . "." . $fileExt : $fileName;
+      $data["extension"] = $fileExt;
+      $data["location"] = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
+      $data['description'] = $description;
+
+/*
+      $file = new Application_Model_File($data);
+      $this->_em->persist($file);
+      $this->_em->flush();
+
+      // prepare file for uploading
+      $adapter->setDestination($file->getAbsoluteLocation());
+      $adapter->addFilter('Rename', array('target'=>$file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension()));
+
+      if($adapter->receive()){
+        chmod($file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension(), 0755);
+
+        // notification
+        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+        Unplagged_Helper::notify("file_uploaded", $file, $user);
+
+        $this->_helper->FlashMessenger(array('success'=>'File was uploaded successfully.'));
+        $this->_helper->redirector('list', 'file');
+      }else{
+        $this->_em->remove($file);
         $this->_em->flush();
 
-        // prepare file for uploading
-        $adapter->setDestination($file->getAbsoluteLocation());
-        $adapter->addFilter('Rename', array('target'=>$file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension()));
-
-        if($adapter->receive()){
-          chmod($file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension(), 0755);
-
-          // notification
-          $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-          Unplagged_Helper::notify("file_uploaded", $file, $user);
-
-          $this->_helper->FlashMessenger(array('success'=>'File was uploaded successfully.'));
-          $this->_helper->redirector('list', 'file');
-        }else{
-          $this->_em->remove($file);
-          $this->_em->flush();
-
-          $this->_helper->FlashMessenger(array('error'=>'File could not be uploaded.'));
-        }
-      }
-    }else{
-      //prefill the form if some error occured
-      $uploadform->populate($this->_request->getPost());
+        $this->_helper->FlashMessenger(array('error'=>'File could not be uploaded.'));
+      }*/
     }
-    $this->view->form = $uploadform;
+
+
+    // Return JSON-RPC response
+    die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
   }
 
   public function listAction(){
@@ -146,6 +224,7 @@ class FileController extends Unplagged_Controller_Action{
     }
 
     $this->view->paginator = $paginator;
+    $this->view->uploadLink = '/file/upload?area=public';
   }
 
   /**
@@ -233,7 +312,7 @@ class FileController extends Unplagged_Controller_Action{
             $this->_helper->FlashMessenger(array('success'=>'The file was successfully parsed.'));
           }
         }
-        
+
         $case = Zend_Registry::getInstance()->user->getCurrentCase();
         $case->addDocument($document);
         $this->_em->persist($case);
@@ -277,5 +356,4 @@ class FileController extends Unplagged_Controller_Action{
   }
 
 }
-
 ?>

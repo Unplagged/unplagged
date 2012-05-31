@@ -457,13 +457,128 @@ $(document).ready(function(){
     return false;
   });
   
-    $(".fileupload").uploadify({
-        height        : 20,
-        swf           : '/uploadify.swf',
-        uploader      : '/uploadify.php',
-        width         : 80, 
-        buttonClass : 'btn',
-        buttonText : 'Select File'
+  //file uploads
+  var files = new Array();
+  var filesRunning = false;
+  var fileupload = $('.fileupload');
+  var fileUploader;
+    
+  // Convert divs to queue widgets when the DOM is ready
+    $('#upload-queue').pluploadQueue({
+      runtimes : 'html5,flash,silverlight,html4',
+      url : '/file/upload',
+      max_file_size : '1000mb',
+      //chunk_size : '5mb', //disable because html5 + chunking kills the filename currently
+      unique_names : true,
+      flash_swf_url : '/js/libs/plupload/js/plupload.flash.swf',
+      silverlight_xap_url : '/js/libs/plupload/js/plupload.silverlight.xap',
+      init: {
+        QueueChanged: queueFileForModalForm,
+        BeforeUpload: function(uploader, file){
+          uploader.settings['multipart_params'].description = file.description;
+          uploader.settings['multipart_params'].newName = file.newName;
+        }
+      },
+      multipart_params: {'description': '', 'newName': ''}
+      
+    });
+
+    // Client side form validation
+    $('form').submit(function(e) {
+      var uploader = $('#uploader').pluploadQueue();
+
+      // Files in queue upload them first
+      if (uploader.files.length > 0) {
+        // When all files are uploaded submit form
+        uploader.bind('StateChanged', function() {
+          if (uploader.files.length === (uploader.total.uploaded + uploader.total.failed)) {
+            $('form')[0].submit();
+          }
+        });
+                
+        uploader.start();
+      } else {
+        alert('You must queue at least one file.');
+      }
+
+      return false;
     });
   
+  function queueFileForModalForm(uploader){
+    fileUploader = uploader;
+    $.each(uploader.files, function(){
+      //add the current file to our own queue
+      files.push(this);
+
+      if(!filesRunning){
+        filesRunning = true;
+        getDataForNextFile();
+      }
+    });
+      
+  }  
+    
+  var fileModal = $('#file-data');
+  fileModal.find('.modal-save').click(saveChanges);
+  fileModal.find('.close').click(closeFileModal);
+     
+  function getDataForNextFile(){
+    var file = files.shift();
+    
+    if(file){
+      //set the filename in the heading
+      fileModal.modal('show').find('.filename').text(file.name);
+      //store the file on the modal so that we can retrieve on button click
+      $.data(fileModal, 'current-file', file);
+    } else {
+      finishAdditionalData();
+    }
+  }
+    
+  function finishAdditionalData(){
+    filesRunning = false;
+    
+    fileModal.hide();
+    //fix for https://github.com/twitter/bootstrap/issues/2839
+    $('.modal-backdrop').remove();
+  }
+    
+  function saveChanges(){
+    var file = $.data(fileModal, 'current-file');
+    if(file){
+      var descriptionValue = fileModal.find('#description').val(); 
+      var newNameValue = fileModal.find('#newName').val(); 
+      file.description = descriptionValue;
+      file.newName = newNameValue;
+    }
+    $.data(fileModal, 'current-file', null);
+    if(files.length >= 1){
+      fileModal.one('hidden', getDataForNextFile);
+      fileModal.modal('hide');
+      $('.modal-backdrop').remove();
+    } else {
+      finishAdditionalData();
+    }
+  }
+    
+  /**
+    * Stops the upload of the current file and deletes the data.
+    */
+  function closeFileModal(){
+    var fileAccess = $.data(fileModal, 'current-file');
+    if(fileAccess){
+      fileAccess[1].removeFile(fileAccess[0]);
+
+      $.data(fileModal, 'current-file', null);
+      
+      fileModal.one('hidden', function(){
+        if(files.length>0){
+          getDataForNextFile();
+        } else {
+          finishAddtionalData();  
+        }
+      });
+    }
+  }
+  //uploadify end
 });

@@ -170,7 +170,12 @@ class Application_Model_File extends Application_Model_Base{
    * be that bad.
    */
   public function getAbsoluteLocation(){
-    return BASE_PATH . DIRECTORY_SEPARATOR . $this->location;
+    if(is_dir($this->location)){
+      return $this->location;  
+    } else {
+      //@todo deprecated remove later on, if every file was stored with the full path
+      return BASE_PATH . DIRECTORY_SEPARATOR . $this->location;
+    }
   }
 
   public function setLocation($location){
