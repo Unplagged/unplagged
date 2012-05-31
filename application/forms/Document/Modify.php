@@ -1,80 +1,6 @@
 <?php
 
-DEFINE ("HANDLEDOCUMENTTYPE", '
 
-								if($(this).val() == \'full\' || $(this).val() == \'periodikum\' ) 
-								{ 
-									$(\'#zeitschrift-element\').show();		$(\'#zeitschrift-label\').show();	
-									$(\'#monat-element\').show(); 			$(\'#monat-label\').show();
-									$(\'#tag-element\').show();				$(\'#tag-label\').show();
-									$(\'#nummer-element\').show();			$(\'#nummer-label\').show();
-								}
-			
-								else {
-									$(\'#zeitschrift-element\').hide();		$(\'#zeitschrift-label\').hide();
-									$(\'#monat-element\').hide(); 			$(\'#monat-label\').hide();									
-									$(\'#tag-element\').hide();				$(\'#tag-label\').hide();
-									$(\'#nummer-element\').hide();			$(\'#nummer-label\').hide();									
-								}
-								
-								if($(this).val() == \'full\' || $(this).val() == \'aufsatz\' ) 
-								{ 
-									$(\'#sammlung-element\').show();		$(\'#sammlung-label\').show();
-									$(\'#hrsg-element\').show();			$(\'#hrsg-label\').show();
-									$(\'#issn-element\').show();			$(\'#issn-label\').show();						
-								}
-			
-								else {
-									$(\'#sammlung-element\').hide();		$(\'#sammlung-label\').hide();
-									$(\'#hrsg-element\').hide();	 		$(\'#hrsg-label\').hide();
-									$(\'#issn-element\').hide();			$(\'#issn-label\').hide();
-								}
-								
-								if($(this).val() == \'full\' || $(this).val() == \'aufsatz\' || $(this).val() == \'periodikum\') 
-								{ 
-									$(\'#seiten-element\').show();			$(\'#seiten-label\').show();	
-																		
-								}
-			
-								else {
-									$(\'#seiten-element\').hide();			$(\'#seiten-label\').hide();
-											
-								}
-								
-								if($(this).val() == \'full\' || $(this).val() == \'buch\' || $(this).val() == \'aufsatz\') 
-								{ 
-									$(\'#isbn-element\').show();			$(\'#isbn-label\').show();
-																
-								}
-			
-								else {
-									$(\'#isbn-element\').hide();			$(\'#isbn-label\').hide();
-											
-								}
-								if($(this).val() == \'full\'){
-									$(\'#kuerzel-element\').show();			$(\'#kuerzel-label\').show();
-									$(\'#beteiligte-element\').show();		$(\'#beteiligte-label\').show();
-									$(\'#ausgabe-element\').show();			$(\'#ausgabe-label\').show();
-									$(\'#umfang-element\').show();			$(\'#umfang-label\').show();
-									$(\'#reihe-element\').show();			$(\'#reihe-label\').show();
-									$(\'#doi-element\').show();				$(\'#doi-label\').show();
-									$(\'#urn-element\').show();				$(\'#urn-label\').show();
-									$(\'#wp-element\').show();				$(\'#wp-label\').show();
-									$(\'#schluessel-element\').show();		$(\'#schluessel-label\').show();
-								}
-								else{
-									$(\'#kuerzel-element\').hide();			$(\'#kuerzel-label\').hide();
-									$(\'#beteiligte-element\').hide();		$(\'#beteiligte-label\').hide();
-									$(\'#ausgabe-element\').hide();			$(\'#ausgabe-label\').hide();
-									$(\'#umfang-element\').hide();			$(\'#umfang-label\').hide();
-									$(\'#reihe-element\').hide();			$(\'#reihe-label\').hide();
-									$(\'#doi-element\').hide();				$(\'#doi-label\').hide();
-									$(\'#urn-element\').hide();				$(\'#urn-label\').hide();
-									$(\'#wp-element\').hide();				$(\'#wp-label\').hide();
-									$(\'#schluessel-element\').hide();		$(\'#schluessel-label\').hide();
-								}
-								
-');
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -119,7 +45,7 @@ class Application_Form_Document_Modify extends Zend_Form{
 	$typeElement->setLabel("Document type: ");
 	$typeElement->addMultiOptions(array('full'=>'Vollständiges Formular', 'buch'=>'Buchformular', 'periodikum'=>'Periodikumformular', 'aufsatz' => 'Aufsatzsammlungsformular' ));
 	$typeElement->setRequired(true);
-	$typeElement->setAttrib('onchange',HANDLEDOCUMENTTYPE);
+	//$typeElement->setAttrib('onchange',HANDLEDOCUMENTTYPE);
      
 	$kuerzelElement = new Zend_Form_Element_Text('kuerzel');
     $kuerzelElement->setLabel("Kuerzel");
