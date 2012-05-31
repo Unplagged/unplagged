@@ -464,4 +464,112 @@ $(document).ready(function(){
     return false;
   });
   
+  $("#type").change(function(){
+    updateBibTexForm();
+  });
+  updateBibTexForm();
+  
+  function updateBibTexForm(){
+    var type = $('#type').val();
+    
+    if(type == 'full' || type == 'periodikum' ) 
+    { 
+      $('#zeitschrift-element').show();
+      $('#zeitschrift-label').show();	
+      $('#monat-element').show();
+      $('#monat-label').show();
+      $('#tag-element').show();
+      $('#tag-label').show();
+      $('#nummer-element').show();
+      $('#nummer-label').show();
+    } else {
+      $('#zeitschrift-element').hide();
+      $('#zeitschrift-label').hide();
+      $('#monat-element').hide();
+      $('#monat-label').hide();									
+      $('#tag-element').hide();
+      $('#tag-label').hide();
+      $('#nummer-element').hide();
+      $('#nummer-label').hide();									
+    }
+   
+    if(type == 'full' || type == 'aufsatz' ) 
+    { 
+      $('#sammlung-element').show();
+      $('#sammlung-label').show();
+      $('#hrsg-element').show();
+      $('#hrsg-label').show();
+      $('#issn-element').show();
+      $('#issn-label').show();						
+    } else {
+      $('#sammlung-element').hide();
+      $('#sammlung-label').hide();
+      $('#hrsg-element').hide();
+      $('#hrsg-label').hide();
+      $('#issn-element').hide();
+      $('#issn-label').hide();
+    }
+   
+    if(type == 'full' || type == 'aufsatz' || type == 'periodikum') 
+    { 
+      $('#seiten-element').show();
+      $('#seiten-label').show();	
+   
+    } else {
+      $('#seiten-element').hide();
+      $('#seiten-label').hide();
+   
+    }
+   
+    if(type == 'full' || type == 'buch' || type == 'aufsatz') 
+    { 
+      $('#isbn-element').show();
+      $('#isbn-label').show();
+   
+    } else {
+      $('#isbn-element').hide();
+      $('#isbn-label').hide();
+   
+    }
+    if(type == 'full'){
+      $('#kuerzel-element').show();
+      $('#kuerzel-label').show();
+      $('#beteiligte-element').show();
+      $('#beteiligte-label').show();
+      $('#ausgabe-element').show();
+      $('#ausgabe-label').show();
+      $('#umfang-element').show();
+      $('#umfang-label').show();
+      $('#reihe-element').show();
+      $('#reihe-label').show();
+      $('#doi-element').show();
+      $('#doi-label').show();
+      $('#urn-element').show();
+      $('#urn-label').show();
+      $('#wp-element').show();
+      $('#wp-label').show();
+      $('#schluessel-element').show();
+      $('#schluessel-label').show();
+    } else{
+      $('#kuerzel-element').hide();
+      $('#kuerzel-label').hide();
+      $('#beteiligte-element').hide();
+      $('#beteiligte-label').hide();
+      $('#ausgabe-element').hide();
+      $('#ausgabe-label').hide();
+      $('#umfang-element').hide();
+      $('#umfang-label').hide();
+      $('#reihe-element').hide();
+      $('#reihe-label').hide();
+      $('#doi-element').hide();
+      $('#doi-label').hide();
+      $('#urn-element').hide();
+      $('#urn-label').hide();
+      $('#wp-element').hide();
+      $('#wp-label').hide();
+      $('#schluessel-element').hide();
+      $('#schluessel-label').hide();
+    }
+  }
+  
 });

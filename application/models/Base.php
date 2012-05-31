@@ -191,10 +191,6 @@ abstract class Application_Model_Base{
     }
     return false;
   }
-  
-  public function geTags(){
-    return $this->tags;
-  }
 
   public function getTagIds(){
     $tagIds = array();
