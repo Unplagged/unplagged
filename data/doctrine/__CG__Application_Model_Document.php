@@ -138,11 +138,6 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::getInitialFile();
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     public function setBibTexForm($form)
     {
         $this->__load();
@@ -311,10 +306,6 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::setBibTexSchluessel($schluessel);
     }
 
-<<<<<<< HEAD
->>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
-=======
->>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     public function setId($id)
     {
         $this->__load();
@@ -403,19 +394,7 @@ class Application_Model_Document extends \Application_Model_Document implements 
 
     public function __sleep()
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
         return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'case', 'initialFile');
-=======
-<<<<<<< HEAD
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'case', 'initialFile');
-=======
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'originalFile');
->>>>>>> tien
->>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
-=======
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'case', 'initialFile');
->>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     }
 
     public function __clone()

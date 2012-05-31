@@ -210,29 +210,10 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
         return parent::getRatings();
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
-<<<<<<< HEAD
-=======
-=======
-=======
->>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     public function getTags()
     {
         $this->__load();
         return parent::getTags();
-<<<<<<< HEAD
->>>>>>> tien
->>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
-=======
->>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     }
 
     public function getCreated()
@@ -253,28 +234,6 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
         return parent::isRatedByUser($user);
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
-    public function getTags()
-    {
-        $this->__load();
-        return parent::getTags();
-<<<<<<< HEAD
-=======
-=======
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
->>>>>>> tien
->>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
-    }
-
-=======
->>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     public function getTagIds()
     {
         $this->__load();
@@ -309,19 +268,7 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
 
     public function __sleep()
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
         return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'version', 'auditLog', 'pageNumber', 'disabled', 'document', 'detectionReports', 'originalFile', 'lines');
-=======
-<<<<<<< HEAD
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'version', 'auditLog', 'pageNumber', 'disabled', 'document', 'detectionReports', 'originalFile', 'lines');
-=======
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'version', 'auditLog', 'pageNumber', 'document', 'detectionReports', 'originalFile', 'lines');
->>>>>>> tien
->>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
-=======
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'version', 'auditLog', 'pageNumber', 'disabled', 'document', 'detectionReports', 'originalFile', 'lines');
->>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     }
 
     public function __clone()

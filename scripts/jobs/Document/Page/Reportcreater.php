@@ -76,40 +76,20 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
     }
 
     private static function createReport($fragments, $user) {
-
-        // get page infos
-        /*  $pageFromPlag = $fragment->getPlag()->getLineFrom()->getPage()->getPageNumber();
-          $pageToPlag = $fragment->getPlag()->getLineTo()->getPage()->getPageNumber();
-
-          $pageFromSource = $fragment->getSource()->getLineFrom()->getPage()->getPageNumber();
-          $pageToSource = $fragment->getSource()->getLineTo()->getPage()->getPageNumber();
-
-          // get line infos
-          $lineFromPlag = $fragment->getPlag()->getLineFrom()->getLineNumber();
-          $lineToPlag = $fragment->getPlag()->getLineTo()->getLineNumber();
-
-          $lineFromSource = $fragment->getSource()->getLineFrom()->getLineNumber();
-          $lineToSource = $fragment->getSource()->getLineTo()->getLineNumber();
-
-          $html .= '<p> Page from: ' . $pageFromPlag . ' to:' . $pageToPlag . '</p>' .
-          '<p> Page from: ' . $pageFromSource . ' to:' . $pageToSource . '</p>';
-
-          $html .= '<p>Plagiarized Text </p>' .
-          '<p> Line from: ' . $lineFromPlag . ' to:' . $lineToPlag . '</p>' .
-          '<p>Source Text </p>' .
-          '<p> Line from: ' . $lineFromSource . ' to:' . $lineToSource . '</p>'; */
-
         $currentCase = $user->getCurrentCase();
         $casename = $currentCase->getAlias();
         $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
 
-        $html = Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
-        $col1 = self::cut_text_into_pages($html[0]);
-        $col2 = self::cut_text_into_pages($html[1]);
+        $array_html = Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
+        $content = "";
+        foreach($array_html as $fragment) {
+            $col1 = self::cut_text_into_pages($fragment["left"]);
+            $col2 = self::cut_text_into_pages($fragment["right"]);
+            $content .= self::mix_two_columns($col1, $col2, "plagiat", "source");
+        }
 
-        $content = self::mix_two_columns($col1, $col2, "possible plagiat", "original");
         $content .= self::getBarCode($currentCase);
- 
+
         $html2pdf = new HTML2PDF('P', 'A4', 'en');
         $html2pdf->WriteHTML($content);
 
@@ -141,10 +121,10 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
 
     private static function getBarCode($case) {
         $str_svg = $case->getBarcode(100, 150, 100, true, '%')->render();
-        
+
         // remove the front 
-        $open_tag = '<svg xmlns="http://www.w3.org/2000/svg" ' . 
-            'version="1.1" style="width: 100%; height: 150px;">';
+        $open_tag = '<svg xmlns="http://www.w3.org/2000/svg" ' .
+                'version="1.1" style="width: 100%; height: 150px;">';
         $close_tag = '</svg>';
         $str_svg = str_replace($open_tag, '<draw style="margin:auto; width: 80%; height: 150px; background: #ffffff">', $str_svg);
         $str_svg = str_replace($close_tag, '</draw>', $str_svg);
@@ -153,7 +133,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
 
         return "<page><h2>Barcode</h2>" . $str_svg . "</page>";
     }
-    
+
     /**
      * Creates an html page element, containing a tbale
      * with three columns. The first parameter is set in
@@ -200,7 +180,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
      * Cuts the given text into an array, which each element contains
      * $nbWordsProPage words.
      */
-     private static function cut_text_into_pages($text) {
+    private static function cut_text_into_pages($text) {
         $text = self::remove_spaces($text);
         $exploded = array_slice(explode(' ', $text), 0);
         $nbWordsProPage = 400;
@@ -220,7 +200,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         return $pages;
     }
 
-     private static function result($length, $s) {
+    private static function result($length, $s) {
         $array = array();
         $array["toRetrieve"] = substr($s, $length, strlen($s) - $length);
         $array["s"] = substr($s, 0, $length);
@@ -228,7 +208,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         return $array;
     }
 
-     private static function check($s) {
+    private static function check($s) {
         $nbST = substr_count($s, ST);
         $nbBT = substr_count($s, GT);
         if ($nbST == $nbBT) {
@@ -283,13 +263,14 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
                 .fragmark-9 { background-color: #a5e6ed; }
                 .text {margin: 3px; padding: 3px; border: 1px solid grey}' .
                 '</style>';
+
         $size1 = sizeof($col1);
         $size2 = sizeof($col2);
         $size = $size1 > $size2 ? $size1 : $size2;
         for ($i = 0; $i < $size; $i++) {
             $c1 = self::get_col($col1, $i);
             $c2 = self::get_col($col2, $i);
-            ;
+        
             $html .= self::create_a_page($c1, $c2, $title1, $title2);
         }
         return $html;
