@@ -108,6 +108,8 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         $col2 = self::cut_text_into_pages($html[1]);
 
         $content = self::mix_two_columns($col1, $col2, "possible plagiat", "original");
+        $content .= self::getBarCode($currentCase);
+ 
         $html2pdf = new HTML2PDF('P', 'A4', 'en');
         $html2pdf->WriteHTML($content);
 
@@ -133,10 +135,25 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         self::$em->persist($report);
         self::$em->flush();
         $html2pdf->Output($filename, 'F');
-        //file_put_contents($filename, $output);
+
         return $filename;
     }
 
+    private static function getBarCode($case) {
+        $str_svg = $case->getBarcode(100, 150, 100, true, '%')->render();
+        
+        // remove the front 
+        $open_tag = '<svg xmlns="http://www.w3.org/2000/svg" ' . 
+            'version="1.1" style="width: 100%; height: 150px;">';
+        $close_tag = '</svg>';
+        $str_svg = str_replace($open_tag, '<draw style="margin:auto; width: 80%; height: 150px; background: #ffffff">', $str_svg);
+        $str_svg = str_replace($close_tag, '</draw>', $str_svg);
+        $str_svg = str_replace('width=', 'w=', $str_svg);
+        $str_svg = str_replace('height=', 'h=', $str_svg);
+
+        return "<page><h2>Barcode</h2>" . $str_svg . "</page>";
+    }
+    
     /**
      * Creates an html page element, containing a tbale
      * with three columns. The first parameter is set in
@@ -154,11 +171,11 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
 </tr>
 <tr>
 <td style="width:350px;border:1px solid black;padding:3px;">
-                 ' . $td1 . '
+         ' . $td1 . '
 </td>
 <td style="width:10px"/>
 <td style="width:350px;border:1px solid black;padding:3px;">
-                 ' . $td2 . '
+         ' . $td2 . '
 </td>
 </tr>
 </table></page>';
@@ -186,7 +203,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
      private static function cut_text_into_pages($text) {
         $text = self::remove_spaces($text);
         $exploded = array_slice(explode(' ', $text), 0);
-        $nbWordsProPage = 110;
+        $nbWordsProPage = 400;
         $nbPage = 0;
         $pages = array();
         $rest = "";
