@@ -204,6 +204,7 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
         return parent::getBarcode($width, $height, $barHeight, $showLabels, $widthUnit);
     }
 
+<<<<<<< HEAD
     public function getTarget()
     {
         $this->__load();
@@ -252,6 +253,8 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
         return parent::addReport($report);
     }
 
+=======
+>>>>>>> tien
     public function getId()
     {
         $this->__load();
@@ -288,10 +291,17 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
         return parent::getRatings();
     }
 
+<<<<<<< HEAD
     public function geTags()
     {
         $this->__load();
         return parent::geTags();
+=======
+    public function getTags()
+    {
+        $this->__load();
+        return parent::getTags();
+>>>>>>> tien
     }
 
     public function getCreated()
@@ -312,10 +322,17 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
         return parent::isRatedByUser($user);
     }
 
+<<<<<<< HEAD
     public function getTags()
     {
         $this->__load();
         return parent::getTags();
+=======
+    public function geTags()
+    {
+        $this->__load();
+        return parent::geTags();
+>>>>>>> tien
     }
 
     public function getTagIds()
@@ -352,7 +369,11 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
 
     public function __sleep()
     {
+<<<<<<< HEAD
         return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'name', 'alias', 'abbreviation', 'updated', 'barcodeData', 'documents', 'reports', 'files', 'collaborators', 'defaultRoles', 'target');
+=======
+        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'name', 'alias', 'abbreviation', 'updated', 'documents', 'files', 'collaborators', 'defaultRoles');
+>>>>>>> tien
     }
 
     public function __clone()

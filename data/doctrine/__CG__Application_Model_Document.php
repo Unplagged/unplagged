@@ -400,7 +400,11 @@ class Application_Model_Document extends \Application_Model_Document implements 
 
     public function __sleep()
     {
+<<<<<<< HEAD
         return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'case', 'initialFile');
+=======
+        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'originalFile');
+>>>>>>> tien
     }
 
     public function __clone()
