@@ -180,17 +180,10 @@ class Application_Model_File extends \Application_Model_File implements \Doctrin
         return parent::getRatings();
     }
 
-<<<<<<< HEAD
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
-=======
     public function getTags()
     {
         $this->__load();
         return parent::getTags();
->>>>>>> tien
     }
 
     public function getConversationTypes()
@@ -205,17 +198,10 @@ class Application_Model_File extends \Application_Model_File implements \Doctrin
         return parent::isRatedByUser($user);
     }
 
-<<<<<<< HEAD
-    public function getTags()
-    {
-        $this->__load();
-        return parent::getTags();
-=======
     public function geTags()
     {
         $this->__load();
         return parent::geTags();
->>>>>>> tien
     }
 
     public function getTagIds()
@@ -252,11 +238,7 @@ class Application_Model_File extends \Application_Model_File implements \Doctrin
 
     public function __sleep()
     {
-<<<<<<< HEAD
         return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'updated', 'filename', 'mimetype', 'size', 'location', 'extension', 'description');
-=======
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'updated', 'filename', 'mimetype', 'size', 'location', 'extension', 'isTarget', 'description');
->>>>>>> tien
     }
 
     public function __clone()
