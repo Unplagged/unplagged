@@ -64,14 +64,20 @@ class Unplagged_HtmlLayout {
             $content = $fragment->getContent('array', true);
 
             //$divLeft = "<div class='text'";
-            $divLeft = "";
+            $divLeft = 'Plag Bibtext: ' . $bibTexPlag['autor'] . ' - ' . $bibTexPlag['titel'] . '<br/>'
+						. 'Page from: ' . $pageFromPlag . ' - Line from: ' . $lineFromPlag . '<br/>' 
+						. 'Page to: ' . $pageToPlag . ' - Line to: ' . $lineToPlag . '<br/>' ;
+                    
             foreach ($content['plag'] as $line) {
                 $divLeft .= $line;
             }
             //$divLeft .= "</div>";
 
             //$divRight = "<div class='text'";
-            $divRight = "";
+            $divRight = 'Source Bibtext: ' . $bibTexSource['autor'] . ' - ' . $bibTexSource['titel'] . '<br/>'
+						. 'Page from: ' . $pageFromSource . ' - Line from: ' . $pageToSource . '<br/>' 
+						. 'Page to: ' . $lineFromSource . ' - Line to: ' . $lineToSource . '<br/>' ;
+						
             foreach ($content['source'] as $line) {
                 $divRight .= $line;
             }
