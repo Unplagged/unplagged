@@ -114,12 +114,6 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::setState($state);
     }
 
-    public function setBibTex($bibTex)
-    {
-        $this->__load();
-        return parent::setBibTex($bibTex);
-    }
-
     public function toArray()
     {
         $this->__load();
@@ -136,6 +130,180 @@ class Application_Model_Document extends \Application_Model_Document implements 
     {
         $this->__load();
         return parent::setCase($case);
+    }
+
+    public function getInitialFile()
+    {
+        $this->__load();
+        return parent::getInitialFile();
+    }
+
+    public function setBibTexForm($form)
+    {
+        $this->__load();
+        return parent::setBibTexForm($form);
+    }
+
+    public function setBibTexKuerzel($kuerzel)
+    {
+        $this->__load();
+        return parent::setBibTexKuerzel($kuerzel);
+    }
+
+    public function setBibTexAutor($autor)
+    {
+        $this->__load();
+        return parent::setBibTexAutor($autor);
+    }
+
+    public function setBibTexTitel($titel)
+    {
+        $this->__load();
+        return parent::setBibTexTitel($titel);
+    }
+
+    public function setBibTexZeitschrift($zeitschrift)
+    {
+        $this->__load();
+        return parent::setBibTexZeitschrift($zeitschrift);
+    }
+
+    public function setBibTexSammlung($sammlung)
+    {
+        $this->__load();
+        return parent::setBibTexSammlung($sammlung);
+    }
+
+    public function setBibTexHrsg($hrsg)
+    {
+        $this->__load();
+        return parent::setBibTexHrsg($hrsg);
+    }
+
+    public function setBibTexBeteiligte($beteiligte)
+    {
+        $this->__load();
+        return parent::setBibTexBeteiligte($beteiligte);
+    }
+
+    public function setBibTexOrt($ort)
+    {
+        $this->__load();
+        return parent::setBibTexOrt($ort);
+    }
+
+    public function setBibTexVerlag($verlag)
+    {
+        $this->__load();
+        return parent::setBibTexVerlag($verlag);
+    }
+
+    public function setBibTexAusgabe($ausgabe)
+    {
+        $this->__load();
+        return parent::setBibTexAusgabe($ausgabe);
+    }
+
+    public function setBibTexJahr($jahr)
+    {
+        $this->__load();
+        return parent::setBibTexJahr($jahr);
+    }
+
+    public function setBibTexMonat($monat)
+    {
+        $this->__load();
+        return parent::setBibTexMonat($monat);
+    }
+
+    public function setBibTexTag($tag)
+    {
+        $this->__load();
+        return parent::setBibTexTag($tag);
+    }
+
+    public function setBibTexNummer($nummer)
+    {
+        $this->__load();
+        return parent::setBibTexNummer($nummer);
+    }
+
+    public function setBibTexSeiten($seiten)
+    {
+        $this->__load();
+        return parent::setBibTexSeiten($seiten);
+    }
+
+    public function setBibTexUmfang($umfang)
+    {
+        $this->__load();
+        return parent::setBibTexUmfang($umfang);
+    }
+
+    public function setBibTexReihe($reihe)
+    {
+        $this->__load();
+        return parent::setBibTexReihe($reihe);
+    }
+
+    public function setBibTexAnmerkung($anmerkung)
+    {
+        $this->__load();
+        return parent::setBibTexAnmerkung($anmerkung);
+    }
+
+    public function setBibTexIsbn($isbn)
+    {
+        $this->__load();
+        return parent::setBibTexIsbn($isbn);
+    }
+
+    public function setBibTexIssn($issn)
+    {
+        $this->__load();
+        return parent::setBibTexIssn($issn);
+    }
+
+    public function setBibTexDoi($doi)
+    {
+        $this->__load();
+        return parent::setBibTexDoi($doi);
+    }
+
+    public function setBibTexUrl($url)
+    {
+        $this->__load();
+        return parent::setBibTexUrl($url);
+    }
+
+    public function setBibTexUrn($urn)
+    {
+        $this->__load();
+        return parent::setBibTexUrn($urn);
+    }
+
+    public function setBibTexWp($wp)
+    {
+        $this->__load();
+        return parent::setBibTexWp($wp);
+    }
+
+    public function setBibTexInlit($inlit)
+    {
+        $this->__load();
+        return parent::setBibTexInlit($inlit);
+    }
+
+    public function setBibTexInfn($infn)
+    {
+        $this->__load();
+        return parent::setBibTexInfn($infn);
+    }
+
+    public function setBibTexSchluessel($schluessel)
+    {
+        $this->__load();
+        return parent::setBibTexSchluessel($schluessel);
     }
 
     public function setId($id)
@@ -232,7 +400,7 @@ class Application_Model_Document extends \Application_Model_Document implements 
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'case');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'case', 'initialFile');
     }
 
     public function __clone()
