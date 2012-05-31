@@ -18,9 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once(realpath(dirname(__FILE__)) . "/../../Base.php");
-require_once(BASE_PATH . '/library/dompdf/dompdf_config.inc.php');
 require_once(BASE_PATH . '/library/html2pdf/html2pdf.class.php');
-spl_autoload_register('DOMPDF_autoload');
+define("SPAN_OPEN", "<span");
+define("SPAN_CLOSE", "</span");
+define("ST", "<");
+define("GT", ">");
 
 /**
  * This class represents a cronjob for creating reports including fragments.
@@ -76,26 +78,26 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
     private static function createReport($fragments, $user) {
 
         // get page infos
-      /*  $pageFromPlag = $fragment->getPlag()->getLineFrom()->getPage()->getPageNumber();
-        $pageToPlag = $fragment->getPlag()->getLineTo()->getPage()->getPageNumber();
+        /*  $pageFromPlag = $fragment->getPlag()->getLineFrom()->getPage()->getPageNumber();
+          $pageToPlag = $fragment->getPlag()->getLineTo()->getPage()->getPageNumber();
 
-        $pageFromSource = $fragment->getSource()->getLineFrom()->getPage()->getPageNumber();
-        $pageToSource = $fragment->getSource()->getLineTo()->getPage()->getPageNumber();
+          $pageFromSource = $fragment->getSource()->getLineFrom()->getPage()->getPageNumber();
+          $pageToSource = $fragment->getSource()->getLineTo()->getPage()->getPageNumber();
 
-        // get line infos
-        $lineFromPlag = $fragment->getPlag()->getLineFrom()->getLineNumber();
-        $lineToPlag = $fragment->getPlag()->getLineTo()->getLineNumber();
+          // get line infos
+          $lineFromPlag = $fragment->getPlag()->getLineFrom()->getLineNumber();
+          $lineToPlag = $fragment->getPlag()->getLineTo()->getLineNumber();
 
-        $lineFromSource = $fragment->getSource()->getLineFrom()->getLineNumber();
-        $lineToSource = $fragment->getSource()->getLineTo()->getLineNumber();
+          $lineFromSource = $fragment->getSource()->getLineFrom()->getLineNumber();
+          $lineToSource = $fragment->getSource()->getLineTo()->getLineNumber();
 
-        $html .= '<p> Page from: ' . $pageFromPlag . ' to:' . $pageToPlag . '</p>' .
-                '<p> Page from: ' . $pageFromSource . ' to:' . $pageToSource . '</p>';
+          $html .= '<p> Page from: ' . $pageFromPlag . ' to:' . $pageToPlag . '</p>' .
+          '<p> Page from: ' . $pageFromSource . ' to:' . $pageToSource . '</p>';
 
-        $html .= '<p>Plagiarized Text </p>' .
-                '<p> Line from: ' . $lineFromPlag . ' to:' . $lineToPlag . '</p>' .
-                '<p>Source Text </p>' .
-                '<p> Line from: ' . $lineFromSource . ' to:' . $lineToSource . '</p>';*/
+          $html .= '<p>Plagiarized Text </p>' .
+          '<p> Line from: ' . $lineFromPlag . ' to:' . $lineToPlag . '</p>' .
+          '<p>Source Text </p>' .
+          '<p> Line from: ' . $lineFromSource . ' to:' . $lineToSource . '</p>'; */
 
         $currentCase = $user->getCurrentCase();
         $casename = $currentCase->getAlias();
@@ -108,7 +110,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         $content = self::mix_two_columns($col1, $col2, "possible plagiat", "original");
         $html2pdf = new HTML2PDF('P', 'A4', 'en');
         $html2pdf->WriteHTML($content);
-        
+
 
         // save report to database to get an Id
         $data = array();
@@ -181,18 +183,55 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
      * Cuts the given text into an array, which each element contains
      * $nbWordsProPage words.
      */
-    private static function cut_text_into_pages($text) {
+     private static function cut_text_into_pages($text) {
         $text = self::remove_spaces($text);
         $exploded = array_slice(explode(' ', $text), 0);
-        $nbWordsProPage = 400;
+        $nbWordsProPage = 110;
         $nbPage = 0;
         $pages = array();
+        $rest = "";
+        $nbRest = 0;
 
         for ($i = 0; $i < sizeof($exploded); $i+=$nbWordsProPage) {
-            $pages[$nbPage++] = implode(' ', array_slice($exploded, $i, $nbWordsProPage));
+            $page = $rest . implode(' ', array_slice($exploded, $i, $nbWordsProPage - $nbRest));
+            $result = self::check($page);
+            $rest = $result["toRetrieve"] . " ";
+            $nbRest = str_word_count($rest);
+            $pages[$nbPage++] = $result["s"];
         }
 
         return $pages;
+    }
+
+     private static function result($length, $s) {
+        $array = array();
+        $array["toRetrieve"] = substr($s, $length, strlen($s) - $length);
+        $array["s"] = substr($s, 0, $length);
+        $array["original"] = $s;
+        return $array;
+    }
+
+     private static function check($s) {
+        $nbST = substr_count($s, ST);
+        $nbBT = substr_count($s, GT);
+        if ($nbST == $nbBT) {
+            $nbSpanOpen = substr_count($s, SPAN_OPEN);
+            $nbSpanClose = substr_count($s, SPAN_CLOSE);
+            if ($nbSpanOpen == $nbSpanClose) {
+                return self::result(strlen($s), $s);
+            } else {
+                // 'halli hallo <span>'
+                return self::result(strrpos($s, SPAN_OPEN), $s);
+            }
+        } else {
+            // one tag is not closed
+            //'halli hallofff <span></span'
+            //'halli hallofff <span'
+            $nbSpanOpen = substr_count($s, SPAN_OPEN);
+            $nbSpanClose = substr_count($s, SPAN_CLOSE);
+
+            return self::result(strrpos($s, SPAN_OPEN), $s);
+        }
     }
 
     /**
