@@ -52,8 +52,8 @@ class Unplagged_HtmlLayout {
             $lineToSource = $fragment->getSource()->getLineTo()->getLineNumber();
 
 
-            $html .= '<p>Plag Bibtext: ' . $bibTexPlag . '</p>' .
-                    '<p>Source Bibtext' . $bibTexSource . '</p>';
+            $html .= '<p>Plag Bibtext: ' . $bibTexPlag['autor'] . ' - ' . $bibTexPlag['titel'] . '</p>' .
+                    '<p>Source Bibtext' . $bibTexSource['autor'] . ' - ' . $bibTexSource['titel'] . '</p>';
 
             $html .= '<p> Page from: ' . $pageFromPlag . ' to:' . $pageToPlag . '</p>' .
                     '<p> Page from: ' . $pageFromSource . ' to:' . $pageToSource . '</p>';

@@ -210,17 +210,10 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
         return parent::getRatings();
     }
 
-<<<<<<< HEAD
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
-=======
     public function getTags()
     {
         $this->__load();
         return parent::getTags();
->>>>>>> tien
     }
 
     public function getCreated()
@@ -241,17 +234,10 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
         return parent::isRatedByUser($user);
     }
 
-<<<<<<< HEAD
-    public function getTags()
-    {
-        $this->__load();
-        return parent::getTags();
-=======
     public function geTags()
     {
         $this->__load();
         return parent::geTags();
->>>>>>> tien
     }
 
     public function getTagIds()
@@ -288,11 +274,7 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
 
     public function __sleep()
     {
-<<<<<<< HEAD
         return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'version', 'auditLog', 'pageNumber', 'disabled', 'document', 'detectionReports', 'originalFile', 'lines');
-=======
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'version', 'auditLog', 'pageNumber', 'document', 'detectionReports', 'originalFile', 'lines');
->>>>>>> tien
     }
 
     public function __clone()

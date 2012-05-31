@@ -336,10 +336,10 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::getRatings();
     }
 
-    public function geTags()
+    public function getTags()
     {
         $this->__load();
-        return parent::geTags();
+        return parent::getTags();
     }
 
     public function getCreated()
@@ -360,10 +360,10 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::isRatedByUser($user);
     }
 
-    public function getTags()
+    public function geTags()
     {
         $this->__load();
-        return parent::getTags();
+        return parent::geTags();
     }
 
     public function getTagIds()
@@ -400,11 +400,7 @@ class Application_Model_Document extends \Application_Model_Document implements 
 
     public function __sleep()
     {
-<<<<<<< HEAD
         return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'case', 'initialFile');
-=======
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'originalFile');
->>>>>>> tien
     }
 
     public function __clone()
