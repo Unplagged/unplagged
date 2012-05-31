@@ -3,9 +3,6 @@
 class Unplagged_HtmlLayout {
 
     public static function htmlLayout($case,$fragments) {
-
-        $casename = 'Eine kritische Auseinandersetzung mit der Dissertation von Prof. Dr. : ' . $case;
-
         // html body
         $array = array();
         $i = 0;

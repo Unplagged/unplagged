@@ -1,5 +1,5 @@
 <?php
-
+require_once(realpath(dirname(__FILE__)) . "/../models/Base.php");
 class ReportController extends Unplagged_Controller_Versionable {
 
     public function init() {
@@ -68,7 +68,7 @@ class ReportController extends Unplagged_Controller_Versionable {
 
                 $this->view->layout()->disableLayout();
                 $this->_helper->viewRenderer->setNoRender(true);
-                $report_name = "Report_" . $report->getTitle() . ".pdf";
+                $report_name = "Report_" . $report->getTitle() . "_" . $report->getCreated()->format("Y-m-d") . ".pdf";
                 $downloadPath = $report->getFilePath();
 
                 // set headers
