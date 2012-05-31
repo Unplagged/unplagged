@@ -81,7 +81,12 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
         $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
 
         $array_html = Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
-        $content = "";
+        
+        $content = '<div style="margin:auto; width: 500px; text-align:center; margin-top: 300px"><h1>Gemeinschaftlicher Bericht</h1><br/><br/>';
+        $content .= "<h2>Dokumentation von Plagiaten in der Dissertation</h2><br/><br/>";
+        $content .= '<h2 style="font-style:italic">' . $casename . '</h2>';
+        $content .= "<br/><br/>";
+        $content .= "<h3>" . date("d M Y") . "</h3></div>";
         foreach($array_html as $fragment) {
             $col1 = self::cut_text_into_pages($fragment["left"]);
             $col2 = self::cut_text_into_pages($fragment["right"]);
@@ -263,7 +268,6 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
                 .fragmark-9 { background-color: #a5e6ed; }
                 .text {margin: 3px; padding: 3px; border: 1px solid grey}' .
                 '</style>';
-
         $size1 = sizeof($col1);
         $size2 = sizeof($col2);
         $size = $size1 > $size2 ? $size1 : $size2;
