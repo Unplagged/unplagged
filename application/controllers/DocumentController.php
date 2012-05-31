@@ -48,7 +48,40 @@ class DocumentController extends Unplagged_Controller_Action{
       $modifyForm->setAction("/document/edit/id/" . $input->id);
 
       $modifyForm->getElement("title")->setValue($document->getTitle());
-      $modifyForm->getElement("bibTex")->setValue($document->getBibTex());
+      
+	  // set bibTex information
+	  $bibTex = $document->getBibTex();
+	  //var_dump($bibTex);
+	  $modifyForm->getElement("type")->setValue($bibTex['form']);
+	  $modifyForm->getElement("kuerzel")->setValue($bibTex['kuerzel']);
+	  $modifyForm->getElement("autor")->setValue($bibTex['autor']);
+	  $modifyForm->getElement("titel")->setValue($bibTex['titel']);
+	  //$modifyForm->getElement("titel")->setAttrib('disabled','disabled');
+	  $modifyForm->getElement("zeitschrift")->setValue($bibTex['zeitschrift']);
+	  $modifyForm->getElement("sammlung")->setValue($bibTex['sammlung']);
+	  $modifyForm->getElement("hrsg")->setValue($bibTex['hrsg']);
+	  $modifyForm->getElement("beteiligte")->setValue($bibTex['beteiligte']);
+	  $modifyForm->getElement("ort")->setValue($bibTex['ort']);
+	  $modifyForm->getElement("verlag")->setValue($bibTex['verlag']);
+	  $modifyForm->getElement("ausgabe")->setValue($bibTex['ausgabe']);
+	  $modifyForm->getElement("jahr")->setValue($bibTex['jahr']);
+	  $modifyForm->getElement("monat")->setValue($bibTex['monat']);
+	  $modifyForm->getElement("tag")->setValue($bibTex['tag']);
+	  $modifyForm->getElement("nummer")->setValue($bibTex['nummer']);
+	  $modifyForm->getElement("seiten")->setValue($bibTex['seiten']);
+	  $modifyForm->getElement("umfang")->setValue($bibTex['umfang']);
+	  $modifyForm->getElement("reihe")->setValue($bibTex['reihe']);
+	  $modifyForm->getElement("anmerkung")->setValue($bibTex['anmerkung']);
+	  $modifyForm->getElement("isbn")->setValue($bibTex['isbn']);
+	  $modifyForm->getElement("issn")->setValue($bibTex['issn']);
+	  $modifyForm->getElement("doi")->setValue($bibTex['doi']);
+	  $modifyForm->getElement("url")->setValue($bibTex['url']);
+	  $modifyForm->getElement("urn")->setValue($bibTex['urn']);
+	  $modifyForm->getElement("wp")->setValue($bibTex['wp']);
+	  $modifyForm->getElement("inlit")->setValue($bibTex['inlit']);
+	  $modifyForm->getElement("infn")->setValue($bibTex['infn']);
+	  $modifyForm->getElement("schluessel")->setValue($bibTex['schluessel']);
+	  
       $modifyForm->getElement("submit")->setLabel("Save document");
 
       if($this->_request->isPost()){
@@ -250,8 +283,37 @@ class DocumentController extends Unplagged_Controller_Action{
     $formData = $this->_request->getPost();
     if($modifyForm->isValid($formData)){
 
-      $document->setTitle($formData['title']);
-      $document->setBibTex($formData['bibTex']);
+      $document->setTitle($formData['title']);     
+	 $document->setBibTexForm($formData['type']);
+	  
+	  // save bibtex information
+      $document->setBibTexKuerzel($formData['kuerzel']);
+	  $document->setBibTexAutor($formData['autor']);
+	  $document->setBibTexTitel($formData['titel']);
+	  $document->setBibTexZeitschrift($formData['zeitschrift']);
+	  $document->setBibTexSammlung($formData['sammlung']);
+	  $document->setBibTexHrsg($formData['hrsg']);
+	  $document->setBibTexBeteiligte($formData['beteiligte']);
+	  $document->setBibTexOrt($formData['ort']);
+	  $document->setBibTexVerlag($formData['verlag']);
+	  $document->setBibTexAusgabe($formData['ausgabe']);
+	  $document->setBibTexJahr($formData['jahr']);
+	  $document->setBibTexMonat($formData['monat']);
+	  $document->setBibTexTag($formData['tag']);
+	  $document->setBibTexNummer($formData['nummer']);
+	  $document->setBibTexSeiten($formData['seiten']);
+	  $document->setBibTexUmfang($formData['umfang']);
+	  $document->setBibTexReihe($formData['reihe']);
+	  $document->setBibTexAnmerkung($formData['anmerkung']);
+	  $document->setBibTexIsbn($formData['isbn']);
+	  $document->setBibTexIssn($formData['issn']);
+	  $document->setBibTexDoi($formData['doi']);
+	  $document->setBibTexUrl($formData['url']);
+	  $document->setBibTexUrn($formData['urn']);
+	  $document->setBibTexWp($formData['wp']);
+	  $document->setBibTexInlit($formData['inlit']);
+	  $document->setBibTexInfn($formData['infn']);
+	  $document->setBibTexSchluessel($formData['schluessel']);
 
       // write back to persistence manager and flush it
       $this->_em->persist($document);

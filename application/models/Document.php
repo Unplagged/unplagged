@@ -59,7 +59,7 @@ class Application_Model_Document extends Application_Model_Base{
    * The bibtex information of the document.
    * @var string The bibtex information.
    * 
-   * @Column(type="text", nullable=true)
+   * @Column(type="array", nullable=true)
    */
   private $bibTex;
 
@@ -91,16 +91,16 @@ class Application_Model_Document extends Application_Model_Base{
       $this->title = $data["title"];
     }
 
-    if(isset($data["bibtex"])){
-      $this->bibtex = $data["bibtex"];
-    }
+    // if(isset($data["bibtex"])){
+      // $this->bibtex = $data["bibtex"];
+    // }
     if(isset($data["state"])){
       $this->state = $data["state"];
     }
     if(isset($data["initialFile"])){
       $this->initialFile = $data["initialFile"];
     }
-
+	
     $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
     $this->fragments = new \Doctrine\Common\Collections\ArrayCollection();
   }
@@ -155,9 +155,9 @@ class Application_Model_Document extends Application_Model_Base{
     $this->state = $state;
   }
 
-  public function setBibTex($bibTex){
-    $this->bibTex = $bibTex;
-  }
+  // public function setBibTex($bibTex){
+    // $this->bibTex = $bibTex;
+  // }
 
   public function toArray(){
     $data["id"] = $this->id;
@@ -190,4 +190,117 @@ class Application_Model_Document extends Application_Model_Base{
   public function getInitialFile(){
     return $this->initialFile;
   }
+  
+  // function to set bibtex data
+	public function setBibTexForm ($form){
+		$this->bibTex['form'] = $form;
+	}
+	
+	public function setBibTexKuerzel ($kuerzel){
+		$this->bibTex['kuerzel'] = $kuerzel;
+	}
+	
+	public function setBibTexAutor ($autor){
+		$this->bibTex['autor'] = $autor;
+	}
+	
+	public function setBibTexTitel ($titel){
+		$this->bibTex['titel'] = $titel;
+	}
+	
+	public function setBibTexZeitschrift ($zeitschrift){
+		$this->bibTex['zeitschrift'] = $zeitschrift;
+	}
+	
+	public function setBibTexSammlung ($sammlung){
+		$this->bibTex['sammlung'] = $sammlung;
+	}
+	
+	public function setBibTexHrsg ($hrsg){
+		$this->bibTex['hrsg'] = $hrsg;
+	}
+	
+	public function setBibTexBeteiligte ($beteiligte){
+		$this->bibTex['beteiligte'] = $beteiligte;
+	}
+	
+	public function setBibTexOrt ($ort){
+		$this->bibTex['ort'] = $ort;
+	}
+	
+	public function setBibTexVerlag ($verlag){
+		$this->bibTex['verlag'] = $verlag;
+	}
+		
+	public function setBibTexAusgabe ($ausgabe){
+		$this->bibTex['ausgabe'] = $ausgabe;
+	}
+	
+	public function setBibTexJahr ($jahr){
+		$this->bibTex['jahr'] = $jahr;
+	}
+	
+	public function setBibTexMonat ($monat){
+		$this->bibTex['monat'] = $monat;
+	}
+	
+	public function setBibTexTag($tag){
+		$this->bibTex['tag'] = $tag;
+	}
+	
+	public function setBibTexNummer ($nummer){
+		$this->bibTex['nummer'] = $nummer;
+	}
+	
+	public function setBibTexSeiten ($seiten){
+		$this->bibTex['seiten'] = $seiten;
+	}
+	
+	public function setBibTexUmfang ($umfang){
+		$this->bibTex['umfang'] = $umfang;
+	}
+	
+	public function setBibTexReihe ($reihe){
+		$this->bibTex['reihe'] = $reihe;
+	}
+	
+	public function setBibTexAnmerkung ($anmerkung){
+		$this->bibTex['anmerkung'] = $anmerkung;
+	}
+	
+	public function setBibTexIsbn ($isbn){
+		$this->bibTex['isbn'] = $isbn;
+	}
+	
+	public function setBibTexIssn ($issn){
+		$this->bibTex['issn'] = $issn;
+	}
+	
+	public function setBibTexDoi ($doi){
+		$this->bibTex['doi'] = $doi;
+	}
+	
+	public function setBibTexUrl ($url){
+		$this->bibTex['url'] = $url;
+	}
+	
+	public function setBibTexUrn ($urn){
+		$this->bibTex['urn'] = $urn;
+	}
+	
+	public function setBibTexWp ($wp){
+		$this->bibTex['wp'] = $wp;
+	}
+	
+	public function setBibTexInlit ($inlit){
+		$this->bibTex['inlit'] = $inlit;
+	}
+	
+	public function setBibTexInfn ($infn){
+		$this->bibTex['infn'] = $infn;
+	}
+	
+	public function setBibTexSchluessel ($schluessel){
+		$this->bibTex['schluessel'] = $schluessel;
+	}
 }

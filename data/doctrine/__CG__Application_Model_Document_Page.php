@@ -210,10 +210,23 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
         return parent::getRatings();
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
     public function geTags()
     {
         $this->__load();
         return parent::geTags();
+<<<<<<< HEAD
+=======
+=======
+    public function getTags()
+    {
+        $this->__load();
+        return parent::getTags();
+>>>>>>> tien
+>>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
     }
 
     public function getCreated()
@@ -234,10 +247,23 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
         return parent::isRatedByUser($user);
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
     public function getTags()
     {
         $this->__load();
         return parent::getTags();
+<<<<<<< HEAD
+=======
+=======
+    public function geTags()
+    {
+        $this->__load();
+        return parent::geTags();
+>>>>>>> tien
+>>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
     }
 
     public function getTagIds()
@@ -274,7 +300,15 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
 
     public function __sleep()
     {
+<<<<<<< HEAD
         return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'version', 'auditLog', 'pageNumber', 'disabled', 'document', 'detectionReports', 'originalFile', 'lines');
+=======
+<<<<<<< HEAD
+        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'version', 'auditLog', 'pageNumber', 'disabled', 'document', 'detectionReports', 'originalFile', 'lines');
+=======
+        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'version', 'auditLog', 'pageNumber', 'document', 'detectionReports', 'originalFile', 'lines');
+>>>>>>> tien
+>>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
     }
 
     public function __clone()

@@ -132,10 +132,23 @@ class Application_Model_Document_Page_Line extends \Application_Model_Document_P
         return parent::getRatings();
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
     public function geTags()
     {
         $this->__load();
         return parent::geTags();
+<<<<<<< HEAD
+=======
+=======
+    public function getTags()
+    {
+        $this->__load();
+        return parent::getTags();
+>>>>>>> tien
+>>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
     }
 
     public function getCreated()
@@ -156,10 +169,23 @@ class Application_Model_Document_Page_Line extends \Application_Model_Document_P
         return parent::isRatedByUser($user);
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
     public function getTags()
     {
         $this->__load();
         return parent::getTags();
+<<<<<<< HEAD
+=======
+=======
+    public function geTags()
+    {
+        $this->__load();
+        return parent::geTags();
+>>>>>>> tien
+>>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
     }
 
     public function getTagIds()
