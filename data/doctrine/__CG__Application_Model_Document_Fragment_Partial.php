@@ -174,12 +174,6 @@ class Application_Model_Document_Fragment_Partial extends \Application_Model_Doc
         return parent::isRatedByUser($user);
     }
 
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
-    }
-
     public function getTagIds()
     {
         $this->__load();

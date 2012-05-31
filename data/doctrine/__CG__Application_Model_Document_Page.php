@@ -234,12 +234,6 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
         return parent::isRatedByUser($user);
     }
 
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
-    }
-
     public function getTagIds()
     {
         $this->__load();
