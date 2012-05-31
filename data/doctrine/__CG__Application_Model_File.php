@@ -192,10 +192,10 @@ class Application_Model_File extends \Application_Model_File implements \Doctrin
         return parent::getRatings();
     }
 
-    public function geTags()
+    public function getTags()
     {
         $this->__load();
-        return parent::geTags();
+        return parent::getTags();
     }
 
     public function getConversationTypes()
@@ -210,10 +210,10 @@ class Application_Model_File extends \Application_Model_File implements \Doctrin
         return parent::isRatedByUser($user);
     }
 
-    public function getTags()
+    public function geTags()
     {
         $this->__load();
-        return parent::getTags();
+        return parent::geTags();
     }
 
     public function getTagIds()

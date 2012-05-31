@@ -198,10 +198,10 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
         return parent::getRatings();
     }
 
-    public function geTags()
+    public function getTags()
     {
         $this->__load();
-        return parent::geTags();
+        return parent::getTags();
     }
 
     public function getCreated()
@@ -222,10 +222,10 @@ class Application_Model_Document_Page extends \Application_Model_Document_Page i
         return parent::isRatedByUser($user);
     }
 
-    public function getTags()
+    public function geTags()
     {
         $this->__load();
-        return parent::getTags();
+        return parent::geTags();
     }
 
     public function getTagIds()

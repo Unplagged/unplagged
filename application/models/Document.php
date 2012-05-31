@@ -192,6 +192,9 @@ class Application_Model_Document extends Application_Model_Base{
   }
   
 	// function to set bibtex data
+	public function setBibTexForm ($form){
+		$this->bibTex['form'] = $form;
+	}
 	
 	public function setBibTexKuerzel ($kuerzel){
 		$this->bibTex['kuerzel'] = $kuerzel;
@@ -269,8 +272,36 @@ class Application_Model_Document extends Application_Model_Base{
 		$this->bibTex['isbn'] = $isbn;
 	}
 	
+	public function setBibTexIssn ($issn){
+		$this->bibTex['issn'] = $issn;
+	}
+	
+	public function setBibTexDoi ($doi){
+		$this->bibTex['doi'] = $doi;
+	}
+	
 	public function setBibTexUrl ($url){
 		$this->bibTex['url'] = $url;
+	}
+	
+	public function setBibTexUrn ($urn){
+		$this->bibTex['urn'] = $urn;
+	}
+	
+	public function setBibTexWp ($wp){
+		$this->bibTex['wp'] = $wp;
+	}
+	
+	public function setBibTexInlit ($inlit){
+		$this->bibTex['inlit'] = $inlit;
+	}
+	
+	public function setBibTexInfn ($infn){
+		$this->bibTex['infn'] = $infn;
+	}
+	
+	public function setBibTexSchluessel ($schluessel){
+		$this->bibTex['schluessel'] = $schluessel;
 	}
 
 }

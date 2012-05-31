@@ -51,11 +51,12 @@ class DocumentController extends Unplagged_Controller_Action{
 	  
 	  // set bibtext information
 	  $bibTex = $document->getBibTex();
-	  var_dump($bibTex);	  
-      
+	  //var_dump($bibTex);	  
+      $modifyForm->getElement("type")->setValue($bibTex['form']);
 	  $modifyForm->getElement("kuerzel")->setValue($bibTex['kuerzel']);
 	  $modifyForm->getElement("autor")->setValue($bibTex['autor']);
 	  $modifyForm->getElement("titel")->setValue($bibTex['titel']);
+	  //$modifyForm->getElement("titel")->setAttrib('disabled','disabled');
 	  $modifyForm->getElement("zeitschrift")->setValue($bibTex['zeitschrift']);
 	  $modifyForm->getElement("sammlung")->setValue($bibTex['sammlung']);
 	  $modifyForm->getElement("hrsg")->setValue($bibTex['hrsg']);
@@ -72,7 +73,15 @@ class DocumentController extends Unplagged_Controller_Action{
 	  $modifyForm->getElement("reihe")->setValue($bibTex['reihe']);
 	  $modifyForm->getElement("anmerkung")->setValue($bibTex['anmerkung']);
 	  $modifyForm->getElement("isbn")->setValue($bibTex['isbn']);
+	  $modifyForm->getElement("issn")->setValue($bibTex['issn']);
+	  $modifyForm->getElement("doi")->setValue($bibTex['doi']);
 	  $modifyForm->getElement("url")->setValue($bibTex['url']);
+	  $modifyForm->getElement("urn")->setValue($bibTex['urn']);
+	  $modifyForm->getElement("wp")->setValue($bibTex['wp']);
+	  $modifyForm->getElement("inlit")->setValue($bibTex['inlit']);
+	  $modifyForm->getElement("infn")->setValue($bibTex['infn']);
+	  $modifyForm->getElement("schluessel")->setValue($bibTex['schluessel']);
+	  
 	  
       $modifyForm->getElement("submit")->setLabel("Save document");
 
@@ -257,6 +266,8 @@ class DocumentController extends Unplagged_Controller_Action{
     if($modifyForm->isValid($formData)){
 		
       $document->setTitle($formData['title']);
+	  $document->setBibTexForm($formData['type']);
+	  
 	  // save bibtex information
       $document->setBibTexKuerzel($formData['kuerzel']);
 	  $document->setBibTexAutor($formData['autor']);
@@ -277,7 +288,14 @@ class DocumentController extends Unplagged_Controller_Action{
 	  $document->setBibTexReihe($formData['reihe']);
 	  $document->setBibTexAnmerkung($formData['anmerkung']);
 	  $document->setBibTexIsbn($formData['isbn']);
+	  $document->setBibTexIssn($formData['issn']);
+	  $document->setBibTexDoi($formData['doi']);
 	  $document->setBibTexUrl($formData['url']);
+	  $document->setBibTexUrn($formData['urn']);
+	  $document->setBibTexWp($formData['wp']);
+	  $document->setBibTexInlit($formData['inlit']);
+	  $document->setBibTexInfn($formData['infn']);
+	  $document->setBibTexSchluessel($formData['schluessel']);
 			  
       // write back to persistence manager and flush it
       $this->_em->persist($document);
@@ -288,6 +306,8 @@ class DocumentController extends Unplagged_Controller_Action{
 
     return false;
   }
+  
+  // function to hande document type
   
   /**
    * Returns all pages in the document . 

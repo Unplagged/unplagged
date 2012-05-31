@@ -1,5 +1,80 @@
 <?php
 
+DEFINE ("HANDLEDOCUMENTTYPE", '
+
+								if($(this).val() == \'full\' || $(this).val() == \'periodikum\' ) 
+								{ 
+									$(\'#zeitschrift-element\').show();		$(\'#zeitschrift-label\').show();	
+									$(\'#monat-element\').show(); 			$(\'#monat-label\').show();
+									$(\'#tag-element\').show();				$(\'#tag-label\').show();
+									$(\'#nummer-element\').show();			$(\'#nummer-label\').show();
+								}
+			
+								else {
+									$(\'#zeitschrift-element\').hide();		$(\'#zeitschrift-label\').hide();
+									$(\'#monat-element\').hide(); 			$(\'#monat-label\').hide();									
+									$(\'#tag-element\').hide();				$(\'#tag-label\').hide();
+									$(\'#nummer-element\').hide();			$(\'#nummer-label\').hide();									
+								}
+								
+								if($(this).val() == \'full\' || $(this).val() == \'aufsatz\' ) 
+								{ 
+									$(\'#sammlung-element\').show();		$(\'#sammlung-label\').show();
+									$(\'#hrsg-element\').show();			$(\'#hrsg-label\').show();
+									$(\'#issn-element\').show();			$(\'#issn-label\').show();						
+								}
+			
+								else {
+									$(\'#sammlung-element\').hide();		$(\'#sammlung-label\').hide();
+									$(\'#hrsg-element\').hide();	 		$(\'#hrsg-label\').hide();
+									$(\'#issn-element\').hide();			$(\'#issn-label\').hide();
+								}
+								
+								if($(this).val() == \'full\' || $(this).val() == \'aufsatz\' || $(this).val() == \'periodikum\') 
+								{ 
+									$(\'#seiten-element\').show();			$(\'#seiten-label\').show();	
+																		
+								}
+			
+								else {
+									$(\'#seiten-element\').hide();			$(\'#seiten-label\').hide();
+											
+								}
+								
+								if($(this).val() == \'full\' || $(this).val() == \'buch\' || $(this).val() == \'aufsatz\') 
+								{ 
+									$(\'#isbn-element\').show();			$(\'#isbn-label\').show();
+																
+								}
+			
+								else {
+									$(\'#isbn-element\').hide();			$(\'#isbn-label\').hide();
+											
+								}
+								if($(this).val() == \'full\'){
+									$(\'#kuerzel-element\').show();			$(\'#kuerzel-label\').show();
+									$(\'#beteiligte-element\').show();		$(\'#beteiligte-label\').show();
+									$(\'#ausgabe-element\').show();			$(\'#ausgabe-label\').show();
+									$(\'#umfang-element\').show();			$(\'#umfang-label\').show();
+									$(\'#reihe-element\').show();			$(\'#reihe-label\').show();
+									$(\'#doi-element\').show();				$(\'#doi-label\').show();
+									$(\'#urn-element\').show();				$(\'#urn-label\').show();
+									$(\'#wp-element\').show();				$(\'#wp-label\').show();
+									$(\'#schluessel-element\').show();		$(\'#schluessel-label\').show();
+								}
+								else{
+									$(\'#kuerzel-element\').hide();			$(\'#kuerzel-label\').hide();
+									$(\'#beteiligte-element\').hide();		$(\'#beteiligte-label\').hide();
+									$(\'#ausgabe-element\').hide();			$(\'#ausgabe-label\').hide();
+									$(\'#umfang-element\').hide();			$(\'#umfang-label\').hide();
+									$(\'#reihe-element\').hide();			$(\'#reihe-label\').hide();
+									$(\'#doi-element\').hide();				$(\'#doi-label\').hide();
+									$(\'#urn-element\').hide();				$(\'#urn-label\').hide();
+									$(\'#wp-element\').hide();				$(\'#wp-label\').hide();
+									$(\'#schluessel-element\').hide();		$(\'#schluessel-label\').hide();
+								}
+								
+');
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -38,19 +113,25 @@ class Application_Form_Document_Modify extends Zend_Form{
     $titleElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
     $titleElement->addValidator('stringLength', false, array(2, 64));
     $titleElement->setRequired(true);
-	
-	// bibtext group
-    // $bibTexElement = new Zend_Form_Element_Text('bibTex');
-    // $bibTexElement->setLabel("bibTex");
+
+	$typeElement = new Zend_Form_Element_Select('type');
+	$typeElement->setLabel("Document type: ");
+	$typeElement->addMultiOptions(array('full'=>'Vollständiges Formular', 'buch'=>'Buchformular', 'periodikum'=>'Periodikumformular', 'aufsatz' => 'Aufsatzsammlungsformular' ));
+	$typeElement->setRequired(true);
+	$typeElement->setAttrib('onchange',HANDLEDOCUMENTTYPE);
+	//HANDLEDOCUMENTTYPE);
+	//'if($(this).val() == \'buch\') { $(\'#zeitschrift-element\').hide();}');
 	
 	$kuerzelElement = new Zend_Form_Element_Text('kuerzel');
     $kuerzelElement->setLabel("Kuerzel");
-	
+		
 	$autorElement = new Zend_Form_Element_Text('autor');
     $autorElement->setLabel("Autor");
+	$autorElement->setRequired(true);
 	
 	$titelElement = new Zend_Form_Element_Text('titel');
     $titelElement->setLabel("Titel");
+	$titelElement->setRequired(true);
 	
 	$zeitschriftElement = new Zend_Form_Element_Text('zeitschrift');
     $zeitschriftElement->setLabel("Zeitschrift");
@@ -75,6 +156,7 @@ class Application_Form_Document_Modify extends Zend_Form{
 	
 	$jahrElement = new Zend_Form_Element_Text('jahr');
 	$jahrElement->setLabel("Jahr");	
+	$jahrElement->setRequired(true);
 	
 	$monatElement = new Zend_Form_Element_Text('monat');
 	$monatElement->setLabel("Monat");	
@@ -100,8 +182,29 @@ class Application_Form_Document_Modify extends Zend_Form{
 	$isbnElement = new Zend_Form_Element_Text('isbn');
 	$isbnElement->setLabel("ISBN");
 	
+	$issnElement = new Zend_Form_Element_Text('issn');
+	$issnElement->setLabel("ISSN");
+	
+	$doiElement = new Zend_Form_Element_Text('doi');
+	$doiElement->setLabel("DOI");
+	
 	$urlElement = new Zend_Form_Element_Text('url');
 	$urlElement->setLabel("URL");
+	
+	$urnElement = new Zend_Form_Element_Text('urn');
+	$urnElement->setLabel("URN");
+	
+	$wpElement = new Zend_Form_Element_Text('wp');
+	$wpElement->setLabel("WP");
+	
+	$inlitElement = new Zend_Form_Element_Text('inlit');
+	$inlitElement->setLabel("inLit");
+	
+	$infnElement = new Zend_Form_Element_Text('infn');
+	$infnElement->setLabel("inFN");
+	
+	$schluesselElement = new Zend_Form_Element_Text('schluessel');
+	$schluesselElement->setLabel("Schluessel");
     
 	// submit
     $submitElement = new Zend_Form_Element_Submit('submit');
@@ -111,7 +214,7 @@ class Application_Form_Document_Modify extends Zend_Form{
 	
     $this->addElements(array(
        $titleElement
-	   
+	   , $typeElement
       //, $bibTexElement
 	  
 	  , $kuerzelElement
@@ -133,10 +236,17 @@ class Application_Form_Document_Modify extends Zend_Form{
 	  , $reiheElement
 	  , $anmerkungElement
 	  , $isbnElement
+	  , $issnElement
+	  , $doiElement
 	  , $urlElement
+	  , $urnElement
+	  , $wpElement
+	  , $inlitElement
+	  , $infnElement
+	  , $schluesselElement
     ));
 
-    $this->addDisplayGroup(array('title')
+    $this->addDisplayGroup(array('title' , 'type')
         , 'generalGroup'
         , array('legend'=>'Document Information')
     );
@@ -163,7 +273,14 @@ class Application_Form_Document_Modify extends Zend_Form{
 		, 'reihe'
 		, 'anmerkung'
 		, 'isbn'
-		, 'url'
+	    , 'issn'
+	    , 'doi'
+	    , 'url'
+	    , 'urn'
+		, 'wp'
+	    , 'inlit'
+	    , 'infn'
+	    , 'schluessel'
 		)
         , 'bibTexGroup'
         , array('legend'=>'BiBTex Information')

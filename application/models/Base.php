@@ -170,7 +170,7 @@ abstract class Application_Model_Base{
     return $this->ratings;
   }
 
-  public function geTags(){
+  public function getTags(){
     return $this->tags;
   }
 
@@ -191,7 +191,7 @@ abstract class Application_Model_Base{
     return false;
   }
   
-  public function getTags(){
+  public function geTags(){
     return $this->tags;
   }
 
