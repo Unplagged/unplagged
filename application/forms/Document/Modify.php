@@ -38,14 +38,15 @@ class Application_Form_Document_Modify extends Zend_Form{
     $titleElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
     $titleElement->addValidator('stringLength', false, array(2, 64));
     $titleElement->setRequired(true);
-
-    // bibTex group
-    $typeElement = new Zend_Form_Element_Select('type');
-    $typeElement->setLabel("Document type: ");
-    $typeElement->addMultiOptions(array('full'=>'Vollständiges Formular', 'buch'=>'Buchformular', 'periodikum'=>'Periodikumformular', 'aufsatz'=>'Aufsatzsammlungsformular'));
-    $typeElement->setRequired(true);
-
-    $kuerzelElement = new Zend_Form_Element_Text('kuerzel');
+	
+	// bibTex group
+	$typeElement = new Zend_Form_Element_Select('type');
+	$typeElement->setLabel("Document type: ");
+	$typeElement->addMultiOptions(array('full'=>'Vollständiges Formular', 'buch'=>'Buchformular', 'periodikum'=>'Periodikumformular', 'aufsatz' => 'Aufsatzsammlungsformular' ));
+	$typeElement->setRequired(true);
+	//$typeElement->setAttrib('onchange',HANDLEDOCUMENTTYPE);
+     
+	$kuerzelElement = new Zend_Form_Element_Text('kuerzel');
     $kuerzelElement->setLabel("Kuerzel");
 
     $autorElement = new Zend_Form_Element_Text('autor');

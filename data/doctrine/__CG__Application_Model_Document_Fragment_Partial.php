@@ -150,17 +150,10 @@ class Application_Model_Document_Fragment_Partial extends \Application_Model_Doc
         return parent::getRatings();
     }
 
-<<<<<<< HEAD
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
-=======
     public function getTags()
     {
         $this->__load();
         return parent::getTags();
->>>>>>> tien
     }
 
     public function getCreated()
@@ -179,19 +172,6 @@ class Application_Model_Document_Fragment_Partial extends \Application_Model_Doc
     {
         $this->__load();
         return parent::isRatedByUser($user);
-    }
-
-<<<<<<< HEAD
-    public function getTags()
-    {
-        $this->__load();
-        return parent::getTags();
-=======
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
->>>>>>> tien
     }
 
     public function getTagIds()

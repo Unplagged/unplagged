@@ -312,12 +312,6 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
         return parent::isRatedByUser($user);
     }
 
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
-    }
-
     public function getTagIds()
     {
         $this->__load();

@@ -133,6 +133,7 @@ class Application_Model_Document_Page_Line extends \Application_Model_Document_P
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 >>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
@@ -143,12 +144,17 @@ class Application_Model_Document_Page_Line extends \Application_Model_Document_P
 <<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     public function getTags()
     {
         $this->__load();
         return parent::getTags();
+<<<<<<< HEAD
 >>>>>>> tien
 >>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
+=======
+>>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     }
 
     public function getCreated()
@@ -170,6 +176,7 @@ class Application_Model_Document_Page_Line extends \Application_Model_Document_P
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 >>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
@@ -188,6 +195,8 @@ class Application_Model_Document_Page_Line extends \Application_Model_Document_P
 >>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
     }
 
+=======
+>>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     public function getTagIds()
     {
         $this->__load();

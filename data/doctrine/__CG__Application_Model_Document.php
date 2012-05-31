@@ -139,7 +139,10 @@ class Application_Model_Document extends \Application_Model_Document implements 
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     public function setBibTexForm($form)
     {
         $this->__load();
@@ -308,7 +311,10 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::setBibTexSchluessel($schluessel);
     }
 
+<<<<<<< HEAD
 >>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
+=======
+>>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     public function setId($id)
     {
         $this->__load();
@@ -339,10 +345,10 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return parent::getRatings();
     }
 
-    public function geTags()
+    public function getTags()
     {
         $this->__load();
-        return parent::geTags();
+        return parent::getTags();
     }
 
     public function getCreated()
@@ -361,12 +367,6 @@ class Application_Model_Document extends \Application_Model_Document implements 
     {
         $this->__load();
         return parent::isRatedByUser($user);
-    }
-
-    public function getTags()
-    {
-        $this->__load();
-        return parent::getTags();
     }
 
     public function getTagIds()
@@ -404,6 +404,7 @@ class Application_Model_Document extends \Application_Model_Document implements 
     public function __sleep()
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'case', 'initialFile');
 =======
 <<<<<<< HEAD
@@ -412,6 +413,9 @@ class Application_Model_Document extends \Application_Model_Document implements 
         return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'originalFile');
 >>>>>>> tien
 >>>>>>> 9eb8f683e6c9d3134ce7765b3d130fbd50020a83
+=======
+        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'title', 'bibTex', 'pages', 'fragments', 'state', 'case', 'initialFile');
+>>>>>>> 772c05a181f258229757fd41f98debe87fda193b
     }
 
     public function __clone()
