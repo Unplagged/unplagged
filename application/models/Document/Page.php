@@ -288,15 +288,15 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
 
         // 2) start page number and end page number are on this page
       }elseif($startPageNumber == $this->pageNumber && $endPageNumber == $this->pageNumber){
-        $this->updatePlagLines($startLineNumber, $endLineNumber, &$plagLines);
+        $this->updatePlagLines($startLineNumber, $endLineNumber, $plagLines);
 
         // 3) page number is page number of start line and end page number is larger
       }elseif($startPageNumber == $this->pageNumber && $endPageNumber > $this->pageNumber){
-        $this->updatePlagLines($startLineNumber, $lastLineNumber, &$plagLines);
+        $this->updatePlagLines($startLineNumber, $lastLineNumber, $plagLines);
 
         // 4) page number is page number somewhere between and end page number is on the same page
       }elseif($startPageNumber == $this->pageNumber && $endPageNumber > $this->pageNumber){
-        $this->updatePlagLines($firstLineNumber, $endLineNumber, &$plagLines);
+        $this->updatePlagLines($firstLineNumber, $endLineNumber, $plagLines);
       }
     }
     $plagCount = sizeof($plagLines);
@@ -305,7 +305,7 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
   }
 
   private function updatePlagLines($startLineNumber, $endLineNumber, &$plagLines){
-    $this->lines->filter(function($line) use (&$plagLines, &$startLineNumber, &$endLineNumber){
+    $this->lines->filter(function($line) use (&$plagLines, $startLineNumber, $endLineNumber){
           if($line->getLineNumber() >= $startLineNumber && $line->getLineNumber() <= $endLineNumber){
             // add line number to result array
             $plagLines[$line->getLineNumber()] = $line->getLineNumber();
