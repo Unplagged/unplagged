@@ -526,6 +526,7 @@ $(document).ready(function(){
     var file = files.shift();
     
     if(file){
+      fileModal.find('input, textarea').val('');
       //set the filename in the heading
       fileModal.modal('show').find('.filename').text(file.name);
       //store the file on the modal so that we can retrieve on button click
@@ -539,6 +540,7 @@ $(document).ready(function(){
     filesRunning = false;
     
     fileModal.hide();
+    fileModal.find('input').val('');
     //fix for https://github.com/twitter/bootstrap/issues/2839
     $('.modal-backdrop').remove();
   }

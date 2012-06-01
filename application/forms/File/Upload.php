@@ -31,8 +31,8 @@ class Application_Form_File_Upload extends Zend_Form{
     $descriptionElement->setLabel('Description:');
 
     $elementNewName = new Zend_Form_Element_Text('newName');
-    $elementNewName->setLabel('New Filename:');
-    $elementNewName->setOptions(array('title'=>'Changes the name with which the file is stored on the server.', 'class'=>'tooltip-toggle'));
+    $elementNewName->setLabel('Alternative filename:');
+    $elementNewName->setOptions(array('title'=>'Provide it if you want to store the file with a different name.', 'class'=>'tooltip-toggle'));
 
     $this->addElements(array(
       $elementNewName,

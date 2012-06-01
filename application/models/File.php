@@ -19,10 +19,14 @@
  */
 
 /**
- * The class represents a file.
- * It defines also the structure of the database table for the ORM.
+ * This class can be used to handle the data of an uploaded file.
+ * 
+ * It is able to keep track of the original filename, but also a
+ * new one that was used to store the file locally. This 
+ * functionality can be useful to hide the storage specific aspects
+ * from the user that should only get to see the original filename.
  *
- * @author Benjamin Oertel <mail@benjaminoertel.com>
+ * @author Unplagged Development Team
  * 
  * @Entity 
  * @Table(name="files")
@@ -33,7 +37,6 @@ class Application_Model_File extends Application_Model_Base{
   const ICON_CLASS = 'icon-file';
   
   /**
-   * The date when the file was modified.
    * @var string The latest modification date.
    * 
    * @Column(type="datetime")
@@ -41,26 +44,30 @@ class Application_Model_File extends Application_Model_Base{
   private $updated;
 
   /**
-   * The name of the file.
-   * @var string The filename.
+   * @var string The original name of the file.
    * 
-   * @Column(type="string", length=64)
+   * @Column(type="string", length=255)
    */
   private $filename;
 
   /**
-   * The mimetype of the file.
-   * @var string The mimetype.
+   * @var string The filename under which the file is actually stored in the file system.
+   * 
+   * @Column(type="string", length=255);
+   */
+  private $localFilename;
+  
+  /**
+   * @var string The mimetype of the file.
    * 
    * @Column(type="string", length=32)
    */
   private $mimetype;
 
   /**
-   * The filesize in bytes..
-   * @var string The filesize.
+   * @var string The filesize in bytes.
    * 
-   * @Column(type="integer", length=32)
+   * @Column(type="integer", length=255)
    */
   private $size;
 
@@ -68,7 +75,7 @@ class Application_Model_File extends Application_Model_Base{
    * The location of the file in the filesystem.
    * @var string The file location.
    * 
-   * @Column(type="string", length=64)
+   * @Column(type="string", length=255)
    */
   private $location;
 
@@ -76,19 +83,19 @@ class Application_Model_File extends Application_Model_Base{
    * The extension of the file.
    * @var string The file extension.
    * 
-   * @Column(type="string", length=16)
+   * @Column(type="string", length=255)
    */
   private $extension;
 
   /**
-   * @var string
+   * @var string A text that the describes the file, e. g. the origin, the reason for the upload or the like.
    *  
    * @Column(type="text")
    */
   private $description = '';
   
   /**
-   * Method auto-called when object is updated in database.
+   * This method is auto-called when the object is updated in the database.
    * 
    * @PrePersist
    */
