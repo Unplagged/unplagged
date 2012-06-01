@@ -316,7 +316,6 @@ $(document).ready(function(){
           $('a.picture').lightBox();
         });
       }
-
     });
 
     $(window).trigger('hashchange');

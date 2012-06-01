@@ -32,7 +32,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
 
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
-    if(!$case->getTarget()){
+    if(!$case || !$case->getTarget()){
       $errorText = 'In order to manage fragments, you need to set a target document on the case.';
       $this->_helper->FlashMessenger(array('error'=>$errorText));
       $this->_helper->redirector('list', 'document');
@@ -172,35 +172,39 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
-    $query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.document d WHERE d.id = :documentId");
-    $query->setParameter('documentId', $case->getTarget()->getId());
+    if($case){
+      $query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.document d WHERE d.id = :documentId");
+      $query->setParameter('documentId', $case->getTarget()->getId());
 
-    $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_Document_Fragment f JOIN f.document d WHERE d.id = :documentId");
-    $count->setParameter('documentId', $case->getTarget()->getId());
+      $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_Document_Fragment f JOIN f.document d WHERE d.id = :documentId");
+      $count->setParameter('documentId', $case->getTarget()->getId());
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
-    $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-    $paginator->setCurrentPageNumber($input->page);
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+      $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+      $paginator->setCurrentPageNumber($input->page);
 
-    // generate the action dropdown for each fragment
-    foreach($paginator as $fragment):
-      $fragment->actions = array();
+      // generate the action dropdown for each fragment
+      foreach($paginator as $fragment):
+        $fragment->actions = array();
 
-      $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
-      $action['label'] = 'Edit fragment';
-      $action['icon'] = 'images/icons/pencil.png';
-      $fragment->actions[] = $action;
+        $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
+        $action['label'] = 'Edit fragment';
+        $action['icon'] = 'images/icons/pencil.png';
+        $fragment->actions[] = $action;
 
-      $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
-      $action['label'] = 'Remove fragment';
-      $action['icon'] = 'images/icons/delete.png';
-      $fragment->actions[] = $action;
-    endforeach;
+        $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
+        $action['label'] = 'Remove fragment';
+        $action['icon'] = 'images/icons/delete.png';
+        $fragment->actions[] = $action;
+      endforeach;
 
-    $this->view->paginator = $paginator;
+      $this->view->paginator = $paginator;
 
-    Zend_Layout::getMvcInstance()->sidebar = null;
-    Zend_Layout::getMvcInstance()->versionableId = null;
+      Zend_Layout::getMvcInstance()->sidebar = null;
+      Zend_Layout::getMvcInstance()->versionableId = null;
+    } else{
+      $this->_helper->FlashMessenger('You need to select a case first.');
+    }
   }
 
   /**
@@ -364,7 +368,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
         $modifyForm->getElement($prefix . 'LineFrom')->setAttrib('disabled', null);
       }
 
-      
+
       // 2) page to and lines
       if(!empty($formData[$prefix . 'PageTo'])){
         $modifyForm->getElement($prefix . 'PageTo')->setValue($formData[$prefix . 'PageTo']);
@@ -374,7 +378,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       }else{
         $page = $firstPage;
       }
-      
+
       foreach($page->getLines() as $line){
         $modifyForm->getElement($prefix . 'LineTo')->addMultioption($line->getId(), $line->getLineNumber());
       }
@@ -387,5 +391,4 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
   }
 
 }
-
 ?>

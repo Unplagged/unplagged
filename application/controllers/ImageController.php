@@ -43,8 +43,7 @@ class ImageController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
-        $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
-
+        $localPath = $file->getFullPath();
         $allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
 
         $response = $this->getResponse();
@@ -55,7 +54,7 @@ class ImageController extends Unplagged_Controller_Action{
           $response->setHeader('Content-type', $file->getMimeType());
         }
         
-        readfile($downloadPath);
+        readfile($localPath);
       }else{
         $this->_helper->FlashMessenger('No file found.');
         $this->_helper->redirector('list', 'file');

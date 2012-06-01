@@ -16,7 +16,7 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
 
   public function parseToDocument(Application_Model_File $file, $language, Application_Model_Document $document = null, Application_Model_Task &$task = null){
     try{
-      $inputFileLocation = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
+      $inputFileLocation = $file->getFullPath();
       $imagemagickTempPath = TEMP_PATH . DIRECTORY_SEPARATOR . 'imagemagick';
 
       if($file->getExtension() == "pdf"){

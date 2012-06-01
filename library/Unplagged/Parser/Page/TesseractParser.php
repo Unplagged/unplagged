@@ -25,7 +25,7 @@ class Unplagged_Parser_Page_TesseractParser implements Unplagged_Parser_Page_Par
     try{
       $hash = Unplagged_Helper::generateRandomHash();
 
-      $inputFileLocation = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getFilename();
+      $inputFileLocation = $file->getFullPath();
       $outputFileLocation = TEMP_PATH . DIRECTORY_SEPARATOR . 'ocr' . DIRECTORY_SEPARATOR . $hash;
 
       $adapter = new Unplagged_Parser_Page_TesseractAdapter($inputFileLocation, $outputFileLocation, $language);

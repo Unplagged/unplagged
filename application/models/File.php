@@ -165,6 +165,10 @@ class Application_Model_File extends Application_Model_Base{
     }
   }
 
+  public function getFullPath(){
+    return $this->getAbsoluteLocation() . $this->localFilename;  
+  }
+  
   public function setLocation($location){
     $this->location = $location;
   }
