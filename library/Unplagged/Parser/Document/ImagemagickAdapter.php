@@ -40,18 +40,20 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
     if(APPLICATION_ENV == "benjamin"){
       putenv("PATH=" . "/usr/local/bin");
     }
+
     $ret = system($command, $returnVal);
 
     if($returnVal == 0){
       $directoryAndFile = explode(DIRECTORY_SEPARATOR, $this->outputFilePath);
-      
+
       $file = array_pop($directoryAndFile);
-      $input = new Zend_Filter_Input(array('file'=>'Digits'), null, array("file" => $file));
+      $input = new Zend_Filter_Input(array('file'=>'Digits'), null, array("file"=>$file));
 
       $directory = implode(DIRECTORY_SEPARATOR, $directoryAndFile);
       $handler = opendir($directory);
+
       while($file = readdir($handler)){
-        if($file != "." && $file != ".."){          
+        if($file != "." && $file != ".."){
           // check if 59, or 59-0 or 59-1,...
           if(preg_match('/' . $input->file . '(-(\d)*){0,1}.tif/', $file)){
             chmod($directory . DIRECTORY_SEPARATOR . $file, 0755);
@@ -79,5 +81,4 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
   }
 
 }
-
 ?>

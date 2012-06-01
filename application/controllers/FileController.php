@@ -213,52 +213,50 @@ class FileController extends Unplagged_Controller_Action{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     if(empty($input->id)){
-      // show error message
-      $this->_helper->FlashMessenger('The fileId has to be set.');
+      $this->_helper->FlashMessenger(array('info'=>'A file id must be set to tell us what to OCR.'));
     }else{
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
-      $language = "eng";
+      $language = 'eng';
 
       if(empty($file)){
-        // show error message
-        $this->_helper->FlashMessenger('No file found by that id.');
+        $this->_helper->FlashMessenger(array('error'=>"Sorry, we couldn't find a file with the specified id."));
       }else{
-        // pdfs will e generated through cron
-        if($file->getExtension() == "pdf"){
-          $data["title"] = $file->getFilename();
-          $data["initialFile"] = $file;
-          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+        // pdfs will be generated through cron
+        if($file->getExtension() === 'pdf'){
+          $data['title'] = $file->getFilename();
+          $data['initialFile'] = $file;
+          $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
           $document = new Application_Model_Document($data);
 
           // start task
           $data = array();
-          $data["initiator"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-          $data["ressource"] = $document;
-          $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('file_parse');
-          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+          $data['initiator'] = Zend_Registry::getInstance()->user;
+          $data['ressource'] = $document;
+          $data['action'] = $this->_em->getRepository('Application_Model_Action')->findOneByName('file_parse');
+          $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
           $task = new Application_Model_Task($data);
 
           $this->_em->persist($task);
           $this->_em->flush();
 
-          $this->_helper->FlashMessenger('The file will be generated now, you will be notified as soon as possible.');
+          $this->_helper->FlashMessenger(array('success'=>'The OCR of this file was started, you will be notified as soon as the process finished.'));
 
-          // images will be parsed directly
         }else{
+          // images will be parsed directly
           $parser = Unplagged_Parser::factory($file->getMimeType());
 
           $document = $parser->parseToDocument($file, $language);
           if(empty($document)){
-            $this->_helper->FlashMessenger(array('error'=>'The file could not be parsed.'));
+            $this->_helper->FlashMessenger(array('error'=>'We are sorry, but an error occured during the OCR.'));
           }else{
             $document->setState($this->_em->getRepository('Application_Model_State')->findOneByName('parsed'));
 
             $this->_em->persist($document);
             $this->_em->flush();
-            $this->_helper->FlashMessenger(array('success'=>'The file was successfully parsed.'));
+            $this->_helper->FlashMessenger(array('success'=>'The OCR of the file was successful.'));
           }
         }
-
+        var_dump(Zend_Registry::getInstance()->user);
         $case = Zend_Registry::getInstance()->user->getCurrentCase();
         $case->addDocument($document);
         $this->_em->persist($case);
@@ -269,7 +267,7 @@ class FileController extends Unplagged_Controller_Action{
   }
 
   /**
-   * Deletes a single file. 
+   * Deletes the file specified by the id parameter. 
    */
   public function deleteAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
@@ -277,20 +275,19 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
-
         // remove file from file system
-        $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
-        $deleted = unlink($downloadPath);
-        if($deleted || !file_exists($downloadPath)){
+        $localPath = $file->getFullPath();
+        $deleted = unlink($localPath);
+        if($deleted || !file_exists($localPath)){
           // remove database record
           $this->_em->remove($file);
           $this->_em->flush();
-          $this->_helper->FlashMessenger('The file was deleted successfully.');
+          $this->_helper->FlashMessenger(array('success'=>'The file was deleted successfully.'));
         }else{
-          $this->_helper->FlashMessenger('The file could not be deleted.');
+          $this->_helper->FlashMessenger(array('error'=>'We are sorry, but the file could not be deleted.'));
         }
       }else{
-        $this->_helper->FlashMessenger('The file does not exist.');
+        $this->_helper->FlashMessenger(array('error'=>'The file you specified does not exist.'));
       }
     }
 

@@ -19,14 +19,15 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
       $inputFileLocation = $file->getFullPath();
       $imagemagickTempPath = TEMP_PATH . DIRECTORY_SEPARATOR . 'imagemagick';
 
-      if($file->getExtension() == "pdf"){
+      if($file->getExtension() === 'pdf'){
         $outputFileLocation = $imagemagickTempPath . DIRECTORY_SEPARATOR . $file->getId() . '-%d.tif';
       }else{
         $outputFileLocation = $imagemagickTempPath . DIRECTORY_SEPARATOR . $file->getId() . '.tif';
       }
       $adapter = new Unplagged_Parser_Document_ImagemagickAdapter($inputFileLocation, $outputFileLocation);
       $adapter->execute();
-
+      //var_dump($outputFileLocation);
+      //die('hier');
       // create the document
       if(!$document){
         $data["file"] = $file;
@@ -53,10 +54,9 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
         if($tifFile != "." && $tifFile != ".."){
           if(preg_match('/' . $file->getId() . '(-(\d)*){0,1}.tif/', $tifFile)){
             // for loop over pages
-            $fileData = array('filename'=>$tifFile, 'extension'=>'tif', 'mimeType'=>'image/tiff', 'location'=>'temp/imagemagick');
+            $fileData = array('filename'=>$tifFile, 'localFilename'=>$tifFile, 'extension'=>'tif', 'mimeType'=>'image/tiff', 'location'=>BASE_PATH . DIRECTORY_SEPARATOR . 'temp/imagemagick' . DIRECTORY_SEPARATOR);
             $tempFile = new Application_Model_File($fileData);
-            $tempFile->setId($file->getId());
-
+            
             $page = $parser->parseToPage($tempFile, $language);
             $page->setPageNumber($i);
             $document->addPage($page);
