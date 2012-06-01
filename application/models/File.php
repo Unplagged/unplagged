@@ -100,32 +100,18 @@ class Application_Model_File extends Application_Model_Base{
    * @PrePersist
    */
   public function updated(){
-    $this->updated = new DateTime("now");
+    $this->updated = new DateTime('now');
   }
 
-  public function __construct($data = array()){
-    if(isset($data["filename"])){
-      $this->filename = $data["filename"];
+  public function __construct(array $data = array()){
+    foreach($data as $key=>$value){
+      $this->setOption($key, $value);  
     }
-
-    if(isset($data["mimetype"])){
-      $this->mimetype = $data["mimetype"];
-    }
-
-    if(isset($data["size"])){
-      $this->size = $data["size"];
-    }
-
-    if(isset($data["location"])){
-      $this->location = $data["location"];
-    }
-
-    if(isset($data["extension"])){
-      $this->extension = $data["extension"];
-    }
-    
-    if(isset($data['description'])){
-      $this->description = $data['description'];
+  }
+  
+  private function setOption($key, $value){
+    if(!empty($key) && !empty($value) && property_exists( $this, $key)){
+      $this->$key = $value;
     }
   }
 

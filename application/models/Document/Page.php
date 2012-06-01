@@ -305,7 +305,7 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
   }
 
   private function updatePlagLines($startLineNumber, $endLineNumber, &$plagLines){
-    $this->lines->filter(function($line) use (&$plagLines, &$startLineNumber, &$endLineNumber){
+    $this->lines->filter(function($line) use (&$plagLines, $startLineNumber, $endLineNumber){
           if($line->getLineNumber() >= $startLineNumber && $line->getLineNumber() <= $endLineNumber){
             // add line number to result array
             $plagLines[$line->getLineNumber()] = $line->getLineNumber();

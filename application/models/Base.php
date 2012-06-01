@@ -103,6 +103,7 @@ abstract class Application_Model_Base{
    * @todo private without getter and setter?
    */
   private $notifications;
+  
   protected $conversationTypes = array('comment');
 
   public function __construct(){
@@ -170,6 +171,10 @@ abstract class Application_Model_Base{
     return $this->ratings;
   }
 
+  public function getTags(){
+    return $this->tags;
+  }
+
   public function getCreated(){
     return $this->created;
   }
@@ -185,10 +190,6 @@ abstract class Application_Model_Base{
       }
     }
     return false;
-  }
-  
-  public function getTags(){
-    return $this->tags;
   }
 
   public function getTagIds(){

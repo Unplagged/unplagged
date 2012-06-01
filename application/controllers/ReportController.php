@@ -1,5 +1,5 @@
 <?php
-
+require_once(realpath(dirname(__FILE__)) . "/../models/Base.php");
 class ReportController extends Unplagged_Controller_Versionable {
 
     public function init() {
@@ -7,35 +7,27 @@ class ReportController extends Unplagged_Controller_Versionable {
     }
 
     public function indexAction() {
-        //$this->_helper->redirector('list', 'report');
     }
 
-    public function createAction() {
-        $input = new Zend_Filter_Input(array('page' => 'Digits', 'content' => 'StripTags'), null, $this->_getAllParams());
-        //$page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->page);
+    public function listAction() {
 
-        $modifyForm = new Application_Form_Report_Modify();
+        $input = new Zend_Filter_Input(array('page' => 'Digits', 'content' => 'StripTags'), null, $this->_getAllParams());
         $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
 
         // get current case
         $currentCase = $user->getCurrentCase();
-        if($currentCase){
-        //$this->_helper->flashMessenger->addMessage( $currentCase);     
-        // get current case name
-        $case = $currentCase->getPublishableName();
-        $this->view->title = "Create report of ".$case;
-       // $modifyForm->getElement("case")->setValue($case);
+        if ($currentCase) {
 
-        $formData = $this->_request->getPost();
-        //if($this->_request->isPost()){// && empty($input->page)){      
+            // get current case name
+            $case = $currentCase->getPublishableName();
+            $this->view->title = "Create report of " . $case;
 
-        if ($modifyForm->isValid($formData) && $this->_request->isPost()) {
-      
+            $formData = $this->_request->getPost();
+
             //Cron_Document_Page_Reportcreater::start();
             // Create a report_requested task
             $data = array();
             $data["initiator"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-            //$data["ressource"] = 198;
             $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('report_requested');
             $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
             $task = new Application_Model_Task($data);
@@ -44,30 +36,18 @@ class ReportController extends Unplagged_Controller_Versionable {
 
             // Inform the user that the process will be started
             $this->_helper->flashMessenger->addMessage('The report-generating process has been started.');
-            $this->_helper->redirector('list', 'report');
-        }
-
-        
-        $this->view->modifyForm = $modifyForm;
-        //$this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'report'));
         } else {
             $this->_helper->flashMessenger->addMessage('You have to select a case, before you can start the report creation.');
-            //$this->view->title = "Report creation.";
             $this->_helper->viewRenderer->setNoRender(true);
-            //$this->_helper->layout()->disableLayout();
             Zend_Layout::getMvcInstance()->sidebar = null;
         }
-    }
 
-    public function listAction() {
-        $case = Zend_Registry::getInstance()->user->getCurrentCase();
-      
         $input = new Zend_Filter_Input(array('page' => 'Digits'), null, $this->_getAllParams());
         $query = $this->_em->createQuery("SELECT r FROM Application_Model_Report r WHERE r.case = :caseId");
-        $query->setParameter('caseId', $case->getId());
+        $query->setParameter('caseId', $currentCase->getId());
         $count = $this->_em->createQuery("SELECT COUNT(r.id) FROM Application_Model_Report r WHERE r.case = :caseId");
-        $count->setParameter('caseId', $case->getId());
-    
+        $count->setParameter('caseId', $currentCase->getId());
+
         $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
         $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
         $paginator->setCurrentPageNumber($input->page);
@@ -88,7 +68,7 @@ class ReportController extends Unplagged_Controller_Versionable {
 
                 $this->view->layout()->disableLayout();
                 $this->_helper->viewRenderer->setNoRender(true);
-                $report_name = "Report_" . $report->getTitle() . ".pdf";
+                $report_name = "Report_" . $report->getTitle() . "_" . $report->getCreated()->format("Y-m-d") . ".pdf";
                 $downloadPath = $report->getFilePath();
 
                 // set headers

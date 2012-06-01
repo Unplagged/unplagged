@@ -108,18 +108,6 @@ class Application_Model_File extends \Application_Model_File implements \Doctrin
         return parent::getAbsoluteLocation();
     }
 
-    public function getIsTarget()
-    {
-        $this->__load();
-        return parent::getIsTarget();
-    }
-
-    public function setIsTarget($isTarget)
-    {
-        $this->__load();
-        return parent::setIsTarget($isTarget);
-    }
-
     public function setLocation($location)
     {
         $this->__load();
@@ -192,10 +180,10 @@ class Application_Model_File extends \Application_Model_File implements \Doctrin
         return parent::getRatings();
     }
 
-    public function geTags()
+    public function getTags()
     {
         $this->__load();
-        return parent::geTags();
+        return parent::getTags();
     }
 
     public function getConversationTypes()
@@ -208,12 +196,6 @@ class Application_Model_File extends \Application_Model_File implements \Doctrin
     {
         $this->__load();
         return parent::isRatedByUser($user);
-    }
-
-    public function getTags()
-    {
-        $this->__load();
-        return parent::getTags();
     }
 
     public function getTagIds()
@@ -250,7 +232,7 @@ class Application_Model_File extends \Application_Model_File implements \Doctrin
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'updated', 'filename', 'mimetype', 'size', 'location', 'extension', 'isTarget', 'description');
+        return array('__isInitialized__', 'id', 'created', 'comments', 'tags', 'ratings', 'notifications', 'updated', 'filename', 'mimetype', 'size', 'location', 'extension', 'description');
     }
 
     public function __clone()

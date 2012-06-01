@@ -42,34 +42,7 @@ class FileController extends Unplagged_Controller_Action{
   }
 
   /**
-   * Creates a unique filename from the specified data
-   * 
-   * @param array $pathinfo
-   * @param string $newName A different name for the file from user input.
-   * @return string The found filename. 
-   */
-  private function findFilename($pathinfo, $newName){
-    $fileExtension = $pathinfo['extension'];
-
-    $fileName = '';
-    if($newName){
-      $fileName = $newName;
-    }else{
-      $fileName = $pathinfo['filename'];
-    }
-    $fileName .= '_' . uniqid() . '.' . $fileExtension;
-
-    return $fileName;
-  }
-
-  /**
-   * Based on upload.php from Plupload.
-   *
-   * Copyright 2009, Moxiecode Systems AB
-   * Released under GPL License.
-   *
-   * License: http://www.plupload.com/license
-   * Contributing: http://www.plupload.com/contributing
+   * Moves the current file to the storage directory and stores an object for the file in the database.
    */
   private function storeUpload(){
     $adapter = new Zend_File_Transfer();
@@ -80,25 +53,14 @@ class FileController extends Unplagged_Controller_Action{
     $pathinfo = pathinfo($adapter->getFileName());
 
     $storageDir = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
-    $fileName = $this->findFilename($pathinfo, $newName);
-    $adapter->addFilter('Rename', $storageDir . $fileName);
+    $fileNames = $this->findFilename($pathinfo, $newName);
+    $adapter->addFilter('Rename', $storageDir . $fileNames[1]);
 
     //move the uploaded file to the before specified location
     if($adapter->receive()){
-      chmod($storageDir . $fileName, 0755);
+      chmod($storageDir . $fileNames[1], 0755);
 
-      $data = array();
-      $data['size'] = $adapter->getFileSize();
-      //if the mime type is always application/octet-stream, then the 
-      //mime magic and fileinfo extensions are probably not installed
-      $data['mimetype'] = $adapter->getMimeType();
-      $data['filename'] = $fileName;
-      $data['extension'] = $pathinfo['extension'];
-      $data['location'] = $storageDir;
-      $data['description'] = $description;
-      $data['
-
-      $file = new Application_Model_File($data);
+      $file = $this->createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir);
       $this->_em->persist($file);
       $this->_em->flush();
 
@@ -106,9 +68,6 @@ class FileController extends Unplagged_Controller_Action{
       $user = Zend_Registry::getInstance()->user;
       Unplagged_Helper::notify('file_uploaded', $file, $user);
 
-      $this->_helper->FlashMessenger(array('success'=>'File was uploaded successfully.'));
-      $this->_helper->redirector('list', 'file');
-      // Return JSON-RPC response
       die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
     }else{
       //we are in ajax here now, so flash messenger makes no sense
@@ -116,10 +75,54 @@ class FileController extends Unplagged_Controller_Action{
     }
   }
 
-  private function createFileObject($size, $mimetype, $filename, $extension){
-    
+  /**
+   * Creates a unique filename from the specified data.
+   * 
+   * @param array $pathinfo An array as returned by the pathinfo() function for the uploaded file.
+   * @param string $newName A different name for the file from user input.
+   * @return array An array containing the original filename and a new unique filename to store the file locally. 
+   */
+  private function findFilename($pathinfo, $newName){
+    $fileExtension = $pathinfo['extension'];
+
+    $fileName = '';
+    if($newName){
+      $fileName = $newName;
+    }else{
+      $fileName = $pathinfo['filename'];
+    }
+    $localFilename = $fileName . '_' . uniqid() . '.' . $fileExtension;
+    $fileName .= '.' . $fileExtension;
+
+    return array($fileName, $localFilename);
   }
-  
+
+  /**
+   *
+   * @param Zend_File_Transfer $adapter
+   * @param array $fileNames
+   * @param array $pathinfo
+   * @param string $description
+   * @param string $storageDir
+   * @return \Application_Model_File 
+   */
+  private function createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir){
+    $data = array();
+    $data['size'] = $adapter->getFileSize();
+    //if the mime type is always application/octet-stream, then the 
+    //mime magic and fileinfo extensions are probably not installed
+    $data['mimetype'] = $adapter->getMimeType();
+    $data['filename'] = $fileNames[0];
+    $data['extension'] = $pathinfo['extension'];
+    $data['location'] = $storageDir;
+    $data['description'] = $description;
+    $data['localFilename'] = $fileNames[1];
+
+    $file = new Application_Model_File($data);
+
+    return $file;
+  }
+
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 

@@ -246,10 +246,10 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::getRatings();
     }
 
-    public function geTags()
+    public function getTags()
     {
         $this->__load();
-        return parent::geTags();
+        return parent::getTags();
     }
 
     public function getCreated()
@@ -268,12 +268,6 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
     {
         $this->__load();
         return parent::isRatedByUser($user);
-    }
-
-    public function getTags()
-    {
-        $this->__load();
-        return parent::getTags();
     }
 
     public function getTagIds()
