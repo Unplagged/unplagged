@@ -313,9 +313,6 @@ $(document).ready(function(){
         }
         url += hash;
         $("#main-wrapper").load(url + " .main", function(){
-          //this callback is not the nicest way, but currently the only way to make sure, that those things 
-          //still work in ajax content
-          wrapActions();
           $('a.picture').lightBox();
         });
       }

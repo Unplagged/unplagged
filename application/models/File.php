@@ -35,7 +35,7 @@
 class Application_Model_File extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-file';
-  
+
   /**
    * @var string The latest modification date.
    * 
@@ -56,7 +56,7 @@ class Application_Model_File extends Application_Model_Base{
    * @Column(type="string", length=255);
    */
   private $localFilename;
-  
+
   /**
    * @var string The mimetype of the file.
    * 
@@ -93,7 +93,13 @@ class Application_Model_File extends Application_Model_Base{
    * @Column(type="text")
    */
   private $description = '';
-  
+
+  public function __construct(array $data = array()){
+    foreach($data as $key=>$value){
+      $this->setOption($key, $value);
+    }
+  }
+
   /**
    * This method is auto-called when the object is updated in the database.
    * 
@@ -103,34 +109,18 @@ class Application_Model_File extends Application_Model_Base{
     $this->updated = new DateTime('now');
   }
 
-  public function __construct(array $data = array()){
-    foreach($data as $key=>$value){
-      $this->setOption($key, $value);  
-    }
-  }
-  
   private function setOption($key, $value){
-    if(!empty($key) && !empty($value) && property_exists( $this, $key)){
+    if(!empty($key) && !empty($value) && property_exists($this, $key)){
       $this->$key = $value;
     }
   }
 
-  public function getId(){
-    return $this->id;
-  }
-
   /**
-   *
-   *
    * @param type $id 
    * @todo remove when TesseractParser doesn't rely anymore on the id for the file path.
    */
   public function setId($id){
     $this->id = $id;
-  }
-
-  public function getCreated(){
-    return $this->created;
   }
 
   public function getUpdated(){
@@ -139,6 +129,10 @@ class Application_Model_File extends Application_Model_Base{
 
   public function getFilename(){
     return $this->filename;
+  }
+
+  public function getLocalFilename(){
+    return $this->localFilename;
   }
 
   public function getMimetype(){
@@ -164,8 +158,8 @@ class Application_Model_File extends Application_Model_Base{
    */
   public function getAbsoluteLocation(){
     if(is_dir($this->location)){
-      return $this->location;  
-    } else {
+      return $this->location;
+    }else{
       //@todo deprecated remove later on, if every file was stored with the full path
       return BASE_PATH . DIRECTORY_SEPARATOR . $this->location;
     }
@@ -195,20 +189,21 @@ class Application_Model_File extends Application_Model_Base{
     $result = array();
 
     if(!empty($this->filename)){
-      $result["filename"] = $this->filename;
+      $result['filename'] = $this->filename;
     }
     if(!empty($this->extension)){
-      $result["extension"] = $this->extension;
+      $result['extension'] = $this->extension;
     }
 
     return $result;
   }
-  
+
   public function getDescription(){
-    return $this->description;  
+    return $this->description;
   }
-  
+
   public function setDescription($description){
     $this->description = $description;
   }
+
 }

@@ -98,7 +98,8 @@ class FileController extends Unplagged_Controller_Action{
   }
 
   /**
-   *
+   * Takes the data to create an Application_Model_File object.
+   * 
    * @param Zend_File_Transfer $adapter
    * @param array $fileNames
    * @param array $pathinfo
