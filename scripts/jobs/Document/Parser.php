@@ -31,7 +31,6 @@ class Cron_Document_Parser extends Cron_Base{
   }
 
   public static function start(){
-   // echo preg_match('/20363(-(\d)*){0,1}.tif/', '20363-155.tif') ? 'ja' : 'nein';
     $query = self::$em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
     $query->setParameter("action", "file_parse");
     $query->setParameter("state", "task_scheduled");
@@ -40,7 +39,6 @@ class Cron_Document_Parser extends Cron_Base{
     $tasks = $query->getResult();
 
     if($tasks){
-      echo 'bla';
       $task = $tasks[0];
       
       $taskId = $task->getId();
@@ -59,7 +57,7 @@ class Cron_Document_Parser extends Cron_Base{
 
       if($document instanceof Application_Model_Document){
         // update document
-        $document->setState(self::$em->getRepository('Application_Model_State')->findOneByName("parsed"));
+        $document->setState(self::$em->getRepository('Application_Model_State')->findOneByName('parsed'));
 
         // update task
         $task = self::$em->getRepository('Application_Model_Task')->findOneById($taskId);

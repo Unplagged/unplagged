@@ -19,10 +19,14 @@
  */
 
 /**
- * The class represents a file.
- * It defines also the structure of the database table for the ORM.
+ * This class can be used to handle the data of an uploaded file.
+ * 
+ * It is able to keep track of the original filename, but also a
+ * new one that was used to store the file locally. This 
+ * functionality can be useful to hide the storage specific aspects
+ * from the user that should only get to see the original filename.
  *
- * @author Benjamin Oertel <mail@benjaminoertel.com>
+ * @author Unplagged Development Team
  * 
  * @Entity 
  * @Table(name="files")
@@ -31,9 +35,8 @@
 class Application_Model_File extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-file';
-  
+
   /**
-   * The date when the file was modified.
    * @var string The latest modification date.
    * 
    * @Column(type="datetime")
@@ -41,26 +44,30 @@ class Application_Model_File extends Application_Model_Base{
   private $updated;
 
   /**
-   * The name of the file.
-   * @var string The filename.
+   * @var string The original name of the file.
    * 
-   * @Column(type="string", length=64)
+   * @Column(type="string", length=255)
    */
   private $filename;
 
   /**
-   * The mimetype of the file.
-   * @var string The mimetype.
+   * @var string The filename under which the file is actually stored in the file system.
+   * 
+   * @Column(type="string", length=255);
+   */
+  private $localFilename;
+
+  /**
+   * @var string The mimetype of the file.
    * 
    * @Column(type="string", length=32)
    */
   private $mimetype;
 
   /**
-   * The filesize in bytes..
-   * @var string The filesize.
+   * @var string The filesize in bytes.
    * 
-   * @Column(type="integer", length=32)
+   * @Column(type="integer", length=255)
    */
   private $size;
 
@@ -68,7 +75,7 @@ class Application_Model_File extends Application_Model_Base{
    * The location of the file in the filesystem.
    * @var string The file location.
    * 
-   * @Column(type="string", length=64)
+   * @Column(type="string", length=255)
    */
   private $location;
 
@@ -76,68 +83,36 @@ class Application_Model_File extends Application_Model_Base{
    * The extension of the file.
    * @var string The file extension.
    * 
-   * @Column(type="string", length=16)
+   * @Column(type="string", length=255)
    */
   private $extension;
 
   /**
-   * @var string
+   * @var string A text that the describes the file, e. g. the origin, the reason for the upload or the like.
    *  
    * @Column(type="text")
    */
   private $description = '';
-  
+
+  public function __construct(array $data = array()){
+    foreach($data as $key=>$value){
+      $this->setOption($key, $value);
+    }
+  }
+
   /**
-   * Method auto-called when object is updated in database.
+   * This method is auto-called when the object is updated in the database.
    * 
    * @PrePersist
    */
   public function updated(){
-    $this->updated = new DateTime("now");
+    $this->updated = new DateTime('now');
   }
 
-  public function __construct($data = array()){
-    if(isset($data["filename"])){
-      $this->filename = $data["filename"];
+  private function setOption($key, $value){
+    if(!empty($key) && !empty($value) && property_exists($this, $key)){
+      $this->$key = $value;
     }
-
-    if(isset($data["mimetype"])){
-      $this->mimetype = $data["mimetype"];
-    }
-
-    if(isset($data["size"])){
-      $this->size = $data["size"];
-    }
-
-    if(isset($data["location"])){
-      $this->location = $data["location"];
-    }
-
-    if(isset($data["extension"])){
-      $this->extension = $data["extension"];
-    }
-    
-    if(isset($data['description'])){
-      $this->description = $data['description'];
-    }
-  }
-
-  public function getId(){
-    return $this->id;
-  }
-
-  /**
-   *
-   *
-   * @param type $id 
-   * @todo remove when TesseractParser doesn't rely anymore on the id for the file path.
-   */
-  public function setId($id){
-    $this->id = $id;
-  }
-
-  public function getCreated(){
-    return $this->created;
   }
 
   public function getUpdated(){
@@ -146,6 +121,10 @@ class Application_Model_File extends Application_Model_Base{
 
   public function getFilename(){
     return $this->filename;
+  }
+
+  public function getLocalFilename(){
+    return $this->localFilename;
   }
 
   public function getMimetype(){
@@ -170,9 +149,18 @@ class Application_Model_File extends Application_Model_Base{
    * be that bad.
    */
   public function getAbsoluteLocation(){
-    return BASE_PATH . DIRECTORY_SEPARATOR . $this->location;
+    if(is_dir($this->location)){
+      return $this->location;
+    }else{
+      //@todo deprecated remove later on, if every file was stored with the full path
+      return BASE_PATH . DIRECTORY_SEPARATOR . $this->location;
+    }
   }
 
+  public function getFullPath(){
+    return $this->getAbsoluteLocation() . $this->localFilename;  
+  }
+  
   public function setLocation($location){
     $this->location = $location;
   }
@@ -197,20 +185,21 @@ class Application_Model_File extends Application_Model_Base{
     $result = array();
 
     if(!empty($this->filename)){
-      $result["filename"] = $this->filename;
+      $result['filename'] = $this->filename;
     }
     if(!empty($this->extension)){
-      $result["extension"] = $this->extension;
+      $result['extension'] = $this->extension;
     }
 
     return $result;
   }
-  
+
   public function getDescription(){
-    return $this->description;  
+    return $this->description;
   }
-  
+
   public function setDescription($description){
     $this->description = $description;
   }
+
 }

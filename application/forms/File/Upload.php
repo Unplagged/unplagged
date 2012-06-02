@@ -25,42 +25,18 @@ class Application_Form_File_Upload extends Zend_Form{
 
   public function init(){
     $this->setName('file');
-    //$this->setAction("");
     $this->setAttrib('enctype', 'multipart/form-data');
-
-    //Zend_Form_Element_File & SubmitButton
-    $elementfile = new Zend_Form_Element_File('filepath');
-    $elementfile->setLabel('Path:')->setRequired(true);
 
     $descriptionElement = new Zend_Form_Element_Textarea('description');
     $descriptionElement->setLabel('Description:');
 
-    $elementnewname = new Zend_Form_Element_Text('newName');
-    $elementnewname->setLabel('New Filename:');
-
-    $elementsubmit = new Zend_Form_Element_Submit('submit');
-    $elementsubmit->setOptions(array('class'=>'btn btn-primary'));
-
-    $elementsubmit->setLabel('Upload File');
-    $elementsubmit->removeDecorator('DtDdWrapper');
+    $elementNewName = new Zend_Form_Element_Text('newName');
+    $elementNewName->setLabel('Alternative filename:');
+    $elementNewName->setOptions(array('title'=>'Provide it if you want to store the file with a different name.', 'class'=>'tooltip-toggle'));
 
     $this->addElements(array(
+      $elementNewName,
       $descriptionElement
-      , $elementfile
-      , $elementnewname
-    ));
-
-    $this->addDisplayGroup(array(
-      'newName'
-      , 'filepath'
-      , 'description'
-        )
-        , 'fileGroup'
-        , array('legend'=>'File Information')
-    );
-
-    $this->addElements(array(
-      $elementsubmit
     ));
   }
 

@@ -25,16 +25,15 @@ class Unplagged_Parser_Page_TesseractParser implements Unplagged_Parser_Page_Par
     try{
       $hash = Unplagged_Helper::generateRandomHash();
 
-      $inputFileLocation = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getFilename();
+      $inputFileLocation = $file->getFullPath();
       $outputFileLocation = TEMP_PATH . DIRECTORY_SEPARATOR . 'ocr' . DIRECTORY_SEPARATOR . $hash;
-echo $outputFileLocation . "<br />";
+
       $adapter = new Unplagged_Parser_Page_TesseractAdapter($inputFileLocation, $outputFileLocation, $language);
       $adapter->execute();
 
-      // tesseract adds .txt extension automatically, so filename is differently than previously specified
+      // tesseract adds .txt extension automatically, so filename is different than previously specified
       $outputFileLocation .= '.txt';
 
-   //   unset($data);
       $page = new Application_Model_Document_Page();
       $page->setContent(file_get_contents($outputFileLocation), "text");
       

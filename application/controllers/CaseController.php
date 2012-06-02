@@ -35,7 +35,7 @@ class CaseController extends Unplagged_Controller_Action{
       $result = $this->handleModifyData($modifyForm);
 
       if($result){
-// notification
+        // notification
         $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
         Unplagged_Helper::notify('case_created', $result, $user);
 
@@ -69,7 +69,7 @@ class CaseController extends Unplagged_Controller_Action{
         $result = $this->handleModifyData($modifyForm, $case);
 
         if($result){
-// notification
+          // notification
           $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
           Unplagged_Helper::notify("case_updated", $result, $user);
 
@@ -97,7 +97,7 @@ class CaseController extends Unplagged_Controller_Action{
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
-// generate the action dropdown for each fragment
+    // generate the action dropdown for each fragment
     foreach($paginator as $case):
       $case->actions = array();
 
@@ -124,8 +124,8 @@ class CaseController extends Unplagged_Controller_Action{
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
       $paginator->setCurrentPageNumber($input->page);
 
-// generate the action dropdown for each file
-// @todo: use centralised method for all three file lists
+      // generate the action dropdown for each file
+      // @todo: use centralised method for all three file lists
       foreach($paginator as $file):
         $file->actions = array();
 
@@ -152,8 +152,9 @@ class CaseController extends Unplagged_Controller_Action{
       endforeach;
 
       $this->view->paginator = $paginator;
+      $this->view->uploadLink = '/file/upload?area=case';
 
-//change the view to the one from the file controller
+      //change the view to the one from the file controller
       $this->_helper->viewRenderer->renderBySpec('list', array('controller'=>'file'));
     }else{
       $this->_helper->FlashMessenger(array('error'=>'You need to select a case first, before you can view files of it.'));
@@ -181,7 +182,7 @@ class CaseController extends Unplagged_Controller_Action{
     }else{
       $this->_helper->FlashMessenger(array('error'=>'The specified file does not exist.'));
     }
-    
+
     $this->_helper->viewRenderer->setNoRender(true);
     $this->redirectToLastPage();
   }
@@ -227,5 +228,4 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
 }
-
 ?>

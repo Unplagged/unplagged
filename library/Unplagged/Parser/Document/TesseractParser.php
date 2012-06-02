@@ -37,5 +37,4 @@ class Unplagged_Parser_Document_TesseractParser implements Unplagged_Parser_Docu
   }
 
 }
-
 ?>

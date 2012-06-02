@@ -29,74 +29,99 @@ class FileController extends Unplagged_Controller_Action{
 
   public function uploadAction(){
     $uploadform = new Application_Form_File_Upload();
+
     if($this->_request->isPost()){
-      if($uploadform->isValid(($this->_request->getPost()))){
-        $adapter = new Zend_File_Transfer_Adapter_Http();
-        $adapter->setOptions(array('useByteString'=>false));
+      $post = $this->_request->getPost();
 
-        // Maximal 20MB = 20480000
-        // $adapter->setMaxFileSize(20480000);
-        //$adapter->addValidator('NotEmpty');
-        // Nur JPEG, PNG, und GIFs
-        //$adapter->addValidator('Extension', true, array('png,gif,tif,jpg, tiff', 'messages'=>'<b>jpg</b>, <b>png</b>, or <b>gif</b> only allowed.'));
-        //muss mit der gruppe geklärt werden
-        //Neither APC nor uploadprogress extension installed 
-        /* $adapterprogressbar = new Zend_ProgressBar_Adapter_Console();
-          $adapterupload = Zend_File_Transfer_Adapter_Http::getProgress($adapterprogressbar);
-
-          $adapterupload = null;
-          while (!$adapterupload['done'])
-          {
-          $adapterupload = Zend_File_Transfer_Adapter_Http::getProgress($adapterupload);
-          } */
-
-        $newName = $this->_request->getPost('newName');
-        $description = $this->_request->getPost('description');
-
-        // collect file information
-        $fileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
-        $fileExt = pathinfo($adapter->getFileName(), PATHINFO_EXTENSION);
-
-        // store file in database to get an id
-        $data = array();
-        $data["size"] = $adapter->getFileSize('filepath');
-        //if the mime type is always application/octet-stream, then the 
-        //mime magic and fileinfo extensions are probably not installed
-        $data["mimetype"] = $adapter->getMimeType('filepath');
-        $data["filename"] = !empty($newName) ? $newName . "." . $fileExt : $fileName;
-        $data["extension"] = $fileExt;
-        $data["location"] = 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
-        $data['description'] = $description;
-
-        $file = new Application_Model_File($data);
-        $this->_em->persist($file);
-        $this->_em->flush();
-
-        // prepare file for uploading
-        $adapter->setDestination($file->getAbsoluteLocation());
-        $adapter->addFilter('Rename', array('target'=>$file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension()));
-
-        if($adapter->receive()){
-          chmod($file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension(), 0755);
-
-          // notification
-          $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-          Unplagged_Helper::notify("file_uploaded", $file, $user);
-
-          $this->_helper->FlashMessenger(array('success'=>'File was uploaded successfully.'));
-          $this->_helper->redirector('list', 'file');
-        }else{
-          $this->_em->remove($file);
-          $this->_em->flush();
-
-          $this->_helper->FlashMessenger(array('error'=>'File could not be uploaded.'));
-        }
+      if($uploadform->isValid($post)){
+        $this->storeUpload();
       }
     }else{
-      // wenn nicht hochgeladen
-      $uploadform->populate($this->_request->getPost());
+      $this->view->form = $uploadform;
     }
-    $this->view->form = $uploadform;
+  }
+
+  /**
+   * Moves the current file to the storage directory and stores an object for the file in the database.
+   */
+  private function storeUpload(){
+    $adapter = new Zend_File_Transfer();
+
+    $newName = $this->_request->getPost('newName');
+    $description = $this->_request->getPost('description');
+
+    $pathinfo = pathinfo($adapter->getFileName());
+
+    $storageDir = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
+    $fileNames = $this->findFilename($pathinfo, $newName);
+    $adapter->addFilter('Rename', $storageDir . $fileNames[1]);
+
+    //move the uploaded file to the before specified location
+    if($adapter->receive()){
+      chmod($storageDir . $fileNames[1], 0755);
+
+      $file = $this->createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir);
+      $this->_em->persist($file);
+      $this->_em->flush();
+
+      //store in the activity stream, that the current user uploaded this file
+      $user = Zend_Registry::getInstance()->user;
+      Unplagged_Helper::notify('file_uploaded', $file, $user);
+
+      die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
+    }else{
+      //we are in ajax here now, so flash messenger makes no sense
+      //$this->_helper->FlashMessenger(array('error'=>'File could not be uploaded.'));
+    }
+  }
+
+  /**
+   * Creates a unique filename from the specified data.
+   * 
+   * @param array $pathinfo An array as returned by the pathinfo() function for the uploaded file.
+   * @param string $newName A different name for the file from user input.
+   * @return array An array containing the original filename and a new unique filename to store the file locally. 
+   */
+  private function findFilename($pathinfo, $newName){
+    $fileExtension = $pathinfo['extension'];
+
+    $fileName = '';
+    if($newName){
+      $fileName = $newName;
+    }else{
+      $fileName = $pathinfo['filename'];
+    }
+    $localFilename = $fileName . '_' . uniqid() . '.' . $fileExtension;
+    $fileName .= '.' . $fileExtension;
+
+    return array($fileName, $localFilename);
+  }
+
+  /**
+   * Takes the data to create an Application_Model_File object.
+   * 
+   * @param Zend_File_Transfer $adapter
+   * @param array $fileNames
+   * @param array $pathinfo
+   * @param string $description
+   * @param string $storageDir
+   * @return \Application_Model_File 
+   */
+  private function createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir){
+    $data = array();
+    $data['size'] = $adapter->getFileSize();
+    //if the mime type is always application/octet-stream, then the 
+    //mime magic and fileinfo extensions are probably not installed
+    $data['mimetype'] = $adapter->getMimeType();
+    $data['filename'] = $fileNames[0];
+    $data['extension'] = $pathinfo['extension'];
+    $data['location'] = $storageDir;
+    $data['description'] = $description;
+    $data['localFilename'] = $fileNames[1];
+
+    $file = new Application_Model_File($data);
+
+    return $file;
   }
 
   public function listAction(){
@@ -146,6 +171,7 @@ class FileController extends Unplagged_Controller_Action{
     }
 
     $this->view->paginator = $paginator;
+    $this->view->uploadLink = '/file/upload?area=public';
   }
 
   /**
@@ -160,8 +186,7 @@ class FileController extends Unplagged_Controller_Action{
         // disable view
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-        $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
-
+        $downloadPath = $file->getFullPath();
         // set headers
         header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
         header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
@@ -181,6 +206,10 @@ class FileController extends Unplagged_Controller_Action{
     }
   }
 
+  private function scheduleOcr(Application_Model_File $file){
+    
+  }
+  
   /**
    * Parses a single file into a document using OCR. 
    */
@@ -188,52 +217,50 @@ class FileController extends Unplagged_Controller_Action{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     if(empty($input->id)){
-      // show error message
-      $this->_helper->FlashMessenger('The fileId has to be set.');
+      $this->_helper->FlashMessenger(array('info'=>'A file id must be set to tell us what to OCR.'));
     }else{
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
-      $language = "eng";
+      $language = 'eng';
 
       if(empty($file)){
-        // show error message
-        $this->_helper->FlashMessenger('No file found by that id.');
+        $this->_helper->FlashMessenger(array('error'=>"Sorry, we couldn't find a file with the specified id."));
       }else{
-        // pdfs will e generated through cron
-        if($file->getExtension() == "pdf"){
-          $data["title"] = $file->getFilename();
-          $data["initialFile"] = $file;
-          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+        // pdfs will be generated through cron
+        if($file->getExtension() === 'pdf'){
+          $data['title'] = $file->getFilename();
+          $data['initialFile'] = $file;
+          $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
           $document = new Application_Model_Document($data);
 
           // start task
           $data = array();
-          $data["initiator"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-          $data["ressource"] = $document;
-          $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('file_parse');
-          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+          $data['initiator'] = Zend_Registry::getInstance()->user;
+          $data['ressource'] = $document;
+          $data['action'] = $this->_em->getRepository('Application_Model_Action')->findOneByName('file_parse');
+          $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
           $task = new Application_Model_Task($data);
 
           $this->_em->persist($task);
           $this->_em->flush();
 
-          $this->_helper->FlashMessenger('The file will be generated now, you will be notified as soon as possible.');
+          $this->_helper->FlashMessenger(array('success'=>'The OCR of this file was scheduled, you will be notified as soon as the process finished.'));
 
-          // images will be parsed directly
         }else{
+          // images will be parsed directly
           $parser = Unplagged_Parser::factory($file->getMimeType());
 
           $document = $parser->parseToDocument($file, $language);
           if(empty($document)){
-            $this->_helper->FlashMessenger(array('error'=>'The file could not be parsed.'));
+            $this->_helper->FlashMessenger(array('error'=>'We are sorry, but an error occured during the OCR, please try again later.'));
           }else{
             $document->setState($this->_em->getRepository('Application_Model_State')->findOneByName('parsed'));
 
             $this->_em->persist($document);
             $this->_em->flush();
-            $this->_helper->FlashMessenger(array('success'=>'The file was successfully parsed.'));
+            $this->_helper->FlashMessenger(array('success'=>'The OCR of the file was successful.'));
           }
         }
-        
+
         $case = Zend_Registry::getInstance()->user->getCurrentCase();
         $case->addDocument($document);
         $this->_em->persist($case);
@@ -244,7 +271,7 @@ class FileController extends Unplagged_Controller_Action{
   }
 
   /**
-   * Deletes a single file. 
+   * Deletes the file specified by the id parameter. 
    */
   public function deleteAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
@@ -252,20 +279,19 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
-
         // remove file from file system
-        $downloadPath = $file->getAbsoluteLocation() . DIRECTORY_SEPARATOR . $file->getId() . "." . $file->getExtension();
-        $deleted = unlink($downloadPath);
-        if($deleted || !file_exists($downloadPath)){
+        $localPath = $file->getFullPath();
+        $deleted = unlink($localPath);
+        if($deleted || !file_exists($localPath)){
           // remove database record
           $this->_em->remove($file);
           $this->_em->flush();
-          $this->_helper->FlashMessenger('The file was deleted successfully.');
+          $this->_helper->FlashMessenger(array('success'=>'The file was deleted successfully.'));
         }else{
-          $this->_helper->FlashMessenger('The file could not be deleted.');
+          $this->_helper->FlashMessenger(array('error'=>'We are sorry, but the file could not be deleted.'));
         }
       }else{
-        $this->_helper->FlashMessenger('The file does not exist.');
+        $this->_helper->FlashMessenger(array('error'=>'The file you specified does not exist.'));
       }
     }
 
@@ -277,5 +303,4 @@ class FileController extends Unplagged_Controller_Action{
   }
 
 }
-
 ?>

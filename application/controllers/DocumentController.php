@@ -109,6 +109,7 @@ class DocumentController extends Unplagged_Controller_Action{
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
+    if($case){
     $query = $this->_em->createQuery("SELECT d FROM Application_Model_Document d WHERE d.case = :caseId");
     $query->setParameter('caseId', $case->getId());
     $count = $this->_em->createQuery("SELECT COUNT(d.id) FROM Application_Model_Document d WHERE d.case = :caseId");
@@ -172,6 +173,9 @@ class DocumentController extends Unplagged_Controller_Action{
 
     Zend_Layout::getMvcInstance()->sidebar = null;
     Zend_Layout::getMvcInstance()->versionableId = null;
+    } else {
+      $this->_helper->FlashMessenger('You need to select a case first.');
+    }
   }
 
   /**

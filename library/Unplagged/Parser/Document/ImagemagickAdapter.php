@@ -9,10 +9,7 @@
  */
 class Unplagged_Parser_Document_ImagemagickAdapter{
 
-  // for pdfs
-  // convert -limit memory 1mb -limit map 1mb -colorspace RGB -density 300 /Users/benjamin/Sites/unplagged.local/application/storage/files/57.pdf /Users/benjamin/Sites/unplagged.local/temp/imagemagick/57-%d.tif
-
-  private $imagemagickCall;
+  private $command;
   private $inputFilePath;
   private $outputFilePath;
 
@@ -22,11 +19,12 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
     if($message === false){
       $this->inputFilePath = $inputFilePath;
       $this->outputFilePath = $outputFilePath;
-      $this->imagemagickCall = Zend_Registry::get('config')->parser->imagemagickPath;
       $pdf = true;
       if($pdf){
-        //$this->imagemagickCall .= " -limit memory 1mb -limit map 1mb -colorspace RGB -density 300";
-       // $this->imagemagickCall = "gs -o page_%03d.tif -sDEVICE=tiffg4 -r720x720 5.pdf ";
+        // use ghotscript for pdfs, because it is much faster to call it directly than through imagemagick
+        $this->command = sprintf(Zend_Registry::get('config')->parser->ghostscriptPath, $this->outputFilePath, $this->inputFilePath);
+      }else{
+        $this->command = Zend_Registry::get('config')->parser->imagemagickPath;
       }
     }else{
       throw new InvalidArgumentException($message);
@@ -35,29 +33,22 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
 
   public function execute(){
     $output = array();
-    //$command = $this->imagemagickCall . ' ' . $this->inputFilePath . ' ' . $this->outputFilePath;
-    $command = "gs -o " . $this->outputFilePath . " -sDEVICE=tiffg4 " . $this->inputFilePath;
-    echo $command;
-    //@todo: escapeshellcmd
-    if(APPLICATION_ENV == "benjamin"){
-      putenv("PATH=" . "/usr/local/bin");
-    }
-    $ret = system($command, $returnVal);
+
+    $ret = system($this->command, $returnVal);
 
     if($returnVal == 0){
-      $directoryAndFile = explode(DIRECTORY_SEPARATOR, $this->outputFilePath);
-      
-      $file = array_pop($directoryAndFile);
-      $input = new Zend_Filter_Input(array('file'=>'Digits'), null, array("file" => $file));
+      $directoryAndFile = pathinfo($this->outputFilePath);
 
-      $directory = implode(DIRECTORY_SEPARATOR, $directoryAndFile);
+      $file = $directoryAndFile['basename'];
+      $input = new Zend_Filter_Input(array('file'=>'Digits'), null, array('file'=>$file));
+      $directory = $directoryAndFile['dirname'] . DIRECTORY_SEPARATOR;
       $handler = opendir($directory);
+
       while($file = readdir($handler)){
         if($file != "." && $file != ".."){
-  //        echo $file . '\n';
           // check if 59, or 59-0 or 59-1,...
           if(preg_match('/' . $input->file . '(-(\d)*){0,1}.tif/', $file)){
-            chmod($directory . DIRECTORY_SEPARATOR . $file, 0755);
+            chmod($directory . $file, 0755);
           }
         }
       }

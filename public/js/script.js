@@ -84,6 +84,75 @@ $(document).ready(function(){
   });
   compareTexts();
   
+  // change bibtex form according to document type
+  function changeBibTexForm(){
+	if($('#type').val() == 'full' || $('#type').val() == 'periodikum' ) { 
+		$('#zeitschrift-element').show();		$('#zeitschrift-label').show();	
+		$('#monat-element').show(); 			$('#monat-label').show();
+		$('#tag-element').show();				$('#tag-label').show();
+		$('#nummer-element').show();			$('#nummer-label').show();
+	}
+	else {
+		$('#zeitschrift-element').hide();		$('#zeitschrift-label').hide();
+		$('#monat-element').hide(); 			$('#monat-label').hide();									
+		$('#tag-element').hide();				$('#tag-label').hide();
+		$('#nummer-element').hide();			$('#nummer-label').hide();									
+	}
+								
+	if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' ) {
+		$('#sammlung-element').show();		$('#sammlung-label').show();
+		$('#hrsg-element').show();			$('#hrsg-label').show();
+		$('#issn-element').show();			$('#issn-label').show();						
+	}
+	else {
+		$('#sammlung-element').hide();		$('#sammlung-label').hide();
+		$('#hrsg-element').hide();	 		$('#hrsg-label').hide();
+		$('#issn-element').hide();			$('#issn-label').hide();
+	}
+					
+	if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' || $('#type').val() == 'periodikum'){ 
+		$('#seiten-element').show();			$('#seiten-label').show();	
+	}
+	else {
+		$('#seiten-element').hide();			$('#seiten-label').hide();
+	}
+				
+	if($('#type').val() == 'full' || $('#type').val() == 'buch' || $('#type').val() == 'aufsatz') { 
+		$('#isbn-element').show();			$('#isbn-label').show();
+	}
+	else {
+		$('#isbn-element').hide();			$('#isbn-label').hide();
+	}
+
+	if($('#type').val() == 'full'){
+		$('#kuerzel-element').show();			$('#kuerzel-label').show();
+		$('#beteiligte-element').show();		$('#beteiligte-label').show();
+		$('#ausgabe-element').show();			$('#ausgabe-label').show();
+		$('#umfang-element').show();			$('#umfang-label').show();
+		$('#reihe-element').show();				$('#reihe-label').show();
+		$('#doi-element').show();				$('#doi-label').show();
+		$('#urn-element').show();				$('#urn-label').show();
+		$('#wp-element').show();				$('#wp-label').show();
+		$('#schluessel-element').show();		$('#schluessel-label').show();
+	}
+	else{
+		$('#kuerzel-element').hide();			$('#kuerzel-label').hide();
+		$('#beteiligte-element').hide();		$('#beteiligte-label').hide();
+		$('#ausgabe-element').hide();			$('#ausgabe-label').hide();
+		$('#umfang-element').hide();			$('#umfang-label').hide();
+		$('#reihe-element').hide();				$('#reihe-label').hide();
+		$('#doi-element').hide();				$('#doi-label').hide();
+		$('#urn-element').hide();				$('#urn-label').hide();
+		$('#wp-element').hide();				$('#wp-label').hide();
+		$('#schluessel-element').hide();		$('#schluessel-label').hide();
+  }
+}
+	
+	$("#type").change(function(){
+    changeBibTexForm();
+  });
+  changeBibTexForm();
+  
   // executes a simtext comparison on fragment show page
   function compareFragmentTexts(fragmentId, highlight) {
     $.post("/document_page/compare", {
@@ -244,13 +313,9 @@ $(document).ready(function(){
         }
         url += hash;
         $("#main-wrapper").load(url + " .main", function(){
-          //this callback is not the nicest way, but currently the only way to make sure, that those things 
-          //still work in ajax content
-          wrapActions();
           $('a.picture').lightBox();
         });
       }
-
     });
 
     $(window).trigger('hashchange');
@@ -487,7 +552,111 @@ $(document).ready(function(){
 
     return false;
   });
+
+  //file uploads
+  var files = new Array();
+  var filesRunning = false;
+    
+  // Convert divs to queue widgets when the DOM is ready
+    $('#upload-queue').pluploadQueue({
+      runtimes : 'html5,flash,silverlight,html4',
+      url : '/file/upload',
+      max_file_size : '1000mb',
+      //chunk_size : '5mb', //disable because html5 + chunking kills the filename currently
+      unique_names : true,
+      flash_swf_url : '/js/libs/plupload/js/plupload.flash.swf',
+      silverlight_xap_url : '/js/libs/plupload/js/plupload.silverlight.xap',
+      init: {
+        QueueChanged: queueFileForModalForm,
+        BeforeUpload: function(uploader, file){
+          uploader.settings['multipart_params'].description = file.description;
+          uploader.settings['multipart_params'].newName = file.newName;
+        }
+      },
+      multipart_params: {'description': '', 'newName': ''}
+      
+    });
   
+  function queueFileForModalForm(uploader){
+    fileUploader = uploader;
+    $.each(uploader.files, function(){
+      //add the current file to our own queue
+      files.push(this);
+
+      if(!filesRunning){
+        filesRunning = true;
+        getDataForNextFile();
+      }
+    });
+      
+  }  
+    
+  var fileModal = $('#file-data');
+  fileModal.find('.modal-save').click(saveChanges);
+  fileModal.find('.close').click(closeFileModal);
+     
+  function getDataForNextFile(){
+    var file = files.shift();
+    
+    if(file){
+      fileModal.find('input, textarea').val('');
+      //set the filename in the heading
+      fileModal.modal('show').find('.filename').text(file.name);
+      //store the file on the modal so that we can retrieve on button click
+      $.data(fileModal, 'current-file', file);
+    } else {
+      finishAdditionalData();
+    }
+  }
+    
+  function finishAdditionalData(){
+    filesRunning = false;
+    
+    fileModal.hide();
+    fileModal.find('input').val('');
+    //fix for https://github.com/twitter/bootstrap/issues/2839
+    $('.modal-backdrop').remove();
+  }
+    
+  function saveChanges(){
+    var file = $.data(fileModal, 'current-file');
+    if(file){
+      var descriptionValue = fileModal.find('#description').val(); 
+      var newNameValue = fileModal.find('#newName').val(); 
+      file.description = descriptionValue;
+      file.newName = newNameValue;
+    }
+    $.data(fileModal, 'current-file', null);
+    if(files.length >= 1){
+      fileModal.one('hidden', getDataForNextFile);
+      fileModal.modal('hide');
+      $('.modal-backdrop').remove();
+    } else {
+      finishAdditionalData();
+    }
+  }
+    
+  /**
+    * Stops the upload of the current file and deletes the data.
+    */
+  function closeFileModal(){
+    var fileAccess = $.data(fileModal, 'current-file');
+    if(fileAccess){
+      fileAccess[1].removeFile(fileAccess[0]);
+
+      $.data(fileModal, 'current-file', null);
+      
+      fileModal.one('hidden', function(){
+        if(files.length>0){
+          getDataForNextFile();
+        } else {
+          finishAddtionalData();  
+        }
+      });
+    }
+  }
+  //file uploads end
+
   $("#type").change(function(){
     updateBibTexForm();
   });

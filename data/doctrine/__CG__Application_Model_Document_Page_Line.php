@@ -132,17 +132,10 @@ class Application_Model_Document_Page_Line extends \Application_Model_Document_P
         return parent::getRatings();
     }
 
-<<<<<<< HEAD
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
-=======
     public function getTags()
     {
         $this->__load();
         return parent::getTags();
->>>>>>> tien
     }
 
     public function getCreated()
@@ -161,19 +154,6 @@ class Application_Model_Document_Page_Line extends \Application_Model_Document_P
     {
         $this->__load();
         return parent::isRatedByUser($user);
-    }
-
-<<<<<<< HEAD
-    public function getTags()
-    {
-        $this->__load();
-        return parent::getTags();
-=======
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
->>>>>>> tien
     }
 
     public function getTagIds()
