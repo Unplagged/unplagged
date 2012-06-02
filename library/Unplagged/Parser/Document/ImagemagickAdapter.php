@@ -13,18 +13,18 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
   private $inputFilePath;
   private $outputFilePath;
 
-  public function __construct($inputFilePath, $outputFilePath){
+  public function __construct($inputFilePath, $outputFilePath, $extension = null){
     $message = $this->checkForInvalidArguments($inputFilePath, $outputFilePath);
 
     if($message === false){
       $this->inputFilePath = $inputFilePath;
       $this->outputFilePath = $outputFilePath;
-      $pdf = true;
-      if($pdf){
+
+      if($extension == 'pdf'){
         // use ghotscript for pdfs, because it is much faster to call it directly than through imagemagick
         $this->command = sprintf(Zend_Registry::get('config')->parser->ghostscriptPath, $this->outputFilePath, $this->inputFilePath);
       }else{
-        $this->command = Zend_Registry::get('config')->parser->imagemagickPath;
+        $this->command = sprintf(Zend_Registry::get('config')->parser->imagemagickPath, $this->inputFilePath, $this->outputFilePath);;
       }
     }else{
       throw new InvalidArgumentException($message);

@@ -28,7 +28,7 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
         $outputFileLocation = $imagemagickTempPath . DIRECTORY_SEPARATOR . $file->getId() . '.tif';
       }
 
-      $adapter = new Unplagged_Parser_Document_ImagemagickAdapter($inputFileLocation, $outputFileLocation);
+      $adapter = new Unplagged_Parser_Document_ImagemagickAdapter($inputFileLocation, $outputFileLocation, $file->getExtension());
       $adapter->execute();
 
       // create the document
@@ -54,12 +54,13 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
       $handler = opendir($imagemagickTempPath);
       while($tifFile = readdir($handler)){
         if($tifFile != "." && $tifFile != ".."){
+
           // for loop over pages
           $fileData = array('filename'=>$tifFile, 'localFilename'=>$tifFile, 'extension'=>'tif', 'mimeType'=>'image/tiff', 'location'=>$imagemagickTempPath . DIRECTORY_SEPARATOR);
           $tempFile = new Application_Model_File($fileData);
 
           $page = $parser->parseToPage($tempFile, $language);
-          $page->setPageNumber($i);
+    $page->setPageNumber($i);
           $page->setDocument($document);
 
           $this->_em->persist($page);
@@ -86,7 +87,8 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
         }
       }
       Unplagged_Helper::removeDirectory($imagemagickTempPath);
-
+      
+      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($documentId);
       return $document;
     }catch(Exception $e){
       Unplagged_Helper::removeDirectory($imagemagickTempPath);

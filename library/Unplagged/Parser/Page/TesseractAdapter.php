@@ -47,14 +47,9 @@ class Unplagged_Parser_Page_TesseractAdapter{
    * The result should be a .txt file with the name that was provided to the constructor as the $outputFileName.
    */
   public function execute(){
-    $command = $this->tesseractCall . ' ' . $this->inputFileLocation . ' ' . $this->outputFileLocation . ' -l ' . $this->language;
-    echo $command;
+    $command = sprintf($this->tesseractCall, $this->inputFileLocation, $this->outputFileLocation, $this->language);
     exec($command, $op, $returnVal);
-     echo $returnVal . "<br />";
-    // exit();
-    // everything okay
-    //  if($returnVal == 0){
-    //   return true;
+
     // language package not found, try with english again
     if($returnVal == 11){
       $this->language = "eng";

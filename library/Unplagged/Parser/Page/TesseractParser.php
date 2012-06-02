@@ -36,7 +36,7 @@ class Unplagged_Parser_Page_TesseractParser implements Unplagged_Parser_Page_Par
 
       $page = new Application_Model_Document_Page();
       $page->setContent(file_get_contents($outputFileLocation), "text");
-      
+
       // remove the ocr-scanned document, because it is stored in the database now
       unlink($outputFileLocation);
 
