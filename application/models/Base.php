@@ -117,13 +117,6 @@ abstract class Application_Model_Base{
   }
 
   /**
-   * @todo do we really need setId? I thought this would always be handled by doctrine, which uses reflection
-   */
-  public function setId($id){
-    $this->id = $id;
-  }
-
-  /**
    * Sets the creation time to the current time, if it is null.
    * This will normally be auto called the first time the object is persisted by doctrine.
    * 

@@ -206,6 +206,10 @@ class FileController extends Unplagged_Controller_Action{
     }
   }
 
+  private function scheduleOcr(Application_Model_File $file){
+    
+  }
+  
   /**
    * Parses a single file into a document using OCR. 
    */
@@ -239,7 +243,7 @@ class FileController extends Unplagged_Controller_Action{
           $this->_em->persist($task);
           $this->_em->flush();
 
-          $this->_helper->FlashMessenger(array('success'=>'The OCR of this file was started, you will be notified as soon as the process finished.'));
+          $this->_helper->FlashMessenger(array('success'=>'The OCR of this file was scheduled, you will be notified as soon as the process finished.'));
 
         }else{
           // images will be parsed directly
@@ -247,7 +251,7 @@ class FileController extends Unplagged_Controller_Action{
 
           $document = $parser->parseToDocument($file, $language);
           if(empty($document)){
-            $this->_helper->FlashMessenger(array('error'=>'We are sorry, but an error occured during the OCR.'));
+            $this->_helper->FlashMessenger(array('error'=>'We are sorry, but an error occured during the OCR, please try again later.'));
           }else{
             $document->setState($this->_em->getRepository('Application_Model_State')->findOneByName('parsed'));
 
@@ -256,7 +260,7 @@ class FileController extends Unplagged_Controller_Action{
             $this->_helper->FlashMessenger(array('success'=>'The OCR of the file was successful.'));
           }
         }
-        var_dump(Zend_Registry::getInstance()->user);
+
         $case = Zend_Registry::getInstance()->user->getCurrentCase();
         $case->addDocument($document);
         $this->_em->persist($case);

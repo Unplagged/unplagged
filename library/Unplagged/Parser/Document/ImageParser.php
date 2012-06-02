@@ -24,6 +24,7 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
       }else{
         $outputFileLocation = $imagemagickTempPath . DIRECTORY_SEPARATOR . $file->getId() . '.tif';
       }
+      var_dump($outputFileLocation);
       $adapter = new Unplagged_Parser_Document_ImagemagickAdapter($inputFileLocation, $outputFileLocation);
       $adapter->execute();
       //var_dump($outputFileLocation);

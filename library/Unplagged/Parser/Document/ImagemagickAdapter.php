@@ -34,7 +34,7 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
 
   public function execute(){
     $output = array();
-    $command = $this->imagemagickCall . ' ' . $this->inputFilePath . ' ' . $this->outputFilePath;
+    $command = $this->imagemagickCall . ' "' . $this->inputFilePath . '" "' . $this->outputFilePath . '"';
 
     //@todo: escapeshellcmd
     if(APPLICATION_ENV == "benjamin"){
@@ -44,19 +44,18 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
     $ret = system($command, $returnVal);
 
     if($returnVal == 0){
-      $directoryAndFile = explode(DIRECTORY_SEPARATOR, $this->outputFilePath);
+      $directoryAndFile = pathinfo($this->outputFilePath);
 
-      $file = array_pop($directoryAndFile);
-      $input = new Zend_Filter_Input(array('file'=>'Digits'), null, array("file"=>$file));
-
-      $directory = implode(DIRECTORY_SEPARATOR, $directoryAndFile);
+      $file = $directoryAndFile['basename'];
+      $input = new Zend_Filter_Input(array('file'=>'Digits'), null, array('file'=>$file));
+      $directory = $directoryAndFile['dirname'] . DIRECTORY_SEPARATOR;
       $handler = opendir($directory);
 
       while($file = readdir($handler)){
         if($file != "." && $file != ".."){
           // check if 59, or 59-0 or 59-1,...
           if(preg_match('/' . $input->file . '(-(\d)*){0,1}.tif/', $file)){
-            chmod($directory . DIRECTORY_SEPARATOR . $file, 0755);
+            chmod($directory . $file, 0755);
           }
         }
       }

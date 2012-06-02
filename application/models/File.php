@@ -115,14 +115,6 @@ class Application_Model_File extends Application_Model_Base{
     }
   }
 
-  /**
-   * @param type $id 
-   * @todo remove when TesseractParser doesn't rely anymore on the id for the file path.
-   */
-  public function setId($id){
-    $this->id = $id;
-  }
-
   public function getUpdated(){
     return $this->updated;
   }
