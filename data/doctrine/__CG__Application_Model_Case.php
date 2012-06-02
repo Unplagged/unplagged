@@ -78,30 +78,6 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
         return parent::getUpdated();
     }
 
-    public function addCollaborator(\Application_Model_User $user)
-    {
-        $this->__load();
-        return parent::addCollaborator($user);
-    }
-
-    public function removeCollaborator(\Application_Model_User $user)
-    {
-        $this->__load();
-        return parent::removeCollaborator($user);
-    }
-
-    public function getCollaborators()
-    {
-        $this->__load();
-        return parent::getCollaborators();
-    }
-
-    public function clearCollaborators()
-    {
-        $this->__load();
-        return parent::clearCollaborators();
-    }
-
     public function addFile(\Application_Model_File $file)
     {
         $this->__load();
@@ -252,6 +228,37 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
         return parent::addReport($report);
     }
 
+    public function getCollaboratorIds()
+    {
+        $this->__load();
+        return parent::getCollaboratorIds();
+    }
+
+    public function addCollaborator(\Application_Model_User $collaborator)
+    {
+        $this->__load();
+        return parent::addCollaborator($collaborator);
+    }
+
+    public function removeCollaborator(\Application_Model_User $collaborator)
+    {
+        $this->__load();
+        return parent::removeCollaborator($collaborator);
+    }
+
+    public function setCollaborators($collaboratorIds = array (
+))
+    {
+        $this->__load();
+        return parent::setCollaborators($collaboratorIds);
+    }
+
+    public function clearCollaborators()
+    {
+        $this->__load();
+        return parent::clearCollaborators();
+    }
+
     public function getId()
     {
         $this->__load();
@@ -310,12 +317,6 @@ class Application_Model_Case extends \Application_Model_Case implements \Doctrin
     {
         $this->__load();
         return parent::isRatedByUser($user);
-    }
-
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
     }
 
     public function getTagIds()

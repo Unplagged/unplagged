@@ -21,16 +21,17 @@ class Unplagged_Parser_Document_TesseractParser implements Unplagged_Parser_Docu
       $data["title"] = $file->getFilename();
 
       $document = new Application_Model_Document($data);
+      $this->_em->persist($document);
+      $this->_em->flush();
     }
 
     $parser = new Unplagged_Parser_Page_TesseractParser();
     $page = $parser->parseToPage($file, $language);
-    $document->addPage($page);
+    //   $document->addPage($page);
     $page->setPageNumber(1);
     $this->_em->persist($page);
-
-    $this->_em->persist($document);
     $this->_em->flush();
+
 
     return $document;
   }

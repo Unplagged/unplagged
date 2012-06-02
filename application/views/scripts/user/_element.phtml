@@ -1,157 +1,38 @@
-<?php $defaultNamespace = new Zend_Session_Namespace('Default');
-
-	$readonly = false;
-	if(key_exists("readonly", $this->default))
-	{
-		$readonly = ($this->default["readonly"] == "true");
-		unset($this->default["readonly"]);
-	}
+<?php
+// some init stuff
+$errors = $this->element->getMessages();
+$disabled = $this->disabled || false;
 ?>
-<?php echo $this->formLabel($this->element->getName(),
-                         $this->element->getLabel()) ?>
-    
-<dd><input <?php if(!empty($readonly) && $readonly) echo 'disabled="disabled"';?> id="<?php echo $this->element->getName() ?>Input" type="text" />
 
- <?php 
- $errors = $this->element->getMessages();
- if(!empty($errors)) echo $this->formErrors($this->element->getMessages()); ?>
- <div class="hint"><?php echo $this->element->getDescription() ?></div>
-    
-<div id="<?php echo $this->element->getName() ?>s" class="memberPicker ui-helper-clearfix">
-<?php 
-	$users = array();
-	if(!empty($_POST))
-	{
-		if(!empty($_POST[$this->element->getName()]))
-		{
-			foreach($_POST[$this->element->getName()] as $key => $value)
-			{
-				$isRemoveable = substr($value, 0, 4) == "true" ? 'true' : 'false';
-				$uid = preg_replace('/[^0-9]/', '', $value);
-				$users[$uid] = $isRemoveable;
-			}
-		}
-	}
-	else
-	{
-		$users = $this->default;
-	}
-	
-		foreach($users as $id => $removeable)
-		{
-			if($readonly) $removeable = false;
-			$user = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneById($id);
-			if($user)
-			{
-			?>
-			<div class="<?php echo $this->element->getName() ?>" id="<?php echo $this->element->getName() ?><?php echo $id; ?>">
-        <span><?php echo $user->getFullName(); ?></span>
-				<input type="hidden" value="<?php echo $removeable.$id; ?>" name="<?php echo $this->element->getName() ?>[]" />
-				<?php if($removeable == "true") { ?>
-				<a class="remove remove-<?php echo $this->element->getName() ?>" title="Remove <?php  echo $user->getFullName(); ?>">x</a>
-				<?php } ?>
-		 	</div>
-			<?php
-			}
-		}
-?>
-	</div></dd>
-<script type="text/javascript">
-//<![CDATA[
+<?php echo $this->formLabel($this->element->getName(), $this->element->getLabel()) ?>
+<dd>
+  <input id="<?php echo $this->element->getName() ?>" type="text" data-view-script="user" data-callback="<?php echo $this->callback; ?>" />
+  <?php
+  if(!empty($errors)){
+    echo $this->formErrors($errors);
+  }
 
-$(document).ready(function(){
-	var skip_default = updateSkippedIds<?php echo $this->element->getName() ?>();
-
-	$('#<?php echo $this->element->getName() ?>Input').autocomplete({
-		source:  "<?php echo $this->callBack ?>?skip=" + skip_default,
-		select: function(e, ui) {
-			
-			//create formatted field
-			addField = $('<div class="<?php echo $this->element->getName() ?>" id="<?php echo $this->element->getName() ?>' + ui.item.value +'">');
-			c_span = $("<span>").text(ui.item.name).appendTo(addField);	
-			c_input = $("<input>").attr({
-			    type: 'hidden',
-			    value: 'true' + ui.item.value,
-			    name: '<?php echo $this->element->getName() ?>[]'
-			}).appendTo(addField);	
-
-			c_a = $("<a>").addClass("remove remove-<?php echo $this->element->getName() ?>").attr({
-					title: "Remove " + ui.item.name
-				}).text("x").appendTo(addField);
-			
-			//add friend to friend div
-			addField.appendTo("#<?php echo $this->element->getName() ?>s");
-			$("#<?php echo $this->element->getName() ?>Input").val('');
-			$("#<?php echo $this->element->getName() ?>").focus();
-			updateSkippedIds<?php echo $this->element->getName() ?>();
-			
-			return false;
-		},
-		change: function() {
-			//prevent field being updated and correct position
-			$("#<?php echo $this->element->getName() ?>Input").val("");
-		}
-	}).keydown( function( event ) {
-		var keyCode = $.ui.keyCode;
-		if((event.keyCode === keyCode.UP || event.keyCode === keyCode.DOWN))
-			$("#<?php echo $this->element->getName() ?>Input").val("");
-  	}).data( "autocomplete" )._renderItem = function( ul, item ) {
-        return $( '<li></li>' )
-        .data( "item.autocomplete", item )
-        .append('<a class="over"><span>' + item.name + '</span></a>' )
-        .appendTo( ul );
-	 };
-	 	
-	//add live handler for clicks on remove links
-	$(".remove", $("#<?php echo $this->element->getName() ?>s")).live("click", function(){
-		//remove
-		$(this).parent().remove();
-		//todo: remove
-		var skip_ids = "";
-		$('.<?php echo $this->element->getName() ?>').each(function(){
-			skip_id = $(this).attr("id").substr('<?php echo $this->element->getName() ?>'.length-1);
-			skip_ids = skip_ids + ',' + skip_id;
-		});
-
-		skip_ids = skip_ids.substr(1);
-	 	$("#<?php echo $this->element->getName() ?>Input").autocomplete({
-			source: '<?php echo $this->callBack ?>?skip=' + skip_ids
-		});
-
-		return false;
-	});	
-	
-	function updateSkippedIds<?php echo $this->element->getName() ?>(){
-		var skip_ids = "";
-
-		<?php 
-		$skipElementsUsers = array();
-		if(!empty($this->skipAlsoUsers))
-		{
-			foreach( $this->skipAlsoUsers as $key => $value)
-			{
-				$skipElementsUsers[] = $value;
-			}
-		}
-		$skipElementsUsers[] = $this->element->getName();
-		
-		foreach( $skipElementsUsers as $key => $value): ?>	
-
-		$('.<?php echo $value ?>').each(function(){
-			skip_id = $(this).attr("id").substr('<?php echo $value ?>'.length);
-			
-			skip_ids = skip_ids + ',' + skip_id;
-		});
-		<?php endforeach; ?>
-		skip_ids = skip_ids.substr(1);
-		
-	 	$("#<?php echo $this->element->getName() ?>Input").autocomplete({
-			source: '<?php echo $this->callBack ?>?skip=' + skip_ids
-		});
-		return skip_ids;
-	}
-});
-
-
-//]]>
-</script>
+  if($this->element->getDescription()){
+    echo '<div class="hint">' . $this->element->getDescription() . '</div>';
+  }
+  ?>
+  <div class="users-wrapper" data-wrapper-for="<?php echo $this->element->getName(); ?>">
+    <?php if($this->element->getValue()){ ?>
+      <?php foreach($this->element->getValue() as $userId): ?>
+        <?php $user = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneById($userId); ?>
+        <div class="well" data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $user->getId(); ?>">
+          <img class="avatar-small no-shadow" src="/images/default-avatar.png">
+          <div class="names">
+            <span class="username"><?php echo $user->getUsername(); ?></span>
+            <span class="realname">Benjamin Oertel</span>
+          </div>
+          <div class="options">
+            <a href="#" class="btn">edit rights</a>
+            <a href="#" class="btn" data-remove="true" data-for="<?php echo $user->getId(); ?>"><i class="icon-remove"></i></a>
+          </div>
+          <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $user->getId(); ?>" />
+        </div>
+      <?php endforeach; ?>
+    <?php } ?>
+  </div>  
+</dd>

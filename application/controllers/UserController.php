@@ -323,39 +323,26 @@ class UserController extends Unplagged_Controller_Action{
 
     $this->redirectToLastPage();
   }
-
+  
   /**
    * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
    * @param String from If defined it selects only users of a specific rank.
-   */
-  public function autocompleteNamesAction(){
-    // @todo clean input
-    $search_string = $this->_getParam('term');
-    // user ids to skip
-    $skipIds = $this->_getParam('skip');
-
-    // no self select possible
-    //$skipIds .= ", " . $this->_defaultNamespace->userId;
-    if(substr($skipIds, 0, 1) == ","){
-      $skipIds = substr($skip_userids, 1);
+   */ 
+  public function autocompleteAction(){
+    $input = new Zend_Filter_Input(array('term'=>'Alnum', 'skip'=>'StringTrim'), null, $this->_getAllParams());
+    
+    if(!empty($input->skip)) {
+      $input->skip = ' AND u.id NOT IN (' . $input->skip . ')';
     }
-
-    if($skipIds != ""){
-      $skipIds = " AND u.id NOT IN (" . $skipIds . ")";
-    }
-
-    $qb = $this->_em->createQueryBuilder();
-    $qb->add('select', "CONCAT(CONCAT(u.firstname, ' '), u.lastname) AS name, u.id AS value")
-        ->add('from', 'Application_Model_User u')
-        ->where("CONCAT(CONCAT(u.firstname, ' '), u.lastname) LIKE '%" . $search_string . "%' " . $skipIds);
-    $qb->setMaxResults(5);
-
-    $dbresults = $qb->getQuery()->getResult();
-    $results = array();
-    foreach($dbresults as $key=>$value){
-      $results[] = $value;
-    }
-    $this->_helper->json($results);
+    
+    // @todo: select only verified users
+    // skip has to be passed in directly and can't be set as a parameter due to a doctrine bug
+    $query = $this->_em->createQuery("SELECT u.id value, u.username label FROM Application_Model_User u WHERE u.username LIKE :term" . $input->skip);
+    $query->setParameter('term', '%' . $input->term . '%');
+    $query->setMaxResults(5);
+    
+    $result = $query->getArrayResult();
+    $this->_helper->json($result);
   }
 
   /**

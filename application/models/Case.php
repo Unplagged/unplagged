@@ -131,11 +131,10 @@ class Application_Model_Case extends Application_Model_Base{
     $this->name = $name;
     $this->alias = $alias;
     $this->abbreviation = $abbreviation;
-    
-    $this->reports = new \Doctrine\Common\Collections\ArrayCollection();
-    $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
-    $this->files = new \Doctrine\Common\Collections\ArrayCollection();
 
+    $this->reports = new ArrayCollection();
+    $this->documents = new ArrayCollection();
+    $this->files = new ArrayCollection();
   }
 
   /**
@@ -184,22 +183,6 @@ class Application_Model_Case extends Application_Model_Base{
 
   public function getUpdated(){
     return $this->updated;
-  }
-
-  public function addCollaborator(Application_Model_User $user){
-    return $this->collaborators->add($user);
-  }
-
-  public function removeCollaborator(Application_Model_User $user){
-    return $this->collaborators->removeElement($user);
-  }
-
-  public function getCollaborators(){
-    return $this->collaborators;
-  }
-
-  public function clearCollaborators(){
-    $this->collaborators->clear();
   }
 
   public function addFile(Application_Model_File $file){
@@ -343,6 +326,54 @@ class Application_Model_Case extends Application_Model_Base{
   public function addReport(Application_Model_Report $report){
     $report->setCase($this);
     $this->reports->add($report);
+  }
+
+  public function getCollaboratorIds(){
+    $collaboratorIds = array();
+    foreach($this->collaborators as $collaborator){
+      $collaboratorIds[] = $collaborator->getId();
+    }
+    return $collaboratorIds;
+  }
+
+  public function addCollaborator(Application_Model_User $collaborator){
+    $this->collaborators->add($collaborator);
+  }
+
+  public function removeCollaborator(Application_Model_User $collaborator){
+    $this->collaborators->removeElement($collaborator);
+  }
+
+  public function setCollaborators($collaboratorIds = array()){
+    $removedCollaborators = array();
+
+    // 1) search all collaborators that already exist by their id
+    if(!empty($this->collaborators)){
+      $this->collaborators->filter(function($collaborator) use (&$collaboratorIds, &$removedCollaborators){
+            if(in_array($collaborator->getId(), $collaboratorIds)){
+              $collaboratorIds = array_diff($collaboratorIds, array($collaborator->getId()));
+              return true;
+            }
+            $removedCollaborators[] = $collaborator;
+            return false;
+          });
+    }
+
+    // 2) create new collaborators for those that don't exist yet
+    foreach($collaboratorIds as $collaboratorId){
+      $collaborator = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneById($collaboratorId);
+
+      $this->addCollaborator($collaborator);
+    }
+
+    // 3) remove collaborators that belonged to the element before, but not anymore
+    foreach($removedCollaborators as $collaborator){
+      $this->removeCollaborator($collaborator);
+    }
+  }
+
+  public function clearCollaborators(){
+    $this->collaborators->clear();
   }
 
 }

@@ -36,7 +36,7 @@ class TagController extends Unplagged_Controller_Action{
       $input->skip = ' AND t.id NOT IN (' . $input->skip . ')';
     }
     
-    // skip has to be passe in directly and can't be set as a parameter due to a doctrine bug
+    // skip has to be passed in directly and can't be set as a parameter due to a doctrine bug
     $query = $this->_em->createQuery("SELECT t.id value, t.title label FROM Application_Model_Tag t WHERE t.title LIKE :term" . $input->skip);
     $query->setParameter('term', '%' . $input->term . '%');
     $query->setMaxResults(5);

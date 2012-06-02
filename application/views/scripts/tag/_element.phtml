@@ -6,7 +6,7 @@ $disabled = $this->disabled || false;
 
 <?php echo $this->formLabel($this->element->getName(), $this->element->getLabel()) ?>
 <dd>
-  <input id="<?php echo $this->element->getName() ?>" type="text" data-callback="<?php echo $this->callback; ?>" />
+  <input id="<?php echo $this->element->getName() ?>" type="text" data-view-script="tag" data-callback="<?php echo $this->callback; ?>" />
   <?php
   if(!empty($errors)){
     echo $this->formErrors($errors);
@@ -19,16 +19,16 @@ $disabled = $this->disabled || false;
   <div class="tags" data-wrapper-for="<?php echo $this->element->getName(); ?>">
     <?php if($this->element->getValue()){ ?>
       <?php foreach($this->element->getValue() as $tagId): ?>
-        <?php 
-        if(is_numeric($tagId)) {
+        <?php
+        if(is_numeric($tagId)){
           $tag = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Tag')->findOneById($tagId);
-        } else {
+        }else{
           $tag = new Application_Model_Tag();
           $tag->setTitle($tagId);
           $tag->setId($tagId);
         }
         ?>
-        <a data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $tag->getId(); ?>" href="#" class="btn<?php echo $disabled ? ' disabled' : ''; ?>">
+        <a data-remove="true" data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $tag->getId(); ?>" data-for="<?php echo $tag->getId(); ?>" href="#" class="btn<?php echo $disabled ? ' disabled' : ''; ?>">
           <i class="icon-tag icon-fam"></i><?php echo $tag->getTitle(); ?><?php echo!$disabled ? ' <i class="icon-remove icon-right"></i>' : ''; ?>
           <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $tag->getId(); ?>" />
         </a>

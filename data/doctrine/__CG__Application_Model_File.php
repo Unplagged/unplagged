@@ -198,12 +198,6 @@ class Application_Model_File extends \Application_Model_File implements \Doctrin
         return parent::isRatedByUser($user);
     }
 
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
-    }
-
     public function getTagIds()
     {
         $this->__load();

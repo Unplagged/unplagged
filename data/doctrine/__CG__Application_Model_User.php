@@ -270,12 +270,6 @@ class Application_Model_User extends \Application_Model_User implements \Doctrin
         return parent::isRatedByUser($user);
     }
 
-    public function geTags()
-    {
-        $this->__load();
-        return parent::geTags();
-    }
-
     public function getTagIds()
     {
         $this->__load();

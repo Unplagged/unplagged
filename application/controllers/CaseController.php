@@ -29,6 +29,7 @@ class CaseController extends Unplagged_Controller_Action{
 
   public function createAction(){
     $modifyForm = new Application_Form_Case_Modify();
+    $modifyForm->getElement("collaborators")->setValue(array($this->_defaultNamespace->userId));
 
     if($this->_request->isPost()){
       $result = $this->handleModifyData($modifyForm);
@@ -61,6 +62,7 @@ class CaseController extends Unplagged_Controller_Action{
       $modifyForm->getElement("alias")->setValue($case->getAlias());
       $modifyForm->getElement("abbreviation")->setValue($case->getAbbreviation());
       $modifyForm->getElement("tags")->setValue($case->getTagIds());
+      $modifyForm->getElement("collaborators")->setValue($case->getCollaboratorIds());
       $modifyForm->getElement("submit")->setLabel("Save case");
 
       if($this->_request->isPost()){
@@ -204,8 +206,8 @@ class CaseController extends Unplagged_Controller_Action{
         $case->setAbbreviation($formData['abbreviation']);
       }
 
+      $case->setCollaborators($formData['collaborators']);
       $case->setTags($formData['tags']);
-      //$case->setCollaborators($formData['collaborators'];
     
       // write back to persistence manager and flush it
       $this->_em->persist($case);

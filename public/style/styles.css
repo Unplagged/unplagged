@@ -1802,6 +1802,47 @@ ins {
   margin-right: 20px;
 }
 
+.users-wrapper {
+  width: 90%;
+  max-width: 462px;
+}
+.users-wrapper i {
+  margin-right: 0;
+}
+.users-wrapper .options {
+  float: right;
+  padding-top: 6px;
+}
+.users-wrapper .well {
+  padding: 5px;
+  clear: both;
+  height: 41px;
+  margin-bottom: 4px;
+  border: 1px transparent solid;
+}
+
+.users-wrapper .well img {
+  float: left;
+}
+
+.users-wrapper .well .names {
+  padding: 3px 0 0 5px;
+  float: left;
+}
+
+.users-wrapper .well span {
+  display: block;
+}
+.users-wrapper .well span.realname {
+  font-style: italic;
+}
+
+.no-shadow {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
 /* ==|== media queries ====================================================== */
 
 @media only screen and (max-width: 768px) {
@@ -1809,7 +1850,7 @@ ins {
   .diff .src-wrapper,
   .zend_form .two-column-form,
   .layout-2-columns-equal .first,
-  .layout-2-columns-equal .second 
+  .layout-2-columns-equal .second,
   {
     float: none;
     width: 100%;
