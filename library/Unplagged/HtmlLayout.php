@@ -28,23 +28,23 @@ class Unplagged_HtmlLayout {
             $lineToSource = $fragment->getSource()->getLineTo()->getLineNumber();
 
             // // get fragment content
-            $content = $fragment->getContent('array', true);
+            $content = $fragment->getContent('list', true);
 
             $divLeft = 'Plag Bibtext: ' . $bibTexPlag['autor'] . ' - ' . $bibTexPlag['titel'] . '<br/>'
 						. 'Page from: ' . $pageFromPlag . ' - Line from: ' . $lineFromPlag . '<br/>' 
 						. 'Page to: ' . $pageToPlag . ' - Line to: ' . $lineToPlag . '<br/><br/>' ;
                     
-            foreach ($content['plag'] as $line) {
-                $divLeft .= $line;
-            }
+            //foreach ($content['plag'] as $line) {
+                $divLeft .= $content['plag'] ;
+            //}
 
             $divRight = 'Source Bibtext: ' . $bibTexSource['autor'] . ' - ' . $bibTexSource['titel'] . '<br/>'
 						. 'Page from: ' . $pageFromSource . ' - Line from: ' . $pageToSource . '<br/>' 
 						. 'Page to: ' . $lineFromSource . ' - Line to: ' . $lineToSource . '<br/><br/>' ;
 						
-            foreach ($content['source'] as $line) {
-                $divRight .= $line;
-            }
+            //foreach ($content['source'] as $line) {
+                $divRight .= $content['source'];
+            //}
 
             $array[$i]["left"]=$divLeft;
             $array[$i]["right"]=$divRight;

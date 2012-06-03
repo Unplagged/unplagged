@@ -29,125 +29,121 @@ define("GT", ">");
  *
  * @author elsa
  */
-class Cron_Document_Page_Reportcreater extends Cron_Base {
+class Cron_Document_Page_Reportcreater extends Cron_Base{
 
-    public static function init() {
-        parent::init();
-    }
+  public static function init(){
+    parent::init();
+  }
 
-    public static function start() {
-        // @todo: dummy stuff, do something real here
-        //$query = self::$em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
-        $query = self::$em->createQuery("SELECT t, a, s 
+  public static function start(){
+    // @todo: dummy stuff, do something real here
+    //$query = self::$em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
+    $query = self::$em->createQuery("SELECT t, a, s 
             FROM Application_Model_Task t, Application_Model_Action a, Application_Model_State s 
             WHERE
                 t.action=a.id AND 
                 t.state=s.id AND 
                 a.name = :action AND 
                 s.name = :state");
-        $query->setParameter("action", "report_requested");
-        $query->setParameter("state", "task_scheduled");
-        $query->setMaxResults(1);
+    $query->setParameter("action", "report_requested");
+    $query->setParameter("state", "task_scheduled");
+    $query->setMaxResults(1);
 
-        $tasks = $query->getResult();
+    $tasks = $query->getResult();
 
-        if ($tasks) {
-            $task = $tasks[0];
+    if($tasks){
+      $task = $tasks[0];
 
-            $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
+      $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
 
-            $user = self::$em->getRepository('Application_Model_User')->findOneById($task->getInitiator());
-            $target = $user->getCurrentCase()->getTarget();
-            $fragments = $target->getFragments();
+      $fragments = $task->getRessource()->getTarget()->getFragments();
 
-            $filename = self::createReport($fragments, $user);
-            // update task
-            $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
-            $task->setProgressPercentage(100);
+      $filename = self::createReport($fragments, $task->getInitiator());
+      // update task
+      $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
+      $task->setProgressPercentage(100);
 
-            //self::$em->persist($report);
-            self::$em->persist($task);
-            self::$em->flush();
+      //self::$em->persist($report);
+      self::$em->persist($task);
+      self::$em->flush();
 
-            // notification
-            $user = $task->getInitiator();
-            //Unplagged_Helper::notify("simtext_report_created", $report, $user);
-        }
+      // notification
+      //$user = ;
+      //Unplagged_Helper::notify("simtext_report_created", $report, $user);
+    }
+  }
+
+  private static function createReport($fragments, $user){
+    $currentCase = $user->getCurrentCase();
+    $casename = $currentCase->getAlias();
+    $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
+
+    $array_html = Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
+
+    $content = '<div style="margin:auto; width: 500px; text-align:center; margin-top: 300px"><h1>Gemeinschaftlicher Bericht</h1><br/><br/>';
+    $content .= "<h2>Dokumentation von Plagiaten in der Dissertation</h2><br/><br/>";
+    $content .= '<h2 style="font-style:italic">' . $casename . '</h2>';
+    $content .= "<br/><br/>";
+    $content .= "<h3>" . date("d M Y") . "</h3></div>";
+    foreach($array_html as $fragment){
+      $col1 = self::cut_text_into_pages($fragment["left"]);
+      $col2 = self::cut_text_into_pages($fragment["right"]);
+      $content .= self::mix_two_columns($col1, $col2, "plagiat", "source");
     }
 
-    private static function createReport($fragments, $user) {
-        $currentCase = $user->getCurrentCase();
-        $casename = $currentCase->getAlias();
-        $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
+    $content .= self::getBarCode($currentCase);
 
-        $array_html = Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
-        
-        $content = '<div style="margin:auto; width: 500px; text-align:center; margin-top: 300px"><h1>Gemeinschaftlicher Bericht</h1><br/><br/>';
-        $content .= "<h2>Dokumentation von Plagiaten in der Dissertation</h2><br/><br/>";
-        $content .= '<h2 style="font-style:italic">' . $casename . '</h2>';
-        $content .= "<br/><br/>";
-        $content .= "<h3>" . date("d M Y") . "</h3></div>";
-        foreach($array_html as $fragment) {
-            $col1 = self::cut_text_into_pages($fragment["left"]);
-            $col2 = self::cut_text_into_pages($fragment["right"]);
-            $content .= self::mix_two_columns($col1, $col2, "plagiat", "source");
-        }
-
-        $content .= self::getBarCode($currentCase);
-
-        $html2pdf = new HTML2PDF('P', 'A4', 'en');
-        $html2pdf->WriteHTML($content);
+    $html2pdf = new HTML2PDF('P', 'A4', 'en');
+    $html2pdf->WriteHTML($content);
 
 
-        // save report to database to get an Id
-        $data = array();
-        $data["title"] = $casename;
-        $data["user"] = $user;
-        $data["target"] = $user->getCurrentCase()->getTarget();
-        $report = new Application_Model_Report($data);
+    // save report to database to get an Id
+    $data = array();
+    $data["title"] = $casename;
+    $data["user"] = $user;
+    $data["target"] = $user->getCurrentCase()->getTarget();
+    $report = new Application_Model_Report($data);
 
-        self::$em->persist($report);
-        $currentCase->addReport($report);
+    self::$em->persist($report);
+    $currentCase->addReport($report);
 
-        self::$em->persist($currentCase);
-        self::$em->flush();
+    self::$em->persist($currentCase);
+    self::$em->flush();
 
-        // after the flush, we can access the id and put a unique identifier in the report name
+    // after the flush, we can access the id and put a unique identifier in the report name
 
-        $filename = $filepath . DIRECTORY_SEPARATOR . $report->getId() . ".pdf";
-        $report->setFilePath($filename);
-        $report->setState(self::$em->getRepository('Application_Model_State')->findOneByName('report_generated'));
+    $filename = $filepath . DIRECTORY_SEPARATOR . $report->getId() . ".pdf";
 
-        self::$em->persist($report);
-        self::$em->flush();
-        $html2pdf->Output($filename, 'F');
+    $html2pdf->Output($filename, 'F');
 
-        return $filename;
-    }
+    $report->setFilePath($filename);
+    $report->setState(self::$em->getRepository('Application_Model_State')->findOneByName('report_generated'));
 
-    private static function getBarCode($case) {
-        $str_svg = $case->getBarcode(100, 150, 100, true, '%')->render();
+    self::$em->persist($report);
+    self::$em->flush();
 
-        // remove the front 
-        $open_tag = '<svg xmlns="http://www.w3.org/2000/svg" ' .
-                'version="1.1" style="width: 100%; height: 150px;">';
-        $close_tag = '</svg>';
-        $str_svg = str_replace($open_tag, '<draw style="margin:auto; width: 80%; height: 150px; background: #ffffff">', $str_svg);
-        $str_svg = str_replace($close_tag, '</draw>', $str_svg);
-        $str_svg = str_replace('width=', 'w=', $str_svg);
-        $str_svg = str_replace('height=', 'h=', $str_svg);
+    
+    return $filename;
+  }
 
-        return "<page><h2>Barcode</h2>" . $str_svg . "</page>";
-    }
+  private static function getBarCode($case){
+    $str_svg = $case->getBarcode(80, 150, 100, false, '%')->render();
 
-    /**
-     * Creates an html page element, containing a tbale
-     * with three columns. The first parameter is set in
-     * the first column and the second parameter is set
-     * in the third column.
-     */
-    private static function create_a_page($td1, $td2, $title1, $title2) {
-        return '
+    $str_svg = str_replace('svg', 'draw', $str_svg);
+    $str_svg = str_replace('width=', 'w=', $str_svg);
+    $str_svg = str_replace('height=', 'h=', $str_svg);
+
+    return "<page><h2>Barcode</h2>" . $str_svg . "</page>";
+  }
+
+  /**
+   * Creates an html page element, containing a tbale
+   * with three columns. The first parameter is set in
+   * the first column and the second parameter is set
+   * in the third column.
+   */
+  private static function create_a_page($td1, $td2, $title1, $title2){
+    return '
 <page>
 <table>
 <tr>
@@ -165,98 +161,98 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
 </td>
 </tr>
 </table></page>';
+  }
+
+  /**
+   * Removes the multiple blank spaces from the given parameter.
+   */
+  private static function remove_spaces($text){
+    while(true){
+      $replaced = str_replace('  ', ' ', $text);
+      if($replaced != $text){
+        $text = $replaced;
+      }else{
+        break;
+      }
+    }
+    return $text;
+  }
+
+  /**
+   * Cuts the given text into an array, which each element contains
+   * $nbWordsProPage words.
+   */
+  private static function cut_text_into_pages($text){
+    $text = self::remove_spaces($text);
+    $exploded = array_slice(explode(' ', $text), 0);
+    $nbWordsProPage = 400;
+    $nbPage = 0;
+    $pages = array();
+    $rest = "";
+    $nbRest = 0;
+
+    for($i = 0; $i < sizeof($exploded); $i+=$nbWordsProPage){
+      $page = $rest . implode(' ', array_slice($exploded, $i, $nbWordsProPage - $nbRest));
+      $result = self::check($page);
+      $rest = $result["toRetrieve"] . " ";
+      $nbRest = str_word_count($rest);
+      $pages[$nbPage++] = $result["s"];
     }
 
-    /**
-     * Removes the multiple blank spaces from the given parameter.
-     */
-    private static function remove_spaces($text) {
-        while (true) {
-            $replaced = str_replace('  ', ' ', $text);
-            if ($replaced != $text) {
-                $text = $replaced;
-            } else {
-                break;
-            }
-        }
-        return $text;
+    return $pages;
+  }
+
+  private static function result($length, $s){
+    $array = array();
+    $array["toRetrieve"] = substr($s, $length, strlen($s) - $length);
+    $array["s"] = substr($s, 0, $length);
+    $array["original"] = $s;
+    return $array;
+  }
+
+  private static function check($s){
+    $nbST = substr_count($s, ST);
+    $nbBT = substr_count($s, GT);
+    if($nbST == $nbBT){
+      $nbSpanOpen = substr_count($s, SPAN_OPEN);
+      $nbSpanClose = substr_count($s, SPAN_CLOSE);
+      if($nbSpanOpen == $nbSpanClose){
+        return self::result(strlen($s), $s);
+      }else{
+        // 'halli hallo <span>'
+        return self::result(strrpos($s, SPAN_OPEN), $s);
+      }
+    }else{
+      // one tag is not closed
+      //'halli hallofff <span></span'
+      //'halli hallofff <span'
+      $nbSpanOpen = substr_count($s, SPAN_OPEN);
+      $nbSpanClose = substr_count($s, SPAN_CLOSE);
+
+      return self::result(strrpos($s, SPAN_OPEN), $s);
     }
+  }
 
-    /**
-     * Cuts the given text into an array, which each element contains
-     * $nbWordsProPage words.
-     */
-    private static function cut_text_into_pages($text) {
-        $text = self::remove_spaces($text);
-        $exploded = array_slice(explode(' ', $text), 0);
-        $nbWordsProPage = 400;
-        $nbPage = 0;
-        $pages = array();
-        $rest = "";
-        $nbRest = 0;
-
-        for ($i = 0; $i < sizeof($exploded); $i+=$nbWordsProPage) {
-            $page = $rest . implode(' ', array_slice($exploded, $i, $nbWordsProPage - $nbRest));
-            $result = self::check($page);
-            $rest = $result["toRetrieve"] . " ";
-            $nbRest = str_word_count($rest);
-            $pages[$nbPage++] = $result["s"];
-        }
-
-        return $pages;
+  /**
+   * Returns the $index elements of the array.
+   * If this element does not exist, a blank
+   * space is returned.
+   */
+  private static function get_col($array, $index){
+    if(isset($array[$index])){
+      return $array[$index];
+    }else{
+      return "&nbsp;";
     }
+  }
 
-    private static function result($length, $s) {
-        $array = array();
-        $array["toRetrieve"] = substr($s, $length, strlen($s) - $length);
-        $array["s"] = substr($s, 0, $length);
-        $array["original"] = $s;
-        return $array;
-    }
-
-    private static function check($s) {
-        $nbST = substr_count($s, ST);
-        $nbBT = substr_count($s, GT);
-        if ($nbST == $nbBT) {
-            $nbSpanOpen = substr_count($s, SPAN_OPEN);
-            $nbSpanClose = substr_count($s, SPAN_CLOSE);
-            if ($nbSpanOpen == $nbSpanClose) {
-                return self::result(strlen($s), $s);
-            } else {
-                // 'halli hallo <span>'
-                return self::result(strrpos($s, SPAN_OPEN), $s);
-            }
-        } else {
-            // one tag is not closed
-            //'halli hallofff <span></span'
-            //'halli hallofff <span'
-            $nbSpanOpen = substr_count($s, SPAN_OPEN);
-            $nbSpanClose = substr_count($s, SPAN_CLOSE);
-
-            return self::result(strrpos($s, SPAN_OPEN), $s);
-        }
-    }
-
-    /**
-     * Returns the $index elements of the array.
-     * If this element does not exist, a blank
-     * space is returned.
-     */
-    private static function get_col($array, $index) {
-        if (isset($array[$index])) {
-            return $array[$index];
-        } else {
-            return "&nbsp;";
-        }
-    }
-
-    /**
-     * Builds a string from two arrays containing
-     * x and y elements.
-     */
-    private static function mix_two_columns($col1, $col2, $title1, $title2) {
-        $html = '<style type="text/css">' .
-                'body {text-align: justify}
+  /**
+   * Builds a string from two arrays containing
+   * x and y elements.
+   */
+  private static function mix_two_columns($col1, $col2, $title1, $title2){
+    $html = '<style type="text/css">' .
+        'body {text-align: justify}
                 .fragmark-0 { background-color: #f5cf9f; }
                 .fragmark-1 { background-color: #c2f598; }
                 .fragmark-2 { background-color: #a7c6f2; }
@@ -268,18 +264,18 @@ class Cron_Document_Page_Reportcreater extends Cron_Base {
                 .fragmark-8 { background-color: #f5cf9f; }
                 .fragmark-9 { background-color: #a5e6ed; }
                 .text {margin: 3px; padding: 3px; border: 1px solid grey}' .
-                '</style>';
-        $size1 = sizeof($col1);
-        $size2 = sizeof($col2);
-        $size = $size1 > $size2 ? $size1 : $size2;
-        for ($i = 0; $i < $size; $i++) {
-            $c1 = self::get_col($col1, $i);
-            $c2 = self::get_col($col2, $i);
-        
-            $html .= self::create_a_page($c1, $c2, $title1, $title2);
-        }
-        return $html;
+        '</style>';
+    $size1 = sizeof($col1);
+    $size2 = sizeof($col2);
+    $size = $size1 > $size2 ? $size1 : $size2;
+    for($i = 0; $i < $size; $i++){
+      $c1 = self::get_col($col1, $i);
+      $c2 = self::get_col($col2, $i);
+
+      $html .= self::create_a_page($c1, $c2, $title1, $title2);
     }
+    return $html;
+  }
 
 }
 
