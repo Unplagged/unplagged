@@ -62,7 +62,7 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
   /**
    * The lines in the document.
    * 
-   * @OneToMany(targetEntity="Application_Model_Document_Page_Line", mappedBy="page", cascade={"persist", "remove"})
+   * @OneToMany(targetEntity="Application_Model_Document_Page_Line", mappedBy="page", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
    * @OrderBy({"lineNumber" = "ASC"})
    */
   private $lines;
@@ -81,7 +81,7 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     if(isset($data["disabled"])){
       $this->disabled = $data["disabled"];
     }
-    
+
     if(isset($data["file"])){
       $this->originalFile = $data["file"];
     }
@@ -92,13 +92,16 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     $this->lines = new \Doctrine\Common\Collections\ArrayCollection();
   }
 
-  public function toArray(){
+  public function toArray($appendLines = false){
     $data["id"] = $this->id;
     $data["pageNumber"] = $this->pageNumber;
-    $data["lines"] = array();
 
-    foreach($this->lines as $line){
-      $data["lines"][] = $line->toArray();
+    if($appendLines == true){
+      $data["lines"] = array();
+
+      foreach($this->lines as $line){
+        $data["lines"][] = $line->toArray();
+      }
     }
     //@todo $data["file"] = ...
     return $data;
@@ -127,7 +130,7 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
   public function setPageNumber($pageNumber){
     $this->pageNumber = $pageNumber;
   }
-  
+
   public function getDisabled(){
     return $this->disabled;
   }

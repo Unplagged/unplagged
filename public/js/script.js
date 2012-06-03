@@ -245,10 +245,13 @@ $(document).ready(function(){
   });
   
   function updateDocumentPages(documentId, targetElements) {
+     console.log('start changed');
     $.post('/document/read', {
       'id': documentId
     }, function(response) {
       if(response.statuscode == 200) {
+            console.log('update changed');
+
         // clear the targets
         $.each(targetElements, function(index, targetId) {
           // clear the targets
