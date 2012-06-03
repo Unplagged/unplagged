@@ -73,7 +73,8 @@ Create new state;Neuen Status erstellen
 Edit Profile;Profil editieren
 Home;Home
 Case Files;Fall Dateien
-Public Files;Öffentliche Dateien
+# See here for bug with first char Umlauts: http://framework.zend.com/issues/browse/ZF-5757
+Public Files;Oeffentliche Dateien
 Personal Files;Persönliche Dateien
 Administration;Administration
 Roles;Rollen
@@ -86,3 +87,4 @@ Edit document;Dokument editieren
 Delete document;Dokument löschen
 No files found.;Keine Dateien gefunden
 Recent activity;Letzte Aktivitäten
+Latest cases;Neuste Fälle
