@@ -248,14 +248,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'controller'=>'document_fragment',
         'action'=>'list',
         'resource'=>'document_fragment_list'
-      ),  array(
+      ), array(
         'label'=>'Reports',
         'title'=>'Reports',
         'module'=>'default',
         'controller'=>'report',
         'action'=>'list'
 //        'resource'=>'report_list'
-      ),array(
+      ), array(
         'label'=>'Administration',
         'title'=>'Administration',
         'uri'=>'#',
@@ -342,17 +342,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     //log untranslated string
     $untranslatedWriter = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/untranslated.log');
-    $untranslatedLog    = new Zend_Log($untranslatedWriter);
+    $untranslatedLog = new Zend_Log($untranslatedWriter);
 
     $translator->setOptions(array(
-        'log'             => $untranslatedLog,
-        'logUntranslated' => true)
+      'log'=>$untranslatedLog,
+      'logUntranslated'=>true)
     );
-    $translate->setOptions(array(
-        'log'             => $untranslatedLog,
-        'logUntranslated' => true)
-    );
-    
+
+    if(file_exists($translationFilePath)){
+      $translate->setOptions(array(
+        'log'=>$untranslatedLog,
+        'logUntranslated'=>true)
+      );
+    }
     return $registry;
   }
 
