@@ -13,7 +13,7 @@ $this->headTitle($this->title);
             <span class="title"><i class="<?php echo $notification->getSource()->getIconClass(); ?> icon-fam"></i><?php echo sprintf($notification->getTitle(), "<a href=\"" . $notification->getSource()->getDirectLink() . "\">" . $notification->getSource()->getDirectName() . "</a>"); ?></span> <span class="user"><?php echo $notification->getUser()->getUsername();?>, <?php echo Unplagged_Helper::humanTiming($notification->getCreated()); ?> </span>
           </h4>
           <div class="links"  style="text-align: right">
-            <a class="btn toggle-conversation" href="#" for="conversation-wrapper-<?php echo $notification->getId(); ?>" class="toggle-comments"><i class="icon-comments icon-fam"></i>Show conversation</a>
+            <a class="btn toggle-conversation" href="#" for="conversation-wrapper-<?php echo $notification->getId(); ?>" class="toggle-comments"><i class="icon-comments icon-fam"></i><?php echo $this->translate('Show comments'); ?></a>
         </div>
         </div>
         <p><?php echo $notification->getMessage(); ?></p>

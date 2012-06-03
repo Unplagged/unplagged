@@ -88,3 +88,7 @@ Delete document;Dokument löschen
 No files found.;Keine Dateien gefunden
 Recent activity;Letzte Aktivitäten
 Latest cases;Neuste Fälle
+The character recognition of big files can take very long, you will be notified when this action is finished.;Die Texterkennung von großen Dateien kann sehr lange dauern. Sie werden benachrichtigt sobald der Prozess beendet wurde.
+The report generation for "%s" has been started.;Die Berichterstellung für "%s" wurde gestartet.
+Show comments;Kommentare anzeigen
+Write comment;Kommentar schreiben
