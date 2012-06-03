@@ -340,6 +340,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     );
     Zend_Validate_Abstract::setDefaultTranslator($translator);
 
+    //log untranslated string
+    $untranslatedWriter = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/untranslated.log');
+    $untranslatedLog    = new Zend_Log($untranslatedWriter);
+
+    $translator->setOptions(array(
+        'log'             => $untranslatedLog,
+        'logUntranslated' => true)
+    );
+    $translate->setOptions(array(
+        'log'             => $untranslatedLog,
+        'logUntranslated' => true)
+    );
+    
     return $registry;
   }
 

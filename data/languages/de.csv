@@ -60,3 +60,29 @@ Page;Seite
 Upload files;Dateien hochladen
 File information;Dateiinformationen
 Description;Beschreibung
+Activity;Aktivität
+Fragments;Fragmente
+Reports;Berichte
+The file "%s" was successfully uploaded.;Die Datei "%s" wurde erfolgreich hochgeladen.
+List of states;Statusliste
+Title;Titel
+Action;Aktion
+Edit state;Status editieren
+Delete state;Status löschen
+Create new state;Neuen Status erstellen
+Edit Profile;Profil editieren
+Home;Home
+Case Files;Fall Dateien
+Public Files;Öffentliche Dateien
+Personal Files;Persönliche Dateien
+Administration;Administration
+Roles;Rollen
+States;Status
+In order to manage fragments, you need to set a target document on the case.;Um Fragmente zu erstellen ist es erforderlich ein Zieldokument für den Fall auszuwählen.
+Pages;Seiten
+Set target;Als Zieldokument setzen
+State;Status
+Edit document;Dokument editieren
+Delete document;Dokument löschen
+No files found.;Keine Dateien gefunden
+Recent activity;Letzte Aktivitäten

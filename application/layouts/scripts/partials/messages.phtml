@@ -1,8 +1,14 @@
 <?php if(!empty($this->flashMessages)): ?>
   <?php foreach($this->flashMessages as $messages): ?>
+    <?php //if we got an array here, the message is categorized with a level ?>
     <?php if(is_array($messages)): ?>
       <?php foreach($messages as $class=>$value): ?>
-        <div class="alert fade in <?php echo 'alert-' . $class; ?>"><?php echo $this->translate($value); ?></div>
+        <?php //if we have an array here, the message contains variables that need to be provided by themselves ?>
+        <?php if(is_array($value)): ?>
+          <div class="alert fade in <?php echo 'alert-' . $class; ?>"><?php echo $this->translate($value[0], $value[1]); ?></div>
+        <?php else: ?>
+          <div class="alert fade in <?php echo 'alert-' . $class; ?>"><?php echo $this->translate($value); ?></div>
+        <?php endif; ?>
       <?php endforeach; ?>
     <?php else: ?>
       <div class="alert fade in"><?php echo $this->translate($messages); ?></div>
