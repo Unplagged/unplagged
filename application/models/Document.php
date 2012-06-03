@@ -303,4 +303,10 @@ class Application_Model_Document extends Application_Model_Base{
 	public function setBibTexSchluessel ($schluessel){
 		$this->bibTex['schluessel'] = $schluessel;
 	}
+  
+  public function getCase(){
+    return $this->case;
+  }
+
+
 }

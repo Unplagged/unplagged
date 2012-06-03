@@ -130,7 +130,7 @@ class CaseController extends Unplagged_Controller_Action{
         $file->actions = array();
 
         $action['link'] = '/file/parse/id/' . $file->getId();
-        $action['label'] = 'Parse';
+        $action['label'] = 'OCR';
         $action['icon'] = 'images/icons/page_gear.png';
         $file->actions[] = $action;
 
