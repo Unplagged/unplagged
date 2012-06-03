@@ -124,7 +124,9 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
   }
 
   public function getTitle(){
-    return 'Fragment ABC' . $this->getPlag()->getLineFrom()->getPage()->getPageNumber();
+    $abbreviation = $this->getPlag()->getLineFrom()->getPage()->getDocument()->getCase()->getAbbreviation();
+
+    return 'Fragment ' . $abbreviation . ' ' . $this->getPlag()->getLineFrom()->getPage()->getPageNumber();
   }
 
   public function getNote(){
