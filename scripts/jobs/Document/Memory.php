@@ -31,6 +31,9 @@ class Cron_Document_Parser extends Cron_Base{
   }
 
   public static function start(){
+  /*
+   *  // echo preg_match('/20363(-(\d)*){0,1}.tif/', '20363-155.tif') ? 'ja' : 'nein';
+   
     $query = self::$em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
     $query->setParameter("action", "file_parse");
     $query->setParameter("state", "task_scheduled");
@@ -39,28 +42,25 @@ class Cron_Document_Parser extends Cron_Base{
     $tasks = $query->getResult();
 
     if($tasks){
+      echo 'bla';
       $task = $tasks[0];
-      
-      $taskId = $task->getId();
-      
+
       $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
       self::$em->persist($task);
       self::$em->flush();
 
       $document = $task->getRessource();
       $file = $document->getInitialFile();
-      $documentId = $document->getId();
 
       $language = 'eng';
       $parser = Unplagged_Parser::factory($file->getMimeType());
-      $document = $parser->parseToDocument($file, $language, $documentId, $taskId);
+      $document = $parser->parseToDocument($file, $language, $document, $task);
 
       if($document instanceof Application_Model_Document){
         // update document
-        $document->setState(self::$em->getRepository('Application_Model_State')->findOneByName('parsed'));
+        $document->setState(self::$em->getRepository('Application_Model_State')->findOneByName("parsed"));
 
         // update task
-        $task = self::$em->getRepository('Application_Model_Task')->findOneById($taskId);
         $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
         $task->setProgressPercentage(100);
         
@@ -68,14 +68,32 @@ class Cron_Document_Parser extends Cron_Base{
         self::$em->persist($task);
 
         self::$em->flush();
-        self::$em->clear();
 
         // notification
-//        $user = $task->getInitiator();
-//        Unplagged_Helper::notify("document_created", $document, $user);
+        $user = $task->getInitiator();
+        Unplagged_Helper::notify("document_created", $document, $user);
       }
+    }*/
+    echo 'memory' . "\n";
+    for($i = 0; $i < 1000; $i++) {
+      $document = self::$em->getRepository('Application_Model_Document')->findOneById(207);
+      echo $i . "\n";
+      $page = new Application_Model_Document_Page();
+      $page->setContent('hello world');
+      $page->setPageNumber($i);
+      $page->setDocument($document);
+      self::$em->persist($page);
+      self::$em->flush();
+      self::$em->clear();
+     // self::$em->detach($page);
     }
+    
   }
+  
+  private static function update(){
+    
+  }
+
 }
 
 Cron_Document_Parser::init();

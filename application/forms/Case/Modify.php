@@ -52,6 +52,14 @@ class Application_Form_Case_Modify extends Zend_Form{
     $abbreviationElement->setAttrib('maxLength', 5);
     $abbreviationElement->setRequired(true);
 
+    $collaboratorsElement = new Zend_Form_Element_Text('collaborators[]');
+    $collaboratorsElement->setLabel('Collaborators');
+    $collaboratorsElement->setDecorators(array(array('ViewScript', array(
+      'viewScript' => '/user/_element.phtml',
+      'callback' => '/user/autocomplete',
+      'disabled' => false
+    ))));
+    
     $tagsElement = new Zend_Form_Element_Text('tags[]');
     $tagsElement->setLabel('Tags');
     $tagsElement->setDecorators(array(array('ViewScript', array(
@@ -68,10 +76,11 @@ class Application_Form_Case_Modify extends Zend_Form{
       $nameElement
       , $aliasElement
       , $abbreviationElement
+      , $collaboratorsElement
       , $tagsElement
     ));
 
-    $this->addDisplayGroup(array('name', 'alias', 'abbreviation', 'tags', 'collaborator')
+    $this->addDisplayGroup(array('name', 'alias', 'abbreviation', 'collaborators', 'tags')
         , 'credentialGroup'
         , array('legend'=>'Case Information')
     );

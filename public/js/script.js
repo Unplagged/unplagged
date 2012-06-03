@@ -464,7 +464,7 @@ $(document).ready(function(){
   });
   
   
-  // tagging stuff
+  // autocompletion form element stuff (used for tags and collaborators)
   $('input[data-callback]').autocomplete({
     create: function(event, ui){ 
       updateAutocompleteSource($(this).attr('id'));
@@ -474,8 +474,9 @@ $(document).ready(function(){
     },
     select: function(event, ui) {      
       var sourceId = $(this).attr('id');
+      var viewScript = $(this).attr('data-view-script');
       
-      createTagElement(sourceId, ui.item.value, ui.item.label);
+      createSelectedElement(sourceId, ui.item.value, ui.item.label, viewScript);
       updateAutocompleteSource(sourceId);
 
       $(this).val('');
@@ -483,25 +484,44 @@ $(document).ready(function(){
     }
   }).live('keypress', function (e) {
     if(e.keyCode == 13){
-      var sourceId = $(this).attr('id');      
-      createTagElement(sourceId, $(this).val(), $(this).val());
-      
-      $(this).val('');
+      var viewScript = $(this).attr('data-view-script');
+      if(viewScript == 'tag') { 
+        var sourceId = $(this).attr('id');
+
+        createSelectedElement(sourceId, $(this).val(), $(this).val(), viewScript);
+        $(this).val('');
+      }
       return false;
     }
   });
       
   function updateAutocompleteSource(sourceId){
+    console.log('update it');
     var source = $('#' + sourceId);
     source.autocomplete('option', 'source', source.attr('data-callback') + '/skip/' + getIdsToSkip(sourceId, true));
   }
   
-  function createTagElement(sourceId, value, label){
-          
-    var element = '<a data-source="' + sourceId + '" data-id="' + value + '" href="#" class="btn">';
-    element += '<i class="icon-tag icon-fam"></i>' + label + '<i class="icon-remove icon-right"></i>';
-    element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" /></a> ';
+  function createSelectedElement(sourceId, value, label, viewScript){
+    var element = '';
+    
+    if(viewScript == 'tag') {
+      element = '<a data-source="' + sourceId + '" data-remove="true" data-id="' + value + '" href="#" data-for="' + value + '" class="btn">';
+      element += '<i class="icon-tag icon-fam"></i>' + label + '<i class="icon-remove icon-right"></i>';
+      element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" /></a> ';
       
+    } else if(viewScript == 'user') {
+      element = '<div class="well" data-source="' + sourceId + '" data-id="' + value + '">';
+      element += '<img class="avatar-small no-shadow" src="/images/default-avatar.png">';
+      element += '<div class="names">';
+      element += '<span class="username">' + label + '</span>';
+      element += '<span class="realname">Benjamin Oertel</span>';
+      element += '</div>';
+      element += '<div class="options"><a href="#" class="btn">edit rights</a> ';
+      element += '<a href="#" class="btn" data-remove="true" data-for="' + value + '"><i class="icon-remove"></i></a></div>';
+      element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" />';
+      element += '</div>';      
+    }
+
     $('div[data-wrapper-for=' + sourceId + ']').append(element);
   }
   
@@ -509,7 +529,7 @@ $(document).ready(function(){
   function getIdsToSkip(sourceId, stringify){
     var skipIds = [];
     
-    $.each($('a[data-source=' + sourceId + ']'), function() {
+    $.each($('*[data-source=' + sourceId + ']'), function() {
       var dataId = $(this).attr('data-id');
       // is an integer
       if(!isNaN(parseInt(dataId * 1)) && dataId.length > 0){
@@ -520,10 +540,14 @@ $(document).ready(function(){
     return stringify ? skipIds.join(',') : skipIds;
   }
 
-  $('div[data-wrapper-for] .btn[data-source]').live('click', function(){
-    var sourceId = $(this).attr('data-source');
-    
-    $(this).remove();
+  $('div[data-wrapper-for] .btn[data-remove]').live('click', function(){
+    var elementId = $(this).attr('data-for');
+    var element = $('*[data-id=' + elementId + ']');
+    var sourceId = element.attr('data-source');
+   // element.outerHeight(true);
+   // element.hide(500, function() {
+      element.remove();
+   // });
     updateAutocompleteSource(sourceId);
 
     return false;

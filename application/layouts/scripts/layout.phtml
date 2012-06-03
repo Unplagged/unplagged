@@ -5,19 +5,10 @@ $defaultNamespace = new Zend_Session_Namespace('Default');
 $me = Zend_Registry::getInstance()->user;
 
 $em = Zend_Registry::getInstance()->entitymanager;
-// had to remove function because it somehow was included twice here
-$qb = $em->createQueryBuilder();
-$qb->add('select', "c.id AS value, c.alias AS label")
-    ->add('from', 'Application_Model_Case c');
 
-$dbresults = $qb->getQuery()->getResult();
-$results = array();
-
-foreach($dbresults as $key=>$value){
-  $results[] = $value;
-}
-
-$cases = $results;
+$query = $em->createQuery("SELECT c.id AS value, c.alias AS label FROM Application_Model_Case c WHERE :userId MEMBER OF c.collaborators");
+$query->setParameter('userId', $me->getId());
+$cases = $query->getArrayResult();
 ?>
 <?php echo $this->partial('partials/header.phtml', array('defaultNamespace'=>$defaultNamespace, 'me'=>$me, 'cases'=>$cases)); ?>
 <div role="main" class="clearfix">
@@ -51,7 +42,7 @@ $cases = $results;
       default:
         echo $this->partial('partials/sidebars/default.phtml', array("cases" => $this->layout()->cases));
     }
-  } //echo $partial;
+  }
   ?>
 </div>
 

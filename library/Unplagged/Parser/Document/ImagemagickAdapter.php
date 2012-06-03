@@ -9,23 +9,22 @@
  */
 class Unplagged_Parser_Document_ImagemagickAdapter{
 
-  // for pdfs
-  // convert -limit memory 1mb -limit map 1mb -colorspace RGB -density 300 /Users/benjamin/Sites/unplagged.local/application/storage/files/57.pdf /Users/benjamin/Sites/unplagged.local/temp/imagemagick/57-%d.tif
-
-  private $imagemagickCall;
+  private $command;
   private $inputFilePath;
   private $outputFilePath;
 
-  public function __construct($inputFilePath, $outputFilePath){
+  public function __construct($inputFilePath, $outputFilePath, $extension = null){
     $message = $this->checkForInvalidArguments($inputFilePath, $outputFilePath);
 
     if($message === false){
       $this->inputFilePath = $inputFilePath;
       $this->outputFilePath = $outputFilePath;
-      $this->imagemagickCall = Zend_Registry::get('config')->parser->imagemagickPath;
-      $pdf = true;
-      if($pdf){
-        $this->imagemagickCall .= " -limit memory 1mb -limit map 1mb -colorspace RGB -density 300";
+
+      if($extension == 'pdf'){
+        // use ghotscript for pdfs, because it is much faster to call it directly than through imagemagick
+        $this->command = sprintf(Zend_Registry::get('config')->parser->ghostscriptPath, $this->outputFilePath, $this->inputFilePath);
+      }else{
+        $this->command = sprintf(Zend_Registry::get('config')->parser->imagemagickPath, $this->inputFilePath, $this->outputFilePath);;
       }
     }else{
       throw new InvalidArgumentException($message);
@@ -34,14 +33,8 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
 
   public function execute(){
     $output = array();
-    $command = $this->imagemagickCall . ' "' . $this->inputFilePath . '" "' . $this->outputFilePath . '"';
 
-    //@todo: escapeshellcmd
-    if(APPLICATION_ENV == "benjamin"){
-      putenv("PATH=" . "/usr/local/bin");
-    }
-
-    $ret = system($command, $returnVal);
+    $ret = system($this->command, $returnVal);
 
     if($returnVal == 0){
       $directoryAndFile = pathinfo($this->outputFilePath);
@@ -80,4 +73,5 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
   }
 
 }
+
 ?>

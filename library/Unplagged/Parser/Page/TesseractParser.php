@@ -27,17 +27,16 @@ class Unplagged_Parser_Page_TesseractParser implements Unplagged_Parser_Page_Par
 
       $inputFileLocation = $file->getFullPath();
       $outputFileLocation = TEMP_PATH . DIRECTORY_SEPARATOR . 'ocr' . DIRECTORY_SEPARATOR . $hash;
-      
+
       $adapter = new Unplagged_Parser_Page_TesseractAdapter($inputFileLocation, $outputFileLocation, $language);
       $adapter->execute();
 
       // tesseract adds .txt extension automatically, so filename is different than previously specified
       $outputFileLocation .= '.txt';
 
-      unset($data);
       $page = new Application_Model_Document_Page();
       $page->setContent(file_get_contents($outputFileLocation), "text");
-      
+
       // remove the ocr-scanned document, because it is stored in the database now
       unlink($outputFileLocation);
 

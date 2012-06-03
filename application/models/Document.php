@@ -43,7 +43,7 @@ class Application_Model_Document extends Application_Model_Base{
   /**
    * The pages in the document.
    * 
-   * @OneToMany(targetEntity="Application_Model_Document_Page", mappedBy="document")
+   * @OneToMany(targetEntity="Application_Model_Document_Page", mappedBy="document", fetch="EXTRA_LAZY")
    * @OrderBy({"pageNumber" = "ASC"})
    */
   private $pages;

@@ -111,11 +111,11 @@ class Unplagged_Helper{
     $em->persist($notification);
     $em->flush();
   }
-  
-  public static function jsTime(DateTime $dateTime) {
+
+  public static function jsTime(DateTime $dateTime){
     $result['dateTime'] = $dateTime->format('Y-m-d H:i:s');
     $result['humanTiming'] = Unplagged_Helper::humanTiming($dateTime);
-    
+
     return $result;
   }
 
@@ -183,5 +183,25 @@ class Unplagged_Helper{
     return $baseResult . $changedResult;
   }
 
+  public static function removeDirectory($dir){
+    foreach(glob($dir . '/*') as $file){
+      if(is_dir($file))
+        rrmdir($file);
+      else
+        unlink($file);
+    }
+    rmdir($dir);
+  }
+
+  public static function countFilesInDirectory($dir, $condition = "*"){
+    if(glob($dir . $condition) != false){
+      $filecount = count(glob($dir . $condition));
+      return $filecount;
+    }else{
+      return 0;
+    }
+  }
+
 }
+
 ?>
