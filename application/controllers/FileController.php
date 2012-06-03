@@ -28,16 +28,14 @@ class FileController extends Unplagged_Controller_Action{
   }
 
   public function uploadAction(){
-    $uploadform = new Application_Form_File_Upload();
 
     if($this->_request->isPost()){
       $post = $this->_request->getPost();
 
+      $uploadform = new Application_Form_File_Upload();
       if($uploadform->isValid($post)){
         $this->storeUpload();
       }
-    }else{
-      $this->view->form = $uploadform;
     }
   }
 
@@ -50,6 +48,7 @@ class FileController extends Unplagged_Controller_Action{
     $newName = $this->_request->getPost('newName');
     $description = $this->_request->getPost('description');
 
+    var_dump($adapter->getFileName());
     $pathinfo = pathinfo($adapter->getFileName());
 
     $storageDir = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
@@ -67,11 +66,11 @@ class FileController extends Unplagged_Controller_Action{
       //store in the activity stream, that the current user uploaded this file
       $user = Zend_Registry::getInstance()->user;
       Unplagged_Helper::notify('file_uploaded', $file, $user);
+      $this->_helper->FlashMessenger(array('success'=>'The file "' . $fileNames[0] . '" was successfully uploaded.'));
 
       die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
     }else{
-      //we are in ajax here now, so flash messenger makes no sense
-      //$this->_helper->FlashMessenger(array('error'=>'File could not be uploaded.'));
+      $this->_helper->FlashMessenger(array('error'=>'The file "' . $fileNames[0] . '" could not be uploaded.'));
     }
   }
 
@@ -91,10 +90,35 @@ class FileController extends Unplagged_Controller_Action{
     }else{
       $fileName = $pathinfo['filename'];
     }
-    $localFilename = substr(preg_replace('/[^a-zA-Z0-9-_\.]/','', $fileName), 0, 50) . '_' . uniqid() . '.' . $fileExtension;
+    $localFilename = $this->sanitizeFilename($fileName) . '_' . uniqid() . '.' . $fileExtension;
+    Zend_Registry::get('Log')->debug($localFilename);
     $fileName .= '.' . $fileExtension;
 
     return array($fileName, $localFilename);
+  }
+
+  /**
+   * Function taken from Wordpress.
+   * 
+   * Sanitizes a filename replacing whitespace with dashes
+   *
+   * Removes special characters that are illegal in filenames on certain
+   * operating systems and special characters requiring special escaping
+   * to manipulate at the command line. Replaces spaces and consecutive
+   * dashes with a single dash. Trim period, dash and underscore from beginning
+   * and end of filename.
+   *
+   * @since 2.1.0
+   *
+   * @param string $filename The filename to be sanitized
+   * @return string The sanitized filename
+   */
+  function sanitizeFilename($filename){
+    $special_chars = array("?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}");
+    $filename = str_replace($special_chars, '', $filename);
+    $filename = preg_replace('/[\s-]+/', '-', $filename);
+    $filename = trim($filename, '.-_');
+    return $filename;
   }
 
   /**
@@ -209,7 +233,7 @@ class FileController extends Unplagged_Controller_Action{
   private function scheduleOcr(Application_Model_File $file){
     
   }
-  
+
   /**
    * Parses a single file into a document using OCR. 
    */
@@ -244,7 +268,6 @@ class FileController extends Unplagged_Controller_Action{
           $this->_em->flush();
 
           $this->_helper->FlashMessenger(array('success'=>'The OCR of this file was scheduled, you will be notified as soon as the process finished.'));
-
         }else{
           // images will be parsed directly
           $parser = Unplagged_Parser::factory($file->getMimeType());

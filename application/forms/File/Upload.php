@@ -28,11 +28,9 @@ class Application_Form_File_Upload extends Zend_Form{
     $this->setAttrib('enctype', 'multipart/form-data');
 
     $descriptionElement = new Zend_Form_Element_Textarea('description');
-    $descriptionElement->setLabel('Description:');
 
     $elementNewName = new Zend_Form_Element_Text('newName');
-    $elementNewName->setLabel('Alternative filename:');
-    $elementNewName->setOptions(array('title'=>'Provide it if you want to store the file with a different name.', 'class'=>'tooltip-toggle'));
+    $elementNewName->setRequired(true);
 
     $this->addElements(array(
       $elementNewName,

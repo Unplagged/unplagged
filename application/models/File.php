@@ -72,15 +72,13 @@ class Application_Model_File extends Application_Model_Base{
   private $size;
 
   /**
-   * The location of the file in the filesystem.
-   * @var string The file location.
+   * @var string The location of the file in the filesystem.
    * 
    * @Column(type="string", length=255)
    */
   private $location;
 
   /**
-   * The extension of the file.
    * @var string The file extension.
    * 
    * @Column(type="string", length=255)
@@ -143,18 +141,8 @@ class Application_Model_File extends Application_Model_Base{
     return $this->location;
   }
 
-  /**
-   * @todo relying on some constant in a model file isn't the best idea in my opinion, better would be to store the whole 
-   * path I think. This would only stop users from moving the installation of Unplagged around easily, but that shouldn't
-   * be that bad.
-   */
   public function getAbsoluteLocation(){
-    if(is_dir($this->location)){
-      return $this->location;
-    }else{
-      //@todo deprecated remove later on, if every file was stored with the full path
-      return BASE_PATH . DIRECTORY_SEPARATOR . $this->location;
-    }
+    return $this->location;
   }
 
   public function getFullPath(){

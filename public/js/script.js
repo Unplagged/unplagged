@@ -86,69 +86,105 @@ $(document).ready(function(){
   
   // change bibtex form according to document type
   function changeBibTexForm(){
-	if($('#type').val() == 'full' || $('#type').val() == 'periodikum' ) { 
-		$('#zeitschrift-element').show();		$('#zeitschrift-label').show();	
-		$('#monat-element').show(); 			$('#monat-label').show();
-		$('#tag-element').show();				$('#tag-label').show();
-		$('#nummer-element').show();			$('#nummer-label').show();
-	}
-	else {
-		$('#zeitschrift-element').hide();		$('#zeitschrift-label').hide();
-		$('#monat-element').hide(); 			$('#monat-label').hide();									
-		$('#tag-element').hide();				$('#tag-label').hide();
-		$('#nummer-element').hide();			$('#nummer-label').hide();									
-	}
+    if($('#type').val() == 'full' || $('#type').val() == 'periodikum' ) { 
+      $('#zeitschrift-element').show();
+      $('#zeitschrift-label').show();	
+      $('#monat-element').show();
+      $('#monat-label').show();
+      $('#tag-element').show();
+      $('#tag-label').show();
+      $('#nummer-element').show();
+      $('#nummer-label').show();
+    }
+    else {
+      $('#zeitschrift-element').hide();
+      $('#zeitschrift-label').hide();
+      $('#monat-element').hide();
+      $('#monat-label').hide();									
+      $('#tag-element').hide();
+      $('#tag-label').hide();
+      $('#nummer-element').hide();
+      $('#nummer-label').hide();									
+    }
 								
-	if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' ) {
-		$('#sammlung-element').show();		$('#sammlung-label').show();
-		$('#hrsg-element').show();			$('#hrsg-label').show();
-		$('#issn-element').show();			$('#issn-label').show();						
-	}
-	else {
-		$('#sammlung-element').hide();		$('#sammlung-label').hide();
-		$('#hrsg-element').hide();	 		$('#hrsg-label').hide();
-		$('#issn-element').hide();			$('#issn-label').hide();
-	}
+    if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' ) {
+      $('#sammlung-element').show();
+      $('#sammlung-label').show();
+      $('#hrsg-element').show();
+      $('#hrsg-label').show();
+      $('#issn-element').show();
+      $('#issn-label').show();						
+    }
+    else {
+      $('#sammlung-element').hide();
+      $('#sammlung-label').hide();
+      $('#hrsg-element').hide();
+      $('#hrsg-label').hide();
+      $('#issn-element').hide();
+      $('#issn-label').hide();
+    }
 					
-	if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' || $('#type').val() == 'periodikum'){ 
-		$('#seiten-element').show();			$('#seiten-label').show();	
-	}
-	else {
-		$('#seiten-element').hide();			$('#seiten-label').hide();
-	}
+    if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' || $('#type').val() == 'periodikum'){ 
+      $('#seiten-element').show();
+      $('#seiten-label').show();	
+    }
+    else {
+      $('#seiten-element').hide();
+      $('#seiten-label').hide();
+    }
 				
-	if($('#type').val() == 'full' || $('#type').val() == 'buch' || $('#type').val() == 'aufsatz') { 
-		$('#isbn-element').show();			$('#isbn-label').show();
-	}
-	else {
-		$('#isbn-element').hide();			$('#isbn-label').hide();
-	}
+    if($('#type').val() == 'full' || $('#type').val() == 'buch' || $('#type').val() == 'aufsatz') { 
+      $('#isbn-element').show();
+      $('#isbn-label').show();
+    }
+    else {
+      $('#isbn-element').hide();
+      $('#isbn-label').hide();
+    }
 
-	if($('#type').val() == 'full'){
-		$('#kuerzel-element').show();			$('#kuerzel-label').show();
-		$('#beteiligte-element').show();		$('#beteiligte-label').show();
-		$('#ausgabe-element').show();			$('#ausgabe-label').show();
-		$('#umfang-element').show();			$('#umfang-label').show();
-		$('#reihe-element').show();				$('#reihe-label').show();
-		$('#doi-element').show();				$('#doi-label').show();
-		$('#urn-element').show();				$('#urn-label').show();
-		$('#wp-element').show();				$('#wp-label').show();
-		$('#schluessel-element').show();		$('#schluessel-label').show();
-	}
-	else{
-		$('#kuerzel-element').hide();			$('#kuerzel-label').hide();
-		$('#beteiligte-element').hide();		$('#beteiligte-label').hide();
-		$('#ausgabe-element').hide();			$('#ausgabe-label').hide();
-		$('#umfang-element').hide();			$('#umfang-label').hide();
-		$('#reihe-element').hide();				$('#reihe-label').hide();
-		$('#doi-element').hide();				$('#doi-label').hide();
-		$('#urn-element').hide();				$('#urn-label').hide();
-		$('#wp-element').hide();				$('#wp-label').hide();
-		$('#schluessel-element').hide();		$('#schluessel-label').hide();
+    if($('#type').val() == 'full'){
+      $('#kuerzel-element').show();
+      $('#kuerzel-label').show();
+      $('#beteiligte-element').show();
+      $('#beteiligte-label').show();
+      $('#ausgabe-element').show();
+      $('#ausgabe-label').show();
+      $('#umfang-element').show();
+      $('#umfang-label').show();
+      $('#reihe-element').show();
+      $('#reihe-label').show();
+      $('#doi-element').show();
+      $('#doi-label').show();
+      $('#urn-element').show();
+      $('#urn-label').show();
+      $('#wp-element').show();
+      $('#wp-label').show();
+      $('#schluessel-element').show();
+      $('#schluessel-label').show();
+    }
+    else{
+      $('#kuerzel-element').hide();
+      $('#kuerzel-label').hide();
+      $('#beteiligte-element').hide();
+      $('#beteiligte-label').hide();
+      $('#ausgabe-element').hide();
+      $('#ausgabe-label').hide();
+      $('#umfang-element').hide();
+      $('#umfang-label').hide();
+      $('#reihe-element').hide();
+      $('#reihe-label').hide();
+      $('#doi-element').hide();
+      $('#doi-label').hide();
+      $('#urn-element').hide();
+      $('#urn-label').hide();
+      $('#wp-element').hide();
+      $('#wp-label').hide();
+      $('#schluessel-element').hide();
+      $('#schluessel-label').hide();
+    }
   }
-}
 	
-	$("#type").change(function(){
+  $("#type").change(function(){
     changeBibTexForm();
   });
   changeBibTexForm();
@@ -544,10 +580,10 @@ $(document).ready(function(){
     var elementId = $(this).attr('data-for');
     var element = $('*[data-id=' + elementId + ']');
     var sourceId = element.attr('data-source');
-   // element.outerHeight(true);
-   // element.hide(500, function() {
-      element.remove();
-   // });
+    // element.outerHeight(true);
+    // element.hide(500, function() {
+    element.remove();
+    // });
     updateAutocompleteSource(sourceId);
 
     return false;
@@ -558,24 +594,28 @@ $(document).ready(function(){
   var filesRunning = false;
     
   // Convert divs to queue widgets when the DOM is ready
-    $('#upload-queue').pluploadQueue({
-      runtimes : 'html5,flash,silverlight,html4',
-      url : '/file/upload',
-      max_file_size : '1000mb',
-      //chunk_size : '5mb', //disable because html5 + chunking kills the filename currently
-      unique_names : true,
-      flash_swf_url : '/js/libs/plupload/js/plupload.flash.swf',
-      silverlight_xap_url : '/js/libs/plupload/js/plupload.silverlight.xap',
-      init: {
-        QueueChanged: queueFileForModalForm,
-        BeforeUpload: function(uploader, file){
-          uploader.settings['multipart_params'].description = file.description;
-          uploader.settings['multipart_params'].newName = file.newName;
-        }
-      },
-      multipart_params: {'description': '', 'newName': ''}
+  $('#upload-queue').pluploadQueue({
+    runtimes : 'html5,flash,silverlight,html4',
+    url : '/file/upload',
+    max_file_size : '1000mb',
+    //chunk_size : '5mb', //disable because html5 + chunking kills the filename currently
+    unique_names : true,
+    flash_swf_url : '/js/libs/plupload/js/plupload.flash.swf',
+    silverlight_xap_url : '/js/libs/plupload/js/plupload.silverlight.xap',
+    init: {
+      QueueChanged: queueFileForModalForm,
+      BeforeUpload: function(uploader, file){
+        //take the data that was set in the file on QueueChange, so that it gets also uploaded
+        uploader.settings['multipart_params'].description = file.description;
+        uploader.settings['multipart_params'].newName = file.newName;
+      }
+    },
+    multipart_params: {
+      'description': '', 
+      'newName': ''
+    }
       
-    });
+  });
   
   function queueFileForModalForm(uploader){
     fileUploader = uploader;
@@ -593,7 +633,7 @@ $(document).ready(function(){
     
   var fileModal = $('#file-data');
   fileModal.find('.modal-save').click(saveChanges);
-  fileModal.find('.close').click(closeFileModal);
+  fileModal.find('.modal-close').click(closeFileModal);
      
   function getDataForNextFile(){
     var file = files.shift();
@@ -601,7 +641,7 @@ $(document).ready(function(){
     if(file){
       fileModal.find('input, textarea').val('');
       //set the filename in the heading
-      fileModal.modal('show').find('.filename').text(file.name);
+      fileModal.modal('show').find('#newName').val(file.name.replace(/\.[^/.]+$/, ""));
       //store the file on the modal so that we can retrieve on button click
       $.data(fileModal, 'current-file', file);
     } else {
@@ -615,7 +655,7 @@ $(document).ready(function(){
     fileModal.hide();
     fileModal.find('input').val('');
     //fix for https://github.com/twitter/bootstrap/issues/2839
-    $('.modal-backdrop').remove();
+    $('.modal-backdrop').hide();
   }
     
   function saveChanges(){
@@ -627,10 +667,10 @@ $(document).ready(function(){
       file.newName = newNameValue;
     }
     $.data(fileModal, 'current-file', null);
-    if(files.length >= 1){
-      fileModal.one('hidden', getDataForNextFile);
-      fileModal.modal('hide');
-      $('.modal-backdrop').remove();
+    if(files.length > 0){
+      $('.modal.in').one('hidden', getDataForNextFile);
+      $('.modal.in').modal('hide');
+      $('.modal-backdrop').hide();
     } else {
       finishAdditionalData();
     }
@@ -642,7 +682,7 @@ $(document).ready(function(){
   function closeFileModal(){
     var fileAccess = $.data(fileModal, 'current-file');
     if(fileAccess){
-      fileAccess[1].removeFile(fileAccess[0]);
+      fileUploader.removeFile(fileAccess);
 
       $.data(fileModal, 'current-file', null);
       
@@ -650,7 +690,7 @@ $(document).ready(function(){
         if(files.length>0){
           getDataForNextFile();
         } else {
-          finishAddtionalData();  
+          finishAdditionalData();  
         }
       });
     }

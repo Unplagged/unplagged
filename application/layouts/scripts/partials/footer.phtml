@@ -18,6 +18,12 @@
     <script defer src="<?php echo $this->baseUrl('/js/libs/plupload/js/plupload.full.js'); ?>"></script>
     <script defer src="<?php echo $this->baseUrl('/js/libs/plupload/js/jquery.plupload.queue/jquery.plupload.queue.js'); ?>"></script>
     
+    <?php $languageString = Zend_Registry::getInstance()->Zend_Locale->getLanguage(); ?>
+    <?php $pluploadTranslationPath = '/js/libs/plupload/js/i18n/' . $languageString . '.js'; ?>
+    <?php if(file_exists(BASE_PATH . DIRECTORY_SEPARATOR . 'public' . $pluploadTranslationPath)): ?>
+    <script defer src="<?php echo $this->baseUrl($pluploadTranslationPath); ?>"></script>
+    <?php endif; ?>
+    
     <?php //own plugins go here ?>
     <script defer src="<?php echo $this->baseUrl('/js/plugins.js'); ?>"></script>
     <?php //all other small scripts can be put here ?>
