@@ -60,7 +60,7 @@ class ReportController extends Unplagged_Controller_Versionable{
       $this->_em->flush();
 
       // Inform the user that the process will be started
-      $this->_helper->flashMessenger->addMessage(array('success', 'The report-generating process has been started.'));
+      $this->_helper->flashMessenger->addMessage(array('success' => 'The report-generating process has been started.'));
     }else{
       $this->_helper->flashMessenger->addMessage('You have to select a case, before you can start the report creation.');
       $this->_helper->viewRenderer->setNoRender(true);
