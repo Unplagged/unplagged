@@ -62,7 +62,7 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
   /**
    * The lines in the document.
    * 
-   * @OneToMany(targetEntity="Application_Model_Document_Page_Line", mappedBy="page", cascade={"persist", "remove"})
+   * @OneToMany(targetEntity="Application_Model_Document_Page_Line", mappedBy="page", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
    * @OrderBy({"lineNumber" = "ASC"})
    */
   private $lines;
