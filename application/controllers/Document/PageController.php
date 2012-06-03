@@ -427,7 +427,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
         $response["statuscode"] = 200;
-        $response["data"] = $page->toArray();
+        $response["data"] = $page->toArray(true);
       }else{
         $response["statuscode"] = 404;
         $response["statusmessage"] = "No page by that id found.";
