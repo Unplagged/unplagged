@@ -91,7 +91,7 @@ class FileController extends Unplagged_Controller_Action{
     }else{
       $fileName = $pathinfo['filename'];
     }
-    $localFilename = $fileName . '_' . uniqid() . '.' . $fileExtension;
+    $localFilename = substr(preg_replace('/[^a-zA-Z0-9-_\.]/','', $fileName), 0, 50) . '_' . uniqid() . '.' . $fileExtension;
     $fileName .= '.' . $fileExtension;
 
     return array($fileName, $localFilename);
