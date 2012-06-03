@@ -166,9 +166,9 @@ class FileController extends Unplagged_Controller_Action{
       $file->actions = array();
 
       $parseAction['link'] = '/file/parse/id/' . $file->getId();
-      $parseAction['title'] = 'Parsing big files can take very long, you will be notified when this action is finalized.';
+      $parseAction['title'] = 'The OCR of big files can take very long, you will be notified when this action is finalized.';
       $parseAction['name'] = 'parse';
-      $parseAction['label'] = 'Parse';
+      $parseAction['label'] = 'OCR';
       $parseAction['icon'] = 'images/icons/page_gear.png';
       $file->actions[] = $parseAction;
 
