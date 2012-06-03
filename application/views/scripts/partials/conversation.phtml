@@ -5,8 +5,8 @@
   <div class="conversation-loading"><img src="/images/ajax-loader.gif" alt="" /></div>
   <div class="conversation"></div>
   <div class="write-comment-box">
-    <input type="text" name="text" placeholder="Write a comment" class="comment-field" />
+    <input type="text" name="text" placeholder="<?php echo $this->translate('Write comment'); ?>" class="comment-field" />
     <input type="hidden" name="sourceId" value="<?php echo $this->sourceId; ?>" />
-    <a class="btn write-comment" href="#"><i class="icon-comment icon-fam"></i>Write comment</a>
+    <a class="btn write-comment" href="#"><i class="icon-comment icon-fam"></i><?php echo $this->translate('Write comment'); ?></a>
   </div>
 </div>

@@ -166,7 +166,7 @@ class FileController extends Unplagged_Controller_Action{
       $file->actions = array();
 
       $parseAction['link'] = '/file/parse/id/' . $file->getId();
-      $parseAction['title'] = 'The OCR of big files can take very long, you will be notified when this action is finalized.';
+      $parseAction['title'] = Zend_Registry::getInstance()->Zend_Translate->translate('The character recognition of big files can take very long, you will be notified when this action is finished.');
       $parseAction['name'] = 'parse';
       $parseAction['label'] = 'OCR';
       $parseAction['icon'] = 'images/icons/page_gear.png';

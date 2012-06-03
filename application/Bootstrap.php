@@ -322,10 +322,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $languageString = $locale->getLanguage();
     $translationFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $languageString . '.csv';
 
+    
     //try to load the language file
     if(file_exists($translationFilePath)){
       $translate = new Zend_Translate('csv', $translationFilePath, $languageString);
       $registry->set('Zend_Translate', $translate);
+    } else {
+      //init an empty Zend_Translate to always have an object
+      $registry->set('Zend_Translate', new Zend_Translate('csv'));
     }
 
     //translate standard zend framework messages and supress errors, which occur when language was not found
@@ -340,7 +344,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     );
     Zend_Validate_Abstract::setDefaultTranslator($translator);
 
-    //log untranslated string
+    //log untranslated strings
     $untranslatedWriter = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/untranslated.log');
     $untranslatedLog = new Zend_Log($untranslatedWriter);
 
@@ -349,7 +353,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       'logUntranslated'=>true)
     );
 
-    if(file_exists($translationFilePath)){
+    if(!empty($translate)){
       $translate->setOptions(array(
         'log'=>$untranslatedLog,
         'logUntranslated'=>true)
