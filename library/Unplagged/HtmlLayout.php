@@ -48,6 +48,7 @@ class Unplagged_HtmlLayout {
 
             $array[$i]["left"]=$divLeft;
             $array[$i]["right"]=$divRight;
+            $i++;
         }
 
         return $array;
