@@ -33,9 +33,16 @@ class Unplagged_Mailer{
   public static function sendRegistrationMail(Application_Model_User $user){
     $config = Zend_Registry::get('config');
 
-    $bodyText = 'Thanks for your registration.' . "\r" . "\n" . "\r" . "\n";
-    $bodyText .= 'Please click the following link, to verify your account: ' . "\r" . "\n";
-    $bodyText .= $config->link->accountVerification . $user->getVerificationHash() . "\r" . "\n";
+    // create view object
+    $html = new Zend_View();
+    $html->setScriptPath(APPLICATION_PATH . '/modules/default/views/emails/');
+
+    // assign valeues
+    $html->assign('verificationLink', $config->link->accountVerification . $user->getVerificationHash());
+    $html->assign('site', 'limespace.de');
+
+    $html->setScriptPath(APPLICATION_PATH . '/views/emails/de/');
+    $bodyText = $html->render('registration.phtml');
 
     $bodyText .= Unplagged_Mailer::getFooter();
 

@@ -107,8 +107,6 @@ class FileController extends Unplagged_Controller_Action{
    * dashes with a single dash. Trim period, dash and underscore from beginning
    * and end of filename.
    *
-   * @since 2.1.0
-   *
    * @param string $filename The filename to be sanitized
    * @return string The sanitized filename
    */
@@ -198,7 +196,7 @@ class FileController extends Unplagged_Controller_Action{
   }
 
   /**
-   * Enables 
+   * Send the requested file to the user.
    */
   public function downloadAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
