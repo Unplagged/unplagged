@@ -3,7 +3,7 @@
     $this->headTitle($this->title);
 ?>
 <div id="upload-queue"></div>
-<div class="modal fade" id="file-data" data-backdrop="static">
+<div class="modal hide" id="file-data" data-backdrop="static">
   <div class="modal-header">
     <button class="close modal-close" data-dismiss="modal">×</button>
     <h3><?php echo $this->translate('File information'); ?></h3>
@@ -19,6 +19,6 @@
   </div>
   <div class="modal-footer">
     <button class="btn modal-close" data-dismiss="modal"><?php echo $this->translate('Close'); ?></button>
-    <button class="btn btn-primary modal-save"><?php echo $this->translate('Save'); ?></button>
+    <button class="btn btn-primary modal-save" data-dismiss="modal"><?php echo $this->translate('Save'); ?></button>
   </div>
 </div>

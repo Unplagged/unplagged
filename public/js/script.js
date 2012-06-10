@@ -595,6 +595,7 @@ $(document).ready(function(){
   //file uploads
   var files = new Array();
   var filesRunning = false;
+  var fileUploader = null;  
     
   // Convert divs to queue widgets when the DOM is ready
   $('#upload-queue').pluploadQueue({
@@ -654,11 +655,7 @@ $(document).ready(function(){
     
   function finishAdditionalData(){
     filesRunning = false;
-    
-    fileModal.hide();
-    fileModal.find('input').val('');
-    //fix for https://github.com/twitter/bootstrap/issues/2839
-    $('.modal-backdrop').hide();
+    fileUploader.start();
   }
     
   function saveChanges(){
@@ -669,14 +666,16 @@ $(document).ready(function(){
       file.description = descriptionValue;
       file.newName = newNameValue;
     }
-    $.data(fileModal, 'current-file', null);
-    if(files.length > 0){
-      $('.modal.in').one('hidden', getDataForNextFile);
-      $('.modal.in').modal('hide');
-      $('.modal-backdrop').hide();
-    } else {
-      finishAdditionalData();
-    }
+    //$.data(fileModal, 'current-file', null);
+    fileModal.one('hidden', function(){
+      if(files.length > 0){
+        getDataForNextFile();
+      } else {
+        finishAdditionalData();
+      }
+    }).modal('hide');
+    //fix for https://github.com/twitter/bootstrap/issues/2839
+    $('.modal-backdrop').hide();
   }
     
   /**
@@ -694,6 +693,8 @@ $(document).ready(function(){
           getDataForNextFile();
         } else {
           finishAdditionalData();  
+          fileModal.modal('hide');
+          $('.modal-backdrop').hide();
         }
       });
     }
