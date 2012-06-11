@@ -83,7 +83,7 @@ class Unplagged_Mailer{
     $mail->setBodyHtml($bodyHtml);
     $mail->setFrom($config->default->senderEmail, $config->default->senderName);
     $mail->addTo($user->getEmail());
-    $mail->setSubject($config->default->portalName . ' Registration verification required');
+    $mail->setSubject($subject);
 
     $mail->send();
 
