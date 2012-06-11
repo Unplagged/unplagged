@@ -23,6 +23,21 @@
  */
 class Unplagged_Mailer{
 
+  private $language;
+  private $templatePath;
+  private $templateName;
+
+  public function __construct($templateName, $language = 'en'){
+    $this->language = $language;
+    $this->templateName = $templateName;
+    $this->templatePath = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR;
+    
+    //check if we have the directory, so that we can at least provide english as the default
+    if(!is_dir($this->templatePath)){
+      $this->templatePath = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR;
+    }
+  }
+
   /**
    * Sends a registration mail to a specific user to verify the users email address.
    * 
@@ -33,9 +48,11 @@ class Unplagged_Mailer{
   public static function sendRegistrationMail(Application_Model_User $user){
     $config = Zend_Registry::get('config');
 
-    $bodyText = 'Thanks for your registration.' . "\r" . "\n" . "\r" . "\n";
-    $bodyText .= 'Please click the following link, to verify your account: ' . "\r" . "\n";
-    $bodyText .= $config->link->accountVerification . $user->getVerificationHash() . "\r" . "\n";
+    $html = new Zend_View();
+    $html->assign('verificationLink', $config->link->accountVerification . $user->getVerificationHash());
+
+    $html->setScriptPath(APPLICATION_PATH . '/views/emails/de/plain/');
+    $bodyText = $html->render('registration.phtml');
 
     $bodyText .= Unplagged_Mailer::getFooter();
 
@@ -48,6 +65,37 @@ class Unplagged_Mailer{
     $mail->send();
 
     return true;
+  }
+
+  public function sendMail(Application_Model_User $user, $subject){
+    $config = Zend_Registry::get('config');
+
+    $mailView = new Zend_View();
+    $mailView->assign('verificationLink', $config->link->accountVerification . $user->getVerificationHash());
+
+    $bodyText = $this->getBodyContent($mailView);;
+    $bodyHtml = $this->getBodyContent($mailView, 'html');
+
+    $mail = new Zend_Mail('utf-8');
+    $mail->setBodyText($bodyText);
+    $mail->setBodyHtml($bodyHtml);
+    $mail->setFrom($config->default->senderEmail, $config->default->senderName);
+    $mail->addTo($user->getEmail());
+    $mail->setSubject($config->default->portalName . ' Registration verification required');
+
+    $mail->send();
+
+    return true;
+  }
+
+  private function getBodyContent($mailView, $type = 'plain'){
+    $bodyHtml = '';
+    if(file_exists($this->templatePath . $type . DIRECTORY_SEPARATOR . $this->templateName)){
+      $mailView->setScriptPath($this->templatePath . $type . DIRECTORY_SEPARATOR);
+      $bodyHtml = $mailView->render($this->templateName);
+    }
+    
+    return $bodyHtml;
   }
 
   /**

@@ -91,14 +91,13 @@ class FileController extends Unplagged_Controller_Action{
       $fileName = $pathinfo['filename'];
     }
     $localFilename = $this->sanitizeFilename($fileName) . '_' . uniqid() . '.' . $fileExtension;
-    Zend_Registry::get('Log')->debug($localFilename);
     $fileName .= '.' . $fileExtension;
 
     return array($fileName, $localFilename);
   }
 
   /**
-   * Function taken from Wordpress.
+   * Based on Wordpress.
    * 
    * Sanitizes a filename replacing whitespace with dashes
    *
@@ -108,12 +107,10 @@ class FileController extends Unplagged_Controller_Action{
    * dashes with a single dash. Trim period, dash and underscore from beginning
    * and end of filename.
    *
-   * @since 2.1.0
-   *
    * @param string $filename The filename to be sanitized
    * @return string The sanitized filename
    */
-  function sanitizeFilename($filename){
+  private function sanitizeFilename($filename){
     $special_chars = array("?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}");
     $filename = str_replace($special_chars, '', $filename);
     $filename = preg_replace('/[\s-]+/', '-', $filename);
@@ -199,7 +196,7 @@ class FileController extends Unplagged_Controller_Action{
   }
 
   /**
-   * Enables 
+   * Send the requested file to the user.
    */
   public function downloadAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
@@ -267,7 +264,7 @@ class FileController extends Unplagged_Controller_Action{
           $this->_em->persist($task);
           $this->_em->flush();
 
-          $this->_helper->FlashMessenger(array('success'=>'The OCR of this file was scheduled, you will be notified as soon as the process finished.'));
+          $this->_helper->FlashMessenger(array('success'=>array('The OCR of "%s" was scheduled, you will be notified as soon as the process finished.', array($file->getFilename()))));
         }else{
           // images will be parsed directly
           $parser = Unplagged_Parser::factory($file->getMimeType());
@@ -290,7 +287,7 @@ class FileController extends Unplagged_Controller_Action{
         $this->_em->flush();
       }
     }
-    $this->_helper->redirector('list', 'file');
+    $this->_helper->redirector('list', 'document');
   }
 
   /**

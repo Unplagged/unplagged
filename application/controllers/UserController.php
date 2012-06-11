@@ -61,7 +61,11 @@ class UserController extends Unplagged_Controller_Action{
 
       // log registration
       Unplagged_Helper::notify('user_registered', $user, $user);
-      Unplagged_Mailer::sendRegistrationMail($user);
+      
+      $locale = Zend_Registry::get('Zend_Locale');
+      $languageString = $locale->getLanguage();
+      $mailer = new Unplagged_Mailer('registration.phtml', $languageString);
+      $mailer->sendMail($user);
 
       $this->_helper->FlashMessenger('In order to finish your registration, please check your E-Mails.');
       $this->_helper->redirector('index', 'index');
