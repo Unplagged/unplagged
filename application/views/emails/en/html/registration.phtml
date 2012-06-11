@@ -17,9 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 ?>
-<p>Thank you for your registration.</p>
+<p>Hello <?php echo $this->recipient; ?>,</p>
 
-<p>Please click the following link, to verify your account:</p>
+<p>thank you for your registration.</p>
+
+<p>Please click the following link, to verify the registration of your account:</p>
 
 <p><a href="<?php echo $this->verificationLink; ?>"><?php echo $this->verificationLink; ?></a></p>
 
