@@ -67,7 +67,7 @@ class UserController extends Unplagged_Controller_Action{
       $mailer = new Unplagged_Mailer('registration.phtml', $languageString);
       $mailer->sendMail($user);
 
-      $this->_helper->FlashMessenger('In order to finish your registration, please check your E-Mails.');
+      $this->_helper->FlashMessenger(array('success'=>'Please check your emails to verify your account.'));
       $this->_helper->redirector('index', 'index');
     }else{
       //set filled and valid data into the form

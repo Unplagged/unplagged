@@ -17,12 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 ?>
-Vielen Dank für Ihre Registrierung.
+<p>Hallo <?php echo $this->recipient; ?>,</p>
 
-Bitte folgen Sie dem folgenden Link um Ihren Account zu verifizieren:
+<p>vielen Dank für Deine Registrierung.</p>
 
-<a href="<?php echo $this->verificationLink; ?>"><?php echo $this->verificationLink; ?></a>
+<p>Bitte folgen dem folgenden Link um Deinen Account zu verifizieren:</p>
 
-Mit freundlichen Grüßen,
+<p><a href="<?php echo $this->verificationLink; ?>"><?php echo $this->verificationLink; ?></a></p>
 
-<?php echo $this->sender; ?>
+<p>Mit freundlichen Grüßen,</p>
+
+<p><?php echo $this->sender; ?></p>

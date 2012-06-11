@@ -72,7 +72,9 @@ class Unplagged_Mailer{
 
     $mailView = new Zend_View();
     $mailView->assign('verificationLink', $config->link->accountVerification . $user->getVerificationHash());
-
+    $mailView->assign('sender', $config->default->senderName);
+    $mailView->assing('recipient', $user->getUsername());
+    
     $bodyText = $this->getBodyContent($mailView);;
     $bodyHtml = $this->getBodyContent($mailView, 'html');
 
