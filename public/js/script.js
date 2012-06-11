@@ -245,12 +245,12 @@ $(document).ready(function(){
   });
   
   function updateDocumentPages(documentId, targetElements) {
-     console.log('start changed');
+    console.log('start changed');
     $.post('/document/read', {
       'id': documentId
     }, function(response) {
       if(response.statuscode == 200) {
-            console.log('update changed');
+        console.log('update changed');
 
         // clear the targets
         $.each(targetElements, function(index, targetId) {
@@ -807,5 +807,21 @@ $(document).ready(function(){
       $('#schluessel-label').hide();
     }
   }
+  $('#right-nav.fixed-nav').closest('#main').width('100%');
+  if($('#right-nav.fixed-nav').length != 0) {
+    $('#main').width('100%');
+  
+  }
+  
+  $('#right-nav.fixed-nav').css('margin-top', '-' + $('#right-nav.fixed-nav').height()/2 + 'px');
+
+  $('#right-nav.fixed-nav.poped-in').live('click', function() {
+    $(this).css('margin-right', '0px');
+    $(this).removeClass('poped-in').addClass('poped-out');
+  });
+  $('#right-nav.fixed-nav.poped-out').live('click', function() {
+    $(this).css('margin-right', '-250px');
+    $(this).removeClass('poped-out').addClass('poped-in');
+  });
   
 });

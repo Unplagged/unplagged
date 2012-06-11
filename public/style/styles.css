@@ -584,6 +584,23 @@ nav#right-nav {
   width: 36.5625%; /* 351px/960px */
   max-width: 450px;
 }
+  nav#right-nav.fixed-nav {
+    position: fixed;
+    background-color: black;
+    padding: 0 0 0 25px;
+    right: 0;
+    top: 50%;
+    left: auto;
+    display: block;
+    width: 250px;
+    margin-right: -250px;
+    
+  }
+  nav#right-nav.fixed-nav ul {
+    background: white;
+    margin: 0;
+  }
+  
 nav#right-nav .barcode {
   display: block;
   margin-top: 10px;
