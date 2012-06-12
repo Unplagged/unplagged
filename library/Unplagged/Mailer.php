@@ -44,6 +44,7 @@ class Unplagged_Mailer{
    * @Application_Model_User $user The user the mail sent to.
    * 
    * @return Whether the mail was sent or not.
+   * @deprecated
    */
   public static function sendRegistrationMail(Application_Model_User $user){
     $config = Zend_Registry::get('config');
@@ -90,6 +91,12 @@ class Unplagged_Mailer{
     return true;
   }
 
+  /**
+   * Tries to load the specified type of body contentn from a template file.
+   * @param type $mailView
+   * @param type $type
+   * @return type 
+   */
   private function getBodyContent($mailView, $type = 'plain'){
     $bodyHtml = '';
     if(file_exists($this->templatePath . $type . DIRECTORY_SEPARATOR . $this->templateName)){
