@@ -38,12 +38,19 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
-require_once 'Zend/Application.php';
+require_once BASE_PATH . '/scripts/build/Installer/Installer.php';
 
-//Create application, bootstrap, and run
-$application = new Zend_Application(
-    APPLICATION_ENV,
-    APPLICATION_PATH . '/configs/application.ini'
-);
-$application->bootstrap();
-$application->run();
+if(Installer::isInstalled()){
+  require_once 'Zend/Application.php';
+
+  //Create application, bootstrap, and run
+  $application = new Zend_Application(
+      APPLICATION_ENV,
+      APPLICATION_PATH . '/configs/application.ini'
+  );
+  $application->bootstrap();
+  $application->run();
+} else {
+  $installer = new Installer();
+  $installer->install();
+}

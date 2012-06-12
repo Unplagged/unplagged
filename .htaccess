@@ -1,9 +1,0 @@
-# This folder should normally not be accessed directly, as /public should be the document root. To avoid
-# accidental access to this level(for example on shared hosting where this can't be changed), simply deny 
-# everything here by default.
-#
-# It should be possible to write appropriate rewrite rules in this file, based on the specific domain/subdomain/folder 
-# setup used for the installation, which routes every request into the /public folder, but I simply don't have an
-# idea for a generalized way of doing this currently.
-Order Deny,Allow
-#Deny from all

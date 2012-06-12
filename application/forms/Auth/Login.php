@@ -31,7 +31,8 @@ class Application_Form_Auth_Login extends Zend_Form{
   public function init(){
 
     $this->setMethod('post');
-    $this->setAction("/auth/login/");
+    $view = Zend_Layout::getMvcInstance()->getView();
+    $this->setAction($view->baseUrl('auth/login/'));
 
     $usernameElement = new Zend_Form_Element_Text('username');
     $usernameElement->setLabel("Username");
