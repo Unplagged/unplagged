@@ -6,4 +6,4 @@
 # setup used for the installation, which routes every request into the /public folder, but I simply don't have an
 # idea for a generalized way of doing this currently.
 Order Deny,Allow
-Deny from all
+#Deny from all
