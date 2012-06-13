@@ -41,16 +41,9 @@ class Application_Form_Case_Modify extends Zend_Form{
     $aliasElement = new Zend_Form_Element_Text('alias');
     $aliasElement->setLabel("Pseudonym");
     $aliasElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
-    $aliasElement->addValidator('stringLength', false, array(2, 64));
-    $aliasElement->setAttrib('maxLength', 64);
-    $aliasElement->setRequired(false);
-    
-    $abbreviationElement = new Zend_Form_Element_Text('abbreviation');
-    $abbreviationElement->setLabel("Abbreviation");
-    $abbreviationElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
-    $abbreviationElement->addValidator('stringLength', false, array(2, 5));
-    $abbreviationElement->setAttrib('maxLength', 5);
-    $abbreviationElement->setRequired(true);
+    $aliasElement->addValidator('stringLength', false, array(2, 5));
+    $aliasElement->setAttrib('maxLength', 5);
+    $aliasElement->setRequired(true);
 
     $collaboratorsElement = new Zend_Form_Element_Text('collaborators[]');
     $collaboratorsElement->setLabel('Collaborators');
@@ -75,12 +68,11 @@ class Application_Form_Case_Modify extends Zend_Form{
     $this->addElements(array(
       $nameElement
       , $aliasElement
-      , $abbreviationElement
       , $collaboratorsElement
       , $tagsElement
     ));
 
-    $this->addDisplayGroup(array('name', 'alias', 'abbreviation', 'collaborators', 'tags')
+    $this->addDisplayGroup(array('name', 'alias', 'collaborators', 'tags')
         , 'credentialGroup'
         , array('legend'=>'Case Information')
     );

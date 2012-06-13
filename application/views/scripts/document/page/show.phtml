@@ -9,7 +9,7 @@
 
 <?php // @todo: think about a better way to open a new page with post data in jquery ?>
 <form method="post" action="/document_fragment/create" id="fragment-create">
-  <input type="hidden" name="page" value="<?php echo $this->page->getId(); ?>" id="fragment-page" />
-  <input type="hidden" name="startLine" id="fragment-start-line" />
-  <input type="hidden" name="endLine" id="fragment-end-line" />
+  <input type="hidden" name="candidatePage" value="<?php echo $this->page->getId(); ?>" id="fragment-page" />
+  <input type="hidden" name="candidateStartLine" id="fragment-candidate-start-line" />
+  <input type="hidden" name="candidateEndLine" id="fragment-candidate-end-line" />
 </form>

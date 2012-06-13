@@ -60,7 +60,6 @@ class CaseController extends Unplagged_Controller_Action{
 
       $modifyForm->getElement("name")->setValue($case->getName());
       $modifyForm->getElement("alias")->setValue($case->getAlias());
-      $modifyForm->getElement("abbreviation")->setValue($case->getAbbreviation());
       $modifyForm->getElement("tags")->setValue($case->getTagIds());
       $modifyForm->getElement("collaborators")->setValue($case->getCollaboratorIds());
       $modifyForm->getElement("submit")->setLabel("Save case");
@@ -193,7 +192,6 @@ class CaseController extends Unplagged_Controller_Action{
       if(!($case)){
         $case = new Application_Model_Case();
         $case->setName($formData['name']);
-        $case->setAbbreviation($formData['abbreviation']);
         $case->setAlias($formData['alias']);
 
         //flush here, so that we can use the id
@@ -204,7 +202,6 @@ class CaseController extends Unplagged_Controller_Action{
       }else{
         $case->setAlias($formData['alias']);
         $case->setName($formData['name']);
-        $case->setAbbreviation($formData['abbreviation']);
       }
 
       $case->setCollaborators($formData['collaborators']);

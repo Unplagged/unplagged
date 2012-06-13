@@ -28,7 +28,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
+    Zend_Layout::getMvcInstance()->menu = 'fragment-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
 
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
@@ -66,7 +66,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $this->view->fragmentIsRated = $fragment->isRatedByUser($user);
 
 
-    Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
+    Zend_Layout::getMvcInstance()->menu = 'fragment-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 
@@ -74,13 +74,13 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
    * Handles the creation of a new fragment. 
    */
   public function createAction(){
-    $input = new Zend_Filter_Input(array('page'=>'Digits', 'startLine'=>'Digits', 'endLine'=>'Digits'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('candidatePage'=>'Digits', 'candidateStartLine'=>'Digits', 'candidateEndLine'=>'Digits', 'sourcePage'=>'Digits', 'sourceStartLine'=>'Digits', 'sourceEndLine'=>'Digits'), null, $this->_getAllParams());
 
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
-    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->page);
-    $startline = $this->_em->getRepository('Application_Model_Document_Page_Line')->findOneBy(array('lineNumber'=>$input->startLine, 'page'=>$input->page));
-    $endline = $this->_em->getRepository('Application_Model_Document_Page_Line')->findOneBy(array('lineNumber'=>$input->endLine, 'page'=>$input->page));
+    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->candidatePage);
+    $startline = $this->_em->getRepository('Application_Model_Document_Page_Line')->findOneBy(array('lineNumber'=>$input->candidateStartLine, 'page'=>$input->candidatePage));
+    $endline = $this->_em->getRepository('Application_Model_Document_Page_Line')->findOneBy(array('lineNumber'=>$input->candidateEndLine, 'page'=>$input->candidatePage));
 
     $formData['candidateDocument'] = $case->getTarget()->getId();
 
@@ -95,7 +95,25 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     }
     $this->initalisePartial($modifyForm, 'candidate', $formData);
 
-    if($this->_request->isPost() && empty($input->page)){
+    if($input->sourcePage){
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->sourcePage);
+      $startline = $this->_em->getRepository('Application_Model_Document_Page_Line')->findOneBy(array('lineNumber'=>$input->sourceStartLine, 'page'=>$input->sourcePage));
+      $endline = $this->_em->getRepository('Application_Model_Document_Page_Line')->findOneBy(array('lineNumber'=>$input->sourceEndLine, 'page'=>$input->sourcePage));
+
+      $formData['sourceDocument'] = $case->getTarget()->getId();
+
+      if($page && $startline && $endline){
+        $modifyForm->getElement("sourceDocument")->setValue($page->getDocument()->getId());
+
+        $formData['sourcePageFrom'] = $page->getId();
+        $formData['sourcePageTo'] = $page->getId();
+        $formData['sourceLineFrom'] = $startline->getId();
+        $formData['sourceLineTo'] = $endline->getId();
+      }
+      $this->initalisePartial($modifyForm, 'source', $formData);
+    }
+
+    if($this->_request->isPost() && empty($input->candidatePage)){
       $result = $this->handleModifyData($modifyForm);
 
       if($result){
@@ -200,7 +218,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
       $this->view->paginator = $paginator;
 
-      Zend_Layout::getMvcInstance()->sidebar = null;
+      Zend_Layout::getMvcInstance()->menu = null;
       Zend_Layout::getMvcInstance()->versionableId = null;
     } else{
       $this->_helper->FlashMessenger('You need to select a case first.');
@@ -214,7 +232,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     parent::changelogAction();
 
     $this->setTitle("Changelog of fragments");
-    Zend_Layout::getMvcInstance()->sidebar = 'fragment-tools';
+    Zend_Layout::getMvcInstance()->menu = 'fragment-tools';
   }
 
   public function deleteAction(){
@@ -391,4 +409,5 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
   }
 
 }
+
 ?>

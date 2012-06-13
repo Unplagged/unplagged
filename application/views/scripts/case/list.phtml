@@ -6,8 +6,7 @@ $this->headTitle($this->title);
   <thead>
     <tr>
       <th><?php echo $this->translate("Name"); ?></th>
-      <th style="width: 110px;"><?php echo $this->translate("Alias"); ?></th>
-      <th style="width: 100px;"><?php echo $this->translate("Abbreviation"); ?></th>
+      <th style="width: 210px;"><?php echo $this->translate("Alias"); ?></th>
       <th class="fit-content"><?php echo $this->translate("Actions"); ?></th>
     </tr>
   </thead>
@@ -16,14 +15,13 @@ $this->headTitle($this->title);
       <?php foreach($this->paginator as $case): ?>
         <tr>
           <td data-label="<?php echo $this->translate("Name"); ?>"><?php echo $case->getName(); ?></td>
-          <td data-label="<?php echo $this->translate("Alias"); ?>"><?php echo $case->getAlias(); ?></td>
-          <td data-label="<?php echo $this->translate("Abbreviation"); ?>"><?php echo $case->getAbbreviation(); ?></td>
+          <td data-label="<?php echo $this->translate("Pseudonym"); ?>"><?php echo $case->getAlias(); ?></td>
           <td data-label="<?php echo $this->translate("Actions"); ?>" class="fit-content"><?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$case->actions)); ?></td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
       <tr>
-        <td colspan="4" class="no-label"><?php echo $this->translate("No cases found."); ?></td>
+        <td colspan="3" class="no-label"><?php echo $this->translate("No cases found."); ?></td>
       </tr>
     <?php endif; ?>
   </tbody>

@@ -30,7 +30,7 @@ class DocumentController extends Unplagged_Controller_Action{
 
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    Zend_Layout::getMvcInstance()->sidebar = 'document-tools';
+    Zend_Layout::getMvcInstance()->menu = 'document-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 

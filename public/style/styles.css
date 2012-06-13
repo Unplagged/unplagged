@@ -584,22 +584,6 @@ nav#right-nav {
   width: 36.5625%; /* 351px/960px */
   max-width: 450px;
 }
-  nav#right-nav.fixed-nav {
-    position: fixed;
-    background-color: black;
-    padding: 0 0 0 25px;
-    right: 0;
-    top: 50%;
-    left: auto;
-    display: block;
-    width: 250px;
-    margin-right: -250px;
-    
-  }
-  nav#right-nav.fixed-nav ul {
-    background: white;
-    margin: 0;
-  }
   
 nav#right-nav .barcode {
   display: block;
@@ -639,6 +623,31 @@ nav#right-nav ul li a .badge {
 
 nav#right-nav ul li a .badge-light{
   background-color: #888C95;
+}
+
+  nav#actions-menu {
+    position: fixed;
+    padding: 0 0 0 25px;
+    right: 0;
+    top: 50%;
+    left: auto;
+    display: block;
+    width: 250px;
+    margin-right: -250px;
+    font-size: 12px;
+    
+  }
+  nav#actions-menu ul {
+    background: white;
+    margin: 0;
+  }
+  nav#actions-menu ul li a {
+  display: block;
+  border-bottom: 1px #efefef solid;
+  padding: 4px 6px;
+}
+nav#actions-menu img {
+  margin-right: 5px;
 }
 
 .default-container {
@@ -1071,7 +1080,8 @@ dl.zend_form dd dt {
 /* icons */
 .btn i,
 .activity i,
-.accordion i{ 
+.accordion i,
+#actions-menu i{ 
   background-repeat: no-repeat;
   margin-right: 5px;
 }
@@ -1159,6 +1169,25 @@ dl.zend_form dd dt {
 
 .icon-rate {
   background-image: url(/images/icons/star.png);
+}
+
+.icon-page {
+  background-image: url(/images/icons/page.png);
+}
+
+.icon-page-add {
+  background-image: url(/images/icons/page_add.png);
+}
+
+.icon-eye {
+  background-image: url(/images/icons/eye.png);
+}
+
+.icon-delete {
+  background-image: url(/images/icons/delete.png);
+}
+.icon-pencil {
+  background-image: url(/images/icons/pencil.png);
 }
 
 #activity-stream {

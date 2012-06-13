@@ -239,6 +239,67 @@ $(document).ready(function(){
     return false;
   });
   
+  // fragment update for two column view
+  $(".set-candidate-fragment, .set-source-fragment").live('click', function() {
+    var target = '#candidate-text';
+    if($(this).hasClass('set-source-fragment')) {
+      target = '#source-text';
+    }
+    
+    var startLine = '';
+    var endLine = '';
+    
+    if (document.selection) {
+      startLine = document.selection.createRange().parentElement();
+    } else {
+      var selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        startLine = selection.getRangeAt(0).startContainer.parentNode;
+        endLine = selection.getRangeAt(0).endContainer.parentNode;
+      }
+    }
+    
+    // if the element is not a list element, get the parent li element
+    if($(startLine)[0].tagName != 'LI') {
+      startLine = $(startLine).parent('li');
+    }
+    if($(endLine)[0].tagName != 'LI') {
+      endLine = $(endLine).parent('li');
+    }
+        
+    var str = $(startLine).find("span").text();
+    if(str.length > 30) {
+      str = str.substr(0, 30) + '...';
+    }
+    
+    var textElement = $(target);
+    textElement.html("'" + str + "'");
+    textElement.closest('li').removeClass('hidden');
+      
+    $(this).parent().addClass('hidden');
+      
+    if($(this).hasClass('set-candidate-fragment')) {
+      $('#fragment-candidate-start-line').val($(startLine).attr('value'));
+      $('#fragment-candidate-end-line').val($(endLine).attr('value'));
+    } else {
+      $('#fragment-source-start-line').val($(startLine).attr('value'));
+      $('#fragment-source-end-line').val($(endLine).attr('value'));
+    }
+    
+    return false;
+  });
+  
+  $(".reset-candidate-fragment, .reset-source-fragment").live('click', function() {
+    var target = '.set-candidate-fragment';
+    if($(this).hasClass('reset-source-fragment')) {
+      target = '.set-source-fragment';
+    }
+    $(target).parent().removeClass('hidden');
+    $(this).parent().addClass('hidden');
+    
+    return false;
+  });
+  
   $("#sourceDocument").change(function(){
     $('#sourceText').html('');
     updateDocumentPages($(this).val(), ['#sourcePageFrom', '#sourcePageTo']);
@@ -327,7 +388,7 @@ $(document).ready(function(){
   /**
    * The pagination plugin.
    */
-  $(function() {            
+  $(function() {
     $(".pagination a").live("click", function() {
       var href = $(this).attr("href");
       if(href) {
@@ -535,7 +596,6 @@ $(document).ready(function(){
   });
       
   function updateAutocompleteSource(sourceId){
-    console.log('update it');
     var source = $('#' + sourceId);
     source.autocomplete('option', 'source', source.attr('data-callback') + '/skip/' + getIdsToSkip(sourceId, true));
   }
@@ -808,21 +868,66 @@ $(document).ready(function(){
       $('#schluessel-label').hide();
     }
   }
-  $('#right-nav.fixed-nav').closest('#main').width('100%');
-  if($('#right-nav.fixed-nav').length != 0) {
-    $('#main').width('100%');
   
-  }
-  
-  $('#right-nav.fixed-nav').css('margin-top', '-' + $('#right-nav.fixed-nav').height()/2 + 'px');
+  $('#actions-menu').css('margin-top', '-' + $('#right-nav.fixed-nav').height()/2 + 'px');
 
-  $('#right-nav.fixed-nav.poped-in').live('click', function() {
+  $('#actions-menu.poped-in').live('click', function() {
     $(this).css('margin-right', '0px');
     $(this).removeClass('poped-in').addClass('poped-out');
   });
-  $('#right-nav.fixed-nav.poped-out').live('click', function() {
+  $('#actions-menu.poped-out').live('click', function() {
     $(this).css('margin-right', '-250px');
     $(this).removeClass('poped-out').addClass('poped-in');
+  });
+  
+  /**
+   * The pagination for document pages.
+   */
+  $(function() {
+    $(".pager a").live("click", function() {
+      var anchor = $(this);
+      if(anchor.parent().hasClass('previous')) {
+        console.log('previous');
+      } else {
+        console.log('next');
+      }
+      
+      var target = anchor.closest('.src-wrapper');
+      
+      // update also the other side
+      
+      
+      console.log(target);
+    //candidate-page
+    // return false;
+    /*      if(href) {
+        var substr = href.split('/');
+        var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
+
+        window.location.hash = hash;
+      }
+      return false;
+  */  });
+  /*
+    $(window).bind('hashchange', function(){
+      var newHash = window.location.hash.substring(1);
+
+      if (newHash) {
+        var substr = newHash.split('/');
+        var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
+
+        var url = window.location.pathname;
+        if(url.charAt(url.length-1) != '/') {
+          url += '/';
+        }
+        url += hash;
+        $("#main-wrapper").load(url + " .main", function(){
+          $('a.picture').lightBox();
+        });
+      }
+    });
+
+    $(window).trigger('hashchange');*/
   });
   
 });

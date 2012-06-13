@@ -55,15 +55,6 @@ class Application_Model_Case extends Application_Model_Base{
   private $state;
 
   /**
-   * An abbreviation for the case.
-   *
-   * @var string
-   *
-   * @Column(type="string", length=4) 
-   */
-  private $abbreviation;
-
-  /**
    * The date when the document was updated the last time.
    * 
    * @var string The update date.
@@ -122,7 +113,7 @@ class Application_Model_Case extends Application_Model_Base{
    */
   private $barcodeData;
 
-  public function __construct($name = null, $alias = null, $abbreviation = null){
+  public function __construct($name = null, $alias = null){
     $this->documents = new ArrayCollection();
     $this->files = new ArrayCollection();
     $this->collaborators = new ArrayCollection();
@@ -130,7 +121,6 @@ class Application_Model_Case extends Application_Model_Base{
 
     $this->name = $name;
     $this->alias = $alias;
-    $this->abbreviation = $abbreviation;
 
     $this->reports = new ArrayCollection();
     $this->documents = new ArrayCollection();
@@ -226,20 +216,12 @@ class Application_Model_Case extends Application_Model_Base{
     return $result;
   }
 
-  public function getAbbreviation(){
-    return $this->abbreviation;
-  }
-
   public function setName($name){
     $this->name = $name;
   }
 
   public function setAlias($alias){
     $this->alias = $alias;
-  }
-
-  public function setAbbreviation($abbreviation){
-    $this->abbreviation = $abbreviation;
   }
 
   public function getRoles(){

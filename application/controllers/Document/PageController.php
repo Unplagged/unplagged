@@ -28,7 +28,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
 
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    Zend_Layout::getMvcInstance()->sidebar = 'page-tools';
+    Zend_Layout::getMvcInstance()->menu = 'page-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 
@@ -67,8 +67,8 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     $this->view->title = 'Document: ' . $document->getTitle();
     $this->view->tooltitle = 'Create';
     $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document_page'));
-    
-    Zend_Layout::getMvcInstance()->sidebar = 'document-tools';
+
+    Zend_Layout::getMvcInstance()->menu = 'document-tools';
     Zend_Layout::getMvcInstance()->versionableId = $input->document;
   }
 
@@ -103,17 +103,15 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         }
       }
 
-     // $this->view->title = "Edit page";
+      // $this->view->title = "Edit page";
       $this->view->modifyForm = $modifyForm;
-      $this->initPageView($page, '/document_page/edit');
+      $this->initPageView($page, '/document_page/edit/id');
       $this->view->tooltitle = 'Edit';
       $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document_page'));
     }else{
       $this->_helper->FlashMessenger(array('error'=>'The specified page does not exist.'));
       $this->_helper->redirector('list', 'case');
     }
-
-    
   }
 
   public function listAction(){
@@ -135,7 +133,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       }
     }
 
-    Zend_Layout::getMvcInstance()->sidebar = "document-tools";
+    Zend_Layout::getMvcInstance()->menu = "document-tools";
     Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 
@@ -161,7 +159,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
         $this->view->page = $page;
-        $this->initPageView($page, '/document_page/show');
+        $this->initPageView($page);
       }
     }
   }
@@ -221,7 +219,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         }
         $this->view->deHyphenForm = $deHyphenForm;
       }
-      $this->initPageView($page, '/document_page/de-hyphen');
+      $this->initPageView($page, '/document_page/de-hyphen/id');
     }
   }
 
@@ -240,13 +238,13 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       // write back to persistence manager and flush it
       $this->_em->persist($page);
       $this->_em->flush();
-         
+
       // updates the barcode data
       $case = Zend_Registry::getInstance()->user->getCurrentCase();
       $case->updateBarcodeData();
       $this->_em->persist($case);
       $this->_em->flush();
-      
+
       return $page;
     }
 
@@ -297,7 +295,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $lines = preg_replace($reg, "<span class='stopword'>$1</span>", $lines);
 
         $this->view->stopWordContent = $lines;
-        $this->initPageView($page, '/document_page/stopwords');
+        $this->initPageView($page, '/document_page/stopwords/id');
       }
     }
   }
@@ -342,7 +340,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
   }
 
   /**
-   * Does a simtext comparision with a page and multiple  
+   * Does a simtext comparision with a page and multiple sources.
    */
   public function simtextAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
@@ -363,7 +361,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         }
       }
 
-      $this->initPageView($page, '/document_page/simtext');
+      $this->initPageView($page, '/document_page/simtext/id');
       $this->view->simtextForm = $simtextForm;
       $this->render('simtext/create');
     }
@@ -414,7 +412,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     parent::changelogAction();
 
     $this->setTitle("Changelog of page");
-    Zend_Layout::getMvcInstance()->sidebar = 'page-tools';
+    Zend_Layout::getMvcInstance()->menu = 'page-tools';
   }
 
   /**
@@ -442,6 +440,68 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     // disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
+  }
+
+  public function fragmentAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits', 'source'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
+    }
+
+    if(!$page){
+      // @todo: show error
+    }
+
+    if(!empty($input->source)){
+      $source = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->source);
+      if($source){
+        $this->view->source = $source;
+        $pageLink = '/document_page/fragment/id/' . $input->id . '/source';
+        $this->initPageView($source, $pageLink, 'prevSourcePageLink', 'nextSourcePageLink');
+      }
+    }
+
+    $pageLink = '/document_page/fragment/id';
+    if(!empty($source)){
+      $pageLink = '/document_page/fragment/source/' . $input->source . '/id';
+    }
+
+    $this->view->page = $page;
+    $this->initPageView($page, $pageLink);
+    
+    if(!empty($source)){
+    // do simtext
+    $left = $page->getContent('array');
+    $right = $source->getContent('array');
+
+    foreach($left as $lineNumber=>$lineContent){
+      $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
+    }
+
+    foreach($right as $lineNumber=>$lineContent){
+      $right[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
+    }
+
+    $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
+
+    $left = $simtextResult['left'];
+    $right = $simtextResult['right'];
+
+    foreach($left as $lineNumber=>$lineContent){
+      $left[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+    }
+
+    foreach($right as $lineNumber=>$lineContent){
+      $right[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+    }
+
+    $this->view->pageContent = '<ol>' . implode("\n", $left) . '</ol>';
+    $this->view->sourceContent = '<ol>' . implode("\n", $right) . '</ol>';
+    } else {
+      $this->view->pageContent = $page->getContent('list');
+      $this->view->sourceContent = '';
+    }
   }
 
   public function compareAction(){
@@ -479,7 +539,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     $this->_helper->viewRenderer->setNoRender(true);
   }
 
-  private function initPageView(Application_Model_Document_Page $page, $pageLink = '/document_page/show'){
+  private function initPageView(Application_Model_Document_Page $page, $pageLink = '/document_page/show/id', $prevLinkParam = 'prevPageLink', $nextLinkParam = 'nextPageLink'){
     // next page
     $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber > :pageNumber ORDER BY p.pageNumber ASC');
     $query->setParameter("document", $page->getDocument()->getId());
@@ -489,7 +549,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     $nextPage = $query->getResult();
     if($nextPage){
       $nextPage = $nextPage[0];
-      $this->view->nextPageLink = $pageLink . '/id/' . $nextPage->getId();
+      $this->view->$nextLinkParam = $pageLink . '/' . $nextPage->getId();
     }
 
     // previous page
@@ -501,7 +561,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     $prevPage = $query->getResult();
     if($prevPage){
       $prevPage = $prevPage[0];
-      $this->view->prevPageLink = $pageLink . '/id/' . $prevPage->getId();
+      $this->view->$prevLinkParam = $pageLink . '/' . $prevPage->getId();
     }
 
     $lastPage = $page->getDocument()->getPages()->last();
