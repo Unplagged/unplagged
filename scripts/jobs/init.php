@@ -32,10 +32,12 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once 'Zend/Application.php';
 
 // Create application, bootstrap, and run
-$application = new Zend_Application(
-        APPLICATION_ENV,
-        APPLICATION_PATH . '/configs/application.ini'
-);
+$application = new Zend_Application(APPLICATION_ENV, array(
+    'config'=>array(
+      APPLICATION_PATH . '/configs/application.ini',
+      APPLICATION_PATH . '/configs/unplagged-config.ini'
+    )
+  ));
 $application->bootstrap();
 
 register_shutdown_function('__shutdown');
