@@ -22,20 +22,30 @@
  */
 class Installer {
   
+  private static $configFilePath;
+  
+  public function __construct(){
+    self::$configFilePath = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . 'unplagged-config.ini';
+  }
+  
   /**
    * Checks whether the "unplagged-config.ini" exists as the indicator for whether the application is 
    * installed or not.
    * 
    * @return boolean
-   * 
-   * @todo fill stub
    */
-  public static function isInstalled(){
-    return true;
+  public function isInstalled(){
+    if(file_exists(self::$configFilePath)){
+      return true;  
+    }
+    
+    return false;
   }
   
   public function install(){
-    die('Not implemented yet');
+    echo '<h1>Not installed</h1>';
+    echo '<p style="width:450px;">The application is not installed. In order to install it, please create ' . self::$configFilePath . ' manually and fill in alle necessary values as provided in the unplagged-config-sample.ini.</p>';
+    die();
   }
 }
 ?>
