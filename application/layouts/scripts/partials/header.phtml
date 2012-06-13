@@ -11,10 +11,10 @@
     <?php echo $this->headTitle(); ?>
     <?php
     echo $this->headLink()
-        ->appendStylesheet($this->baseUrl() . '/style/jquery.lightbox-0.5.css')
-        ->appendStylesheet($this->baseUrl() . '/style/styles.css')
-        ->prependStylesheet($this->baseUrl() . '/style/flick/jquery-ui-1.8.17.custom.css')
-        ->prependStylesheet($this->baseUrl() . '/style/bootstrap.min.css');
+        ->appendStylesheet($this->baseUrl('style/jquery.lightbox-0.5.css'))
+        ->appendStylesheet($this->baseUrl('style/styles.css'))
+        ->prependStylesheet($this->baseUrl('style/flick/jquery-ui-1.8.17.custom.css'))
+        ->prependStylesheet($this->baseUrl('style/bootstrap.min.css'));
     ?>
     <!-- Modernizr needs to stay in the head to work properly -->
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.5.3.min.js'); ?>"></script>
@@ -29,10 +29,11 @@
           <div class="user-box">
             <img class="avatar" src="<?php echo $this->me->getAvatar(); ?>" />
             <div class="dropdown-button hoverable user-menu">
-              <a class="button" href="/user/edit"><?php echo $this->me->getUsername(); ?><span class="arrow-down"></span></a>
+              <a class="button" href="<?php echo $this->baseUrl('user/edit'); ?>"><?php echo $this->me->getUsername(); ?><span class="arrow-down"></span></a>
               <ul>
-                <li><a href="/auth/logout"><?php echo $this->translate("Logout"); ?></a></li>
-                <li><a href="/user/edit"><?php echo $this->translate("Edit Profile"); ?></a></li>
+                <li><a href="<?php echo $this->baseUrl('auth/logout'); ?>"><?php echo $this->translate("Logout"); ?></a></li>
+                <li><a href="<?php echo $this->baseUrl('user/edit'); ?>"><?php echo $this->translate("Edit Profile"); ?></a></li>
+                <li><a href="<?php echo $this->baseUrl('user/settings'); ?>"><?php echo $this->translate("Settings"); ?></a></li>
               </ul>
             </div>
           </div>
@@ -46,9 +47,9 @@
             }
             ?>
             <?php if($currentValue): ?>
-            <a href="/case/edit/id/<?php echo $currentValue; ?>"><?php echo $this->translate("Edit Case"); ?></a>
+            <a href="<?php echo $this->baseUrl('case/edit/id/' . $currentValue); ?>"><?php echo $this->translate("Edit Case"); ?></a>
             <?php endif; ?>
-            <form class="current-case" method="POST" action="/user/set-current-case">
+            <form class="current-case" method="POST" action="<?php echo $this->baseUrl('user/set-current-case'); ?>">
               <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
                   <option></option>
                 <?php foreach($this->cases as $case): ?>
@@ -60,9 +61,9 @@
           </div>
         <?php else: ?>
           <div class="login-register-box">
-            <a href="/user/register"><?php echo $this->translate("Register now"); ?></a>
+            <a href="<?php echo $this->baseUrl('user/register'); ?>"><?php echo $this->translate("Register now"); ?></a>
             <span><?php echo $this->translate('or') . ' '; ?></span>
-            <a href="/auth/login"><?php echo $this->translate("login"); ?></a>
+            <a href="<?php echo $this->baseUrl('auth/login'); ?>"><?php echo $this->translate("login"); ?></a>
           </div>
         <?php endif; ?>
       </div>

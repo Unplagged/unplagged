@@ -32,18 +32,28 @@ defined('TEMP_PATH')
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
-// Ensure library folder is on the include_path
-set_include_path(implode(PATH_SEPARATOR, array(
-    realpath(APPLICATION_PATH . '/../library'),
-    get_include_path(),
-)));
 
-require_once 'Zend/Application.php';
+require_once BASE_PATH . '/scripts/build/Installer/Installer.php';
 
-//Create application, bootstrap, and run
-$application = new Zend_Application(
-    APPLICATION_ENV,
-    APPLICATION_PATH . '/configs/application.ini'
-);
-$application->bootstrap();
-$application->run();
+$installer = new Installer();
+if($installer->isInstalled()){
+  // Ensure library folder is on the include_path
+  set_include_path(implode(PATH_SEPARATOR, array(
+      realpath(APPLICATION_PATH . '/../library'),
+      get_include_path(),
+  )));
+  
+  require_once 'Zend/Application.php';
+  
+  //Create application, bootstrap, and run
+  $application = new Zend_Application(APPLICATION_ENV, array(
+    'config'=>array(
+      APPLICATION_PATH . '/configs/application.ini',
+      APPLICATION_PATH . '/configs/unplagged-config.ini'
+    )
+  ));
+  $application->bootstrap();
+  $application->run();
+} else {
+  $installer->install();
+}

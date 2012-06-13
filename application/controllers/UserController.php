@@ -62,12 +62,14 @@ class UserController extends Unplagged_Controller_Action{
       // log registration
       Unplagged_Helper::notify('user_registered', $user, $user);
       
+      $config = Zend_Registry::get('config');
       $locale = Zend_Registry::get('Zend_Locale');
       $languageString = $locale->getLanguage();
       $mailer = new Unplagged_Mailer('registration.phtml', $languageString);
-      $mailer->sendMail($user);
+      $subject = Zend_Registry::get('Zend_Translate')->translate('%s: Registration verification required');
+      $mailer->sendMail($user, sprintf($subject, $config->default->applicationName));
 
-      $this->_helper->FlashMessenger('In order to finish your registration, please check your E-Mails.');
+      $this->_helper->FlashMessenger(array('success'=>'Please check your emails to verify your account.'));
       $this->_helper->redirector('index', 'index');
     }else{
       //set filled and valid data into the form

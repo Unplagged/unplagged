@@ -65,6 +65,9 @@ class FileController extends Unplagged_Controller_Action{
 
       //store in the activity stream, that the current user uploaded this file
       $user = Zend_Registry::getInstance()->user;
+      $user->addFile($file);
+      $this->_em->persists($user);
+      
       Unplagged_Helper::notify('file_uploaded', $file, $user);
       $this->_helper->FlashMessenger(array('success'=>array('The file "%s" was successfully uploaded.', array($fileNames[0]))));
 

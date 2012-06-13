@@ -44,6 +44,7 @@ class Unplagged_Mailer{
    * @Application_Model_User $user The user the mail sent to.
    * 
    * @return Whether the mail was sent or not.
+   * @deprecated
    */
   public static function sendRegistrationMail(Application_Model_User $user){
     $config = Zend_Registry::get('config');
@@ -72,7 +73,9 @@ class Unplagged_Mailer{
 
     $mailView = new Zend_View();
     $mailView->assign('verificationLink', $config->link->accountVerification . $user->getVerificationHash());
-
+    $mailView->assign('sender', $config->default->senderName);
+    $mailView->assign('recipient', $user->getUsername());
+    
     $bodyText = $this->getBodyContent($mailView);;
     $bodyHtml = $this->getBodyContent($mailView, 'html');
 
@@ -81,13 +84,19 @@ class Unplagged_Mailer{
     $mail->setBodyHtml($bodyHtml);
     $mail->setFrom($config->default->senderEmail, $config->default->senderName);
     $mail->addTo($user->getEmail());
-    $mail->setSubject($config->default->portalName . ' Registration verification required');
+    $mail->setSubject($subject);
 
     $mail->send();
 
     return true;
   }
 
+  /**
+   * Tries to load the specified type of body contentn from a template file.
+   * @param type $mailView
+   * @param type $type
+   * @return type 
+   */
   private function getBodyContent($mailView, $type = 'plain'){
     $bodyHtml = '';
     if(file_exists($this->templatePath . $type . DIRECTORY_SEPARATOR . $this->templateName)){

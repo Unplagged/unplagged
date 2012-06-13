@@ -43,10 +43,12 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once ('Zend/Application.php');
 
 // Create application, bootstrap, and run
-$application = new Zend_Application(
-        APPLICATION_ENV,
-        APPLICATION_PATH . DIRECTORY_SEPARATOR .'configs' . DIRECTORY_SEPARATOR . 'application.ini'
-);
+$application = new Zend_Application(APPLICATION_ENV, array(
+    'config'=>array(
+      APPLICATION_PATH . '/configs/application.ini',
+      APPLICATION_PATH . '/configs/unplagged-config.ini'
+    )
+  ));
 
 //make sure doctrine was initialized, so we can get access to the db via the entity manager
 $application->getBootstrap()->bootstrap('doctrine');

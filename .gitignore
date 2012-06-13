@@ -9,6 +9,7 @@
 /docs/Developers Manual/*.bbl
 /docs/Developers Manual/*.synctex.gz
 /docs/Developers Manual/parts/*.aux
+/application/configs/unplagged-config.ini
 
 
 /nbproject/private/
