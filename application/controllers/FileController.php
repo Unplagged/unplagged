@@ -48,7 +48,6 @@ class FileController extends Unplagged_Controller_Action{
     $newName = $this->_request->getPost('newName');
     $description = $this->_request->getPost('description');
 
-    var_dump($adapter->getFileName());
     $pathinfo = pathinfo($adapter->getFileName());
 
     $storageDir = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
@@ -66,7 +65,7 @@ class FileController extends Unplagged_Controller_Action{
       //store in the activity stream, that the current user uploaded this file
       $user = Zend_Registry::getInstance()->user;
       $user->addFile($file);
-      $this->_em->persists($user);
+      $this->_em->persist($user);
       
       Unplagged_Helper::notify('file_uploaded', $file, $user);
       $this->_helper->FlashMessenger(array('success'=>array('The file "%s" was successfully uploaded.', array($fileNames[0]))));
@@ -153,7 +152,7 @@ class FileController extends Unplagged_Controller_Action{
 
     $this->setTitle('Public Files');
 
-    $query = $this->_em->createQuery("SELECT f FROM Application_Model_File f");
+    $query = $this->_em->createQuery("SELECT f FROM Application_Model_File f ORDER BY f.created DESC");
     $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_File f");
 
     $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
