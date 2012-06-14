@@ -5,24 +5,24 @@
  * Please put everything at least into a self-executing function block to don't pollute
  * the global namespace.
  */
-
 $(document).ready(function(){  
-  // lined textareas
-  $("textarea.line-numbers").numberfy();
+  // enable line numbers on textareas with a certain class name
+  $('textarea.line-numbers').numberfy();
+  // enable the twitter bootstrap tooltip and dropdowns for certain classnames
   $('.tooltip-toggle').tooltip();
-
   $('.dropdown-toggle').dropdown();
+
   $('.alert').prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');
   $().alert()
  
-  // submit the case selection on change of the dropdown
+  // enable chosen for the case selection in the upper right and submit it on change
   $('.case-settings-box select').chosen({
     allow_single_deselect: true
   }).change(function(){
     $(this).closest('form').submit();  
   });
   
-  //select all for de-hyphen area
+  // select all button for de-hyphen area
   $('.de-hyphen form').css('position', 'relative').append('<a class="btn select-all" href=""><i class="icon-ok-circle"></i>Deselect all</a>');
   var selectAllLink = $('.select-all');
   selectAllLink.css({
@@ -701,5 +701,6 @@ $(document).ready(function(){
   }
   
   $('#upload-queue').unplaggedFileUpload();
+  $().unplaggedContextMenu();
   
 });

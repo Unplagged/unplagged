@@ -1,114 +1,17 @@
-/*
- * jQuery hashchange event - v1.3 - 7/21/2010
- * http://benalman.com/projects/jquery-hashchange-plugin/
- * 
- * Copyright (c) 2010 "Cowboy" Ben Alman
- * Dual licensed under the MIT and GPL licenses.
- * http://benalman.com/about/license/
- */
-(function($,e,b){
-  var c="hashchange",h=document,f,g=$.event.special,i=h.documentMode,d="on"+c in e&&(i===b||i>7);
-  function a(j){
-    j=j||location.href;
-    return"#"+j.replace(/^[^#]*#?(.*)$/,"$1")
-    }
-    $.fn[c]=function(j){
-    return j?this.bind(c,j):this.trigger(c)
-    };
-    
-  $.fn[c].delay=50;
-  g[c]=$.extend(g[c],{
-    setup:function(){
-      if(d){
-        return false
-        }
-        $(f.start)
-      },
-    teardown:function(){
-      if(d){
-        return false
-        }
-        $(f.stop)
-      }
-    });
-f=(function(){
-  var j={},p,m=a(),k=function(q){
-    return q
-    },l=k,o=k;
-  j.start=function(){
-    p||n()
-    };
-    
-  j.stop=function(){
-    p&&clearTimeout(p);
-    p=b
-    };
-    
-  function n(){
-    var r=a(),q=o(m);
-    if(r!==m){
-      l(m=r,q);
-      $(e).trigger(c)
-      }else{
-      if(q!==m){
-        location.href=location.href.replace(/#.*/,"")+q
-        }
-      }
-    p=setTimeout(n,$.fn[c].delay)
-  }
-  $.browser.msie&&!d&&(function(){
-  var q,r;
-  j.start=function(){
-    if(!q){
-      r=$.fn[c].src;
-      r=r&&r+a();
-      q=$('<iframe tabindex="-1" title="empty"/>').hide().one("load",function(){
-        r||l(a());
-        n()
-        }).attr("src",r||"javascript:0").insertAfter("body")[0].contentWindow;
-      h.onpropertychange=function(){
-        try{
-          if(event.propertyName==="title"){
-            q.document.title=h.title
-            }
-          }catch(s){}
-    }
-  }
-};
-
-j.stop=k;
-o=function(){
-  return a(q.location.href)
-  };
-  
-l=function(v,s){
-  var u=q.document,t=$.fn[c].domain;
-  if(v!==s){
-    u.title=h.title;
-    u.open();
-    t&&u.write('<script>document.domain="'+t+'"<\/script>');
-    u.close();
-    q.location.hash=v
-    }
-  }
-})();
-return j
-})()
-})(jQuery,this);
-       
-
 /**
  * Plugin that enables Plupload as the file uploader and uses Bootstrap modals to
  * query for additional information.
  * 
- * Dependencies
+ * Dependencies are Twitter Bootstrap and it's js file and Plupload.
  */
 (function($){
 
   $.fn.unplaggedFileUpload = function(){
     var files = new Array();
     var filesRunning = false;
-    var fileUploader = null;  
+    var fileUploader = null;
+    //store the modal dialog that is somewhere in the page
+    var fileModal = $('#file-data');
     
     // Convert divs to queue widgets when the DOM is ready
     this.pluploadQueue({
@@ -120,7 +23,20 @@ return j
       flash_swf_url : '/js/libs/plupload/js/plupload.flash.swf',
       silverlight_xap_url : '/js/libs/plupload/js/plupload.silverlight.xap',
       init: {
-        QueueChanged: queueFileForModalForm,
+        QueueChanged: function(uploader){
+          // store the uploader so we have access later on 
+          fileUploader = uploader;
+          $.each(uploader.files, function(){
+            //add the current file to our own queue
+            files.push(this);
+
+            //start processing of the queue if it isn't already running
+            if(!filesRunning){
+              filesRunning = true;
+              getDataForNextFile();
+            }
+          });
+        },
         BeforeUpload: function(uploader, file){
           //take the data that was set in the file on QueueChange, so that it gets also uploaded
           uploader.settings['multipart_params'].description = file.description;
@@ -131,24 +47,8 @@ return j
         'description': '', 
         'newName': ''
       }
-      
     });
-  
-    function queueFileForModalForm(uploader){
-      fileUploader = uploader;
-      $.each(uploader.files, function(){
-        //add the current file to our own queue
-        files.push(this);
-
-        if(!filesRunning){
-          filesRunning = true;
-          getDataForNextFile();
-        }
-      });
-      
-    }  
     
-    var fileModal = $('#file-data');
     fileModal.find('.modal-save').click(saveChanges);
     fileModal.find('.modal-close').click(closeFileModal);
      
@@ -210,6 +110,155 @@ return j
             $('.modal-backdrop').hide();
           }
         });
+      }
+    }
+  }
+})(jQuery);
+
+
+/**
+ * Plugin that enables the contextmenu.
+ */
+(function($){
+  $.fn.unplaggedContextMenu = function(){
+    //unobtrusively add the context menu, so that users without js don't see it
+    addContextMenu();
+  
+    var searchBuffer='';
+    // tells whether the click was on the contextmenu or not
+    var contextMenu = false;
+    var contextMenuElement = $('#contextmenu');
+  
+    /**
+   * Adds the html for the context menu to the body.
+   */
+    function addContextMenu(){
+      var contextMenuElement = '<ul id="contextmenu" class="contextmenu dropdown-menu">' + 
+      '<li class="google-search-for start-search"><a href="#"><i class="icon-search"></i> Google Suche nach <span id="google-search-words"></span></a></li>' +
+      '<li class="google-search-for delete-search-words"><a href="#"><i class="icon-remove"></i> Google-Suchwörter löschen</a></li>' +
+      '<li class="divider"></li>' +
+      '<li><a href="#" class="create-fragment"><i class="icon-tasks"></i> Create fragment</a></li>' +
+      '<li class="divider"></li>' +
+      '<li><a href="http://www.google.de"><i class="icon-globe"></i> Open Google</a></li>' +
+      '<li><a href="#" onclick="window.print();"><i class="icon-print"></i> Print page</a></li>' +
+      '</ul>';
+  
+      $('body').append(contextMenuElement);
+    }
+  
+    $('#contextmenu .delete-search-words a').click(deleteSearchWords);
+    $('#contextmenu .start-search a').click(googleSearch);
+  
+  
+    //to make it possible to show the contextmenu only on certain elements, 
+    //we only use it when the class show-contextmenu is present
+    $('.show-contextmenu')
+    .attr('title', 'Tip: Use Contextmenu')
+    .attr('data-content', 'You can mark words with a leftclick and then open a contexmenu on right click.')
+    .popover({
+      placement: 'top'
+    }).bind('contextmenu', showCustomContextmenu);
+
+    //we probably only need mouseup, because then we know that the selection is finished
+    $('.show-contextmenu').bind('mouseup', clickHandler);
+    $('.show-contextmenu').click(function(){
+      contextMenuElement.hide();
+    });
+
+    //mouse enter should have better performance then mousemove, because it should only get called once
+    contextMenuElement.mouseenter(function(){
+      contextMenu = true;
+    });
+  
+    contextMenuElement.mouseout(function(){
+      contextMenu = false;
+    });
+
+    function showCustomContextmenu(ev)
+    {  
+      // if searchBuffer is not empty, it means that the user has selected a word
+      // => show our context menu.
+      x = (document.all) ? window.event.x + document.body.scrollLeft : ev.pageX;
+      y = (document.all) ? window.event.y + document.body.scrollTop : ev.pageY;
+      var scrollTop = document.body.scrollTop ? document.body.scrollTop : document.documentElement.scrollTop;
+      var scrollLeft = document.body.scrollLeft ? document.body.scrollLeft : document.documentElement.scrollLeft;
+
+      contextMenuElement.css({
+        'left': ev.clientX + scrollLeft + 'px',
+        'top': ev.clientY + scrollTop + 'px',
+        'display': 'block'
+      });
+
+      // avoid showing default contextMenu
+      return false;
+    }
+
+    function clickHandler(event)
+    {
+      // if click on contextmenu or 'right' click, we do not need to save the selection
+      // in the searchBuffer
+      if (!contextMenu && event.which === 1) {
+        
+        var selectedText = getSelectedText();
+        //shouldn't be possible to get undefined or ' ' now, because the 
+        //function always returns '' and is trimmed now
+        if (selectedText != ''){
+          searchBuffer += ' ' + selectedText;
+          updateGoogleSearchText();
+        }
+      }
+    }
+
+    function getSelectedText()
+    {
+      var text = '';
+
+      if (window.getSelection)
+      {
+        text = window.getSelection().toString();
+      }
+      else if (document.getSelection)
+      {
+        text = document.getSelection();
+      }
+      else if (document.selection)
+      {
+        text = document.selection.createRange().text;
+      }
+
+      return $.trim(text);
+    }
+
+    function copyToClipboard(s) {
+      if (window.clipboardData && clipboardData.setData) {
+        clipboardData.setData('text', s);
+      }
+    }
+
+    function deleteSearchWords(){
+      searchBuffer = "";
+      updateGoogleSearchText();
+    
+      return false;
+    }
+
+    function googleSearch(){
+      window.open('http://www.google.de/search?q='+searchBuffer, '_newTab');
+      searchBuffer = '';
+      updateGoogleSearchText();
+    }
+
+    function updateGoogleSearchText(){
+      if(searchBuffer.length == 0) {
+        $('.google-search-for').hide();
+      } else {
+        $('.google-search-for').show();
+      
+        var str = searchBuffer;
+        if(str.length > 30) {
+          str = str.substr(0, 30) + '...';
+        }
+        $('#google-search-words').html("'" + str + "'");
       }
     }
   }
