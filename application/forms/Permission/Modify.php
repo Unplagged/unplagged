@@ -37,7 +37,7 @@ class Application_Form_Permission_Modify extends Zend_Form{
     // @todo: add filter only for some permission types
     $collaboratorsElement->setDecorators(array(array('ViewScript', array(
       'viewScript' => '/permission/_element.phtml',
-      'callback' => '/permission/autocomplete/case/3',
+      'callback' => '/permission/autocomplete', //@todo /case/caseId can be added as param if needed
       'disabled' => false
     ))));
 
