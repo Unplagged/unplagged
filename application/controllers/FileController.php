@@ -66,6 +66,7 @@ class FileController extends Unplagged_Controller_Action{
       $this->_em->flush();
       
       $user->addFile($file);
+
       $this->_em->persist($user);
       
       //store in the activity stream, that the current user uploaded this file
@@ -155,10 +156,11 @@ class FileController extends Unplagged_Controller_Action{
 
     $this->setTitle('Public Files');
 
-    $query = $this->_em->createQuery("SELECT f FROM Application_Model_File f ORDER BY f.created DESC");
-    $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_File f");
+    $permissionAction = 'read';
+    $query = 'SELECT b FROM Application_Model_File b ORDER BY f.created DESC';
+    $count = 'SELECT COUNT(b.id) FROM Application_Model_File b';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, null, $permissionAction));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
@@ -174,16 +176,18 @@ class FileController extends Unplagged_Controller_Action{
       $parseAction['icon'] = 'images/icons/page_gear.png';
       $file->actions[] = $parseAction;
 
-      $action['link'] = '/file/download/id/' . $file->getId();
-      $action['label'] = 'Download';
-      $action['icon'] = 'images/icons/disk.png';
-      $file->actions[] = $action;
-
-      $action['link'] = '/file/delete/id/' . $file->getId();
-      $action['label'] = 'Delete';
-      $action['icon'] = 'images/icons/delete.png';
-      $file->actions[] = $action;
-
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $file->getId()))){
+        $action['link'] = '/file/download/id/' . $file->getId();
+        $action['label'] = 'Download';
+        $action['icon'] = 'images/icons/disk.png';
+        $file->actions[] = $action;
+      }
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $file->getId()))){
+        $action['link'] = '/file/delete/id/' . $file->getId();
+        $action['label'] = 'Delete';
+        $action['icon'] = 'images/icons/delete.png';
+        $file->actions[] = $action;
+      }
       $action['link'] = '/user/add-file/id/' . $file->getId();
       $action['label'] = 'Add to personal files';
       $action['icon'] = 'images/icons/basket_put.png';
@@ -194,6 +198,13 @@ class FileController extends Unplagged_Controller_Action{
       $action['label'] = 'Add to current case';
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
+      
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'authorize', $file->getId()))){
+        $action['link'] = '/permission/edit/id/' . $file->getId();
+        $action['label'] = 'Set permissions';
+        $action['icon'] = 'images/icons/shield.png';
+        $file->actions[] = $action;
+      }
     }
 
     $this->view->paginator = $paginator;
@@ -209,6 +220,10 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
+        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $input->id))){
+          $this->redirectToLastPage(true);
+        }
+
         // disable view
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -304,6 +319,9 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
+        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $input->id))){
+          $this->redirectToLastPage(true);
+        }
         // remove file from file system
         $localPath = $file->getFullPath();
         $deleted = unlink($localPath);
@@ -328,4 +346,5 @@ class FileController extends Unplagged_Controller_Action{
   }
 
 }
+
 ?>

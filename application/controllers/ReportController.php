@@ -1,7 +1,5 @@
 <?php
 
-require_once(realpath(dirname(__FILE__)) . "/../models/Base.php");
-
 class ReportController extends Unplagged_Controller_Versionable{
 
   public function init(){
@@ -13,38 +11,26 @@ class ReportController extends Unplagged_Controller_Versionable{
   }
 
   public function listAction(){
-
     $input = new Zend_Filter_Input(array('page'=>'Digits', 'content'=>'StripTags'), null, $this->_getAllParams());
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
-    $currentCase = $user->getCurrentCase();
+    $permissionAction = 'read';
+    $query = 'SELECT b FROM Application_Model_Report b';
+    $count = 'SELECT COUNT(b.id) FROM Application_Model_Report b';
 
-    $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
-    $query = $this->_em->createQuery("SELECT r FROM Application_Model_Report r WHERE r.case = :caseId");
-    $query->setParameter('caseId', $currentCase->getId());
-    $count = $this->_em->createQuery("SELECT COUNT(r.id) FROM Application_Model_Report r WHERE r.case = :caseId");
-    $count->setParameter('caseId', $currentCase->getId());
-
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permissionAction));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
     $this->view->paginator = $paginator;
-
-//        Zend_Layout::getMvcInstance()->sidebar = null;
-//        Zend_Layout::getMvcInstance()->versionableId = null;
   }
 
   public function createAction(){
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
-// get current case
-    $currentCase = $user->getCurrentCase();
-    if($currentCase){
-
+    if($case){
       // get current case name
-      $case = $currentCase->getPublishableName();
-      $this->view->title = "Create report of " . $case;
+      $this->view->title = "Create report of " . $case->getPublishableName();
 
       $formData = $this->_request->getPost();
 
@@ -54,13 +40,13 @@ class ReportController extends Unplagged_Controller_Versionable{
       $data["initiator"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
       $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('report_requested');
       $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
-      $data["ressource"] = $currentCase;
+      $data["ressource"] = $case;
       $task = new Application_Model_Task($data);
       $this->_em->persist($task);
       $this->_em->flush();
 
       // Inform the user that the process will be started
-      $this->_helper->flashMessenger->addMessage(array('success' => 'The report-generating process has been started.'));
+      $this->_helper->flashMessenger->addMessage(array('success'=>'The report-generating process has been started.'));
     }else{
       $this->_helper->flashMessenger->addMessage('You have to select a case, before you can start the report creation.');
       $this->_helper->viewRenderer->setNoRender(true);

@@ -55,12 +55,15 @@ class CaseController extends Unplagged_Controller_Action{
     $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
 
     if($case){
+      if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('case', 'update', $input->id))){
+        $this->redirectToLastPage(true);
+      }
+
       $modifyForm = new Application_Form_Case_Modify();
       $modifyForm->setAction("/case/edit/id/" . $input->id);
 
       $modifyForm->getElement("name")->setValue($case->getName());
       $modifyForm->getElement("alias")->setValue($case->getAlias());
-      $modifyForm->getElement("abbreviation")->setValue($case->getAbbreviation());
       $modifyForm->getElement("tags")->setValue($case->getTagIds());
       $modifyForm->getElement("collaborators")->setValue($case->getCollaboratorIds());
       $modifyForm->getElement("submit")->setLabel("Save case");
@@ -90,21 +93,23 @@ class CaseController extends Unplagged_Controller_Action{
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
-    $query = $this->_em->createQuery("SELECT c FROM Application_Model_Case c");
-    $count = $this->_em->createQuery("SELECT COUNT(c.id) FROM Application_Model_Case c");
+    $permissionAction = 'read';
+    $query = 'SELECT b FROM Application_Model_Case b';
+    $count = 'SELECT COUNT(b.id) FROM Application_Model_Case b';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, null, $permissionAction));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
     // generate the action dropdown for each fragment
     foreach($paginator as $case):
       $case->actions = array();
-
-      $action['link'] = '/case/edit/id/' . $case->getId();
-      $action['label'] = 'Edit case';
-      $action['icon'] = 'images/icons/pencil.png';
-      $case->actions[] = $action;
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('case', 'update', $case->getId()))){
+        $action['link'] = '/case/edit/id/' . $case->getId();
+        $action['label'] = 'Edit case';
+        $action['icon'] = 'images/icons/pencil.png';
+        $case->actions[] = $action;
+      }
     endforeach;
 
     $this->view->paginator = $paginator;
@@ -193,7 +198,6 @@ class CaseController extends Unplagged_Controller_Action{
       if(!($case)){
         $case = new Application_Model_Case();
         $case->setName($formData['name']);
-        $case->setAbbreviation($formData['abbreviation']);
         $case->setAlias($formData['alias']);
 
         //flush here, so that we can use the id
@@ -204,12 +208,11 @@ class CaseController extends Unplagged_Controller_Action{
       }else{
         $case->setAlias($formData['alias']);
         $case->setName($formData['name']);
-        $case->setAbbreviation($formData['abbreviation']);
       }
 
       $case->setCollaborators($formData['collaborators']);
       $case->setTags($formData['tags']);
-    
+
       // write back to persistence manager and flush it
       $this->_em->persist($case);
       $this->_em->flush();
@@ -228,4 +231,5 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
 }
+
 ?>

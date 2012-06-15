@@ -55,22 +55,31 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
    */
   private $base;
   
+  /**
+   * @var string The base element permissions.
+   * 
+   * @ManyToMany(targetEntity="Application_Model_User_Role", mappedBy="permissions")
+   */
+  private $roles;
+  
   public function __construct($type, $action, Application_Model_Base $base = null){
     $this->type = $type;
     $this->base = $base;
     $this->action = $action;
+    $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
   }
-
+  
   public function getAction(){
     return $this->action;
   }
 
   public function getType(){
-    return $this->type;  
+    return $this->type;
   }
-  
+
   public function getResourceId(){
     return $this->type . '_' . $this->action;  
   }
+
 }
 ?>

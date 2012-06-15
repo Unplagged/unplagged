@@ -21,7 +21,7 @@
 /**
  * 
  */
-class Application_Form_Case_Modify extends Zend_Form{
+class Application_Form_Permission_Modify extends Zend_Form{
 
   /**
    * Creates the form to create a new case.
@@ -47,17 +47,10 @@ class Application_Form_Case_Modify extends Zend_Form{
 
     $collaboratorsElement = new Zend_Form_Element_Text('collaborators[]');
     $collaboratorsElement->setLabel('Collaborators');
+    // @todo: add filter only for some permission types
     $collaboratorsElement->setDecorators(array(array('ViewScript', array(
-      'viewScript' => '/user/_element.phtml',
-      'callback' => '/user/autocomplete',
-      'disabled' => false
-    ))));
-    
-    $tagsElement = new Zend_Form_Element_Text('tags[]');
-    $tagsElement->setLabel('Tags');
-    $tagsElement->setDecorators(array(array('ViewScript', array(
-      'viewScript' => '/tag/_element.phtml',
-      'callback' => '/tag/autocomplete',
+      'viewScript' => '/permission/_element.phtml',
+      'callback' => '/user/autocomplete/case/3',
       'disabled' => false
     ))));
 
@@ -69,10 +62,9 @@ class Application_Form_Case_Modify extends Zend_Form{
       $nameElement
       , $aliasElement
       , $collaboratorsElement
-      , $tagsElement
     ));
 
-    $this->addDisplayGroup(array('name', 'alias', 'collaborators', 'tags')
+    $this->addDisplayGroup(array('name', 'alias', 'collaborators')
         , 'credentialGroup'
         , array('legend'=>'Case Information')
     );
