@@ -26,7 +26,7 @@ defined('TEMP_PATH')
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (isset($arguments["e"]) ? $arguments["e"] : 'production'));
 
-require_once BASE_PATH . '/scripts/build/Installer/Installer.php';
+require_once 'Zend/Application.php';
 
 // Create application, bootstrap, and run
 $application = new Zend_Application(APPLICATION_ENV, array(

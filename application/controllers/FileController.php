@@ -32,8 +32,7 @@ class FileController extends Unplagged_Controller_Action{
       $post = $this->_request->getPost();
 
       $uploadForm = new Application_Form_File_Upload();
-      var_dump($uploadForm->isValid($post));
-      die('hier');
+
       if($uploadForm->isValid($post)){
         $this->storeUpload();
       }
@@ -58,7 +57,7 @@ class FileController extends Unplagged_Controller_Action{
     //move the uploaded file to the before specified location
     if($adapter->receive()){
       chmod($storageDir . $fileNames[1], 0755);
-      die('hier');
+
       $user = Zend_Registry::getInstance()->user;
       
       $file = $this->createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir, $user);
@@ -157,7 +156,7 @@ class FileController extends Unplagged_Controller_Action{
     $this->setTitle('Public Files');
 
     $permissionAction = 'read';
-    $query = 'SELECT b FROM Application_Model_File b ORDER BY f.created DESC';
+    $query = 'SELECT b FROM Application_Model_File b ORDER BY b.created DESC';
     $count = 'SELECT COUNT(b.id) FROM Application_Model_File b';
 
     $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, null, $permissionAction));
@@ -176,13 +175,13 @@ class FileController extends Unplagged_Controller_Action{
       $parseAction['icon'] = 'images/icons/page_gear.png';
       $file->actions[] = $parseAction;
 
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $file->getId()))){
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $file))){
         $action['link'] = '/file/download/id/' . $file->getId();
         $action['label'] = 'Download';
         $action['icon'] = 'images/icons/disk.png';
         $file->actions[] = $action;
       }
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $file->getId()))){
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $file))){
         $action['link'] = '/file/delete/id/' . $file->getId();
         $action['label'] = 'Delete';
         $action['icon'] = 'images/icons/delete.png';
@@ -199,7 +198,7 @@ class FileController extends Unplagged_Controller_Action{
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
       
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'authorize', $file->getId()))){
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'authorize', $file))){
         $action['link'] = '/permission/edit/id/' . $file->getId();
         $action['label'] = 'Set permissions';
         $action['icon'] = 'images/icons/shield.png';
@@ -220,7 +219,7 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
-        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $input->id))){
+        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $file))){
           $this->redirectToLastPage(true);
         }
 
@@ -319,7 +318,7 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
-        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $input->id))){
+        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $file))){
           $this->redirectToLastPage(true);
         }
         // remove file from file system
