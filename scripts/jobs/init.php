@@ -26,7 +26,13 @@ defined('TEMP_PATH')
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (isset($arguments["e"]) ? $arguments["e"] : 'production'));
 
-require_once BASE_PATH . '/scripts/build/Installer/Installer.php';
+// Ensure library/ is on include_path
+set_include_path(implode(PATH_SEPARATOR, array(
+      realpath(APPLICATION_PATH . '/../library'),
+      get_include_path(),
+    )));
+
+require_once ('Zend/Application.php');
 
 // Create application, bootstrap, and run
 $application = new Zend_Application(APPLICATION_ENV, array(
