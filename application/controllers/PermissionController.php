@@ -155,6 +155,49 @@ class PermissionController extends Unplagged_Controller_Action{
     //var_dump($inheritableRoles);
     Zend_Layout::getMvcInstance()->sidebar = null;
   }
+  
+  public function editAction() {
+    $this->setTitle('Permissions for element');
+    
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    $base = $this->_em->getRepository('Application_Model_Base')->findOneById($input->id);
+
+    if($base){
+    //  if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('case', 'update', $input->id))){
+    //    $this->redirectToLastPage(true);
+    //  }
+
+      $modifyForm = new Application_Form_Permission_Modify();
+      $modifyForm->setAction("/case/edit/id/" . $input->id);
+/*
+      $modifyForm->getElement("name")->setValue($case->getName());
+      $modifyForm->getElement("alias")->setValue($case->getAlias());
+      $modifyForm->getElement("tags")->setValue($case->getTagIds());
+      $modifyForm->getElement("collaborators")->setValue($case->getCollaboratorIds());
+      $modifyForm->getElement("submit")->setLabel("Save case");
+*/
+      if($this->_request->isPost()){
+        $result = $this->handleModifyData($modifyForm, $case);
+
+        if($result){
+          // notification
+          $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          Unplagged_Helper::notify("case_updated", $result, $user);
+
+          $this->_helper->FlashMessenger(array('success'=>'The case was updated successfully.'));
+          $this->_helper->redirector('list', 'case');
+        }
+      }
+
+      $this->view->title = "Edit case";
+      $this->view->modifyForm = $modifyForm;
+      $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
+    }else{
+      $this->_helper->FlashMessenger(array('error'=>'The specified case does not exist.'));
+      $this->_helper->redirector('list', 'case');
+    }
+  }
 
 }
 ?>

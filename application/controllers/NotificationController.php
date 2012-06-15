@@ -35,10 +35,11 @@ class NotificationController extends Unplagged_Controller_Action{
   public function recentActivityAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
-    $query = $this->_em->createQuery("SELECT n FROM Application_Model_Notification n ORDER BY n.created DESC");
-    $count = $this->_em->createQuery("SELECT COUNT(n.id) FROM Application_Model_Notification n");
+    $permissionAction = 'read';
+    $query = 'SELECT n FROM Application_Model_Notification n JOIN n.source b';
+    $count = 'SELECT COUNT(n.id) FROM Application_Model_Notification n JOIN n.source b';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, 'n.created DESC', $permissionAction));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
@@ -77,7 +78,7 @@ class NotificationController extends Unplagged_Controller_Action{
       $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
       $types = $source->getConversationTypes();
     }
-    
+
     // at each step, the next type of the conversation strem types is picked and the items related to the type are selected
     if(count($types) > 0){
       $this->_helper->viewRenderer->setNoRender(true);
@@ -90,15 +91,16 @@ class NotificationController extends Unplagged_Controller_Action{
 
       switch($type){
         case 'comment':
-          $this->_forward('list', 'comment', null, array('source'=>$input->source, 'conversation' => true));
+          $this->_forward('list', 'comment', null, array('source'=>$input->source, 'conversation'=>true));
           break;
         case 'rating':
-          $this->_forward('list', 'rating', null, array('source'=>$input->source, 'conversation'=> true));
+          $this->_forward('list', 'rating', null, array('source'=>$input->source, 'conversation'=>true));
           break;
       }
     }else{
+
       // before the result is returned, all the items are sorted by there creation date
-      function date_sort($a, $b) {
+      function date_sort($a, $b){
         return strcmp($a['created']['dateTime'], $b['created']['dateTime']);
       }
 

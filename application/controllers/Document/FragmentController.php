@@ -141,6 +141,10 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
 
     if($fragment){
+      if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'update', $input->id))){
+        $this->redirectToLastPage(true);
+      }
+
       $modifyForm = new Application_Form_Document_Fragment_Modify();
       $modifyForm->setAction("/document_fragment/edit/id/" . $input->id);
 
@@ -191,13 +195,11 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
     if($case){
-      $query = $this->_em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.document d WHERE d.id = :documentId");
-      $query->setParameter('documentId', $case->getTarget()->getId());
+      $permissionAction = 'read';
+      $query = 'SELECT b FROM Application_Model_Document_Fragment b JOIN b.document d';
+      $count = 'SELECT COUNT(b.id) FROM Application_Model_Document_Fragment b JOIN b.document d';
 
-      $count = $this->_em->createQuery("SELECT COUNT(f.id) FROM Application_Model_Document_Fragment f JOIN f.document d WHERE d.id = :documentId");
-      $count->setParameter('documentId', $case->getTarget()->getId());
-
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('d.id'=>$case->getTarget()->getId()), null, $permissionAction));
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
       $paginator->setCurrentPageNumber($input->page);
 
@@ -205,22 +207,26 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       foreach($paginator as $fragment):
         $fragment->actions = array();
 
-        $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
-        $action['label'] = 'Edit fragment';
-        $action['icon'] = 'images/icons/pencil.png';
-        $fragment->actions[] = $action;
+        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'update', $fragment->getId()))){
+          $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
+          $action['label'] = 'Edit fragment';
+          $action['icon'] = 'images/icons/pencil.png';
+          $fragment->actions[] = $action;
+        }
 
-        $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
-        $action['label'] = 'Remove fragment';
-        $action['icon'] = 'images/icons/delete.png';
-        $fragment->actions[] = $action;
+        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'delete', $fragment->getId()))){
+          $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
+          $action['label'] = 'Remove fragment';
+          $action['icon'] = 'images/icons/delete.png';
+          $fragment->actions[] = $action;
+        }
       endforeach;
 
       $this->view->paginator = $paginator;
 
       Zend_Layout::getMvcInstance()->menu = null;
       Zend_Layout::getMvcInstance()->versionableId = null;
-    } else{
+    }else{
       $this->_helper->FlashMessenger('You need to select a case first.');
     }
   }
@@ -239,9 +245,12 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     if(!empty($input->id)){
-      $document = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
-      if($document){
-        $this->_em->remove($document);
+      $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
+      if($fragment){
+        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'delete', $input->id))){
+          $this->redirectToLastPage(true);
+        }
+        $this->_em->remove($fragment);
         $this->_em->flush();
       }else{
         $this->_helper->FlashMessenger('The fragment does not exist.');

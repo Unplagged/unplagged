@@ -425,7 +425,10 @@ $(document).ready(function(){
   
   // turns checkboxes in forms into single toggle elements
   $('input[type="checkbox"].btn').each(function(index) {
-    var element = $(this);
+    updateCheckBox($(this));    
+  });
+  
+  function updateCheckBox(element) {
     var classes = element.attr('class');
 
     // get label value and hide the element afterwards
@@ -433,17 +436,14 @@ $(document).ready(function(){
     $('#' + element.attr('id') + '-label').hide();
     $('#' + element.attr('id') + '-element').hide();
     
-    
     // insert the new bootstrap-based element
     element.parent().parent().append('<a class="' + classes + '" data-toggle="button" data-checkbox="' + element.attr('id') + '">' + label + '</a>');
     if(element.is(':checked')){
       $('a[data-checkbox="' + element.attr('id') + '"]').trigger('click').addClass('active');
-      console.log(element);
     }
-    
-  });
+  }
   
-  $('.btn[data-toggle="button"]').click(function(){
+  $('.btn[data-toggle="button"]').live('click', function(){
     var id = $(this).attr('data-checkbox');
     var cb = $('#' + id);
     
@@ -619,9 +619,32 @@ $(document).ready(function(){
       element += '<a href="#" class="btn" data-remove="true" data-for="' + value + '"><i class="icon-remove"></i></a></div>';
       element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" />';
       element += '</div>';      
+    } else if(viewScript == 'permission') {
+      element = '<div class="well" data-source="' + sourceId + '" data-id="' + value + '">';
+      element += '<img class="avatar-small no-shadow" src="/images/default-avatar.png">';
+      element += '<div class="names">';
+      element += '<span class="username">' + label + '</span>';
+      element += '<span class="realname">bla</span>';
+      element += '</div>';
+
+      var permissions = ['create', 'read', 'update', 'delete', 'authorize'];
+      element += '<div class="options">';
+      $.each(permissions, function(index, permission) { 
+        element += '<span id="' + permission + '-' + value + '-label">';
+        element += '<label for="' + permission + '-' + value + '">' + permission + '</label>';
+        element += '<input type="checkbox" name="' + permission + '[' + value + ']" id="' + permission + '-' + value + '" value="0" class="btn btn-checkbox">';
+        element += '</span>';
+      });
+
+      element += '<a href="#" class="btn" data-remove="true" data-for="' + value + '"><i class="icon-remove"></i></a></div>';
+      element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" />';
+      element += '</div>';    
     }
 
     $('div[data-wrapper-for=' + sourceId + ']').append(element);
+    $('input[type="checkbox"].btn').each(function(index) {
+      updateCheckBox($(this));
+    });
   }
   
   // Gets the ids of the elements which should not be returned through autocompletion anymore.
@@ -869,7 +892,7 @@ $(document).ready(function(){
     }
   }
   
-  $('#actions-menu').css('margin-top', '-' + $('#right-nav.fixed-nav').height()/2 + 'px');
+  $('#actions-menu').css('margin-top', '-' + $('#actions-menu').height()/2 + 'px');
 
   $('#actions-menu.poped-in').live('click', function() {
     $(this).css('margin-right', '0px');

@@ -61,7 +61,7 @@ class UserController extends Unplagged_Controller_Action{
 
       // log registration
       Unplagged_Helper::notify('user_registered', $user, $user);
-      
+
       $config = Zend_Registry::get('config');
       $locale = Zend_Registry::get('Zend_Locale');
       $languageString = $locale->getLanguage();
@@ -104,7 +104,7 @@ class UserController extends Unplagged_Controller_Action{
 
     $this->setTitle('Personal Files');
 
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $user = Zend_Registry::getInstance()->user;
     $userFiles = $user->getFiles();
 
     $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($userFiles->toArray()));
@@ -330,24 +330,30 @@ class UserController extends Unplagged_Controller_Action{
 
     $this->redirectToLastPage();
   }
-  
+
   /**
    * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
    * @param String from If defined it selects only users of a specific rank.
-   */ 
+   */
   public function autocompleteAction(){
-    $input = new Zend_Filter_Input(array('term'=>'Alnum', 'skip'=>'StringTrim'), null, $this->_getAllParams());
-    
-    if(!empty($input->skip)) {
+    $input = new Zend_Filter_Input(array('term'=>'Alnum', 'case'=>'Digits', 'skip'=>'StringTrim'), null, $this->_getAllParams());
+
+    if(!empty($input->skip)){
       $input->skip = ' AND u.id NOT IN (' . $input->skip . ')';
     }
-    
-    // @todo: select only verified users
+    $caseCondition = '';
+    if(!empty($input->case)){
+      $caseCondition = ' :caseId MEMBER OF u.cases AND';
+    }
+
     // skip has to be passed in directly and can't be set as a parameter due to a doctrine bug
-    $query = $this->_em->createQuery("SELECT u.id value, u.username label FROM Application_Model_User u WHERE u.username LIKE :term" . $input->skip);
+    $query = $this->_em->createQuery("SELECT u.id value, u.username label FROM Application_Model_User u WHERE " . $caseCondition . " u.username LIKE :term" . $input->skip);
     $query->setParameter('term', '%' . $input->term . '%');
+    if(!empty($input->case)){
+      $query->setParameter('caseId', $input->case);
+    }
     $query->setMaxResults(5);
-    
+
     $result = $query->getArrayResult();
     $this->_helper->json($result);
   }

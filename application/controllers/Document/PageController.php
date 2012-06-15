@@ -118,10 +118,11 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     $input = new Zend_Filter_Input(array('id'=>'Digits', 'page'=>'Digits'), null, $this->_getAllParams());
 
     if(!empty($input->id)){
-      $query = $this->_em->createQuery("SELECT p FROM Application_Model_Document_Page p WHERE p.document = '" . $input->id . "' ORDER BY p.pageNumber ASC");
-      $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page p WHERE p.document = '" . $input->id . "'");
+      $permissionAction = 'read';
+      $query = 'SELECT p FROM Application_Model_Document_Page p JOIN p.document b';
+      $count = 'SELECT COUNT(p.id) FROM Application_Model_Document_Page p JOIN p.document b';
 
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.document' => $input->id), 'p.pageNumber ASC', $permissionAction));
       $paginator->setItemCountPerPage(100);
       $paginator->setCurrentPageNumber($input->page);
 

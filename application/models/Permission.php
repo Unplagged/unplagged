@@ -48,17 +48,31 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
   /**
    * @Column(type="string", length=255, nullable=true)
    */
-  private $type = '';
+  private $action = '';
+
+  /**
+   * @ManyToOne(targetEntity="Application_Model_Base")
+   * @JoinColumn(name="base_id", referencedColumnName="id", onDelete="CASCADE")
+   */
+  private $base;
   
-  public function __construct($name, $type=''){
+  /**
+   * @var string The base element permissions.
+   * 
+   * @ManyToMany(targetEntity="Application_Model_User_Role", mappedBy="permissions")
+   */
+  private $roles;
+
+  public function __construct($name, $type = ''){
 
     if(is_string($name) && trim($name) !== ''){
       $this->name = $name;
     }else{
       throw new InvalidArgumentException('The argument $name must be a string');
     }
-    
-    $this->type = $type;
+
+    $this->action = $type;
+    $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
   }
 
   public function getName(){
@@ -66,12 +80,17 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
   }
 
   public function getType(){
-    return $this->type;  
+    return $this->type;
   }
-  
+
   public function getResourceId(){
-    return $this->name;  
+    return $this->name;
   }
   
+  public function getAction(){
+    return 'read';
+  }
+
 }
+
 ?>

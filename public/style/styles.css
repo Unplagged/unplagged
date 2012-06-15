@@ -635,11 +635,29 @@ nav#right-nav ul li a .badge-light{
     width: 250px;
     margin-right: -250px;
     font-size: 12px;
+    background-color: #40C0E9;
     
+  }
+  nav#actions-menu h5 {
+position: absolute;
+margin-left: -21px;
+margin-top: 100%;
+padding-left: 5px;
+transform: rotate(-90deg);
+transform-origin:0 0;
+-ms-transform: rotate(-90deg); /* IE 9 */
+-ms-transform-origin:0 0; /* IE 9 */
+-webkit-transform: rotate(-90deg); /* Safari and Chrome */
+-webkit-transform-origin:0 0; /* Safari and Chrome */
+-moz-transform: rotate(-90deg); /* Firefox */
+-moz-transform-origin:0 0; /* Firefox */
+-o-transform: rotate(-90deg); /* Opera */
+-o-transform-origin:0 0; /* Opera */
   }
   nav#actions-menu ul {
     background: white;
     margin: 0;
+    clear: left;
   }
   nav#actions-menu ul li a {
   display: block;
@@ -1188,6 +1206,27 @@ dl.zend_form dd dt {
 }
 .icon-pencil {
   background-image: url(/images/icons/pencil.png);
+}
+.icon-text-padding-right {
+  background-image: url(/images/icons/text_padding_right.png); 
+}
+.icon-zoom {
+  background-image: url(/images/icons/zoom.png);
+}
+.icon-table-row-delete {
+  background-image: url(/images/icons/table_row_delete.png);
+}
+.icon-textfield-rename {
+  background-image: url(/images/icons/textfield_rename.png);
+}
+.icon-report-magnify {
+  background-image: url(/images/icons/report_magnify.png);
+}
+.icon-table-row-delete {
+  background-image: url(/images/icons/table_row_delete.png);
+}
+.icon-table-relationship {
+  background-image: url(/images/icons/table_relationship.png);
 }
 
 #activity-stream {

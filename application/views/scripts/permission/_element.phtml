@@ -1,0 +1,44 @@
+<?php
+// some init stuff
+$errors = $this->element->getMessages();
+$disabled = $this->disabled || false;
+$permissions = array('create', 'read', 'update', 'delete', 'authorize');
+?>
+
+<?php echo $this->formLabel($this->element->getName(), $this->element->getLabel()) ?>
+<dd>
+  <input id="<?php echo $this->element->getName() ?>" type="text" data-view-script="permission" data-callback="<?php echo $this->callback; ?>" />
+  <?php
+  if(!empty($errors)){
+    echo $this->formErrors($errors);
+  }
+
+  if($this->element->getDescription()){
+    echo '<div class="hint">' . $this->element->getDescription() . '</div>';
+  }
+  ?>
+  <div class="users-wrapper" data-wrapper-for="<?php echo $this->element->getName(); ?>">
+    <?php if($this->element->getValue()){ ?>
+      <?php foreach($this->element->getValue() as $userId): ?>
+        <?php $user = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneById($userId); ?>
+        <div class="well" data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $user->getId(); ?>">
+          <img class="avatar-small no-shadow" src="/images/default-avatar.png">
+          <div class="names">
+            <span class="username"><?php echo $user->getUsername(); ?></span>
+            <span class="realname">Benjamin Oertel</span>
+          </div>
+          <div class="options">
+            <?php foreach($permissions as $permission) { ?>
+            <span id="<?php echo $permission; ?>-<?php echo $userId; ?>-label">
+              <label for="<?php echo $permission; ?>-<?php echo $userId; ?>">edit-user</label>
+              <input type="checkbox" name="<?php echo $permission; ?>[<?php echo $userId; ?>]" id="<?php echo $permission; ?>-<?php echo $userId; ?>" value="1" class="btn btn-checkbox">
+            </span>
+            <?php } ?>
+            <a href="#" class="btn" data-remove="true" data-for="<?php echo $user->getId(); ?>"><i class="icon-remove"></i></a>
+          </div>
+          <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $user->getId(); ?>" />
+        </div>
+      <?php endforeach; ?>
+    <?php } ?>
+  </div>  
+</dd>

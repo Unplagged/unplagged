@@ -52,7 +52,10 @@ abstract class Unplagged_Controller_Action extends Zend_Controller_Action{
    * 
    * If the last url is the same as the current the default page is the activity stream.
    */
-  protected function redirectToLastPage(){
+  protected function redirectToLastPage($permissionDenied = false){
+    if($permissionDenied) {
+      $this->_helper->FlashMessenger(array('error'=>'Permission denied.'));
+    }
     $historySessionNamespace = new Zend_Session_Namespace('history');
 
     //check if the last url is the same as the current to avoid infinite loop

@@ -96,6 +96,14 @@ abstract class Application_Model_Base{
   private $ratings;
 
   /**
+   * @var string The base element permissions.
+   * 
+   * @OneToMany(targetEntity="Application_Model_Permission", mappedBy="base")
+   * @JoinColumn(name="permission_id", referencedColumnName="id")
+   */
+  private $permissions;
+  
+  /**
    * @var ArrayCollection The notifications related to this object.
    * 
    * @OneToMany(targetEntity="Application_Model_Notification", mappedBy="source")
@@ -110,6 +118,7 @@ abstract class Application_Model_Base{
     $this->comments = new ArrayCollection();
     $this->ratings = new ArrayCollection();
     $this->tags = new ArrayCollection();
+    $this->permissions = new ArrayCollection();
   }
 
   public function getId(){
