@@ -39,9 +39,9 @@ $front = $application->getBootstrap()->getResource('FrontController');
 $basicResources = array();
 
 //first permission is allow everything
-$allowAll = $em->getRepository('Application_Model_Permission')->findOneByName('*');
+$allowAll = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'global', 'action'=>'*'));
 if(!$allowAll){
-  $allowAll = new Application_Model_Permission('*');
+  $allowAll = new Application_Model_Permission('global', '*');
   $em->persist($allowAll);
 }
 
@@ -79,7 +79,7 @@ foreach(get_declared_classes() as $class){
 
       if(strstr($action, 'Action') !== false){
         $actionWithHyphens = preg_replace_callback('/([A-Z])/', create_function('$matches', 'return \'-\' . strtolower($matches[1]);'), substr($action, 0, -6));
-        $basicResources[] = $controller . '_' . $actionWithHyphens;
+        $basicResources[] = array($controller, $actionWithHyphens);
       }
     }
   }
@@ -87,9 +87,9 @@ foreach(get_declared_classes() as $class){
 
 //store all found resources in the db
 foreach($basicResources as $resource){
-  $permission = $em->getRepository('Application_Model_Permission')->findOneByName($resource);
+  $permission = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1]));
   if(empty($permission)){
-    $permission = new Application_Model_Permission($resource, 'action');
+    $permission = new Application_Model_Permission($resource[0], $resource[1]);
     $em->persist($permission);
   }
 }
@@ -97,41 +97,70 @@ foreach($basicResources as $resource){
 $em->flush();
 
 //create the guest users role
-$element = $em->getRepository('Application_Model_User_Role')->findOneByRoleId('guest');
-if(empty($element)){
+$guestRole = $em->getRepository('Application_Model_User_Role')->findOneByRoleId('guest');
+if(empty($guestRole)){
   $guestRole = new Application_Model_User_Role(Application_Model_User_Role::TYPE_GLOBAL);
   $guestRole->setRoleId('guest');
 
   $defaultPermissions = array(
-    'auth_login',
-    'auth_logout',
-    'index_index',
-    'error_error',
-    'user_register',
-    'user_verify',
-    'user_recover-password',
-    'document_response-plagiarism'
+    array('auth', 'login'),
+    array('auth', 'logout'),
+    array('index', 'index'),
+    array('error', 'error'),
+    array('user', 'register'),
+    array('user', 'verify'),
+    array('user', 'recover-password'),
+    array('document', 'response-plagiarism')
   );
 
   foreach($defaultPermissions as $permissionName){
-    $permission = $em->getRepository('Application_Model_Permission')->findOneByName($permissionName);
+    $permission = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$permissionName[0], 'action'=>$permissionName[1]));
 
     if($permission){
       $guestRole->addPermission($permission);
     }
   }
   $em->persist($guestRole);
+}
+
+function randomString($length) {
+	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$./";	
+
+	$size = strlen( $chars );
+  $str = '';
+	for( $i = 0; $i < $length; $i++ ) {
+		$str .= $chars[ rand( 0, $size - 1 ) ];
+	}
+
+	return $str;
+}
+
+$guestUser = $em->getRepository('Application_Model_User')->findOneByUsername('guest');
+if(empty($guestUser)){
+  //create the guest user object here
+  $guestUser = new Application_Model_User(array(
+    'role'=>$guestRole,
+    'username'=>'guest',
+    //essentially we won't need a password here, because everyone already got all the guest permission
+    //but it's required by the class and probably better anyways to avoid some unforeseeable results
+    //so we just set it here to some random string, for which we wouldn't know the real password, as it's hashed
+    'password'=> randomString(60),
+    'email'=>'',
+    'verificationHash'=>''
+  ));
+  $em->persist($guestUser);
+  
   //flush here to have access to the id
   $em->flush();
-
-  $guestSetting = $em->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
-  if(!$guestSetting){
-    $guestSetting = new Application_Model_Setting();
-    $guestSetting->setSettingKey('guest-role-id');
+  
+  //write the guest id into the settings
+  $guestUserSetting = $em->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
+  if(!$guestUserSetting){
+    $guestUserSetting = new Application_Model_Setting();
+    $guestUserSetting->setSettingKey('guest-id');
   }
-  $guestSetting->setValue($guestRole->getId());
-
-  $em->persist($guestSetting);
+  $guestUserSetting->setValue($guestUser->getId());
+  $em->persist($guestUserSetting);
 }
 
 //create the admin user role

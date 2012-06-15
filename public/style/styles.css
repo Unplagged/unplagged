@@ -346,6 +346,7 @@ header[role=toolbar]{
 
 header[role=toolbar] .login-register-box {
   color: white;
+  float: left;
 }
 
 header[role=toolbar] .content {

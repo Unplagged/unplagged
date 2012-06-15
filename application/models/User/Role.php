@@ -126,7 +126,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     
     if($inheritedRoles->count()>0){
       foreach($this->getInheritedRoles() as $inheritedRole){
-        $permissions = array_merge ($inheritedRole->getPermissions(), $permissions); 
+        $permissions = array_merge($inheritedRole->getPermissions(), $permissions); 
       }
     }
     

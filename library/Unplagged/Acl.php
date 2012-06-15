@@ -27,11 +27,10 @@ class Unplagged_Acl extends Zend_Acl{
 
     $this->addRole($user->getRole());
 
-
     $resources = $em->getRepository('Application_Model_Permission')->findAll();
 
     foreach($resources as $resource){
-      if(!$this->has($resource->getName())){
+      if(!$this->has($resource->getResourceId())){
         $this->add($resource);
       }
     }
@@ -45,7 +44,7 @@ class Unplagged_Acl extends Zend_Acl{
       }
 
       // asterisk means everything is allowed
-      if($permission->getName() === '*'){
+      if($permission->getAction() === '*' && $permission->getType() === 'global'){
         $this->allow($user->getRole());
         break;
       }else{

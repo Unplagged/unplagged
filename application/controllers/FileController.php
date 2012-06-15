@@ -28,12 +28,13 @@ class FileController extends Unplagged_Controller_Action{
   }
 
   public function uploadAction(){
-
     if($this->_request->isPost()){
       $post = $this->_request->getPost();
 
-      $uploadform = new Application_Form_File_Upload();
-      if($uploadform->isValid($post)){
+      $uploadForm = new Application_Form_File_Upload();
+      var_dump($uploadForm->isValid($post));
+      die('hier');
+      if($uploadForm->isValid($post)){
         $this->storeUpload();
       }
     }
@@ -57,16 +58,17 @@ class FileController extends Unplagged_Controller_Action{
     //move the uploaded file to the before specified location
     if($adapter->receive()){
       chmod($storageDir . $fileNames[1], 0755);
-
-      $file = $this->createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir);
+      die('hier');
+      $user = Zend_Registry::getInstance()->user;
+      
+      $file = $this->createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir, $user);
       $this->_em->persist($file);
       $this->_em->flush();
-
-      //store in the activity stream, that the current user uploaded this file
-      $user = Zend_Registry::getInstance()->user;
+      
       $user->addFile($file);
       $this->_em->persist($user);
       
+      //store in the activity stream, that the current user uploaded this file
       Unplagged_Helper::notify('file_uploaded', $file, $user);
       $this->_helper->FlashMessenger(array('success'=>array('The file "%s" was successfully uploaded.', array($fileNames[0]))));
 
@@ -130,7 +132,7 @@ class FileController extends Unplagged_Controller_Action{
    * @param string $storageDir
    * @return \Application_Model_File 
    */
-  private function createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir){
+  private function createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir, $user){
     $data = array();
     $data['size'] = $adapter->getFileSize();
     //if the mime type is always application/octet-stream, then the 
@@ -141,6 +143,7 @@ class FileController extends Unplagged_Controller_Action{
     $data['location'] = $storageDir;
     $data['description'] = $description;
     $data['localFilename'] = $fileNames[1];
+    $data['uploader'] = $user;
 
     $file = new Application_Model_File($data);
 

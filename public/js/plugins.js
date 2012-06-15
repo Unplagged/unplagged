@@ -2,16 +2,49 @@
  * Plugin that enables Plupload as the file uploader and uses Bootstrap modals to
  * query for additional information.
  * 
- * Dependencies are Twitter Bootstrap and it's js file and Plupload.
+ * Dependencies are Twitter Bootstrap, it's js file and Plupload.
  */
 (function($){
 
   $.fn.unplaggedFileUpload = function(){
-    var files = new Array();
-    var filesRunning = false;
     var fileUploader = null;
-    //store the modal dialog that is somewhere in the page
-    var fileModal = $('#file-data');
+    var modalCounter = 0;
+    var $this = this;
+    var modalVisible = false;
+    //just a helper to fix the weird behaviour of QueueChanged, which fires just once
+    //when files are added, but does when files are removed during the dialog phase
+    var fired = false;
+    
+    
+    function createNextFileModal(dataBackdrop, fileCount){
+      var defaultFileModal = 
+      '<div data-modal-number="' + (modalCounter + 1) + '" class="modal hide" data-backdrop="' + dataBackdrop + '">' +
+      '  <div class="modal-header">' +
+      '    <button class="close modal-close">x</button>' +
+      '    <h3>' + $this.attr('data-file-information') + ' <span class="count">' + (modalCounter + 1) + '/' + fileCount + '</span></h3>' +
+      '  </div>' +
+      '  <div class="modal-body">' +
+      '    <dl>' +
+      '      <dt id="newName-label"><label for="newName-' + modalCounter + '">' + $this.attr('data-filename') + ':*</label></dt>' +
+      '      <dd id="newName-element">' +
+      '      <input type="text" id="newName-' + modalCounter + ' name="newName" value="" class="tooltip-toggle newName"></dd>' +
+      '      <dt id="description-label">' + 
+      '        <label for="description" class="optional">' + $this.attr('data-description') + ':</label>' + 
+      '      </dt>' +
+      '      <dd id="description-element">' +
+      '        <textarea id="description-' + modalCounter + '" class="description" rows="10" cols="160"></textarea>' + 
+      '      </dd>' + 
+      '    </dl>' +
+      '  </div>' +
+      '  <div class="modal-footer">' +
+      '    <button class="btn modal-close">' + $this.attr('data-close') + '</button>' +
+      '    <button class="btn btn-primary modal-save">' + $this.attr('data-save') + '</button>' +
+      '  </div>' +
+      '</div>';
+      
+      modalCounter++;
+      return $(defaultFileModal);
+    }
     
     // Convert divs to queue widgets when the DOM is ready
     this.pluploadQueue({
@@ -24,18 +57,33 @@
       silverlight_xap_url : '/js/libs/plupload/js/plupload.silverlight.xap',
       init: {
         QueueChanged: function(uploader){
-          // store the uploader so we have access later on 
-          fileUploader = uploader;
-          $.each(uploader.files, function(){
-            //add the current file to our own queue
-            files.push(this);
+          if(!fired){
+            fired = true;
+            // store the uploader so we have access later on 
+            fileUploader = uploader;
 
-            //start processing of the queue if it isn't already running
-            if(!filesRunning){
-              filesRunning = true;
-              getDataForNextFile();
-            }
-          });
+            //count the files
+            var fileCount = 0;
+            $.each(uploader.files, function(){
+              fileCount++;  
+            });
+          
+            //create a modal for each file
+            $.each(uploader.files, function(){
+              var fileModal = createNextFileModal('static', fileCount);
+              $('body').append(fileModal);
+              fileModal.find('input, textarea').val('');
+              //store the file on the modal so that we can retrieve on button click
+              fileModal.data('current-file', this);
+              //set the filename in the input field
+              fileModal.find('.newName').val(this.name.replace(/\.[^/.]+$/, ""));
+            
+              if(!modalVisible){
+                modalVisible = true;
+                fileModal.modal('show');  
+              }
+            }); 
+          }
         },
         BeforeUpload: function(uploader, file){
           //take the data that was set in the file on QueueChange, so that it gets also uploaded
@@ -49,67 +97,63 @@
       }
     });
     
-    fileModal.find('.modal-save').click(saveChanges);
-    fileModal.find('.modal-close').click(closeFileModal);
-     
-    function getDataForNextFile(){
-      var file = files.shift();
-    
-      if(file){
-        fileModal.find('input, textarea').val('');
-        //set the filename in the heading
-        fileModal.modal('show').find('#newName').val(file.name.replace(/\.[^/.]+$/, ""));
-        //store the file on the modal so that we can retrieve on button click
-        $.data(fileModal, 'current-file', file);
-      } else {
-        finishAdditionalData();
-      }
-    }
-    
-    function finishAdditionalData(){
-      filesRunning = false;
-      fileUploader.start();
-    }
+    //attach button listeners to dynamically added modals
+    $('.modal-save').live('click', saveChanges);
+    $('.modal-close').live('click', closeFileModal);
     
     function saveChanges(){
-      var file = $.data(fileModal, 'current-file');
+      var fileModal = $(this).closest('.modal');
+      var file = fileModal.data('current-file');
       if(file){
-        var descriptionValue = fileModal.find('#description').val(); 
-        var newNameValue = fileModal.find('#newName').val(); 
-        file.description = descriptionValue;
-        file.newName = newNameValue;
+        file.description = fileModal.find('.description').val();
+        file.newName = fileModal.find('.newName').val();
       }
-      //$.data(fileModal, 'current-file', null);
-      fileModal.one('hidden', function(){
-        if(files.length > 0){
-          getDataForNextFile();
-        } else {
-          finishAdditionalData();
-        }
-      }).modal('hide');
-      //fix for https://github.com/twitter/bootstrap/issues/2839
-      $('.modal-backdrop').hide();
+      $.data(fileModal, 'current-file', null);
+      
+      removeCurrentModal(fileModal);      
     }
     
     /**
-    * Stops the upload of the current file and deletes the data.
-    */
+     * Hides the given modal and removes it from the DOM afterwards. It also starts
+     * the display of the next dialog if necessary.
+     */
+    function removeCurrentModal(fileModal){
+      fileModal.one('hidden', function(){
+        var currentNumber = parseInt(fileModal.attr('data-modal-number'));
+        fileModal.remove();
+        //fix for https://github.com/twitter/bootstrap/issues/2839
+        $('.modal-backdrop').hide().remove();
+        showNext(currentNumber + 1);
+      });
+      fileModal.modal('hide');  
+    }
+    
+    /**
+     * Stops the upload of the current file and deletes the data.
+     */
     function closeFileModal(){
-      var fileAccess = $.data(fileModal, 'current-file');
-      if(fileAccess){
-        fileUploader.removeFile(fileAccess);
-
-        $.data(fileModal, 'current-file', null);
+      var fileModal = $(this).closest('.modal');
       
-        fileModal.one('hidden', function(){
-          if(files.length>0){
-            getDataForNextFile();
-          } else {
-            finishAdditionalData();  
-            fileModal.modal('hide');
-            $('.modal-backdrop').hide();
-          }
-        });
+      //user cancelled, so remove the file of this modal from the uploader queue
+      var file = fileModal.data('current-file');
+      if(file){
+        fileUploader.removeFile(file);
+      }
+      
+      removeCurrentModal(fileModal);
+    }
+    
+    function showNext(nextModal){
+      var fileModal = $('.modal[data-modal-number=' + nextModal + ']')
+      if(fileModal.length > 0){
+        fileModal.modal('show');
+      } else {
+        //we need to start here if nothing is left, because the queueChanged event
+        //weirdly just fires the first time, so if the user would add more files
+        //after we finished the dialogs once, nothing would happen
+        //if this is fixed sometime in bootstrap, we could let the user start 
+        //the upload for theirselves and add files multiple times
+        fileUploader.start();  
       }
     }
   }
@@ -135,7 +179,7 @@
     function addContextMenu(){
       var contextMenuElement = '<ul id="contextmenu" class="contextmenu dropdown-menu">' + 
       '<li class="google-search-for start-search"><a href="#"><i class="icon-search"></i> Google Suche nach <span id="google-search-words"></span></a></li>' +
-      '<li class="google-search-for delete-search-words"><a href="#"><i class="icon-remove"></i> Google-Suchwörter löschen</a></li>' +
+      '<li class="google-search-for delete-search-words"><a href="#"><i class="icon-remove"></i> Google-SuchwÃƒÂ¶rter lÃƒÂ¶schen</a></li>' +
       '<li class="divider"></li>' +
       '<li><a href="#" class="create-fragment"><i class="icon-tasks"></i> Create fragment</a></li>' +
       '<li class="divider"></li>' +
