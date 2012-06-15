@@ -31,6 +31,7 @@
 class Application_Model_Tag extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-tag';
+  const PERMISSION_TYPE = 'tag';
 
   /**
    * The title.

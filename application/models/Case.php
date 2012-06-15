@@ -30,6 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Application_Model_Case extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-case';
+  const PERMISSION_TYPE = 'case';
 
   /**
    * The "real" name of the case, under which it will get published later on.
@@ -93,6 +94,10 @@ class Application_Model_Case extends Application_Model_Base{
 
   /**
    * @ManyToMany(targetEntity="Application_Model_User_InheritableRole", cascade={"persist", "remove"}) 
+   * @JoinTable(name="case_has_defaultroles",
+   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")}
+   *      )
    */
   private $defaultRoles;
 

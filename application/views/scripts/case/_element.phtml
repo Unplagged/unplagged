@@ -16,16 +16,19 @@ $disabled = $this->disabled || false;
     echo '<div class="hint">' . $this->element->getDescription() . '</div>';
   }
   ?>
-  <div class="users-wrapper" data-wrapper-for="<?php echo $this->element->getName(); ?>">
+  <div class="collaborators-wrapper" data-wrapper-for="<?php echo $this->element->getName(); ?>">
     <?php if($this->element->getValue()){ ?>
       <?php foreach($this->element->getValue() as $userId): ?>
         <?php $user = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneById($userId); ?>
         <div class="well" data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $user->getId(); ?>">
-          <img class="avatar-small no-shadow" src="/images/default-avatar.png">
+          <img class="avatar no-shadow" src="<?php echo $user->getAvatar(); ?>" />
           <div class="names">
             <span class="username"><?php echo $user->getUsername(); ?></span>
           </div>
           <div class="options">
+            <select class="span2" style="width: 150px;">
+              <option>test</option>
+            </select>
             <a href="#" class="btn btn-danger" data-remove="true" data-for="<?php echo $user->getId(); ?>"><i class="icon-remove"></i></a>
           </div>
           <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $user->getId(); ?>" />

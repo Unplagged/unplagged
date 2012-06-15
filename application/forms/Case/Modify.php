@@ -48,7 +48,7 @@ class Application_Form_Case_Modify extends Zend_Form{
     $collaboratorsElement = new Zend_Form_Element_Text('collaborators[]');
     $collaboratorsElement->setLabel('Collaborators');
     $collaboratorsElement->setDecorators(array(array('ViewScript', array(
-      'viewScript' => '/user/_element.phtml',
+      'viewScript' => '/case/_element.phtml',
       'callback' => '/user/autocomplete',
       'disabled' => false
     ))));

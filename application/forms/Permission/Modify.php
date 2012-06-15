@@ -30,43 +30,28 @@ class Application_Form_Permission_Modify extends Zend_Form{
    */
   public function init(){
     $this->setMethod('post');
-    $this->setAction("/case/create");
+    $this->setAction("/permission/edit");
 
-    $nameElement = new Zend_Form_Element_Text('name');
-    $nameElement->setLabel("Name");
-    $nameElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
-    $nameElement->addValidator('stringLength', false, array(2, 64));
-    $nameElement->setRequired(true);
-
-    $aliasElement = new Zend_Form_Element_Text('alias');
-    $aliasElement->setLabel("Pseudonym");
-    $aliasElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
-    $aliasElement->addValidator('stringLength', false, array(2, 5));
-    $aliasElement->setAttrib('maxLength', 5);
-    $aliasElement->setRequired(true);
-
-    $collaboratorsElement = new Zend_Form_Element_Text('collaborators[]');
-    $collaboratorsElement->setLabel('Collaborators');
+    $collaboratorsElement = new Zend_Form_Element_Text('permissions[]');
+    $collaboratorsElement->setLabel('People having access to the element');
     // @todo: add filter only for some permission types
     $collaboratorsElement->setDecorators(array(array('ViewScript', array(
       'viewScript' => '/permission/_element.phtml',
-      'callback' => '/user/autocomplete/case/3',
+      'callback' => '/permission/autocomplete/case/3',
       'disabled' => false
     ))));
 
     $submitElement = new Zend_Form_Element_Submit('submit');
-    $submitElement->setLabel('Create case');
+    $submitElement->setLabel('Save permissions');
     $submitElement->setOptions(array('class'=>'btn btn-primary'));
 
     $this->addElements(array(
-      $nameElement
-      , $aliasElement
-      , $collaboratorsElement
+      $collaboratorsElement
     ));
 
-    $this->addDisplayGroup(array('name', 'alias', 'collaborators')
+    $this->addDisplayGroup(array('permissions')
         , 'credentialGroup'
-        , array('legend'=>'Case Information')
+        , array('legend'=>'Permissions Information')
     );
 
     $this->addElements(array(

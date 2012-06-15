@@ -437,7 +437,7 @@ $(document).ready(function(){
     $('#' + element.attr('id') + '-element').hide();
     
     // insert the new bootstrap-based element
-    element.parent().parent().append('<a class="' + classes + '" data-toggle="button" data-checkbox="' + element.attr('id') + '">' + label + '</a>');
+    element.parent().parent().prepend('<a class="' + classes + '" data-toggle="button" data-checkbox="' + element.attr('id') + '">' + label + '</a>');
     if(element.is(':checked')){
       $('a[data-checkbox="' + element.attr('id') + '"]').trigger('click').addClass('active');
     }
@@ -621,10 +621,9 @@ $(document).ready(function(){
       element += '</div>';      
     } else if(viewScript == 'permission') {
       element = '<div class="well" data-source="' + sourceId + '" data-id="' + value + '">';
-      element += '<img class="avatar-small no-shadow" src="/images/default-avatar.png">';
+      element += '<img class="avatar no-shadow" src="/images/default-avatar.png">';
       element += '<div class="names">';
       element += '<span class="username">' + label + '</span>';
-      element += '<span class="realname">bla</span>';
       element += '</div>';
 
       var permissions = ['create', 'read', 'update', 'delete', 'authorize'];
@@ -632,11 +631,11 @@ $(document).ready(function(){
       $.each(permissions, function(index, permission) { 
         element += '<span id="' + permission + '-' + value + '-label">';
         element += '<label for="' + permission + '-' + value + '">' + permission + '</label>';
-        element += '<input type="checkbox" name="' + permission + '[' + value + ']" id="' + permission + '-' + value + '" value="0" class="btn btn-checkbox">';
+        element += '<input type="checkbox" name="' + permission + '[]" id="' + permission + '-' + value + '" value="' + value + '" class="btn btn-checkbox btn-small">';
         element += '</span>';
       });
 
-      element += '<a href="#" class="btn" data-remove="true" data-for="' + value + '"><i class="icon-remove"></i></a></div>';
+      element += '<a href="#" class="btn btn-danger" data-remove="true" data-for="' + value + '"><i class="icon-remove"></i></a></div>';
       element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" />';
       element += '</div>';    
     }
