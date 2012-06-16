@@ -11,7 +11,7 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
   protected $query;
   protected $countQuery;
 
-  public function __construct($query, $countQuery, $additionalConditions = array(), $orderBy = null, $permissionAction = null){
+  public function __construct($query, $countQuery, $additionalConditions = array(), $orderBy = null, $permissionType = null, $permissionAction = null){
     $em = Zend_Registry::getInstance()->entitymanager;
     $user = Zend_Registry::getInstance()->user;
 

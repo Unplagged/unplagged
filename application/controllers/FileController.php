@@ -162,7 +162,7 @@ class FileController extends Unplagged_Controller_Action{
     $count = 'SELECT COUNT(b.id) FROM Application_Model_File b';
     $orderBy = 'b.created DESC';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, $orderBy, $permissionAction));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, $orderBy, 'file', $permissionAction));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
