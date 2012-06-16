@@ -138,6 +138,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       $guestId = $registry->entitymanager->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
       $guest = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($guestId->getValue());
 
+      $caseId = $defaultNamespace->case;
+      if($caseId){
+        $case = $registry->entitymanager->getRepository('Application_Model_Case')->findOneById($caseId);
+        $guest->setCurrentCase($case);
+      }
+      
       $registry->user = $guest;
       $defaultNamespace->userId = 'guest';
     }else{

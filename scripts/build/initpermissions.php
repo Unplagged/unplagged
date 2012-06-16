@@ -20,10 +20,6 @@
  * 
  * This file searches the controller directory for all actions and stores
  * them in the permissions table as $controller_$action.
- * 
- * @todo when running this script on the command line, there is a weird 
- * output of some <script> tag, it works so not that important right now,
- * but I'm curious where this could come from
  */
 
 include 'initbase.php';
@@ -37,6 +33,7 @@ $application->getBootstrap()->bootstrap('FrontController');
 $front = $application->getBootstrap()->getResource('FrontController');
 
 $basicResources = array();
+$modelResources = array();
 
 //first permission is allow everything
 $allowAll = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'global', 'action'=>'*'));
@@ -87,22 +84,31 @@ foreach(get_declared_classes() as $class){
   if(is_subclass_of($class, 'Application_Model_Base')){
     $model = substr($class, strrpos($class, '_') + 1);
     $modelWithHyphens = substr(preg_replace_callback('/([A-Z])/', create_function('$matches', 'return \'-\' . strtolower($matches[1]);'), $model), 1);
-    var_dump($modelWithHyphens);
-    var_dump(in_array($modelWithHyphens, Application_Model_Base::$blacklist));
     if(!in_array($modelWithHyphens, Application_Model_Base::$blacklist)){
       foreach(Application_Model_Base::$permissionTypes as $permissionType){
-        $basicResources[] = array($modelWithHyphens, $permissionType);
+        $resource = array($modelWithHyphens, $permissionType);
+        $modelResources[] = $resource;
       }
     }
   }
 }
-//store all found resources in the db
-foreach($basicResources as $resource){
-  $permission = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1]));
-  if(empty($permission)){
-    $permission = new Application_Model_Permission($resource[0], $resource[1]);
-    $em->persist($permission);
+
+storeResources($basicResources, $em);
+$modelPermissions = storeResources($modelResources, $em);
+
+
+function storeResources(array $resources, $em){
+  $permissions = array();
+  foreach($resources as $resource){
+    $permission = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1]));
+    if(empty($permission)){
+      $permission = new Application_Model_Permission($resource[0], $resource[1]);
+      $em->persist($permission);
+    }
+    $permissions[] = $permission;
   }
+  
+  return $permissions;
 }
 
 //create the permissions for the model level
@@ -123,7 +129,8 @@ if(!$guestRole){
     array('user', 'register'),
     array('user', 'verify'),
     array('user', 'recover-password'),
-    array('document', 'response-plagiarism')
+    array('document', 'response-plagiarism'),
+    array('user', 'set-current-case')
   );
 
   foreach($defaultPermissions as $permissionName){
@@ -148,10 +155,9 @@ function randomString($length){
   return $str;
 }
 
+//create the guest user object
 $guestUser = $em->getRepository('Application_Model_User')->findOneByUsername('guest');
-
 if(!$guestUser){
-  //create the guest user object here
   $guestUser = new Application_Model_User(array(
         'role'=>$guestRole,
         'username'=>'guest',
@@ -198,6 +204,21 @@ if(!$element){
 
   $em->persist($adminSetting);
 }
+
+//create the default case roles
+$caseAdmin = $em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'admin', 'type'=>Application_Model_User_Role::TYPE_CASE_DEFAULT));
+if(!$caseAdmin){
+  $caseAdmin = new Application_Model_User_InheritableRole(Application_Model_User_Role::TYPE_CASE_DEFAULT);
+  $caseAdmin->setRoleId('case-admin');
+
+  foreach($modelPermissions as $modelPermission){
+    $caseAdmin->addPermission($modelPermission);
+  }
+
+  $em->persist($caseAdmin);
+}
+
+
 
 $em->flush();
 ?>

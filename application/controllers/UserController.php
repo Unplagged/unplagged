@@ -67,12 +67,12 @@ class UserController extends Unplagged_Controller_Action{
       $languageString = $locale->getLanguage();
       $mailer = new Unplagged_Mailer('registration.phtml', $languageString);
       $subject = Zend_Registry::get('Zend_Translate')->translate('%s: Registration verification required');
-      
+
       try{
         $mailer->sendMail($user, sprintf($subject, $config->default->applicationName));
         $this->_helper->FlashMessenger(array('success'=>'Please check your emails to verify your account.'));
         $this->_helper->redirector('index', 'index');
-      } catch(Zend_Mail_Transport_Exception $e){
+      }catch(Zend_Mail_Transport_Exception $e){
         $this->_helper->FlashMessenger(array('error'=>'Sorry, we were unable to send a verification mail, please try again later'));
         Zend_Registry::get('Log')->err('Unable to send mail for user ' . $user->getUsername() . '.');
       }
@@ -322,16 +322,28 @@ class UserController extends Unplagged_Controller_Action{
    */
   public function setCurrentCaseAction(){
     $input = new Zend_Filter_Input(array('case'=>'Digits'), null, $this->_getAllParams());
-
+    $user = Zend_Registry::get('user');
+    //die($input->case);
     $case = null;
     if($input->case){
       $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->case);
     }
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-    $user->setCurrentCase($case);
 
-    $this->_em->persist($user);
-    $this->_em->flush();
+    $user->setCurrentCase($case);
+    
+    //only persist the current case if we have no guest
+    if($user->getUsername() !== 'guest'){
+      $this->_em->persist($user);
+      $this->_em->flush();
+    }else{
+      //otherwise store it in the session
+      $defaultNamespace = new Zend_Session_Namespace('Default');
+      if($case){
+        $defaultNamespace->case = $case->getId();
+      }else{
+        $defaultNamespace->case = '';
+      }
+    }
 
     $this->redirectToLastPage();
   }
