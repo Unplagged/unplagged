@@ -231,5 +231,4 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
 }
-
 ?>

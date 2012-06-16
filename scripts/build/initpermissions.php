@@ -98,10 +98,10 @@ $em->flush();
 
 //create the guest users role
 $guestRole = $em->getRepository('Application_Model_User_Role')->findOneByRoleId('guest');
-if(empty($guestRole)){
+
+if(!$guestRole){
   $guestRole = new Application_Model_User_Role(Application_Model_User_Role::TYPE_GLOBAL);
   $guestRole->setRoleId('guest');
-
   $defaultPermissions = array(
     array('auth', 'login'),
     array('auth', 'logout'),
@@ -136,7 +136,8 @@ function randomString($length) {
 }
 
 $guestUser = $em->getRepository('Application_Model_User')->findOneByUsername('guest');
-if(empty($guestUser)){
+
+if(!$guestUser){
   //create the guest user object here
   $guestUser = new Application_Model_User(array(
     'role'=>$guestRole,
@@ -152,7 +153,7 @@ if(empty($guestUser)){
   
   //flush here to have access to the id
   $em->flush();
-  
+  //die('hier');
   //write the guest id into the settings
   $guestUserSetting = $em->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
   if(!$guestUserSetting){

@@ -16,10 +16,10 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
     $user = Zend_Registry::getInstance()->user;
 
     $conditions = array();
-    /*
-      if(isset($permissionAction)){
+
+    if(isset($permissionAction)){
       $conditions[] = 'u.id = ' . $user->getId();
-    }*/
+    }
     if(isset($additionalConditions)){
       foreach($additionalConditions as $field=>$value){
         $conditions[] = $field . " = '" . $value . "'";
@@ -28,16 +28,16 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
     $condition = implode(' AND ', $conditions);
     $orderBy = isset($orderBy) ? ' ORDER BY ' . $orderBy : '';
     $permissionStatement = '';
-   /* if(isset($permissionAction)){
+    if(isset($permissionAction)){
       $permissionStatement = " JOIN b.permissions pe WITH (pe.base = b.id AND pe.action = '%s') JOIN pe.roles re JOIN re.user u WHERE ";
       $permissionStatement = sprintf($permissionStatement, $permissionAction);
-    } elseif(!empty($condition)) {
-      $permissionStatement = ' WHERE ';
-    }*/
-    // @todo: remove the condition below when the permission stuff is uncommented again
-    if(!empty($condition)) {
+    }elseif(!empty($condition)){
       $permissionStatement = ' WHERE ';
     }
+    // @todo: remove the condition below when the permission stuff is uncommented again
+    /* if(!empty($condition)){
+      $permissionStatement = ' WHERE ';
+      } */
     $this->query = $em->createQuery($query . $permissionStatement . $condition . $orderBy);
     $this->countQuery = $em->createQuery($countQuery . $permissionStatement . $condition . $orderBy);
   }

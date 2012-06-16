@@ -196,7 +196,7 @@ class DocumentController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
       if($document){
-        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'delete', $input->id))){
+        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'delete', $document))){
           $this->redirectToLastPage(true);
         }
         $this->_em->remove($document);

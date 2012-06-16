@@ -35,6 +35,7 @@ class FileController extends Unplagged_Controller_Action{
       if($uploadForm->isValid($post)){
         $this->storeUpload();
       } else {
+        var_dump($uploadForm->getErrors());
         die('{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}');
       }
     }
@@ -157,10 +158,11 @@ class FileController extends Unplagged_Controller_Action{
     $this->setTitle('Public Files');
 
     $permissionAction = 'read';
-    $query = 'SELECT b FROM Application_Model_File b ORDER BY b.created DESC';
+    $query = 'SELECT b FROM Application_Model_File b';
     $count = 'SELECT COUNT(b.id) FROM Application_Model_File b';
+    $orderBy = 'b.created DESC';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, null, $permissionAction));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, $orderBy, $permissionAction));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
@@ -199,7 +201,7 @@ class FileController extends Unplagged_Controller_Action{
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
       
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'authorize', $file))){
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'authorize', $file))){
         $action['link'] = '/permission/edit/id/' . $file->getId();
         $action['label'] = 'Set permissions';
         $action['icon'] = 'images/icons/shield.png';

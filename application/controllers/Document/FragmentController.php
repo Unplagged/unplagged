@@ -141,7 +141,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
 
     if($fragment){
-      if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'update', $input->id))){
+      if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'update', $fragment))){
         $this->redirectToLastPage(true);
       }
 
@@ -207,14 +207,14 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       foreach($paginator as $fragment):
         $fragment->actions = array();
 
-        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'update', $fragment->getId()))){
+        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'update', $fragment))){
           $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
           $action['label'] = 'Edit fragment';
           $action['icon'] = 'images/icons/pencil.png';
           $fragment->actions[] = $action;
         }
 
-        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'delete', $fragment->getId()))){
+        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'delete', $fragment))){
           $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
           $action['label'] = 'Remove fragment';
           $action['icon'] = 'images/icons/delete.png';
@@ -247,7 +247,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     if(!empty($input->id)){
       $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
       if($fragment){
-        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'delete', $input->id))){
+        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document_fragment', 'delete', $fragment))){
           $this->redirectToLastPage(true);
         }
         $this->_em->remove($fragment);
