@@ -93,11 +93,11 @@ class CaseController extends Unplagged_Controller_Action{
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
-    $permissionAction = 'read';
+    $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=> 'case', 'action' => 'read', 'base' => null));
     $query = 'SELECT b FROM Application_Model_Case b';
     $count = 'SELECT COUNT(b.id) FROM Application_Model_Case b';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, null, $permissionAction));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, null, $permission));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 

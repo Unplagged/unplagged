@@ -195,11 +195,12 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
     if($case){
-      $permissionAction = 'read';
+      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
+
       $query = 'SELECT b FROM Application_Model_Document_Fragment b JOIN b.document d';
       $count = 'SELECT COUNT(b.id) FROM Application_Model_Document_Fragment b JOIN b.document d';
 
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('d.id'=>$case->getTarget()->getId()), null, $permissionAction));
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('d.id'=>$case->getTarget()->getId()), null, $permission));
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
       $paginator->setCurrentPageNumber($input->page);
 

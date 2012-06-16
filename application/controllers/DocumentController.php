@@ -114,11 +114,11 @@ class DocumentController extends Unplagged_Controller_Action{
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
     if($case){
-      $permissionAction = 'read';
+      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
       $query = 'SELECT b FROM Application_Model_Document b';
       $count = 'SELECT COUNT(b.id) FROM Application_Model_Document b';
 
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permissionAction));
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permission));
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
       $paginator->setCurrentPageNumber($input->page);
 
@@ -145,7 +145,7 @@ class DocumentController extends Unplagged_Controller_Action{
           $action['icon'] = 'images/icons/pencil.png';
           $document->actions[] = $action;
         }
-        
+
         $action['link'] = '/document/detect-plagiarism/id/' . $document->getId();
         $action['label'] = 'Detect plagiarism';
         $action['icon'] = 'images/icons/eye.png';
@@ -184,6 +184,7 @@ class DocumentController extends Unplagged_Controller_Action{
       Zend_Layout::getMvcInstance()->versionableId = null;
     }else{
       $this->_helper->FlashMessenger('You need to select a case first.');
+      $this->redirectToLastPage();
     }
   }
 

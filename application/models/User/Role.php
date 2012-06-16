@@ -88,8 +88,8 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    * @OneToOne(targetEntity="Application_Model_User", mappedBy="role")
    */
   protected $user;
-  
-    /**
+
+  /**
    * OneToOne(targetEntity="Application_Model_User", mappedBy="role")
    */
   protected $u4ser;
@@ -127,7 +127,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
 
     if($inheritedRoles->count() > 0){
       foreach($this->getInheritedRoles() as $inheritedRole){
-        $permissions = array_merge($inheritedRole->getPermissions(), $permissions); 
+        $permissions = array_merge($inheritedRole->getPermissions(), $permissions);
       }
     }
 
@@ -144,36 +144,41 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     $permissions = array_merge($inheritedPermissions, $this->permissions->toArray());
     return $permissions;
   }
-  
-    public function getPermissions2(){
-      return $this->permissions;
-    }
-    
-    public function hasPermission(Application_Model_Permission $permission) {
-      $user = Zend_Registry::getInstance()->user;
-      $case = $user->getCurrentCase();
-      
-      // check the main user role on that right
-      if($this->getPermissions2()->contains($permission)) {
-        return true;
-      }
-      
-      $condition = array(
-        'type'=> $permission->getType(),
-        'action' => $permission->getAction(),
-        'base' => null);
-      
-      $permissionAny = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Permission')->findOneBy($condition);
-      foreach($case->getDefaultRoles() as $caseRole) {
-        if($this->getInheritedRoles()->contains($caseRole)) {
-          if($caseRole->getPermissions2()->contains($permissionAny)) {
-            return true;
-          }
-        }
-      }
-      
+
+  public function getPermissions2(){
+    return $this->permissions;
+  }
+
+  public function hasPermission(Application_Model_Permission $permission){
+    $user = Zend_Registry::getInstance()->user;
+    $case = $user->getCurrentCase();
+
+    // check the main user role on that right
+    if($this->getPermissions2()->contains($permission)){
       return true;
     }
+
+    // when a role without a base was sent, we do not need to select it
+    if($permission->getBase()){
+      $condition = array(
+        'type'=>$permission->getType(),
+        'action'=>$permission->getAction(),
+        'base'=>null);
+
+      $permissionAny = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Permission')->findOneBy($condition);
+    }else{
+      $permissionAny = $permission;
+    }
+    foreach($case->getDefaultRoles() as $caseRole){
+      if($this->getInheritedRoles()->contains($caseRole)){
+        if($caseRole->getPermissions2()->contains($permissionAny)){
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
 
   /**
    * Returns only the explicitly set permissions for the current object.
@@ -211,4 +216,5 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   }
 
 }
+
 ?>

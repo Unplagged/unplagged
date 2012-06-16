@@ -157,12 +157,12 @@ class FileController extends Unplagged_Controller_Action{
 
     $this->setTitle('Public Files');
 
-    $permissionAction = 'read';
+    $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=> 'file', 'action' => 'read', 'base' => null));
     $query = 'SELECT b FROM Application_Model_File b';
     $count = 'SELECT COUNT(b.id) FROM Application_Model_File b';
     $orderBy = 'b.created DESC';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, $orderBy, 'file', $permissionAction));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, $orderBy, $permission));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 

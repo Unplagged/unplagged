@@ -11,43 +11,44 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
   protected $query;
   protected $countQuery;
 
-  public function __construct($query, $countQuery, $additionalConditions = array(), $orderBy = null, $permissionType = null, $permissionAction = null){
+  public function __construct($query, $countQuery, $additionalConditions = array(), $orderBy = null, Application_Model_Permission $readAllPermission = null){
     $em = Zend_Registry::getInstance()->entitymanager;
     $user = Zend_Registry::getInstance()->user;
 
     $conditions = array();
 
-    if(isset($permissionAction)){
-       $conditions[] = 'u.id = ' . $user->getId();
-    }
     if(isset($additionalConditions)){
       foreach($additionalConditions as $field=>$value){
         $conditions[] = $field . " = '" . $value . "'";
       }
     }
-    $condition = implode(' AND ', $conditions);
-    $orderBy = isset($orderBy) ? ' ORDER BY ' . $orderBy : '';
-    $permissionStatement = '';
-    if(isset($permissionAction)){
-      // JOIN b.permissions pg WITH pt.base IS NULL AND pe.action = ... AND pe.type = ... JOIN pg.roles WITH roleId = 'case' 
-      $permissionStatement = " JOIN b.permissions pe WITH (pe.base = b.id AND pe.action = '%s') JOIN pe.roles re JOIN re.user u WHERE ";
-      //$permissionStatement = " JOIN b.permissions pe WITH (pe.base = b.id AND pe.action = '%s' AND (:userRoleId MEMBER OF pe.roles OR :caseRoleId MEMBER OF pe.roles))";
 
-      $permissionStatement = sprintf($permissionStatement, $permissionAction);
-    }elseif(!empty($condition)){
-      $permissionStatement = ' WHERE ';
+    $permissionStatement = '';
+    if(isset($readAllPermission)){
+      // 1) check if the user has the right to see all elements , then we do not have to check permission on each file
+      $canAccessAll = $user->getRole()->hasPermission($readAllPermission);
+
+      // 2) if not, check permission on each file
+      if(!$canAccessAll){
+        if($readAllPermission->getAction()){
+          //$permissionStatement = " JOIN b.permissions pe WITH (pe.base = b.id AND pe.action = '%s') JOIN pe.roles re JOIN re.user u ";
+          $permissionStatement = " JOIN b.permissions pe WITH (pe.base = b.id AND pe.action = :permissionAction AND :roleId MEMBER OF pe.roles)";
+
+          $permissionStatement = sprintf($permissionStatement, $readAllPermission->getAction());
+        }
+      }
     }
-    // @todo: remove the condition below when the permission stuff is uncommented again
-    /* if(!empty($condition)){
-      $permissionStatement = ' WHERE ';
-      } */
-    echo $query . $permissionStatement . $condition . $orderBy;
+    $condition = !empty($conditions) ? ' WHERE ' . implode(' AND ', $conditions) : '';
+    $orderBy = isset($orderBy) ? ' ORDER BY ' . $orderBy : '';
+
     $this->query = $em->createQuery($query . $permissionStatement . $condition . $orderBy);
-    //$this->query->setParameter('userRoleId', 5);
-    //$this->query->setParameter('caseRoleId', 5);
     $this->countQuery = $em->createQuery($countQuery . $permissionStatement . $condition . $orderBy);
-    //$this->countQuery->setParameter('userRoleId', 5);
-    //$this->countQuery->setParameter('caseRoleId', 5);
+    if(isset($readAllPermission) && !$canAccessAll){
+      $this->query->setParameter('permissionAction', $readAllPermission->getAction());
+      $this->query->setParameter('roleId', $user->getRole()->getId());
+      $this->countQuery->setParameter('permissionAction', $readAllPermission->getAction());
+      $this->countQuery->setParameter('roleId', $user->getRole()->getId());
+    }
   }
 
   /**

@@ -69,6 +69,15 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
     $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
   }
 
+  
+  public function getId(){
+    return $this->id;
+  } 
+  
+  public function getBase() {
+    return $this->base;
+  }
+  
   public function getAction(){
     return $this->action;
   }
