@@ -30,11 +30,11 @@ class FileController extends Unplagged_Controller_Action{
   public function uploadAction(){
     if($this->_request->isPost()){
       $post = $this->_request->getPost();
-      
+
       $uploadForm = new Application_Form_File_Upload();
       if($uploadForm->isValid($post)){
         $this->storeUpload();
-      } else {
+      }else{
         var_dump($uploadForm->getErrors());
         die('{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}');
       }
@@ -61,15 +61,15 @@ class FileController extends Unplagged_Controller_Action{
       chmod($storageDir . $fileNames[1], 0755);
 
       $user = Zend_Registry::getInstance()->user;
-      
+
       $file = $this->createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir, $user);
       $this->_em->persist($file);
       $this->_em->flush();
-      
+
       $user->addFile($file);
 
       $this->_em->persist($user);
-      
+
       //store in the activity stream, that the current user uploaded this file
       Unplagged_Helper::notify('file_uploaded', $file, $user);
       $this->_helper->FlashMessenger(array('success'=>array('The file "%s" was successfully uploaded.', array($fileNames[0]))));
@@ -200,7 +200,7 @@ class FileController extends Unplagged_Controller_Action{
       $action['label'] = 'Add to current case';
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
-      
+
       if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'authorize', $file))){
         $action['link'] = '/permission/edit/id/' . $file->getId();
         $action['label'] = 'Set permissions';
@@ -259,55 +259,59 @@ class FileController extends Unplagged_Controller_Action{
   public function parseAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    if(empty($input->id)){
-      $this->_helper->FlashMessenger(array('info'=>'A file id must be set to tell us what to OCR.'));
-    }else{
-      $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
-      $language = 'eng';
-
-      if(empty($file)){
-        $this->_helper->FlashMessenger(array('error'=>"Sorry, we couldn't find a file with the specified id."));
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
+    if($case){
+      if(empty($input->id)){
+        $this->_helper->FlashMessenger(array('info'=>'A file id must be set to tell us what to OCR.'));
       }else{
-        // pdfs will be generated through cron
-        if($file->getExtension() === 'pdf'){
-          $data['title'] = $file->getFilename();
-          $data['initialFile'] = $file;
-          $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
-          $document = new Application_Model_Document($data);
+        $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
+        $language = 'eng';
 
-          // start task
-          $data = array();
-          $data['initiator'] = Zend_Registry::getInstance()->user;
-          $data['ressource'] = $document;
-          $data['action'] = $this->_em->getRepository('Application_Model_Action')->findOneByName('file_parse');
-          $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
-          $task = new Application_Model_Task($data);
-
-          $this->_em->persist($task);
-          $this->_em->flush();
-
-          $this->_helper->FlashMessenger(array('success'=>array('The OCR of "%s" was scheduled, you will be notified as soon as the process finished.', array($file->getFilename()))));
+        if(empty($file)){
+          $this->_helper->FlashMessenger(array('error'=>"Sorry, we couldn't find a file with the specified id."));
         }else{
-          // images will be parsed directly
-          $parser = Unplagged_Parser::factory($file->getMimeType());
+          // pdfs will be generated through cron
+          if($file->getExtension() === 'pdf'){
+            $data['title'] = $file->getFilename();
+            $data['initialFile'] = $file;
+            $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+            $document = new Application_Model_Document($data);
 
-          $document = $parser->parseToDocument($file, $language);
-          if(empty($document)){
-            $this->_helper->FlashMessenger(array('error'=>'We are sorry, but an error occured during the OCR, please try again later.'));
-          }else{
-            $document->setState($this->_em->getRepository('Application_Model_State')->findOneByName('parsed'));
+            // start task
+            $data = array();
+            $data['initiator'] = Zend_Registry::getInstance()->user;
+            $data['ressource'] = $document;
+            $data['action'] = $this->_em->getRepository('Application_Model_Action')->findOneByName('file_parse');
+            $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+            $task = new Application_Model_Task($data);
 
-            $this->_em->persist($document);
+            $this->_em->persist($task);
             $this->_em->flush();
-            $this->_helper->FlashMessenger(array('success'=>'The OCR of the file was successful.'));
-          }
-        }
 
-        $case = Zend_Registry::getInstance()->user->getCurrentCase();
-        $case->addDocument($document);
-        $this->_em->persist($case);
-        $this->_em->flush();
+            $this->_helper->FlashMessenger(array('success'=>array('The OCR of "%s" was scheduled, you will be notified as soon as the process finished.', array($file->getFilename()))));
+          }else{
+            // images will be parsed directly
+            $parser = Unplagged_Parser::factory($file->getMimeType());
+
+            $document = $parser->parseToDocument($file, $language);
+            if(empty($document)){
+              $this->_helper->FlashMessenger(array('error'=>'We are sorry, but an error occured during the OCR, please try again later.'));
+            }else{
+              $document->setState($this->_em->getRepository('Application_Model_State')->findOneByName('parsed'));
+
+              $this->_em->persist($document);
+              $this->_em->flush();
+              $this->_helper->FlashMessenger(array('success'=>'The OCR of the file was successful.'));
+            }
+          }
+
+          $case->addDocument($document);
+          $this->_em->persist($case);
+          $this->_em->flush();
+        }
       }
+    } else {
+      $this->_helper->FlashMessenger(array('error'=>'You need to select a case for which this document should be parsed.'));  
     }
     $this->_helper->redirector('list', 'document');
   }
@@ -348,5 +352,4 @@ class FileController extends Unplagged_Controller_Action{
   }
 
 }
-
 ?>

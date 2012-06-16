@@ -41,6 +41,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   const TYPE_GLOBAL = 'global';
   const TYPE_CASE = 'case';
   const TYPE_USER = 'user';
+  const TYPE_CASE_DEFAULT = 'case-default';
 
   /**
    * @Id
@@ -64,16 +65,6 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    *      )
    */
   protected $permissions;
-
-  /**
-   *
-   * @ManyToMany(targetEntity="Application_Model_Permission")
-   * @JoinTable(name="role_permission_blacklist",
-   *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
-   *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id")}
-   *      )
-   */
-  protected $blacklist;
 
   /**
    * Stores the roles this role is extending.

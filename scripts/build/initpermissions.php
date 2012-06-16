@@ -83,8 +83,19 @@ foreach(get_declared_classes() as $class){
       }
     }
   }
-}
 
+  if(is_subclass_of($class, 'Application_Model_Base')){
+    $model = substr($class, strrpos($class, '_') + 1);
+    $modelWithHyphens = substr(preg_replace_callback('/([A-Z])/', create_function('$matches', 'return \'-\' . strtolower($matches[1]);'), $model), 1);
+    var_dump($modelWithHyphens);
+    var_dump(in_array($modelWithHyphens, Application_Model_Base::$blacklist));
+    if(!in_array($modelWithHyphens, Application_Model_Base::$blacklist)){
+      foreach(Application_Model_Base::$permissionTypes as $permissionType){
+        $basicResources[] = array($modelWithHyphens, $permissionType);
+      }
+    }
+  }
+}
 //store all found resources in the db
 foreach($basicResources as $resource){
   $permission = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1]));
@@ -93,6 +104,8 @@ foreach($basicResources as $resource){
     $em->persist($permission);
   }
 }
+
+//create the permissions for the model level
 //make sure the permission are already in the db, so we can retrieve some
 $em->flush();
 
@@ -123,16 +136,16 @@ if(!$guestRole){
   $em->persist($guestRole);
 }
 
-function randomString($length) {
-	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$./";	
+function randomString($length){
+  $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$./";
 
-	$size = strlen( $chars );
+  $size = strlen($chars);
   $str = '';
-	for( $i = 0; $i < $length; $i++ ) {
-		$str .= $chars[ rand( 0, $size - 1 ) ];
-	}
+  for($i = 0; $i < $length; $i++){
+    $str .= $chars[rand(0, $size - 1)];
+  }
 
-	return $str;
+  return $str;
 }
 
 $guestUser = $em->getRepository('Application_Model_User')->findOneByUsername('guest');
@@ -140,17 +153,17 @@ $guestUser = $em->getRepository('Application_Model_User')->findOneByUsername('gu
 if(!$guestUser){
   //create the guest user object here
   $guestUser = new Application_Model_User(array(
-    'role'=>$guestRole,
-    'username'=>'guest',
-    //essentially we won't need a password here, because everyone already got all the guest permission
-    //but it's required by the class and probably better anyways to avoid some unforeseeable results
-    //so we just set it here to some random string, for which we wouldn't know the real password, as it's hashed
-    'password'=> randomString(60),
-    'email'=>'',
-    'verificationHash'=>''
-  ));
+        'role'=>$guestRole,
+        'username'=>'guest',
+        //essentially we won't need a password here, because everyone already got all the guest permission
+        //but it's required by the class and probably better anyways to avoid some unforeseeable results
+        //so we just set it here to some random string, for which we wouldn't know the real password, as it's hashed
+        'password'=>randomString(60),
+        'email'=>'',
+        'verificationHash'=>''
+      ));
   $em->persist($guestUser);
-  
+
   //flush here to have access to the id
   $em->flush();
   //die('hier');
