@@ -47,14 +47,17 @@ class ImageController extends Unplagged_Controller_Action{
         $allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
 
         $response = $this->getResponse();
-        
-        if(in_array($file->getExtension(), $allowedExtensions)){
-          $response->setHeader('Content-type', 'image/' . $file->getExtension());
+        if(file_exists($localPath)){
+          if(in_array($file->getExtension(), $allowedExtensions)){
+            $response->setHeader('Content-type', 'image/' . $file->getExtension());
+          }else{
+            $response->setHeader('Content-type', $file->getMimeType());
+          }
+
+          readfile($localPath);
         }else{
-          $response->setHeader('Content-type', $file->getMimeType());
+          $response->setHttpResponseCode(404);
         }
-        
-        readfile($localPath);
       }else{
         $this->_helper->FlashMessenger('No file found.');
         $this->_helper->redirector('list', 'file');
@@ -63,4 +66,5 @@ class ImageController extends Unplagged_Controller_Action{
   }
 
 }
+
 ?>

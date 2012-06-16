@@ -196,7 +196,7 @@ class FileController extends Unplagged_Controller_Action{
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
       
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'authorize', $file->getId()))){
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'authorize', $file->getId()))){
         $action['link'] = '/permission/edit/id/' . $file->getId();
         $action['label'] = 'Set permissions';
         $action['icon'] = 'images/icons/shield.png';

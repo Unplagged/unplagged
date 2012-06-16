@@ -51,7 +51,7 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
    * The current state of the report.
    * 
    * @ManyToOne(targetEntity="Application_Model_State")
-   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
+   * @JoinColumn(name="state_id", referencedColumnName="id")
    */
   private $state;
 
