@@ -35,7 +35,7 @@ class Application_Model_Report extends Application_Model_Base{
    * The current state of the report.
    * 
    * @ManyToOne(targetEntity="Application_Model_State")
-   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
+   * @JoinColumn(name="state_id", referencedColumnName="id")
    */
   private $state;
 

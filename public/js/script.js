@@ -852,4 +852,13 @@ $(document).ready(function(){
     $(window).trigger('hashchange');*/
   });
   
+  $.i18n.init({
+      lng: 'en-US'                               // defaults to get from navigator
+    , fallbackLng: 'en'                          // defaults to 'dev'
+    , ns: 'myNamespace'                          // defaults to 'tranalation'
+    , resGetPath: 'myFolder/__lng__/__ns__.json' // defaults to 'locales/__lng__/__ns__.json' where ns = translation (default)
+    , useLocalStorage: false                     // defaults to true
+    , debug: true                                // last but not least get some information if things go wrong
+});
+  
 });

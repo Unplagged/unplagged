@@ -303,6 +303,6 @@ class Application_Model_User extends Application_Model_Base{
   }
   
   public function hasPermission(Application_Model_Permission $permission) {
-    return true;
+    return $this->role->hasPermission($permission);
   }
 }
