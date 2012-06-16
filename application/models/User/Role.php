@@ -97,6 +97,11 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    * @OneToOne(targetEntity="Application_Model_User", mappedBy="role")
    */
   protected $user;
+  
+    /**
+   * @OneToOne(targetEntity="Application_Model_User", mappedBy="role")
+   */
+  protected $user;
 
   public function __construct($type = null){
     $this->inheritedRoles = new \Doctrine\Common\Collections\ArrayCollection();
@@ -148,6 +153,36 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     $permissions = array_merge($inheritedPermissions, $this->permissions->toArray());
     return $permissions;
   }
+  
+    public function getPermissions2(){
+      return $this->permissions;
+    }
+    
+    public function hasPermission(Application_Model_Permission $permission) {
+      $user = Zend_Registry::getInstance()->user;
+      $case = $user->getCurrentCase();
+      
+      // check the main user role on that right
+      if($this->getPermissions2()->contains($permission)) {
+        return true;
+      }
+      
+      $condition = array(
+        'type'=> $permission->getType(),
+        'action' => $permission->getAction(),
+        'base' => null);
+      
+      $permissionAny = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Permission')->findOneBy($condition);
+      foreach($case->getDefaultRoles() as $caseRole) {
+        if($this->getInheritedRoles()->contains($caseRole)) {
+          if($caseRole->getPermissions2()->contains($permissionAny)) {
+            return true;
+          }
+        }
+      }
+      
+      return true;
+    }
 
   /**
    * Returns only the explicitly set permissions for the current object.

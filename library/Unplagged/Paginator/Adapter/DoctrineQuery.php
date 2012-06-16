@@ -18,7 +18,7 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
     $conditions = array();
 
     if(isset($permissionAction)){
-      $conditions[] = 'u.id = ' . $user->getId();
+       $conditions[] = 'u.id = ' . $user->getId();
     }
     if(isset($additionalConditions)){
       foreach($additionalConditions as $field=>$value){
@@ -29,7 +29,10 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
     $orderBy = isset($orderBy) ? ' ORDER BY ' . $orderBy : '';
     $permissionStatement = '';
     if(isset($permissionAction)){
+      // JOIN b.permissions pg WITH pt.base IS NULL AND pe.action = ... AND pe.type = ... JOIN pg.roles WITH roleId = 'case' 
       $permissionStatement = " JOIN b.permissions pe WITH (pe.base = b.id AND pe.action = '%s') JOIN pe.roles re JOIN re.user u WHERE ";
+      //$permissionStatement = " JOIN b.permissions pe WITH (pe.base = b.id AND pe.action = '%s' AND (:userRoleId MEMBER OF pe.roles OR :caseRoleId MEMBER OF pe.roles))";
+
       $permissionStatement = sprintf($permissionStatement, $permissionAction);
     }elseif(!empty($condition)){
       $permissionStatement = ' WHERE ';
@@ -38,8 +41,13 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
     /* if(!empty($condition)){
       $permissionStatement = ' WHERE ';
       } */
+    echo $query . $permissionStatement . $condition . $orderBy;
     $this->query = $em->createQuery($query . $permissionStatement . $condition . $orderBy);
+    //$this->query->setParameter('userRoleId', 5);
+    //$this->query->setParameter('caseRoleId', 5);
     $this->countQuery = $em->createQuery($countQuery . $permissionStatement . $condition . $orderBy);
+    //$this->countQuery->setParameter('userRoleId', 5);
+    //$this->countQuery->setParameter('caseRoleId', 5);
   }
 
   /**
