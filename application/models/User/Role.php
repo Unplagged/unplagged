@@ -90,9 +90,9 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   protected $user;
   
     /**
-   * @OneToOne(targetEntity="Application_Model_User", mappedBy="role")
+   * OneToOne(targetEntity="Application_Model_User", mappedBy="role")
    */
-  protected $user;
+  protected $u4ser;
 
   public function __construct($type = null){
     $this->inheritedRoles = new \Doctrine\Common\Collections\ArrayCollection();
