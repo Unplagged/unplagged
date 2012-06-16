@@ -31,6 +31,7 @@ define("GT", ">");
  */
 class Cron_Document_Page_Reportcreater extends Cron_Base{
 
+  private static $pagenumber;
   public static function init(){
     parent::init();
   }
@@ -74,6 +75,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base{
   }
 
   private static function createReport($fragments, $user){
+    self::$pagenumber = 1;
     $currentCase = $user->getCurrentCase();
     $casename = $currentCase->getAlias();
     $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
@@ -85,13 +87,15 @@ class Cron_Document_Page_Reportcreater extends Cron_Base{
     $content .= '<h2 style="font-style:italic">' . $casename . '</h2>';
     $content .= "<br/><br/>";
     $content .= "<h3>" . date("d M Y") . "</h3></div>";
+    $content .= self::getBarCode($currentCase);
     foreach($array_html as $fragment){
       $col1 = self::cut_text_into_pages($fragment["left"]);
       $col2 = self::cut_text_into_pages($fragment["right"]);
       $content .= self::mix_two_columns($col1, $col2, "plagiat", "source");
     }
 
-    $content .= self::getBarCode($currentCase);
+  
+    $content = str_replace('%pagenumber%', self::$pagenumber, $content);
 
     $html2pdf = new HTML2PDF('P', 'A4', 'en');
     $html2pdf->WriteHTML($content);
@@ -133,16 +137,22 @@ class Cron_Document_Page_Reportcreater extends Cron_Base{
     $str_svg = str_replace('width=', 'w=', $str_svg);
     $str_svg = str_replace('height=', 'h=', $str_svg);
 
-    return "<page><h2>Barcode</h2>" . $str_svg . "</page>";
+    return "<h2>Barcode</h2>" . $str_svg;
+  }
+  
+  private static function getFooter($pagenumber){
+      return "<page_footer>".$pagenumber."/%pagenumber%</page_footer> ";
   }
 
+  
   /**
-   * Creates an html page element, containing a tbale
+   * Creates an html page element, containing a table
    * with three columns. The first parameter is set in
    * the first column and the second parameter is set
    * in the third column.
    */
   private static function create_a_page($td1, $td2, $title1, $title2){
+    self::$pagenumber++;
     return '
 <page>
 <table>
@@ -160,7 +170,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base{
          ' . $td2 . '
 </td>
 </tr>
-</table></page>';
+</table>'.self::getFooter(self::$pagenumber).'</page>';
   }
 
   /**
@@ -268,6 +278,7 @@ class Cron_Document_Page_Reportcreater extends Cron_Base{
     $size1 = sizeof($col1);
     $size2 = sizeof($col2);
     $size = $size1 > $size2 ? $size1 : $size2;
+    
     for($i = 0; $i < $size; $i++){
       $c1 = self::get_col($col1, $i);
       $c2 = self::get_col($col2, $i);

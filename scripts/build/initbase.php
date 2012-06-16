@@ -27,7 +27,7 @@ $arguments = getopt("e:");
  */
 //set only as development environment, when no parameter is present
 defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (isset($arguments["e"]) ? $arguments["e"] : 'development'));
+    || define('APPLICATION_ENV', (isset($arguments["e"]) ? $arguments["e"] : 'production'));
 
 defined('BASE_PATH')
     || define('BASE_PATH', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR));
