@@ -258,16 +258,21 @@ $(document).ready(function(){
         endLine = selection.getRangeAt(0).endContainer.parentNode;
       }
     }
-    
+    var str = '';
     // if the element is not a list element, get the parent li element
     if($(startLine)[0].tagName != 'LI') {
       startLine = $(startLine).parent('li');
+      str = $(startLine).find("span").text();
+    } else {
+      str = $(startLine).text();
     }
     if($(endLine)[0].tagName != 'LI') {
       endLine = $(endLine).parent('li');
+      str = $(endLine).find("span").text();
+    } else {
+      str = $(endLine).text();
     }
-        
-    var str = $(startLine).find("span").text();
+     
     if(str.length > 30) {
       str = str.substr(0, 30) + '...';
     }
