@@ -2,23 +2,4 @@
     $this->title = $this->translate('Upload files');
     $this->headTitle($this->title);
 ?>
-<div id="upload-queue"></div>
-<div class="modal hide" id="file-data" data-backdrop="static">
-  <div class="modal-header">
-    <button class="close modal-close" data-dismiss="modal">×</button>
-    <h3><?php echo $this->translate('File information'); ?></h3>
-  </div>
-  <div class="modal-body">
-    <dl>
-      <dt id="newName-label"><label for="newName" class="optional"><?php echo $this->translate('Filename'); ?>:*</label></dt>
-      <dd id="newName-element">
-        <input type="text" name="newName" id="newName" value="" class="tooltip-toggle"></dd>
-      <dt id="description-label"><label for="description" class="optional"><?php echo $this->translate('Description'); ?>:</label></dt>
-      <dd id="description-element">
-        <textarea name="description" id="description" rows="10" cols="160"></textarea></dd></dl>
-  </div>
-  <div class="modal-footer">
-    <button class="btn modal-close" data-dismiss="modal"><?php echo $this->translate('Close'); ?></button>
-    <button class="btn btn-primary modal-save" data-dismiss="modal"><?php echo $this->translate('Save'); ?></button>
-  </div>
-</div>
+<div id="upload-queue" data-close="<?php echo $this->translate('Close'); ?>" data-save="<?php echo $this->translate('Save'); ?>" data-file-information="<?php echo $this->translate('File information'); ?>" data-description="<?php echo $this->translate('Description'); ?>" data-filename="<?php echo $this->translate('Filename'); ?>"></div>

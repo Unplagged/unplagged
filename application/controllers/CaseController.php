@@ -55,7 +55,7 @@ class CaseController extends Unplagged_Controller_Action{
     $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
 
     if($case){
-      if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('case', 'update', $input->id))){
+      if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('case', 'update', $case))){
         $this->redirectToLastPage(true);
       }
 
@@ -104,7 +104,7 @@ class CaseController extends Unplagged_Controller_Action{
     // generate the action dropdown for each fragment
     foreach($paginator as $case):
       $case->actions = array();
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('case', 'update', $case->getId()))){
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('case', 'update', $case))){
         $action['link'] = '/case/edit/id/' . $case->getId();
         $action['label'] = 'Edit case';
         $action['icon'] = 'images/icons/pencil.png';
@@ -231,5 +231,4 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
 }
-
 ?>

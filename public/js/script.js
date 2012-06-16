@@ -5,24 +5,24 @@
  * Please put everything at least into a self-executing function block to don't pollute
  * the global namespace.
  */
-
 $(document).ready(function(){  
-  // lined textareas
-  $("textarea.line-numbers").numberfy();
+  // enable line numbers on textareas with a certain class name
+  $('textarea.line-numbers').numberfy();
+  // enable the twitter bootstrap tooltip and dropdowns for certain classnames
   $('.tooltip-toggle').tooltip();
-
   $('.dropdown-toggle').dropdown();
+
   $('.alert').prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');
   $().alert()
  
-  // submit the case selection on change of the dropdown
+  // enable chosen for the case selection in the upper right and submit it on change
   $('.case-settings-box select').chosen({
     allow_single_deselect: true
   }).change(function(){
     $(this).closest('form').submit();  
   });
   
-  //select all for de-hyphen area
+  // select all button for de-hyphen area
   $('.de-hyphen form').css('position', 'relative').append('<a class="btn select-all" href=""><i class="icon-ok-circle"></i>Deselect all</a>');
   var selectAllLink = $('.select-all');
   selectAllLink.css({
@@ -679,115 +679,6 @@ $(document).ready(function(){
     return false;
   });
 
-  //file uploads
-  var files = new Array();
-  var filesRunning = false;
-  var fileUploader = null;  
-    
-  // Convert divs to queue widgets when the DOM is ready
-  $('#upload-queue').pluploadQueue({
-    runtimes : 'html5,flash,silverlight,html4',
-    url : '/file/upload',
-    max_file_size : '1000mb',
-    //chunk_size : '5mb', //disable because html5 + chunking kills the filename currently
-    unique_names : true,
-    flash_swf_url : '/js/libs/plupload/js/plupload.flash.swf',
-    silverlight_xap_url : '/js/libs/plupload/js/plupload.silverlight.xap',
-    init: {
-      QueueChanged: queueFileForModalForm,
-      BeforeUpload: function(uploader, file){
-        //take the data that was set in the file on QueueChange, so that it gets also uploaded
-        uploader.settings['multipart_params'].description = file.description;
-        uploader.settings['multipart_params'].newName = file.newName;
-      }
-    },
-    multipart_params: {
-      'description': '', 
-      'newName': ''
-    }
-      
-  });
-  
-  function queueFileForModalForm(uploader){
-    fileUploader = uploader;
-    $.each(uploader.files, function(){
-      //add the current file to our own queue
-      files.push(this);
-
-      if(!filesRunning){
-        filesRunning = true;
-        getDataForNextFile();
-      }
-    });
-      
-  }  
-    
-  var fileModal = $('#file-data');
-  fileModal.find('.modal-save').click(saveChanges);
-  fileModal.find('.modal-close').click(closeFileModal);
-     
-  function getDataForNextFile(){
-    var file = files.shift();
-    
-    if(file){
-      fileModal.find('input, textarea').val('');
-      //set the filename in the heading
-      fileModal.modal('show').find('#newName').val(file.name.replace(/\.[^/.]+$/, ""));
-      //store the file on the modal so that we can retrieve on button click
-      $.data(fileModal, 'current-file', file);
-    } else {
-      finishAdditionalData();
-    }
-  }
-    
-  function finishAdditionalData(){
-    filesRunning = false;
-    fileUploader.start();
-  }
-    
-  function saveChanges(){
-    var file = $.data(fileModal, 'current-file');
-    if(file){
-      var descriptionValue = fileModal.find('#description').val(); 
-      var newNameValue = fileModal.find('#newName').val(); 
-      file.description = descriptionValue;
-      file.newName = newNameValue;
-    }
-    //$.data(fileModal, 'current-file', null);
-    fileModal.one('hidden', function(){
-      if(files.length > 0){
-        getDataForNextFile();
-      } else {
-        finishAdditionalData();
-      }
-    }).modal('hide');
-    //fix for https://github.com/twitter/bootstrap/issues/2839
-    $('.modal-backdrop').hide();
-  }
-    
-  /**
-    * Stops the upload of the current file and deletes the data.
-    */
-  function closeFileModal(){
-    var fileAccess = $.data(fileModal, 'current-file');
-    if(fileAccess){
-      fileUploader.removeFile(fileAccess);
-
-      $.data(fileModal, 'current-file', null);
-      
-      fileModal.one('hidden', function(){
-        if(files.length>0){
-          getDataForNextFile();
-        } else {
-          finishAdditionalData();  
-          fileModal.modal('hide');
-          $('.modal-backdrop').hide();
-        }
-      });
-    }
-  }
-  //file uploads end
-
   $("#type").change(function(){
     updateBibTexForm();
   });
@@ -896,6 +787,10 @@ $(document).ready(function(){
     }
   }
   
+
+  $('#upload-queue').unplaggedFileUpload();
+  $().unplaggedContextMenu();
+
   $('#actions-menu').css('margin-top', '-' + $('#actions-menu').height()/2 + 'px');
 
   $('#actions-menu.poped-in').live('click', function() {

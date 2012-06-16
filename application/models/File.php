@@ -93,6 +93,14 @@ class Application_Model_File extends Application_Model_Base{
    */
   private $description = '';
 
+  /**
+   * @var Application_Model_User The user who uploaded this specific file.
+   * 
+   * @ManyToOne(targetEntity="Application_Model_User")
+   * @JoinColumn(name="uploader_id", referencedColumnName="id")
+   */
+  private $uploader;
+
   public function __construct(array $data = array()){
     foreach($data as $key=>$value){
       $this->setOption($key, $value);
@@ -147,9 +155,9 @@ class Application_Model_File extends Application_Model_Base{
   }
 
   public function getFullPath(){
-    return $this->location . $this->localFilename;  
+    return $this->location . $this->localFilename;
   }
-  
+
   public function setLocation($location){
     $this->location = $location;
   }
@@ -189,6 +197,10 @@ class Application_Model_File extends Application_Model_Base{
 
   public function setDescription($description){
     $this->description = $description;
+  }
+
+  public function getUploader(){
+    return $this->uploader;
   }
 
 }

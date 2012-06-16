@@ -28,13 +28,15 @@ class FileController extends Unplagged_Controller_Action{
   }
 
   public function uploadAction(){
-
     if($this->_request->isPost()){
       $post = $this->_request->getPost();
-
-      $uploadform = new Application_Form_File_Upload();
-      if($uploadform->isValid($post)){
+      
+      $uploadForm = new Application_Form_File_Upload();
+      if($uploadForm->isValid($post)){
         $this->storeUpload();
+      } else {
+        var_dump($uploadForm->getErrors());
+        die('{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}');
       }
     }
   }
@@ -48,7 +50,6 @@ class FileController extends Unplagged_Controller_Action{
     $newName = $this->_request->getPost('newName');
     $description = $this->_request->getPost('description');
 
-    var_dump($adapter->getFileName());
     $pathinfo = pathinfo($adapter->getFileName());
 
     $storageDir = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
@@ -59,15 +60,17 @@ class FileController extends Unplagged_Controller_Action{
     if($adapter->receive()){
       chmod($storageDir . $fileNames[1], 0755);
 
-      $file = $this->createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir);
+      $user = Zend_Registry::getInstance()->user;
+      
+      $file = $this->createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir, $user);
       $this->_em->persist($file);
       $this->_em->flush();
-
-      //store in the activity stream, that the current user uploaded this file
-      $user = Zend_Registry::getInstance()->user;
+      
       $user->addFile($file);
-      $this->_em->persists($user);
 
+      $this->_em->persist($user);
+      
+      //store in the activity stream, that the current user uploaded this file
       Unplagged_Helper::notify('file_uploaded', $file, $user);
       $this->_helper->FlashMessenger(array('success'=>array('The file "%s" was successfully uploaded.', array($fileNames[0]))));
 
@@ -131,7 +134,7 @@ class FileController extends Unplagged_Controller_Action{
    * @param string $storageDir
    * @return \Application_Model_File 
    */
-  private function createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir){
+  private function createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir, $user){
     $data = array();
     $data['size'] = $adapter->getFileSize();
     //if the mime type is always application/octet-stream, then the 
@@ -142,6 +145,7 @@ class FileController extends Unplagged_Controller_Action{
     $data['location'] = $storageDir;
     $data['description'] = $description;
     $data['localFilename'] = $fileNames[1];
+    $data['uploader'] = $user;
 
     $file = new Application_Model_File($data);
 
@@ -156,8 +160,9 @@ class FileController extends Unplagged_Controller_Action{
     $permissionAction = 'read';
     $query = 'SELECT b FROM Application_Model_File b';
     $count = 'SELECT COUNT(b.id) FROM Application_Model_File b';
+    $orderBy = 'b.created DESC';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, null, $permissionAction));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, $orderBy, $permissionAction));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
@@ -173,13 +178,13 @@ class FileController extends Unplagged_Controller_Action{
       $parseAction['icon'] = 'images/icons/page_gear.png';
       $file->actions[] = $parseAction;
 
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $file->getId()))){
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $file))){
         $action['link'] = '/file/download/id/' . $file->getId();
         $action['label'] = 'Download';
         $action['icon'] = 'images/icons/disk.png';
         $file->actions[] = $action;
       }
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $file->getId()))){
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $file))){
         $action['link'] = '/file/delete/id/' . $file->getId();
         $action['label'] = 'Delete';
         $action['icon'] = 'images/icons/delete.png';
@@ -196,7 +201,7 @@ class FileController extends Unplagged_Controller_Action{
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
       
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'authorize', $file->getId()))){
+      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'authorize', $file))){
         $action['link'] = '/permission/edit/id/' . $file->getId();
         $action['label'] = 'Set permissions';
         $action['icon'] = 'images/icons/shield.png';
@@ -217,7 +222,7 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
-        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $input->id))){
+        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $file))){
           $this->redirectToLastPage(true);
         }
 
@@ -316,7 +321,7 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
-        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $input->id))){
+        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $file))){
           $this->redirectToLastPage(true);
         }
         // remove file from file system

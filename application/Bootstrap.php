@@ -131,17 +131,23 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * If no user is logged in, the guest user is set as a default.
    */
   protected function _initUser(){
-    $registry = $registry = Zend_Registry::getInstance();
+    $registry = Zend_Registry::getInstance();
     $defaultNamespace = new Zend_Session_Namespace('Default');
 
     if(!$defaultNamespace->userId || $defaultNamespace->userId === 'guest'){
-      $guestId = $registry->entitymanager->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-role-id');
-      $guestRole = $registry->entitymanager->getRepository('Application_Model_User_Role')->findOneById($guestId->getValue());
+      $guestId = $registry->entitymanager->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
+      $guest = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($guestId->getValue());
 
-      $registry->user = new Application_Model_User(array('role'=>$guestRole));
+      $registry->user = $guest;
       $defaultNamespace->userId = 'guest';
     }else{
-      $registry->user = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
+      $registry->user = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId); 
+    }
+    
+    //if we don't have a user something went wrong with the session, so clear everything and force new login
+    if(!$registry->user){
+      session_unset();
+      header('Location: ');
     }
   }
 

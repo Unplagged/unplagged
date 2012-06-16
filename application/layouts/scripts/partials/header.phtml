@@ -18,14 +18,16 @@
     ?>
     <!-- Modernizr needs to stay in the head to work properly -->
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.5.3.min.js'); ?>"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="<?php echo $this->baseUrl('/js/libs/jquery-1.7.2.min.js'); ?>"><\/script>')</script>
   </head>
   <body>
     <noscript><div class="alert-danger top-alert"><div class="alert alert-danger"><h4 class="alert-heading"><?php echo $this->translate('Attention!'); ?></h4><p><?php echo $this->translate('Unfortunately JavaScript is currently not supported or is disabled in your browser. Please enable JavaScript for full functionality.'); ?></p></div></div></noscript>
     <!-- Prompt IE 7 and lower users to install Chrome Frame. -->
-    <!--[if lt IE 8]><div class="alert-danger top-alert"><div class="alert alert-danger"><p><?php echo $this->translate('Your browser is');?><em> <?php echo $this->translate('ancient!'); ?></em> <a href="http://browsehappy.com/"><?php echo $this->translate('Upgrade to a different browser'); ?></a> <?php echo $this->translate('or'); ?> <a href="http://www.google.com/chromeframe/?redirect=true"><?php echo $this->translate('install Google Chrome Frame'); ?></a> <?php echo $this->translate('to experience this site.'); ?></p></div></div><![endif]-->
+    <!--[if lt IE 8]><div class="alert-danger top-alert"><div class="alert alert-danger"><p><?php echo $this->translate('Your browser is'); ?><em> <?php echo $this->translate('ancient!'); ?></em> <a href="http://browsehappy.com/"><?php echo $this->translate('Upgrade to a different browser'); ?></a> <?php echo $this->translate('or'); ?> <a href="http://www.google.com/chromeframe/?redirect=true"><?php echo $this->translate('install Google Chrome Frame'); ?></a> <?php echo $this->translate('to experience this site.'); ?></p></div></div><![endif]-->
     <header role="toolbar">
       <div class="content clearfix">
-        <?php if(Zend_Auth::getInstance()->hasIdentity() && $this->me): ?>
+        <?php if(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest'): ?>
           <div class="user-box">
             <img class="avatar" src="<?php echo $this->me->getAvatar(); ?>" />
             <div class="dropdown-button hoverable user-menu">
@@ -37,28 +39,6 @@
               </ul>
             </div>
           </div>
-          <div class="case-settings-box clearfix">
-            <?php
-            $currentLabel = '';
-            $currentValue = null;
-            if($this->me->getCurrentCase() instanceof Application_Model_Case){
-              $currentLabel = $this->me->getCurrentCase()->getPublishableName();
-              $currentValue = $this->me->getCurrentCase()->getId();
-            }
-            ?>
-            <?php if($currentValue): ?>
-            <a href="<?php echo $this->baseUrl('case/edit/id/' . $currentValue); ?>"><?php echo $this->translate("Edit Case"); ?></a>
-            <?php endif; ?>
-            <form class="current-case" method="POST" action="<?php echo $this->baseUrl('user/set-current-case'); ?>">
-              <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
-                  <option></option>
-                <?php foreach($this->cases as $case): ?>
-                  <option <?php if($case['value'] == $currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
-                <?php endforeach; ?>
-              </select>
-              <button class="button">Ok</button>  
-            </form>
-          </div>
         <?php else: ?>
           <div class="login-register-box">
             <a href="<?php echo $this->baseUrl('user/register'); ?>"><?php echo $this->translate("Register now"); ?></a>
@@ -66,6 +46,28 @@
             <a href="<?php echo $this->baseUrl('auth/login'); ?>"><?php echo $this->translate("login"); ?></a>
           </div>
         <?php endif; ?>
+        <div class="case-settings-box clearfix">
+          <?php
+          $currentLabel = '';
+          $currentValue = null;
+          if($this->me->getCurrentCase() instanceof Application_Model_Case){
+            $currentLabel = $this->me->getCurrentCase()->getPublishableName();
+            $currentValue = $this->me->getCurrentCase()->getId();
+          }
+          ?>
+          <?php if($currentValue): ?>
+            <a href="<?php echo $this->baseUrl('case/edit/id/' . $currentValue); ?>"><?php echo $this->translate("Edit Case"); ?></a>
+          <?php endif; ?>
+          <form class="current-case" method="POST" action="<?php echo $this->baseUrl('user/set-current-case'); ?>">
+            <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
+              <option></option>
+              <?php foreach($this->cases as $case): ?>
+                <option <?php if($case['value'] == $currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
+              <?php endforeach; ?>
+            </select>
+            <button class="button">Ok</button>  
+          </form>
+        </div>
       </div>
     </header>
     <div class="pagewrap">

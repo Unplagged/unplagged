@@ -29,7 +29,6 @@
  * 
  * @Entity
  * @Table(name="permissions")
- * @UniqueEntity("name")
  */
 class Application_Model_Permission implements Zend_Acl_Resource_Interface{
 
@@ -43,7 +42,7 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
   /**
    * @Column(type="string", length=255)
    */
-  private $name;
+  private $type;
 
   /**
    * @Column(type="string", length=255, nullable=true)
@@ -52,7 +51,7 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
 
   /**
    * @ManyToOne(targetEntity="Application_Model_Base")
-   * @JoinColumn(name="base_id", referencedColumnName="id", onDelete="CASCADE")
+   * @JoinColumn(name="base_id", referencedColumnName="id") 
    */
   private $base;
 
@@ -63,20 +62,15 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
    */
   private $roles;
 
-  public function __construct($name, $type = ''){
-
-    if(is_string($name) && trim($name) !== ''){
-      $this->name = $name;
-    }else{
-      throw new InvalidArgumentException('The argument $name must be a string');
-    }
-
-    $this->action = $type;
+  public function __construct($type, $action, Application_Model_Base $base = null){
+    $this->type = $type;
+    $this->base = $base;
+    $this->action = $action;
     $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
   }
 
-  public function getName(){
-    return $this->name;
+  public function getAction(){
+    return $this->action;
   }
 
   public function getType(){
@@ -84,14 +78,10 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
   }
 
   public function getResourceId(){
-    return $this->name;
+    return $this->type . '_' . $this->action;
   }
 
-  public function getAction(){
-    return $this->action;
-  }
-  
-    public function getRoleIds(){
+  public function getRoleIds(){
     $roleIds = array();
     foreach($this->roles as $role){
       $roleIds[] = $role->getId();
@@ -102,7 +92,6 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
   public function addRole(Application_Model_User_Role $role){
     $role->addPermission($this);
     $this->roles->add($role);
-    
   }
 
   public function removeRole(Application_Model_User_Role $role){
@@ -141,5 +130,4 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
   }
 
 }
-
 ?>

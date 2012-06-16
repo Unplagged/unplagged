@@ -14,15 +14,18 @@ class ReportController extends Unplagged_Controller_Versionable{
     $input = new Zend_Filter_Input(array('page'=>'Digits', 'content'=>'StripTags'), null, $this->_getAllParams());
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
-    $permissionAction = 'read';
-    $query = 'SELECT b FROM Application_Model_Report b';
-    $count = 'SELECT COUNT(b.id) FROM Application_Model_Report b';
+    $paginator = null;
+    if($case){
+      $permissionAction = 'read';
+      $query = 'SELECT b FROM Application_Model_Report b';
+      $count = 'SELECT COUNT(b.id) FROM Application_Model_Report b';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permissionAction));
-    $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-    $paginator->setCurrentPageNumber($input->page);
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permissionAction));
+      $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+      $paginator->setCurrentPageNumber($input->page);
 
-    $this->view->paginator = $paginator;
+      $this->view->paginator = $paginator;
+    }
   }
 
   public function createAction(){
@@ -88,5 +91,4 @@ class ReportController extends Unplagged_Controller_Versionable{
   }
 
 }
-
 ?>

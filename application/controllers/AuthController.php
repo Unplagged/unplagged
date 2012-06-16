@@ -50,7 +50,9 @@ class AuthController extends Unplagged_Controller_Action{
    * The user is redirected to the last visited page.
    */
   public function loginAction(){
-    if($this->auth->hasIdentity()){
+    $defaultNamespace = new Zend_Session_Namespace('Default');
+
+    if($defaultNamespace->userId !== 'guest' && $this->auth->hasIdentity()){
       $this->redirectToLastPage();
     }else{
       $loginForm = new Application_Form_Auth_Login();

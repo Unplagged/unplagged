@@ -49,18 +49,17 @@ class PermissionController extends Unplagged_Controller_Action{
 
     //set all permissions that this role got as active and inherited
     foreach($rolePermissions->getPermissions() as $allowedPermission){
-      if($allowedPermission->getName() === '*'){
+      if($allowedPermission->getAction() === '*' && $allowedPermission->getType() === 'global'){
         foreach($outputPermissions as $permissionGroupKey=>$permissionGroup){
           foreach($permissionGroup as $outputPermissionKey=>$outputPermission){
             $outputPermissions[$permissionGroupKey][$outputPermissionKey]['allowed'] = true;
           }
         }
       }else{
-        $permissionGroupNameEnd = strpos($allowedPermission->getName(), '_');
-        $permissionGroupName = substr($allowedPermission->getName(), 0, $permissionGroupNameEnd);
+        $permissionGroupName = $allowedPermission->getType();
 
         if(isset($outputPermissions[$permissionGroupName])){
-          $permissionName = substr($allowedPermission->getName(), $permissionGroupNameEnd + 1);
+          $permissionName = $allowedPermission->getAction();
 
           if(isset($outputPermissions[$permissionGroupName][$permissionName])){
             $outputPermissions[$permissionGroupName][$permissionName]['allowed'] = true;
@@ -72,18 +71,17 @@ class PermissionController extends Unplagged_Controller_Action{
 
     //remove the inherited flag for every permission that this role got on it's own
     foreach($rolePermissions->getBasicPermissions() as $basicPermissions){
-      if($basicPermissions->getName() === '*'){
+      if($allowedPermission->getAction() === '*' && $allowedPermission->getType() === 'global'){
         foreach($outputPermissions as $permissionGroupKey=>$permissionGroup){
           foreach($permissionGroup as $outputPermissionKey=>$outputPermission){
             $outputPermissions[$permissionGroupKey][$outputPermissionKey]['inherited'] = false;
           }
         }
       }else{
-        $permissionGroupNameEnd = strpos($basicPermissions->getName(), '_');
-        $permissionGroupName = substr($basicPermissions->getName(), 0, $permissionGroupNameEnd);
+        $permissionGroupName = $basicPermissions->getType();
 
         if(isset($outputPermissions[$permissionGroupName])){
-          $permissionName = substr($basicPermissions->getName(), $permissionGroupNameEnd + 1);
+          $permissionName = $basicPermissions->getAction();
 
           if(isset($outputPermissions[$permissionGroupName][$permissionName])){
 
@@ -190,7 +188,7 @@ class PermissionController extends Unplagged_Controller_Action{
     if($base){
       $this->setTitle('Manage permissions');
       $this->view->subtitle = $base->getDirectName();
-        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission($base->getPermissionType(), 'authorize', $input->id))){
+        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission($base->getPermissionType(), 'authorize', $base))){
           $this->redirectToLastPage(true);
         }
 
