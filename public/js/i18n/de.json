@@ -1,0 +1,10 @@
+{
+  "permission": {
+    "create": "erstellen",
+    "read": "lesen",
+    "update": "editieren",
+    "delete": "löschen",
+    "authorize": "freigeben"
+
+  }
+}

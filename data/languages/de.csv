@@ -96,3 +96,8 @@ Write comment;Kommentar schreiben
 Welcome to %s;Willkommen bei %s
 %s: Registration verification required; %s: Verifizierung der Registrierung erforderlich
 Please check your emails to verify your account.;Bitte überprüfe deine Emails um die Registrierung deines Accounts zu verifizieren.
+authorize;freigeben
+delete;löschen
+update;editieren
+read;lesen
+create;erstellen

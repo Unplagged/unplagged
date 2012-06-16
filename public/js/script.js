@@ -438,6 +438,7 @@ $(document).ready(function(){
 
     // get label value and hide the element afterwards
     var label = $('#' + element.attr('id') + '-label label').text();
+
     $('#' + element.attr('id') + '-label').hide();
     $('#' + element.attr('id') + '-element').hide();
     
@@ -631,11 +632,11 @@ $(document).ready(function(){
       element += '<span class="username">' + label + '</span>';
       element += '</div>';
 
-      var permissions = ['create', 'read', 'update', 'delete', 'authorize'];
+      var permissions = ['authorize', 'delete', 'update', 'read'];
       element += '<div class="options">';
       $.each(permissions, function(index, permission) { 
         element += '<span id="' + permission + '-' + value + '-label">';
-        element += '<label for="' + permission + '-' + value + '">' + permission + '</label>';
+        element += '<label for="' + permission + '-' + value + '">' + $.t('permission.' + permission) + '</label>';
         element += '<input type="checkbox" name="' + permission + '[]" id="' + permission + '-' + value + '" value="' + value + '" class="btn btn-checkbox btn-small">';
         element += '</span>';
       });
@@ -645,8 +646,8 @@ $(document).ready(function(){
       element += '</div>';    
     }
 
-    $('div[data-wrapper-for=' + sourceId + ']').append(element);
-    $('input[type="checkbox"].btn').each(function(index) {
+    $('div[data-wrapper-for=' + sourceId + ']').append(element);    
+    $('div[data-id=' + value + '] input[type="checkbox"].btn').each(function(index) {
       updateCheckBox($(this));
     });
   }
@@ -670,10 +671,8 @@ $(document).ready(function(){
     var elementId = $(this).attr('data-for');
     var element = $('*[data-id=' + elementId + ']');
     var sourceId = element.attr('data-source');
-    // element.outerHeight(true);
-    // element.hide(500, function() {
+
     element.remove();
-    // });
     updateAutocompleteSource(sourceId);
 
     return false;
@@ -853,11 +852,10 @@ $(document).ready(function(){
   });
   
   $.i18n.init({
-      lng: 'en-US'                               // defaults to get from navigator
-    , fallbackLng: 'en'                          // defaults to 'dev'
-    , ns: 'myNamespace'                          // defaults to 'tranalation'
-    , resGetPath: 'myFolder/__lng__/__ns__.json' // defaults to 'locales/__lng__/__ns__.json' where ns = translation (default)
-    , useLocalStorage: false                     // defaults to true
+      lng: 'de'                               // defaults to get from navigator
+    , fallbackLng: 'de'                          // defaults to 'dev'
+    , resGetPath: '/js/i18n/__lng__.json' // defaults to 'locales/__lng__/__ns__.json' where ns = translation (default)
+    , useLocalStorage: true                     // defaults to true
     , debug: true                                // last but not least get some information if things go wrong
 });
   

@@ -89,7 +89,6 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    */
   protected $user;
 
-
   public function __construct($type = null){
     $this->inheritedRoles = new \Doctrine\Common\Collections\ArrayCollection();
     $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
@@ -178,7 +177,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    * @return array
    */
   public function getBasicPermissions($asCollection = false){
-    if($asCollection) {
+    if($asCollection){
       return $this->permissions;
     }
     return $this->permissions->toArray();

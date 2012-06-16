@@ -323,6 +323,10 @@ class Application_Model_Case extends Application_Model_Base{
     return $collaboratorIds;
   }
 
+  public function getCollaborators(){
+    return $this->collaborators;
+  }
+  
   public function addCollaborator(Application_Model_User $collaborator){
     $this->collaborators->add($collaborator);
   }
