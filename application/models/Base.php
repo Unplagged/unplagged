@@ -57,6 +57,26 @@ abstract class Application_Model_Base{
   const ICON_CLASS = '';
   const PERMISSION_TYPE = 'base';
 
+  public static $permissionTypes = array(
+    'read',
+    'update',
+    'delete',
+    'authorize'
+  );
+  public static $blacklist = array(
+    'base',
+    'task',
+    'partial',
+    'fragment',
+    'notification',
+    'page',
+    'tag',
+    'version',
+    'line',
+    'rating',
+    'versionable'
+  );
+
   /**
    * @Id @GeneratedValue @Column(type="integer") 
    */
@@ -142,44 +162,25 @@ abstract class Application_Model_Base{
    * @PrePersist 
    */
   public function storePermissions(){
-    $blacklist = array(
-      'base',
-      'cron_task',
-      'document_fragment_partial',
-      'notification',
-      'document_page',
-      'tag',
-      'versionable_version',
-      'document_page_line',
-      'rating'
-    );
-    
-    $permissionTypes = array(
-      'read',
-      'update',
-      'delete',
-      'authorize'
-    );
-    
     $registry = Zend_Registry::getInstance();
     $em = $registry->entitymanager;
-    
+
     $user = null;
     if($this->getPermissionType() === 'user'){
       $user = $this;
-    } else {
+    }else{
       $user = $registry->user;
     }
-    
-    foreach($permissionTypes as $permissionType){
-      if(!in_array($this->getPermissionType(), $blacklist)){
+
+    foreach(self::$permissionTypes as $permissionType){
+      if(!in_array($this->getPermissionType(), self::$blacklist)){
         $permission = new Application_Model_Permission($this->getPermissionType(), $permissionType, $this);
         $user->getRole()->addPermission($permission);
         $em->persist($permission);
       }
     }
   }
-  
+
   /**
    * Returns a direct link to an element by id. 
    */
