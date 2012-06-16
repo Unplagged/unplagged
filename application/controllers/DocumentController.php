@@ -44,7 +44,7 @@ class DocumentController extends Unplagged_Controller_Action{
     $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
 
     if($document){
-      if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'update', $input->id))){
+      if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'update', $document))){
         $this->redirectToLastPage(true);
       }
 
@@ -139,7 +139,7 @@ class DocumentController extends Unplagged_Controller_Action{
         }
 
         $document->actions = array();
-        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'update', $document->getId()))){
+        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'update', $document))){
           $action['link'] = '/document/edit/id/' . $document->getId();
           $action['label'] = 'Edit document';
           $action['icon'] = 'images/icons/pencil.png';
@@ -151,7 +151,7 @@ class DocumentController extends Unplagged_Controller_Action{
         $action['icon'] = 'images/icons/eye.png';
         $document->actions[] = $action;
 
-        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'delete', $document->getId()))){
+        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'delete', $document))){
           $action['link'] = '/document/delete/id/' . $document->getId();
           $action['label'] = 'Delete document';
           $action['icon'] = 'images/icons/delete.png';
@@ -170,7 +170,7 @@ class DocumentController extends Unplagged_Controller_Action{
           $document->actions[] = $action;
           $document->isTarget = false;
         }
-        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'authorize', $document->getId()))){
+        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'authorize', $document))){
           $action['link'] = '/permission/edit/id/' . $document->getId();
           $action['label'] = 'Set permissions';
           $action['icon'] = 'images/icons/shield.png';

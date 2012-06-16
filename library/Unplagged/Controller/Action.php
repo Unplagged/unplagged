@@ -34,7 +34,7 @@ abstract class Unplagged_Controller_Action extends Zend_Controller_Action{
     $this->_em = Zend_Registry::getInstance()->entitymanager;
     $this->_defaultNamespace = new Zend_Session_Namespace('Default');
 
-    $this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
+    //$this->view->flashMessages = $this->_helper->flashMessenger->getMessages();
   }
 
   /**

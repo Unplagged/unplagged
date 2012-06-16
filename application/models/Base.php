@@ -55,6 +55,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 abstract class Application_Model_Base{
 
   const ICON_CLASS = '';
+  const PERMISSION_TYPE = 'base';
 
   /**
    * @Id @GeneratedValue @Column(type="integer") 
@@ -102,7 +103,7 @@ abstract class Application_Model_Base{
    * @JoinColumn(name="permission_id", referencedColumnName="id")
    */
   private $permissions;
-  
+
   /**
    * @var ArrayCollection The notifications related to this object.
    * 
@@ -165,6 +166,14 @@ abstract class Application_Model_Base{
     }
   }
 
+  public function getPermissionType(){
+    $childClass = get_called_class();
+
+    if($childClass::PERMISSION_TYPE !== null){
+      return $childClass::PERMISSION_TYPE;
+    }
+  }
+
   public function getComments(){
     return $this->comments;
   }
@@ -201,7 +210,7 @@ abstract class Application_Model_Base{
     }
     return $tagIds;
   }
-  
+
   public function addTag(Application_Model_Tag $tag){
     $this->tags->add($tag);
   }
@@ -245,6 +254,10 @@ abstract class Application_Model_Base{
 
   public function clearTags(){
     $this->tags->clear();
+  }
+
+  public function getPermissions(){
+    return $this->permissions;
   }
 
 }

@@ -1,5 +1,9 @@
-<?php if(!empty($this->flashMessages)): ?>
-  <?php foreach($this->flashMessages as $messages): ?>
+<?php
+$messenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
+$flashMessages = array_merge($messenger->getCurrentMessages(), $messenger->getMessages());
+?>
+<?php if(!empty($flashMessages)): ?>
+  <?php foreach($flashMessages as $messages): ?>
     <?php //if we got an array here, the message is categorized with a level ?>
     <?php if(is_array($messages)): ?>
       <?php foreach($messages as $class=>$value): ?>
@@ -11,6 +15,7 @@
         <?php endif; ?>
       <?php endforeach; ?>
     <?php else: ?>
+      <?php //just a fallback for places where the error levels don't work ?>
       <div class="alert fade in"><?php echo $this->translate($messages); ?></div>
     <?php endif; ?>
   <?php endforeach; ?>

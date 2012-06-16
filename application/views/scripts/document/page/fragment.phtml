@@ -4,16 +4,18 @@
 <div class="document-page diff clearfix show-contextmenu">
   <div id="candidate-page" class="src-wrapper">
     <?php echo $this->pageContent; ?>
-  
+
     <?php echo $this->partial('partials/next-prev-paginator.phtml', array('prevLink'=>$this->prevPageLink, 'nextLink'=>$this->nextPageLink)); ?>
   </div>
-  
-      <select name="source-document">
-      <option>test</option>
-    </select>
+
+  <select name="source-document">
+    <option>test</option>
+  </select>
   <div id="source-page" class="src-wrapper">
-    <?php echo $this->sourceContent; ?>
-    <?php echo $this->partial('partials/next-prev-paginator.phtml', array('prevLink'=>$this->prevSourcePageLink, 'nextLink'=>$this->nextSourcePageLink)); ?>
+    <?php if(isset($this->source)): ?>
+      <?php echo $this->sourceContent; ?>
+      <?php echo $this->partial('partials/next-prev-paginator.phtml', array('prevLink'=>$this->prevSourcePageLink, 'nextLink'=>$this->nextSourcePageLink)); ?>
+    <?php endif; ?>
   </div>
 </div>
 
@@ -22,8 +24,9 @@
   <input type="hidden" name="candidatePage" value="<?php echo $this->page->getId(); ?>" id="fragment-candidate-page" />
   <input type="hidden" name="candidateStartLine" id="fragment-candidate-start-line" />
   <input type="hidden" name="candidateEndLine" id="fragment-candidate-end-line" />
-  
-  <input type="hidden" name="sourcePage"  value="<?php echo $this->source->getId(); ?>" id="fragment-source-page" />
-  <input type="hidden" name="sourceStartLine" id="fragment-source-start-line" />
-  <input type="hidden" name="sourceEndLine" id="fragment-source-end-line" />
+  <?php if(isset($this->source)): ?>
+    <input type="hidden" name="sourcePage"  value="<?php echo $this->source->getId(); ?>" id="fragment-source-page" />
+    <input type="hidden" name="sourceStartLine" id="fragment-source-start-line" />
+    <input type="hidden" name="sourceEndLine" id="fragment-source-end-line" />
+  <?php endif; ?>
 </form>

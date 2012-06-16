@@ -30,11 +30,12 @@ class FileController extends Unplagged_Controller_Action{
   public function uploadAction(){
     if($this->_request->isPost()){
       $post = $this->_request->getPost();
-
+      
       $uploadForm = new Application_Form_File_Upload();
-
       if($uploadForm->isValid($post)){
         $this->storeUpload();
+      } else {
+        die('{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}');
       }
     }
   }

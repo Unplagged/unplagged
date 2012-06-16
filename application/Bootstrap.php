@@ -141,7 +141,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       $registry->user = $guest;
       $defaultNamespace->userId = 'guest';
     }else{
-      $registry->user = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
+      $registry->user = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId); 
+    }
+    
+    //if we don't have a user something went wrong with the session, so clear everything and force new login
+    if(!$registry->user){
+      session_unset();
+      header('Location: ');
     }
   }
 

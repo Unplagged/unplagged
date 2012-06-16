@@ -3,6 +3,13 @@
 $errors = $this->element->getMessages();
 $disabled = $this->disabled || false;
 $permissions = array('create', 'read', 'update', 'delete', 'authorize');
+
+$roleIds = array();
+foreach($this->element->getValue() as $permission => $valueRoleIds){
+  foreach($valueRoleIds as $roleId) {
+    $roleIds[$roleId][] = $permission;
+  }
+}
 ?>
 
 <?php echo $this->formLabel($this->element->getName(), $this->element->getLabel()) ?>
@@ -17,26 +24,25 @@ $permissions = array('create', 'read', 'update', 'delete', 'authorize');
     echo '<div class="hint">' . $this->element->getDescription() . '</div>';
   }
   ?>
-  <div class="users-wrapper" data-wrapper-for="<?php echo $this->element->getName(); ?>">
+  <div class="permissions-wrapper" data-wrapper-for="<?php echo $this->element->getName(); ?>">
     <?php if($this->element->getValue()){ ?>
-      <?php foreach($this->element->getValue() as $userId): ?>
-        <?php $user = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneById($userId); ?>
+      <?php foreach($roleIds as $roleId => $rolePermissions): ?>
+        <?php $user = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneByRole($roleId); ?>
         <div class="well" data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $user->getId(); ?>">
-          <img class="avatar-small no-shadow" src="/images/default-avatar.png">
+          <img class="avatar no-shadow" src="<?php echo $user->getAvatar(); ?>">
           <div class="names">
             <span class="username"><?php echo $user->getUsername(); ?></span>
-            <span class="realname">Benjamin Oertel</span>
           </div>
           <div class="options">
             <?php foreach($permissions as $permission) { ?>
-            <span id="<?php echo $permission; ?>-<?php echo $userId; ?>-label">
-              <label for="<?php echo $permission; ?>-<?php echo $userId; ?>">edit-user</label>
-              <input type="checkbox" name="<?php echo $permission; ?>[<?php echo $userId; ?>]" id="<?php echo $permission; ?>-<?php echo $userId; ?>" value="1" class="btn btn-checkbox">
+            <span id="<?php echo $permission; ?>-<?php echo $roleId; ?>-label">
+              <label for="<?php echo $permission; ?>-<?php echo $roleId; ?>"><?php echo $permission; ?></label>
+              <input <?php if(in_array($permission, $rolePermissions)) { echo 'checked="checked" '; } ?> type="checkbox" name="<?php echo $permission; ?>[]" id="<?php echo $permission; ?>-<?php echo $roleId; ?>" value="<?php echo $roleId; ?>" class="btn btn-checkbox btn-small">
             </span>
             <?php } ?>
-            <a href="#" class="btn" data-remove="true" data-for="<?php echo $user->getId(); ?>"><i class="icon-remove"></i></a>
+            <a href="#" class="btn btn-danger" data-remove="true" data-for="<?php echo $roleId; ?>"><i class="icon-remove"></i></a>
           </div>
-          <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $user->getId(); ?>" />
+          <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $roleId; ?>" />
         </div>
       <?php endforeach; ?>
     <?php } ?>
