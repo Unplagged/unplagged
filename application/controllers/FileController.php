@@ -157,7 +157,7 @@ class FileController extends Unplagged_Controller_Action{
 
     $this->setTitle('Public Files');
 
-    $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=> 'file', 'action' => 'read', 'base' => null));
+    $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>null));
     $query = 'SELECT b FROM Application_Model_File b';
     $count = 'SELECT COUNT(b.id) FROM Application_Model_File b';
     $orderBy = 'b.created DESC';
@@ -178,13 +178,15 @@ class FileController extends Unplagged_Controller_Action{
       $parseAction['icon'] = 'images/icons/page_gear.png';
       $file->actions[] = $parseAction;
 
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $file))){
+      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
+      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $action['link'] = '/file/download/id/' . $file->getId();
         $action['label'] = 'Download';
         $action['icon'] = 'images/icons/disk.png';
         $file->actions[] = $action;
       }
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $file))){
+      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'delete', 'base'=>$file));
+      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $action['link'] = '/file/delete/id/' . $file->getId();
         $action['label'] = 'Delete';
         $action['icon'] = 'images/icons/delete.png';
@@ -201,7 +203,8 @@ class FileController extends Unplagged_Controller_Action{
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
 
-      if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'authorize', $file))){
+      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'authorize', 'base'=>$file));
+      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $action['link'] = '/permission/edit/id/' . $file->getId();
         $action['label'] = 'Set permissions';
         $action['icon'] = 'images/icons/shield.png';
@@ -222,7 +225,8 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
-        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'read', $file))){
+        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }
 
@@ -270,6 +274,10 @@ class FileController extends Unplagged_Controller_Action{
         if(empty($file)){
           $this->_helper->FlashMessenger(array('error'=>"Sorry, we couldn't find a file with the specified id."));
         }else{
+          $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
+          if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+            $this->redirectToLastPage(true);
+          }
           // pdfs will be generated through cron
           if($file->getExtension() === 'pdf'){
             $data['title'] = $file->getFilename();
@@ -310,8 +318,8 @@ class FileController extends Unplagged_Controller_Action{
           $this->_em->flush();
         }
       }
-    } else {
-      $this->_helper->FlashMessenger(array('error'=>'You need to select a case for which this document should be parsed.'));  
+    }else{
+      $this->_helper->FlashMessenger(array('error'=>'You need to select a case for which this document should be parsed.'));
     }
     $this->_helper->redirector('list', 'document');
   }
@@ -325,7 +333,8 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
-        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('file', 'delete', $file))){
+        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'delete', 'base'=>$file));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }
         // remove file from file system
@@ -352,4 +361,5 @@ class FileController extends Unplagged_Controller_Action{
   }
 
 }
+
 ?>

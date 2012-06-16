@@ -42,21 +42,27 @@ class ImageController extends Unplagged_Controller_Action{
 
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
+
       if($file){
-        $localPath = $file->getFullPath();
-        $allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
-
-        $response = $this->getResponse();
-        if(file_exists($localPath)){
-          if(in_array($file->getExtension(), $allowedExtensions)){
-            $response->setHeader('Content-type', 'image/' . $file->getExtension());
-          }else{
-            $response->setHeader('Content-type', $file->getMimeType());
-          }
-
-          readfile($localPath);
+              $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
+        if(!$this->_em->user->getRole()->hasPermission($permission)){
+          $response->setHttpResponseCode(403);
         }else{
-          $response->setHttpResponseCode(404);
+          $localPath = $file->getFullPath();
+          $allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
+
+          $response = $this->getResponse();
+          if(file_exists($localPath)){
+            if(in_array($file->getExtension(), $allowedExtensions)){
+              $response->setHeader('Content-type', 'image/' . $file->getExtension());
+            }else{
+              $response->setHeader('Content-type', $file->getMimeType());
+            }
+
+            readfile($localPath);
+          }else{
+            $response->setHttpResponseCode(404);
+          }
         }
       }else{
         $this->_helper->FlashMessenger('No file found.');

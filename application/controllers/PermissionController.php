@@ -188,9 +188,11 @@ class PermissionController extends Unplagged_Controller_Action{
     if($base){
       $this->setTitle('Manage permissions');
       $this->view->subtitle = $base->getDirectName();
-        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission($base->getPermissionType(), 'authorize', $base))){
-          $this->redirectToLastPage(true);
-        }
+      
+      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$base->getPermissionType(), 'action'=>'authorize', 'base'=>$base));
+      if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        $this->redirectToLastPage(true);
+      }
 
       $modifyForm = new Application_Form_Permission_Modify();
       $modifyForm->setAction("/permission/edit/id/" . $input->id);

@@ -89,10 +89,6 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    */
   protected $user;
 
-  /**
-   * OneToOne(targetEntity="Application_Model_User", mappedBy="role")
-   */
-  protected $u4ser;
 
   public function __construct($type = null){
     $this->inheritedRoles = new \Doctrine\Common\Collections\ArrayCollection();
@@ -145,16 +141,12 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     return $permissions;
   }
 
-  public function getPermissions2(){
-    return $this->permissions;
-  }
-
   public function hasPermission(Application_Model_Permission $permission){
     $user = Zend_Registry::getInstance()->user;
     $case = $user->getCurrentCase();
 
     // check the main user role on that right
-    if($this->getPermissions2()->contains($permission)){
+    if($this->getBasicPermissions(true)->contains($permission)){
       return true;
     }
 
@@ -171,7 +163,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     }
     foreach($case->getDefaultRoles() as $caseRole){
       if($this->getInheritedRoles()->contains($caseRole)){
-        if($caseRole->getPermissions2()->contains($permissionAny)){
+        if($caseRole->getBasicPermissions(true)->contains($permissionAny)){
           return true;
         }
       }
@@ -185,7 +177,10 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    * 
    * @return array
    */
-  public function getBasicPermissions(){
+  public function getBasicPermissions($asCollection = false){
+    if($asCollection) {
+      return $this->permissions;
+    }
     return $this->permissions->toArray();
   }
 

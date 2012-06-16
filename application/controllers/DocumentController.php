@@ -44,7 +44,8 @@ class DocumentController extends Unplagged_Controller_Action{
     $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
 
     if($document){
-      if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'update', $document))){
+      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
+      if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $this->redirectToLastPage(true);
       }
 
@@ -139,7 +140,8 @@ class DocumentController extends Unplagged_Controller_Action{
         }
 
         $document->actions = array();
-        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'update', $document))){
+        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
+        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $action['link'] = '/document/edit/id/' . $document->getId();
           $action['label'] = 'Edit document';
           $action['icon'] = 'images/icons/pencil.png';
@@ -150,8 +152,9 @@ class DocumentController extends Unplagged_Controller_Action{
         $action['label'] = 'Detect plagiarism';
         $action['icon'] = 'images/icons/eye.png';
         $document->actions[] = $action;
+        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'delete', 'base'=>$document));
 
-        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'delete', $document))){
+        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $action['link'] = '/document/delete/id/' . $document->getId();
           $action['label'] = 'Delete document';
           $action['icon'] = 'images/icons/delete.png';
@@ -170,7 +173,8 @@ class DocumentController extends Unplagged_Controller_Action{
           $document->actions[] = $action;
           $document->isTarget = false;
         }
-        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'authorize', $document))){
+        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'authorize', 'base'=>$document));
+        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $action['link'] = '/permission/edit/id/' . $document->getId();
           $action['label'] = 'Set permissions';
           $action['icon'] = 'images/icons/shield.png';
@@ -180,6 +184,7 @@ class DocumentController extends Unplagged_Controller_Action{
 
       $this->view->paginator = $paginator;
 
+      Zend_Layout::getMvcInstance()->menu = null;
       Zend_Layout::getMvcInstance()->sidebar = null;
       Zend_Layout::getMvcInstance()->versionableId = null;
     }else{
@@ -197,7 +202,8 @@ class DocumentController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
       if($document){
-        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'delete', $document))){
+        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'delete', 'base'=>$document));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }
         $this->_em->remove($document);
