@@ -205,9 +205,8 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
 
     private static function addSources($array_html) {
         self::$pagenumber++;
-        $sources = "<page>";
+        $sources = "<page><h2>Quellenverzeichnis</h2>";
         foreach ($array_html as $fragment) {//array_expression as $value
-            $sources .= self::writeSource($fragment["bibtextplag"]);
             $sources .= self::writeSource($fragment["bibtextsource"]);
         }
         $sources .=self::getFooter(self::$pagenumber) . "</page>";
@@ -218,8 +217,8 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
         $source = "";
         if (isset($sce)) {
             $source = "<div class='source'>"
-                    . "[" . $sce["kuerzel"] . "]     " . $sce["autor"] . " "
-                    . $sce["titel"] . " " . $sce["zeitschrift"] . " " . $sce["ort"] . " "
+                    . "[" . $sce["autor"] ." ". $sce["jahr"]. "]&nbsp; " . $sce["autor"] . ": "
+                    . $sce["titel"] . ". " . $sce["zeitschrift"] . " " . $sce["ort"] . " "
                     . $sce["jahr"] . " " . $sce["verlag"]
                     . "</div>";
         }
