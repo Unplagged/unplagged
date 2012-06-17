@@ -29,10 +29,10 @@ define("GT", ">");
  *
  * @author elsa
  */
-class Cron_Document_Page_Reportcreater extends Cron_Base{
+class Cron_Document_Page_Reportcreater extends Cron_Base {
 
-  private static $pagenumber;
-  private static $defaultText = "<div class='introduction'><h2>1. Einleitung</h2>
+    private static $pagenumber;
+    private static $defaultText = "<div class='introduction'><h2>1. Einleitung</h2>
 Gegenstand dieses Berichts ist die Untersuchung der 2005 im Verlag Peter Lang veröffentlichten
 Dissertation Die Begrenzung kriegerischer Konflikte durch das moderne
 Völkerrecht von Daniel Volk auf Plagiatstellen.
@@ -71,8 +71,8 @@ abrufbar.
 <h3>4.3. Fehlerhafte Quellenangaben</h3>
 In der untersuchten Arbeit findet sich eine Reihe von inkorrekten Quellenangaben. Diese
 stützen den Plagiatsverdacht. Eine Auflistung ist unter Fehlerhafte Quellenangaben
-abrufbar.
-<h2>5. Vorläufige Bewertung</h2>
+abrufbar.</div>";
+    private static $defaultText2 = "<div class='introduction'><h2>5. Vorläufige Bewertung</h2>
 Bezüglich der in diesem Bericht dokumentierten Plagiate lässt sich zusammenfassend
 feststellen:
 <ul>
@@ -95,160 +95,161 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
 <ul>
 <li>Übersicht über die Dissertation</li>
 <li>Übersicht über die plagiierten Quellen</li></ul></div>";
-  
-  public static function init(){
-    parent::init();
-  }
 
-  public static function start(){
-    // @todo: dummy stuff, do something real here
-    //$query = self::$em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
-    $query = self::$em->createQuery("SELECT t, a, s 
+    public static function init() {
+        parent::init();
+    }
+
+    public static function start() {
+        // @todo: dummy stuff, do something real here
+        //$query = self::$em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
+        $query = self::$em->createQuery("SELECT t, a, s 
             FROM Application_Model_Task t, Application_Model_Action a, Application_Model_State s 
             WHERE
                 t.action=a.id AND 
                 t.state=s.id AND 
                 a.name = :action AND 
                 s.name = :state");
-    $query->setParameter("action", "report_requested");
-    $query->setParameter("state", "task_scheduled");
-    $query->setMaxResults(1);
+        $query->setParameter("action", "report_requested");
+        $query->setParameter("state", "task_scheduled");
+        $query->setMaxResults(1);
 
-    $tasks = $query->getResult();
+        $tasks = $query->getResult();
 
-    if($tasks){
-      $task = $tasks[0];
+        if ($tasks) {
+            $task = $tasks[0];
 
-      $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
+            $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
 
-      $fragments = $task->getRessource()->getTarget()->getFragments();
+            $fragments = $task->getRessource()->getTarget()->getFragments();
 
-      $filename = self::createReport($fragments, $task->getInitiator());
-      // update task
-      $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
-      $task->setProgressPercentage(100);
+            $filename = self::createReport($fragments, $task->getInitiator());
+            // update task
+            $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
+            $task->setProgressPercentage(100);
 
-      //self::$em->persist($report);
-      self::$em->persist($task);
-      self::$em->flush();
+            //self::$em->persist($report);
+            self::$em->persist($task);
+            self::$em->flush();
 
-      // notification
-      //$user = ;
-      //Unplagged_Helper::notify("simtext_report_created", $report, $user);
-    }
-  }
-
-  private static function createReport($fragments, $user){
-    self::$pagenumber = 1;
-    $currentCase = $user->getCurrentCase();
-    $casename = $currentCase->getAlias();
-    $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
-
-    $array_html = Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
-    $plagiat = $array_html[0]["bibtextplag"];
-
-    $content = '<div style="margin:auto; width: 500px; text-align:center; margin-top: 300px"><h1>Gemeinschaftlicher Bericht</h1><br/><br/>';
-    $content .= "<h2>Dokumentation von Plagiaten in der Dissertation \"".$plagiat["titel"]."\" von ".
-            $plagiat["autor"].". ".$plagiat["ort"].
-            ". ".$plagiat["jahr"]."</h2><br/><br/>";
-    $content .= "<h2>VroniPlag</h2>";
-    $content .= '<h2 style="font-style:italic">' . $casename . '</h2>';
-    $content .= "<br/><br/>";
-    $content .= "<h3>" . date("d M Y") . "</h3></div>";
-    $content .= self::getBarCode($currentCase);
-    $content .= "<page>".self::$defaultText."</page>";
-    foreach($array_html as $fragment){
-      $col1 = self::cut_text_into_pages($fragment["left"]);
-      $col2 = self::cut_text_into_pages($fragment["right"]);
-      $content .= self::mix_two_columns($col1, $col2, "plagiat", "source");
+            // notification
+            //$user = ;
+            //Unplagged_Helper::notify("simtext_report_created", $report, $user);
+        }
     }
 
-  
-    $content = str_replace('%pagenumber%', self::$pagenumber, $content);
-    $content .= self::addSources($array_html);
-    /*$fp = fopen('test.html','w');
-    fwrite($fp, $content);
-    fclose($fp);*/
-    
-    $html2pdf = new HTML2PDF('P', 'A4', 'en');
-    $html2pdf->WriteHTML($content);
- 
-    // save report to database to get an Id
-    $data = array();
-    $data["title"] = $casename;
-    $data["user"] = $user;
-    $data["target"] = $user->getCurrentCase()->getTarget();
-    $report = new Application_Model_Report($data);
+    private static function createReport($fragments, $user) {
+        self::$pagenumber = 3;
+        $currentCase = $user->getCurrentCase();
+        $casename = $currentCase->getAlias();
+        $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
 
-    self::$em->persist($report);
-    $currentCase->addReport($report);
+        $array_html = Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
+        $plagiat = $array_html[0]["bibtextplag"];
 
-    self::$em->persist($currentCase);
-    self::$em->flush();
+        $content = '<div style="margin:auto; width: 500px; text-align:center; margin-top: 300px"><h1>Gemeinschaftlicher Bericht</h1><br/><br/>';
+        $content .= "<h2>Dokumentation von Plagiaten in der Dissertation \"" . $plagiat["titel"] . "\" von " .
+                $plagiat["autor"] . ". " . $plagiat["ort"] .
+                ". " . $plagiat["jahr"] . "</h2><br/><br/>";
+        $content .= "<h2>VroniPlag</h2>";
+        $content .= '<h2 style="font-style:italic">' . $casename . '</h2>';
+        $content .= "<br/><br/>";
+        $content .= "<h3>" . date("d M Y") . "</h3></div>";
+        $content .= self::getBarCode($currentCase);
+        $content .= "<page>" . self::$defaultText . self::getFooter(2) . "</page>";
+        $content .= "<page>" . self::$defaultText2 . self::getFooter(3) . "</page>";
+        foreach ($array_html as $fragment) {
+            $col1 = self::cut_text_into_pages($fragment["left"]);
+            $col2 = self::cut_text_into_pages($fragment["right"]);
+            $content .= self::mix_two_columns($col1, $col2, "plagiat", "source");
+        }
 
-    // after the flush, we can access the id and put a unique identifier in the report name
+        $content .= self::addSources($array_html);
+        $content = str_replace('%pagenumber%', self::$pagenumber, $content);
 
-    $filename = $filepath . DIRECTORY_SEPARATOR . $report->getId() . ".pdf";
+        /* $fp = fopen('test.html','w');
+          fwrite($fp, $content);
+          fclose($fp); */
 
-    $html2pdf->Output($filename, 'F');
+        $html2pdf = new HTML2PDF('P', 'A4', 'en');
+        $html2pdf->WriteHTML($content);
 
-    $report->setFilePath($filename);
-    $report->setState(self::$em->getRepository('Application_Model_State')->findOneByName('report_generated'));
+        // save report to database to get an Id
+        $data = array();
+        $data["title"] = $casename;
+        $data["user"] = $user;
+        $data["target"] = $user->getCurrentCase()->getTarget();
+        $report = new Application_Model_Report($data);
 
-    self::$em->persist($report);
-    self::$em->flush();
+        self::$em->persist($report);
+        $currentCase->addReport($report);
 
-    
-    return $filename;
-  }
-  
-  private static function addSources($array_html){
-      $sources = "<page>";
-      foreach($array_html as $fragment){//array_expression as $value
-          $sources .= self::writeSource($fragment["bibtextplag"]);
-          $sources .= self::writeSource($fragment["bibtextsource"]);
-      }
-      $sources .="</page>";
-      return $sources;
-  }
+        self::$em->persist($currentCase);
+        self::$em->flush();
 
-  private static function writeSource($sce) {
-      $source = "";
-      if (isset($sce)) {
-          $source = "<div class='source'>"
-            ."[".$sce["kuerzel"]."]     ".$sce["autor"]." "
-            .$sce["titel"]." ".$sce["zeitschrift"]." ".$sce["ort"]." "
-            .$sce["jahr"]." ".$sce["verlag"]
-            ."</div>";
-      }
-            
-      return $source;
-  }
-  
-  private static function getBarCode($case){
-    $str_svg = $case->getBarcode(80, 150, 100, false, '%')->render();
+        // after the flush, we can access the id and put a unique identifier in the report name
 
-    $str_svg = str_replace('svg', 'draw', $str_svg);
-    $str_svg = str_replace('width=', 'w=', $str_svg);
-    $str_svg = str_replace('height=', 'h=', $str_svg);
+        $filename = $filepath . DIRECTORY_SEPARATOR . $report->getId() . ".pdf";
 
-    return "<h2>Barcode</h2>" . $str_svg;
-  }
-  
-  private static function getFooter($pagenumber){
-      return "<page_footer>".$pagenumber."/%pagenumber%</page_footer> ";
-  }
+        $html2pdf->Output($filename, 'F');
 
-  
-  /**
-   * Creates an html page element, containing a table
-   * with three columns. The first parameter is set in
-   * the first column and the second parameter is set
-   * in the third column.
-   */
-  private static function create_a_page($td1, $td2, $title1, $title2){
-    self::$pagenumber++;
-    return '
+        $report->setFilePath($filename);
+        $report->setState(self::$em->getRepository('Application_Model_State')->findOneByName('report_generated'));
+
+        self::$em->persist($report);
+        self::$em->flush();
+
+
+        return $filename;
+    }
+
+    private static function addSources($array_html) {
+        self::$pagenumber++;
+        $sources = "<page>";
+        foreach ($array_html as $fragment) {//array_expression as $value
+            $sources .= self::writeSource($fragment["bibtextplag"]);
+            $sources .= self::writeSource($fragment["bibtextsource"]);
+        }
+        $sources .=self::getFooter(self::$pagenumber) . "</page>";
+        return $sources;
+    }
+
+    private static function writeSource($sce) {
+        $source = "";
+        if (isset($sce)) {
+            $source = "<div class='source'>"
+                    . "[" . $sce["kuerzel"] . "]     " . $sce["autor"] . " "
+                    . $sce["titel"] . " " . $sce["zeitschrift"] . " " . $sce["ort"] . " "
+                    . $sce["jahr"] . " " . $sce["verlag"]
+                    . "</div>";
+        }
+
+        return $source;
+    }
+
+    private static function getBarCode($case) {
+        $str_svg = $case->getBarcode(80, 150, 100, false, '%')->render();
+
+        $str_svg = str_replace('svg', 'draw', $str_svg);
+        $str_svg = str_replace('width=', 'w=', $str_svg);
+        $str_svg = str_replace('height=', 'h=', $str_svg);
+
+        return "<h2>Barcode</h2>" . $str_svg;
+    }
+
+    private static function getFooter($pagenumber) {
+        return "<page_footer>" . $pagenumber . "/%pagenumber%</page_footer> ";
+    }
+
+    /**
+     * Creates an html page element, containing a table
+     * with three columns. The first parameter is set in
+     * the first column and the second parameter is set
+     * in the third column.
+     */
+    private static function create_a_page($td1, $td2, $title1, $title2) {
+        self::$pagenumber++;
+        return '
 <page>
 <table>
 <tr>
@@ -265,99 +266,99 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
          ' . $td2 . '
 </td>
 </tr>
-</table>'.self::getFooter(self::$pagenumber).'</page>';
-  }
-
-  /**
-   * Removes the multiple blank spaces from the given parameter.
-   */
-  private static function remove_spaces($text){
-    while(true){
-      $replaced = str_replace('  ', ' ', $text);
-      if($replaced != $text){
-        $text = $replaced;
-      }else{
-        break;
-      }
-    }
-    return $text;
-  }
-
-  /**
-   * Cuts the given text into an array, which each element contains
-   * $nbWordsProPage words.
-   */
-  private static function cut_text_into_pages($text){
-    $text = self::remove_spaces($text);
-    $exploded = array_slice(explode(' ', $text), 0);
-    $nbWordsProPage = 400;
-    $nbPage = 0;
-    $pages = array();
-    $rest = "";
-    $nbRest = 0;
-
-    for($i = 0; $i < sizeof($exploded); $i+=$nbWordsProPage){
-      $page = $rest . implode(' ', array_slice($exploded, $i, $nbWordsProPage - $nbRest));
-      $result = self::check($page);
-      $rest = $result["toRetrieve"] . " ";
-      $nbRest = str_word_count($rest);
-      $pages[$nbPage++] = $result["s"];
+</table>' . self::getFooter(self::$pagenumber) . '</page>';
     }
 
-    return $pages;
-  }
-
-  private static function result($length, $s){
-    $array = array();
-    $array["toRetrieve"] = substr($s, $length, strlen($s) - $length);
-    $array["s"] = substr($s, 0, $length);
-    $array["original"] = $s;
-    return $array;
-  }
-
-  private static function check($s){
-    $nbST = substr_count($s, ST);
-    $nbBT = substr_count($s, GT);
-    if($nbST == $nbBT){
-      $nbSpanOpen = substr_count($s, SPAN_OPEN);
-      $nbSpanClose = substr_count($s, SPAN_CLOSE);
-      if($nbSpanOpen == $nbSpanClose){
-        return self::result(strlen($s), $s);
-      }else{
-        // 'halli hallo <span>'
-        return self::result(strrpos($s, SPAN_OPEN), $s);
-      }
-    }else{
-      // one tag is not closed
-      //'halli hallofff <span></span'
-      //'halli hallofff <span'
-      $nbSpanOpen = substr_count($s, SPAN_OPEN);
-      $nbSpanClose = substr_count($s, SPAN_CLOSE);
-
-      return self::result(strrpos($s, SPAN_OPEN), $s);
+    /**
+     * Removes the multiple blank spaces from the given parameter.
+     */
+    private static function remove_spaces($text) {
+        while (true) {
+            $replaced = str_replace('  ', ' ', $text);
+            if ($replaced != $text) {
+                $text = $replaced;
+            } else {
+                break;
+            }
+        }
+        return $text;
     }
-  }
 
-  /**
-   * Returns the $index elements of the array.
-   * If this element does not exist, a blank
-   * space is returned.
-   */
-  private static function get_col($array, $index){
-    if(isset($array[$index])){
-      return $array[$index];
-    }else{
-      return "&nbsp;";
+    /**
+     * Cuts the given text into an array, which each element contains
+     * $nbWordsProPage words.
+     */
+    private static function cut_text_into_pages($text) {
+        $text = self::remove_spaces($text);
+        $exploded = array_slice(explode(' ', $text), 0);
+        $nbWordsProPage = 400;
+        $nbPage = 0;
+        $pages = array();
+        $rest = "";
+        $nbRest = 0;
+
+        for ($i = 0; $i < sizeof($exploded); $i+=$nbWordsProPage) {
+            $page = $rest . implode(' ', array_slice($exploded, $i, $nbWordsProPage - $nbRest));
+            $result = self::check($page);
+            $rest = $result["toRetrieve"] . " ";
+            $nbRest = str_word_count($rest);
+            $pages[$nbPage++] = $result["s"];
+        }
+
+        return $pages;
     }
-  }
 
-  /**
-   * Builds a string from two arrays containing
-   * x and y elements.
-   */
-  private static function mix_two_columns($col1, $col2, $title1, $title2){
-    $html = '<style type="text/css">' .
-        'body {text-align: justify}
+    private static function result($length, $s) {
+        $array = array();
+        $array["toRetrieve"] = substr($s, $length, strlen($s) - $length);
+        $array["s"] = substr($s, 0, $length);
+        $array["original"] = $s;
+        return $array;
+    }
+
+    private static function check($s) {
+        $nbST = substr_count($s, ST);
+        $nbBT = substr_count($s, GT);
+        if ($nbST == $nbBT) {
+            $nbSpanOpen = substr_count($s, SPAN_OPEN);
+            $nbSpanClose = substr_count($s, SPAN_CLOSE);
+            if ($nbSpanOpen == $nbSpanClose) {
+                return self::result(strlen($s), $s);
+            } else {
+                // 'halli hallo <span>'
+                return self::result(strrpos($s, SPAN_OPEN), $s);
+            }
+        } else {
+            // one tag is not closed
+            //'halli hallofff <span></span'
+            //'halli hallofff <span'
+            $nbSpanOpen = substr_count($s, SPAN_OPEN);
+            $nbSpanClose = substr_count($s, SPAN_CLOSE);
+
+            return self::result(strrpos($s, SPAN_OPEN), $s);
+        }
+    }
+
+    /**
+     * Returns the $index elements of the array.
+     * If this element does not exist, a blank
+     * space is returned.
+     */
+    private static function get_col($array, $index) {
+        if (isset($array[$index])) {
+            return $array[$index];
+        } else {
+            return "&nbsp;";
+        }
+    }
+
+    /**
+     * Builds a string from two arrays containing
+     * x and y elements.
+     */
+    private static function mix_two_columns($col1, $col2, $title1, $title2) {
+        $html = '<style type="text/css">' .
+                'body {text-align: justify}
                 .fragmark-0 { background-color: #f5cf9f; }
                 .fragmark-1 { background-color: #c2f598; }
                 .fragmark-2 { background-color: #a7c6f2; }
@@ -369,7 +370,7 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
                 .fragmark-8 { background-color: #f5cf9f; }
                 .fragmark-9 { background-color: #a5e6ed; }
                 .text {margin: 3px; padding: 3px; border: 1px solid grey}' .
-            ' 
+                ' 
              ol li{
                 list-style: none;
                 background-color: white;
@@ -387,20 +388,20 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
              }
              .introduction{
                 margin-left: 10px;
-             }'.
-        '</style>';
-    $size1 = sizeof($col1);
-    $size2 = sizeof($col2);
-    $size = $size1 > $size2 ? $size1 : $size2;
-    
-    for($i = 0; $i < $size; $i++){
-      $c1 = self::get_col($col1, $i);
-      $c2 = self::get_col($col2, $i);
+             }' .
+                '</style>';
+        $size1 = sizeof($col1);
+        $size2 = sizeof($col2);
+        $size = $size1 > $size2 ? $size1 : $size2;
 
-      $html .= self::create_a_page($c1, $c2, $title1, $title2);
+        for ($i = 0; $i < $size; $i++) {
+            $c1 = self::get_col($col1, $i);
+            $c2 = self::get_col($col2, $i);
+
+            $html .= self::create_a_page($c1, $c2, $title1, $title2);
+        }
+        return $html;
     }
-    return $html;
-  }
 
 }
 
