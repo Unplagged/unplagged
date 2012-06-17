@@ -32,6 +32,70 @@ define("GT", ">");
 class Cron_Document_Page_Reportcreater extends Cron_Base{
 
   private static $pagenumber;
+  private static $defaultText = "<div class='introduction'><h2>1. Einleitung</h2>
+Gegenstand dieses Berichts ist die Untersuchung der 2005 im Verlag Peter Lang veröffentlichten
+Dissertation Die Begrenzung kriegerischer Konflikte durch das moderne
+Völkerrecht von Daniel Volk auf Plagiatstellen.
+Die dokumentierten Fragmente erlauben es der akademischen und allgemeinen
+Öffentlichkeit, sich ein eigenes Bild des Falls zu machen. Eine detaillierte, kontinuierlich
+erweiterte Dokumentation der Projektergebnisse ist unter <a href=\"http://de.vroniplag.wikia.
+com/wiki/Dv\">http://de.vroniplag.wikia.com</a> zu finden.
+<h2>2. Vorgehensweise</h2>
+Die Analyse der Dissertation fand in mehreren Schritten statt. Im ersten Schritt wurden
+vermutete Plagiate der Dissertation in Form von Fragmenten dokumentiert, welche
+den direkten Vergleich mit den Originalen ermöglichen. Wie auch in der Wikipedia ist
+diese Dokumentation anonym möglich. Nach anschließender Verifizierung wurden die
+betroffenen Stellen nach dem „Vier-Augen-Prinzip“ in gesichtete Fragmente überführt.
+<h2>3. Definition von Plagiatkategorien</h2>
+Die hier verwendeten Plagiatkategorien basieren auf den Ausarbeitungen von Wohnsdorf
+/ Weber-Wulff: Strategien der Plagiatsbekämpfung, 2006. Eine vollständige Beschreibung
+der Kategorien findet sich im VroniPlag-Wiki. Die Plagiatkategorien sind im
+Einzelnen:
+<h3>3.1. Komplettplagiat</h3>
+Text, der wörtlich aus einer Quelle ohne Quellenangabe übernommen wurde.
+<h3>3.2. Verschleierung</h3>
+Text, der erkennbar aus fremder Quelle stammt, jedoch umformuliert und weder als
+Paraphrase noch als Zitat gekennzeichnet wurde.
+<h3>3.3. Bauernopfer</h3>
+Text, dessen Quelle ausgewiesen ist, der jedoch ohne Kenntlichmachung einer wörtlichen
+oder sinngemäßen Übernahme kopiert wurde.
+
+<h2>4. Vorläufige Ergebnisse</h2>
+<h3>4.1. Überblick</h3>
+Bis zum jetzigen Zeitpunkt wurden auf 80 von 186 Textseiten Plagiatstellen nachgewiesen.
+Dokumentiert sind Textübernahmen aus insgesamt 19 verschiedenen Quellen.
+<h3>4.2. Herausragende Fundstellen</h3>
+Aus der Vielzahl der Fundstellen ragen einige heraus, die sich durch ihre Art oder ihren
+Umfang besonders auszeichnen. Eine Auflistung ist unter Herausragende Fundstellen
+abrufbar.
+<h3>4.3. Fehlerhafte Quellenangaben</h3>
+In der untersuchten Arbeit findet sich eine Reihe von inkorrekten Quellenangaben. Diese
+stützen den Plagiatsverdacht. Eine Auflistung ist unter Fehlerhafte Quellenangaben
+abrufbar.
+<h2>5. Vorläufige Bewertung</h2>
+Bezüglich der in diesem Bericht dokumentierten Plagiate lässt sich zusammenfassend
+feststellen:
+<ul>
+<li>In der untersuchten Dissertation wurden in erheblichem Ausmaß fremde Quellen
+verwendet, die nicht oder nicht hinreichend als Zitat gekennzeichnet wurden.
+Dies stellt eine eklatante Verletzung wissenschaftlicher Standards dar.</li>
+<li>Quantitativ sticht hierbei A. Randelzhofers Kommentar zu Art. 51 der UN-Charta
+als Plagiatsquelle hervor. Auffällig ist zudem die Verwendung der im Jahr 2001
+ebenfalls am damaligen Lehrstuhl für Völkerrecht, allgemeine Staatslehre, deutsches
+und bayerisches Staatsrecht und politische Wissenschaften der Juristischen
+Fakultät der Universität Würzburg fertig gestellten Dissertation von K. Wodarz als
+Quelle.</li>
+<li> Die Tatsache, dass die Plagiate über die gesamte Dissertation hinweg – bis auf
+Teil 1 II, der noch nicht ausführlich untersucht worden ist – zu finden sind, und
+insbesondere die systematische, meist seitenzahlgenaue Nennung von Literaturreferenzen
+aus den Quellen lassen darauf schließen, dass die nicht kenntlich
+gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.</li></ul>
+
+<h2>6. Weiterführende Links</h2>
+<ul>
+<li>Übersicht über die Dissertation</li>
+<li>Übersicht über die plagiierten Quellen</li></ul></div>";
+  
   public static function init(){
     parent::init();
   }
@@ -81,13 +145,18 @@ class Cron_Document_Page_Reportcreater extends Cron_Base{
     $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
 
     $array_html = Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
+    $plagiat = $array_html[0]["bibtextplag"];
 
     $content = '<div style="margin:auto; width: 500px; text-align:center; margin-top: 300px"><h1>Gemeinschaftlicher Bericht</h1><br/><br/>';
-    $content .= "<h2>Dokumentation von Plagiaten in der Dissertation</h2><br/><br/>";
+    $content .= "<h2>Dokumentation von Plagiaten in der Dissertation \"".$plagiat["titel"]."\" von ".
+            $plagiat["autor"].". ".$plagiat["ort"].
+            ". ".$plagiat["jahr"]."</h2><br/><br/>";
+    $content .= "<h2>VroniPlag</h2>";
     $content .= '<h2 style="font-style:italic">' . $casename . '</h2>';
     $content .= "<br/><br/>";
     $content .= "<h3>" . date("d M Y") . "</h3></div>";
     $content .= self::getBarCode($currentCase);
+    $content .= "<page>".self::$defaultText."</page>";
     foreach($array_html as $fragment){
       $col1 = self::cut_text_into_pages($fragment["left"]);
       $col2 = self::cut_text_into_pages($fragment["right"]);
@@ -96,11 +165,14 @@ class Cron_Document_Page_Reportcreater extends Cron_Base{
 
   
     $content = str_replace('%pagenumber%', self::$pagenumber, $content);
-
+    $content .= self::addSources($array_html);
+    /*$fp = fopen('test.html','w');
+    fwrite($fp, $content);
+    fclose($fp);*/
+    
     $html2pdf = new HTML2PDF('P', 'A4', 'en');
     $html2pdf->WriteHTML($content);
-
-
+ 
     // save report to database to get an Id
     $data = array();
     $data["title"] = $casename;
@@ -129,7 +201,30 @@ class Cron_Document_Page_Reportcreater extends Cron_Base{
     
     return $filename;
   }
+  
+  private static function addSources($array_html){
+      $sources = "<page>";
+      foreach($array_html as $fragment){//array_expression as $value
+          $sources .= self::writeSource($fragment["bibtextplag"]);
+          $sources .= self::writeSource($fragment["bibtextsource"]);
+      }
+      $sources .="</page>";
+      return $sources;
+  }
 
+  private static function writeSource($sce) {
+      $source = "";
+      if (isset($sce)) {
+          $source = "<div class='source'>"
+            ."[".$sce["kuerzel"]."]     ".$sce["autor"]." "
+            .$sce["titel"]." ".$sce["zeitschrift"]." ".$sce["ort"]." "
+            .$sce["jahr"]." ".$sce["verlag"]
+            ."</div>";
+      }
+            
+      return $source;
+  }
+  
   private static function getBarCode($case){
     $str_svg = $case->getBarcode(80, 150, 100, false, '%')->render();
 
@@ -274,6 +369,25 @@ class Cron_Document_Page_Reportcreater extends Cron_Base{
                 .fragmark-8 { background-color: #f5cf9f; }
                 .fragmark-9 { background-color: #a5e6ed; }
                 .text {margin: 3px; padding: 3px; border: 1px solid grey}' .
+            ' 
+             ol li{
+                list-style: none;
+                background-color: white;
+                padding-left: 3px;
+                border-left: 1px solid black;
+             }
+             ol {
+                background-color: #bcbcbc;
+                border-top: 1px solid black;
+             }
+             .number {
+             }
+             tr {
+                vertical-align: top;
+             }
+             .introduction{
+                margin-left: 10px;
+             }'.
         '</style>';
     $size1 = sizeof($col1);
     $size2 = sizeof($col2);
