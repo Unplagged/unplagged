@@ -148,26 +148,26 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     if($this->getBasicPermissions(true)->contains($permission)){
       return true;
     }
+    if($case){
+      // when a role without a base was sent, we do not need to select it
+      if($permission->getBase()){
+        $condition = array(
+          'type'=>$permission->getType(),
+          'action'=>$permission->getAction(),
+          'action'=>$permission->getAction());
 
-    // when a role without a base was sent, we do not need to select it
-    if($permission->getBase()){
-      $condition = array(
-        'type'=>$permission->getType(),
-        'action'=>$permission->getAction(),
-        'base'=>null);
-
-      $permissionAny = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Permission')->findOneBy($condition);
-    }else{
-      $permissionAny = $permission;
-    }
-    foreach($case->getDefaultRoles() as $caseRole){
-      if($this->getInheritedRoles()->contains($caseRole)){
-        if($caseRole->getBasicPermissions(true)->contains($permissionAny)){
-          return true;
+        $permissionAny = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Permission')->findOneBy($condition);
+      }else{
+        $permissionAny = $permission;
+      }
+      foreach($case->getDefaultRoles() as $caseRole){
+        if($this->getInheritedRoles()->contains($caseRole)){
+          if($caseRole->getBasicPermissions(true)->contains($permissionAny)){
+            return true;
+          }
         }
       }
     }
-
     return false;
   }
 

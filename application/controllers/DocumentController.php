@@ -44,7 +44,7 @@ class DocumentController extends Unplagged_Controller_Action{
     $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
 
     if($document){
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
       if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $this->redirectToLastPage(true);
       }
@@ -115,7 +115,7 @@ class DocumentController extends Unplagged_Controller_Action{
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
     if($case){
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
       $query = 'SELECT b FROM Application_Model_Document b';
       $count = 'SELECT COUNT(b.id) FROM Application_Model_Document b';
 
@@ -140,7 +140,7 @@ class DocumentController extends Unplagged_Controller_Action{
         }
 
         $document->actions = array();
-        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
         if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $action['link'] = '/document/edit/id/' . $document->getId();
           $action['label'] = 'Edit document';
@@ -152,7 +152,7 @@ class DocumentController extends Unplagged_Controller_Action{
         $action['label'] = 'Detect plagiarism';
         $action['icon'] = 'images/icons/eye.png';
         $document->actions[] = $action;
-        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'delete', 'base'=>$document));
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'delete', 'base'=>$document));
 
         if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $action['link'] = '/document/delete/id/' . $document->getId();
@@ -173,7 +173,7 @@ class DocumentController extends Unplagged_Controller_Action{
           $document->actions[] = $action;
           $document->isTarget = false;
         }
-        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'authorize', 'base'=>$document));
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'authorize', 'base'=>$document));
         if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $action['link'] = '/permission/edit/id/' . $document->getId();
           $action['label'] = 'Set permissions';
@@ -202,7 +202,7 @@ class DocumentController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
       if($document){
-        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'delete', 'base'=>$document));
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'delete', 'base'=>$document));
         if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }

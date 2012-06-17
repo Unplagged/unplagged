@@ -35,7 +35,7 @@ class NotificationController extends Unplagged_Controller_Action{
   public function recentActivityAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
-    $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'base', 'action'=>'read', 'base'=>null));
+    $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'base', 'action'=>'read', 'base'=>null));
     $query = 'SELECT n FROM Application_Model_Notification n JOIN n.source b';
     $count = 'SELECT COUNT(n.id) FROM Application_Model_Notification n JOIN n.source b';
 

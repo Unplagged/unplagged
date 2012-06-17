@@ -44,7 +44,7 @@ class ImageController extends Unplagged_Controller_Action{
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
 
       if($file){
-              $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
+              $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
         if(!$this->_em->user->getRole()->hasPermission($permission)){
           $response->setHttpResponseCode(403);
         }else{

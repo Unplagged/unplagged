@@ -119,7 +119,7 @@ abstract class Application_Model_Base{
   /**
    * @var string The base element permissions.
    * 
-   * @OneToMany(targetEntity="Application_Model_Permission", mappedBy="base")
+   * @OneToMany(targetEntity="Application_Model_ModelPermission", mappedBy="base")
    * @JoinColumn(name="permission_id", referencedColumnName="id")
    */
   private $permissions;

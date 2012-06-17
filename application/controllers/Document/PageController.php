@@ -118,7 +118,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     $input = new Zend_Filter_Input(array('id'=>'Digits', 'page'=>'Digits'), null, $this->_getAllParams());
 
     if(!empty($input->id)){
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
       $query = 'SELECT p FROM Application_Model_Document_Page p JOIN p.document b';
       $count = 'SELECT COUNT(p.id) FROM Application_Model_Document_Page p JOIN p.document b';
 
