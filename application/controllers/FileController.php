@@ -157,7 +157,7 @@ class FileController extends Unplagged_Controller_Action{
 
     $this->setTitle('Public Files');
 
-    $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>null));
+    $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>null));
     $query = 'SELECT b FROM Application_Model_File b';
     $count = 'SELECT COUNT(b.id) FROM Application_Model_File b';
     $orderBy = 'b.created DESC';
@@ -178,14 +178,14 @@ class FileController extends Unplagged_Controller_Action{
       $parseAction['icon'] = 'images/icons/page_gear.png';
       $file->actions[] = $parseAction;
 
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
       if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $action['link'] = '/file/download/id/' . $file->getId();
         $action['label'] = 'Download';
         $action['icon'] = 'images/icons/disk.png';
         $file->actions[] = $action;
       }
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'delete', 'base'=>$file));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'delete', 'base'=>$file));
       if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $action['link'] = '/file/delete/id/' . $file->getId();
         $action['label'] = 'Delete';
@@ -203,7 +203,7 @@ class FileController extends Unplagged_Controller_Action{
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
 
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'authorize', 'base'=>$file));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'authorize', 'base'=>$file));
       if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $action['link'] = '/permission/edit/id/' . $file->getId();
         $action['label'] = 'Set permissions';
@@ -225,7 +225,7 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
-        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
         if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }
@@ -274,7 +274,7 @@ class FileController extends Unplagged_Controller_Action{
         if(empty($file)){
           $this->_helper->FlashMessenger(array('error'=>"Sorry, we couldn't find a file with the specified id."));
         }else{
-          $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
+          $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
           if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
             $this->redirectToLastPage(true);
           }
@@ -333,7 +333,7 @@ class FileController extends Unplagged_Controller_Action{
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
       if($file){
-        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'file', 'action'=>'delete', 'base'=>$file));
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'delete', 'base'=>$file));
         if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }

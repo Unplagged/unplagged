@@ -119,16 +119,16 @@ class PermissionController extends Unplagged_Controller_Action{
     $formData = $this->_request->getPost();
     if($editForm->isValid($formData)){
 
-      foreach($formData as $groupName => $permissionGroup){
+      foreach($formData as $groupName=>$permissionGroup){
         if(is_array($permissionGroup)){
           foreach($permissionGroup as $permissionName=>$value){
 
-            $actionName = substr($permissionName, strrpos($permissionName, '_')+1);
+            $actionName = substr($permissionName, strrpos($permissionName, '_') + 1);
             if(!$actionName){
-              $actionName = '';  
+              $actionName = '';
             }
 
-            $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('action'=>$actionName, 'type'=>substr($groupName, strrpos($groupName, '_')+1)));
+            $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('action'=>$actionName, 'type'=>substr($groupName, strrpos($groupName, '_') + 1)));
             if($permission){
               //var_dump($value);
               //var_dump($permission);
@@ -216,7 +216,7 @@ class PermissionController extends Unplagged_Controller_Action{
 
       $permissionActions = array('read', 'update', 'delete', 'authorize');
 
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$base->getPermissionType(), 'action'=>'authorize', 'base'=>$base));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>$base->getPermissionType(), 'action'=>'authorize', 'base'=>$base));
       if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $this->redirectToLastPage(true);
       }
@@ -225,29 +225,30 @@ class PermissionController extends Unplagged_Controller_Action{
       $modifyForm->setAction("/permission/edit/id/" . $input->id);
 
       $case = Zend_Registry::getInstance()->user->getCurrentCase();
+
       // get the permission directly on a specific base
       $permissions = array();
       // get users that have the global right due to their default role of the case
       $inheritedPermissions = array();
+      if($case){
+        foreach($base->getPermissions() as $permission){
+          $permissions[$permission->getAction()] = $permission->getRoleIds();
 
-      foreach($base->getPermissions() as $permission){
-        $permissions[$permission->getAction()] = $permission->getRoleIds();
-
-        foreach($permissionActions as $permissionAction){
-          foreach($case->getCollaborators() as $collaborator){
-            $accessAllPermission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$base->getPermissionType(), 'action'=>$permissionAction, 'base'=>null));
-            if($accessAllPermission){
-              if($collaborator->getRole()->hasPermission($accessAllPermission)){
-                if(!in_array($collaborator->getRole()->getId(), $permissions[$permission->getAction()])){
-                  $permissions[$permissionAction][] = $collaborator->getRole()->getId();
+          foreach($permissionActions as $permissionAction){
+            foreach($case->getCollaborators() as $collaborator){
+              $accessAllPermission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>$base->getPermissionType(), 'action'=>$permissionAction, 'base'=>null));
+              if($accessAllPermission){
+                if($collaborator->getRole()->hasPermission($accessAllPermission)){
+                  if(!in_array($collaborator->getRole()->getId(), $permissions[$permission->getAction()])){
+                    $permissions[$permissionAction][] = $collaborator->getRole()->getId();
+                  }
+                  $inheritedPermissions[$permissionAction][] = $collaborator->getRole()->getId();
                 }
-                $inheritedPermissions[$permissionAction][] = $collaborator->getRole()->getId();
               }
             }
           }
         }
       }
-
       $value = array('inherited'=>$inheritedPermissions, 'default'=>$permissions);
       $modifyForm->getElement("permissions")->setValue($value);
 

@@ -16,7 +16,7 @@ class ReportController extends Unplagged_Controller_Versionable{
 
     $paginator = null;
     if($case){
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'report', 'action'=>'read', 'base'=>null));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'report', 'action'=>'read', 'base'=>null));
       $query = 'SELECT b FROM Application_Model_Report b';
       $count = 'SELECT COUNT(b.id) FROM Application_Model_Report b';
 

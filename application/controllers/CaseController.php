@@ -57,7 +57,7 @@ class CaseController extends Unplagged_Controller_Action{
     $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
 
     if($case){
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'case', 'action'=>'update', 'base'=>$case));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'case', 'action'=>'update', 'base'=>$case));
       if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $this->redirectToLastPage(true);
       }
@@ -106,7 +106,7 @@ class CaseController extends Unplagged_Controller_Action{
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
-    $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'case', 'action'=>'read', 'base'=>null));
+    $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'case', 'action'=>'read', 'base'=>null));
     $query = 'SELECT b FROM Application_Model_Case b';
     $count = 'SELECT COUNT(b.id) FROM Application_Model_Case b';
 
@@ -117,7 +117,7 @@ class CaseController extends Unplagged_Controller_Action{
     // generate the action dropdown for each fragment
     foreach($paginator as $case):
       $case->actions = array();
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'case', 'action'=>'update', 'base'=>$case));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'case', 'action'=>'update', 'base'=>$case));
       if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $action['link'] = '/case/edit/id/' . $case->getId();
         $action['label'] = 'Edit case';

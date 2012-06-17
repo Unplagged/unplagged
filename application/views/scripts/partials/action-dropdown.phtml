@@ -1,3 +1,4 @@
+<?php if(count($this->actions) > 0): ?>
 <div class="btn-group">
   <button class="btn dropdown-toggle" data-toggle="dropdown"><?php echo $this->translate('Action'); ?> <span class="caret"></span></button>
   <ul class="dropdown-menu pull-right">
@@ -8,3 +9,4 @@
     <?php endforeach; ?>
   </ul>
 </div>
+<?php endif;?>

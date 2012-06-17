@@ -141,7 +141,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
 
     if($fragment){
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document-fragment', 'action'=>'update', 'base'=>$fragment));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'fragment', 'action'=>'update', 'base'=>$fragment));
       if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $this->redirectToLastPage(true);
       }
@@ -196,12 +196,12 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
     if($case){
-      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'fragment', 'action'=>'read', 'base'=>null));
 
-      $query = 'SELECT b FROM Application_Model_Document_Fragment b JOIN b.document d';
-      $count = 'SELECT COUNT(b.id) FROM Application_Model_Document_Fragment b JOIN b.document d';
+      $query = 'SELECT d FROM Application_Model_Document_Fragment d JOIN d.document b';
+      $count = 'SELECT COUNT(d.id) FROM Application_Model_Document_Fragment d JOIN d.document b';
 
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('d.id'=>$case->getTarget()->getId()), null, $permission));
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.id'=>$case->getTarget()->getId()), null, $permission));
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
       $paginator->setCurrentPageNumber($input->page);
 
@@ -209,7 +209,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       foreach($paginator as $fragment):
         $fragment->actions = array();
 
-        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document-fragment', 'action'=>'update', 'base'=>$fragment));
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'fragment', 'action'=>'update', 'base'=>$fragment));
         if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $action['link'] = '/document_fragment/edit/id/' . $fragment->getId();
           $action['label'] = 'Edit fragment';
@@ -217,11 +217,19 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
           $fragment->actions[] = $action;
         }
 
-        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document-fragment', 'action'=>'delete', 'base'=>$fragment));
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'fragment', 'action'=>'delete', 'base'=>$fragment));
         if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $action['link'] = '/document_fragment/delete/id/' . $fragment->getId();
           $action['label'] = 'Remove fragment';
           $action['icon'] = 'images/icons/delete.png';
+          $fragment->actions[] = $action;
+        }
+        
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'fragment', 'action'=>'authorize', 'base'=>$fragment));
+        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $action['link'] = '/permission/edit/id/' . $fragment->getId();
+          $action['label'] = 'Set permissions';
+          $action['icon'] = 'images/icons/shield.png';
           $fragment->actions[] = $action;
         }
       endforeach;
@@ -251,7 +259,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     if(!empty($input->id)){
       $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
       if($fragment){
-        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document-fragment', 'action'=>'delete', 'base'=>$fragment));
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'fragment', 'action'=>'delete', 'base'=>$fragment));
         if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }

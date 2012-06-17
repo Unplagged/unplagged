@@ -81,7 +81,7 @@ foreach(get_declared_classes() as $class){
     }
   }
 
-  if(is_subclass_of($class, 'Application_Model_Base')){
+  if($class == 'Application_Model_Base' || is_subclass_of($class, 'Application_Model_Base')){
     $model = substr($class, strrpos($class, '_') + 1);
     $modelWithHyphens = substr(preg_replace_callback('/([A-Z])/', create_function('$matches', 'return \'-\' . strtolower($matches[1]);'), $model), 1);
     if(!in_array($modelWithHyphens, Application_Model_Base::$blacklist)){
@@ -96,22 +96,26 @@ foreach(get_declared_classes() as $class){
 storeResources($basicResources, $em, 'page');
 $modelPermissions = storeResources($modelResources, $em, 'model');
 
-
 function storeResources(array $resources, $em, $type = 'model'){
   $permissions = array();
   foreach($resources as $resource){
-    $permission = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1]));
+    if($type == 'model'){
+    echo $resource[0] . '...' . $resource[1] . "\n";
+      $permission = $em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1], 'base'=>null));
+    }else{
+      $permission = $em->getRepository('Application_Model_PagePermission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1], 'base'=>null));
+    }
     if(empty($permission)){
-      if($type==='model'){
+      if($type === 'model'){
         $permission = new Application_Model_ModelPermission($resource[0], $resource[1]);
-      } else {
-        $permission = new Application_Model_PagePermission($resource[0], $resource[1]);  
+      }else{
+        $permission = new Application_Model_PagePermission($resource[0], $resource[1]);
       }
       $em->persist($permission);
     }
     $permissions[] = $permission;
   }
-  
+
   return $permissions;
 }
 
@@ -145,6 +149,99 @@ if(!$guestRole){
     }
   }
   $em->persist($guestRole);
+}
+
+//create the guest users role
+$userRole = $em->getRepository('Application_Model_User_Role')->findOneByRoleId('user');
+
+if(!$userRole){
+  $userRole = new Application_Model_User_Role(Application_Model_User_Role::TYPE_GLOBAL);
+  $userRole->setRoleId('user');
+  $defaultPermissions = array(
+    array('admin', 'index'),
+    array('auth', 'login'),
+    array('auth', 'logout'),
+    array('case', 'get-roles'),
+    array('case', 'add-file'),
+    array('case', 'files'),
+    array('case', 'list'),
+    array('case', 'edit'),
+    array('case', 'create'),
+    array('comment', 'list'),
+    array('comment', 'create'),
+    array('document_fragment', 'rate'),
+    array('document_fragment', 'delete'),
+    array('document_fragment', 'changelog'),
+    array('document_fragment', 'list'),
+    array('document_fragment', 'edit'),
+    array('document_fragment', 'create'),
+    array('document_fragment', 'show'),
+    array('document_page', 'compare'),
+    array('document_page', 'fragment'),
+    array('document_page', 'read'),
+    array('document_page', 'changelog'),
+    array('document_page', 'simtext'),
+    array('document_page', 'simtext-reports'),
+    array('document_page', 'stopwords'),
+    array('document_page', 'delete'),
+    array('document_page', 'de-hyphen'),
+    array('document_page', 'show'),
+    array('document_page', 'detection-reports'),
+    array('document_page', 'list'),
+    array('document_page', 'edit'),
+    array('document_page', 'create'),
+    array('document', 'unset-target'),
+    array('document', 'set-target'),
+    array('document', 'response-plagiarism'),
+    array('document', 'detect-plagiarism'),
+    array('document', 'delete'),
+    array('document', 'list'),
+    array('document', 'edit'),
+    array('document', 'read'),
+    array('file', 'delete'),
+    array('file', 'parse'),
+    array('file', 'download'),
+    array('file', 'list'),
+    array('file', 'upload'),
+    array('index', 'index'),
+    array('error', 'error'),
+    array('user', 'register'),
+    array('user', 'verify'),
+    array('user', 'recover-password'),
+    array('user', 'autocomplete'),
+    array('user', 'add-file'),
+    array('user', 'files'),
+    array('user', 'edit-profile'),
+    array('user', 'remove-account'),
+    array('user', 'set-current-case'),
+    array('notification', 'conversation'),
+    array('notification', 'comments'),
+    array('notification', 'recent-activity'),
+    array('permission', 'edit'),
+    array('permission', 'autocomplete'),
+    array('permission', 'list'),
+    array('permission', 'edit-role'),
+    array('rating', 'list'),
+    array('rating', 'edit'),
+    array('rating', 'create'),
+    array('report', 'download'),
+    array('report', 'create'),
+    array('report', 'index'),
+    array('report', 'list'),
+    array('simtext', 'ajax'),
+    array('simtext', 'download-report'),
+    array('simtext', 'compare'),
+    array('tag', 'autocomplete')
+  );
+
+  foreach($defaultPermissions as $permissionName){
+    $permission = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$permissionName[0], 'action'=>$permissionName[1], 'base'=>null));
+
+    if($permission){
+      $userRole->addPermission($permission);
+    }
+  }
+  $em->persist($userRole);
 }
 
 function randomString($length){

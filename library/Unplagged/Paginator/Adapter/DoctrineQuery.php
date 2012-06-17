@@ -11,7 +11,7 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
   protected $query;
   protected $countQuery;
 
-  public function __construct($query, $countQuery, $additionalConditions = array(), $orderBy = null, Application_Model_Permission $readAllPermission = null){
+  public function __construct($query, $countQuery, $additionalConditions = array(), $orderBy = null, Application_Model_ModelPermission $readAllPermission = null){
     $em = Zend_Registry::getInstance()->entitymanager;
     $user = Zend_Registry::getInstance()->user;
 
@@ -32,7 +32,7 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
       if(!$canAccessAll){
         if($readAllPermission->getAction()){
           //$permissionStatement = " JOIN b.permissions pe WITH (pe.base = b.id AND pe.action = '%s') JOIN pe.roles re JOIN re.user u ";
-          $permissionStatement = " JOIN b.permissions pe WITH (pe.base = b.id AND pe.action = :permissionAction AND :roleId MEMBER OF pe.roles)";
+          $permissionStatement = " JOIN b.permissions pe WITH (pe INSTANCE OF Application_Model_ModelPermission AND pe.base = b.id AND pe.action = :permissionAction AND :roleId MEMBER OF pe.roles)";
 
           $permissionStatement = sprintf($permissionStatement, $readAllPermission->getAction());
         }

@@ -38,6 +38,7 @@ foreach($inheritedValues as $permission => $valueRoleIds){
     <?php if($defaultValues){ ?>
       <?php foreach($roleIds as $roleId => $rolePermissions): ?>
         <?php $user = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneByRole($roleId); ?>
+    <?php if($user){ ?>
         <div class="well" data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $roleId; ?>">
           <img class="avatar no-shadow" src="<?php echo $user->getAvatar(); ?>">
           <div class="names">
@@ -48,7 +49,7 @@ foreach($inheritedValues as $permission => $valueRoleIds){
             <span id="<?php echo $permissionAction; ?>-<?php echo $roleId; ?>-label">
               <label for="<?php echo $permissionAction; ?>-<?php echo $roleId; ?>"><?php echo $this->translate($permissionAction); ?></label>
               <?php $checked = in_array($permissionAction, $rolePermissions) ? 'checked="checked"' : ''; ?>
-              <?php $disabled = in_array($permissionAction, $defaultRoleIds[$roleId]) ? 'disabled' : ''; ?>
+              <?php $disabled = (isset($defaultRoleIds[$roleId]) && in_array($permissionAction, $defaultRoleIds[$roleId])) ? 'disabled' : ''; ?>
               <input <?php echo $checked; ?> type="checkbox" <?php if(empty($disabled)) { ?>name="<?php echo $permissionAction; ?>[]"<?php } ?> id="<?php echo $permissionAction; ?>-<?php echo $roleId; ?>" value="<?php echo $roleId; ?>" class="btn btn-checkbox btn-small <?php echo $disabled; ?>">
             </span>
             <?php } ?>
@@ -58,6 +59,7 @@ foreach($inheritedValues as $permission => $valueRoleIds){
           </div>
           <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $roleId; ?>" />
         </div>
+    <?php } ?>
       <?php endforeach; ?>
     <?php } ?>
   </div>  
