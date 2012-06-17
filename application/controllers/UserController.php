@@ -151,6 +151,15 @@ class UserController extends Unplagged_Controller_Action{
       $action['label'] = 'Add to current case';
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
+      
+      
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'authorize', 'base'=>$file));
+      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        $action['link'] = '/permission/edit/id/' . $file->getId();
+        $action['label'] = 'Set permissions';
+        $action['icon'] = 'images/icons/shield.png';
+        $file->actions[] = $action;
+      }
     }
 
     $this->view->paginator = $paginator;

@@ -192,7 +192,6 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
-
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
     if($case){

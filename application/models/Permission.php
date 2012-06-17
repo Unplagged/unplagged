@@ -98,6 +98,7 @@ abstract class Application_Model_Permission implements Zend_Acl_Resource_Interfa
   }
 
   public function removeRole(Application_Model_User_Role $role){
+    $role->removePermission($this);
     $this->roles->removeElement($role);
   }
 
@@ -111,6 +112,7 @@ abstract class Application_Model_Permission implements Zend_Acl_Resource_Interfa
               $roleIds = array_diff($roleIds, array($role->getId()));
               return true;
             }
+           // if($role->getUser())
             $removedRoles[] = $role;
             return false;
           });
@@ -124,6 +126,7 @@ abstract class Application_Model_Permission implements Zend_Acl_Resource_Interfa
 
     // 3) remove roles that belonged to the permission before, but not anymore
     foreach($removedRoles as $role){
+     // echo $role->getUser()->getUsername() . '...';
       $this->removeRole($role);
     }
   }
