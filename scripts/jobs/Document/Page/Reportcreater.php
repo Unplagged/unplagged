@@ -387,7 +387,7 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
                 vertical-align: top;
              }
              .introduction{
-                margin-left: 10px;
+                margin-left: 25px;
              }' .
                 '</style>';
         $size1 = sizeof($col1);
