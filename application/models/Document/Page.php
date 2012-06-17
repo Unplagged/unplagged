@@ -28,6 +28,7 @@
 class Application_Model_Document_Page extends Application_Model_Versionable{
 
   const ICON_CLASS = 'icon-page';
+  const PERMISSION_TYPE = 'document_page';
 
   /**
    * The page number in the origional document.

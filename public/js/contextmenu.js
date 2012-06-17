@@ -15,7 +15,13 @@ $(document).ready(function(){
     '<li class="google-search-for start-search"><a href="#"><i class="icon-search"></i> Google Suche nach <span id="google-search-words"></span></a></li>' +
     '<li class="google-search-for delete-search-words"><a href="#"><i class="icon-remove"></i> Google-Suchwörter löschen</a></li>' +
     '<li class="divider"></li>' +
-    '<li><a href="#" class="create-fragment"><i class="icon-tasks"></i> Create fragment</a></li>' +
+    
+    '<li><a href="#" class="set-candidate-fragment"><i class="icon-bookmark"></i> Set as candidate of fragment</a></li>' +
+    '<li class="hidden"><a class="reset-candidate-fragment"href="#"><i class="icon-remove"></i> <span id="candidate-text">test</span></a></li>' +
+    '<li><a href="#" class="set-source-fragment"><i class="icon-bookmark"></i> Set as source of fragment</a></li>' +
+    '<li class="hidden"><a class="reset-source-fragment" href="#"><i class="icon-remove"></i> <span id="source-text">test</span></a></li>' +
+    '<li class="disabled"><a href="#" class="create-fragment"><i class="icon-tasks"></i> Create fragment</a></li>' +
+    
     '<li class="divider"></li>' +
     '<li><a href="http://www.google.de"><i class="icon-globe"></i> Open Google</a></li>' +
     '<li><a href="#" onclick="window.print();"><i class="icon-print"></i> Print page</a></li>' +

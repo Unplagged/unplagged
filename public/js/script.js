@@ -239,18 +239,84 @@ $(document).ready(function(){
     return false;
   });
   
+  // fragment update for two column view
+  $(".set-candidate-fragment, .set-source-fragment").live('click', function() {
+    var target = '#candidate-text';
+    if($(this).hasClass('set-source-fragment')) {
+      target = '#source-text';
+    }
+    
+    var startLine = '';
+    var endLine = '';
+    
+    if (document.selection) {
+      startLine = document.selection.createRange().parentElement();
+    } else {
+      var selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        startLine = selection.getRangeAt(0).startContainer.parentNode;
+        endLine = selection.getRangeAt(0).endContainer.parentNode;
+      }
+    }
+    var str = '';
+    // if the element is not a list element, get the parent li element
+    if($(startLine)[0].tagName != 'LI') {
+      startLine = $(startLine).parent('li');
+      str = $(startLine).find("span").text();
+    } else {
+      str = $(startLine).text();
+    }
+    if($(endLine)[0].tagName != 'LI') {
+      endLine = $(endLine).parent('li');
+      str = $(endLine).find("span").text();
+    } else {
+      str = $(endLine).text();
+    }
+     
+    if(str.length > 30) {
+      str = str.substr(0, 30) + '...';
+    }
+    
+    var textElement = $(target);
+    textElement.html("'" + str + "'");
+    textElement.closest('li').removeClass('hidden');
+      
+    $(this).parent().addClass('hidden');
+      
+    if($(this).hasClass('set-candidate-fragment')) {
+      $('#fragment-candidate-start-line').val($(startLine).attr('value'));
+      $('#fragment-candidate-end-line').val($(endLine).attr('value'));
+    } else {
+      $('#fragment-source-start-line').val($(startLine).attr('value'));
+      $('#fragment-source-end-line').val($(endLine).attr('value'));
+    }
+    
+    return false;
+  });
+  
+  $(".reset-candidate-fragment, .reset-source-fragment").live('click', function() {
+    var target = '.set-candidate-fragment';
+    if($(this).hasClass('reset-source-fragment')) {
+      target = '.set-source-fragment';
+    }
+    $(target).parent().removeClass('hidden');
+    $(this).parent().addClass('hidden');
+    
+    return false;
+  });
+  
   $("#sourceDocument").change(function(){
     $('#sourceText').html('');
     updateDocumentPages($(this).val(), ['#sourcePageFrom', '#sourcePageTo']);
   });
   
   function updateDocumentPages(documentId, targetElements) {
-     console.log('start changed');
+    console.log('start changed');
     $.post('/document/read', {
       'id': documentId
     }, function(response) {
       if(response.statuscode == 200) {
-            console.log('update changed');
+        console.log('update changed');
 
         // clear the targets
         $.each(targetElements, function(index, targetId) {
@@ -327,7 +393,7 @@ $(document).ready(function(){
   /**
    * The pagination plugin.
    */
-  $(function() {            
+  $(function() {
     $(".pagination a").live("click", function() {
       var href = $(this).attr("href");
       if(href) {
@@ -364,7 +430,10 @@ $(document).ready(function(){
   
   // turns checkboxes in forms into single toggle elements
   $('input[type="checkbox"].btn').each(function(index) {
-    var element = $(this);
+    updateCheckBox($(this));    
+  });
+  
+  function updateCheckBox(element) {
     var classes = element.attr('class');
 
     // get label value and hide the element afterwards
@@ -372,17 +441,14 @@ $(document).ready(function(){
     $('#' + element.attr('id') + '-label').hide();
     $('#' + element.attr('id') + '-element').hide();
     
-    
     // insert the new bootstrap-based element
-    element.parent().parent().append('<a class="' + classes + '" data-toggle="button" data-checkbox="' + element.attr('id') + '">' + label + '</a>');
+    element.parent().parent().prepend('<a class="' + classes + '" data-toggle="button" data-checkbox="' + element.attr('id') + '">' + label + '</a>');
     if(element.is(':checked')){
       $('a[data-checkbox="' + element.attr('id') + '"]').trigger('click').addClass('active');
-      console.log(element);
     }
-    
-  });
+  }
   
-  $('.btn[data-toggle="button"]').click(function(){
+  $('.btn[data-toggle="button"]').live('click', function(){
     var id = $(this).attr('data-checkbox');
     var cb = $('#' + id);
     
@@ -535,7 +601,6 @@ $(document).ready(function(){
   });
       
   function updateAutocompleteSource(sourceId){
-    console.log('update it');
     var source = $('#' + sourceId);
     source.autocomplete('option', 'source', source.attr('data-callback') + '/skip/' + getIdsToSkip(sourceId, true));
   }
@@ -559,9 +624,31 @@ $(document).ready(function(){
       element += '<a href="#" class="btn" data-remove="true" data-for="' + value + '"><i class="icon-remove"></i></a></div>';
       element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" />';
       element += '</div>';      
+    } else if(viewScript == 'permission') {
+      element = '<div class="well" data-source="' + sourceId + '" data-id="' + value + '">';
+      element += '<img class="avatar no-shadow" src="/images/default-avatar.png">';
+      element += '<div class="names">';
+      element += '<span class="username">' + label + '</span>';
+      element += '</div>';
+
+      var permissions = ['create', 'read', 'update', 'delete', 'authorize'];
+      element += '<div class="options">';
+      $.each(permissions, function(index, permission) { 
+        element += '<span id="' + permission + '-' + value + '-label">';
+        element += '<label for="' + permission + '-' + value + '">' + permission + '</label>';
+        element += '<input type="checkbox" name="' + permission + '[]" id="' + permission + '-' + value + '" value="' + value + '" class="btn btn-checkbox btn-small">';
+        element += '</span>';
+      });
+
+      element += '<a href="#" class="btn btn-danger" data-remove="true" data-for="' + value + '"><i class="icon-remove"></i></a></div>';
+      element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" />';
+      element += '</div>';    
     }
 
     $('div[data-wrapper-for=' + sourceId + ']').append(element);
+    $('input[type="checkbox"].btn').each(function(index) {
+      updateCheckBox($(this));
+    });
   }
   
   // Gets the ids of the elements which should not be returned through autocompletion anymore.
@@ -808,5 +895,66 @@ $(document).ready(function(){
       $('#schluessel-label').hide();
     }
   }
+  
+  $('#actions-menu').css('margin-top', '-' + $('#actions-menu').height()/2 + 'px');
+
+  $('#actions-menu.poped-in').live('click', function() {
+    $(this).css('margin-right', '0px');
+    $(this).removeClass('poped-in').addClass('poped-out');
+  });
+  $('#actions-menu.poped-out').live('click', function() {
+    $(this).css('margin-right', '-250px');
+    $(this).removeClass('poped-out').addClass('poped-in');
+  });
+  
+  /**
+   * The pagination for document pages.
+   */
+  $(function() {
+    $(".pager a").live("click", function() {
+      var anchor = $(this);
+      if(anchor.parent().hasClass('previous')) {
+        console.log('previous');
+      } else {
+        console.log('next');
+      }
+      
+      var target = anchor.closest('.src-wrapper');
+      
+      // update also the other side
+      
+      
+      console.log(target);
+    //candidate-page
+    // return false;
+    /*      if(href) {
+        var substr = href.split('/');
+        var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
+
+        window.location.hash = hash;
+      }
+      return false;
+  */  });
+  /*
+    $(window).bind('hashchange', function(){
+      var newHash = window.location.hash.substring(1);
+
+      if (newHash) {
+        var substr = newHash.split('/');
+        var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
+
+        var url = window.location.pathname;
+        if(url.charAt(url.length-1) != '/') {
+          url += '/';
+        }
+        url += hash;
+        $("#main-wrapper").load(url + " .main", function(){
+          $('a.picture').lightBox();
+        });
+      }
+    });
+
+    $(window).trigger('hashchange');*/
+  });
   
 });

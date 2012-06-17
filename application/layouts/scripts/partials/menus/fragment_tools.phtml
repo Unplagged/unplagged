@@ -1,0 +1,28 @@
+<nav id="actions-menu" class="dropdown-menu fixed-nav poped-in">
+  <h5>Actions Menu</h5>
+  <ul class="nav nav-list">
+    <li class="nav-header">Actions</li>
+    <li>
+      <a href="<?php echo "/document_fragment/show/id/" . $this->fragmentId; ?>">
+        <i class="icon-page icon-fam"></i><span><?php echo $this->translate("Show"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document_fragment/edit/id/" . $this->fragmentId; ?>">
+        <i class="icon-pencil icon-fam"></i><span><?php echo $this->translate("Edit"); ?></span>
+      </a>
+    </li>
+    <li>
+      <a href="<?php echo "/document_fragment/delete/id/" . $this->fragmentId; ?>">
+        <i class="icon-delete icon-fam"></i><span><?php echo $this->translate("Remove"); ?></span>
+      </a>
+    </li>
+
+    <li class="nav-header">Links</li>
+    <li>
+      <a href="<?php echo "/document_fragment/changelog/id/" . $this->fragmentId; ?>">
+        <i class="icon-table-relationship icon-fam"></i><span><?php echo $this->translate("Changelog"); ?></span>
+      </a>
+    </li>
+  </ul>
+</nav>

@@ -41,7 +41,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   const TYPE_GLOBAL = 'global';
   const TYPE_CASE = 'case';
   const TYPE_USER = 'user';
-  
+
   /**
    * @Id
    * @GeneratedValue
@@ -74,7 +74,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    *      )
    */
   protected $blacklist;
-  
+
   /**
    * Stores the roles this role is extending.
    * 
@@ -92,13 +92,18 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    * @Column(type="string")
    */
   protected $type;
-  
+
+  /**
+   * @OneToOne(targetEntity="Application_Model_User", mappedBy="role")
+   */
+  protected $user;
+
   public function __construct($type = null){
     $this->inheritedRoles = new \Doctrine\Common\Collections\ArrayCollection();
     $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
-    if($type===null){
+    if($type === null){
       $this->type = self::TYPE_USER;
-    } else {
+    }else{
       $this->type = $type;
     }
   }
@@ -111,28 +116,28 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     if($this->roleId === null){
       $this->roleId = (string) $this->getId();
     }
-    
+
     return $this->roleId;
   }
-  
+
   public function setRoleId($roleId){
-    $this->roleId = $roleId;  
+    $this->roleId = $roleId;
   }
 
   public function getInheritedPermissions(){
     $permissions = array();
-    
+
     $inheritedRoles = $this->getInheritedRoles();
-    
-    if($inheritedRoles->count()>0){
+
+    if($inheritedRoles->count() > 0){
       foreach($this->getInheritedRoles() as $inheritedRole){
-        $permissions = array_merge ($inheritedRole->getPermissions(), $permissions); 
+        $permissions = array_merge($inheritedRole->getPermissions(), $permissions);
       }
     }
-    
+
     return $permissions;
   }
-  
+
   /**
    * Returns all permissions of this Role including the inherited.
    * 
@@ -150,18 +155,18 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    * @return array
    */
   public function getBasicPermissions(){
-    return $this->permissions->toArray(); 
+    return $this->permissions->toArray();
   }
-  
+
   public function addPermission(Application_Model_Permission $permission){
     if(!$this->permissions->contains($permission)){
       $this->permissions->add($permission);
     }
   }
-  
+
   public function removePermission(Application_Model_Permission $permission){
     if($this->permissions->contains($permission)){
-      $this->permissions->removeElement($permission); 
+      $this->permissions->removeElement($permission);
     }
   }
 
@@ -178,5 +183,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   public function getType(){
     return $this->type;
   }
+
 }
+
 ?>

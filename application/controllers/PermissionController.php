@@ -150,11 +150,101 @@ class PermissionController extends Unplagged_Controller_Action{
     $paginator->setCurrentPageNumber($input->page);
 
     $this->view->paginator = $paginator;
-    
+
     $this->setTitle('Roles');
     //var_dump($inheritableRoles);
     Zend_Layout::getMvcInstance()->sidebar = null;
   }
 
+  /**
+   * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
+   * @param String from If defined it selects only users of a specific rank.
+   */
+  public function autocompleteAction(){
+    $input = new Zend_Filter_Input(array('term'=>'Alnum', 'case'=>'Digits', 'skip'=>'StringTrim'), null, $this->_getAllParams());
+
+    if(!empty($input->skip)){
+      $input->skip = ' AND r.id NOT IN (' . $input->skip . ')';
+    }
+    $caseCondition = '';
+    if(!empty($input->case)){
+      $caseCondition = ' :caseId MEMBER OF u.cases AND';
+    }
+
+    // skip has to be passed in directly and can't be set as a parameter due to a doctrine bug
+    $query = $this->_em->createQuery("SELECT r.id value, u.username label FROM Application_Model_User_Role r JOIN r.user u WHERE " . $caseCondition . " u.username LIKE :term" . $input->skip);
+    $query->setParameter('term', '%' . $input->term . '%');
+    if(!empty($input->case)){
+      $query->setParameter('caseId', $input->case);
+    }
+    $query->setMaxResults(5);
+
+    $result = $query->getArrayResult();
+    $this->_helper->json($result);
+  }
+
+  public function editAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+    $base = $this->_em->getRepository('Application_Model_Base')->findOneById($input->id);
+
+    if($base){
+      $this->setTitle('Manage permissions');
+      $this->view->subtitle = $base->getDirectName();
+        if(!Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission($base->getPermissionType(), 'authorize', $input->id))){
+          $this->redirectToLastPage(true);
+        }
+
+      $modifyForm = new Application_Form_Permission_Modify();
+      $modifyForm->setAction("/permission/edit/id/" . $input->id);
+
+      $permissions = array();
+      foreach($base->getPermissions() as $permission){
+        $permissions[$permission->getAction()] = $permission->getRoleIds();
+      }
+      $modifyForm->getElement("permissions")->setValue($permissions);
+
+
+      if($this->_request->isPost()){
+        $result = $this->handleModifyData($modifyForm, $base);
+
+        if($result){
+          // notification
+          // $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          // Unplagged_Helper::notify("case_updated", $result, $user);
+
+          $this->_helper->FlashMessenger(array('success'=>'The permissions were updated successfully.'));
+          $this->redirectToLastPage();
+        }
+      }
+
+      $this->view->modifyForm = $modifyForm;
+    }else{
+      $this->_helper->FlashMessenger(array('error'=>'The specified element does not exist.'));
+      $this->redirectToLastPage();
+    }
+  }
+
+  private function handleModifyData(Application_Form_Permission_Modify $modifyForm, Application_Model_Base $base = null){
+    $formData = $this->_request->getPost();
+
+    if($modifyForm->isValid($formData)){
+      foreach($base->getPermissions() as $permission){
+        if(isset($formData[$permission->getAction()])){
+          $permission->setRoles($formData[$permission->getAction()]);
+          $this->_em->persist($permission);
+        }
+      }
+
+      // write back to persistence manager and flush it
+      $this->_em->persist($base);
+      $this->_em->flush();
+
+      return $base;
+    }
+
+    return false;
+  }
+
 }
+
 ?>

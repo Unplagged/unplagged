@@ -30,6 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Application_Model_Case extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-case';
+  const PERMISSION_TYPE = 'case';
 
   /**
    * The "real" name of the case, under which it will get published later on.
@@ -53,15 +54,6 @@ class Application_Model_Case extends Application_Model_Base{
    * @var string  
    */
   private $state;
-
-  /**
-   * An abbreviation for the case.
-   *
-   * @var string
-   *
-   * @Column(type="string", length=4) 
-   */
-  private $abbreviation;
 
   /**
    * The date when the document was updated the last time.
@@ -102,6 +94,10 @@ class Application_Model_Case extends Application_Model_Base{
 
   /**
    * @ManyToMany(targetEntity="Application_Model_User_InheritableRole", cascade={"persist", "remove"}) 
+   * @JoinTable(name="case_has_defaultroles",
+   *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
+   *      inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName="id")}
+   *      )
    */
   private $defaultRoles;
 
@@ -122,7 +118,7 @@ class Application_Model_Case extends Application_Model_Base{
    */
   private $barcodeData;
 
-  public function __construct($name = null, $alias = null, $abbreviation = null){
+  public function __construct($name = null, $alias = null){
     $this->documents = new ArrayCollection();
     $this->files = new ArrayCollection();
     $this->collaborators = new ArrayCollection();
@@ -130,7 +126,6 @@ class Application_Model_Case extends Application_Model_Base{
 
     $this->name = $name;
     $this->alias = $alias;
-    $this->abbreviation = $abbreviation;
 
     $this->reports = new ArrayCollection();
     $this->documents = new ArrayCollection();
@@ -226,20 +221,12 @@ class Application_Model_Case extends Application_Model_Base{
     return $result;
   }
 
-  public function getAbbreviation(){
-    return $this->abbreviation;
-  }
-
   public function setName($name){
     $this->name = $name;
   }
 
   public function setAlias($alias){
     $this->alias = $alias;
-  }
-
-  public function setAbbreviation($abbreviation){
-    $this->abbreviation = $abbreviation;
   }
 
   public function getRoles(){

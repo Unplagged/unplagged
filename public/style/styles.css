@@ -584,6 +584,7 @@ nav#right-nav {
   width: 36.5625%; /* 351px/960px */
   max-width: 450px;
 }
+
 nav#right-nav .barcode {
   display: block;
   margin-top: 10px;
@@ -622,6 +623,51 @@ nav#right-nav ul li a .badge {
 
 nav#right-nav ul li a .badge-light{
   background-color: #888C95;
+}
+
+nav#actions-menu {
+  position: fixed;
+  padding: 0 0 0 25px;
+  right: 0;
+  top: 50%;
+  left: auto;
+  display: block;
+  width: 250px;
+  margin-right: -250px;
+  font-size: 12px;
+  background-color: #40C0E9;
+  cursor: pointer;
+
+
+}
+nav#actions-menu h5 {
+  position: absolute;
+  margin-left: -21px;
+  margin-top: 100%;
+  padding-left: 5px;
+  transform: rotate(-90deg);
+  transform-origin:0 0;
+  -ms-transform: rotate(-90deg); /* IE 9 */
+  -ms-transform-origin:0 0; /* IE 9 */
+  -webkit-transform: rotate(-90deg); /* Safari and Chrome */
+  -webkit-transform-origin:0 0; /* Safari and Chrome */
+  -moz-transform: rotate(-90deg); /* Firefox */
+  -moz-transform-origin:0 0; /* Firefox */
+  -o-transform: rotate(-90deg); /* Opera */
+  -o-transform-origin:0 0; /* Opera */
+}
+nav#actions-menu ul {
+  background: white;
+  margin: 0;
+  clear: left;
+}
+nav#actions-menu ul li a {
+  display: block;
+  border-bottom: 1px #efefef solid;
+  padding: 4px 6px;
+}
+nav#actions-menu img {
+  margin-right: 5px;
 }
 
 .default-container {
@@ -918,15 +964,23 @@ dl.zend_form dd dt {
   overflow:auto;
   font-family:"Courier New",Courier,mono;
   margin:0;
-  padding:0 3.1em;
+  padding:0 2.8em;
 }
 
 .src-wrapper li {
   background: white;
   font-size:small;
   padding-left: 3px;
+  list-style-type: none;
 }
-
+.src-wrapper li:before { 
+  content: attr(value);
+  margin-left: -35px;
+  margin-right: 16px;
+  text-align: right;
+  width: 22px;
+  display: inline-block;
+}
 .document-page .stopword{
   color:#C9C9C9;
 }
@@ -1054,7 +1108,8 @@ dl.zend_form dd dt {
 /* icons */
 .btn i,
 .activity i,
-.accordion i{ 
+.accordion i,
+#actions-menu i{ 
   background-repeat: no-repeat;
   margin-right: 5px;
 }
@@ -1142,6 +1197,46 @@ dl.zend_form dd dt {
 
 .icon-rate {
   background-image: url(/images/icons/star.png);
+}
+
+.icon-page {
+  background-image: url(/images/icons/page.png);
+}
+
+.icon-page-add {
+  background-image: url(/images/icons/page_add.png);
+}
+
+.icon-eye {
+  background-image: url(/images/icons/eye.png);
+}
+
+.icon-delete {
+  background-image: url(/images/icons/delete.png);
+}
+.icon-pencil {
+  background-image: url(/images/icons/pencil.png);
+}
+.icon-text-padding-right {
+  background-image: url(/images/icons/text_padding_right.png); 
+}
+.icon-zoom {
+  background-image: url(/images/icons/zoom.png);
+}
+.icon-table-row-delete {
+  background-image: url(/images/icons/table_row_delete.png);
+}
+.icon-textfield-rename {
+  background-image: url(/images/icons/textfield_rename.png);
+}
+.icon-report-magnify {
+  background-image: url(/images/icons/report_magnify.png);
+}
+.icon-table-row-delete {
+  background-image: url(/images/icons/table_row_delete.png);
+}
+.icon-table-relationship {
+  background-image: url(/images/icons/table_relationship.png);
 }
 
 #activity-stream {
@@ -1790,99 +1885,99 @@ ins {
 ------------------------------------------------------------------- */
 
 .plupload_button {
-	display: -moz-inline-box; /* FF < 3*/
-	display: inline-block;
-	font: normal 12px sans-serif;
-	text-decoration: none;
-    color: #42454a;
-    border: 1px solid #bababa;
-    padding: 2px 8px 3px 20px;
-	margin-right: 4px;
-    background: #f3f3f3 url('../images/buttons.png') no-repeat 0 center;
-	outline: 0;
+  display: -moz-inline-box; /* FF < 3*/
+  display: inline-block;
+  font: normal 12px sans-serif;
+  text-decoration: none;
+  color: #42454a;
+  border: 1px solid #bababa;
+  padding: 2px 8px 3px 20px;
+  margin-right: 4px;
+  background: #f3f3f3 url('../images/buttons.png') no-repeat 0 center;
+  outline: 0;
 
-    /* Optional rounded corners for browsers that support it */
-    -moz-border-radius: 3px;
-    -khtml-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+  /* Optional rounded corners for browsers that support it */
+  -moz-border-radius: 3px;
+  -khtml-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
 }
 
 .plupload_button:hover {
-	color: #000;
-	text-decoration: none;
+  color: #000;
+  text-decoration: none;
 }
 
 .plupload_disabled, a.plupload_disabled:hover {
-    color: #737373;
-    border-color: #c5c5c5;
-    background: #ededed url('../images/buttons-disabled.png') no-repeat 0 center;
-	cursor: default;
+  color: #737373;
+  border-color: #c5c5c5;
+  background: #ededed url('../images/buttons-disabled.png') no-repeat 0 center;
+  cursor: default;
 }
 
 .plupload_add {
-	background-position: -181px center;
+  background-position: -181px center;
 }
 
 .plupload_wrapper {
-	font: normal 11px Verdana,sans-serif;
-	width: 100%;
+  font: normal 11px Verdana,sans-serif;
+  width: 100%;
 }
 
 .plupload_container {
-	padding-bottom: 8px;
-	background: url('../images/transp50.png');
-	/*-moz-border-radius: 5px;*/
+  padding-bottom: 8px;
+  background: url('../images/transp50.png');
+  /*-moz-border-radius: 5px;*/
 }
 
 .plupload_container input {
-	border: 1px solid #DDD;
-	font: normal 11px Verdana,sans-serif;
-	width: 98%;
+  border: 1px solid #DDD;
+  font: normal 11px Verdana,sans-serif;
+  width: 98%;
 }
 
 .plupload_header {background: #484C51;}
 .plupload_header_content {
-	min-height: 26px;
-	padding-left: 10px;
-	color: #FFF;
+  min-height: 26px;
+  padding-left: 10px;
+  color: #FFF;
 }
 .plupload_header_title {
   display: none; /* hide because we use our own title, not the one from the plugin */
-	font: normal 18px sans-serif;
-	padding: 6px 0 3px;
+  font: normal 18px sans-serif;
+  padding: 6px 0 3px;
 }
 .plupload_header_text {
-	font: normal 12px sans-serif;
+  font: normal 12px sans-serif;
   padding: 6px 0 3px;
 }
 
 .plupload_filelist {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .plupload_scroll .plupload_filelist {
-	height: 185px;
-	background: #F5F5F5;
-	overflow-y: scroll;
+  height: 185px;
+  background: #F5F5F5;
+  overflow-y: scroll;
 }
 
 .plupload_filelist li {
-	padding: 10px 8px;
-	background: #F5F5F5 url('../images/backgrounds.gif') repeat-x 0 -156px;
-	border-bottom: 1px solid #DDD;
+  padding: 10px 8px;
+  background: #F5F5F5 url('../images/backgrounds.gif') repeat-x 0 -156px;
+  border-bottom: 1px solid #DDD;
 }
 
 .plupload_filelist_header, .plupload_filelist_footer {
-	background: #DFDFDF;
-	padding: 8px 8px;
-	color: #42454A;
+  background: #DFDFDF;
+  padding: 8px 8px;
+  color: #42454A;
 }
 .plupload_filelist_header {	
-	border-top: 1px solid #EEE;
-	border-bottom: 1px solid #CDCDCD;
+  border-top: 1px solid #EEE;
+  border-bottom: 1px solid #CDCDCD;
 }
 
 .plupload_filelist_footer {border-top: 1px solid #FFF; height: 22px; line-height: 20px; vertical-align: middle;}
@@ -1890,78 +1985,78 @@ ins {
 .plupload_file_status {color: #777;}
 .plupload_file_status span {color: #42454A;}
 .plupload_file_size, .plupload_file_status, .plupload_progress {
-	float: right;
-	width: 80px;
+  float: right;
+  width: 80px;
 }
 .plupload_file_size, .plupload_file_status, .plupload_file_action {text-align: right;}
 
 .plupload_filelist .plupload_file_name {width: 205px}
 
 .plupload_file_action {
-	float: right;
-	width: 16px;
-	height: 16px;
-	margin-left: 15px;
+  float: right;
+  width: 16px;
+  height: 16px;
+  margin-left: 15px;
 }
 
 .plupload_file_action * {
-	display: none;
-	width: 16px;
-	height: 16px;
+  display: none;
+  width: 16px;
+  height: 16px;
 }
 
 li.plupload_uploading {background: #ECF3DC url('../images/backgrounds.gif') repeat-x 0 -238px;}
 li.plupload_done {color:#AAA}
 
 li.plupload_delete a {
-	background: url('../images/delete.gif');
+  background: url('../images/delete.gif');
 }
 
 li.plupload_failed a {
-	background: url('../images/error.gif');
-	cursor: default;
+  background: url('../images/error.gif');
+  cursor: default;
 }
 
 li.plupload_done a {
-	background: url('../images/done.gif');
-	cursor: default;
+  background: url('../images/done.gif');
+  cursor: default;
 }
 
 .plupload_progress, .plupload_upload_status {
-	display: none;
+  display: none;
 }
 
 .plupload_progress_container {
-	margin-top: 3px;
-	border: 1px solid #CCC;
-	background: #FFF;
-	padding: 1px;
+  margin-top: 3px;
+  border: 1px solid #CCC;
+  background: #FFF;
+  padding: 1px;
 }
 .plupload_progress_bar {
-	width: 0px;
-	height: 7px;
-	background: #CDEB8B;
+  width: 0px;
+  height: 7px;
+  background: #CDEB8B;
 }
 
 .plupload_scroll .plupload_filelist_header .plupload_file_action, .plupload_scroll .plupload_filelist_footer .plupload_file_action {
-	margin-right: 17px;
+  margin-right: 17px;
 }
 
 /* Floats */
 
 .plupload_clear,.plupload_clearer {clear: both;}
 .plupload_clearer, .plupload_progress_bar {
-	display: block;
-	font-size: 0;
-	line-height: 0;	
+  display: block;
+  font-size: 0;
+  line-height: 0;	
 }
 
 li.plupload_droptext {
-	background: transparent;
-	text-align: center;
-	vertical-align: middle;
-	border: 0;
-	line-height: 165px;
+  background: transparent;
+  text-align: center;
+  vertical-align: middle;
+  border: 0;
+  line-height: 165px;
 }
 
 
@@ -1982,20 +2077,30 @@ li.plupload_droptext {
 }
 
 .btn.btn-checkbox {
-  margin-right: 20px;
+  margin-right: 5px;
 }
 
-.users-wrapper {
+.users-wrapper,
+.collaborators-wrapper,
+.permissions-wrapper{
   width: 90%;
   max-width: 462px;
 }
+.permissions-wrapper i,
+.collaborators-wrapper i,
 .users-wrapper i {
   margin-right: 0;
+}
+.collaborators-wrapper .options,
+.permissions-wrapper .options {
+  padding: 6px 0 0 70px;
 }
 .users-wrapper .options {
   float: right;
   padding-top: 6px;
 }
+.collaborators-wrapper .well,
+.permissions-wrapper .well,
 .users-wrapper .well {
   padding: 5px;
   clear: both;
@@ -2003,19 +2108,29 @@ li.plupload_droptext {
   margin-bottom: 4px;
   border: 1px transparent solid;
 }
-
+.collaborators-wrapper .well,
+.permissions-wrapper .well {
+  height: 56px;
+}
+.collaborators-wrapper .well img,
+.permissions-wrapper .well img,
 .users-wrapper .well img {
   float: left;
 }
-
+.collaborators-wrapper .well .names,
+.permissions-wrapper .well .names {
+  padding: 3px 0 0 70px;
+}
 .users-wrapper .well .names {
   padding: 3px 0 0 5px;
   float: left;
 }
-
+.collaborators-wrapper .well span,
+.permissions-wrapper .well span,
 .users-wrapper .well span {
   display: block;
 }
+
 .users-wrapper .well span.realname {
   font-style: italic;
 }
@@ -2080,6 +2195,10 @@ li.plupload_droptext {
   .user-box {
     position: absolute;
     bottom: 0;
+  }
+
+  .float-right {
+    float: right;
   }
 }
 

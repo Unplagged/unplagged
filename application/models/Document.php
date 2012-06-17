@@ -31,6 +31,7 @@
 class Application_Model_Document extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-document';
+  const PERMISSION_TYPE = 'document';
 
   /**
    * The title of the document.

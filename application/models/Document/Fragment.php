@@ -31,53 +31,56 @@ use DoctrineExtensions\Versionable\Versionable;
  * @Table(name="document_fragments")
  * @HasLifeCycleCallbacks
  */
-class Application_Model_Document_Fragment extends Application_Model_Versionable {
-    const ICON_CLASS = 'icon-fragment';
+class Application_Model_Document_Fragment extends Application_Model_Versionable{
 
-    /**
-     * The note.
-     * @var string The note.
-     * 
-     * @Column(type="text")
-     */
-    private $note;
+  const ICON_CLASS = 'icon-fragment';
+  const PERMISSION_TYPE = 'document_fragment';
+  
+  /**
+   * The note.
+   * @var string The note.
+   * 
+   * @Column(type="text")
+   */
+  private $note;
 
-    /**
-     * The lines in the document.
-     * 
-     * @ManyToOne(targetEntity="Application_Model_Document_Fragment_Type")
-     * @JoinColumn(name="fragment_type_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $type;
+  /**
+   * The lines in the document.
+   * 
+   * @ManyToOne(targetEntity="Application_Model_Document_Fragment_Type")
+   * @JoinColumn(name="fragment_type_id", referencedColumnName="id", onDelete="CASCADE")
+   */
+  private $type;
 
-    /**
-     * The plag partial of the fragment.
-     *
-     * @OneToOne(targetEntity="Application_Model_Document_Fragment_Partial", cascade={"persist", "remove"})
-     * @JoinColumn(name="fragment_partial_plag_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $plag;
+  /**
+   * The plag partial of the fragment.
+   *
+   * @OneToOne(targetEntity="Application_Model_Document_Fragment_Partial", cascade={"persist", "remove"})
+   * @JoinColumn(name="fragment_partial_plag_id", referencedColumnName="id", onDelete="CASCADE")
+   */
+  private $plag;
 
-    /**
-     * The source partial of the fragment.
-     *
-     * @OneToOne(targetEntity="Application_Model_Document_Fragment_Partial", cascade={"persist", "remove"})
-     * @JoinColumn(name="fragment_partial_source_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $source;
+  /**
+   * The source partial of the fragment.
+   *
+   * @OneToOne(targetEntity="Application_Model_Document_Fragment_Partial", cascade={"persist", "remove"})
+   * @JoinColumn(name="fragment_partial_source_id", referencedColumnName="id", onDelete="CASCADE")
+   */
+  private $source;
 
-    /**
-     * @ManyToOne(targetEntity="Application_Model_Document", inversedBy="fragments")
-     * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $document;
-    protected $conversationTypes = array('comment', 'rating');
+  /**
+   * @ManyToOne(targetEntity="Application_Model_Document", inversedBy="fragments")
+   * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
+   */
+  private $document;
+  
+  protected $conversationTypes = array('comment', 'rating');
 
-    public function __construct(array $data = null) {
-        parent::__construct();
-        if (isset($data["plag"])) {
-            $this->plag = $data["plag"];
-        }
+  public function __construct(array $data = null){
+    parent::__construct();
+    if(isset($data["plag"])){
+      $this->plag = $data["plag"];
+    }
 
         if (isset($data["source"])) {
             $this->source = $data["source"];
@@ -121,11 +124,11 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable 
         return $this->type;
     }
 
-    public function getTitle() {
-        $abbreviation = $this->getPlag()->getLineFrom()->getPage()->getDocument()->getCase()->getAbbreviation();
+  public function getTitle(){
+    $alias = $this->getPlag()->getLineFrom()->getPage()->getDocument()->getCase()->getAlias();
 
-        return 'Fragment ' . $abbreviation . ' ' . $this->getPlag()->getLineFrom()->getPage()->getPageNumber();
-    }
+    return 'Fragment ' . $alias . ' ' . $this->getPlag()->getLineFrom()->getPage()->getPageNumber();
+  }
 
     public function getNote() {
         return $this->note;

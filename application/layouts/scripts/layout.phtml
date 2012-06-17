@@ -1,5 +1,6 @@
 <?php
 $sidebar = $this->layout()->sidebar;
+$menu = $this->layout()->menu;
 
 $defaultNamespace = new Zend_Session_Namespace('Default');
 $me = Zend_Registry::getInstance()->user;
@@ -30,22 +31,27 @@ $cases = $query->getArrayResult();
   <?php
   if(!empty($sidebar)){
     switch($sidebar){
-      case "fragment-tools":
-        echo $this->partial('partials/sidebars/fragment_tools.phtml', array("fragmentId" => $this->layout()->versionableId));
-        break;
-      case "page-tools":
-        echo $this->partial('partials/sidebars/page_tools.phtml', array("pageId" => $this->layout()->versionableId));
-        break;
-      case "document-tools":
-        echo $this->partial('partials/sidebars/document_tools.phtml', array("documentId" => $this->layout()->versionableId));
-        break;
       default:
         echo $this->partial('partials/sidebars/default.phtml', array("cases" => $this->layout()->cases));
     }
   }
   ?>
 </div>
-
+ <?php
+  if(!empty($menu)){
+    switch($menu){
+      case "fragment-tools":
+        echo $this->partial('partials/menus/fragment_tools.phtml', array("fragmentId" => $this->layout()->versionableId));
+        break;
+      case "page-tools":
+        echo $this->partial('partials/menus/page_tools.phtml', array("pageId" => $this->layout()->versionableId));
+        break;
+      case "document-tools":
+        echo $this->partial('partials/menus/document_tools.phtml', array("documentId" => $this->layout()->versionableId));
+        break;
+      }
+  }
+  ?>
 <?php echo $this->partial('partials/footer.phtml'); ?>
 </body>
 </html>

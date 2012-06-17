@@ -29,6 +29,7 @@
 class Application_Model_Report extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-report';
+  const PERMISSION_TYPE = 'report';
 
   /**
    * The current state of the report.

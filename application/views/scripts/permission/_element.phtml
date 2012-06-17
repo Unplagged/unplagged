@@ -1,0 +1,50 @@
+<?php
+// some init stuff
+$errors = $this->element->getMessages();
+$disabled = $this->disabled || false;
+$permissions = array('create', 'read', 'update', 'delete', 'authorize');
+
+$roleIds = array();
+foreach($this->element->getValue() as $permission => $valueRoleIds){
+  foreach($valueRoleIds as $roleId) {
+    $roleIds[$roleId][] = $permission;
+  }
+}
+?>
+
+<?php echo $this->formLabel($this->element->getName(), $this->element->getLabel()) ?>
+<dd>
+  <input id="<?php echo $this->element->getName() ?>" type="text" data-view-script="permission" data-callback="<?php echo $this->callback; ?>" />
+  <?php
+  if(!empty($errors)){
+    echo $this->formErrors($errors);
+  }
+
+  if($this->element->getDescription()){
+    echo '<div class="hint">' . $this->element->getDescription() . '</div>';
+  }
+  ?>
+  <div class="permissions-wrapper" data-wrapper-for="<?php echo $this->element->getName(); ?>">
+    <?php if($this->element->getValue()){ ?>
+      <?php foreach($roleIds as $roleId => $rolePermissions): ?>
+        <?php $user = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneByRole($roleId); ?>
+        <div class="well" data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $user->getId(); ?>">
+          <img class="avatar no-shadow" src="<?php echo $user->getAvatar(); ?>">
+          <div class="names">
+            <span class="username"><?php echo $user->getUsername(); ?></span>
+          </div>
+          <div class="options">
+            <?php foreach($permissions as $permission) { ?>
+            <span id="<?php echo $permission; ?>-<?php echo $roleId; ?>-label">
+              <label for="<?php echo $permission; ?>-<?php echo $roleId; ?>"><?php echo $permission; ?></label>
+              <input <?php if(in_array($permission, $rolePermissions)) { echo 'checked="checked" '; } ?> type="checkbox" name="<?php echo $permission; ?>[]" id="<?php echo $permission; ?>-<?php echo $roleId; ?>" value="<?php echo $roleId; ?>" class="btn btn-checkbox btn-small">
+            </span>
+            <?php } ?>
+            <a href="#" class="btn btn-danger" data-remove="true" data-for="<?php echo $roleId; ?>"><i class="icon-remove"></i></a>
+          </div>
+          <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $roleId; ?>" />
+        </div>
+      <?php endforeach; ?>
+    <?php } ?>
+  </div>  
+</dd>

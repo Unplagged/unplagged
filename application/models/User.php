@@ -28,6 +28,7 @@
 class Application_Model_User extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-user';
+  const PERMISSION_TYPE = 'user';
   
   /**
    * @var string The date when this user got last modified.
@@ -89,7 +90,7 @@ class Application_Model_User extends Application_Model_Base{
   /**
    * @var Application_Model_User_Role 
    * 
-   * @OneToOne(targetEntity="Application_Model_User_Role", cascade={"persist", "remove"})
+   * @OneToOne(targetEntity="Application_Model_User_Role", inversedBy="user", cascade={"persist", "remove"})
    */
   private $role;
 
@@ -124,6 +125,13 @@ class Application_Model_User extends Application_Model_Base{
    * @ManyToOne(targetEntity="Application_Model_Setting") 
    */
   private $settings;
+  
+   /**
+   * All the cases, the user is taking part in.
+   * 
+   * @ManyToMany(targetEntity="Application_Model_Case", mappedBy="collaborators")
+   */
+  private $cases;
 
   public function __construct($data = array()){
     if(isset($data['username'])){
@@ -155,6 +163,7 @@ class Application_Model_User extends Application_Model_Base{
     }
 
     $this->files = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->cases = new \Doctrine\Common\Collections\ArrayCollection();
 
     if(isset($data['role']) && $data['role'] instanceof Application_Model_User_Role){
       $this->role = $data['role'];
@@ -291,5 +300,9 @@ class Application_Model_User extends Application_Model_Base{
 
   public function getSettings(){
     return $this->settings;  
+  }
+  
+  public function hasPermission(Application_Model_Permission $permission) {
+    return true;
   }
 }

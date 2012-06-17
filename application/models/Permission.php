@@ -41,24 +41,38 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
   private $id;
 
   /**
-   * @Column(type="string", length=255, unique=true)
+   * @Column(type="string", length=255)
    */
   private $name;
 
   /**
    * @Column(type="string", length=255, nullable=true)
    */
-  private $type = '';
-  
-  public function __construct($name, $type=''){
+  private $action = '';
+
+  /**
+   * @ManyToOne(targetEntity="Application_Model_Base")
+   * @JoinColumn(name="base_id", referencedColumnName="id", onDelete="CASCADE")
+   */
+  private $base;
+
+  /**
+   * @var string The base element permissions.
+   * 
+   * @ManyToMany(targetEntity="Application_Model_User_Role", mappedBy="permissions", cascade={"persist"})
+   */
+  private $roles;
+
+  public function __construct($name, $type = ''){
 
     if(is_string($name) && trim($name) !== ''){
       $this->name = $name;
     }else{
       throw new InvalidArgumentException('The argument $name must be a string');
     }
-    
-    $this->type = $type;
+
+    $this->action = $type;
+    $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
   }
 
   public function getName(){
@@ -66,12 +80,66 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
   }
 
   public function getType(){
-    return $this->type;  
+    return $this->type;
   }
-  
+
   public function getResourceId(){
-    return $this->name;  
+    return $this->name;
+  }
+
+  public function getAction(){
+    return $this->action;
   }
   
+    public function getRoleIds(){
+    $roleIds = array();
+    foreach($this->roles as $role){
+      $roleIds[] = $role->getId();
+    }
+    return $roleIds;
+  }
+
+  public function addRole(Application_Model_User_Role $role){
+    $role->addPermission($this);
+    $this->roles->add($role);
+    
+  }
+
+  public function removeRole(Application_Model_User_Role $role){
+    $this->roles->removeElement($role);
+  }
+
+  public function setRoles($roleIds = array()){
+    $removedRoles = array();
+
+    // 1) search all roles that already exist by their id
+    if(!empty($this->roles)){
+      $this->roles->filter(function($role) use (&$roleIds, &$removedRoles){
+            if(in_array($role->getId(), $roleIds)){
+              $roleIds = array_diff($roleIds, array($role->getId()));
+              return true;
+            }
+            $removedRoles[] = $role;
+            return false;
+          });
+    }
+
+    // 2) add new roles that don't exist yet
+    foreach($roleIds as $roleId){
+      $role = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User_Role')->findOneById($roleId);
+      $this->addRole($role);
+    }
+
+    // 3) remove roles that belonged to the permission before, but not anymore
+    foreach($removedRoles as $role){
+      $this->removeRole($role);
+    }
+  }
+
+  public function clearRoles(){
+    $this->roles->clear();
+  }
+
 }
+
 ?>
