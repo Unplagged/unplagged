@@ -59,7 +59,7 @@ class PermissionController extends Unplagged_Controller_Action{
 
   private function initPermissionData($permissions, $rolePermissions){
     $outputPermissions = array();
-    
+
     foreach($permissions as $possiblePermission){
       if($possiblePermission->getBase() === Null){
         $permissionName = $possiblePermission->getAction();
@@ -112,7 +112,7 @@ class PermissionController extends Unplagged_Controller_Action{
         }
       }
     }
-    
+
     return $outputPermissions;
   }
 
@@ -226,11 +226,13 @@ class PermissionController extends Unplagged_Controller_Action{
         foreach($permissionActions as $permissionAction){
           foreach($case->getCollaborators() as $collaborator){
             $accessAllPermission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$base->getPermissionType(), 'action'=>$permissionAction, 'base'=>null));
-            if($collaborator->getRole()->hasPermission($accessAllPermission)){
-              if(!in_array($collaborator->getRole()->getId(), $permissions[$permission->getAction()])){
-                $permissions[$permissionAction][] = $collaborator->getRole()->getId();
+            if($accessAllPermission){
+              if($collaborator->getRole()->hasPermission($accessAllPermission)){
+                if(!in_array($collaborator->getRole()->getId(), $permissions[$permission->getAction()])){
+                  $permissions[$permissionAction][] = $collaborator->getRole()->getId();
+                }
+                $inheritedPermissions[$permissionAction][] = $collaborator->getRole()->getId();
               }
-              $inheritedPermissions[$permissionAction][] = $collaborator->getRole()->getId();
             }
           }
         }
@@ -282,4 +284,5 @@ class PermissionController extends Unplagged_Controller_Action{
   }
 
 }
+
 ?>
