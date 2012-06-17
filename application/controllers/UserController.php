@@ -89,22 +89,27 @@ class UserController extends Unplagged_Controller_Action{
     $data['email'] = $formData['email'];
     $data['verificationHash'] = Unplagged_Helper::generateRandomHash();
     $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
-    
-    $roleTemplate = $this->_em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'user', 'type'=>'global'));
+
+    // @todo: change to global roleId user, when implemented
+    $roleTemplate = $this->_em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'guest', 'type'=>'global'));
     $role = clone $roleTemplate;
     $role->setId(null);
     $role->setRoleId(null);
     $role->setType('user');
     $this->_em->persist($role);
-    
     $data['role'] = $role;
-    
+
     $user = new Application_Model_User($data);
 
     // write back to persistence manager and flush it
     $this->_em->persist($user);
     $this->_em->flush();
-
+    
+    $this->_em->detach($role);
+    
+    $role = $this->_em->getRepository('Application_Model_User_Role')->findOneById($role->getId());
+    $adminRole = $this->_em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'admin', 'type'=>'global'));
+    $role->addInheritedRole($adminRole);
     $role->setRoleId($user->getId());
     $this->_em->persist($role);
     $this->_em->flush();
