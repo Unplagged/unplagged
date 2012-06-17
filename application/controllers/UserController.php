@@ -89,16 +89,24 @@ class UserController extends Unplagged_Controller_Action{
     $data['email'] = $formData['email'];
     $data['verificationHash'] = Unplagged_Helper::generateRandomHash();
     $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
+    
+    $roleTemplate = $this->_em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'user', 'type'=>'global'));
+    $role = clone $roleTemplate;
+    $role->setId(null);
+    $role->setRoleId(null);
+    $role->setType('user');
+    $this->_em->persist($role);
+    
+    $data['role'] = $role;
+    
     $user = new Application_Model_User($data);
-
-    //set all permissions as allowed for now
-    $allPermissions = $this->_em->getRepository('Application_Model_Permission')->findAll();
-    foreach($allPermissions as $permission){
-      $user->getRole()->addPermission($permission);
-    }
 
     // write back to persistence manager and flush it
     $this->_em->persist($user);
+    $this->_em->flush();
+
+    $role->setRoleId($user->getId());
+    $this->_em->persist($role);
     $this->_em->flush();
 
     return $user;
@@ -330,7 +338,7 @@ class UserController extends Unplagged_Controller_Action{
     }
 
     $user->setCurrentCase($case);
-    
+
     //only persist the current case if we have no guest
     if($user->getUsername() !== 'guest'){
       $this->_em->persist($user);
