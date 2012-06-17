@@ -1,21 +1,39 @@
 <?php $this->headTitle($this->title); ?>
 <h3><?php echo $this->subtitle; ?> <small>Fragment</small></h3>
 
-<div class="document-page diff clearfix show-contextmenu">
-  <div id="candidate-page" class="src-wrapper">
-    <?php echo $this->pageContent; ?>
+<p class="pagination-right switch-two-columns">
+  <a href="/document_page/show/id/<?php echo $this->page->getId(); ?>" class="btn"><i class="icon-ok-circle"></i>Hide to two column view for fragment creation</a>
+</p>
 
+<div class="diff clearfix">
+  <div id="candidate-page" class="src-wrapper">
+    <div class="document-page show-contextmenu">
+      <?php echo $this->pageContent; ?>
+    </div>
     <?php echo $this->partial('partials/next-prev-paginator.phtml', array('prevLink'=>$this->prevPageLink, 'nextLink'=>$this->nextPageLink)); ?>
   </div>
 
-  <select name="source-document">
-    <option>test</option>
-  </select>
   <div id="source-page" class="src-wrapper">
     <?php if(isset($this->source)): ?>
-      <?php echo $this->sourceContent; ?>
+      <div class="document-page show-contextmenu">
+        <?php echo $this->sourceContent; ?>
+      </div>
       <?php echo $this->partial('partials/next-prev-paginator.phtml', array('prevLink'=>$this->prevSourcePageLink, 'nextLink'=>$this->nextSourcePageLink)); ?>
     <?php endif; ?>
+      <form method="post" action="/document_page/fragment/id/<?php echo $this->page->getId(); ?>" id="source-document-select" class="form-horizontal">
+        <div class="control-group">
+        <label for="source-document" class="control-label">Source document:</label>
+        <div class="controls">
+        <select id="source-document" name="sourceDocument">
+          <option value="">Please choose</option>
+          <?php foreach($this->documents as $document): ?>
+          <?php $selected = ($this->source && $document->getId() == $this->source->getDocument()->getId()) ? 'selected="selected"' : ''; ?>
+            <option <?php echo $selected; ?> value="<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></option>
+          <?php endforeach; ?>
+        </select>
+        </div>
+        </div>
+      </form>
   </div>
 </div>
 

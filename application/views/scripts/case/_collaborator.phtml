@@ -6,7 +6,7 @@ $disabled = $this->disabled || false;
 
 <?php echo $this->formLabel($this->element->getName(), $this->element->getLabel()) ?>
 <dd>
-  <input id="<?php echo $this->element->getName() ?>" type="text" data-view-script="user" data-callback="<?php echo $this->callback; ?>" />
+  <input id="<?php echo $this->element->getName() ?>" type="text" data-view-script="collaborator" data-case="<?php echo $this->case ? $this->case->getId() : ''; ?>" data-callback="<?php echo $this->callback; ?>" />
   <?php
   if(!empty($errors)){
     echo $this->formErrors($errors);
@@ -26,12 +26,14 @@ $disabled = $this->disabled || false;
             <span class="username"><?php echo $user->getUsername(); ?></span>
           </div>
           <div class="options">
-            <select class="span2" style="width: 150px;">
-              <option>test</option>
+            <select class="span2" name="<?php echo $this->element->getName(); ?>-roles[<?php echo $user->getRole()->getId(); ?>]" style="width: 150px;">
+              <?php foreach($this->roles as $role): ?>
+              <option value="<?php echo $role->getId(); ?>"><?php echo $role->getRoleId(); ?></option>
+              <?php endforeach; ?>
             </select>
             <a href="#" class="btn btn-danger" data-remove="true" data-for="<?php echo $user->getId(); ?>"><i class="icon-remove"></i></a>
           </div>
-          <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $user->getId(); ?>" />
+          <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $user->getRole()->getId(); ?>" />
         </div>
       <?php endforeach; ?>
     <?php } ?>

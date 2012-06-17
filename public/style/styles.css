@@ -2141,6 +2141,23 @@ li.plupload_droptext {
   -moz-box-shadow: none;
   box-shadow: none;
 }
+#source-page .document-page,
+#candidate-page .document-page{
+  margin-top: 0;
+}
+#candidate-page .document-page,
+#candidate-page .pager{
+  margin-right: 5px;
+}
+
+.switch-two-columns {
+  margin-top: -44px;
+  padding-bottom: 6px;
+}
+#source-document {
+  width: 100%;
+}
+
 
 /* ==|== media queries ====================================================== */
 

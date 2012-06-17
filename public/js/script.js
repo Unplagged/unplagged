@@ -83,111 +83,7 @@ $(document).ready(function(){
     compareTexts();
   });
   compareTexts();
-  
-  // change bibtex form according to document type
-  function changeBibTexForm(){
-    if($('#type').val() == 'full' || $('#type').val() == 'periodikum' ) { 
-      $('#zeitschrift-element').show();
-      $('#zeitschrift-label').show();	
-      $('#monat-element').show();
-      $('#monat-label').show();
-      $('#tag-element').show();
-      $('#tag-label').show();
-      $('#nummer-element').show();
-      $('#nummer-label').show();
-    }
-    else {
-      $('#zeitschrift-element').hide();
-      $('#zeitschrift-label').hide();
-      $('#monat-element').hide();
-      $('#monat-label').hide();									
-      $('#tag-element').hide();
-      $('#tag-label').hide();
-      $('#nummer-element').hide();
-      $('#nummer-label').hide();									
-    }
-								
-    if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' ) {
-      $('#sammlung-element').show();
-      $('#sammlung-label').show();
-      $('#hrsg-element').show();
-      $('#hrsg-label').show();
-      $('#issn-element').show();
-      $('#issn-label').show();						
-    }
-    else {
-      $('#sammlung-element').hide();
-      $('#sammlung-label').hide();
-      $('#hrsg-element').hide();
-      $('#hrsg-label').hide();
-      $('#issn-element').hide();
-      $('#issn-label').hide();
-    }
-					
-    if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' || $('#type').val() == 'periodikum'){ 
-      $('#seiten-element').show();
-      $('#seiten-label').show();	
-    }
-    else {
-      $('#seiten-element').hide();
-      $('#seiten-label').hide();
-    }
-				
-    if($('#type').val() == 'full' || $('#type').val() == 'buch' || $('#type').val() == 'aufsatz') { 
-      $('#isbn-element').show();
-      $('#isbn-label').show();
-    }
-    else {
-      $('#isbn-element').hide();
-      $('#isbn-label').hide();
-    }
 
-    if($('#type').val() == 'full'){
-      $('#kuerzel-element').show();
-      $('#kuerzel-label').show();
-      $('#beteiligte-element').show();
-      $('#beteiligte-label').show();
-      $('#ausgabe-element').show();
-      $('#ausgabe-label').show();
-      $('#umfang-element').show();
-      $('#umfang-label').show();
-      $('#reihe-element').show();
-      $('#reihe-label').show();
-      $('#doi-element').show();
-      $('#doi-label').show();
-      $('#urn-element').show();
-      $('#urn-label').show();
-      $('#wp-element').show();
-      $('#wp-label').show();
-      $('#schluessel-element').show();
-      $('#schluessel-label').show();
-    }
-    else{
-      $('#kuerzel-element').hide();
-      $('#kuerzel-label').hide();
-      $('#beteiligte-element').hide();
-      $('#beteiligte-label').hide();
-      $('#ausgabe-element').hide();
-      $('#ausgabe-label').hide();
-      $('#umfang-element').hide();
-      $('#umfang-label').hide();
-      $('#reihe-element').hide();
-      $('#reihe-label').hide();
-      $('#doi-element').hide();
-      $('#doi-label').hide();
-      $('#urn-element').hide();
-      $('#urn-label').hide();
-      $('#wp-element').hide();
-      $('#wp-label').hide();
-      $('#schluessel-element').hide();
-      $('#schluessel-label').hide();
-    }
-  }
-	
-  $("#type").change(function(){
-    changeBibTexForm();
-  });
-  changeBibTexForm();
   
   // executes a simtext comparison on fragment show page
   function compareFragmentTexts(fragmentId, highlight) {
@@ -311,13 +207,10 @@ $(document).ready(function(){
   });
   
   function updateDocumentPages(documentId, targetElements) {
-    console.log('start changed');
     $.post('/document/read', {
       'id': documentId
     }, function(response) {
       if(response.statuscode == 200) {
-        console.log('update changed');
-
         // clear the targets
         $.each(targetElements, function(index, targetId) {
           // clear the targets
@@ -582,7 +475,13 @@ $(document).ready(function(){
       var sourceId = $(this).attr('id');
       var viewScript = $(this).attr('data-view-script');
       
-      createSelectedElement(sourceId, ui.item.value, ui.item.label, viewScript);
+      var options = null;
+      if(viewScript == 'collaborator') {
+        options = {
+          'caseId': $(this).attr('data-case')
+        }
+      }
+      createSelectedElement(sourceId, ui.item.value, ui.item.label, viewScript, options);
       updateAutocompleteSource(sourceId);
 
       $(this).val('');
@@ -606,25 +505,38 @@ $(document).ready(function(){
     source.autocomplete('option', 'source', source.attr('data-callback') + '/skip/' + getIdsToSkip(sourceId, true));
   }
   
-  function createSelectedElement(sourceId, value, label, viewScript){
+  function createSelectedElement(sourceId, value, label, viewScript, options){
     var element = '';
     
     if(viewScript == 'tag') {
       element = '<a data-source="' + sourceId + '" data-remove="true" data-id="' + value + '" href="#" data-for="' + value + '" class="btn">';
       element += '<i class="icon-tag icon-fam"></i>' + label + '<i class="icon-remove icon-right"></i>';
       element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" /></a> ';
+      $('div[data-wrapper-for=' + sourceId + ']').append(element);
       
-    } else if(viewScript == 'user') {
-      element = '<div class="well" data-source="' + sourceId + '" data-id="' + value + '">';
-      element += '<img class="avatar-small no-shadow" src="/images/default-avatar.png">';
-      element += '<div class="names">';
-      element += '<span class="username">' + label + '</span>';
-      element += '<span class="realname">Benjamin Oertel</span>';
-      element += '</div>';
-      element += '<div class="options"><a href="#" class="btn">edit rights</a> ';
-      element += '<a href="#" class="btn" data-remove="true" data-for="' + value + '"><i class="icon-remove"></i></a></div>';
-      element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" />';
-      element += '</div>';      
+    } else if(viewScript == 'collaborator') {
+      var caseId = (parseInt(options.caseId) == options.caseId) ? '/id/' + options.caseId : '';
+
+      $.post('/case/get-roles/' + caseId, {}, function(response) {  
+        element = '<div class="well" data-source="' + sourceId + '" data-id="' + value + '">';
+        element += '<img class="avatar no-shadow" src="/images/default-avatar.png">';
+        element += '<div class="names">';
+        element += '<span class="username">' + label + '</span>';
+        element += '</div>';
+        element += '<div class="options">';
+        element += '<select class="span2" style="width: 150px;">';
+        
+        $.each(response.roles, function(roleId, roleName) { 
+          element += '<option value=' + roleId + '>' + roleName + '</option>';
+        });
+        element += '</select>';
+        element += ' <a href="#" class="btn btn-danger" data-remove="true" data-for="' + value + '"><i class="icon-remove"></i></a></div>';
+        element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" />';
+        element += '</div>';
+        $('div[data-wrapper-for=' + sourceId + ']').append(element);
+        updateAutocompleteSource(sourceId);
+      }, "json");
+      
     } else if(viewScript == 'permission') {
       element = '<div class="well" data-source="' + sourceId + '" data-id="' + value + '">';
       element += '<img class="avatar no-shadow" src="/images/default-avatar.png">';
@@ -643,13 +555,14 @@ $(document).ready(function(){
 
       element += '<a href="#" class="btn btn-danger" data-remove="true" data-for="' + value + '"><i class="icon-remove"></i></a></div>';
       element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" />';
-      element += '</div>';    
+      element += '</div>';
+      
+      $('div[data-wrapper-for=' + sourceId + ']').append(element); 
+      $('div[data-id=' + value + '] input[type="checkbox"].btn').each(function(index) {
+        updateCheckBox($(this));
+      });
     }
 
-    $('div[data-wrapper-for=' + sourceId + ']').append(element);    
-    $('div[data-id=' + value + '] input[type="checkbox"].btn').each(function(index) {
-      updateCheckBox($(this));
-    });
   }
   
   // Gets the ids of the elements which should not be returned through autocompletion anymore.
@@ -677,17 +590,10 @@ $(document).ready(function(){
 
     return false;
   });
-
-  $("#type").change(function(){
-    updateBibTexForm();
-  });
-  updateBibTexForm();
   
-  function updateBibTexForm(){
-    var type = $('#type').val();
-    
-    if(type == 'full' || type == 'periodikum' ) 
-    { 
+  // change bibtex form according to document type
+  function changeBibTexForm(){
+    if($('#type').val() == 'full' || $('#type').val() == 'periodikum' ) { 
       $('#zeitschrift-element').show();
       $('#zeitschrift-label').show();	
       $('#monat-element').show();
@@ -696,7 +602,8 @@ $(document).ready(function(){
       $('#tag-label').show();
       $('#nummer-element').show();
       $('#nummer-label').show();
-    } else {
+    }
+    else {
       $('#zeitschrift-element').hide();
       $('#zeitschrift-label').hide();
       $('#monat-element').hide();
@@ -706,16 +613,16 @@ $(document).ready(function(){
       $('#nummer-element').hide();
       $('#nummer-label').hide();									
     }
-   
-    if(type == 'full' || type == 'aufsatz' ) 
-    { 
+								
+    if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' ) {
       $('#sammlung-element').show();
       $('#sammlung-label').show();
       $('#hrsg-element').show();
       $('#hrsg-label').show();
       $('#issn-element').show();
       $('#issn-label').show();						
-    } else {
+    }
+    else {
       $('#sammlung-element').hide();
       $('#sammlung-label').hide();
       $('#hrsg-element').hide();
@@ -723,29 +630,26 @@ $(document).ready(function(){
       $('#issn-element').hide();
       $('#issn-label').hide();
     }
-   
-    if(type == 'full' || type == 'aufsatz' || type == 'periodikum') 
-    { 
+					
+    if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' || $('#type').val() == 'periodikum'){ 
       $('#seiten-element').show();
       $('#seiten-label').show();	
-   
-    } else {
+    }
+    else {
       $('#seiten-element').hide();
       $('#seiten-label').hide();
-   
     }
-   
-    if(type == 'full' || type == 'buch' || type == 'aufsatz') 
-    { 
+				
+    if($('#type').val() == 'full' || $('#type').val() == 'buch' || $('#type').val() == 'aufsatz') { 
       $('#isbn-element').show();
       $('#isbn-label').show();
-   
-    } else {
+    }
+    else {
       $('#isbn-element').hide();
       $('#isbn-label').hide();
-   
     }
-    if(type == 'full'){
+
+    if($('#type').val() == 'full'){
       $('#kuerzel-element').show();
       $('#kuerzel-label').show();
       $('#beteiligte-element').show();
@@ -764,7 +668,8 @@ $(document).ready(function(){
       $('#wp-label').show();
       $('#schluessel-element').show();
       $('#schluessel-label').show();
-    } else{
+    }
+    else{
       $('#kuerzel-element').hide();
       $('#kuerzel-label').hide();
       $('#beteiligte-element').hide();
@@ -785,8 +690,12 @@ $(document).ready(function(){
       $('#schluessel-label').hide();
     }
   }
+	
+  $("#type").change(function(){
+    changeBibTexForm();
+  });
+  changeBibTexForm();
   
-
   $('#upload-queue').unplaggedFileUpload();
   $().unplaggedContextMenu();
 
@@ -801,62 +710,19 @@ $(document).ready(function(){
     $(this).removeClass('poped-out').addClass('poped-in');
   });
   
-  /**
-   * The pagination for document pages.
-   */
-  $(function() {
-    $(".pager a").live("click", function() {
-      var anchor = $(this);
-      if(anchor.parent().hasClass('previous')) {
-        console.log('previous');
-      } else {
-        console.log('next');
-      }
-      
-      var target = anchor.closest('.src-wrapper');
-      
-      // update also the other side
-      
-      
-      console.log(target);
-    //candidate-page
-    // return false;
-    /*      if(href) {
-        var substr = href.split('/');
-        var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
-
-        window.location.hash = hash;
-      }
-      return false;
-  */  });
-  /*
-    $(window).bind('hashchange', function(){
-      var newHash = window.location.hash.substring(1);
-
-      if (newHash) {
-        var substr = newHash.split('/');
-        var hash = substr[substr.length-2] + "/" + substr[substr.length-1];
-
-        var url = window.location.pathname;
-        if(url.charAt(url.length-1) != '/') {
-          url += '/';
-        }
-        url += hash;
-        $("#main-wrapper").load(url + " .main", function(){
-          $('a.picture').lightBox();
-        });
-      }
-    });
-
-    $(window).trigger('hashchange');*/
+  $('#source-document-select #source-document').change(function(){
+    $('#source-document-select').submit();
   });
   
   $.i18n.init({
-      lng: 'de'                               // defaults to get from navigator
-    , fallbackLng: 'de'                          // defaults to 'dev'
-    , resGetPath: '/js/i18n/__lng__.json' // defaults to 'locales/__lng__/__ns__.json' where ns = translation (default)
-    , useLocalStorage: true                     // defaults to true
-    , debug: true                                // last but not least get some information if things go wrong
-});
+    lng: 'de', 
+    fallbackLng: 'de', 
+    resGetPath: '/js/i18n/__lng__.json', 
+    debug: false
+  });
+  
+  $('.pager .disabled a').live('click', function() {
+    return false;
+  })
   
 });
