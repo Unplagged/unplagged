@@ -100,7 +100,6 @@ function storeResources(array $resources, $em, $type = 'model'){
   $permissions = array();
   foreach($resources as $resource){
     if($type == 'model'){
-    echo $resource[0] . '...' . $resource[1] . "\n";
       $permission = $em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1], 'base'=>null));
     }else{
       $permission = $em->getRepository('Application_Model_PagePermission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1], 'base'=>null));
@@ -231,6 +230,7 @@ if(!$userRole){
     array('simtext', 'ajax'),
     array('simtext', 'download-report'),
     array('simtext', 'compare'),
+    array('image', 'show'),
     array('tag', 'autocomplete')
   );
 

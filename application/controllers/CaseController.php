@@ -136,8 +136,15 @@ class CaseController extends Unplagged_Controller_Action{
 
     $user = Zend_Registry::getInstance()->user;
     $case = $user->getCurrentCase();
+    $em = $this->_em;
     if(!empty($case)){
-      $caseFiles = $case->getFiles();
+      $caseFiles = $case->getFiles()->filter(function($file) use (&$user, &$em){
+            $permission = $em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
+            if($user->getRole()->hasPermission($permission)){
+              return true;
+            }
+            return false;
+          });
 
       $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($caseFiles->toArray()));
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
@@ -158,11 +165,13 @@ class CaseController extends Unplagged_Controller_Action{
         $action['icon'] = 'images/icons/disk.png';
         $file->actions[] = $action;
 
-        $action['link'] = '/file/delete/id/' . $file->getId();
-        $action['label'] = 'Delete';
-        $action['icon'] = 'images/icons/delete.png';
-        $file->actions[] = $action;
-
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'delete', 'base'=>$file));
+        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $action['link'] = '/file/delete/id/' . $file->getId();
+          $action['label'] = 'Delete';
+          $action['icon'] = 'images/icons/delete.png';
+          $file->actions[] = $action;
+        }
         $action['link'] = '/user/add-file/id/' . $file->getId();
         $action['label'] = 'Add to personal files';
         $action['icon'] = 'images/icons/basket_put.png';
