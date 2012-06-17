@@ -23,6 +23,17 @@
  */
 class Application_Form_Case_Modify extends Zend_Form{
 
+  protected $case = null;
+  protected $roles = null;
+
+  public function setCase($case){
+    $this->case = $case;
+  }
+
+  public function setRoles($roles){
+    $this->roles = $roles;
+  }
+
   /**
    * Creates the form to create a new case.
    * 
@@ -48,18 +59,20 @@ class Application_Form_Case_Modify extends Zend_Form{
     $collaboratorsElement = new Zend_Form_Element_Text('collaborators[]');
     $collaboratorsElement->setLabel('Collaborators');
     $collaboratorsElement->setDecorators(array(array('ViewScript', array(
-      'viewScript' => '/case/_element.phtml',
-      'callback' => '/user/autocomplete',
-      'disabled' => false
-    ))));
-    
+          'viewScript'=>'/case/_collaborator.phtml',
+          'callback'=>'/user/autocomplete',
+          'disabled'=>false,
+          'roles'=>$this->roles,
+          'case'=>$this->case
+      ))));
+
     $tagsElement = new Zend_Form_Element_Text('tags[]');
     $tagsElement->setLabel('Tags');
     $tagsElement->setDecorators(array(array('ViewScript', array(
-      'viewScript' => '/tag/_element.phtml',
-      'callback' => '/tag/autocomplete',
-      'disabled' => false
-    ))));
+          'viewScript'=>'/tag/_element.phtml',
+          'callback'=>'/tag/autocomplete',
+          'disabled'=>false
+      ))));
 
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Create case');
@@ -84,4 +97,5 @@ class Application_Form_Case_Modify extends Zend_Form{
   }
 
 }
+
 ?>

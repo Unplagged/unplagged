@@ -28,7 +28,9 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
   public function createAction(){
-    $modifyForm = new Application_Form_Case_Modify();
+    //@todo: get the default roles here which the case will inherit from
+    $roles = Zend_Registry::getInstance()->user->getCurrentCase()->getDefaultRoles();
+    $modifyForm = new Application_Form_Case_Modify(array('roles'=>$roles));
     $modifyForm->getElement("collaborators")->setValue(array($this->_defaultNamespace->userId));
 
     if($this->_request->isPost()){
@@ -60,7 +62,8 @@ class CaseController extends Unplagged_Controller_Action{
         $this->redirectToLastPage(true);
       }
 
-      $modifyForm = new Application_Form_Case_Modify();
+      $roles = $case->getDefaultRoles();
+      $modifyForm = new Application_Form_Case_Modify(array('roles'=>$roles, 'case'=>$case));
       $modifyForm->setAction("/case/edit/id/" . $input->id);
 
       $modifyForm->getElement("name")->setValue($case->getName());
@@ -74,8 +77,7 @@ class CaseController extends Unplagged_Controller_Action{
 
         if($result){
           // notification
-          $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-          Unplagged_Helper::notify("case_updated", $result, $user);
+          Unplagged_Helper::notify("case_updated", $result, Zend_Registry::getInstance()->user);
 
           $this->_helper->FlashMessenger(array('success'=>'The case was updated successfully.'));
           $this->_helper->redirector('list', 'case');
@@ -196,6 +198,8 @@ class CaseController extends Unplagged_Controller_Action{
 
   private function handleModifyData(Application_Form_Case_Modify $modifyForm, Application_Model_Case $case = null){
     $formData = $this->_request->getPost();
+
+
     if($modifyForm->isValid($formData)){
       if(!($case)){
         $case = new Application_Model_Case();
@@ -212,6 +216,23 @@ class CaseController extends Unplagged_Controller_Action{
         $case->setName($formData['name']);
       }
 
+      // add roles for each collaborator, the collaborators not in the array anymore will be removed in the setCollaborators call
+      foreach($formData['collaborators-roles'] as $roleId=>$inheritedRoleId){
+        $role = $this->_em->getRepository('Application_Model_User_Role')->findOneById($roleId);
+        $inheritedRole = $this->_em->getRepository('Application_Model_User_Role')->findOneById($inheritedRoleId);
+
+        foreach($case->getDefaultRoles() as $defaultRole){
+          if($role->getInheritedRoles()->contains($defaultRole)){
+            if($defaultRole->getId() != $inheritedRoleId){
+              // the user has already a default role of this case, so we need to remove it
+              $role->removeInheritedRole($defaultRole);
+              $role->addInheritedRole($inheritedRole);
+            }
+            unset($roleIdsToRemove[$roleId]);
+          }
+        }
+      }
+      
       $case->setCollaborators($formData['collaborators']);
       $case->setTags($formData['tags']);
 
@@ -230,6 +251,29 @@ class CaseController extends Unplagged_Controller_Action{
     $adminRole->setRoleId('admin_case-' . $case->getId());
 
     $case->addDefaultRole($adminRole);
+  }
+
+  /**
+   * Selects 5 users based on matching first and lastname with the search string and sends their ids as json string back.
+   * @param String from If defined it selects only users of a specific rank.
+   */
+  public function getRolesAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
+      $roles = $case->getDefaultRoles();
+    }else{
+      // select default roles
+      $roles = array();
+    }
+
+    $result = array();
+    foreach($roles as $role){
+      $result[$role->getId()] = $role->getRoleId();
+    }
+
+    $this->_helper->json(array('roles'=>$result));
   }
 
 }

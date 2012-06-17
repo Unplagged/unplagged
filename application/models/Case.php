@@ -366,6 +366,10 @@ class Application_Model_Case extends Application_Model_Base{
   public function clearCollaborators(){
     $this->collaborators->clear();
   }
+  
+  public function hasDefaultRole(Application_Model_User_Role $defaultRole) {
+    return $this->defaultRoles->contains($defaultRole);
+  }
 
 }
 

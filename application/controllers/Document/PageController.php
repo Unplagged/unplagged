@@ -118,11 +118,11 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     $input = new Zend_Filter_Input(array('id'=>'Digits', 'page'=>'Digits'), null, $this->_getAllParams());
 
     if(!empty($input->id)){
-    $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=> 'document', 'action' => 'read', 'base' => null));
+      $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
       $query = 'SELECT p FROM Application_Model_Document_Page p JOIN p.document b';
       $count = 'SELECT COUNT(p.id) FROM Application_Model_Document_Page p JOIN p.document b';
 
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.document' => $input->id), 'p.pageNumber ASC', $permission));
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.document'=>$input->id), 'p.pageNumber ASC', $permission));
       $paginator->setItemCountPerPage(100);
       $paginator->setCurrentPageNumber($input->page);
 
@@ -159,6 +159,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     if(!empty($input->id)){
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
+        $this->view->case = Zend_Registry::getInstance()->user->getCurrentCase();
         $this->view->page = $page;
         $this->initPageView($page);
       }
@@ -444,7 +445,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
   }
 
   public function fragmentAction(){
-    $input = new Zend_Filter_Input(array('id'=>'Digits', 'source'=>'Digits'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('id'=>'Digits', 'source'=>'Digits', 'sourceDocument'=>'Digits'), null, $this->_getAllParams());
 
     if(!empty($input->id)){
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
@@ -454,13 +455,16 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       // @todo: show error
     }
 
-    if(!empty($input->source)){
+    if(!empty($input->sourceDocument)){
+      $sourceDocument = $this->_em->getRepository('Application_Model_Document')->findOneById($input->sourceDocument);
+      $source = $sourceDocument->getPages()->first();
+    }elseif(!empty($input->source)){
       $source = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->source);
-      if($source){
-        $this->view->source = $source;
-        $pageLink = '/document_page/fragment/id/' . $input->id . '/source';
-        $this->initPageView($source, $pageLink, 'prevSourcePageLink', 'nextSourcePageLink');
-      }
+    }
+    if(isset($source)){
+      $this->view->source = $source;
+      $pageLink = '/document_page/fragment/id/' . $input->id . '/source';
+      $this->initPageView($source, $pageLink, 'prevSourcePageLink', 'nextSourcePageLink');
     }
 
     $pageLink = '/document_page/fragment/id';
@@ -468,38 +472,39 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $pageLink = '/document_page/fragment/source/' . $input->source . '/id';
     }
 
+    $this->view->documents = Zend_Registry::getInstance()->user->getCurrentCase()->getDocuments();
     $this->view->page = $page;
     $this->initPageView($page, $pageLink);
-    
+
     if(!empty($source)){
-    // do simtext
-    $left = $page->getContent('array');
-    $right = $source->getContent('array');
+      // do simtext
+      $left = $page->getContent('array');
+      $right = $source->getContent('array');
 
-    foreach($left as $lineNumber=>$lineContent){
-      $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
-    }
+      foreach($left as $lineNumber=>$lineContent){
+        $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
+      }
 
-    foreach($right as $lineNumber=>$lineContent){
-      $right[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
-    }
+      foreach($right as $lineNumber=>$lineContent){
+        $right[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
+      }
 
-    $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
+      $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
 
-    $left = $simtextResult['left'];
-    $right = $simtextResult['right'];
+      $left = $simtextResult['left'];
+      $right = $simtextResult['right'];
 
-    foreach($left as $lineNumber=>$lineContent){
-      $left[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
-    }
+      foreach($left as $lineNumber=>$lineContent){
+        $left[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+      }
 
-    foreach($right as $lineNumber=>$lineContent){
-      $right[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
-    }
+      foreach($right as $lineNumber=>$lineContent){
+        $right[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+      }
 
-    $this->view->pageContent = '<ol>' . implode("\n", $left) . '</ol>';
-    $this->view->sourceContent = '<ol>' . implode("\n", $right) . '</ol>';
-    } else {
+      $this->view->pageContent = '<ol>' . implode("\n", $left) . '</ol>';
+      $this->view->sourceContent = '<ol>' . implode("\n", $right) . '</ol>';
+    }else{
       $this->view->pageContent = $page->getContent('list');
       $this->view->sourceContent = '';
     }
