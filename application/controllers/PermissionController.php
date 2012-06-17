@@ -118,34 +118,36 @@ class PermissionController extends Unplagged_Controller_Action{
   public function handleEditData(Application_Form_Permission_EditRole $editForm, Application_Model_User_Role $role){
     $formData = $this->_request->getPost();
     if($editForm->isValid($formData)){
-
       foreach($formData as $groupName=>$permissionGroup){
         if(is_array($permissionGroup)){
+          
           foreach($permissionGroup as $permissionName=>$value){
 
-            $actionName = substr($permissionName, strrpos($permissionName, '_') + 1);
+            //get the ending from the checkbox name and turn camelCase into hy-phens
+            $actionName = substr(preg_replace_callback ('/([A-Z])/', create_function('$matches','return \'-\' . strtolower($matches[1]);'), substr($permissionName, strrpos($permissionName, '_') + 1)), 1);
+
             if(!$actionName){
               $actionName = '';
             }
+            $permission = null;
+            if(substr($groupName, 0, stripos($groupName, '_'))==='modelPermissions'){
+              $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('action'=>$actionName, 'type'=>substr($groupName, strrpos($groupName, '_') + 1), 'base'=>null));
+            } else {
+              $permission = $this->_em->getRepository('Application_Model_PagePermission')->findOneBy(array('action'=>$actionName, 'type'=>substr($groupName, strrpos($groupName, '_') + 1), 'base'=>null));
+            }
 
-            $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('action'=>$actionName, 'type'=>substr($groupName, strrpos($groupName, '_') + 1)));
             if($permission){
-              //var_dump($value);
-              //var_dump($permission);
-              //die('hier');
-              if($value === '1'){
+              if($value == '1'){
                 $role->addPermission($permission);
               }else{
-                var_dump($permission);
                 $role->removePermission($permission);
               }
+              $this->_em->persist($role);
             }
           }
         }
       }
-      die('hier');
 
-      $this->_em->persist($role);
       $this->_em->flush();
 
       return true;

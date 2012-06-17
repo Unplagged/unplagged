@@ -196,6 +196,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   }
 
   public function addInheritedRole(Application_Model_User_InheritableRole $inheritedRole){
+    var_dump(!$this->inheritedRoles->contains($inheritedRole));
     if(!$this->inheritedRoles->contains($inheritedRole)){
       $this->inheritedRoles->add($inheritedRole);
     }
