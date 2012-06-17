@@ -29,25 +29,27 @@ class Application_Form_Permission_EditRole extends Zend_Form{
 
   public function init(){
     $this->setMethod('post');
-    foreach($this->permissions as $groupLabel=>$permissionGroup){
-      $elements = array();
-      
-      foreach($permissionGroup as $permissionName=>$permissionData){
-        $checkboxElement = new Zend_Form_Element_Checkbox($groupLabel . '_' . $permissionName, array('belongsTo'=>$groupLabel));
-        $checkboxElement->setLabel($permissionName);
-        $class = 'btn btn-checkbox';
-        if($permissionData['allowed']===true){
-          $class .= ' active'; 
-          $checkboxElement->setChecked(true);
+    foreach($this->permissions as $permissionKey=>$permissionType){
+      foreach($permissionType as $groupLabel=>$permissionGroup){
+        $elements = array();
+
+        foreach($permissionGroup as $permissionName=>$permissionData){
+          $checkboxElement = new Zend_Form_Element_Checkbox($permissionKey . '_' .$groupLabel . '_' . $permissionName, array('belongsTo'=>$permissionKey . '_' .$groupLabel));
+          $checkboxElement->setLabel($permissionName);
+          $class = 'btn btn-checkbox';
+          if($permissionData['allowed'] === true){
+            $class .= ' active';
+            $checkboxElement->setChecked(true);
+          }
+          if($permissionData['inherited'] === true){
+            $class .= ' btn-primary';
+          }
+          $checkboxElement->setOptions(array('class'=>$class));
+          $elements[] = $checkboxElement;
+          $this->addElement($checkboxElement);
         }
-        if($permissionData['inherited']===true){
-          $class .= ' btn-primary';  
-        }
-        $checkboxElement->setOptions(array('class'=>$class));
-        $elements[] = $checkboxElement;
-        $this->addElement($checkboxElement);
+        $this->addDisplayGroup($elements, $permissionKey . '_' .$groupLabel, array('legend'=>$groupLabel));
       }
-     $this->addDisplayGroup($elements, $groupLabel, array('legend'=>$groupLabel));
     }
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Save Role');

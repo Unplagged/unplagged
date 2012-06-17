@@ -29,21 +29,43 @@ class PermissionController extends Unplagged_Controller_Action{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
     $rolePermissions = $this->_em->getRepository('Application_Model_User_Role')->findOneById($input->id);
 
-
     $this->setTitle('Permissions for ' . $rolePermissions->getRoleId());
-    //@todo findAll could be overkill here, as we currently only use those of type 'action'
-    $allPermissions = $this->_em->getRepository('Application_Model_Permission')->findAll();
+
+    $pagePermissions = $this->_em->getRepository('Application_Model_PagePermission')->findAll();
+    $modelPermissions = $this->_em->getRepository('Application_Model_ModelPermission')->findAll();
 
     $outputPermissions = array();
+    $outputPermissions['pagePermissions'] = $this->initPermissionData($pagePermissions, $rolePermissions);
+    $outputPermissions['modelPermissions'] = $this->initPermissionData($modelPermissions, $rolePermissions);
 
-    foreach($allPermissions as $possiblePermission){
-      if($possiblePermission->getType() === 'action'){
-        $permissionName = $possiblePermission->getName();
 
-        $controllerNameEnd = strpos($permissionName, '_');
-        $controllerName = substr($permissionName, 0, $controllerNameEnd);
+    $editForm = new Application_Form_Permission_EditRole(array('permissions'=>$outputPermissions));
 
-        $outputPermissions[$controllerName][substr($permissionName, $controllerNameEnd + 1)] = array('allowed'=>false, 'inherited'=>false);
+    if($this->_request->isPost()){
+      $success = $this->handleEditData($editForm, $rolePermissions);
+
+      if($success){
+        $this->_helper->FlashMessenger(array('success'=>'The role was updated successfully.'));
+      }else{
+        $this->_helper->FlashMessenger(array('error'=>'An error occured while updating the role.'));
+      }
+
+      $this->_helper->redirector('list', 'permission');
+    }else{
+      $this->view->allPermissions = $outputPermissions;
+      $this->view->editForm = $editForm;
+    }
+  }
+
+  private function initPermissionData($permissions, $rolePermissions){
+    $outputPermissions = array();
+    
+    foreach($permissions as $possiblePermission){
+      if($possiblePermission->getBase() === Null){
+        $permissionName = $possiblePermission->getAction();
+        $controllerName = $possiblePermission->getType();
+
+        $outputPermissions[$controllerName][$permissionName] = array('allowed'=>false, 'inherited'=>false);
       }
     }
 
@@ -58,12 +80,12 @@ class PermissionController extends Unplagged_Controller_Action{
       }else{
         $permissionGroupName = $allowedPermission->getType();
 
-        if(isset($outputPermissions[$permissionGroupName])){
+        if(isset($outputPermissions['pagePermissions'][$permissionGroupName])){
           $permissionName = $allowedPermission->getAction();
 
           if(isset($outputPermissions[$permissionGroupName][$permissionName])){
-            $outputPermissions[$permissionGroupName][$permissionName]['allowed'] = true;
-            $outputPermissions[$permissionGroupName][$permissionName]['inherited'] = true;
+            $outputPermissions['pagePermissions'][$permissionGroupName][$permissionName]['allowed'] = true;
+            $outputPermissions['pagePermissions'][$permissionGroupName][$permissionName]['inherited'] = true;
           }
         }
       }
@@ -90,23 +112,8 @@ class PermissionController extends Unplagged_Controller_Action{
         }
       }
     }
-
-    $editForm = new Application_Form_Permission_EditRole(array('permissions'=>$outputPermissions));
-
-    if($this->_request->isPost()){
-      $success = $this->handleEditData($editForm, $rolePermissions);
-
-      if($success){
-        $this->_helper->FlashMessenger(array('success'=>'The role was updated successfully.'));
-      }else{
-        $this->_helper->FlashMessenger(array('error'=>'An error occured while updating the role.'));
-      }
-
-      $this->_helper->redirector('list', 'permission');
-    }else{
-      $this->view->allPermissions = $outputPermissions;
-      $this->view->editForm = $editForm;
-    }
+    
+    return $outputPermissions;
   }
 
   public function handleEditData(Application_Form_Permission_EditRole $editForm, Application_Model_User_Role $role){
@@ -116,11 +123,10 @@ class PermissionController extends Unplagged_Controller_Action{
       foreach($formData as $permissionGroup){
         if(is_array($permissionGroup)){
           foreach($permissionGroup as $permissionName=>$value){
-            $permission = $this->_em->getRepository('Application_Model_Permission')->findOneByName($permissionName);
+            $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('action'=>$permissionName, 'type'=>$permissionGroup));
             if($permission){
               if($value === '1'){
                 $role->addPermission($permission);
-                //die('hier');
               }else{
                 $role->removePermission($permission);
               }
@@ -139,15 +145,24 @@ class PermissionController extends Unplagged_Controller_Action{
   }
 
   public function listAction(){
-    $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
+    $caseRoles = $this->_em->getRepository('Application_Model_User_InheritableRole')->findByType('case-default');
+    $userRoles = $this->_em->getRepository('Application_Model_User_Role')->findByType('user');
+    $systemRoles = $this->_em->getRepository('Application_Model_User_Role')->findByType('global');
 
-    $inheritableRoles = $this->_em->getRepository('Application_Model_User_Role')->findAll();
+    $userRolePaginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($userRoles));
+    $userRolePaginator->setItemCountPerPage(-1);
 
-    $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($inheritableRoles));
-    $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-    $paginator->setCurrentPageNumber($input->page);
+    $this->view->userRoles = $userRolePaginator;
 
-    $this->view->paginator = $paginator;
+    $caseRolePaginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($caseRoles));
+    $caseRolePaginator->setItemCountPerPage(-1);
+
+    $this->view->caseRoles = $caseRolePaginator;
+
+    $systemRolePaginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($systemRoles));
+    $systemRolePaginator->setItemCountPerPage(-1);
+
+    $this->view->systemRoles = $systemRolePaginator;
 
     $this->setTitle('Roles');
     //var_dump($inheritableRoles);
@@ -200,7 +215,7 @@ class PermissionController extends Unplagged_Controller_Action{
       $modifyForm->setAction("/permission/edit/id/" . $input->id);
 
       $case = Zend_Registry::getInstance()->user->getCurrentCase();
-      // get the users that have a permission directly on a specific base
+      // get the permission directly on a specific base
       $permissions = array();
       // get users that have the global right due to their default role of the case
       $inheritedPermissions = array();
@@ -212,7 +227,7 @@ class PermissionController extends Unplagged_Controller_Action{
           foreach($case->getCollaborators() as $collaborator){
             $accessAllPermission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$base->getPermissionType(), 'action'=>$permissionAction, 'base'=>null));
             if($collaborator->getRole()->hasPermission($accessAllPermission)){
-              if(!in_array($collaborator->getRole()->getId(), $permissions[$permission->getAction()])) {
+              if(!in_array($collaborator->getRole()->getId(), $permissions[$permission->getAction()])){
                 $permissions[$permissionAction][] = $collaborator->getRole()->getId();
               }
               $inheritedPermissions[$permissionAction][] = $collaborator->getRole()->getId();
@@ -267,5 +282,4 @@ class PermissionController extends Unplagged_Controller_Action{
   }
 
 }
-
 ?>

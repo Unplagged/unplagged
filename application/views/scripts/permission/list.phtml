@@ -20,26 +20,71 @@
 <table cellpadding="0" cellspacing="0" class="default">
   <thead>
     <tr>
-      <th style="width: 85%;"><?php echo $this->translate("Role name"); ?></th>
+      <th style="width: 85%;"><?php echo $this->translate("User Roles"); ?></th>
       <th><?php echo $this->translate("Actions"); ?></th>
     </tr>
   </thead>
   <tbody>
-    <?php if(count($this->paginator)): ?>
-      <?php foreach($this->paginator as $role): ?>
+    <?php if(count($this->userRoles)): ?>
+      <?php foreach($this->userRoles as $role): ?>
         <tr>
-          <td data-label="<?php echo $this->translate("Role name"); ?>"><?php echo $role->getRoleId(); ?></td>
+          <td data-label="<?php echo $this->translate("User role"); ?>"><?php echo $role->getRoleId(); ?></td>
           <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn">Edit</a></td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
       <tr>
-        <td colspan="4" class="no-label"><?php echo $this->translate("No files found."); ?></td>
+        <td colspan="4" class="no-label"><?php echo $this->translate("No roles found."); ?></td>
       </tr>
     <?php endif; ?>
   </tbody>
 </table>
-<?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
+
+<table cellpadding="0" cellspacing="0" class="default">
+  <thead>
+    <tr>
+      <th style="width: 85%;"><?php echo $this->translate("Case Roles"); ?></th>
+      <th><?php echo $this->translate("Actions"); ?></th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if(count($this->caseRoles)): ?>
+      <?php foreach($this->caseRoles as $role): ?>
+        <tr>
+          <td data-label="<?php echo $this->translate("Case Role"); ?>"><?php echo $role->getRoleId(); ?></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn">Edit</a></td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr>
+        <td colspan="4" class="no-label"><?php echo $this->translate("No roles found."); ?></td>
+      </tr>
+    <?php endif; ?>
+  </tbody>
+</table>
+
+<table cellpadding="0" cellspacing="0" class="default">
+  <thead>
+    <tr>
+      <th style="width: 85%;"><?php echo $this->translate("System Roles"); ?></th>
+      <th><?php echo $this->translate("Actions"); ?></th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if(count($this->systemRoles)): ?>
+      <?php foreach($this->systemRoles as $role): ?>
+        <tr>
+          <td data-label="<?php echo $this->translate("System Role"); ?>"><?php echo $role->getRoleId(); ?></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn">Edit</a></td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr>
+        <td colspan="4" class="no-label"><?php echo $this->translate("No roles found."); ?></td>
+      </tr>
+    <?php endif; ?>
+  </tbody>
+</table>
 
 <!-- <a class="btn btn-primary" href="/file/upload"><i class="icon-upload icon-fam"></i><?php echo $this->translate("Create New Role"); ?></a>-->
 

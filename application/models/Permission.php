@@ -1,6 +1,5 @@
 <?php
-
-/**
+/*
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
  *  
@@ -19,19 +18,14 @@
  */
 
 /**
- * This class can be used to store the name of a permission.
- * 
- * The general idea is to generate all needed permissions either upon 
- * installation or the creation of a new resource, in order to be able
- * to fetch all and register them with the authorization module.
- * 
- * @author Unplagged
- * 
+ *
  * @Entity
  * @Table(name="permissions")
+ * @InheritanceType("SINGLE_TABLE")
+ * @DiscriminatorColumn(name="discr", type="string")
+ * @DiscriminatorMap({"page_permission" = "Application_Model_PagePermission", "model_permission" = "Application_Model_ModelPermission"})
  */
-class Application_Model_Permission implements Zend_Acl_Resource_Interface{
-
+abstract class Application_Model_Permission implements Zend_Acl_Resource_Interface{
   /**
    * @Id
    * @GeneratedValue
@@ -137,6 +131,5 @@ class Application_Model_Permission implements Zend_Acl_Resource_Interface{
   public function clearRoles(){
     $this->roles->clear();
   }
-
 }
 ?>
