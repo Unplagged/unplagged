@@ -40,9 +40,9 @@ class Application_Model_User_InheritableRole extends Application_Model_User_Role
   /**
    * This function does nothing and shouldn't be called. It's just here out of necessity to stop multiple inheritance.
    * 
-   * @param Unplagged_Model_User_InheritableRole $inheritedRole 
+   * @param Application_Model_User_InheritableRole $inheritedRole 
    */
-  public function addInheritedRole(Unplagged_Model_User_InheritableRole $inheritedRole){
+  public function addInheritedRole(Application_Model_User_InheritableRole $inheritedRole){
     //do nothing here, to avoid multi level inheritance  
   }
 }

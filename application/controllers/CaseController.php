@@ -28,17 +28,17 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
   public function createAction(){
-    //@todo: get the default roles here which the case will inherit from
-    $roles = Zend_Registry::getInstance()->user->getCurrentCase()->getDefaultRoles();
+    $roles = $this->_em->getRepository('Application_Model_User_InheritableRole')->findByType('case-default');
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+
     $modifyForm = new Application_Form_Case_Modify(array('roles'=>$roles));
-    $modifyForm->getElement("collaborators")->setValue(array($this->_defaultNamespace->userId));
+    $modifyForm->getElement("collaborators")->setValue(array($user->getRole()->getId()=>$roles[0]->getId()));
 
     if($this->_request->isPost()){
       $result = $this->handleModifyData($modifyForm);
 
       if($result){
         // notification
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
         Unplagged_Helper::notify('case_created', $result, $user);
 
         $this->_helper->FlashMessenger(array('success'=>'The case was created successfully.'));
@@ -69,7 +69,17 @@ class CaseController extends Unplagged_Controller_Action{
       $modifyForm->getElement("name")->setValue($case->getName());
       $modifyForm->getElement("alias")->setValue($case->getAlias());
       $modifyForm->getElement("tags")->setValue($case->getTagIds());
-      $modifyForm->getElement("collaborators")->setValue($case->getCollaboratorIds());
+
+      $collaborators = array();
+      foreach($case->getCollaborators() as $collaborator){
+        foreach($collaborator->getRole()->getInheritedRoles() as $defaultRole){
+          if($case->hasDefaultRole($defaultRole)){
+            $collaborators[$collaborator->getRole()->getId()] = $defaultRole->getId();
+          }
+        }
+      }
+
+      $modifyForm->getElement("collaborators")->setValue($collaborators);
       $modifyForm->getElement("submit")->setLabel("Save case");
 
       if($this->_request->isPost()){
@@ -199,7 +209,6 @@ class CaseController extends Unplagged_Controller_Action{
   private function handleModifyData(Application_Form_Case_Modify $modifyForm, Application_Model_Case $case = null){
     $formData = $this->_request->getPost();
 
-
     if($modifyForm->isValid($formData)){
       if(!($case)){
         $case = new Application_Model_Case();
@@ -210,31 +219,39 @@ class CaseController extends Unplagged_Controller_Action{
         $this->_em->persist($case);
         $this->_em->flush();
 
-        $this->initBasicRolesForCase($case);
+        $this->initBasicRolesForCase($case, $formData['collaborators']);
       }else{
         $case->setAlias($formData['alias']);
         $case->setName($formData['name']);
-      }
+        // add roles for each collaborator, the collaborators not in the array anymore will be removed in the setCollaborators call
+        foreach($formData['collaborators'] as $roleId=>$inheritedRoleId){
+          $role = $this->_em->getRepository('Application_Model_User_Role')->findOneById($roleId);
+          $inheritedRole = $this->_em->getRepository('Application_Model_User_Role')->findOneById($inheritedRoleId);
 
-      // add roles for each collaborator, the collaborators not in the array anymore will be removed in the setCollaborators call
-      foreach($formData['collaborators-roles'] as $roleId=>$inheritedRoleId){
-        $role = $this->_em->getRepository('Application_Model_User_Role')->findOneById($roleId);
-        $inheritedRole = $this->_em->getRepository('Application_Model_User_Role')->findOneById($inheritedRoleId);
-
-        foreach($case->getDefaultRoles() as $defaultRole){
-          if($role->getInheritedRoles()->contains($defaultRole)){
-            if($defaultRole->getId() != $inheritedRoleId){
-              // the user has already a default role of this case, so we need to remove it
-              $role->removeInheritedRole($defaultRole);
-              $role->addInheritedRole($inheritedRole);
+          $roleChanged = true;
+          foreach($case->getDefaultRoles() as $defaultRole){
+            // role (user) already has a defaultRole in this case.
+            if($role->getInheritedRoles()->contains($defaultRole)){
+              if($defaultRole->getId() != $inheritedRoleId){
+                //changed role in case
+                $role->removeInheritedRole($defaultRole);
+                break;
+              }else{
+                // role did not change
+                $roleChanged = false;
+              }
+              break;
             }
-            unset($roleIdsToRemove[$roleId]);
+          }
+
+          if($roleChanged){
+            $role->addInheritedRole($inheritedRole);
           }
         }
       }
       
-      $case->setCollaborators($formData['collaborators']);
-      $case->setTags($formData['tags']);
+      $case->setCollaborators($formData['collaborators-users']);
+      $case->setTags(isset($formData['tags']) ? $formData['tags'] : array());
 
       // write back to persistence manager and flush it
       $this->_em->persist($case);
@@ -246,11 +263,33 @@ class CaseController extends Unplagged_Controller_Action{
     return false;
   }
 
-  private function initBasicRolesForCase(Application_Model_Case $case){
-    $adminRole = new Application_Model_User_InheritableRole();
-    $adminRole->setRoleId('admin_case-' . $case->getId());
+  private function initBasicRolesForCase(Application_Model_Case $case, $collaboratorsRoles){
 
-    $case->addDefaultRole($adminRole);
+    $templateRoles = $this->_em->getRepository('Application_Model_User_InheritableRole')->findByType('case-default');
+    $mappingRoleIds = array();
+    // create new roles for the new case based on the case-default roles that are used as templates
+    foreach($templateRoles as $templateRole){
+      $templateRoleId = $templateRole->getId();
+
+      $caseDefaultRole = clone $templateRole;
+      $caseDefaultRole->setId(null);
+      $caseDefaultRole->setRoleId($caseDefaultRole->getRoleId() . ' - ' . $case->getId());
+      $caseDefaultRole->setType('case');
+
+      $this->_em->persist($caseDefaultRole);
+      $this->_em->flush();
+      $case->addDefaultRole($caseDefaultRole);
+
+      $mappingRoleIds[$templateRoleId] = $caseDefaultRole->getId();
+    }
+
+    // add the roles to the collaborators
+    foreach($collaboratorsRoles as $roleId=>$inheritedRoleId){
+      $role = $this->_em->getRepository('Application_Model_User_Role')->findOneById($roleId);
+      $inheritedRole = $this->_em->getRepository('Application_Model_User_Role')->findOneById($mappingRoleIds[$inheritedRoleId]);
+      $role->addInheritedRole($inheritedRole);
+      $this->_em->persist($role);
+    }
   }
 
   /**
@@ -262,10 +301,12 @@ class CaseController extends Unplagged_Controller_Action{
 
     if(!empty($input->id)){
       $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
-      $roles = $case->getDefaultRoles();
+      if($case){
+        $roles = $case->getDefaultRoles();
+      }
     }else{
       // select default roles
-      $roles = array();
+      $roles = $this->_em->getRepository('Application_Model_User_InheritableRole')->findByType('case-default');
     }
 
     $result = array();

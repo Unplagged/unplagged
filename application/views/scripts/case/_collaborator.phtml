@@ -18,23 +18,28 @@ $disabled = $this->disabled || false;
   ?>
   <div class="collaborators-wrapper" data-wrapper-for="<?php echo $this->element->getName(); ?>">
     <?php if($this->element->getValue()){ ?>
-      <?php foreach($this->element->getValue() as $userId): ?>
-        <?php $user = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneById($userId); ?>
-        <div class="well" data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $user->getId(); ?>">
-          <img class="avatar no-shadow" src="<?php echo $user->getAvatar(); ?>" />
-          <div class="names">
-            <span class="username"><?php echo $user->getUsername(); ?></span>
-          </div>
-          <div class="options">
-            <select class="span2" name="<?php echo $this->element->getName(); ?>-roles[<?php echo $user->getRole()->getId(); ?>]" style="width: 150px;">
-              <?php foreach($this->roles as $role): ?>
-              <option value="<?php echo $role->getId(); ?>"><?php echo $role->getRoleId(); ?></option>
-              <?php endforeach; ?>
-            </select>
-            <a href="#" class="btn btn-danger" data-remove="true" data-for="<?php echo $user->getId(); ?>"><i class="icon-remove"></i></a>
-          </div>
-          <input type="hidden" name="<?php echo $this->element->getName(); ?>[]" value="<?php echo $user->getRole()->getId(); ?>" />
-        </div>
+      <?php foreach($this->element->getValue() as $roleId=>$inheritedRoleId): ?>
+        <?php $role = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User_Role')->findOneById($roleId); ?>
+        <?php if($role): ?>
+          <div class="well" data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $role->getUser()->getId(); ?>">
+            <img class="avatar no-shadow" src="<?php echo $role->getUser()->getAvatar(); ?>" />
+            <div class="names">
+              <span class="username"><?php echo $role->getUser()->getUsername(); ?></span>
+            </div>
+            <div class="options">
+              <select class="span2" name="<?php echo $this->element->getName(); ?>[<?php echo $role->getId(); ?>]" style="width: 150px;">
+                <?php foreach($this->roles as $inheritedRole): ?>
+                  <?php $selected = ($inheritedRoleId == $inheritedRole->getId()) ? 'selected="selected"' : ''; ?>
+                  <option <?php echo $selected; ?> value="<?php echo $inheritedRole->getId(); ?>"><?php echo $inheritedRole->getRoleId(); ?></option>
+                <?php endforeach; ?>
+              </select>
+              <input type="hidden" name="<?php echo $this->element->getName(); ?>-users[]" value="<?php echo $role->getUser()->getId(); ?>" />
+
+              <a href="#" class="btn btn-danger" data-remove="true" data-for="<?php echo $role->getUser()->getId(); ?>"><i class="icon-remove"></i></a>
+            </div>
+            </div>
+          <?php endif; ?>
+        
       <?php endforeach; ?>
     <?php } ?>
   </div>  

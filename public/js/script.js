@@ -478,7 +478,8 @@ $(document).ready(function(){
       var options = null;
       if(viewScript == 'collaborator') {
         options = {
-          'caseId': $(this).attr('data-case')
+          'caseId': $(this).attr('data-case'),
+          'roleId': ui.item.role
         }
       }
       createSelectedElement(sourceId, ui.item.value, ui.item.label, viewScript, options);
@@ -517,21 +518,21 @@ $(document).ready(function(){
     } else if(viewScript == 'collaborator') {
       var caseId = (parseInt(options.caseId) == options.caseId) ? '/id/' + options.caseId : '';
 
-      $.post('/case/get-roles/' + caseId, {}, function(response) {  
+      $.post('/case/get-roles' + caseId, {}, function(response) {  
         element = '<div class="well" data-source="' + sourceId + '" data-id="' + value + '">';
         element += '<img class="avatar no-shadow" src="/images/default-avatar.png">';
         element += '<div class="names">';
         element += '<span class="username">' + label + '</span>';
         element += '</div>';
         element += '<div class="options">';
-        element += '<select class="span2" style="width: 150px;">';
+        element += '<select class="span2" name="' + sourceId + '[' + options.roleId + ']" style="width: 150px;">';
         
         $.each(response.roles, function(roleId, roleName) { 
           element += '<option value=' + roleId + '>' + roleName + '</option>';
         });
         element += '</select>';
         element += ' <a href="#" class="btn btn-danger" data-remove="true" data-for="' + value + '"><i class="icon-remove"></i></a></div>';
-        element += '<input type="hidden" name="' + sourceId + '[]" value="' +  value + '" />';
+        element += '<input type="hidden" name="' + sourceId + '-users[]" value="' +  value + '" />';
         element += '</div>';
         $('div[data-wrapper-for=' + sourceId + ']').append(element);
         updateAutocompleteSource(sourceId);

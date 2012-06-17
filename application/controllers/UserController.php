@@ -364,7 +364,7 @@ class UserController extends Unplagged_Controller_Action{
     }
 
     // skip has to be passed in directly and can't be set as a parameter due to a doctrine bug
-    $query = $this->_em->createQuery("SELECT u.id value, u.username label FROM Application_Model_User u WHERE " . $caseCondition . " u.username LIKE :term" . $input->skip);
+    $query = $this->_em->createQuery("SELECT u.id value, u.username label, r.id role FROM Application_Model_User u JOIN u.role r WHERE " . $caseCondition . " u.username LIKE :term" . $input->skip);
     $query->setParameter('term', '%' . $input->term . '%');
     if(!empty($input->case)){
       $query->setParameter('caseId', $input->case);

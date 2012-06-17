@@ -195,10 +195,14 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     }
   }
 
-  public function addInheritedRole(Unplagged_Model_User_InheritableRole $inheritedRole){
+  public function addInheritedRole(Application_Model_User_InheritableRole $inheritedRole){
     if(!$this->inheritedRoles->contains($inheritedRole)){
       $this->inheritedRoles->add($inheritedRole);
     }
+  }
+
+  public function removeInheritedRole(Application_Model_User_InheritableRole $inheritedRole){
+    $this->inheritedRoles->removeElement($inheritedRole);
   }
 
   public function getInheritedRoles(){
@@ -207,6 +211,18 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
 
   public function getType(){
     return $this->type;
+  }
+
+  public function getUser(){
+    return $this->user;
+  }
+
+  public function setId($id){
+    $this->id = $id;
+  }
+
+  public function setType($type){
+    $this->type = $type;
   }
 
 }
