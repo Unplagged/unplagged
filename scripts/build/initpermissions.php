@@ -81,7 +81,7 @@ foreach(get_declared_classes() as $class){
     }
   }
 
-  if(is_subclass_of($class, 'Application_Model_Base')){
+  if($class == 'Application_Model_Base' || is_subclass_of($class, 'Application_Model_Base')){
     $model = substr($class, strrpos($class, '_') + 1);
     $modelWithHyphens = substr(preg_replace_callback('/([A-Z])/', create_function('$matches', 'return \'-\' . strtolower($matches[1]);'), $model), 1);
     if(!in_array($modelWithHyphens, Application_Model_Base::$blacklist)){
@@ -99,7 +99,12 @@ $modelPermissions = storeResources($modelResources, $em, 'model');
 function storeResources(array $resources, $em, $type = 'model'){
   $permissions = array();
   foreach($resources as $resource){
-    $permission = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1]));
+    if($type == 'model'){
+    echo $resource[0] . '...' . $resource[1] . "\n";
+      $permission = $em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1], 'base'=>null));
+    }else{
+      $permission = $em->getRepository('Application_Model_PagePermission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1], 'base'=>null));
+    }
     if(empty($permission)){
       if($type === 'model'){
         $permission = new Application_Model_ModelPermission($resource[0], $resource[1]);

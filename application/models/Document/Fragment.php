@@ -34,7 +34,7 @@ use DoctrineExtensions\Versionable\Versionable;
 class Application_Model_Document_Fragment extends Application_Model_Versionable{
 
   const ICON_CLASS = 'icon-fragment';
-  const PERMISSION_TYPE = 'document_fragment';
+  const PERMISSION_TYPE = 'fragment';
   
   /**
    * The note.

@@ -64,10 +64,8 @@ abstract class Application_Model_Base{
     'authorize'
   );
   public static $blacklist = array(
-    'base',
     'task',
     'partial',
-    'fragment',
     'notification',
     'page',
     'tag',
