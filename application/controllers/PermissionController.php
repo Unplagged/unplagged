@@ -282,8 +282,10 @@ class PermissionController extends Unplagged_Controller_Action{
       foreach($base->getPermissions() as $permission){
         if(isset($formData[$permission->getAction()])){
           $permission->setRoles($formData[$permission->getAction()]);
-          $this->_em->persist($permission);
+        }else{
+          $permission->setRoles(array());
         }
+        $this->_em->persist($permission);
       }
 
       // write back to persistence manager and flush it

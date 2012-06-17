@@ -168,6 +168,14 @@ class CaseController extends Unplagged_Controller_Action{
         $action['icon'] = 'images/icons/basket_put.png';
         $file->actions[] = $action;
 
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'authorize', 'base'=>$file));
+        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $action['link'] = '/permission/edit/id/' . $file->getId();
+          $action['label'] = 'Set permissions';
+          $action['icon'] = 'images/icons/shield.png';
+          $file->actions[] = $action;
+        }
+
       endforeach;
 
       $this->view->paginator = $paginator;
@@ -249,7 +257,7 @@ class CaseController extends Unplagged_Controller_Action{
           }
         }
       }
-      
+
       $case->setCollaborators($formData['collaborators-users']);
       $case->setTags(isset($formData['tags']) ? $formData['tags'] : array());
 
