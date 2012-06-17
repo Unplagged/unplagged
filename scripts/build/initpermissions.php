@@ -38,7 +38,7 @@ $modelResources = array();
 //first permission is allow everything
 $allowAll = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>'global', 'action'=>'*'));
 if(!$allowAll){
-  $allowAll = new Application_Model_Permission('global', '*');
+  $allowAll = new Application_Model_PagePermission('global', '*');
   $em->persist($allowAll);
 }
 
@@ -93,16 +93,20 @@ foreach(get_declared_classes() as $class){
   }
 }
 
-storeResources($basicResources, $em);
-$modelPermissions = storeResources($modelResources, $em);
+storeResources($basicResources, $em, 'page');
+$modelPermissions = storeResources($modelResources, $em, 'model');
 
 
-function storeResources(array $resources, $em){
+function storeResources(array $resources, $em, $type = 'model'){
   $permissions = array();
   foreach($resources as $resource){
     $permission = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$resource[0], 'action'=>$resource[1]));
     if(empty($permission)){
-      $permission = new Application_Model_Permission($resource[0], $resource[1]);
+      if($type==='model'){
+        $permission = new Application_Model_ModelPermission($resource[0], $resource[1]);
+      } else {
+        $permission = new Application_Model_PagePermission($resource[0], $resource[1]);  
+      }
       $em->persist($permission);
     }
     $permissions[] = $permission;
@@ -206,7 +210,7 @@ if(!$element){
 }
 
 //create the default case roles
-$caseAdmin = $em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'admin', 'type'=>Application_Model_User_Role::TYPE_CASE_DEFAULT));
+$caseAdmin = $em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'case-admin', 'type'=>Application_Model_User_Role::TYPE_CASE_DEFAULT));
 if(!$caseAdmin){
   $caseAdmin = new Application_Model_User_InheritableRole(Application_Model_User_Role::TYPE_CASE_DEFAULT);
   $caseAdmin->setRoleId('case-admin');
@@ -218,6 +222,18 @@ if(!$caseAdmin){
   $em->persist($caseAdmin);
 }
 
+//create the default case roles
+$caseCollaborator = $em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'case-collaborator', 'type'=>Application_Model_User_Role::TYPE_CASE_DEFAULT));
+if(!$caseCollaborator){
+  $caseCollaborator = new Application_Model_User_InheritableRole(Application_Model_User_Role::TYPE_CASE_DEFAULT);
+  $caseAdmin->setRoleId('case-collaborator');
+
+  foreach($modelPermissions as $modelPermission){
+    $caseAdmin->addPermission($modelPermission);
+  }
+
+  $em->persist($caseAdmin);
+}
 
 
 $em->flush();

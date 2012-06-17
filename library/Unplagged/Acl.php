@@ -27,7 +27,7 @@ class Unplagged_Acl extends Zend_Acl{
 
     $this->addRole($user->getRole());
 
-    $resources = $em->getRepository('Application_Model_Permission')->findAll();
+    $resources = $em->getRepository('Application_Model_PagePermission')->findAll();
 
     foreach($resources as $resource){
       if(!$this->has($resource->getResourceId())){

@@ -174,7 +174,7 @@ abstract class Application_Model_Base{
 
     foreach(self::$permissionTypes as $permissionType){
       if(!in_array($this->getPermissionType(), self::$blacklist)){
-        $permission = new Application_Model_Permission($this->getPermissionType(), $permissionType, $this);
+        $permission = new Application_Model_ModelPermission($this->getPermissionType(), $permissionType, $this);
         $user->getRole()->addPermission($permission);
         $em->persist($permission);
       }
