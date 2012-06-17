@@ -38,7 +38,6 @@ class PermissionController extends Unplagged_Controller_Action{
     $outputPermissions['pagePermissions'] = $this->initPermissionData($pagePermissions, $rolePermissions);
     $outputPermissions['modelPermissions'] = $this->initPermissionData($modelPermissions, $rolePermissions);
 
-
     $editForm = new Application_Form_Permission_EditRole(array('permissions'=>$outputPermissions));
 
     if($this->_request->isPost()){
@@ -80,12 +79,12 @@ class PermissionController extends Unplagged_Controller_Action{
       }else{
         $permissionGroupName = $allowedPermission->getType();
 
-        if(isset($outputPermissions['pagePermissions'][$permissionGroupName])){
+        if(isset($outputPermissions[$permissionGroupName])){
           $permissionName = $allowedPermission->getAction();
 
           if(isset($outputPermissions[$permissionGroupName][$permissionName])){
-            $outputPermissions['pagePermissions'][$permissionGroupName][$permissionName]['allowed'] = true;
-            $outputPermissions['pagePermissions'][$permissionGroupName][$permissionName]['inherited'] = true;
+            $outputPermissions[$permissionGroupName][$permissionName]['allowed'] = true;
+            $outputPermissions[$permissionGroupName][$permissionName]['inherited'] = true;
           }
         }
       }
@@ -120,11 +119,20 @@ class PermissionController extends Unplagged_Controller_Action{
     $formData = $this->_request->getPost();
     if($editForm->isValid($formData)){
 
-      foreach($formData as $permissionGroup){
+      foreach($formData as $groupName => $permissionGroup){
         if(is_array($permissionGroup)){
           foreach($permissionGroup as $permissionName=>$value){
-            $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('action'=>$permissionName, 'type'=>$permissionGroup));
+
+            $actionName = substr($permissionName, strrpos($permissionName, '_')+1);
+            if(!$actionName){
+              $actionName = '';  
+            }
+
+            $permission = $this->_em->getRepository('Application_Model_Permission')->findOneBy(array('action'=>$actionName, 'type'=>substr($groupName, strrpos($groupName, '_')+1)));
             if($permission){
+              //var_dump($value);
+              //var_dump($permission);
+              //die('hier');
               if($value === '1'){
                 $role->addPermission($permission);
               }else{
