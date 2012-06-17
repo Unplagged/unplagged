@@ -34,13 +34,13 @@ class Unplagged_HtmlLayout {
                     . 'Page from: ' . $pageFromPlag . ' - Line from: ' . $lineFromPlag . '<br/>'
                     . 'Page to: ' . $pageToPlag . ' - Line to: ' . $lineToPlag . '<br/><br/>';*/
             
-             $divLeft = 'Plag Bibtextkürzel: ' . $bibTexPlag['kuerzel'] .'<br/>'
+             $divLeft = 'Plag Bibtextkürzel: ' . "[" . $bibTexPlag["autor"] ." ". $bibTexPlag["jahr"]. "] " .'<br/>'
                     . 'Page from: ' . $pageFromPlag . ' - Line from: ' . $lineFromPlag . '<br/>'
                     . 'Page to: ' . $pageToPlag . ' - Line to: ' . $lineToPlag . '<br/><br/>';
 
             $divLeft .= $content['plag'];
 
-            $divRight = 'Source Bibtextkürzel: ' . $bibTexSource['kuerzel'] . '<br/>'
+            $divRight = 'Source Bibtextkürzel: ' . "[" . $bibTexSource["autor"] ." ". $bibTexSource["jahr"]. "]". '<br/>'
                     . 'Page from: ' . $pageFromSource . ' - Line from: ' . $pageToSource . '<br/>'
                     . 'Page to: ' . $lineFromSource . ' - Line to: ' . $lineToSource . '<br/><br/>';
 

@@ -373,12 +373,13 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
              ol li{
                 list-style: none;
                 background-color: white;
-                padding-left: 3px;
-                border-left: 1px solid black;
+                padding-left: 0px;
+                border-left: 1px solid black;                
              }
              ol {
                 background-color: #bcbcbc;
                 border-top: 1px solid black;
+                margin-left:0px;
              }
              .number {
              }
