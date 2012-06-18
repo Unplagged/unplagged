@@ -687,6 +687,17 @@ $(document).ready(function(){
   function updateBibTexForm(){
     var type = $('#type').val();
     
+	// form with label and element together in a line
+	  $('#autor-label').css({"float":"left","width":"80px"});
+	  $('#titel-label').css({"float":"left","width":"80px"});
+      $('#ort-label').css({"float":"left","width":"80px"});
+      $('#verlag-label').css({"float":"left","width":"80px"});
+	  $('#jahr-label').css({"float":"left","width":"80px"});
+	  $('#anmerkung-label').css({"float":"left","width":"80px"});
+      $('#url-label').css({"float":"left","width":"80px"});
+      $('#inlit-label').css({"float":"left","width":"80px"});
+	  $('#infn-label').css({"float":"left","width":"80px"});
+	  
     if(type == 'full' || type == 'periodikum' ) 
     { 
       $('#zeitschrift-element').show();
@@ -697,6 +708,13 @@ $(document).ready(function(){
       $('#tag-label').show();
       $('#nummer-element').show();
       $('#nummer-label').show();
+	  
+	  // form with label and element together in a line
+	  $('#zeitschrift-label').css({"float":"left","width":"80px"});
+	  $('#monat-label').css({"float":"left","width":"80px"});
+      $('#tag-label').css({"float":"left","width":"80px"});
+      $('#nummer-label').css({"float":"left","width":"80px"});
+	  
     } else {
       $('#zeitschrift-element').hide();
       $('#zeitschrift-label').hide();
@@ -715,7 +733,13 @@ $(document).ready(function(){
       $('#hrsg-element').show();
       $('#hrsg-label').show();
       $('#issn-element').show();
-      $('#issn-label').show();						
+      $('#issn-label').show();	
+
+	  // form with label and element together in a line
+	   $('#sammlung-label').css({"float":"left","width":"80px"});
+	  $('#hrsg-label').css({"float":"left","width":"80px"});
+      $('#issn-label').css({"float":"left","width":"80px"});
+      
     } else {
       $('#sammlung-element').hide();
       $('#sammlung-label').hide();
@@ -728,8 +752,11 @@ $(document).ready(function(){
     if(type == 'full' || type == 'aufsatz' || type == 'periodikum') 
     { 
       $('#seiten-element').show();
-      $('#seiten-label').show();	
-   
+      $('#seiten-label').show();
+
+	  // form with label and element together in a line
+	  $('#seiten-label').css({"float":"left","width":"80px"});
+	
     } else {
       $('#seiten-element').hide();
       $('#seiten-label').hide();
@@ -741,6 +768,9 @@ $(document).ready(function(){
       $('#isbn-element').show();
       $('#isbn-label').show();
    
+      // form with label and element together in a line
+	  $('#isbn-label').css({"float":"left","width":"80px"});
+	  
     } else {
       $('#isbn-element').hide();
       $('#isbn-label').hide();
@@ -765,6 +795,18 @@ $(document).ready(function(){
       $('#wp-label').show();
       $('#schluessel-element').show();
       $('#schluessel-label').show();
+	  
+	  // form with label and element together in a line
+	  $('#kuerzel-label').css({"float":"left","width":"80px"});
+	  $('#beteiligte-label').css({"float":"left","width":"80px"});
+	  $('#ausgabe-label').css({"float":"left","width":"80px"});
+	  $('#umfang-label').css({"float":"left","width":"80px"});
+	  $('#reihe-label').css({"float":"left","width":"80px"});
+	  $('#doi-label').css({"float":"left","width":"80px"});
+	  $('#urn-label').css({"float":"left","width":"80px"});
+	  $('#wp-label').css({"float":"left","width":"80px"});
+	  $('#schluessel-label').css({"float":"left","width":"80px"});
+	  
     } else{
       $('#kuerzel-element').hide();
       $('#kuerzel-label').hide();
