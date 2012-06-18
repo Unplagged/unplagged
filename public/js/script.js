@@ -591,7 +591,7 @@ $(document).ready(function(){
 
     return false;
   });
-  /*
+  
   function updateBibTexForm(){
     var type = $('#type').val();
     
@@ -616,10 +616,6 @@ $(document).ready(function(){
       $('#tag-label').show();
       $('#nummer-element').show();
       $('#nummer-label').show();
-<<<<<<< HEAD
-    }
-    else {
-=======
 	  
 	  // form with label and element together in a line
 	  $('#zeitschrift-label').css({"float":"left","width":"80px"});
@@ -628,7 +624,6 @@ $(document).ready(function(){
       $('#nummer-label').css({"float":"left","width":"80px"});
 	  
     } else {
->>>>>>> 54504814c840f4926e6e2b3d37cb07bec26a014d
       $('#zeitschrift-element').hide();
       $('#zeitschrift-label').hide();
       $('#monat-element').hide();
@@ -638,18 +633,14 @@ $(document).ready(function(){
       $('#nummer-element').hide();
       $('#nummer-label').hide();									
     }
-								
-    if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' ) {
+   
+    if(type == 'full' || type == 'aufsatz' ) 
+    { 
       $('#sammlung-element').show();
       $('#sammlung-label').show();
       $('#hrsg-element').show();
       $('#hrsg-label').show();
       $('#issn-element').show();
-<<<<<<< HEAD
-      $('#issn-label').show();						
-    }
-    else {
-=======
       $('#issn-label').show();	
 
 	  // form with label and element together in a line
@@ -658,7 +649,6 @@ $(document).ready(function(){
       $('#issn-label').css({"float":"left","width":"80px"});
       
     } else {
->>>>>>> 54504814c840f4926e6e2b3d37cb07bec26a014d
       $('#sammlung-element').hide();
       $('#sammlung-label').hide();
       $('#hrsg-element').hide();
@@ -666,43 +656,35 @@ $(document).ready(function(){
       $('#issn-element').hide();
       $('#issn-label').hide();
     }
-					
-    if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' || $('#type').val() == 'periodikum'){ 
+   
+    if(type == 'full' || type == 'aufsatz' || type == 'periodikum') 
+    { 
       $('#seiten-element').show();
-<<<<<<< HEAD
-      $('#seiten-label').show();	
-    }
-    else {
-=======
       $('#seiten-label').show();
 
 	  // form with label and element together in a line
 	  $('#seiten-label').css({"float":"left","width":"80px"});
 	
     } else {
->>>>>>> 54504814c840f4926e6e2b3d37cb07bec26a014d
       $('#seiten-element').hide();
       $('#seiten-label').hide();
+   
     }
-				
-    if($('#type').val() == 'full' || $('#type').val() == 'buch' || $('#type').val() == 'aufsatz') { 
+   
+    if(type == 'full' || type == 'buch' || type == 'aufsatz') 
+    { 
       $('#isbn-element').show();
       $('#isbn-label').show();
-<<<<<<< HEAD
-    }
-    else {
-=======
    
       // form with label and element together in a line
 	  $('#isbn-label').css({"float":"left","width":"80px"});
 	  
     } else {
->>>>>>> 54504814c840f4926e6e2b3d37cb07bec26a014d
       $('#isbn-element').hide();
       $('#isbn-label').hide();
+   
     }
-
-    if($('#type').val() == 'full'){
+    if(type == 'full'){
       $('#kuerzel-element').show();
       $('#kuerzel-label').show();
       $('#beteiligte-element').show();
@@ -721,10 +703,6 @@ $(document).ready(function(){
       $('#wp-label').show();
       $('#schluessel-element').show();
       $('#schluessel-label').show();
-<<<<<<< HEAD
-    }
-    else{
-=======
 	  
 	  // form with label and element together in a line
 	  $('#kuerzel-label').css({"float":"left","width":"80px"});
@@ -738,7 +716,6 @@ $(document).ready(function(){
 	  $('#schluessel-label').css({"float":"left","width":"80px"});
 	  
     } else{
->>>>>>> 54504814c840f4926e6e2b3d37cb07bec26a014d
       $('#kuerzel-element').hide();
       $('#kuerzel-label').hide();
       $('#beteiligte-element').hide();
@@ -759,11 +736,10 @@ $(document).ready(function(){
       $('#schluessel-label').hide();
     }
   }
-	*/
   $("#type").change(function(){
-    changeBibTexForm();
+    updateBibTexForm();
   });
-  changeBibTexForm();
+  updateBibTexForm();
   
   $('#upload-queue').unplaggedFileUpload();
   $().unplaggedContextMenu();
