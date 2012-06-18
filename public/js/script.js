@@ -591,7 +591,7 @@ $(document).ready(function(){
 
     return false;
   });
-  
+  /*
   function updateBibTexForm(){
     var type = $('#type').val();
     
@@ -759,7 +759,7 @@ $(document).ready(function(){
       $('#schluessel-label').hide();
     }
   }
-	
+	*/
   $("#type").change(function(){
     changeBibTexForm();
   });
