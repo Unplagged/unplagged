@@ -65,14 +65,17 @@ abstract class Application_Model_Base{
   );
   public static $blacklist = array(
     'task',
-    'partial',
+    'document-fragment-type',
+    'document-fragment-partial',
     'notification',
     'page',
     'tag',
-    'version',
-    'line',
+    'versionable',
+    'document-page-line',
     'rating',
-    'versionable'
+    'versionable-version',
+    'document-page-simtextreport',
+    'document-page-detectionreport',
   );
 
   /**

@@ -47,14 +47,11 @@ class BibtexController extends Unplagged_Controller_Action{
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
     if($case){
-      $permissionAction = 'read';
-      $query = 'SELECT b FROM Application_Model_Document b';// WHERE b.case=\'5\'';
-      $count = 'SELECT COUNT(b.id) FROM Application_Model_Document b';// WHERE b.case=\'5\'';
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
+      $query = 'SELECT b FROM Application_Model_Document b';
+      $count = 'SELECT COUNT(b.id) FROM Application_Model_Document b';
 	  
-	  //$query = $this->_em->createQuery("SELECT b FROM Application_Model_Document b");
-      //$count = $this->_em->createQuery("SELECT COUNT(b.id) FROM Application_Model_Document b");
-	  
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permissionAction));
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permission));
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
       $paginator->setCurrentPageNumber($input->page);
 
@@ -75,7 +72,8 @@ class BibtexController extends Unplagged_Controller_Action{
         }
 
         $document->actions = array();
-        if(Zend_Registry::getInstance()->user->hasPermission(new Application_Model_Permission('document', 'update', $document->getId()))){
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
+        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $action['link'] = '/document/edit/id/' . $document->getId();
           $action['label'] = 'Edit bibtex';
           $action['icon'] = 'images/icons/pencil.png';

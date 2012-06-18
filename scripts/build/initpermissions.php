@@ -42,48 +42,29 @@ if(!$allowAll){
   $em->persist($allowAll);
 }
 
+$classesArr = array();
+
 //find all controllers and include them; we currently have no modules, 
 //if we have later on, this probably needs to be included into the 
 //permission name
 foreach($front->getControllerDirectory() as $module=>$path){
   recursiveDirectories($path);
-}
-
-/**
- * Include all *Controller.php files from the given path and it's subdirectories.
- * @param string $path 
- */
-function recursiveDirectories($path){
-  $content = scandir($path);
-  foreach($content as $directoryContent){
-    if($directoryContent !== '..' && $directoryContent !== '.' && is_dir($path . DIRECTORY_SEPARATOR . $directoryContent)){
-      recursiveDirectories($path . DIRECTORY_SEPARATOR . $directoryContent);
-    }else{
-      if(strstr($path . DIRECTORY_SEPARATOR . $directoryContent, 'Controller.php') !== false){
-        include_once $path . DIRECTORY_SEPARATOR . $directoryContent;
-      }
-    }
-  }
+  recursiveDirectories(str_replace('controllers', 'models', $path));
 }
 
 //get the actions of every included controller to store them in the db
-foreach(get_declared_classes() as $class){
-  if(is_subclass_of($class, 'Zend_Controller_Action')){
-
+foreach($classesArr as $class){
+  if(strpos($class, 'Controller') > 0){
     $controller = strtolower(substr($class, 0, strpos($class, 'Controller')));
-
     foreach(get_class_methods($class) as $action){
-
       if(strstr($action, 'Action') !== false){
         $actionWithHyphens = preg_replace_callback('/([A-Z])/', create_function('$matches', 'return \'-\' . strtolower($matches[1]);'), substr($action, 0, -6));
         $basicResources[] = array($controller, $actionWithHyphens);
       }
     }
-  }
-
-  if($class == 'Application_Model_Base' || is_subclass_of($class, 'Application_Model_Base')){
-    $model = substr($class, strrpos($class, '_') + 1);
-    $modelWithHyphens = substr(preg_replace_callback('/([A-Z])/', create_function('$matches', 'return \'-\' . strtolower($matches[1]);'), $model), 1);
+  }elseif(strpos($class, 'Application_Model_') !== false && $class == 'Application_Model_Base' || is_subclass_of($class, 'Application_Model_Base')){
+    // Application_Model_Base_Document will get base-document
+    $modelWithHyphens = strtolower(str_replace('_', '-', substr($class, strlen('Application_Model_'))));
     if(!in_array($modelWithHyphens, Application_Model_Base::$blacklist)){
       foreach(Application_Model_Base::$permissionTypes as $permissionType){
         $resource = array($modelWithHyphens, $permissionType);
@@ -93,7 +74,7 @@ foreach(get_declared_classes() as $class){
   }
 }
 
-storeResources($basicResources, $em, 'page');
+$pagePermissions = storeResources($basicResources, $em, 'page');
 $modelPermissions = storeResources($modelResources, $em, 'model');
 
 function storeResources(array $resources, $em, $type = 'model'){
@@ -334,4 +315,49 @@ if(!$caseCollaborator){
 
 
 $em->flush();
+
+// some helper stuff for loading the classes needed
+function file_get_php_classes($filepath){
+  $php_code = file_get_contents($filepath);
+  $classes = get_php_classes($php_code);
+
+  return $classes;
+}
+
+function get_php_classes($php_code){
+  global $classesArr;
+
+  $tokens = token_get_all($php_code);
+  $count = count($tokens);
+  for($i = 2; $i < $count; $i++){
+    if($tokens[$i - 2][0] == T_CLASS
+        && $tokens[$i - 1][0] == T_WHITESPACE
+        && $tokens[$i][0] == T_STRING){
+
+      $class_name = $tokens[$i][1];
+      $classesArr[] = $class_name;
+    }
+  }
+  return;
+}
+
+/**
+ * Include all *Controller.php files from the given path and it's subdirectories.
+ * @param string $path 
+ */
+function recursiveDirectories($path){
+  $content = scandir($path);
+  foreach($content as $directoryContent){
+    if($directoryContent !== '..' && $directoryContent !== '.' && is_dir($path . DIRECTORY_SEPARATOR . $directoryContent)){
+      recursiveDirectories($path . DIRECTORY_SEPARATOR . $directoryContent);
+    }else{
+      $filePath = $path . DIRECTORY_SEPARATOR . $directoryContent;
+      if(strstr($filePath, '.php')){
+        require_once($filePath);
+        file_get_php_classes($filePath);
+      }
+    }
+  }
+}
+
 ?>
