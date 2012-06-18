@@ -34,7 +34,7 @@ class Application_Form_Document_Modify extends Zend_Form{
 
     // general group
     $titleElement = new Zend_Form_Element_Text('title');
-    $titleElement->setLabel("Title");
+    $titleElement->setLabel("Title*");
     $titleElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
     $titleElement->addValidator('stringLength', false, array(2, 64));
     $titleElement->setRequired(true);
@@ -43,18 +43,18 @@ class Application_Form_Document_Modify extends Zend_Form{
 	$typeElement = new Zend_Form_Element_Select('type');
 	$typeElement->setLabel("Document type: ");
 	$typeElement->addMultiOptions(array('full'=>'Vollständiges Formular', 'buch'=>'Buchformular', 'periodikum'=>'Periodikumformular', 'aufsatz' => 'Aufsatzsammlungsformular' ));
-	$typeElement->setRequired(true);
+	//$typeElement->setRequired(true);
 	//$typeElement->setAttrib('onchange',HANDLEDOCUMENTTYPE);
      
 	$kuerzelElement = new Zend_Form_Element_Text('kuerzel');
     $kuerzelElement->setLabel("Kuerzel");
 
     $autorElement = new Zend_Form_Element_Text('autor');
-    $autorElement->setLabel("Autor");
+    $autorElement->setLabel("Autor*");
     $autorElement->setRequired(true);
 
     $titelElement = new Zend_Form_Element_Text('titel');
-    $titelElement->setLabel("Titel");
+    $titelElement->setLabel("Titel*");
     $titelElement->setRequired(true);
 
     $zeitschriftElement = new Zend_Form_Element_Text('zeitschrift');
@@ -79,7 +79,7 @@ class Application_Form_Document_Modify extends Zend_Form{
     $ausgabeElement->setLabel("Ausgabe");
 
     $jahrElement = new Zend_Form_Element_Text('jahr');
-    $jahrElement->setLabel("Jahr");
+    $jahrElement->setLabel("Jahr*");
     $jahrElement->setRequired(true);
 
     $monatElement = new Zend_Form_Element_Text('monat');

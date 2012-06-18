@@ -416,6 +416,19 @@ class DocumentController extends Unplagged_Controller_Action{
     $this->_helper->viewRenderer->setNoRender(true);
   }
 
+  // show bibtex information of a document
+  public function bibtexAction(){
+	$input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
+      $this->view->document =  $document;
+	 
+    }
+	
+    //Zend_Layout::getMvcInstance()->menu = 'fragment-tools';
+    //Zend_Layout::getMvcInstance()->versionableId = $input->id;
+  }
 }
 
 ?>

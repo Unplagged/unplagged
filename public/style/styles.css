@@ -2371,3 +2371,7 @@ li.plupload_droptext {
 
 @media (max-width:767px){body{padding-left:0;padding-right:0;}}
 
+/*style for bibtex information of a defined document*/
+td.bibtex{
+	font-weight:bold;
+}

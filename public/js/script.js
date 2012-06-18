@@ -592,9 +592,22 @@ $(document).ready(function(){
     return false;
   });
   
-  // change bibtex form according to document type
-  function changeBibTexForm(){
-    if($('#type').val() == 'full' || $('#type').val() == 'periodikum' ) { 
+  function updateBibTexForm(){
+    var type = $('#type').val();
+    
+	// form with label and element together in a line
+	  $('#autor-label').css({"float":"left","width":"80px"});
+	  $('#titel-label').css({"float":"left","width":"80px"});
+      $('#ort-label').css({"float":"left","width":"80px"});
+      $('#verlag-label').css({"float":"left","width":"80px"});
+	  $('#jahr-label').css({"float":"left","width":"80px"});
+	  $('#anmerkung-label').css({"float":"left","width":"80px"});
+      $('#url-label').css({"float":"left","width":"80px"});
+      $('#inlit-label').css({"float":"left","width":"80px"});
+	  $('#infn-label').css({"float":"left","width":"80px"});
+	  
+    if(type == 'full' || type == 'periodikum' ) 
+    { 
       $('#zeitschrift-element').show();
       $('#zeitschrift-label').show();	
       $('#monat-element').show();
@@ -603,8 +616,19 @@ $(document).ready(function(){
       $('#tag-label').show();
       $('#nummer-element').show();
       $('#nummer-label').show();
+<<<<<<< HEAD
     }
     else {
+=======
+	  
+	  // form with label and element together in a line
+	  $('#zeitschrift-label').css({"float":"left","width":"80px"});
+	  $('#monat-label').css({"float":"left","width":"80px"});
+      $('#tag-label').css({"float":"left","width":"80px"});
+      $('#nummer-label').css({"float":"left","width":"80px"});
+	  
+    } else {
+>>>>>>> 54504814c840f4926e6e2b3d37cb07bec26a014d
       $('#zeitschrift-element').hide();
       $('#zeitschrift-label').hide();
       $('#monat-element').hide();
@@ -621,9 +645,20 @@ $(document).ready(function(){
       $('#hrsg-element').show();
       $('#hrsg-label').show();
       $('#issn-element').show();
+<<<<<<< HEAD
       $('#issn-label').show();						
     }
     else {
+=======
+      $('#issn-label').show();	
+
+	  // form with label and element together in a line
+	   $('#sammlung-label').css({"float":"left","width":"80px"});
+	  $('#hrsg-label').css({"float":"left","width":"80px"});
+      $('#issn-label').css({"float":"left","width":"80px"});
+      
+    } else {
+>>>>>>> 54504814c840f4926e6e2b3d37cb07bec26a014d
       $('#sammlung-element').hide();
       $('#sammlung-label').hide();
       $('#hrsg-element').hide();
@@ -634,9 +669,18 @@ $(document).ready(function(){
 					
     if($('#type').val() == 'full' || $('#type').val() == 'aufsatz' || $('#type').val() == 'periodikum'){ 
       $('#seiten-element').show();
+<<<<<<< HEAD
       $('#seiten-label').show();	
     }
     else {
+=======
+      $('#seiten-label').show();
+
+	  // form with label and element together in a line
+	  $('#seiten-label').css({"float":"left","width":"80px"});
+	
+    } else {
+>>>>>>> 54504814c840f4926e6e2b3d37cb07bec26a014d
       $('#seiten-element').hide();
       $('#seiten-label').hide();
     }
@@ -644,8 +688,16 @@ $(document).ready(function(){
     if($('#type').val() == 'full' || $('#type').val() == 'buch' || $('#type').val() == 'aufsatz') { 
       $('#isbn-element').show();
       $('#isbn-label').show();
+<<<<<<< HEAD
     }
     else {
+=======
+   
+      // form with label and element together in a line
+	  $('#isbn-label').css({"float":"left","width":"80px"});
+	  
+    } else {
+>>>>>>> 54504814c840f4926e6e2b3d37cb07bec26a014d
       $('#isbn-element').hide();
       $('#isbn-label').hide();
     }
@@ -669,8 +721,24 @@ $(document).ready(function(){
       $('#wp-label').show();
       $('#schluessel-element').show();
       $('#schluessel-label').show();
+<<<<<<< HEAD
     }
     else{
+=======
+	  
+	  // form with label and element together in a line
+	  $('#kuerzel-label').css({"float":"left","width":"80px"});
+	  $('#beteiligte-label').css({"float":"left","width":"80px"});
+	  $('#ausgabe-label').css({"float":"left","width":"80px"});
+	  $('#umfang-label').css({"float":"left","width":"80px"});
+	  $('#reihe-label').css({"float":"left","width":"80px"});
+	  $('#doi-label').css({"float":"left","width":"80px"});
+	  $('#urn-label').css({"float":"left","width":"80px"});
+	  $('#wp-label').css({"float":"left","width":"80px"});
+	  $('#schluessel-label').css({"float":"left","width":"80px"});
+	  
+    } else{
+>>>>>>> 54504814c840f4926e6e2b3d37cb07bec26a014d
       $('#kuerzel-element').hide();
       $('#kuerzel-label').hide();
       $('#beteiligte-element').hide();
