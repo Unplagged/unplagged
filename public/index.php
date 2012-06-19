@@ -49,8 +49,8 @@ if($installer->isInstalled()){
   $application = new Zend_Application(APPLICATION_ENV, array(
     'config'=>array(
       APPLICATION_PATH . '/configs/application.ini',
-      APPLICATION_PATH . '/configs/unplagged-config.ini',
-      APPLICATION_PATH . '/configs/log.ini'
+      APPLICATION_PATH . '/configs/log.ini',
+      APPLICATION_PATH . '/configs/unplagged-config.ini'
     )
   ));
   $application->bootstrap();

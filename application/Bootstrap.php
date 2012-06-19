@@ -188,8 +188,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       $log = new Zend_Log($writer);  
     }
     Zend_Registry::getInstance()->Log = $log;
-    Zend_Registry::get('Log')->info('Hi');
+    //Zend_Registry::get('Log')->info('Hi');
     
+    //@todo can be removed when Benni and Server are tested(20.06.12)
     /*$writer = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/application.log');
     $logger = new Zend_Log($writer);
     //   $logger = $this->getResource('Log');
