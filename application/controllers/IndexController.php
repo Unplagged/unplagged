@@ -35,6 +35,7 @@ class IndexController extends Unplagged_Controller_Action{
     $registry = Zend_Registry::getInstance();
     $user = $registry->user;
 
+    Zend_Layout::getMvcInstance()->sidebar = null;
     $case = $user->getCurrentCase();
     if($case){
       $barcode = $case->getBarcode(100, 150, 100, true, '%');

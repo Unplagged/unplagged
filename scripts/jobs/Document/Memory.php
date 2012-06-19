@@ -94,7 +94,6 @@ class Cron_Document_Parser extends Cron_Base{
   private static function update(){
     
   }
-
 }
 
 Cron_Document_Parser::init();

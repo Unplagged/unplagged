@@ -84,3 +84,4 @@ class Unplagged_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface{
   }
 
 }
+?>

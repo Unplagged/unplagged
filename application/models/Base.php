@@ -63,6 +63,10 @@ abstract class Application_Model_Base{
     'delete',
     'authorize'
   );
+  
+  /**
+   * @var array An array containing all classes that don't need permission management. 
+   */
   public static $blacklist = array(
     'task',
     'partial',
@@ -130,7 +134,6 @@ abstract class Application_Model_Base{
    * @todo private without getter and setter?
    */
   private $notifications;
-  
   protected $conversationTypes = array('comment');
 
   public function __construct(){

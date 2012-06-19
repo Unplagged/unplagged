@@ -28,34 +28,30 @@
 class Application_Model_Action{
 
   /**
-   * The id is an unique identifier for each notification action.
-   * @var string The notification action id.
+   * @var int The notification action id.
    * 
    * @Id @GeneratedValue @Column(type="integer")
    */
   private $id;
 
   /**
-   * A unique name for the notification action.
-   * @var string The name of the notification action.
+   * @var string The unique name of the notification action.
    * 
-   * @Column(type="string", unique=true, length=32)
+   * @Column(type="string", unique=true, length=255)
    */
   private $name;
 
   /**
-   * A unique name for the notification action.
-   * @var string The name of the notification action.
+   * @var string The unique name of the notification action.
    * 
-   * @Column(type="string", length=32)
+   * @Column(type="string", length=255)
    */
   private $title;
 
   /**
-   * A description for the notification action.
-   * @var string The description.
+   * @var string The description for the notification action
    * 
-   * @Column(type="string", length=256)
+   * @Column(type="string", length=255)
    */
   private $description;
 

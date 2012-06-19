@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once('Doctrine' . DIRECTORY_SEPARATOR . 'Common' . DIRECTORY_SEPARATOR . 'ClassLoader.php');
 
 use \Doctrine\Common\ClassLoader;
@@ -26,7 +27,7 @@ use \Doctrine\Common\ClassLoader;
  * all base components.
  *
  * Please remember that all the '_init*' methods are called alphabetically, so make sure to explicitly bootstrap
- * all dependencies in methods that deviate from this order.
+ * all dependencies in methods that need to deviate from this order.
  * 
  * @author Unplagged
  */
