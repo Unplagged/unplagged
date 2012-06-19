@@ -183,7 +183,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       $this->bootstrap('log');
       $log = $this->getResource('log');
     } else {
-      var_dump('hier');
       //if no logger was provided within a config, stub it out so no errors get thrown when logging is called
       $writer = new Zend_Log_Writer_Null;
       $log = new Zend_Log($writer);  
