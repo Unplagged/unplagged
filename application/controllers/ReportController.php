@@ -48,6 +48,7 @@ class ReportController extends Unplagged_Controller_Versionable{
       $this->_em->persist($task);
       $this->_em->flush();
 
+      $this->_helper->redirector('list', 'report');
       // Inform the user that the process will be started
       $this->_helper->flashMessenger->addMessage(array('success'=>'The report-generating process has been started.'));
     }else{
@@ -55,7 +56,7 @@ class ReportController extends Unplagged_Controller_Versionable{
       $this->_helper->viewRenderer->setNoRender(true);
       Zend_Layout::getMvcInstance()->sidebar = null;
     }
-    $this->_helper->redirector('list', 'report');
+    //$this->_helper->redirector('list', 'report');
   }
 
   public function downloadAction(){

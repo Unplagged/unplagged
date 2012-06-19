@@ -94,7 +94,7 @@ class UserController extends Unplagged_Controller_Action{
     $roleTemplate = $this->_em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'user', 'type'=>'global'));
     $role = new Application_Model_User_Role();
     $role->setType('user');
-    foreach($roleTemplate->getPermissions() as $permission) {
+    foreach($roleTemplate->getPermissions() as $permission){
       $role->addPermission($permission);
     }
     $adminRole = $this->_em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'admin', 'type'=>'global'));
@@ -141,18 +141,19 @@ class UserController extends Unplagged_Controller_Action{
       $action['label'] = 'Download';
       $action['icon'] = 'images/icons/disk.png';
       $file->actions[] = $action;
-
-      $action['link'] = '/file/delete/id/' . $file->getId();
-      $action['label'] = 'Delete';
-      $action['icon'] = 'images/icons/delete.png';
-      $file->actions[] = $action;
-
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'delete', 'base'=>$file));
+      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        $action['link'] = '/file/delete/id/' . $file->getId();
+        $action['label'] = 'Delete';
+        $action['icon'] = 'images/icons/delete.png';
+        $file->actions[] = $action;
+      }
       $action['link'] = '/case/add-file/id/' . $file->getId();
       $action['label'] = 'Add to current case';
       $action['icon'] = 'images/icons/package_add.png';
       $file->actions[] = $action;
-      
-      
+
+
       $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'authorize', 'base'=>$file));
       if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $action['link'] = '/permission/edit/id/' . $file->getId();

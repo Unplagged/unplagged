@@ -23,7 +23,7 @@
  */
 class Unplagged_HtmlLayout {
 
-    public static function htmlLayout($case,$fragments) {
+    public static function htmlLayout($case, $fragments) {
         // html body
         $array = array();
         $i = 0;
@@ -47,28 +47,30 @@ class Unplagged_HtmlLayout {
 
             $lineFromSource = $fragment->getSource()->getLineFrom()->getLineNumber();
             $lineToSource = $fragment->getSource()->getLineTo()->getLineNumber();
-
-            // // get fragment content
+                         
+            // get fragment content
             $content = $fragment->getContent('list', true);
 
-            $divLeft = 'Plag Bibtext: ' . $bibTexPlag['autor'] . ' - ' . $bibTexPlag['titel'] . '<br/>'
-						. 'Page from: ' . $pageFromPlag . ' - Line from: ' . $lineFromPlag . '<br/>' 
-						. 'Page to: ' . $pageToPlag . ' - Line to: ' . $lineToPlag . '<br/><br/>' ;
-                    
-            //foreach ($content['plag'] as $line) {
-                $divLeft .= $content['plag'] ;
-            //}
+            /*$divLeft = 'Plag Bibtext: ' . $bibTexPlag['autor'] . ' - ' . $bibTexPlag['titel'] . '<br/>'
+                    . 'Page from: ' . $pageFromPlag . ' - Line from: ' . $lineFromPlag . '<br/>'
+                    . 'Page to: ' . $pageToPlag . ' - Line to: ' . $lineToPlag . '<br/><br/>';*/
+            
+             $divLeft = 'Plag Bibtextkürzel: ' . "[" . $bibTexPlag["autor"] ." ". $bibTexPlag["jahr"]. "] " .'<br/>'
+                    . 'Page from: ' . $pageFromPlag . ' - Line from: ' . $lineFromPlag . '<br/>'
+                    . 'Page to: ' . $pageToPlag . ' - Line to: ' . $lineToPlag . '<br/><br/>';
 
-            $divRight = 'Source Bibtext: ' . $bibTexSource['autor'] . ' - ' . $bibTexSource['titel'] . '<br/>'
-						. 'Page from: ' . $pageFromSource . ' - Line from: ' . $pageToSource . '<br/>' 
-						. 'Page to: ' . $lineFromSource . ' - Line to: ' . $lineToSource . '<br/><br/>' ;
-						
-            //foreach ($content['source'] as $line) {
-                $divRight .= $content['source'];
-            //}
+            $divLeft .= $content['plag'];
 
-            $array[$i]["left"]=$divLeft;
-            $array[$i]["right"]=$divRight;
+            $divRight = 'Source Bibtextkürzel: ' . "[" . $bibTexSource["autor"] ." ". $bibTexSource["jahr"]. "]". '<br/>'
+                    . 'Page from: ' . $pageFromSource . ' - Line from: ' . $pageToSource . '<br/>'
+                    . 'Page to: ' . $lineFromSource . ' - Line to: ' . $lineToSource . '<br/><br/>';
+
+            $divRight .= $content['source'];
+
+            $array[$i]["left"] = $divLeft;
+            $array[$i]["right"] = $divRight;
+            $array[$i]["bibtextplag"] = $bibTexPlag;
+            $array[$i]["bibtextsource"] = $bibTexSource;
             $i++;
         }
 

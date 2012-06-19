@@ -1,0 +1,48 @@
+<?php
+$this->title = $this->translate("List of bibtex sources");
+$this->headTitle($this->title);
+?>
+<table cellpadding="0" cellspacing="0" class="default"> 
+  <thead>
+    <tr>
+      <th><?php echo $this->translate("Title"); ?></th>
+      <th><?php echo $this->translate("Page"); ?></th>
+      	  <th><?php echo $this->translate("Autor"); ?></th>
+	  <th><?php echo $this->translate("Ort"); ?></th>
+	  <th><?php echo $this->translate("Jahr"); ?></th>
+	  <th><?php echo $this->translate("Lit.V."); ?></th>
+	  <th><?php echo $this->translate("FN"); ?></th>
+      <th class="fit-content"><?php echo $this->translate("Actions"); ?></th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if(count($this->paginator)): ?>
+      <?php foreach($this->paginator as $document): 
+			$bibtex = $document->getBibtex();?>
+        <tr>
+          <?php if($document->getState()->getName() == 'parsed'): ?>
+            <td data-label="<?php echo $this->translate("Title"); ?>"><a href="/document/bibtex/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
+          <?php else: ?>
+            <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $document->getTitle(); ?></td>
+          <?php endif; ?>
+          <td data-label="<?php echo $this->translate("Pages"); ?>"><?php if($document->getPages()->last()){ echo $document->getPages()->last()->getPageNumber(); } ?></td>
+		  <td data-label="<?php echo $this->translate("Autor"); ?>"><?php echo $bibtex['autor'];?></td>
+		  <td data-label="<?php echo $this->translate("Ort"); ?>"><?php echo $bibtex['ort'];?></td>
+		  <td data-label="<?php echo $this->translate("Jahr"); ?>"><?php echo $bibtex['jahr'];?></td>
+		  <td data-label="<?php echo $this->translate("Lit.V."); ?>"><?php echo $bibtex['inlit'];?></td>
+		  <td data-label="<?php echo $this->translate("FN"); ?>"><?php echo $bibtex['infn'];?></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>" class="fit-content">
+            <?php if($document->getState()->getName() == 'parsed'): ?>
+              <?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$document->actions)); ?>
+            <?php endif; ?>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr>
+        <td colspan="4" class="no-label"><?php echo $this->translate("No documents found."); ?></td>
+      </tr>
+    <?php endif; ?>
+  </tbody>
+</table>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
