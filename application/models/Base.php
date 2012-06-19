@@ -24,8 +24,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * comments or can be the source of a notification.
  * 
  * It defines also the structure of the database table for the ORM.
- *
- * @author Unplagged
  * 
  * @Entity 
  * @HasLifeCycleCallbacks

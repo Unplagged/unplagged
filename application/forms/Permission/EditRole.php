@@ -20,8 +20,6 @@
 
 /**
  *
- * 
- * @author Unplagged
  */
 class Application_Form_Permission_EditRole extends Zend_Form{
 

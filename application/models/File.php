@@ -25,8 +25,6 @@
  * new one that was used to store the file locally. This 
  * functionality can be useful to hide the storage specific aspects
  * from the user that should only get to see the original filename.
- *
- * @author Unplagged Development Team
  * 
  * @Entity 
  * @Table(name="files")

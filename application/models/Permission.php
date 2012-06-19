@@ -26,6 +26,7 @@
  * @DiscriminatorMap({"page_permission" = "Application_Model_PagePermission", "model_permission" = "Application_Model_ModelPermission"})
  */
 abstract class Application_Model_Permission implements Zend_Acl_Resource_Interface{
+  
   /**
    * @Id
    * @GeneratedValue

@@ -63,4 +63,3 @@ class Application_Form_Setting_Action_Modify extends Zend_Form{
     );
   }
 }
-?>

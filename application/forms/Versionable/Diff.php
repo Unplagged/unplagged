@@ -20,9 +20,6 @@
 
 /**
  * The form class generates a form for choosing the versions to diff of a versionable element.
- *
- * @author Benjamin Oertel <mail@benjaminoertel.com>
- * @version 1.0
  */
 class Application_Form_Versionable_Diff extends Zend_Form{
 

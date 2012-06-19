@@ -28,32 +28,28 @@
 class Application_Model_State {
 
   /**
-   * The id is an unique identifier for each notification action.
-   * @var string The notification action id.
+   * @var string The state id.
    * 
    * @Id @GeneratedValue @Column(type="integer")
    */
   private $id;
 
   /**
-   * A unique name for the notification action.
-   * @var string The name of the notification action.
+   * @var string The name of the State.
    * 
    * @Column(type="string", unique=true, length=32)
    */
   private $name;
   
   /**
-   * A unique name for the notification action.
-   * @var string The name of the notification action.
+   * @var string The title of this State.
    * 
    * @Column(type="string", length=32)
    */
   private $title;
 
   /**
-   * A description for the notification action.
-   * @var string The description.
+   * @var string The description of this State.
    * 
    * @Column(type="string", length=256)
    */
@@ -84,6 +80,7 @@ class Application_Model_State {
   public function getDescription(){
     return $this->description;
   }
+  
   public function getTitle(){
     return $this->title;
   }

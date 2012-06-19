@@ -22,9 +22,6 @@
  * The class represents a log entry.
  * It defines also the structure of the database table for the ORM.
  *
- * @author Benjamin Oertel <mail@benjaminoertel.com>
- * @version 1.0
- *
  * @Entity
  * @Table(name="notifications")
  */

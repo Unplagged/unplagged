@@ -21,8 +21,6 @@
 /**
  *
  * 
- * @author Unplagged
- * 
  * @Entity
  */
 class Application_Model_User_GuestRole extends Application_Model_User_Role{
@@ -32,4 +30,3 @@ class Application_Model_User_GuestRole extends Application_Model_User_Role{
     $this->permissions = array();
   }
 }
-?>

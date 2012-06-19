@@ -26,8 +26,6 @@
  * This essentially means that there can be only one level of role inheritance, which
  * is achieved through the fact that Application_Model_User_Role only allows objects of
  * this type to be inherited. 
-* 
- * @author Unplagged
  * 
  * @Entity
  */
@@ -46,4 +44,3 @@ class Application_Model_User_InheritableRole extends Application_Model_User_Role
     //do nothing here, to avoid multi level inheritance 
   }
 }
-?>

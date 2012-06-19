@@ -21,9 +21,6 @@
 /**
  * The class represents a single tag used to categorize an article.
  * It defines also the structure of the database table for the ORM.
- *
- * @author Benjamin Oertel <benjamin.oertel@me.com>
- * @version 1.0
  * 
  * @Entity
  * @Table(name="comments")
@@ -40,7 +37,6 @@ class Application_Model_Comment extends Application_Model_Base{
   private $author;
 
   /**
-   * The title.
    * @var string The title of the comment.
    * @access private
    * 
@@ -49,7 +45,6 @@ class Application_Model_Comment extends Application_Model_Base{
   private $title;
 
   /**
-   * The text.
    * @var string The text of the comment.
    * @access private
    * 
@@ -86,6 +81,7 @@ class Application_Model_Comment extends Application_Model_Base{
 
   /**
    * Gets the tag id.
+   * 
    * @return int Returns the tag id.
    */
   public function getId(){
@@ -94,6 +90,7 @@ class Application_Model_Comment extends Application_Model_Base{
 
   /**
    * Gets comment title.
+   * 
    * @return int Returns the title.
    */
   public function getTitle(){
@@ -102,6 +99,7 @@ class Application_Model_Comment extends Application_Model_Base{
 
   /**
    * Gets comment text.
+   * 
    * @return int Returns the text.
    */
   public function getText(){
@@ -137,7 +135,7 @@ class Application_Model_Comment extends Application_Model_Base{
     if(!empty($this->title)){
       $result["title"] = $this->title;
     }
-$result['type'] = 'comment';
+    $result['type'] = 'comment';
     return $result;
   }
 

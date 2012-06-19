@@ -78,4 +78,3 @@ class Application_Form_Document_Page_Simtext extends Zend_Form{
     );
   }
 }
-?>

@@ -19,10 +19,7 @@
  */
 
 /**
- * The form class generates a form for creating a new fragment.
- *
- * @author Benjamin Oertel <mail@benjaminoertel.com>
- * @version 1.0
+ * Contains all elements for creating a new fragment.
  */
 class Application_Form_Report_Modify extends Zend_Form {
 

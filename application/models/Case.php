@@ -22,7 +22,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * A case is one of the most important model classes of the Unplagged system.
  * 
- * 
  * @Entity
  * @Table(name="cases")
  * @HasLifeCycleCallbacks
@@ -33,18 +32,14 @@ class Application_Model_Case extends Application_Model_Base{
   const PERMISSION_TYPE = 'case';
 
   /**
-   * The "real" name of the case, under which it will get published later on.
-   * 
-   * @var string
+   * @var string The "real" name of the case, under which it will get published later on.
    * 
    * @Column(type="string") 
    */
   private $name;
 
   /**
-   * The alias is used to show everyone who doesn't have the permission to see the real case name.
-   * 
-   * @var string
+   * @var string The alias is used to show everyone who doesn't have the permission to see the real case name.
    * 
    * @Column(type="string") 
    */
@@ -56,9 +51,7 @@ class Application_Model_Case extends Application_Model_Base{
   private $state;
 
   /**
-   * The date when the document was updated the last time.
-   * 
-   * @var string The update date.
+   * @var string The date when the document was updated the last time.
    * 
    * @Column(type="datetime", nullable=true)
    */
@@ -110,9 +103,7 @@ class Application_Model_Case extends Application_Model_Base{
   private $target;
 
   /**
-   * The data to generate the barcode from is cached here.
-   * 
-   * @var array The barcode data.
+   * @var array The data to generate the barcode from is cached here.
    * 
    * @Column(type="array", nullable=true)
    */
@@ -372,5 +363,4 @@ class Application_Model_Case extends Application_Model_Base{
   }
 
 }
-
 ?>

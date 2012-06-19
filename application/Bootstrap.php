@@ -28,8 +28,6 @@ use \Doctrine\Common\ClassLoader;
  *
  * Please remember that all the '_init*' methods are called alphabetically, so make sure to explicitly bootstrap
  * all dependencies in methods that need to deviate from this order.
- * 
- * @author Unplagged
  */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
@@ -177,19 +175,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * 
    * @todo rotate logfiles 
    */
-  protected function _initLogger(){/*
-    $this->bootstrap('Zend_Log');
-
-    if (!$this->hasPluginResource('Zend_Log')) {
-    throw new Zend_Exception('Log not enabled in config.ini');
-    }
-
-   */
-    $writer = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/unplagged.log');
+  protected function _initLogger(){
+    $this->bootstrap('log');
+    Zend_Registry::getInstance()->Log = $this->getResource('log');
+    //Zend_Registry::get('log')->info('Hi');
+    
+    /*$writer = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/application.log');
     $logger = new Zend_Log($writer);
     //   $logger = $this->getResource('Log');
     // assert($logger != null);
-    Zend_Registry::set('Log', $logger);
+    Zend_Registry::set('Log', $logger);*/
   }
 
   /**

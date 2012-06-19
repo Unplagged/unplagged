@@ -19,7 +19,9 @@
  */
 
 /**
+ * This form contains all elements for metadata of uploaded files.
  * 
+ * It is just used for validation purposes and not for actual rendering.
  */
 class Application_Form_File_Upload extends Zend_Form{
 
@@ -39,5 +41,3 @@ class Application_Form_File_Upload extends Zend_Form{
   }
 
 }
-
-?>

@@ -21,9 +21,6 @@
 /**
  * The class represents a single tag used to categorize an article.
  * It defines also the structure of the database table for the ORM.
- *
- * @author Benjamin Oertel <benjamin.oertel@me.com>
- * @version 1.0
  * 
  * @Entity
  * @Table(name="tags")
@@ -34,9 +31,7 @@ class Application_Model_Tag extends Application_Model_Base{
   const PERMISSION_TYPE = 'tag';
 
   /**
-   * The title.
    * @var string The title.
-   * @access private
    * 
    * @Column(type="string", length=45)
    */

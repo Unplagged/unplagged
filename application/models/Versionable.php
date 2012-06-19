@@ -28,11 +28,9 @@
 abstract class Application_Model_Versionable extends Application_Model_Base{
 
   /**
-   * The current version of the fragment.
-   * @var integer The version.
+   * @var integer The current version of this object.
    * 
    * @Column(type="integer", length=64)
-   * @version
    */
   protected $version;
 
