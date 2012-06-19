@@ -46,7 +46,7 @@ if($installer->isInstalled()){
   require_once 'Zend/Application.php';
   
   //Create application, bootstrap, and run
-  $application = new Zend_Application(APPLICATION_ENV, array(
+  $application = new Zend_Application('testing', array(
     'config'=>array(
       APPLICATION_PATH . '/configs/application.ini',
       APPLICATION_PATH . '/configs/unplagged-config.ini',

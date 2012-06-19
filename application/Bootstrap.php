@@ -176,9 +176,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * @todo rotate logfiles 
    */
   protected function _initLogger(){
-    $this->bootstrap('log');
-    Zend_Registry::getInstance()->Log = $this->getResource('log');
-    //Zend_Registry::get('log')->info('Hi');
+    $log = null;
+    
+    //enable the logs as provided in the log.ini
+    if($this->hasResource('log')){
+      $this->bootstrap('log');
+      $log = $this->getResource('log');
+    } else {
+      //if no logger was provided within a config, stub it out so no errors get thrown when logging is called
+      $log = new Zend_Log_Writer_Null();  
+    }
+    Zend_Registry::getInstance()->Log = $log;
+    //Zend_Registry::get('Log')->err('Hi');
     
     /*$writer = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/application.log');
     $logger = new Zend_Log($writer);
