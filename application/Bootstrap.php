@@ -179,15 +179,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $log = null;
     
     //enable the logs as provided in the log.ini
-    if($this->hasResource('log')){
+    if($this->hasPluginResource('log')){
       $this->bootstrap('log');
       $log = $this->getResource('log');
     } else {
+      var_dump('hier');
       //if no logger was provided within a config, stub it out so no errors get thrown when logging is called
-      $log = new Zend_Log_Writer_Null();  
+      $writer = new Zend_Log_Writer_Null;
+      $log = new Zend_Log($writer);  
     }
     Zend_Registry::getInstance()->Log = $log;
-    //Zend_Registry::get('Log')->err('Hi');
+    Zend_Registry::get('Log')->info('Hi');
     
     /*$writer = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/application.log');
     $logger = new Zend_Log($writer);
