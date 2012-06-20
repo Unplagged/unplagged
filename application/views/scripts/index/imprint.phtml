@@ -17,3 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 ?>
+<?php if($this->address): ?>
+<p><?php echo $this->address; ?></p>
+<?php endif; ?>
+<?php if($this->telephone || $this->email): ?>
+<h2><?php echo $this->translate('Contact'); ?>:</h2>
+<dl>
+  <dt><?php echo $this->translate('Telephone'); ?>:</dt>
+  <dd><?php echo $this->telephone; ?></dd>
+  <dt>E-Mail:</dt>
+  <dd><?php echo $this->email; ?></dd>
+</dl>
+<?php endif; ?>

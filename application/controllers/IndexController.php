@@ -57,7 +57,15 @@ class IndexController extends Unplagged_Controller_Action{
   }
 
   public function imprintAction(){
+    $registry = Zend_Registry::getInstance();
+    $imprintConfig = $registry->config->get('imprint');
     
+    $this->view->address = $imprintConfig->get('address');
+    $this->view->telephone = $imprintConfig->get('telephone');
+    $this->view->email = $imprintConfig->get('email');
+    
+    $this->setTitle($registry->get('Zend_Translate')->translate('Imprint'));
+    Zend_Layout::getMvcInstance()->sidebar = null;
   }
 
 }
