@@ -165,15 +165,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   }
 
   /**
-   * Sets the logger inside the registry, so that it can be called via:
+   * Sets the logger in the registry, so that it can be called via:
    * 
-   * <code>Zend_Registry::get('log')->crit('Critical');</code>
+   * <code>Zend_Registry::get('Log')->crit('Critical');</code>
    * 
    * The settings are provided inside the log.ini file.
    * 
    * This function can not be named _initLog, because this creates a conflict with Zend.
-   * 
-   * @todo rotate logfiles 
    */
   protected function _initLogger(){
     $log = null;
@@ -183,7 +181,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       $this->bootstrap('log');
       $log = $this->getResource('log');
     } else {
-      //if no logger was provided within a config, stub it out so no errors get thrown when logging is called
+      //if no logger was provided within the config, stub it out so no errors get thrown when logging is called
       $writer = new Zend_Log_Writer_Null;
       $log = new Zend_Log($writer);  
     }

@@ -50,6 +50,8 @@ class Unplagged_AccessControl extends Zend_Controller_Plugin_Abstract{
     $resource = $request->getControllerName();
     $action = $request->getActionName();
 
+    var_dump($resource);
+    var_dump($action);
     $resourceKey = $resource . '_' . $action;
     
     $allowAlways = array(
