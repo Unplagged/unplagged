@@ -26,13 +26,8 @@ require_once(realpath(dirname(__FILE__)) . "/../../Base.php");
  */
 class Cron_Document_Page_Simtext extends Cron_Base{
 
-  public static function init(){
-    parent::init();
-  }
-
-  public static function start(){
-    // @todo: dummy stuff, do something real here
-    $query = self::$em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
+  public function start(){
+    $query = $this->em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
     $query->setParameter("action", "page_simtext");
     $query->setParameter("state", "task_scheduled");
     $query->setMaxResults(1);
@@ -42,9 +37,9 @@ class Cron_Document_Page_Simtext extends Cron_Base{
     if($tasks){
       $task = $tasks[0];
 
-      $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
-      self::$em->persist($task);
-      self::$em->flush();
+      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("task_running"));
+      $this->em->persist($task);
+      $this->em->flush();
 
       $report = $task->getRessource();
 
@@ -56,7 +51,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
       $documents = $report->getDocuments();
       $pagesCount = 0;
       foreach($documents as $documentId){
-        $document = self::$em->getRepository('Application_Model_Document')->findOneById($documentId);
+        $document = $this->em->getRepository('Application_Model_Document')->findOneById($documentId);
         $pagesCount += $document->getPages()->count();
       }
       $prevPerc = 0; // the percentage of the previous iteration
@@ -64,7 +59,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
       $i = 0;
       $documents = $report->getDocuments();
       foreach($documents as $documentId){
-        $document = self::$em->getRepository('Application_Model_Document')->findOneById($documentId);
+        $document = $this->em->getRepository('Application_Model_Document')->findOneById($documentId);
         $pages = $document->getPages();
 
         foreach($pages as $page){
@@ -115,8 +110,8 @@ class Cron_Document_Page_Simtext extends Cron_Base{
           $perc = round($i * 1.0 / $pagesCount * 100 / 10) * 10;
           if($perc > $prevPerc){
             $task->setProgressPercentage($perc);
-            self::$em->persist($task);
-            self::$em->flush();
+            $this->em->persist($task);
+            $this->em->flush();
             $prevPerc = $perc;
           }
         }
@@ -124,16 +119,16 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
       // update report
       $report->setContent($content);
-      $report->setState(self::$em->getRepository('Application_Model_State')->findOneByName("report_generated"));
+      $report->setState($this->em->getRepository('Application_Model_State')->findOneByName("report_generated"));
 
       // update task
-      $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
+      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("task_finished"));
       $task->setProgressPercentage(100);
 
-      self::$em->persist($report);
-      self::$em->persist($task);
+      $this->em->persist($report);
+      $this->em->persist($task);
 
-      self::$em->flush();
+      $this->em->flush();
 
       // notification
       $user = $task->getInitiator();
@@ -142,7 +137,6 @@ class Cron_Document_Page_Simtext extends Cron_Base{
   }
 
 }
-
-Cron_Document_Page_Simtext::init();
-Cron_Document_Page_Simtext::start();
+$simtext = new Cron_Document_Page_Simtext();
+$simtext->start();
 ?>

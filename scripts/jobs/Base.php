@@ -18,19 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(realpath(dirname(__FILE__)) . "/init.php");
+require_once 'init.php';
 
 /**
  * This class represents an abstract class that initalizes any cron, each
  * cron should extend it.
- *
- * @author Unplagged
  */
 abstract class Cron_Base{
-  protected static $em;
+  protected $em;
   
-  public static function init() {
-    self::$em = Zend_Registry::getInstance()->entitymanager;
+  public function __construct() {
+    Zend_Registry::get('Log')->info('Starting cronjob ' . get_class());
+    $this->em = Zend_Registry::getInstance()->entitymanager;
   }
+  
+  abstract public function start();
 }
-?>

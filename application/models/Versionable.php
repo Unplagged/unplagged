@@ -30,7 +30,7 @@ abstract class Application_Model_Versionable extends Application_Model_Base{
   /**
    * @var integer The current version of this object.
    * 
-   * @Column(type="integer", length=64)
+   * @Column(type="integer", length=64, nullable=true)
    */
   protected $version;
 
