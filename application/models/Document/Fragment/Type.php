@@ -26,6 +26,8 @@
  * @Table(name="document_fragment_types")
  */
 class Application_Model_Document_Fragment_Type{
+  
+  const PERMISSION_TYPE = 'document-fragment-type';
 
   /**
    * The id is an unique identifier for each fragment type.

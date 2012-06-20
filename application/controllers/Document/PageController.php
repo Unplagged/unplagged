@@ -79,8 +79,11 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
-
+    $this->_em->detach($page);
     if($page){
+      
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
+      
       $modifyForm = new Application_Form_Document_Page_Modify();
       $modifyForm->setAction("/document_page/edit/id/" . $input->id);
 
@@ -240,13 +243,13 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       // write back to persistence manager and flush it
       $this->_em->persist($page);
       $this->_em->flush();
-
+      /*
       // updates the barcode data
       $case = Zend_Registry::getInstance()->user->getCurrentCase();
       $case->updateBarcodeData();
       $this->_em->persist($case);
       $this->_em->flush();
-
+*/
       return $page;
     }
 

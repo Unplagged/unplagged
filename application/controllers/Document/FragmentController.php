@@ -332,9 +332,9 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $this->_em->flush();
 
       // updates the barcode data
-      $case->updateBarcodeData();
-      $this->_em->persist($case);
-      $this->_em->flush();
+     // $case->updateBarcodeData();
+     // $this->_em->persist($case);
+     // $this->_em->flush();
 
       return $fragment;
     }

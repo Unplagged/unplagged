@@ -26,6 +26,8 @@
  */
 class Application_Model_Versionable_Version extends Application_Model_Base{
   
+  const PERMISSION_TYPE = 'versionable-version';
+  
   /**
    * @Column(type="integer")
    */
@@ -37,7 +39,7 @@ class Application_Model_Versionable_Version extends Application_Model_Base{
   protected $data;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_Versionable")
+   * @ManyToOne(targetEntity="Application_Model_Versionable", cascade={"persist"})
    */
   protected $versionable;
 
@@ -45,7 +47,7 @@ class Application_Model_Versionable_Version extends Application_Model_Base{
     $this->versionable = $versionable;
 
     $this->version = $versionable->getCurrentVersion();
-    $this->data = $versionable->toArray();
+    $this->data = $versionable->toVersionArray();
   }
 
   public function getDirectLink(){
@@ -79,7 +81,7 @@ class Application_Model_Versionable_Version extends Application_Model_Base{
   public function getData(){
     return $this->data;
   }
-
+  
 }
 
 ?>

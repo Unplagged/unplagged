@@ -28,7 +28,7 @@
 class Application_Model_Document_Page extends Application_Model_Versionable{
 
   const ICON_CLASS = 'icon-page';
-  const PERMISSION_TYPE = 'document_page';
+  const PERMISSION_TYPE = 'document-page-line';
 
   /**
    * The page number in the origional document.
@@ -105,6 +105,14 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
       }
     }
     //@todo $data["file"] = ...
+    return $data;
+  }
+
+  public function toVersionArray(){
+    $data["id"] = $this->id;
+    $data["pageNumber"] = $this->pageNumber;
+    $data["content"] = $this->getContent('array');
+
     return $data;
   }
 

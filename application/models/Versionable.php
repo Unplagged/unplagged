@@ -57,7 +57,7 @@ abstract class Application_Model_Versionable extends Application_Model_Base{
   public function logVersion(){
 
     $versionableVersion = new Application_Model_Versionable_Version($this);
-    $versionableVersion->setVersionable($this);
+    //$versionableVersion->setVersionable($this);
 
     $this->auditLog->add($versionableVersion);
     $this->_em = Zend_Registry::getInstance()->entitymanager;
@@ -86,6 +86,9 @@ abstract class Application_Model_Versionable extends Application_Model_Base{
   public function getAuditLog(){
     return $this->auditLog;
   }
+  
+    abstract public function toVersionArray();
+
 
 }
 ?>
