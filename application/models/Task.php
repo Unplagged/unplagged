@@ -59,6 +59,8 @@ class Application_Model_Task extends Application_Model_Base{
   /**
    * @ManyToOne(targetEntity="Application_Model_Base", cascade={"persist"})
    * @JoinColumn(name="ressource_id", referencedColumnName="id", onDelete="CASCADE")
+   * 
+   * @todo this is misspelled, should be resource, but too lazy to change now..
    */
   private $ressource;
 
@@ -146,4 +148,3 @@ class Application_Model_Task extends Application_Model_Base{
     $this->progressPercentage = $progressPercentage;
   }
 }
-?>

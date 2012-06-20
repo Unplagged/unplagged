@@ -87,6 +87,10 @@ class Application_Model_Report extends Application_Model_Base{
       $this->target = $data["target"];
     }
 
+    if(isset($data['case'])){
+      $this->case = $data['case'];
+    }
+    
     if(isset($data["filePath"])){
       $this->filePath = $data["filePath"];
     }

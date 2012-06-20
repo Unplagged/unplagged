@@ -161,6 +161,14 @@ if(!$em->getRepository('Application_Model_State')->findOneByName("report_running
   $state = new Application_Model_State($data);
   $em->persist($state);
 }
+if(!$em->getRepository('Application_Model_State')->findOneByName("report_scheduled")){
+  unset($data);
+  $data["name"] = "report_scheduled";
+  $data["title"] = "scheduled";
+  $data["description"] = "The report generation is scheduled.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
 if(!($em->getRepository('Application_Model_State')->findOneByName("task_scheduled"))){
   unset($data);
   $data["name"] = "task_scheduled";

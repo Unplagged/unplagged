@@ -115,7 +115,10 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
       $task = $tasks[0];
 
       $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("task_running"));
-
+      
+      //some fake percentage to show it's running
+      $task->setProgressPercentage(20);
+      die('hier');
       $fragments = $task->getRessource()->getTarget()->getFragments();
 
       $filename = $this->createReport($fragments, $task->getInitiator());

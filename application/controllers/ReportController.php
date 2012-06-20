@@ -16,43 +16,93 @@ class ReportController extends Unplagged_Controller_Versionable{
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
       $paginator->setCurrentPageNumber($input->page);
 
+      foreach($paginator as $report){
+        if($report->getState() && $report->getState()->getName() == 'report_scheduled'){
+          // find the associated task and get percentage
+          $state = $this->_em->getRepository('Application_Model_State')->findOneByName('report_running');
+          $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
+          if(!$task){
+            $percentage = 0;
+          }else{
+            $percentage = $task->getProgressPercentage();
+          }
+          $report->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
+        }else{
+          if($report->getState()){
+            $report->outputState = $report->getState()->getTitle();
+          }else {
+            $report->outputState = '';
+          }
+        }
+      }
+      
       $this->view->paginator = $paginator;
-    } else {
+    }else{
       $this->_helper->flashMessenger->addMessage(array('error'=>'You have to select a case, before you can start the report creation.'));
       $this->_helper->viewRenderer->setNoRender(true);
       Zend_Layout::getMvcInstance()->sidebar = null;
     }
   }
 
+  /**
+   * Schedules the cronjob task for the requested report generation. 
+   */
   public function createAction(){
-    $case = Zend_Registry::getInstance()->user->getCurrentCase();
+    $registry = Zend_Registry::getInstance();
+    $case = $registry->user->getCurrentCase();
 
-    if($case){
-      // get current case name
-      $this->view->title = "Create report of " . $case->getPublishableName();
-
-      $formData = $this->_request->getPost();
-
-      //Cron_Document_Page_Reportcreater::start();
-      // Create a report_requested task
-      $data = array();
-      $data['initiator'] = Zend_Registry::get('user');
-      $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('report_requested');
-      $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
-      $data["ressource"] = $case;
-      $task = new Application_Model_Task($data);
+    if($case){      
+      //create an empty report to show the user something in the list
+      $emptyReport = $this->createEmptyReport($registry->user, $case);
+      $this->_em->persist($emptyReport);
+      
+      $task = $this->createTask($registry->user, $emptyReport);
       $this->_em->persist($task);
+      
       $this->_em->flush();
-
-      $this->_helper->redirector('list', 'report');
-      // Inform the user that the process will be started
+      
       $this->_helper->flashMessenger->addMessage(array('success'=>'The report generation has been scheduled.'));
     }else{
-      $this->_helper->flashMessenger->addMessage('You have to select a case, before you can start the report creation.');
-      $this->_helper->viewRenderer->setNoRender(true);
-      Zend_Layout::getMvcInstance()->sidebar = null;
+      $this->_helper->flashMessenger->addMessage(array('error'=>'You have to select a case, before you can start the report creation.'));
     }
     $this->_helper->redirector('list', 'report');
+  }
+
+  /**
+   * Create an report on which the PDF creation in the cronjob will be based.
+   * 
+   * @param Application_Model_User $user
+   * @param Application_Model_Case $case
+   * @return Application_Model_Report 
+   */
+  private function createEmptyReport(Application_Model_User $user){
+    $data = array(
+      'user' => $user,
+      'case' => $user->getCurrentCase(),
+      'target' => $user->getCurrentCase()->getTarget(),
+      'title' => $user->getCurrentCase()->getPublishableName(),
+      'state' => $this->_em->getRepository('Application_Model_State')->findOneByName('report_scheduled')
+    );
+    $report = new Application_Model_Report($data);
+    
+    return $report;
+  }
+  
+  /**
+   * Creates the task for the cronjob to create the actual report PDF.
+   * 
+   * @param Application_Model_User $user
+   * @param Application_Model_Case $case 
+   */
+  private function createTask(Application_Model_User $user, Application_Model_Report $report){
+    $data = array();
+    $data['initiator'] = $user;
+    $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('report_requested');
+    $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+    $data["ressource"] = $report;
+
+    $task = new Application_Model_Task($data);
+    return $task;
   }
 
   public function downloadAction(){
@@ -62,9 +112,9 @@ class ReportController extends Unplagged_Controller_Versionable{
       $report = $this->_em->getRepository('Application_Model_Report')->findOneById($input->id);
       if($report){
         // disable view
-
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
+
         $report_name = "Report_" . $report->getTitle() . "_" . $report->getCreated()->format("Y-m-d") . ".pdf";
         $downloadPath = $report->getFilePath();
 
@@ -78,11 +128,11 @@ class ReportController extends Unplagged_Controller_Versionable{
 
         readfile($downloadPath);
       }else{
-        $this->_helper->FlashMessenger('No report found.');
+        $this->_helper->flashMessenger->addMessage(array('error' => "Sorry, we couldn't find the requested report."));
         $this->_helper->redirector('list', 'report');
       }
     }else{
-      $this->_helper->FlashMessenger('The report couldn\'t be found.');
+      $this->_helper->flashMessenger->addMessage(array('error' => "Sorry, we couldn't find the requested report."));
       $this->_helper->redirector('list', 'report');
     }
   }
