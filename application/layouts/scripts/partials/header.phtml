@@ -41,9 +41,9 @@
           </div>
         <?php else: ?>
           <div class="login-register-box">
-            <a href="<?php echo $this->baseUrl('user/register'); ?>"><?php echo $this->translate("Register now"); ?></a>
+            <a href="<?php echo $this->baseUrl('register'); ?>"><?php echo $this->translate("Register now"); ?></a>
             <span><?php echo $this->translate('or') . ' '; ?></span>
-            <a href="<?php echo $this->baseUrl('auth/login'); ?>"><?php echo $this->translate("login"); ?></a>
+            <a href="<?php echo $this->baseUrl('login'); ?>"><?php echo $this->translate("login"); ?></a>
           </div>
         <?php endif; ?>
         <div class="case-settings-box clearfix">
@@ -55,6 +55,7 @@
             $currentValue = $this->me->getCurrentCase()->getId();
           }
           ?>
+          <?php if(count($this->cases)>0): ?>
           <?php if($currentValue): ?>
             <a href="<?php echo $this->baseUrl('case/edit/id/' . $currentValue); ?>"><?php echo $this->translate("Edit Case"); ?></a>
           <?php endif; ?>
@@ -67,6 +68,7 @@
             </select>
             <button class="button">Ok</button>  
           </form>
+          <?php endif; ?>
         </div>
       </div>
     </header>

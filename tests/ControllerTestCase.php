@@ -12,7 +12,14 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase{
   }
 
   public function appBootstrap(){
-    $this->application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini');
+    $this->application = new Zend_Application(APPLICATION_ENV, array(
+          'config'=>array(
+            APPLICATION_PATH . '/configs/application.ini',
+            APPLICATION_PATH . '/configs/log.ini',
+            APPLICATION_PATH . '/configs/routes.ini',
+            APPLICATION_PATH . '/configs/unplagged-config.ini'
+          )
+        ));
     $this->application->bootstrap();
   }
 
@@ -23,5 +30,4 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase{
   }
 
 }
-
 ?>

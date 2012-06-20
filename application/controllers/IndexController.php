@@ -36,12 +36,14 @@ class IndexController extends Unplagged_Controller_Action{
     $user = $registry->user;
 
     Zend_Layout::getMvcInstance()->sidebar = null;
-    $case = $user->getCurrentCase();
-    if($case){
-      $barcode = $case->getBarcode(100, 150, 100, true, '%');
-      if($barcode){
-        $this->view->currentCase = '<h4>' . $registry->Zend_Translate->translate('Barcode for') . ' "' . $case->getPublishableName() . '"</h4>';
-        $this->view->barcode = $barcode->render();
+    foreach(Zend_Layout::getMvcInstance()->cases as $case){
+      //$case = $user->getCurrentCase();
+      if($case){
+        $barcode = $case->getBarcode(100, 150, 100, true, '%');
+        if($barcode){
+          $this->view->currentCase = '<h4>' . $registry->Zend_Translate->translate('Barcode for') . ' "' . $case->getPublishableName() . '"</h4>';
+          $this->view->barcode .= $barcode->render();
+        }
       }
     }
   }
@@ -52,6 +54,10 @@ class IndexController extends Unplagged_Controller_Action{
   public function emptyAction(){
     $this->_helper->viewRenderer->setNoRender(true);
     Zend_Layout::getMvcInstance()->sidebar = null;
+  }
+
+  public function imprintAction(){
+    
   }
 
 }

@@ -32,7 +32,7 @@ class Application_Form_Auth_Login extends Zend_Form{
 
     $this->setMethod('post');
     $view = Zend_Layout::getMvcInstance()->getView();
-    $this->setAction($view->baseUrl('auth/login/'));
+    $this->setAction($view->baseUrl('login'));
 
     $usernameElement = new Zend_Form_Element_Text('username');
     $usernameElement->setLabel("Username");

@@ -50,6 +50,7 @@ if($installer->isInstalled()){
     'config'=>array(
       APPLICATION_PATH . '/configs/application.ini',
       APPLICATION_PATH . '/configs/log.ini',
+      APPLICATION_PATH . '/configs/routes.ini',
       APPLICATION_PATH . '/configs/unplagged-config.ini'
     )
   ));
