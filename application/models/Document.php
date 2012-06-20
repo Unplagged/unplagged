@@ -162,8 +162,8 @@ class Application_Model_Document extends Application_Model_Base{
     return $this->language;  
   }
   
-  public function setLanguage(){
-    
+  public function setLanguage($language){
+    $this->language = $language;
   }
   
   // public function setBibTex($bibTex){

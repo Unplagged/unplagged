@@ -97,7 +97,6 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
 <li>Übersicht über die plagiierten Quellen</li></ul></div>";
 
   public function start(){
-    // @todo: dummy stuff, do something real here
     //$query = $this->em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
     $query = $this->em->createQuery("SELECT t, a, s 
             FROM Application_Model_Task t, Application_Model_Action a, Application_Model_State s 
@@ -124,7 +123,6 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
       $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("task_finished"));
       $task->setProgressPercentage(100);
 
-      //$this->em->persist($report);
       $this->em->persist($task);
       $this->em->flush();
 
@@ -194,7 +192,6 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
 
     $this->em->persist($report);
     $this->em->flush();
-
 
     return $filename;
   }

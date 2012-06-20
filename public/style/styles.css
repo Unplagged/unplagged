@@ -830,6 +830,10 @@ table.default .progress {
   overflow: scroll scroll;
 }
 
+.barcodes-big {
+  max-width: 800px;
+}
+
 .zend_form textarea.auto
 {
   max-width: auto;

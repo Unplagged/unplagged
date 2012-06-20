@@ -39,9 +39,10 @@ class IndexController extends Unplagged_Controller_Action{
       //$case = $user->getCurrentCase();
       $barcode = $case->getBarcode(100, 150, 100, true, '%');
       if($barcode){
-        $this->view->currentCase = '<h4>' . $registry->Zend_Translate->translate('Barcode for') . ' "' . $case->getPublishableName() . '"</h4>';
-
-        $barcodes[] = $barcode->render();
+        $barcodes[] = array(
+          'graphic'=>$barcode->render(),
+          'title' => $registry->Zend_Translate->translate('Barcode for') . ' "' . $case->getPublishableName() . '"'
+        );
       }
     }
     $this->view->barcodes = $barcodes;

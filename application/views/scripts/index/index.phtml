@@ -5,7 +5,11 @@ $this->title = $this->translate('Welcome to %s', $applicationName);
 $this->headTitle($this->title);
 ?>
 <div class="welcome-message well"><?php echo $this->translate($defaultConfig->welcomeMessage); ?></div>
-<?php var_dump($this->barcodes); ?>
-<?php foreach($this->barcodes as $barcode): ?>
-  <?php echo $barcode ?>
-<?php endforeach; ?>
+<?php if(count($this->barcodes > 0)): ?>
+  <div class="barcodes-big">  
+    <?php foreach($this->barcodes as $barcode): ?>
+      <h4><?php echo $barcode['title']; ?></h4>
+      <?php echo $barcode['graphic']; ?>
+    <?php endforeach; ?>
+  </div>
+<?php endif; ?>

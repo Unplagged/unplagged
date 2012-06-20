@@ -2,14 +2,6 @@
 
 class ReportController extends Unplagged_Controller_Versionable{
 
-  public function init(){
-    parent::init();
-  }
-
-  public function indexAction(){
-    
-  }
-
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits', 'content'=>'StripTags'), null, $this->_getAllParams());
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
@@ -25,6 +17,10 @@ class ReportController extends Unplagged_Controller_Versionable{
       $paginator->setCurrentPageNumber($input->page);
 
       $this->view->paginator = $paginator;
+    } else {
+      $this->_helper->flashMessenger->addMessage(array('error'=>'You have to select a case, before you can start the report creation.'));
+      $this->_helper->viewRenderer->setNoRender(true);
+      Zend_Layout::getMvcInstance()->sidebar = null;
     }
   }
 
@@ -40,7 +36,7 @@ class ReportController extends Unplagged_Controller_Versionable{
       //Cron_Document_Page_Reportcreater::start();
       // Create a report_requested task
       $data = array();
-      $data["initiator"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+      $data['initiator'] = Zend_Registry::get('user');
       $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('report_requested');
       $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
       $data["ressource"] = $case;
@@ -50,13 +46,13 @@ class ReportController extends Unplagged_Controller_Versionable{
 
       $this->_helper->redirector('list', 'report');
       // Inform the user that the process will be started
-      $this->_helper->flashMessenger->addMessage(array('success'=>'The report-generating process has been started.'));
+      $this->_helper->flashMessenger->addMessage(array('success'=>'The report generation has been scheduled.'));
     }else{
       $this->_helper->flashMessenger->addMessage('You have to select a case, before you can start the report creation.');
       $this->_helper->viewRenderer->setNoRender(true);
       Zend_Layout::getMvcInstance()->sidebar = null;
     }
-    //$this->_helper->redirector('list', 'report');
+    $this->_helper->redirector('list', 'report');
   }
 
   public function downloadAction(){
@@ -92,5 +88,3 @@ class ReportController extends Unplagged_Controller_Versionable{
   }
 
 }
-
-?>
