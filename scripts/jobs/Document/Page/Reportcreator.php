@@ -115,13 +115,13 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
       $task = $tasks[0];
 
       $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("task_running"));
-      
+
       //some fake percentage to show it's running
       $task->setProgressPercentage(20);
-      die('hier');
+
       $fragments = $task->getRessource()->getTarget()->getFragments();
 
-      $filename = $this->createReport($fragments, $task->getInitiator());
+      $filename = $this->createReport($fragments, $task->getRessource());
       // update task
       $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("task_finished"));
       $task->setProgressPercentage(100);
@@ -135,9 +135,10 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
     }
   }
 
-  private function createReport($fragments, $user){
+  private function createReport($fragments, $report){
     $this->pagenumber = 3;
-    $currentCase = $user->getCurrentCase();
+
+    $currentCase = $report->getCase();
     $casename = $currentCase->getAlias();
     $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
 
@@ -171,23 +172,9 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
     $html2pdf = new HTML2PDF('P', 'A4', 'en');
     $html2pdf->WriteHTML($content);
 
-    // save report to database to get an Id
-    $data = array();
-    $data["title"] = $casename;
-    $data["user"] = $user;
-    $data["target"] = $user->getCurrentCase()->getTarget();
-    $report = new Application_Model_Report($data);
-
-    $this->em->persist($report);
-    $currentCase->addReport($report);
-
-    $this->em->persist($currentCase);
-    $this->em->flush();
-
     // after the flush, we can access the id and put a unique identifier in the report name
-
     $filename = $filepath . DIRECTORY_SEPARATOR . $report->getId() . ".pdf";
-
+    
     $html2pdf->Output($filename, 'F');
 
     $report->setFilePath($filename);

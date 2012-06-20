@@ -17,7 +17,7 @@ class ReportController extends Unplagged_Controller_Versionable{
       $paginator->setCurrentPageNumber($input->page);
 
       foreach($paginator as $report){
-        if($report->getState() && $report->getState()->getName() == 'report_scheduled'){
+        if($report->getState()->getName() == 'report_scheduled'){
           // find the associated task and get percentage
           $state = $this->_em->getRepository('Application_Model_State')->findOneByName('report_running');
           $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
@@ -28,11 +28,7 @@ class ReportController extends Unplagged_Controller_Versionable{
           }
           $report->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
         }else{
-          if($report->getState()){
             $report->outputState = $report->getState()->getTitle();
-          }else {
-            $report->outputState = '';
-          }
         }
       }
       
@@ -58,6 +54,9 @@ class ReportController extends Unplagged_Controller_Versionable{
       
       $task = $this->createTask($registry->user, $emptyReport);
       $this->_em->persist($task);
+      
+      $case->addReport($emptyReport);
+      $this->_em->persist($case);
       
       $this->_em->flush();
       
