@@ -1,9 +1,27 @@
 <?php
 
 /**
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
  * This class wraps the command line calls to the tesseract ocr tool.
  * 
- * @author Dominik Horb <dominik.horb@googlemail.com>
+ * @author Unplagged
  * 
  * @todo handing over the tesseract path from user input is a possible security issue, because this gets executed on the
  * command line, we should at least think about, whether we want to keep it that way

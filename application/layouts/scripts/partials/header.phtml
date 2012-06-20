@@ -18,8 +18,6 @@
     ?>
     <!-- Modernizr needs to stay in the head to work properly -->
     <script src="<?php echo $this->baseUrl('/js/libs/modernizr-2.5.3.min.js'); ?>"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="<?php echo $this->baseUrl('/js/libs/jquery-1.7.2.min.js'); ?>"><\/script>')</script>
   </head>
   <body>
     <noscript><div class="alert-danger top-alert"><div class="alert alert-danger"><h4 class="alert-heading"><?php echo $this->translate('Attention!'); ?></h4><p><?php echo $this->translate('Unfortunately JavaScript is currently not supported or is disabled in your browser. Please enable JavaScript for full functionality.'); ?></p></div></div></noscript>
@@ -41,9 +39,9 @@
           </div>
         <?php else: ?>
           <div class="login-register-box">
-            <a href="<?php echo $this->baseUrl('user/register'); ?>"><?php echo $this->translate("Register now"); ?></a>
+            <a href="<?php echo $this->baseUrl('register'); ?>"><?php echo $this->translate("Register now"); ?></a>
             <span><?php echo $this->translate('or') . ' '; ?></span>
-            <a href="<?php echo $this->baseUrl('auth/login'); ?>"><?php echo $this->translate("login"); ?></a>
+            <a href="<?php echo $this->baseUrl('login'); ?>"><?php echo $this->translate("login"); ?></a>
           </div>
         <?php endif; ?>
         <div class="case-settings-box clearfix">
@@ -55,6 +53,7 @@
             $currentValue = $this->me->getCurrentCase()->getId();
           }
           ?>
+          <?php if(count($this->cases)>0): ?>
           <?php if($currentValue): ?>
             <a href="<?php echo $this->baseUrl('case/edit/id/' . $currentValue); ?>"><?php echo $this->translate("Edit Case"); ?></a>
           <?php endif; ?>
@@ -67,6 +66,7 @@
             </select>
             <button class="button">Ok</button>  
           </form>
+          <?php endif; ?>
         </div>
       </div>
     </header>

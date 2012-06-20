@@ -1,7 +1,5 @@
 <?php
 
-use DoctrineExtensions\Versionable\Versionable;
-
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -20,12 +18,11 @@ use DoctrineExtensions\Versionable\Versionable;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use DoctrineExtensions\Versionable\Versionable;
+
 /**
  * The class represents a fragment within a document.
  * It defines also the structure of the database table for the ORM.
- *
- * @author Benjamin Oertel <mail@benjaminoertel.com>
- * @version 1.0
  * 
  * @Entity 
  * @Table(name="document_fragments")

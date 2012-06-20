@@ -97,5 +97,3 @@ class Application_Form_Case_Modify extends Zend_Form{
   }
 
 }
-
-?>

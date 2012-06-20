@@ -20,9 +20,6 @@
 
 /**
  * The form class generates a form for recovering a user password.
- *
- * @author Benjamin Oertel <mail@benjaminoertel.com>
- * @version 1.0
  */
 class Application_Form_User_Remove extends Zend_Form{
 

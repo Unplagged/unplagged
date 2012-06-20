@@ -26,9 +26,7 @@
  * that were made for this role.
  * 
  * @todo We could think about adding a blacklist of permissions later on, so that admin could refuse certain permissions
- * to the user even if an inherited role changes and allows it.
- * 
- * @author Unplagged
+ * to the user even if an inherited role changes and allows it.´
  * 
  * @Entity
  * @table(name="roles")
@@ -196,7 +194,6 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   }
 
   public function addInheritedRole(Application_Model_User_InheritableRole $inheritedRole){
-    var_dump(!$this->inheritedRoles->contains($inheritedRole));
     if(!$this->inheritedRoles->contains($inheritedRole)){
       $this->inheritedRoles->add($inheritedRole);
     }
@@ -227,5 +224,3 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   }
 
 }
-
-?>

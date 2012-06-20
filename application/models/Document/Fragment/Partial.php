@@ -21,9 +21,6 @@
 /**
  * The class represents a partial (page, line, text) of a fragment within a document.
  * It defines also the structure of the database table for the ORM.
- *
- * @author Benjamin Oertel <mail@benjaminoertel.com>
- * @version 1.0
  * 
  * @Entity 
  * @Table(name="document_fragment_partials")

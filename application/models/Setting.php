@@ -21,8 +21,6 @@
 /**
  * This class can be used to store simple settings with their key and value.
  * 
- * @author Unplagged
- * 
  * @Entity
  * @Table(name="setting")
  * @UniqueEntity("key")

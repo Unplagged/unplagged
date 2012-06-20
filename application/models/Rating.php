@@ -21,9 +21,6 @@
 /**
  * The class represents a single tag used to categorize an article.
  * It defines also the structure of the database table for the ORM.
- *
- * @author Benjamin Oertel <benjamin.oertel@me.com>
- * @version 1.0
  * 
  * @Entity
  * @Table(name="ratings")
@@ -133,7 +130,7 @@ class Application_Model_Rating extends Application_Model_Base{
       $result["source"] = $this->source->toArray();
     }
     $result["created"] = Unplagged_Helper::jsTime($this->created);
-$result['type'] = 'rating';
+    $result['type'] = 'rating';
 
     return $result;
   }

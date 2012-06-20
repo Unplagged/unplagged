@@ -155,7 +155,4 @@ class Application_Model_Report extends Application_Model_Base{
   public function setFilePath($filePath){
     $this->filePath = $filePath;
   }
-
-
-
 }

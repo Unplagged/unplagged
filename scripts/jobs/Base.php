@@ -24,7 +24,7 @@ require_once(realpath(dirname(__FILE__)) . "/init.php");
  * This class represents an abstract class that initalizes any cron, each
  * cron should extend it.
  *
- * @author benjamin
+ * @author Unplagged
  */
 abstract class Cron_Base{
   protected static $em;
@@ -33,5 +33,4 @@ abstract class Cron_Base{
     self::$em = Zend_Registry::getInstance()->entitymanager;
   }
 }
-
 ?>

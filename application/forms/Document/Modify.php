@@ -216,5 +216,3 @@ class Application_Form_Document_Modify extends Zend_Form{
   }
 
 }
-
-?>

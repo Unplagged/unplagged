@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once('Doctrine' . DIRECTORY_SEPARATOR . 'Common' . DIRECTORY_SEPARATOR . 'ClassLoader.php');
 
 use \Doctrine\Common\ClassLoader;
@@ -26,9 +27,7 @@ use \Doctrine\Common\ClassLoader;
  * all base components.
  *
  * Please remember that all the '_init*' methods are called alphabetically, so make sure to explicitly bootstrap
- * all dependencies in methods that deviate from this order.
- * 
- * @author Unplagged
+ * all dependencies in methods that need to deviate from this order.
  */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
@@ -176,21 +175,29 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * 
    * @todo rotate logfiles 
    */
-  protected function _initLogger(){/*
-    $this->bootstrap('Zend_Log');
-
-    if (!$this->hasPluginResource('Zend_Log')) {
-    throw new Zend_Exception('Log not enabled in config.ini');
+  protected function _initLogger(){
+    $log = null;
+    
+    //enable the logs as provided in the log.ini
+    if($this->hasPluginResource('log')){
+      $this->bootstrap('log');
+      $log = $this->getResource('log');
+    } else {
+      //if no logger was provided within a config, stub it out so no errors get thrown when logging is called
+      $writer = new Zend_Log_Writer_Null;
+      $log = new Zend_Log($writer);  
     }
-
-   */
-    $writer = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/unplagged.log');
+    Zend_Registry::getInstance()->Log = $log;
+    //Zend_Registry::get('Log')->info('Hi');
+    
+    //@todo can be removed when Benni and Server are tested(20.06.12)
+    /*$writer = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/application.log');
     $logger = new Zend_Log($writer);
     //   $logger = $this->getResource('Log');
     // assert($logger != null);
-    Zend_Registry::set('Log', $logger);
+    Zend_Registry::set('Log', $logger);*/
   }
-
+  
   /**
    * 
    */
@@ -205,6 +212,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'controller'=>'index',
         'action'=>'index',
         'class'=>'home',
+        'route'=>'default',
         'order'=>-100 // make sure home is the first page
       ), array(
         'label'=>'Activity',
@@ -212,6 +220,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'notification',
         'action'=>'recent-activity',
+        'route'=>'default',
         'resource'=>'notification_recent-activity'
       ), array(
         'label'=>'Files',
@@ -219,6 +228,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'user',
         'action'=>'files',
+        'route'=>'default',
         'resource'=>'user_files',
         'pages'=>array(
           array(
@@ -227,6 +237,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'case',
             'action'=>'files',
+            'route'=>'default',
             'resource'=>'case_files'
           ),
           array(
@@ -235,6 +246,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'file',
             'action'=>'list',
+            'route'=>'default',
             'resource'=>'file_list'
           ),
           array(
@@ -243,6 +255,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'user',
             'action'=>'files',
+            'route'=>'default',
             'resource'=>'user_files'
           )
         )
@@ -252,6 +265,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'document',
         'action'=>'list',
+        'route'=>'default',
         'resource'=>'document_list'
       ), array(
         'label'=>'Fragments',
@@ -259,18 +273,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'module'=>'default',
         'controller'=>'document_fragment',
         'action'=>'list',
+        'route'=>'default',
         'resource'=>'document_fragment_list'
       ), array(
         'label'=>'Reports',
         'title'=>'Reports',
         'module'=>'default',
         'controller'=>'report',
-        'action'=>'list'
-//        'resource'=>'report_list'
+        'action'=>'list',
+        'route'=>'default',
+        'resource'=>'report_list'
       ), array(
         'label'=>'Administration',
         'title'=>'Administration',
         'uri'=>'#',
+        'route'=>'default',
         'resource'=>'admin_index',
         'pages'=>array(
           array(
@@ -279,6 +296,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'case',
             'action'=>'list',
+            'route'=>'default',
             'resource'=>'case_list'
           ),
           array(
@@ -287,6 +305,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'permission',
             'action'=>'list',
+            'route'=>'default',
             'resource'=>'permission_list'
           ),
           array(
@@ -294,6 +313,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'title'=>'States',
             'module'=>'default',
             'controller'=>'setting',
+            'route'=>'default',
             'action'=>'list-states'
           ),
           array(
@@ -301,6 +321,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'title'=>'Actions',
             'module'=>'default',
             'controller'=>'setting',
+            'route'=>'default',
             'action'=>'list-actions'
           )
         )
@@ -333,7 +354,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     $languageString = $locale->getLanguage();
     $translationFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $languageString . '.csv';
-
     
     //try to load the language file
     if(file_exists($translationFilePath)){
@@ -344,7 +364,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       $registry->set('Zend_Translate', new Zend_Translate('csv'));
     }
 
-    //translate standard zend framework messages and supress errors, which occur when language was not found
+    //translate standard zend framework messages and supress errors which occur when language was not found
     //should default to english
     $translator = @new Zend_Translate(
             array(

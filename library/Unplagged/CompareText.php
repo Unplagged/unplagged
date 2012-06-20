@@ -194,5 +194,4 @@ class Unplagged_CompareText{
   }
 
 }
-
 ?> 

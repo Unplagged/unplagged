@@ -34,8 +34,7 @@ class Application_Model_Task extends Application_Model_Base{
   private $initiator;
 
   /**
-   * The date when the cron finished.
-   * @var string The cron job end date.
+   * @var string The date when the cron finished.
    * 
    * @Column(type="datetime", nullable=true)
    */
@@ -64,7 +63,6 @@ class Application_Model_Task extends Application_Model_Base{
   private $ressource;
 
   /**
-   * The log message returned by the cron.
    * @var string The log message returned by the cron execution.
    * 
    * @Column(type="text", nullable=true)
@@ -72,7 +70,6 @@ class Application_Model_Task extends Application_Model_Base{
   private $log;
   
   /**
-   * The current progress in percent of the task.
    * @var string The current progress in percent of the task.
    * 
    * @Column(type="integer")
@@ -148,8 +145,5 @@ class Application_Model_Task extends Application_Model_Base{
   public function setProgressPercentage($progressPercentage){
     $this->progressPercentage = $progressPercentage;
   }
-
-
-
 }
 ?>

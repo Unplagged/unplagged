@@ -32,7 +32,7 @@ class Application_Form_User_Register extends Zend_Form{
    */
   public function init(){
     $this->setMethod('post');
-    $this->setAction("/user/register/");
+    $this->setAction("register");
 
     $emailElement = new Zend_Form_Element_Text('email');
     $emailElement->setLabel("E-Mail");

@@ -21,8 +21,6 @@
 /**
  * The class represents a single document.
  * It defines also the structure of the database table for the ORM.
- *
- * @author Benjamin Oertel <mail@benjaminoertel.com>
  * 
  * @Entity 
  * @Table(name="documents")
@@ -34,15 +32,14 @@ class Application_Model_Document extends Application_Model_Base{
   const PERMISSION_TYPE = 'document';
 
   /**
-   * The title of the document.
-   * @var string The title.
+   * @var string The title of the document.
    * 
    * @Column(type="string", length=64)
    */
   private $title;
 
   /**
-   * The pages in the document.
+   * @var ArrayCollection The pages in the document.
    * 
    * @OneToMany(targetEntity="Application_Model_Document_Page", mappedBy="document", fetch="EXTRA_LAZY")
    * @OrderBy({"pageNumber" = "ASC"})
@@ -50,15 +47,14 @@ class Application_Model_Document extends Application_Model_Base{
   private $pages;
 
   /**
-   * The fragments in the document.
+   * @var ArrayCollection The fragments in the document.
    * 
    * @OneToMany(targetEntity="Application_Model_Document_Fragment", mappedBy="document")
    */
   private $fragments;
 
   /**
-   * The bibtex information of the document.
-   * @var string The bibtex information.
+   * @var string The bibtex information of the document.
    * 
    * @Column(type="array", nullable=true)
    */
@@ -78,7 +74,7 @@ class Application_Model_Document extends Application_Model_Base{
    */
   private $case;
   
-    /**
+  /**
    * The file the document was initially created from.
    * 
    * @ManyToOne(targetEntity="Application_Model_File")
@@ -308,6 +304,4 @@ class Application_Model_Document extends Application_Model_Base{
   public function getCase(){
     return $this->case;
   }
-
-
 }

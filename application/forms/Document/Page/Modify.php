@@ -63,4 +63,3 @@ class Application_Form_Document_Page_Modify extends Zend_Form{
     );
   }
 }
-?>

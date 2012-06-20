@@ -35,12 +35,15 @@ class IndexController extends Unplagged_Controller_Action{
     $registry = Zend_Registry::getInstance();
     $user = $registry->user;
 
-    $case = $user->getCurrentCase();
-    if($case){
-      $barcode = $case->getBarcode(100, 150, 100, true, '%');
-      if($barcode){
-        $this->view->currentCase = '<h4>' . $registry->Zend_Translate->translate('Barcode for') . ' "' . $case->getPublishableName() . '"</h4>';
-        $this->view->barcode = $barcode->render();
+    Zend_Layout::getMvcInstance()->sidebar = null;
+    foreach(Zend_Layout::getMvcInstance()->cases as $case){
+      //$case = $user->getCurrentCase();
+      if($case){
+        $barcode = $case->getBarcode(100, 150, 100, true, '%');
+        if($barcode){
+          $this->view->currentCase = '<h4>' . $registry->Zend_Translate->translate('Barcode for') . ' "' . $case->getPublishableName() . '"</h4>';
+          $this->view->barcode .= $barcode->render();
+        }
       }
     }
   }
@@ -50,6 +53,18 @@ class IndexController extends Unplagged_Controller_Action{
    */
   public function emptyAction(){
     $this->_helper->viewRenderer->setNoRender(true);
+    Zend_Layout::getMvcInstance()->sidebar = null;
+  }
+
+  public function imprintAction(){
+    $registry = Zend_Registry::getInstance();
+    $imprintConfig = $registry->config->get('imprint');
+    
+    $this->view->address = $imprintConfig->get('address');
+    $this->view->telephone = $imprintConfig->get('telephone');
+    $this->view->email = $imprintConfig->get('email');
+    
+    $this->setTitle($registry->get('Zend_Translate')->translate('Imprint'));
     Zend_Layout::getMvcInstance()->sidebar = null;
   }
 
