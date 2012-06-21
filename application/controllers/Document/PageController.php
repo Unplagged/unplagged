@@ -312,10 +312,11 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $this->render('simtext/show');
     }else{
       if(!empty($input->id)){
-        $query = $this->_em->createQuery("SELECT p FROM Application_Model_Document_Page_SimtextReport p WHERE p.page = '" . $input->id . "'");
-        $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page_SimtextReport p WHERE p.page = '" . $input->id . "'");
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
+        $query = 'SELECT p FROM Application_Model_Document_Page_SimtextReport p JOIN p.page c JOIN c.document b';
+        $count = 'SELECT count(p.id) FROM Application_Model_Document_Page_SimtextReport p JOIN p.page c JOIN c.document b';
 
-        $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+        $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.page'=>$input->id), null, $permission));
         $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
         $paginator->setCurrentPageNumber($input->page);
 
@@ -577,5 +578,4 @@ class Document_PageController extends Unplagged_Controller_Versionable{
   }
 
 }
-
 ?>

@@ -66,11 +66,11 @@ abstract class Application_Model_Base{
    * @var array An array containing all classes that don't need permission management. 
    */
   public static $blacklist = array(
+    'base',
     'task',
     'document-fragment-type',
     'document-fragment-partial',
     'notification',
-    'page',
     'tag',
     'versionable',
     'document-page-line',
