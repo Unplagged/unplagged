@@ -208,7 +208,7 @@ class UserController extends Unplagged_Controller_Action{
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
     if(empty($user) || $user->getState()->getName() != 'user_registered'){
-      $this->_helper->FlashMessenger('Verification failed.');
+      $this->_helper->flashmessenger->addMessage(array('error'=>'Verification failed.'));
       $this->_helper->redirector('index', 'index');
     }else{
       $user->setState($this->_em->getRepository('Application_Model_State')->findOneByName('user_activated'));
@@ -224,7 +224,7 @@ class UserController extends Unplagged_Controller_Action{
       // send registration mail
       Unplagged_Mailer::sendActivationMail($user);
 
-      $this->_helper->FlashMessenger('Verification finished successfully.');
+      $this->_helper->flashmessenger->addMessage(array('success'=>'Verification finished successfully.'));
       $this->_helper->redirector('index', 'index');
     }
   }

@@ -285,7 +285,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'label'=>'Administration',
         'title'=>'Administration',
         'uri'=>'#',
-        'route'=>'default',
         'resource'=>'admin_index',
         'pages'=>array(
           array(
