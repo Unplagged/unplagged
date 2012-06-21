@@ -59,7 +59,7 @@ class IndexController extends Unplagged_Controller_Action{
 
   public function imprintAction(){
     $registry = Zend_Registry::getInstance();
-    $imprintConfig = $registry->config->get('imprint');
+    $imprintConfig = $registry->config->get('contact')->get('imprint');
 
     $this->view->address = $imprintConfig->get('address');
     $this->view->telephone = $imprintConfig->get('telephone');

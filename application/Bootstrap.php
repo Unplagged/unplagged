@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once('Doctrine' . DIRECTORY_SEPARATOR . 'Common' . DIRECTORY_SEPARATOR . 'ClassLoader.php');
 
 use \Doctrine\Common\ClassLoader;
@@ -142,13 +141,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         $case = $registry->entitymanager->getRepository('Application_Model_Case')->findOneById($caseId);
         $guest->setCurrentCase($case);
       }
-      
+
       $registry->user = $guest;
       $defaultNamespace->userId = 'guest';
     }else{
-      $registry->user = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId); 
+      $registry->user = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($defaultNamespace->userId);
     }
-    
+
     //if we don't have a user something went wrong with the session, so clear everything and force new login
     if(!$registry->user){
       session_unset();
@@ -175,27 +174,26 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    */
   protected function _initLogger(){
     $log = null;
-    
+
     //enable the logs as provided in the log.ini
     if($this->hasPluginResource('log')){
       $this->bootstrap('log');
       $log = $this->getResource('log');
-    } else {
+    }else{
       //if no logger was provided within the config, stub it out so no errors get thrown when logging is called
       $writer = new Zend_Log_Writer_Null;
-      $log = new Zend_Log($writer);  
+      $log = new Zend_Log($writer);
     }
     Zend_Registry::getInstance()->Log = $log;
     //Zend_Registry::get('Log')->info('Hi');
-    
     //@todo can be removed when Benni and Server are tested(20.06.12)
-    /*$writer = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/application.log');
-    $logger = new Zend_Log($writer);
-    //   $logger = $this->getResource('Log');
-    // assert($logger != null);
-    Zend_Registry::set('Log', $logger);*/
+    /* $writer = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/application.log');
+      $logger = new Zend_Log($writer);
+      //   $logger = $this->getResource('Log');
+      // assert($logger != null);
+      Zend_Registry::set('Log', $logger); */
   }
-  
+
   /**
    * 
    */
@@ -351,12 +349,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     $languageString = $locale->getLanguage();
     $translationFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $languageString . '.csv';
-    
+
     //try to load the language file
     if(file_exists($translationFilePath)){
       $translate = new Zend_Translate('csv', $translationFilePath, $languageString);
       $registry->set('Zend_Translate', $translate);
-    } else {
+    }else{
       //init an empty Zend_Translate to always have an object
       $registry->set('Zend_Translate', new Zend_Translate('csv'));
     }
