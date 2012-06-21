@@ -344,7 +344,6 @@ class UserController extends Unplagged_Controller_Action{
   public function setCurrentCaseAction(){
     $input = new Zend_Filter_Input(array('case'=>'Digits'), null, $this->_getAllParams());
     $user = Zend_Registry::get('user');
-    //die($input->case);
     $case = null;
     if($input->case){
       $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->case);
@@ -361,8 +360,12 @@ class UserController extends Unplagged_Controller_Action{
       $defaultNamespace = new Zend_Session_Namespace('Default');
       if($case){
         $defaultNamespace->case = $case->getId();
+        $user->setCurrentCase($case);
       }else{
-        $defaultNamespace->case = '';
+        $defaultNamespace->case = null;
+        $user->setCurrentCase(null);
+        $this->_em->persist($user);
+        $this->_em->flush();
       }
     }
 

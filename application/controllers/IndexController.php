@@ -51,12 +51,16 @@ class IndexController extends Unplagged_Controller_Action{
   }
 
   /**
-   * Used to render an empty page when the user is not allowed to access the actual data. 
+   * Used to render an empty page when the user is not allowed to access the actual data. This is necessary in order
+   * to always at least show some error message, when really nothing is allowed.
    */
   public function emptyAction(){
     $this->_helper->viewRenderer->setNoRender(true);
   }
 
+  /**
+   * Page that shows contact information required at least by german law. 
+   */
   public function imprintAction(){
     $registry = Zend_Registry::getInstance();
     $imprintConfig = $registry->config->get('contact')->get('imprint');
