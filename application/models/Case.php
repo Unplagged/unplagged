@@ -46,7 +46,8 @@ class Application_Model_Case extends Application_Model_Base{
   private $alias;
 
   /**
-   * @var string  
+   * @ManyToOne(targetEntity="Application_Model_State")
+   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $state;
 
@@ -107,8 +108,8 @@ class Application_Model_Case extends Application_Model_Base{
    * 
    * @Column(type="array", nullable=true)
    */
-  private $barcodeData;
-
+  private $barcodeData;  
+  
   public function __construct($name = null, $alias = null){
     $this->documents = new ArrayCollection();
     $this->files = new ArrayCollection();
@@ -153,7 +154,7 @@ class Application_Model_Case extends Application_Model_Base{
   public function getPublishableName(){
     $publishableName = $this->getAlias();
 
-    if($this->getState() === 'public'){
+    if($this->getState() && $this->getState()->getName() === 'case_published'){
       $publishableName = $this->getName();
     }
 
@@ -161,10 +162,14 @@ class Application_Model_Case extends Application_Model_Base{
   }
 
   /**
-   * @return string
+   * 
    */
   public function getState(){
     return $this->state;
+  }
+  
+  public function setState(Application_Model_State $state){
+    $this->state = $state;  
   }
 
   public function getUpdated(){

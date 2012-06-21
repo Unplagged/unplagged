@@ -51,6 +51,31 @@ class CaseController extends Unplagged_Controller_Action{
     $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
   }
 
+  public function publishAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
+
+    if($case){
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'case', 'action'=>'update', 'base'=>$case));
+      if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        $this->redirectToLastPage(true);
+      }
+
+      $state = $this->_em->getRepository('Application_Model_State')->findOneByName('case_published');
+
+      $case->setState($state);
+
+      $this->_em->persist($case);
+      $this->_em->flush();
+      $this->_helper->FlashMessenger(array('success'=>array('The case %s was updated successfully.', array($case->getPublishableName()))));
+    }else{
+      $this->_helper->FlashMessenger(array('error'=>"Sorry, we couldn't find the requested case."));
+    }
+
+    $this->_helper->redirector('list', 'case');
+  }
+
   public function editAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
@@ -123,6 +148,11 @@ class CaseController extends Unplagged_Controller_Action{
         $action['label'] = 'Edit case';
         $action['icon'] = 'images/icons/pencil.png';
         $case->actions[] = $action;
+
+        $publishAction['link'] = '/case/publish/id/' . $case->getId();
+        $publishAction['label'] = 'Publish case';
+        $publishAction['icon'] = 'images/icons/pencil.png';
+        $case->actions[] = $publishAction;
       }
     endforeach;
 
@@ -335,5 +365,4 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
 }
-
 ?>

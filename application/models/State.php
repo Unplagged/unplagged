@@ -19,7 +19,9 @@
  */
 
 /**
- * The class represents a notification action.
+ * This class models the state of an operation. It also provides additional data
+ * for display purposes.
+ * 
  * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
@@ -28,7 +30,7 @@
 class Application_Model_State {
 
   /**
-   * @var string The state id.
+   * @var int The state id.
    * 
    * @Id @GeneratedValue @Column(type="integer")
    */
@@ -37,21 +39,21 @@ class Application_Model_State {
   /**
    * @var string The name of the State.
    * 
-   * @Column(type="string", unique=true, length=32)
+   * @Column(type="string", unique=true, length=255)
    */
   private $name;
   
   /**
    * @var string The title of this State.
    * 
-   * @Column(type="string", length=32)
+   * @Column(type="string", length=255)
    */
   private $title;
 
   /**
    * @var string The description of this State.
    * 
-   * @Column(type="string", length=256)
+   * @Column(type="string", length=255)
    */
   private $description;
 

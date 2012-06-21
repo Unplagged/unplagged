@@ -37,12 +37,14 @@ class IndexController extends Unplagged_Controller_Action{
 
     foreach($cases as $case){
       //$case = $user->getCurrentCase();
-      $barcode = $case->getBarcode(100, 150, 100, true, '%');
-      if($barcode){
-        $barcodes[] = array(
-          'graphic'=>$barcode->render(),
-          'title' => $registry->Zend_Translate->translate('Barcode for') . ' "' . $case->getPublishableName() . '"'
-        );
+      if($case->getState() && $case->getState()->getName() === 'case_published'){
+        $barcode = $case->getBarcode(100, 150, 100, true, '%');
+        if($barcode){
+          $barcodes[] = array(
+            'graphic'=>$barcode->render(),
+            'title'=>$registry->Zend_Translate->translate('Barcode for') . ' "' . $case->getPublishableName() . '"'
+          );
+        }
       }
     }
     $this->view->barcodes = $barcodes;

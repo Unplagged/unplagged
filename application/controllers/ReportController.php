@@ -68,7 +68,7 @@ class ReportController extends Unplagged_Controller_Versionable{
   }
 
   /**
-   * Create an report on which the PDF creation in the cronjob will be based.
+   * Create an empty report on which the PDF creation in the cronjob will be based.
    * 
    * @param Application_Model_User $user
    * @param Application_Model_Case $case
