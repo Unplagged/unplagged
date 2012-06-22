@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use DoctrineExtensions\Versionable\Versionable;
-
 /**
  * The class represents a fragment within a document.
  * It defines also the structure of the database table for the ORM.
@@ -31,7 +29,6 @@ use DoctrineExtensions\Versionable\Versionable;
 class Application_Model_Document_Fragment extends Application_Model_Versionable{
 
   const ICON_CLASS = 'icon-fragment';
-  const PERMISSION_TYPE = 'document-fragment';
 
   /**
    * The note.
@@ -66,10 +63,11 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
   private $source;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_Document", inversedBy="fragments")
+   * @ManyToOne(targetEntity="Application_Model_Document", inversedBy="fragments"))
    * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $document;
+  
   protected $conversationTypes = array('comment', 'rating');
 
   public function __construct(array $data = null){
@@ -241,6 +239,36 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
 
   public function setDocument($document){
     $this->document = $document;
+  }
+  
+    
+  public function getSidebarActions(){
+    $actions = array();
+    
+    $action['label'] = 'Actions';
+    $actions[] = $action;
+
+    $action['link'] = '/document_fragment/show/id/' . $this->id;
+    $action['label'] = 'Show fragment';
+    $action['icon'] = 'icon-page';
+    $actions[] = $action;
+
+    $action['link'] = '/document_fragment/edit/id/' . $this->id;
+    $action['label'] = 'Edit fragment';
+    $action['icon'] = 'icon-pencil';
+    $actions[] = $action;
+
+    $action['link'] = '/document_fragment/delete/id/' . $this->id;
+    $action['label'] = 'Remove fragment';
+    $action['icon'] = 'icon-delete';
+    $actions[] = $action;
+
+    $action['link'] = '/document_fragment/changelog/id/' . $this->id;
+    $action['label'] = 'Changelog';
+    $action['icon'] = 'icon-table-relationship';
+    $actions[] = $action;
+    
+    return $actions;
   }
 
 }

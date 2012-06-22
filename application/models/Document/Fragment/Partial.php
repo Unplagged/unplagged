@@ -28,8 +28,6 @@
  */
 class Application_Model_Document_Fragment_Partial extends Application_Model_Base{
   
-  const PERMISSION_TYPE = 'document-fragment-partial';
-
   /**
    *
    * @ManyToOne(targetEntity="Application_Model_Document_Page_Line")

@@ -48,12 +48,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  * ,"versionable_version" = "Application_Model_Versionable_Version"
  * ,"document_page_line" = "Application_Model_Document_Page_Line"
  * ,"rating" = "Application_Model_Rating"
+ * ,"bibtex" = "Application_Model_BibTex"
  * })
  */
 abstract class Application_Model_Base{
 
   const ICON_CLASS = '';
-  const PERMISSION_TYPE = 'base';
 
   public static $permissionTypes = array(
     'read',
@@ -61,18 +61,19 @@ abstract class Application_Model_Base{
     'delete',
     'authorize'
   );
-  
+
   /**
    * @var array An array containing all classes that don't need permission management. 
    */
   public static $blacklist = array(
+    'base',
     'task',
     'document-fragment-type',
     'document-fragment-partial',
     'notification',
-    'page',
     'tag',
     'versionable',
+    'document-page',
     'document-page-line',
     'rating',
     'versionable-version',
@@ -91,6 +92,13 @@ abstract class Application_Model_Base{
    * @Column(type="datetime")
    */
   protected $created;
+
+  /**
+   * Defines whether an element is removed or not.
+   * 
+   * @Column(type="boolean")
+   */
+  private $isRemoved = false;
 
   /**
    * @var string The base element comments.
@@ -135,6 +143,7 @@ abstract class Application_Model_Base{
    * @todo private without getter and setter?
    */
   private $notifications;
+  
   protected $conversationTypes = array('comment');
 
   public function __construct(){
@@ -176,9 +185,21 @@ abstract class Application_Model_Base{
 
     foreach(self::$permissionTypes as $permissionType){
       if(!in_array($this->getPermissionType(), self::$blacklist)){
-        $permission = new Application_Model_ModelPermission($this->getPermissionType(), $permissionType, $this);
-        $user->getRole()->addPermission($permission);
-        $em->persist($permission);
+        //echo $this->getId() . "<br />";
+        //$permission = $em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>$this->getPermissionType(), 'action'=>$permissionType, 'base'=>$this));
+        //if(!$permission){
+          $permission = new Application_Model_ModelPermission($this->getPermissionType(), $permissionType, $this);
+        //}
+        
+        //if(!$user->getRole()->hasPermission($permission)){
+          $user->getRole()->addPermission($permission);
+          $em->persist($permission);
+         // echo 'has not permission';
+        //} //else {
+          //echo 'has permission';
+        //}
+        //exit;
+        
       }
     }
   }
@@ -214,9 +235,7 @@ abstract class Application_Model_Base{
   public function getPermissionType(){
     $childClass = get_called_class();
 
-    if($childClass::PERMISSION_TYPE !== null){
-      return $childClass::PERMISSION_TYPE;
-    }
+    return strtolower(str_replace('_', '-', substr($childClass, strlen('Application_Model_'))));
   }
 
   public function getComments(){
@@ -303,6 +322,14 @@ abstract class Application_Model_Base{
 
   public function getPermissions(){
     return $this->permissions;
+  }
+
+  public function remove(){
+    $this->isRemoved = true;
+  }
+
+  public function getIsRemoved(){
+    return $this->isRemoved;
   }
 
 }

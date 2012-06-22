@@ -2375,3 +2375,8 @@ li.plupload_droptext {
 td.bibtex{
 	font-weight:bold;
 }
+
+#fieldset-bibTexGroup label {
+  float: left;
+  width: 80px;
+}

@@ -33,7 +33,6 @@
 class Application_Model_File extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-file';
-  const PERMISSION_TYPE = 'file';
 
   /**
    * @var string The latest modification date.

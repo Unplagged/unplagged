@@ -25,9 +25,7 @@
  * @Table(name="versionable_versions") 
  */
 class Application_Model_Versionable_Version extends Application_Model_Base{
-  
-  const PERMISSION_TYPE = 'versionable-version';
-  
+    
   /**
    * @Column(type="integer")
    */

@@ -31,6 +31,7 @@ abstract class Application_Model_Versionable extends Application_Model_Base{
    * @var integer The current version of this object.
    * 
    * @Column(type="integer", length=64)
+   * @version
    */
   protected $version;
 
@@ -55,7 +56,7 @@ abstract class Application_Model_Versionable extends Application_Model_Base{
   public function logVersion(){
 
     $versionableVersion = new Application_Model_Versionable_Version($this);
-    //$versionableVersion->setVersionable($this);
+    $versionableVersion->setVersionable($this);
 
     $this->auditLog->add($versionableVersion);
     $this->_em = Zend_Registry::getInstance()->entitymanager;

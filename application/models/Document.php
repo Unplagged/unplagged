@@ -29,7 +29,6 @@
 class Application_Model_Document extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-document';
-  const PERMISSION_TYPE = 'document';
 
   /**
    * @var string The title of the document.
@@ -56,7 +55,8 @@ class Application_Model_Document extends Application_Model_Base{
   /**
    * @var string The bibtex information of the document.
    * 
-   * @Column(type="array", nullable=true)
+   * @OneToOne(targetEntity="Application_Model_BibTex", cascade={"persist"})
+   * @JoinColumn(name="bibtex_id", referencedColumnName="id", onDelete="SET NULL")
    */
   private $bibTex;
 
@@ -67,13 +67,13 @@ class Application_Model_Document extends Application_Model_Base{
    * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
    */
   private $state;
-  
+
   /**
    * @ManyToOne(targetEntity="Application_Model_Case", inversedBy="documents")
    * @JoinColumn(name="case_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $case;
-  
+
   /**
    * The file the document was initially created from.
    * 
@@ -89,7 +89,7 @@ class Application_Model_Document extends Application_Model_Base{
     }
 
     // if(isset($data["bibtex"])){
-      // $this->bibtex = $data["bibtex"];
+    // $this->bibtex = $data["bibtex"];
     // }
     if(isset($data["state"])){
       $this->state = $data["state"];
@@ -97,13 +97,9 @@ class Application_Model_Document extends Application_Model_Base{
     if(isset($data["initialFile"])){
       $this->initialFile = $data["initialFile"];
     }
-	
+
     $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
     $this->fragments = new \Doctrine\Common\Collections\ArrayCollection();
-  }
-
-  public function getId(){
-    return $this->id;
   }
 
   public function getTitle(){
@@ -152,13 +148,13 @@ class Application_Model_Document extends Application_Model_Base{
     $this->state = $state;
   }
 
-  // public function setBibTex($bibTex){
-    // $this->bibTex = $bibTex;
-  // }
+  public function setBibTex($bibTex){
+    $this->bibTex = $bibTex;
+  }
 
   public function toArray(){
     $data["id"] = $this->id;
-    $data["bibTex"] = $this->bibTex;
+    //$data["bibTex"] = $this->bibTex;
     $data["pages"] = array();
 
     foreach($this->pages as $page){
@@ -178,130 +174,51 @@ class Application_Model_Document extends Application_Model_Base{
 
     return ($pagesCount != 0) ? round($percentageSum * 1. / $pagesCount / 10) * 10 : 0;
   }
-  
-    
+
   public function setCase($case){
     $this->case = $case;
   }
-  
+
   public function getInitialFile(){
     return $this->initialFile;
   }
-  
-  // function to set bibtex data
-	public function setBibTexForm ($form){
-		$this->bibTex['form'] = $form;
-	}
-	
-	public function setBibTexKuerzel ($kuerzel){
-		$this->bibTex['kuerzel'] = $kuerzel;
-	}
-	
-	public function setBibTexAutor ($autor){
-		$this->bibTex['autor'] = $autor;
-	}
-	
-	public function setBibTexTitel ($titel){
-		$this->bibTex['titel'] = $titel;
-	}
-	
-	public function setBibTexZeitschrift ($zeitschrift){
-		$this->bibTex['zeitschrift'] = $zeitschrift;
-	}
-	
-	public function setBibTexSammlung ($sammlung){
-		$this->bibTex['sammlung'] = $sammlung;
-	}
-	
-	public function setBibTexHrsg ($hrsg){
-		$this->bibTex['hrsg'] = $hrsg;
-	}
-	
-	public function setBibTexBeteiligte ($beteiligte){
-		$this->bibTex['beteiligte'] = $beteiligte;
-	}
-	
-	public function setBibTexOrt ($ort){
-		$this->bibTex['ort'] = $ort;
-	}
-	
-	public function setBibTexVerlag ($verlag){
-		$this->bibTex['verlag'] = $verlag;
-	}
-		
-	public function setBibTexAusgabe ($ausgabe){
-		$this->bibTex['ausgabe'] = $ausgabe;
-	}
-	
-	public function setBibTexJahr ($jahr){
-		$this->bibTex['jahr'] = $jahr;
-	}
-	
-	public function setBibTexMonat ($monat){
-		$this->bibTex['monat'] = $monat;
-	}
-	
-	public function setBibTexTag($tag){
-		$this->bibTex['tag'] = $tag;
-	}
-	
-	public function setBibTexNummer ($nummer){
-		$this->bibTex['nummer'] = $nummer;
-	}
-	
-	public function setBibTexSeiten ($seiten){
-		$this->bibTex['seiten'] = $seiten;
-	}
-	
-	public function setBibTexUmfang ($umfang){
-		$this->bibTex['umfang'] = $umfang;
-	}
-	
-	public function setBibTexReihe ($reihe){
-		$this->bibTex['reihe'] = $reihe;
-	}
-	
-	public function setBibTexAnmerkung ($anmerkung){
-		$this->bibTex['anmerkung'] = $anmerkung;
-	}
-	
-	public function setBibTexIsbn ($isbn){
-		$this->bibTex['isbn'] = $isbn;
-	}
-	
-	public function setBibTexIssn ($issn){
-		$this->bibTex['issn'] = $issn;
-	}
-	
-	public function setBibTexDoi ($doi){
-		$this->bibTex['doi'] = $doi;
-	}
-	
-	public function setBibTexUrl ($url){
-		$this->bibTex['url'] = $url;
-	}
-	
-	public function setBibTexUrn ($urn){
-		$this->bibTex['urn'] = $urn;
-	}
-	
-	public function setBibTexWp ($wp){
-		$this->bibTex['wp'] = $wp;
-	}
-	
-	public function setBibTexInlit ($inlit){
-		$this->bibTex['inlit'] = $inlit;
-	}
-	
-	public function setBibTexInfn ($infn){
-		$this->bibTex['infn'] = $infn;
-	}
-	
-	public function setBibTexSchluessel ($schluessel){
-		$this->bibTex['schluessel'] = $schluessel;
-	}
-  
+
   public function getCase(){
     return $this->case;
   }
+
+  public function getSidebarActions(){
+    $actions = array();
+
+    $action['label'] = 'Actions';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/list/id/' . $this->id;
+    $action['label'] = 'Show document pages';
+    $action['icon'] = 'icon-page';
+    $actions[] = $action;
+
+    $action['link'] = '/document/edit/id/' . $this->id;
+    $action['label'] = 'Edit document';
+    $action['icon'] = 'icon-pencil';
+    $actions[] = $action;
+
+    $action['link'] = '/document/delete/id/' . $this->id;
+    $action['label'] = 'Remove document';
+    $action['icon'] = 'icon-delete';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/create/document/' . $this->id;
+    $action['label'] = 'Add new page to document';
+    $action['icon'] = 'icon-page-add';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/create/documen/' . $this->id;
+    $action['label'] = 'Detect Plagiarism';
+    $action['icon'] = 'icon-eye';
+    $actions[] = $action;
+
+    return $actions;
+  }
+
 }

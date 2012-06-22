@@ -47,9 +47,9 @@ class BibtexController extends Unplagged_Controller_Action{
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
     if($case){
-      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
-      $query = 'SELECT b FROM Application_Model_Document b';
-      $count = 'SELECT COUNT(b.id) FROM Application_Model_Document b';
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'bibtex', 'action'=>'read', 'base'=>null));
+      $query = 'SELECT d FROM Application_Model_BibTex d JOIN d.document b';
+      $count = 'SELECT COUNT(d.id) FROM Application_Model_BibTex d.document b';
 	  
       $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permission));
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
