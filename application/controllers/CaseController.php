@@ -29,10 +29,10 @@ class CaseController extends Unplagged_Controller_Action{
 
   public function createAction(){
     $roles = $this->_em->getRepository('Application_Model_User_InheritableRole')->findByType('case-default');
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $user = Zend_Registry::get('user');
 
     $modifyForm = new Application_Form_Case_Modify(array('roles'=>$roles));
-    $modifyForm->getElement("collaborators")->setValue(array($user->getRole()->getId()=>$roles[0]->getId()));
+    $modifyForm->getElement('collaborators')->setValue(array($user->getRole()->getId()=>$roles[0]->getId()));
 
     if($this->_request->isPost()){
       $result = $this->handleModifyData($modifyForm);
@@ -40,7 +40,11 @@ class CaseController extends Unplagged_Controller_Action{
       if($result){
         // notification
         Unplagged_Helper::notify('case_created', $result, $user);
-
+        
+        $user->setCurrentCase($result);
+        $this->_em->persist($user);
+        $this->_em->flush();
+        
         $this->_helper->FlashMessenger(array('success'=>'The case was created successfully.'));
         $this->_helper->redirector('list', 'case');
       }
