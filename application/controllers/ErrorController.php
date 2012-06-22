@@ -21,9 +21,11 @@
 /**
  * 
  */
-class ErrorController extends Zend_Controller_Action{
+class ErrorController extends Unplagged_Controller_Action{
 
   public function errorAction(){
+    Zend_Layout::getMvcInstance()->sidebar = null;
+    
     $errors = $this->_getParam('error_handler');
 
     if(!$errors || !$errors instanceof ArrayObject){
@@ -38,16 +40,28 @@ class ErrorController extends Zend_Controller_Action{
         // 404 error -- controller or action not found
         $this->getResponse()->setHttpResponseCode(404);
         $priority = Zend_Log::NOTICE;
-        $this->view->message = 'Page not found';
+        $this->setTitle('404 - Not Found');
+        $this->view->message = "<strong>We are sorry, but we couldn't find the page you requested.</strong><br /><br />This is probably our fault, but just to make sure, please check if you spelled the URL correctly.";
+        
+        
         break;
       default:
         // application error
         $this->getResponse()->setHttpResponseCode(500);
         $priority = Zend_Log::CRIT;
-        $this->view->message = 'Application error';
+        $this->setTitle('500 - Internal Server Error');
+        $this->view->message = "<strong>We are sorry, but we encountered an internal problem that couldn't be resolved.</strong>";
         break;
     }
 
+    $registry = Zend_Registry::getInstance();
+    $webmasterConfig = $registry->config->get('contact')->get('webmaster');
+    $webmasterEmail = $webmasterConfig->get('email');
+    
+    if(!empty($webmasterEmail)){
+      $this->view->message .= ' If you think this is a severe problem, please notify our webmaster at: <a href="mailto:' . $webmasterEmail . '">' . $webmasterEmail . '</a>';
+    }
+    
     // Log exception, if logger available
     if($log = $this->getLog()){
       $log->log($this->view->message, $priority, $errors->exception);

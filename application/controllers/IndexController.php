@@ -26,46 +26,50 @@ class IndexController extends Unplagged_Controller_Action{
   public function init(){
     parent::init();
 
-    Zend_Layout::getMvcInstance()->sidebar = 'default';
-    Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository("Application_Model_Case")->findAll();
+    Zend_Layout::getMvcInstance()->sidebar = null;
   }
 
   public function indexAction(){
-    //Zend_Registry::get('Log')->debug('Index');
     $registry = Zend_Registry::getInstance();
-    $user = $registry->user;
+    $cases = $this->_em->getRepository("Application_Model_Case")->findAll();
 
-    Zend_Layout::getMvcInstance()->sidebar = null;
-    foreach(Zend_Layout::getMvcInstance()->cases as $case){
+    $barcodes = array();
+
+    foreach($cases as $case){
       //$case = $user->getCurrentCase();
-      if($case){
+      if($case->getState() && $case->getState()->getName() === 'case_published'){
         $barcode = $case->getBarcode(100, 150, 100, true, '%');
         if($barcode){
-          $this->view->currentCase = '<h4>' . $registry->Zend_Translate->translate('Barcode for') . ' "' . $case->getPublishableName() . '"</h4>';
-          $this->view->barcode .= $barcode->render();
+          $barcodes[] = array(
+            'graphic'=>$barcode->render(),
+            'title'=>$registry->Zend_Translate->translate('Barcode for') . ' "' . $case->getPublishableName() . '"'
+          );
         }
       }
     }
+    $this->view->barcodes = $barcodes;
   }
 
   /**
-   * Used to render an empty page when the user is not allowed to access the actual data. 
+   * Used to render an empty page when the user is not allowed to access the actual data. This is necessary in order
+   * to always at least show some error message, when really nothing is allowed.
    */
   public function emptyAction(){
     $this->_helper->viewRenderer->setNoRender(true);
-    Zend_Layout::getMvcInstance()->sidebar = null;
   }
 
+  /**
+   * Page that shows contact information required at least by german law. 
+   */
   public function imprintAction(){
     $registry = Zend_Registry::getInstance();
-    $imprintConfig = $registry->config->get('imprint');
-    
+    $imprintConfig = $registry->config->get('contact')->get('imprint');
+
     $this->view->address = $imprintConfig->get('address');
     $this->view->telephone = $imprintConfig->get('telephone');
     $this->view->email = $imprintConfig->get('email');
-    
+
     $this->setTitle($registry->get('Zend_Translate')->translate('Imprint'));
-    Zend_Layout::getMvcInstance()->sidebar = null;
   }
 
 }

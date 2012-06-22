@@ -161,6 +161,14 @@ if(!$em->getRepository('Application_Model_State')->findOneByName("report_running
   $state = new Application_Model_State($data);
   $em->persist($state);
 }
+if(!$em->getRepository('Application_Model_State')->findOneByName("report_scheduled")){
+  unset($data);
+  $data["name"] = "report_scheduled";
+  $data["title"] = "scheduled";
+  $data["description"] = "The report generation is scheduled.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
 if(!($em->getRepository('Application_Model_State')->findOneByName("task_scheduled"))){
   unset($data);
   $data["name"] = "task_scheduled";
@@ -201,6 +209,17 @@ if(!($em->getRepository('Application_Model_State')->findOneByName("parsed"))){
   $state = new Application_Model_State($data);
   $em->persist($state);
 }
+
+//case states
+if(!($em->getRepository('Application_Model_State')->findOneByName('case_published'))){
+  unset($data);
+  $data["name"] = "case_published";
+  $data["title"] = "published";
+  $data["description"] = "The case is published.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+
 
 // 4) fragment types
 if(!($em->getRepository('Application_Model_Document_Fragment_Type')->findOneByName("UnbekannteQuelle"))){

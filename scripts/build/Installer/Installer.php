@@ -102,6 +102,7 @@ class Installer{
       'data' . DIRECTORY_SEPARATOR . 'uploads',
       'data' . DIRECTORY_SEPARATOR . 'logs',
       'data' . DIRECTORY_SEPARATOR . 'cache',
+      'data' . DIRECTORY_SEPARATOR . 'reports',
       'data' . DIRECTORY_SEPARATOR . 'doctrine',
       'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR . 'proxies',
       'temp',
@@ -121,7 +122,7 @@ class Installer{
         }
       }
     }
-    echo 'Finished creation of directories.';
+    echo 'Finished creation of directories.' . PHP_EOL;
   }
 
   /**

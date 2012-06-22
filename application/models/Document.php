@@ -81,6 +81,12 @@ class Application_Model_Document extends Application_Model_Base{
    * @JoinColumn(name="initial_file_id", referencedColumnName="id", onDelete="SET NULL")
    */
   private $initialFile;
+  
+  /**
+   *
+   * @Column(type="string", length=2)
+   */
+  private $language = 'en';
 
   public function __construct(array $data = null){
 
@@ -148,9 +154,23 @@ class Application_Model_Document extends Application_Model_Base{
     $this->state = $state;
   }
 
+<<<<<<< HEAD
   public function setBibTex($bibTex){
     $this->bibTex = $bibTex;
   }
+=======
+  public function getLanguage(){
+    return $this->language;  
+  }
+  
+  public function setLanguage($language){
+    $this->language = $language;
+  }
+  
+  // public function setBibTex($bibTex){
+    // $this->bibTex = $bibTex;
+  // }
+>>>>>>> 5d8376472d32b3c9eb0b0ddd34e47071408cb9bf
 
   public function toArray(){
     $data["id"] = $this->id;

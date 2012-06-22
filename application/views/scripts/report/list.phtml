@@ -15,8 +15,12 @@ $this->headTitle($this->title);
       <?php foreach($this->paginator as $report): ?>
 
         <tr> 
+          <?php if($report->getState()->getName() == 'report_generated'): ?>
           <td data-label="<?php echo $this->translate("Report"); ?>"><a href="/report/download/id/<?php echo $report->getId(); ?>"><?php echo $report->getTitle() . '_' . $report->getCreated()->format("Y-m-d"); ?></a></td>
-          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $report->getState()->getTitle(); ?></td>
+          <?php else: ?>
+          <td data-label="<?php echo $this->translate("Report"); ?>"><?php echo $report->getTitle() . '_' . $report->getCreated()->format("Y-m-d"); ?></td>
+          <?php endif; ?>
+          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $report->outputState; ?></td>
           <td data-label="<?php echo $this->translate("Source"); ?>">
             <?php
             if($report->getTarget() != null){

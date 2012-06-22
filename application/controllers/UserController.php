@@ -208,7 +208,7 @@ class UserController extends Unplagged_Controller_Action{
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
     if(empty($user) || $user->getState()->getName() != 'user_registered'){
-      $this->_helper->FlashMessenger('Verification failed.');
+      $this->_helper->flashmessenger->addMessage(array('error'=>'Verification failed.'));
       $this->_helper->redirector('index', 'index');
     }else{
       $user->setState($this->_em->getRepository('Application_Model_State')->findOneByName('user_activated'));
@@ -224,7 +224,7 @@ class UserController extends Unplagged_Controller_Action{
       // send registration mail
       Unplagged_Mailer::sendActivationMail($user);
 
-      $this->_helper->FlashMessenger('Verification finished successfully.');
+      $this->_helper->flashmessenger->addMessage(array('success'=>'Verification finished successfully.'));
       $this->_helper->redirector('index', 'index');
     }
   }
@@ -344,7 +344,6 @@ class UserController extends Unplagged_Controller_Action{
   public function setCurrentCaseAction(){
     $input = new Zend_Filter_Input(array('case'=>'Digits'), null, $this->_getAllParams());
     $user = Zend_Registry::get('user');
-    //die($input->case);
     $case = null;
     if($input->case){
       $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->case);
@@ -361,8 +360,12 @@ class UserController extends Unplagged_Controller_Action{
       $defaultNamespace = new Zend_Session_Namespace('Default');
       if($case){
         $defaultNamespace->case = $case->getId();
+        $user->setCurrentCase($case);
       }else{
-        $defaultNamespace->case = '';
+        $defaultNamespace->case = null;
+        $user->setCurrentCase(null);
+        $this->_em->persist($user);
+        $this->_em->flush();
       }
     }
 

@@ -361,6 +361,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $this->render('simtext/show');
     }else{
       if(!empty($input->id)){
+<<<<<<< HEAD
         $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
         if($page){
           $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
@@ -387,6 +388,23 @@ class Document_PageController extends Unplagged_Controller_Versionable{
                 $percentage = $task->getProgressPercentage();
               }
               $report->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
+=======
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
+        $query = 'SELECT p FROM Application_Model_Document_Page_SimtextReport p JOIN p.page c JOIN c.document b';
+        $count = 'SELECT count(p.id) FROM Application_Model_Document_Page_SimtextReport p JOIN p.page c JOIN c.document b';
+
+        $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.page'=>$input->id), null, $permission));
+        $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+        $paginator->setCurrentPageNumber($input->page);
+
+        foreach($paginator as $report):
+          if($report->getState()->getName() == 'task_scheduled'){
+            // find the associated task and get percentage
+            $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
+            $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
+            if(!$task){
+              $percentage = 0;
+>>>>>>> 5d8376472d32b3c9eb0b0ddd34e47071408cb9bf
             }else{
               $report->outputState = $report->getState()->getTitle();
             }
@@ -647,5 +665,9 @@ class Document_PageController extends Unplagged_Controller_Versionable{
   }
 
 }
+<<<<<<< HEAD
 
 ?>
+=======
+?>
+>>>>>>> 5d8376472d32b3c9eb0b0ddd34e47071408cb9bf

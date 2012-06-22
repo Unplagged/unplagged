@@ -12,7 +12,7 @@ $(document).ready(function(){
   $('.tooltip-toggle').tooltip();
   $('.dropdown-toggle').dropdown();
 
-  $('.alert').prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');
+  $('.alert:not(.unclosable)').prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');
   $().alert()
  
   // enable chosen for the case selection in the upper right and submit it on change

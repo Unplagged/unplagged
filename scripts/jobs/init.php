@@ -1,7 +1,9 @@
 <?php
-
+//register current time and memory state in global variables to create benchmark after execution
 $time = microtime(true);
 $memory = memory_get_usage();
+//register trace here so the developer can find out which cronjob had the problem
+$trace = debug_backtrace();
 
 $arguments = getopt("e:");
 
@@ -46,12 +48,25 @@ $application = new Zend_Application(APPLICATION_ENV, array(
   ));
 $application->bootstrap();
 
-register_shutdown_function('__shutdown');
+register_shutdown_function('benchmark');
 
-function __shutdown(){
-  global $time, $memory;
+/**
+ * Calculates time and memory usage to provide benchmark data.
+ * 
+ * @global int $time
+ * @global int $memory 
+ */
+function benchmark(){
+  global $time, $memory, $trace;
   $endTime = microtime(true);
   $endMemory = memory_get_usage();
-
-  echo 'Time [' . ($endTime - $time) . '] Memory [' . number_format(( $endMemory - $memory) / 1024) . 'Kb]';
+  
+  //in kb
+  $usedMemory = ($endMemory - $memory) / 1024;
+  
+  //log if the system uses more than 30MB
+  if($usedMemory > 30000){
+    Zend_Registry::get('Log')->crit('High memory usage in cronjob:' . PHP_EOL . print_r($trace, true));
+  }
+  echo 'Time [' . ($endTime - $time) . '] Memory [' . number_format(( $endMemory - $memory) / 1024) . 'MB]';
 }

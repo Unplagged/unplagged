@@ -1,10 +1,15 @@
 <?php
 $defaultConfig = Zend_Registry::getInstance()->config->default;
 $applicationName = $defaultConfig->applicationName;
-$this->title = $this->translate('Welcome to %s', $applicationName) . '.';
+$this->title = $this->translate('Welcome to %s', $applicationName);
 $this->headTitle($this->title);
 ?>
 <div class="welcome-message well"><?php echo $this->translate($defaultConfig->welcomeMessage); ?></div>
-
-<?php echo $this->currentCase; ?>
-<?php echo $this->barcode; ?>
+<?php if(count($this->barcodes > 0)): ?>
+  <div class="barcodes-big">  
+    <?php foreach($this->barcodes as $barcode): ?>
+      <h4><?php echo $barcode['title']; ?></h4>
+      <?php echo $barcode['graphic']; ?>
+    <?php endforeach; ?>
+  </div>
+<?php endif; ?>

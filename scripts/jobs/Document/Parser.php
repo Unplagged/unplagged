@@ -21,31 +21,20 @@ require_once(realpath(dirname(__FILE__)) . "/../Base.php");
 
 /**
  * This class represents a cronjob for parsing larger files into documents using OCR.
- *
- * @author benjamin
  */
 class Cron_Document_Parser extends Cron_Base{
 
-  public static function init(){
-    parent::init();
-  }
-
-  public static function start(){
-    $query = self::$em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
-    $query->setParameter("action", "file_parse");
-    $query->setParameter("state", "task_scheduled");
-    $query->setMaxResults(1);
-
-    $tasks = $query->getResult();
+  public function start(){
+    $tasks = $this->findTask();
 
     if($tasks){
       $task = $tasks[0];
-      
+
       $taskId = $task->getId();
-      
-      $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_running"));
-      self::$em->persist($task);
-      self::$em->flush();
+
+      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName('task_running'));
+      $this->em->persist($task);
+      $this->em->flush();
 
       $document = $task->getRessource();
       $file = $document->getInitialFile();
@@ -57,18 +46,18 @@ class Cron_Document_Parser extends Cron_Base{
 
       if($document instanceof Application_Model_Document){
         // update document
-        $document->setState(self::$em->getRepository('Application_Model_State')->findOneByName('parsed'));
+        $document->setState($this->em->getRepository('Application_Model_State')->findOneByName('parsed'));
 
         // update task
-        $task = self::$em->getRepository('Application_Model_Task')->findOneById($taskId);
-        $task->setState(self::$em->getRepository('Application_Model_State')->findOneByName("task_finished"));
+        $task = $this->em->getRepository('Application_Model_Task')->findOneById($taskId);
+        $task->setState($this->em->getRepository('Application_Model_State')->findOneByName('task_finished'));
         $task->setProgressPercentage(100);
-        
-        self::$em->persist($document);
-        self::$em->persist($task);
 
-        self::$em->flush();
-        self::$em->clear();
+        $this->em->persist($document);
+        $this->em->persist($task);
+
+        $this->em->flush();
+        $this->em->clear();
 
         // notification
 //        $user = $task->getInitiator();
@@ -76,8 +65,17 @@ class Cron_Document_Parser extends Cron_Base{
       }
     }
   }
-}
 
-Cron_Document_Parser::init();
-Cron_Document_Parser::start();
+  private function findTask(){
+    $query = $this->em->createQuery('SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state');
+    $query->setParameter('action', 'file_parse');
+    $query->setParameter('state', 'task_scheduled');
+    $query->setMaxResults(1);
+
+    return $query->getResult();
+  }
+
+}
+$parser = new Cron_Document_Parser();
+$parser->start();
 ?>
