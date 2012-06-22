@@ -209,7 +209,36 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'action'=>'index',
         'class'=>'home',
         'route'=>'default',
-        'order'=>-100 // make sure home is the first page
+        'order'=>-100, // make sure home is the first page
+        'pages'=>array(
+          array(
+            'label'=>'Login',
+            'title'=>'Login',
+            'module'=>'default',
+            'controller'=>'auth',
+            'action'=>'login',
+            'visible'=>false,
+            'resource'=>'auth_login'
+          ),
+          array(
+            'label'=>'Register',
+            'title'=>'Register',
+            'module'=>'default',
+            'controller'=>'user',
+            'action'=>'register',
+            'visible'=>false,
+            'resource'=>'user_register'
+          ),
+          array(
+            'label'=>'Impressum',
+            'title'=>'Impressum',
+            'module'=>'default',
+            'controller'=>'index',
+            'action'=>'imprint',
+            'visible'=>false,
+            'resource'=>'index_imprint'
+          )
+        )
       ), array(
         'label'=>'Activity',
         'title'=>'Activity',
@@ -253,6 +282,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'action'=>'files',
             'route'=>'default',
             'resource'=>'user_files'
+          ),
+          array(
+            'label'=>'Upload',
+            'title'=>'Upload',
+            'module'=>'default',
+            'controller'=>'file',
+            'action'=>'upload',
+            'visible'=>false,
+            'resource'=>'file_upload'
           )
         )
       ), array(
@@ -292,7 +330,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'controller'=>'case',
             'action'=>'list',
             'route'=>'default',
-            'resource'=>'case_list'
+            'resource'=>'case_list',
+            'pages'=>array(
+              array(
+                'label'=>'Create Case',
+                'title'=>'Create Case',
+                'module'=>'default',
+                'controller'=>'case',
+                'action'=>'create',
+                'visible'=>false,
+                'resource'=>'case_create'
+              )
+            ),
           ),
           array(
             'label'=>'Roles',
@@ -301,7 +350,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'controller'=>'permission',
             'action'=>'list',
             'route'=>'default',
-            'resource'=>'permission_list'
+            'resource'=>'permission_list',
+            'pages'=>array(
+              array(
+                'label'=>'Edit Role',
+                'title'=>'Edit Role',
+                'module'=>'default',
+                'controller'=>'permission',
+                'action'=>'edit-role',
+                'visible'=>false,
+                'resource'=>'permission_edit-role'
+              )
+            ),
           ),
           array(
             'label'=>'States',
@@ -309,7 +369,27 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'setting',
             'route'=>'default',
-            'action'=>'list-states'
+            'action'=>'list-states',
+            'pages'=>array(
+              array(
+                'label'=>'Edit State',
+                'title'=>'Edit State',
+                'module'=>'default',
+                'controller'=>'setting',
+                'action'=>'edit-state',
+                'visible'=>false,
+                'resource'=>'setting_edit-state'
+              ),
+              array(
+                'label'=>'Create State',
+                'title'=>'Create State',
+                'module'=>'default',
+                'controller'=>'setting',
+                'action'=>'create-state',
+                'visible'=>false,
+                'resource'=>'setting_create-state'
+              )
+            ),
           ),
           array(
             'label'=>'Actions',
@@ -317,7 +397,27 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'module'=>'default',
             'controller'=>'setting',
             'route'=>'default',
-            'action'=>'list-actions'
+            'action'=>'list-actions',
+            'pages'=>array(
+              array(
+                'label'=>'Edit Action',
+                'title'=>'Edit Action',
+                'module'=>'default',
+                'controller'=>'setting',
+                'action'=>'edit-action',
+                'visible'=>false,
+                'resource'=>'setting_edit-action'
+              ),
+              array(
+                'label'=>'Create Action',
+                'title'=>'Create Action',
+                'module'=>'default',
+                'controller'=>'setting',
+                'action'=>'create-action',
+                'visible'=>false,
+                'resource'=>'setting_create-action'
+              )
+            )
           )
         )
       )
