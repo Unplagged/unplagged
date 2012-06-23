@@ -299,7 +299,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $this->initalisePartial($modifyForm, 'candidate', $formData);
     $this->initalisePartial($modifyForm, 'source', $formData);
 
-   // if($modifyForm->isValid($formData)){
+   if($modifyForm->isValid($formData)){
 
       $fragment->setNote($formData['note']);
       $fragment->setType($this->_em->getRepository('Application_Model_Document_Fragment_Type')->findOneById($formData['type']));
@@ -319,30 +319,22 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       }
       $fragment->setSource($this->handlelPartialCreation($partial, $formData['sourceLineFrom'], $formData['sourceLineTo']));
 
-     // $case = Zend_Registry::getInstance()->user->getCurrentCase();
-     // $target = $case->getTarget();
-     // $target->addFragment($fragment);
+      $case = Zend_Registry::getInstance()->user->getCurrentCase();
+      $target = $case->getTarget();
+      $target->addFragment($fragment);
 
 
       // write back to persistence manager and flush it
-      //$this->_em->persist($fragment->getPlag());
-      //$this->_em->persist($fragment->getSource());
-      //      $this->_em->persist($fragment->getType());
-      //$this->_em->persist($fragment->getDocument());
-      //echo $fragment->getCurrentVersion();exit;
       $this->_em->persist($fragment);
-
-//      $this->_em->persist($target);
       $this->_em->flush();
-      echo 'blabla';
-      //exit();
+
       // updates the barcode data
-      // $case->updateBarcodeData();
-      // $this->_em->persist($case);
-      // $this->_em->flush();
+      $case->updateBarcodeData();
+      $this->_em->persist($case);
+      $this->_em->flush();
 
       return $fragment;
-   // }
+    }
 
     return false;
   }

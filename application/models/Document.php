@@ -94,9 +94,6 @@ class Application_Model_Document extends Application_Model_Base{
       $this->title = $data["title"];
     }
 
-    // if(isset($data["bibtex"])){
-    // $this->bibtex = $data["bibtex"];
-    // }
     if(isset($data["state"])){
       $this->state = $data["state"];
     }
@@ -154,11 +151,10 @@ class Application_Model_Document extends Application_Model_Base{
     $this->state = $state;
   }
 
-<<<<<<< HEAD
   public function setBibTex($bibTex){
     $this->bibTex = $bibTex;
   }
-=======
+
   public function getLanguage(){
     return $this->language;  
   }
@@ -166,11 +162,6 @@ class Application_Model_Document extends Application_Model_Base{
   public function setLanguage($language){
     $this->language = $language;
   }
-  
-  // public function setBibTex($bibTex){
-    // $this->bibTex = $bibTex;
-  // }
->>>>>>> 5d8376472d32b3c9eb0b0ddd34e47071408cb9bf
 
   public function toArray(){
     $data["id"] = $this->id;

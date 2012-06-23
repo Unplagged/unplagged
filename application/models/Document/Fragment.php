@@ -63,7 +63,7 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
   private $source;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_Document", inversedBy="fragments"))
+   * @ManyToOne(targetEntity="Application_Model_Document", inversedBy="fragments"), cascade={"persist"})
    * @JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $document;

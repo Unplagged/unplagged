@@ -42,15 +42,28 @@ class Application_Form_Document_Modify extends Zend_Form{
     // bibTex group
     $typeElement = new Zend_Form_Element_Select('bibSourceType');
     $typeElement->setLabel("Document type: ");
-    $typeElement->addMultiOptions(array('full'=>'Vollständiges Formular', 'book'=>'Buchformular', 'periodikum'=>'Periodikumformular', 'aufsatz'=>'Aufsatzsammlungsformular'));
+    $typeElement->addMultiOptions(array('full'=>'Full', 'book'=>'Book', 'periodical'=>'Periodical', 'essay'=>'Essay'));
 
     $fieldIs = array();
+    $fieldIs[] = 'bibSourceType';
+    
     foreach(Application_Model_BibTex::$accessibleFields as $fieldName=>$field){
       $fieldId = 'bib' . ucfirst($fieldName);
       $fieldIs[] = $fieldId;
       $bibTexElement = new Zend_Form_Element_Text($fieldId);
       $bibTexElement->setLabel($field['label']);
-      $bibTexElement->setOptions(array('class'=>'bibtex ' . implode(' ', $field['types'])));
+
+      $classes = array();
+      foreach(Application_Model_BibTex::$sourceTypes as $name => $fields){
+        if(in_array($fieldName, Application_Model_BibTex::$sourceTypes[$name])){
+          $classes[] = $name;
+        }
+      }
+      $bibTexElement->setOptions(array('class'=>'bibtex ' . implode(' ', $classes)));
+      if($field['required']){
+        $bibTexElement->setRequired(true);
+      }
+
       $this->addElement($bibTexElement);
     }
 
@@ -64,7 +77,7 @@ class Application_Form_Document_Modify extends Zend_Form{
       , $typeElement
     ));
 
-    $this->addDisplayGroup(array('title', 'bibSourceType')
+    $this->addDisplayGroup(array('title')
         , 'generalGroup'
         , array('legend'=>'Document Information')
     );

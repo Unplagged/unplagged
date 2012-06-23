@@ -2162,6 +2162,35 @@ li.plupload_droptext {
   width: 100%;
 }
 
+.bibtex-line {
+  padding: 0; /*2px 5px 5px 10px;*/
+  margin: 0;
+  clear: left;
+}
+.bibtex-line .bibtex-label {
+  display: block;
+  width: 100px;
+  float: left;
+  background-color: #EBECED;
+  width: 30%;
+}
+
+.bibtex-line .bibtex-label span {
+  padding: 5px 10px;
+  display: block;
+  
+}
+
+.bibtex-line .bibtex-content {
+    display: block;
+  float: left;
+  width: 70%;
+
+}
+.bibtex-line .bibtex-content span {
+    padding: 5px 10px;
+    display: block;
+}
 
 /* ==|== media queries ====================================================== */
 
@@ -2376,11 +2405,7 @@ li.plupload_droptext {
 @media (max-width:767px){body{padding-left:0;padding-right:0;}}
 
 /*style for bibtex information of a defined document*/
-td.bibtex{
-	font-weight:bold;
-}
-
 #fieldset-bibTexGroup label {
   float: left;
-  width: 80px;
+  width: 125px;
 }

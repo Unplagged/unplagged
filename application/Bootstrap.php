@@ -280,6 +280,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'route'=>'default',
         'resource'=>'report_list'
       ), array(
+        'label'=>'Bibliography',
+        'title'=>'Bibliography',
+        'module'=>'default',
+        'controller'=>'bibtex',
+        'action'=>'list',
+        'route'=>'default',
+        'resource'=>'bibtex_list'
+      ), array(
         'label'=>'Administration',
         'title'=>'Administration',
         'uri'=>'#',

@@ -45,170 +45,141 @@ class Application_Model_BibTex extends Application_Model_Base{
   /**
    * @Column(type="string", length=255)
    */
-  private $shortcut;
+  private $bAuthor;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $author;
+  private $bTitle;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $title;
+  private $bYear;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $newspaper;
+  private $bMonth;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $collection;
+  private $bDay;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $hrsg;
+  private $bJournal;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $people;
+  private $bVolume;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $city;
+  private $bNumber;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $publisher;
+  private $bPublisher;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $edition;
+  private $bAddress;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $year;
+  private $bSeries;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $month;
+  private $bEdition;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $day;
+  private $bBooktitle;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $number;
+  private $bEditor;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $pages;
+  private $bPages;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $scope;
+  private $bIsbn;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $row;
+  private $bIssn;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $note;
+  private $bUrl;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $isbn;
+  private $bKey;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $issn;
+  private $bNote;
 
   /**
    * @Column(type="string", length=255)
    */
-  private $doi;
-
-  /**
-   * @Column(type="string", length=255)
-   */
-  private $url;
-
-  /**
-   * @Column(type="string", length=255)
-   */
-  private $rnl;
-
-  /**
-   * @Column(type="string", length=255)
-   */
-  private $wp;
-
-  /**
-   * @Column(type="string", length=255)
-   */
-  private $inlit;
-
-  /**
-   * @Column(type="string", length=255)
-   */
-  private $infn;
-
-  /**
-   * @Column(type="string", length=255)
-   */
-  private $skey;
+  private $bWp;
 
   /**
    * This array defines in which order the fields are returned.
    * @var type 
    */
   public static $accessibleFields = array(
-    'shortcut'=>array('label'=>'Shortcut', 'required'=>false, 'types'=>array('full')),
-    'author'=>array('label'=>'Author', 'required'=>false, 'types'=>array('full', 'book', 'periodikum', 'aufsatz')),
-    'title'=>array('label'=>'Title', 'required'=>false, 'types'=>array('full', 'book', 'periodikum', 'aufsatz')),
-    'newspaper'=>array('label'=>'Newspaper', 'required'=>false, 'types'=>array('full', 'periodikum')),
-    'collection'=>array('label'=>'Collection', 'required'=>false, 'types'=>array('full', 'aufsatz')),
-    'hrsg'=>array('label'=>'Hrsg', 'required'=>false, 'types'=>array('full', 'aufsatz')),
-    'people'=>array('label'=>'People', 'required'=>false, 'types'=>array('full')),
-    'city'=>array('label'=>'City', 'required'=>false, 'types'=>array('full', 'book', 'periodikum', 'aufsatz')),
-    'publisher'=>array('label'=>'Publisher', 'required'=>false, 'types'=>array('full', 'book', 'periodikum', 'aufsatz')),
-    'edition'=>array('label'=>'Edition', 'required'=>false, 'types'=>array('full')),
-    'year'=>array('label'=>'Year', 'required'=>false, 'types'=>array('full', 'book', 'periodikum', 'aufsatz')),
-    'month'=>array('label'=>'Month', 'required'=>false, 'types'=>array('full', 'periodikum')),
-    'day'=>array('label'=>'Day', 'required'=>false, 'types'=>array('full', 'periodikum')),
-    'number'=>array('label'=>'Number', 'required'=>false, 'types'=>array('full', 'periodikum')),
-    'pages'=>array('label'=>'Pages', 'required'=>false, 'types'=>array('full', 'periodikum', 'aufsatz')),
-    'scope'=>array('label'=>'Scope', 'required'=>false, 'types'=>array('full')),
-    'row'=>array('label'=>'Row', 'required'=>false, 'types'=>array('full')),
-    'note'=>array('label'=>'Note', 'required'=>false, 'types'=>array('full', 'book', 'periodikum', 'aufsatz')),
-    'isbn'=>array('label'=>'ISBN', 'required'=>false, 'types'=>array('full', 'book', 'aufsatz')),
-    'issn'=>array('label'=>'ISSN', 'required'=>false, 'types'=>array('full', 'aufsatz')),
-    'doi'=>array('label'=>'Doi', 'required'=>false, 'types'=>array('full')),
-    'url'=>array('label'=>'URL', 'required'=>false, 'types'=>array('full', 'book', 'periodikum', 'aufsatz')), // verify
-    'rnl'=>array('label'=>'RNL', 'required'=>false, 'types'=>array('full', 'book', 'periodikum', 'aufsatz')), // verify
-    'wp'=>array('label'=>'WP', 'required'=>false, 'types'=>array('full')),
-    'inlit'=>array('label'=>'Inlit', 'required'=>false, 'types'=>array('full', 'book', 'periodikum', 'aufsatz')), //verify
-    'skey'=>array('label'=>'Key', 'required'=>false, 'types'=>array('full')),
-    'infn'=>array('label'=>'Infn', 'required'=>false, 'types'=>array('full', 'book', 'periodikum', 'aufsatz')) //verify
+    'author'=>array('label'=>'Author', 'required'=>true),
+    'title'=>array('label'=>'Title', 'required'=>true),
+    'year'=>array('label'=>'Year', 'required'=>false),
+    'month'=>array('label'=>'Month', 'required'=>false),
+    'day'=>array('label'=>'Day', 'required'=>false),
+    'journal'=>array('label'=>'Journal', 'required'=>false),
+    'volume'=>array('label'=>'Volume', 'required'=>false),
+    'number'=>array('label'=>'Number', 'required'=>false),
+    'publisher'=>array('label'=>'Publisher', 'required'=>false),
+    'address'=>array('label'=>'Address', 'required'=>false),
+    'series'=>array('label'=>'Series', 'required'=>false),
+    'edition'=>array('label'=>'Edition', 'required'=>false),
+    'booktitle'=>array('label'=>'Booktitle', 'required'=>false),
+    'editor'=>array('label'=>'Editor', 'required'=>false),
+    'pages'=>array('label'=>'Pages', 'required'=>false),
+    'isbn'=>array('label'=>'ISBN', 'required'=>false),
+    'issn'=>array('label'=>'ISSN', 'required'=>false),
+    'url'=>array('label'=>'URL', 'required'=>false),
+    'key'=>array('label'=>'Key', 'required'=>false),
+    'note'=>array('label'=>'Note', 'required'=>false),
+    'wp'=>array('label'=>'Wikipedia', 'required'=>false)
+  );
+  
+  public static $sourceTypes = array(
+    'full'=>array('author', 'title', 'year', 'month', 'day', 'journal', 'volume', 'number', 'publisher', 'address', 'series', 'edition', 'booktitle', 'editor', 'pages', 'isbn', 'issn', 'url', 'key', 'note', 'wp'),
+    'book'=>array('author', 'year', 'title', 'isbn', 'publisher', 'address', 'url', 'note'),
+    'periodical'=>array('author', 'title', 'journal', 'volume', 'number', 'year', 'month', 'day', 'pages', 'publisher', 'issn', 'url', 'note'),
+    'essay'=>array('author', 'title', 'year', 'volume', 'hrsg', 'pages', 'publisher', 'address', 'isbn', 'url', 'note')
   );
 
   public function __construct(array $data = null){
@@ -232,15 +203,18 @@ class Application_Model_BibTex extends Application_Model_Base{
   }
 
   public function getContent($fieldName){
+    $fieldName = 'b' . ucfirst($fieldName);
+
     if($this->$fieldName){
+
       return $this->$fieldName;
     }
     return null;
   }
 
   public function setContent($content, $fieldName){
+    $fieldName = 'b' . ucfirst($fieldName);
     $this->$fieldName = $content;
-    echo $content . "<br />";
   }
 
   public function getDirectLink(){
