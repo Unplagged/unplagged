@@ -34,7 +34,7 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
     $user = Zend_Registry::getInstance()->user;
 
     $conditions = array();
-
+    $conditions[] = 'b.isRemoved = 0';
     if(isset($additionalConditions)){
       foreach($additionalConditions as $field=>$value){
         $conditions[] = $field . " = '" . $value . "'";
@@ -49,7 +49,6 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
       // 2) if not, check permission on each file
       if(!$canAccessAll){
         if($readAllPermission->getAction()){
-          //$permissionStatement = " JOIN b.permissions pe WITH (pe.base = b.id AND pe.action = '%s') JOIN pe.roles re JOIN re.user u ";
           $permissionStatement = " JOIN b.permissions pe WITH (pe INSTANCE OF Application_Model_ModelPermission AND pe.base = b.id AND pe.action = :permissionAction AND :roleId MEMBER OF pe.roles)";
 
           $permissionStatement = sprintf($permissionStatement, $readAllPermission->getAction());

@@ -27,11 +27,6 @@ class DocumentController extends Unplagged_Controller_Action{
 
   public function init(){
     parent::init();
-
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
-    Zend_Layout::getMvcInstance()->menu = 'document-tools';
-    Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 
   public function indexAction(){
@@ -49,6 +44,8 @@ class DocumentController extends Unplagged_Controller_Action{
         $this->redirectToLastPage(true);
       }
 
+      Zend_Layout::getMvcInstance()->menu = $document->getSidebarActions();
+
       $modifyForm = new Application_Form_Document_Modify();
       $modifyForm->setAction("/document/edit/id/" . $input->id);
 
@@ -56,36 +53,13 @@ class DocumentController extends Unplagged_Controller_Action{
 
       // set bibTex information
       $bibTex = $document->getBibTex();
-      //var_dump($bibTex);
-      $modifyForm->getElement("type")->setValue($bibTex['form']);
-      $modifyForm->getElement("kuerzel")->setValue($bibTex['kuerzel']);
-      $modifyForm->getElement("autor")->setValue($bibTex['autor']);
-      $modifyForm->getElement("titel")->setValue($bibTex['titel']);
-      //$modifyForm->getElement("titel")->setAttrib('disabled','disabled');
-      $modifyForm->getElement("zeitschrift")->setValue($bibTex['zeitschrift']);
-      $modifyForm->getElement("sammlung")->setValue($bibTex['sammlung']);
-      $modifyForm->getElement("hrsg")->setValue($bibTex['hrsg']);
-      $modifyForm->getElement("beteiligte")->setValue($bibTex['beteiligte']);
-      $modifyForm->getElement("ort")->setValue($bibTex['ort']);
-      $modifyForm->getElement("verlag")->setValue($bibTex['verlag']);
-      $modifyForm->getElement("ausgabe")->setValue($bibTex['ausgabe']);
-      $modifyForm->getElement("jahr")->setValue($bibTex['jahr']);
-      $modifyForm->getElement("monat")->setValue($bibTex['monat']);
-      $modifyForm->getElement("tag")->setValue($bibTex['tag']);
-      $modifyForm->getElement("nummer")->setValue($bibTex['nummer']);
-      $modifyForm->getElement("seiten")->setValue($bibTex['seiten']);
-      $modifyForm->getElement("umfang")->setValue($bibTex['umfang']);
-      $modifyForm->getElement("reihe")->setValue($bibTex['reihe']);
-      $modifyForm->getElement("anmerkung")->setValue($bibTex['anmerkung']);
-      $modifyForm->getElement("isbn")->setValue($bibTex['isbn']);
-      $modifyForm->getElement("issn")->setValue($bibTex['issn']);
-      $modifyForm->getElement("doi")->setValue($bibTex['doi']);
-      $modifyForm->getElement("url")->setValue($bibTex['url']);
-      $modifyForm->getElement("urn")->setValue($bibTex['urn']);
-      $modifyForm->getElement("wp")->setValue($bibTex['wp']);
-      $modifyForm->getElement("inlit")->setValue($bibTex['inlit']);
-      $modifyForm->getElement("infn")->setValue($bibTex['infn']);
-      $modifyForm->getElement("schluessel")->setValue($bibTex['schluessel']);
+      if(!$bibTex){
+        $bibTex = new Application_Model_BibTex();
+        $document->setBibTex($bibTex);
+      }
+      foreach(Application_Model_BibTex::$accessibleFields as $fieldName=>$field){
+        $modifyForm->getElement('bib' . ucfirst($fieldName))->setValue($bibTex->getContent($fieldName));
+      }
 
       $modifyForm->getElement("submit")->setLabel("Save document");
 
@@ -123,10 +97,10 @@ class DocumentController extends Unplagged_Controller_Action{
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
       $paginator->setCurrentPageNumber($input->page);
 
-      // generate the action dropdown for each file
+// generate the action dropdown for each file
       foreach($paginator as $document):
         if($document->getState()->getName() == 'task_scheduled'){
-          // find the associated task and get percentage
+// find the associated task and get percentage
           $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
           $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$document->getId(), 'state'=>$state));
           if(!$task){
@@ -160,18 +134,21 @@ class DocumentController extends Unplagged_Controller_Action{
           $action['icon'] = 'images/icons/delete.png';
           $document->actions[] = $action;
         }
-        if($case->getTarget() && $case->getTarget()->getId() == $document->getId()){
-          $action['link'] = '/document/unset-target/id/' . $document->getId();
-          $action['label'] = 'Unset target';
-          $action['icon'] = 'images/icons/page_find.png';
-          $document->actions[] = $action;
-          $document->isTarget = true;
-        }else{
-          $action['link'] = '/document/set-target/id/' . $document->getId();
-          $action['label'] = 'Set target';
-          $action['icon'] = 'images/icons/page.png';
-          $document->actions[] = $action;
-          $document->isTarget = false;
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'case', 'action'=>'update', 'base'=>$case));
+        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          if($case->getTarget() && $case->getTarget()->getId() == $document->getId()){
+            $action['link'] = '/document/unset-target/id/' . $document->getId();
+            $action['label'] = 'Unset target';
+            $action['icon'] = 'images/icons/page_find.png';
+            $document->actions[] = $action;
+            $document->isTarget = true;
+          }else{
+            $action['link'] = '/document/set-target/id/' . $document->getId();
+            $action['label'] = 'Set target';
+            $action['icon'] = 'images/icons/page.png';
+            $document->actions[] = $action;
+            $document->isTarget = false;
+          }
         }
         $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'authorize', 'base'=>$document));
         if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
@@ -183,10 +160,6 @@ class DocumentController extends Unplagged_Controller_Action{
       endforeach;
 
       $this->view->paginator = $paginator;
-
-      Zend_Layout::getMvcInstance()->menu = null;
-      Zend_Layout::getMvcInstance()->sidebar = null;
-      Zend_Layout::getMvcInstance()->versionableId = null;
     }else{
       $this->_helper->FlashMessenger('You need to select a case first.');
       $this->redirectToLastPage();
@@ -216,7 +189,7 @@ class DocumentController extends Unplagged_Controller_Action{
     $this->_helper->FlashMessenger(array('success'=>'The document was deleted successfully.'));
     $this->_helper->redirector('list', 'document');
 
-    // disable view
+// disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
@@ -230,6 +203,8 @@ class DocumentController extends Unplagged_Controller_Action{
     if(!empty($input->id) && $this->_defaultNamespace->userId){
       $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
       if($document){
+        Zend_Layout::getMvcInstance()->menu = $document->getSidebarActions();
+
         $pages = $document->getPages();
 
         $successPages = array();
@@ -291,7 +266,7 @@ class DocumentController extends Unplagged_Controller_Action{
       $this->_em->persist($report);
       $this->_em->flush();
 
-      // create notification
+// create notification
       Unplagged_Helper::notify("detection_report_created", $report, $report->getUser());
     }
     $this->view->layout()->disableLayout();
@@ -307,36 +282,13 @@ class DocumentController extends Unplagged_Controller_Action{
     if($modifyForm->isValid($formData)){
 
       $document->setTitle($formData['title']);
-      $document->setBibTexForm($formData['type']);
+      $bibTex = $document->getBibTex();
 
-      // save bibtex information
-      $document->setBibTexKuerzel($formData['kuerzel']);
-      $document->setBibTexAutor($formData['autor']);
-      $document->setBibTexTitel($formData['titel']);
-      $document->setBibTexZeitschrift($formData['zeitschrift']);
-      $document->setBibTexSammlung($formData['sammlung']);
-      $document->setBibTexHrsg($formData['hrsg']);
-      $document->setBibTexBeteiligte($formData['beteiligte']);
-      $document->setBibTexOrt($formData['ort']);
-      $document->setBibTexVerlag($formData['verlag']);
-      $document->setBibTexAusgabe($formData['ausgabe']);
-      $document->setBibTexJahr($formData['jahr']);
-      $document->setBibTexMonat($formData['monat']);
-      $document->setBibTexTag($formData['tag']);
-      $document->setBibTexNummer($formData['nummer']);
-      $document->setBibTexSeiten($formData['seiten']);
-      $document->setBibTexUmfang($formData['umfang']);
-      $document->setBibTexReihe($formData['reihe']);
-      $document->setBibTexAnmerkung($formData['anmerkung']);
-      $document->setBibTexIsbn($formData['isbn']);
-      $document->setBibTexIssn($formData['issn']);
-      $document->setBibTexDoi($formData['doi']);
-      $document->setBibTexUrl($formData['url']);
-      $document->setBibTexUrn($formData['urn']);
-      $document->setBibTexWp($formData['wp']);
-      $document->setBibTexInlit($formData['inlit']);
-      $document->setBibTexInfn($formData['infn']);
-      $document->setBibTexSchluessel($formData['schluessel']);
+      $bibTex->setSourceType($formData['bibSourceType']);
+      foreach(Application_Model_BibTex::$accessibleFields as $fieldName=>$field){
+        $fieldId = 'bib' . ucfirst($fieldName);
+        $bibTex->setContent($formData[$fieldId], $fieldName);
+      }
 
       // write back to persistence manager and flush it
       $this->_em->persist($document);
@@ -370,7 +322,7 @@ class DocumentController extends Unplagged_Controller_Action{
 
     $this->getResponse()->appendBody(json_encode($response));
 
-    // disable view
+// disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
@@ -416,19 +368,6 @@ class DocumentController extends Unplagged_Controller_Action{
     $this->_helper->viewRenderer->setNoRender(true);
   }
 
-  // show bibtex information of a document
-  public function bibtexAction(){
-	$input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
-    if(!empty($input->id)){
-      $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
-      $this->view->document =  $document;
-	 
-    }
-	
-    //Zend_Layout::getMvcInstance()->menu = 'fragment-tools';
-    //Zend_Layout::getMvcInstance()->versionableId = $input->id;
-  }
 }
 
 ?>

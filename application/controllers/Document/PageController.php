@@ -23,15 +23,6 @@
  */
 class Document_PageController extends Unplagged_Controller_Versionable{
 
-  public function init(){
-    parent::init();
-
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
-    Zend_Layout::getMvcInstance()->menu = 'page-tools';
-    Zend_Layout::getMvcInstance()->versionableId = $input->id;
-  }
-
   public function indexAction(){
     $this->_helper->redirector('list', 'document_page');
   }
@@ -43,33 +34,39 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     $input = new Zend_Filter_Input(array('document'=>'Digits'), null, $this->_getAllParams());
     $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->document);
 
-    $modifyForm = new Application_Form_Document_Page_Modify();
-
-    if($this->_request->isPost()){
-      $result = $this->handleModifyData($modifyForm);
-
-      if($result){
-        $result->setDocument($document);
-        $this->_em->persist($result);
-        $this->_em->flush();
-
-        // notification
-        //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-        //Unplagged_Helper::notify('case_created', $result, $user);
-
-        $this->_helper->FlashMessenger(array('success'=>'The document page was created successfully.'));
-        $params = array('id'=>$result->getId());
-        $this->_helper->redirector('show', 'document_page', '', $params);
+    if($document){
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
+      if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        $this->redirectToLastPage(true);
       }
+
+      Zend_Layout::getMvcInstance()->menu = $document->getSidebarActions();
+
+      $modifyForm = new Application_Form_Document_Page_Modify();
+
+      if($this->_request->isPost()){
+        $result = $this->handleModifyData($modifyForm);
+
+        if($result){
+          $result->setDocument($document);
+          $this->_em->persist($result);
+          $this->_em->flush();
+
+// notification
+//$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+//Unplagged_Helper::notify('case_created', $result, $user);
+
+          $this->_helper->FlashMessenger(array('success'=>'The document page was created successfully.'));
+          $params = array('id'=>$result->getId());
+          $this->_helper->redirector('show', 'document_page', '', $params);
+        }
+      }
+
+      $this->view->modifyForm = $modifyForm;
+      $this->view->title = 'Document: ' . $document->getTitle();
+      $this->view->tooltitle = 'Create';
+      $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document_page'));
     }
-
-    $this->view->modifyForm = $modifyForm;
-    $this->view->title = 'Document: ' . $document->getTitle();
-    $this->view->tooltitle = 'Create';
-    $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document_page'));
-
-    Zend_Layout::getMvcInstance()->menu = 'document-tools';
-    Zend_Layout::getMvcInstance()->versionableId = $input->document;
   }
 
   /**
@@ -78,9 +75,18 @@ class Document_PageController extends Unplagged_Controller_Versionable{
   public function editAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
-    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
+    $this->_em->clear();
 
+    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
     if($page){
+      //@todo: need to fix that, since em needs to be cleared, the user is gone at this point
+      /*     $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        $this->redirectToLastPage(true);
+        } */
+
+      Zend_Layout::getMvcInstance()->menu = $page->getSidebarActions();
+
       $modifyForm = new Application_Form_Document_Page_Modify();
       $modifyForm->setAction("/document_page/edit/id/" . $input->id);
 
@@ -93,9 +99,9 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $result = $this->handleModifyData($modifyForm, $page);
 
         if($result){
-          // notification
-          //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-          //Unplagged_Helper::notify("case_updated", $result, $user);
+// notification
+//$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+//Unplagged_Helper::notify("case_updated", $result, $user);
 
           $this->_helper->FlashMessenger(array('success'=>'The document page was updated successfully.'));
           $params = array('id'=>$page->getId());
@@ -103,7 +109,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         }
       }
 
-      // $this->view->title = "Edit page";
+// $this->view->title = "Edit page";
       $this->view->modifyForm = $modifyForm;
       $this->initPageView($page, '/document_page/edit/id');
       $this->view->tooltitle = 'Edit';
@@ -115,41 +121,58 @@ class Document_PageController extends Unplagged_Controller_Versionable{
   }
 
   public function listAction(){
-    $input = new Zend_Filter_Input(array('id'=>'Digits', 'page'=>'Digits'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     if(!empty($input->id)){
-      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
-      $query = 'SELECT p FROM Application_Model_Document_Page p JOIN p.document b';
-      $count = 'SELECT COUNT(p.id) FROM Application_Model_Document_Page p JOIN p.document b';
-
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.document'=>$input->id), 'p.pageNumber ASC', $permission));
-      $paginator->setItemCountPerPage(100);
-      $paginator->setCurrentPageNumber($input->page);
-
-      $this->view->paginator = $paginator;
-
       $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
       if($document){
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $this->redirectToLastPage(true);
+        }
+
+        Zend_Layout::getMvcInstance()->menu = $document->getSidebarActions();
+
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
+        $query = 'SELECT p FROM Application_Model_Document_Page p JOIN p.document b';
+        $count = 'SELECT COUNT(p.id) FROM Application_Model_Document_Page p JOIN p.document b';
+
+        $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.document'=>$input->id), 'p.pageNumber ASC', $permission));
+        $paginator->setItemCountPerPage(100);
+        $paginator->setCurrentPageNumber($input->page);
+
+        $this->view->paginator = $paginator;
         $this->view->title = 'Document: ' . $document->getTitle();
       }
     }
-
-    Zend_Layout::getMvcInstance()->menu = "document-tools";
-    Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 
   public function detectionReportsAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits', 'page'=>'Digits'), null, $this->_getAllParams());
 
     if(!empty($input->id)){
-      $query = $this->_em->createQuery("SELECT p FROM Application_Model_Document_Page_DetectionReport p WHERE p.page = '" . $input->id . "'");
-      $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page_DetectionReport p WHERE p.page = '" . $input->id . "'");
+      $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
+      if($page){
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $this->redirectToLastPage(true);
+        }
 
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
-      $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-      $paginator->setCurrentPageNumber($input->page);
+        Zend_Layout::getMvcInstance()->menu = $page->getSidebarActions();
 
-      $this->view->paginator = $paginator;
+        $query = $this->_em->createQuery("SELECT p FROM Application_Model_Document_Page_DetectionReport p WHERE p.page = '" . $input->id . "'");
+        $count = $this->_em->createQuery("SELECT COUNT(p.id) FROM Application_Model_Document_Page_DetectionReport p WHERE p.page = '" . $input->id . "'");
+
+        $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+        $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+        $paginator->setCurrentPageNumber($input->page);
+
+        $this->view->paginator = $paginator;
+      }else{
+        $this->redirectToLastPage();
+      }
+    }else{
+      $this->redirectToLastPage();
     }
   }
 
@@ -159,6 +182,13 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     if(!empty($input->id)){
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $this->redirectToLastPage(true);
+        }
+
+        Zend_Layout::getMvcInstance()->menu = $page->getSidebarActions();
+
         $this->view->case = Zend_Registry::getInstance()->user->getCurrentCase();
         $this->view->page = $page;
         $this->initPageView($page);
@@ -172,6 +202,13 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     if(!empty($input->id)){
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $this->redirectToLastPage(true);
+        }
+
+        Zend_Layout::getMvcInstance()->menu = $page->getSidebarActions();
+
         $lines = $page->getContent("array");
 
         $pageLines = array();
@@ -180,7 +217,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
           $pageLine["hasHyphen"] = (substr($pageLine["content"], -1) == "-");
           $pageLines[] = $pageLine;
         }
-        // create form
+// create form
         $deHyphenForm = new Application_Form_Document_Page_Dehyphen(array('pageLines'=>$pageLines));
 
         if($this->_request->isPost()){
@@ -190,10 +227,10 @@ class Document_PageController extends Unplagged_Controller_Versionable{
           if($deHyphenForm->isValid($formData)){
             foreach($formData["pageLine"] as $lineNumber=>$doDehyphenation){
               if($doDehyphenation == 1){
-                // remove last character (the hyphen)
+// remove last character (the hyphen)
                 $pageLines[$lineNumber]["content"] = substr($pageLines[$lineNumber]["content"], 0, -1);
 
-                // move first word of following line to the current line to merge it with the last word
+// move first word of following line to the current line to merge it with the last word
                 if($pageLines[$lineNumber + 1]){
                   $nextLine = $pageLines[$lineNumber + 1];
                   if(!empty($nextLine["content"])){
@@ -210,7 +247,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
 
             $page->setContent($lineContent, "array");
 
-            // write back to persistence manager and flush it
+// write back to persistence manager and flush it
             $this->_em->persist($page);
             $this->_em->flush();
 
@@ -237,16 +274,16 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $page->setDisabled($formData['disabled']);
       $page->setContent($formData["content"], "text");
 
-      // write back to persistence manager and flush it
+// write back to persistence manager and flush it
       $this->_em->persist($page);
       $this->_em->flush();
-
-      // updates the barcode data
-      $case = Zend_Registry::getInstance()->user->getCurrentCase();
-      $case->updateBarcodeData();
-      $this->_em->persist($case);
-      $this->_em->flush();
-
+      
+        // updates the barcode data
+        $case = Zend_Registry::getInstance()->user->getCurrentCase();
+        $case->updateBarcodeData();
+        $this->_em->persist($case);
+        $this->_em->flush();
+      
       return $page;
     }
 
@@ -259,6 +296,11 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     if(!empty($input->id)){
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $this->redirectToLastPage(true);
+        }
+
         $this->_em->remove($page);
         $this->_em->flush();
       }else{
@@ -270,7 +312,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     $params = array('id'=>$page->getDocument()->getId());
     $this->_helper->redirector('list', 'document_page', '', $params);
 
-    // disable view
+// disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
@@ -281,17 +323,24 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
 
       if($page){
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $this->redirectToLastPage(true);
+        }
+
+        Zend_Layout::getMvcInstance()->menu = $page->getSidebarActions();
+
         $words = array('hat', 'mit',
           'aber', 'als', 'am', 'an', 'auch', 'auf', 'aus', 'bei', 'bin',
-          'bis', 'ist', 'da', 'dadurch', 'daher', 'darum', 'das', 'daß', 'dass', 'dein', 'deine',
+          'bis', 'ist', 'da', 'dadurch', 'daher', 'darum', 'das', 'da√ü', 'dass', 'dein', 'deine',
           'dem', 'den', 'der', 'des', 'dessen', 'deshalb', 'die', 'die', 'dieser', 'dieses', 'doch', 'dort', 'du', 'durch',
-          'ein', 'eine', 'einem', 'einen', 'einer', 'eines', 'er', 'es', 'euer', 'eure', 'für', 'hatte', 'hatten', 'hattest',
+          'ein', 'eine', 'einem', 'einen', 'einer', 'eines', 'er', 'es', 'euer', 'eure', 'f√ºr', 'hatte', 'hatten', 'hattest',
           'hattet', 'hier', 'hinter', 'ich', 'ihr', 'ihre', 'im', 'in', 'ist', 'ja', 'jede', 'jedem', 'jeden', 'jeder', 'jedes',
           'jener', 'jenes', 'jetzt', 'kann', 'kannst', 'kÃ¶nnen', 'könnt', 'machen', 'mein', 'meine', 'mit', 'muß', 'mußt',
           'musst', 'müssen', 'müßt', 'nach', 'nachdem', 'nein', 'nicht', 'nun', 'oder', 'seid', 'sein', 'seine', 'sich', 'sie',
           'sind', 'soll', 'sollen', 'sollst', 'sollt', 'sonst', 'soweit', 'sowie', 'und', 'unser', 'unsere', 'unter', 'vom', 'von',
           'vor', 'wann', 'warum', 'was', 'weiter', 'weitere', 'wenn', 'wer', 'werde', 'werden', 'werdet', 'weshalb', 'wie', 'wieder',
-          'wieso', 'wir', 'wird', 'wirst', 'wo', 'woher', 'wohin', 'zu', 'zum', 'zur', 'über');
+          'wieso', 'wir', 'wird', 'wirst', 'wo', 'woher', 'wohin', 'zu', 'zum', 'zur', '√ºber');
         $reg = '/(?<=\s)(' . implode('|', $words) . ')(?=\s)/';
         $lines = $page->getContent("list");
         $lines = preg_replace($reg, "<span class='stopword'>$1</span>", $lines);
@@ -312,32 +361,41 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $this->render('simtext/show');
     }else{
       if(!empty($input->id)){
-        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
-        $query = 'SELECT p FROM Application_Model_Document_Page_SimtextReport p JOIN p.page c JOIN c.document b';
-        $count = 'SELECT count(p.id) FROM Application_Model_Document_Page_SimtextReport p JOIN p.page c JOIN c.document b';
-
-        $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.page'=>$input->id), null, $permission));
-        $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-        $paginator->setCurrentPageNumber($input->page);
-
-        foreach($paginator as $report):
-          if($report->getState()->getName() == 'task_scheduled'){
-            // find the associated task and get percentage
-            $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
-            $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
-            if(!$task){
-              $percentage = 0;
-            }else{
-              $percentage = $task->getProgressPercentage();
-            }
-            $report->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
-          }else{
-            $report->outputState = $report->getState()->getTitle();
+        $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
+        if($page){
+          $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
+          if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+            $this->redirectToLastPage(true);
           }
-        endforeach;
+          Zend_Layout::getMvcInstance()->menu = $page->getSidebarActions();
 
-        $this->view->paginator = $paginator;
-        $this->render('simtext/list-reports');
+          $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>$page->getDocument()));
+          $query = 'SELECT p FROM Application_Model_Document_Page_SimtextReport p JOIN p.page c JOIN c.document b';
+          $count = 'SELECT count(p.id) FROM Application_Model_Document_Page_SimtextReport p JOIN p.page c JOIN c.document b';
+
+          $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.page'=>$input->id), null, $permission));
+          $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+          $paginator->setCurrentPageNumber($input->page);
+
+          foreach($paginator as $report):
+            if($report->getState()->getName() == 'task_scheduled'){
+              // find the associated task and get percentage
+              $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
+              $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
+              if(!$task){
+                $percentage = 0;
+              }else{
+                $percentage = $task->getProgressPercentage();
+              }
+              $report->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
+            }else{
+              $report->outputState = $report->getState()->getTitle();
+            }
+          endforeach;
+
+          $this->view->paginator = $paginator;
+          $this->render('simtext/list-reports');
+        }
       }
     }
   }
@@ -350,23 +408,31 @@ class Document_PageController extends Unplagged_Controller_Versionable{
 
     if(!empty($input->id)){
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
-      $this->view->page = $page;
-
-      $simtextForm = new Application_Form_Document_Page_Simtext();
-      $simtextForm->setAction("/document_page/simtext/id/" . $input->id);
-
-      if($this->_request->isPost()){
-        $result = $this->handleSimtextData($simtextForm, $page);
-
-        if($result){
-          $this->_helper->FlashMessenger('The simtext process was started, you will be notified, when it finished.');
-          $this->_helper->redirector('simtext-reports', 'document_page', '', array('id'=>$input->id));
+      if($page){
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $this->redirectToLastPage(true);
         }
-      }
+        Zend_Layout::getMvcInstance()->menu = $page->getSidebarActions();
 
-      $this->initPageView($page, '/document_page/simtext/id');
-      $this->view->simtextForm = $simtextForm;
-      $this->render('simtext/create');
+        $this->view->page = $page;
+
+        $simtextForm = new Application_Form_Document_Page_Simtext();
+        $simtextForm->setAction("/document_page/simtext/id/" . $input->id);
+
+        if($this->_request->isPost()){
+          $result = $this->handleSimtextData($simtextForm, $page);
+
+          if($result){
+            $this->_helper->FlashMessenger('The simtext process was started, you will be notified, when it finished.');
+            $this->_helper->redirector('simtext-reports', 'document_page', '', array('id'=>$input->id));
+          }
+        }
+
+        $this->initPageView($page, '/document_page/simtext/id');
+        $this->view->simtextForm = $simtextForm;
+        $this->render('simtext/create');
+      }
     }
   }
 
@@ -415,11 +481,10 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     parent::changelogAction();
 
     $this->setTitle("Changelog of page");
-    Zend_Layout::getMvcInstance()->menu = 'page-tools';
   }
 
   /**
-   * Returns all lines in the document . 
+   * Returns all lines in the document page. 
    */
   public function readAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
@@ -440,7 +505,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
 
     $this->getResponse()->appendBody(json_encode($response));
 
-    // disable view
+// disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
@@ -450,64 +515,69 @@ class Document_PageController extends Unplagged_Controller_Versionable{
 
     if(!empty($input->id)){
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
-    }
 
-    if(!$page){
-      // @todo: show error
-    }
+      if($page){
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
+        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $this->redirectToLastPage(true);
+        }
+        Zend_Layout::getMvcInstance()->menu = $page->getSidebarActions();
 
-    if(!empty($input->sourceDocument)){
-      $sourceDocument = $this->_em->getRepository('Application_Model_Document')->findOneById($input->sourceDocument);
-      $source = $sourceDocument->getPages()->first();
-    }elseif(!empty($input->source)){
-      $source = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->source);
-    }
-    if(isset($source)){
-      $this->view->source = $source;
-      $pageLink = '/document_page/fragment/id/' . $input->id . '/source';
-      $this->initPageView($source, $pageLink, 'prevSourcePageLink', 'nextSourcePageLink');
-    }
 
-    $pageLink = '/document_page/fragment/id';
-    if(!empty($source)){
-      $pageLink = '/document_page/fragment/source/' . $input->source . '/id';
-    }
+        if(!empty($input->sourceDocument)){
+          $sourceDocument = $this->_em->getRepository('Application_Model_Document')->findOneById($input->sourceDocument);
+          $source = $sourceDocument->getPages()->first();
+        }elseif(!empty($input->source)){
+          $source = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->source);
+        }
+        if(isset($source)){
+          $this->view->source = $source;
+          $pageLink = '/document_page/fragment/id/' . $input->id . '/source';
+          $this->initPageView($source, $pageLink, 'prevSourcePageLink', 'nextSourcePageLink');
+        }
 
-    $this->view->documents = Zend_Registry::getInstance()->user->getCurrentCase()->getDocuments();
-    $this->view->page = $page;
-    $this->initPageView($page, $pageLink);
+        $pageLink = '/document_page/fragment/id';
+        if(!empty($source)){
+          $pageLink = '/document_page/fragment/source/' . $input->source . '/id';
+        }
 
-    if(!empty($source)){
-      // do simtext
-      $left = $page->getContent('array');
-      $right = $source->getContent('array');
+        $this->view->documents = Zend_Registry::getInstance()->user->getCurrentCase()->getDocuments();
+        $this->view->page = $page;
+        $this->initPageView($page, $pageLink);
 
-      foreach($left as $lineNumber=>$lineContent){
-        $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
+        if(!empty($source)){
+          // do simtext
+          $left = $page->getContent('array');
+          $right = $source->getContent('array');
+
+          foreach($left as $lineNumber=>$lineContent){
+            $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
+          }
+
+          foreach($right as $lineNumber=>$lineContent){
+            $right[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
+          }
+
+          $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
+
+          $left = $simtextResult['left'];
+          $right = $simtextResult['right'];
+
+          foreach($left as $lineNumber=>$lineContent){
+            $left[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+          }
+
+          foreach($right as $lineNumber=>$lineContent){
+            $right[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+          }
+
+          $this->view->pageContent = '<ol>' . implode("\n", $left) . '</ol>';
+          $this->view->sourceContent = '<ol>' . implode("\n", $right) . '</ol>';
+        }else{
+          $this->view->pageContent = $page->getContent('list');
+          $this->view->sourceContent = '';
+        }
       }
-
-      foreach($right as $lineNumber=>$lineContent){
-        $right[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
-      }
-
-      $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
-
-      $left = $simtextResult['left'];
-      $right = $simtextResult['right'];
-
-      foreach($left as $lineNumber=>$lineContent){
-        $left[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
-      }
-
-      foreach($right as $lineNumber=>$lineContent){
-        $right[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
-      }
-
-      $this->view->pageContent = '<ol>' . implode("\n", $left) . '</ol>';
-      $this->view->sourceContent = '<ol>' . implode("\n", $right) . '</ol>';
-    }else{
-      $this->view->pageContent = $page->getContent('list');
-      $this->view->sourceContent = '';
     }
   }
 
@@ -541,13 +611,13 @@ class Document_PageController extends Unplagged_Controller_Versionable{
 
     $this->getResponse()->appendBody(json_encode($response));
 
-    // disable view
+// disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
 
   private function initPageView(Application_Model_Document_Page $page, $pageLink = '/document_page/show/id', $prevLinkParam = 'prevPageLink', $nextLinkParam = 'nextPageLink'){
-    // next page
+// next page
     $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber > :pageNumber ORDER BY p.pageNumber ASC');
     $query->setParameter("document", $page->getDocument()->getId());
     $query->setParameter("pageNumber", $page->getPageNumber());
@@ -559,7 +629,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $this->view->$nextLinkParam = $pageLink . '/' . $nextPage->getId();
     }
 
-    // previous page
+// previous page
     $query = $this->_em->createQuery('SELECT p FROM Application_Model_Document_Page p WHERE p.document = :document AND p.pageNumber < :pageNumber ORDER BY p.pageNumber DESC');
     $query->setParameter("document", $page->getDocument()->getId());
     $query->setParameter("pageNumber", $page->getPageNumber());
@@ -578,4 +648,5 @@ class Document_PageController extends Unplagged_Controller_Versionable{
   }
 
 }
+
 ?>

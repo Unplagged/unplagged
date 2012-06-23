@@ -1,5 +1,4 @@
 <?php
-$sidebar = $this->layout()->sidebar;
 $menu = $this->layout()->menu;
 
 $defaultNamespace = new Zend_Session_Namespace('Default');
@@ -15,7 +14,7 @@ $cases = $query->getArrayResult();
 <div role="main" class="clearfix">
   <?php echo $this->partial('partials/messages.phtml', array('defaultNamespace'=>$defaultNamespace, 'flashMessages'=>$this->flashMessages)); ?>
   <!--<div class="breadcrumbs">
-    <?php //echo $this->navigation()->breadcrumbs(); ?>
+  <?php //echo $this->navigation()->breadcrumbs(); ?>
   </div>-->
   <h2><?php echo $this->escape($this->title); ?></h2>
   <div class="main">
@@ -28,28 +27,10 @@ $cases = $query->getArrayResult();
       </div>
     </div>
   </div>
-  <?php
-  if(!empty($sidebar)){
-    switch($sidebar){
-      default:
-        echo $this->partial('partials/sidebars/default.phtml', array("cases" => $this->layout()->cases));
-    }
-  }
-  ?>
 </div>
- <?php
-  if(!empty($menu)){
-    switch($menu){
-      case "fragment-tools":
-        echo $this->partial('partials/menus/fragment_tools.phtml', array("fragmentId" => $this->layout()->versionableId));
-        break;
-      case "page-tools":
-        echo $this->partial('partials/menus/page_tools.phtml', array("pageId" => $this->layout()->versionableId));
-        break;
-      case "document-tools":
-        echo $this->partial('partials/menus/document_tools.phtml', array("documentId" => $this->layout()->versionableId));
-        break;
-      }
-  }
-  ?>
+<?php
+if(!empty($menu)){
+  echo $this->partial('partials/sidebar_menu.phtml', array("actions"=>$this->layout()->menu));
+}
+?>
 <?php echo $this->partial('partials/footer.phtml'); ?>

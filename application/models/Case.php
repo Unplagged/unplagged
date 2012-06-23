@@ -29,7 +29,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Application_Model_Case extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-case';
-  const PERMISSION_TYPE = 'case';
 
   /**
    * @var string The "real" name of the case, under which it will get published later on.

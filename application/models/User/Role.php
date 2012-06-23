@@ -56,10 +56,10 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   /**
    * A list of all the permissions that are allowed for an owner of this role.
    *
-   * @ManyToMany(targetEntity="Application_Model_Permission")
+   * @ManyToMany(targetEntity="Application_Model_Permission", cascade={"delete"})
    * @JoinTable(name="role_has_permission",
-   *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id")},
-   *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id")}
+   *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")},
+   *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id", onDelete="CASCADE")}
    *      )
    */
   protected $permissions;
@@ -142,6 +142,11 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     $user = Zend_Registry::getInstance()->user;
     $case = $user->getCurrentCase();
 
+    //check if the ressource related to this element is already removed.
+    if($permission->getBase() && $permission->getBase()->getIsRemoved()) {
+      return false;
+    }
+    
     // check the main user role on that right
     if($this->getBasicPermissions(true)->contains($permission)){
       return true;

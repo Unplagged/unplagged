@@ -26,7 +26,7 @@
  * @Table(name="document_page_lines")
  */
 class Application_Model_Document_Page_Line extends Application_Model_Base{
-
+    
   /**
    * The line number in the page.
    * @var integer The line number.

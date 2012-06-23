@@ -341,8 +341,9 @@ class FileController extends Unplagged_Controller_Action{
         $localPath = $file->getFullPath();
         $deleted = unlink($localPath);
         if($deleted || !file_exists($localPath)){
-          // remove database record
-          $this->_em->remove($file);
+          // set removed state in database record
+          $file->remove();
+          $this->_em->persist($file);
           $this->_em->flush();
           $this->_helper->FlashMessenger(array('success'=>'The file was deleted successfully.'));
         }else{
