@@ -56,7 +56,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   /**
    * A list of all the permissions that are allowed for an owner of this role.
    *
-   * @ManyToMany(targetEntity="Application_Model_Permission", cascade={"delete"})
+   * @ManyToMany(targetEntity="Application_Model_Permission", cascade={"delete", "persist"})
    * @JoinTable(name="role_has_permission",
    *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")},
    *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id", onDelete="CASCADE")}

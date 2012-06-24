@@ -59,7 +59,8 @@ class CaseController extends Unplagged_Controller_Action{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
-
+    $user = Zend_Registry::getInstance()->user;
+    
     if($case){
       $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'case', 'action'=>'update', 'base'=>$case));
       if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
@@ -71,10 +72,16 @@ class CaseController extends Unplagged_Controller_Action{
         $state = $this->_em->getRepository('Application_Model_State')->findOneByName('case_created');
         $case->setState($state);
         $this->_helper->FlashMessenger(array('success'=>array('The case %s was unpublished successfully.', array($case->getPublishableName()))));
+      
+        // notification
+        Unplagged_Helper::notify('case_published', $case, $user);
       }else{
         $state = $this->_em->getRepository('Application_Model_State')->findOneByName('case_published');
         $case->setState($state);
         $this->_helper->FlashMessenger(array('success'=>array('The case %s was published successfully.', array($case->getPublishableName()))));
+      
+        // notification
+        Unplagged_Helper::notify('case_unpublished', $case, $user);
       }
 
       $this->_em->persist($case);

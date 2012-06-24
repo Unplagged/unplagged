@@ -29,12 +29,14 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
   protected $query;
   protected $countQuery;
 
-  public function __construct($query, $countQuery, $additionalConditions = array(), $orderBy = null, Application_Model_ModelPermission $readAllPermission = null){
+  public function __construct($query, $countQuery, $additionalConditions = array(), $orderBy = null, Application_Model_ModelPermission $readAllPermission = null, $selectRemovedItems = false){
     $em = Zend_Registry::getInstance()->entitymanager;
     $user = Zend_Registry::getInstance()->user;
 
     $conditions = array();
-    $conditions[] = 'b.isRemoved = 0';
+    if(!$selectRemovedItems) {
+      $conditions[] = 'b.isRemoved = 0';
+    }
     if(isset($additionalConditions)){
       foreach($additionalConditions as $field=>$value){
         $conditions[] = $field . " = '" . $value . "'";

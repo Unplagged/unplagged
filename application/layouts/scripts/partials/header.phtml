@@ -53,26 +53,26 @@
             $currentValue = $this->me->getCurrentCase()->getId();
           }
           ?>
-          <?php if(count($this->cases)>0): ?>
-          <?php if($currentValue): ?>
-            <a href="<?php echo $this->baseUrl('case/edit/id/' . $currentValue); ?>"><?php echo $this->translate("Edit Case"); ?></a>
-          <?php endif; ?>
-          <form class="current-case" method="POST" action="<?php echo $this->baseUrl('user/set-current-case'); ?>">
-            <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
-              <option></option>
-              <?php foreach($this->cases as $case): ?>
-                <option <?php if($case['value'] == $currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
-              <?php endforeach; ?>
-            </select>
-            <button class="button">Ok</button>  
-          </form>
+          <?php if(count($this->cases) > 0): ?>
+            <?php if($currentValue): ?>
+              <a href="<?php echo $this->baseUrl('case/edit/id/' . $currentValue); ?>"><?php echo $this->translate("Edit Case"); ?></a>
+            <?php endif; ?>
+            <form class="current-case" method="POST" action="<?php echo $this->baseUrl('user/set-current-case'); ?>">
+              <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
+                <option></option>
+                <?php foreach($this->cases as $case): ?>
+                  <option <?php if($case['value'] == $currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
+                <?php endforeach; ?>
+              </select>
+              <button class="button">Ok</button>  
+            </form>
           <?php endif; ?>
         </div>
       </div>
     </header>
     <div class="pagewrap">
       <header role="banner" class="clearfix">
-        <div class="beta-patch"></div>
+        <a href="https://github.com/Unplagged/unplagged"><img style="position: absolute; top: -2px; right: 0px; border: 0; width: 129px" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
         <h1 class="ir">Unplagged - The Plagiarism Detection Cockpit</h1>
         <nav><?php echo $this->navigation()->menu(); ?></nav>
       </header>

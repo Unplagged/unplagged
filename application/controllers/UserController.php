@@ -403,7 +403,7 @@ class UserController extends Unplagged_Controller_Action{
    * Removes the own user account.
    */
   public function removeAccountAction(){
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $user = Zend_Registry::getInstance()->user;
     // display the form with user data pre-loaded
     $removalForm = new Application_Form_User_Remove();
 

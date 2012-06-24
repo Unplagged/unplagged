@@ -39,7 +39,7 @@ class SettingController extends Unplagged_Controller_Action{
       if($result){
         // notification
         // @todo: add notification
-        //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+        //$user = Zend_Registry::getInstance()->user;
         //Unplagged_Helper::notify("case_created", $result, $user);
 
         $this->_helper->FlashMessenger(array('success'=>'Your state was added successfully.'));
@@ -74,7 +74,7 @@ class SettingController extends Unplagged_Controller_Action{
 
         if($result){
           // notification
-          //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          //$user = Zend_Registry::getInstance()->user;
           //Unplagged_Helper::notify("case_updated", $result, $user);
 
           $this->_helper->FlashMessenger(array('success'=>'The state was updated successfully.'));
@@ -152,7 +152,7 @@ class SettingController extends Unplagged_Controller_Action{
       if($result){
         // notification
         // @todo: add notification
-        //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+        //$user = Zend_Registry::getInstance()->user;
         //Unplagged_Helper::notify("case_created", $result, $user);
 
         $this->_helper->FlashMessenger(array('success'=>'Your action was added successfully.'));
@@ -187,7 +187,7 @@ class SettingController extends Unplagged_Controller_Action{
 
         if($result){
           // notification
-          //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          //$user = Zend_Registry::getInstance()->user;
           //Unplagged_Helper::notify("case_updated", $result, $user);
 
           $this->_helper->FlashMessenger(array('success'=>'The action was updated successfully.'));

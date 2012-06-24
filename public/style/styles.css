@@ -1139,10 +1139,6 @@ dl.zend_form dd dt {
   background-image: url(/images/icons/page_white_get.png);
 }
 
-.icon-create-case {
-  background-image: url(/images/icons/book_add.png);
-}
-
 .icon-create-report {
   background-image: url(/images/icons/report_add.png);
 }
@@ -1162,6 +1158,10 @@ dl.zend_form dd dt {
 
 .icon-case{
   background-image: url(/images/icons/package.png);
+}
+
+.icon-case-add{
+  background-image: url(/images/icons/package_add.png);
 }
 
 .icon-comment {
@@ -1210,6 +1210,10 @@ dl.zend_form dd dt {
 
 .icon-page-add {
   background-image: url(/images/icons/page_add.png);
+}
+
+.icon-document-add {
+  background-image: url(/images/icons/book_add.png);
 }
 
 .icon-eye {
@@ -2190,6 +2194,12 @@ li.plupload_droptext {
 .bibtex-line .bibtex-content span {
     padding: 5px 10px;
     display: block;
+}
+
+.removed-element {
+  text-decoration: line-through;
+  color: #888C95;
+  font-weight: normal;
 }
 
 /* ==|== media queries ====================================================== */

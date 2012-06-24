@@ -33,6 +33,41 @@ class DocumentController extends Unplagged_Controller_Action{
     $this->_helper->redirector('list', 'document');
   }
 
+  public function createAction(){
+    //$permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'create', 'base'=>$document));
+    //if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+    //  $this->redirectToLastPage(true);
+    //}
+
+    $modifyForm = new Application_Form_Document_Modify();
+
+    if($this->_request->isPost()){
+      $result = $this->handleModifyData($modifyForm);
+
+      if($result){
+        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('parsed');
+        $result->setState($state);
+
+        $case = Zend_Registry::getInstance()->user->getCurrentCase();
+        $result->setCase($case);
+
+        $this->_em->persist($result);
+        $this->_em->flush();
+
+        // notification
+        $user = Zend_Registry::getInstance()->user;
+        Unplagged_Helper::notify('document_created', $result, $user);
+
+        $this->_helper->FlashMessenger(array('success'=>'The document was created successfully.'));
+        $this->_helper->redirector('list', 'document');
+      }
+    }
+
+    $this->view->title = "Create document";
+    $this->view->modifyForm = $modifyForm;
+    $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document'));
+  }
+
   public function editAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
@@ -51,12 +86,14 @@ class DocumentController extends Unplagged_Controller_Action{
 
       $modifyForm->getElement("title")->setValue($document->getTitle());
 
-      // set bibTex information
+// set bibTex information
       $bibTex = $document->getBibTex();
       if(!$bibTex){
         $bibTex = new Application_Model_BibTex();
         $document->setBibTex($bibTex);
       }
+      $modifyForm->getElement("bibSourceType")->setValue($bibTex->getSourceType());
+
       foreach(Application_Model_BibTex::$accessibleFields as $fieldName=>$field){
         $modifyForm->getElement('bib' . ucfirst($fieldName))->setValue($bibTex->getContent($fieldName));
       }
@@ -67,6 +104,10 @@ class DocumentController extends Unplagged_Controller_Action{
         $result = $this->handleModifyData($modifyForm, $document);
 
         if($result){
+          // log notification
+          $user = Zend_Registry::getInstance()->user;
+          Unplagged_Helper::notify("document_updated", $result, $user);
+
           $this->_helper->FlashMessenger(array('success'=>'The document was updated successfully.'));
           $params = array('id'=>$document->getId());
           $this->_helper->redirector('list', 'document_page', '', $params);
@@ -179,7 +220,11 @@ class DocumentController extends Unplagged_Controller_Action{
         if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }
-        $this->_em->remove($document);
+        
+        Unplagged_Helper::notify('document_removed', $document, Zend_Registry::getInstance()->user);
+
+        $document->remove();
+        $this->_em->persist($document);
         $this->_em->flush();
       }else{
         $this->_helper->FlashMessenger('The document does not exist.');
@@ -212,7 +257,7 @@ class DocumentController extends Unplagged_Controller_Action{
         foreach($pages as $page){
           $detector = Unplagged_Detector::factory();
 
-          $data["user"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          $data["user"] = Zend_Registry::getInstance()->user;
 
           $data["page"] = $page;
           $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName("report_running");
@@ -266,7 +311,7 @@ class DocumentController extends Unplagged_Controller_Action{
       $this->_em->persist($report);
       $this->_em->flush();
 
-// create notification
+      // create notification
       Unplagged_Helper::notify("detection_report_created", $report, $report->getUser());
     }
     $this->view->layout()->disableLayout();
@@ -283,13 +328,18 @@ class DocumentController extends Unplagged_Controller_Action{
 
       $document->setTitle($formData['title']);
       $bibTex = $document->getBibTex();
+      if(!$bibTex){
+        $bibTex = new Application_Model_BibTex();
+      }
 
       $bibTex->setSourceType($formData['bibSourceType']);
       foreach(Application_Model_BibTex::$accessibleFields as $fieldName=>$field){
         $fieldId = 'bib' . ucfirst($fieldName);
         $bibTex->setContent($formData[$fieldId], $fieldName);
       }
-
+      
+      $document->setBibTex($bibTex);
+      
       // write back to persistence manager and flush it
       $this->_em->persist($document);
       $this->_em->flush();
@@ -363,7 +413,7 @@ class DocumentController extends Unplagged_Controller_Action{
 
     $this->_helper->redirector('list', 'document');
 
-    // disable view
+// disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }

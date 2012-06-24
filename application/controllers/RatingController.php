@@ -43,7 +43,7 @@ class RatingController extends Unplagged_Controller_Action{
 
       if($result){
         // notification
-        //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+        //$user = Zend_Registry::getInstance()->user;
         //Unplagged_Helper::notify("case_created", $result, $user);
 
         $this->_helper->FlashMessenger(array('success'=>'Your rating was added successfully.'));
@@ -76,7 +76,7 @@ class RatingController extends Unplagged_Controller_Action{
 
         if($result){
           // notification
-          //$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          //$user = Zend_Registry::getInstance()->user;
           //Unplagged_Helper::notify("case_created", $result, $user);
 
           $this->_helper->FlashMessenger(array('success'=>'Your rating was edited successfully.'));
@@ -96,7 +96,7 @@ class RatingController extends Unplagged_Controller_Action{
       $rating = new Application_Model_Rating();
     }
 
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $user = Zend_Registry::getInstance()->user;
     $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
 
     $formData = $this->_request->getPost();

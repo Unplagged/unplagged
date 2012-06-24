@@ -52,9 +52,9 @@ class Document_PageController extends Unplagged_Controller_Versionable{
           $this->_em->persist($result);
           $this->_em->flush();
 
-// notification
-//$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-//Unplagged_Helper::notify('case_created', $result, $user);
+          // notification
+          $user = Zend_Registry::getInstance()->user;
+          Unplagged_Helper::notify('page_created', $result, $user);
 
           $this->_helper->FlashMessenger(array('success'=>'The document page was created successfully.'));
           $params = array('id'=>$result->getId());
@@ -74,16 +74,16 @@ class Document_PageController extends Unplagged_Controller_Versionable{
    */
   public function editAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
     $this->_em->clear();
 
     $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById(Zend_Registry::getInstance()->user->getId());
+
     if($page){
-      //@todo: need to fix that, since em needs to be cleared, the user is gone at this point
-      /*     $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
-        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
+      if(!$user->getRole()->hasPermission($permission)){
         $this->redirectToLastPage(true);
-        } */
+      }
 
       Zend_Layout::getMvcInstance()->menu = $page->getSidebarActions();
 
@@ -99,24 +99,22 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $result = $this->handleModifyData($modifyForm, $page);
 
         if($result){
-// notification
-//$user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
-//Unplagged_Helper::notify("case_updated", $result, $user);
+          // log notification
+          Unplagged_Helper::notify("page_updated", $result, $user);
 
           $this->_helper->FlashMessenger(array('success'=>'The document page was updated successfully.'));
-          $params = array('id'=>$page->getId());
+          $params = array('id'=>$result->getId());
           $this->_helper->redirector('show', 'document_page', '', $params);
         }
       }
 
-// $this->view->title = "Edit page";
       $this->view->modifyForm = $modifyForm;
       $this->initPageView($page, '/document_page/edit/id');
       $this->view->tooltitle = 'Edit';
       $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document_page'));
     }else{
       $this->_helper->FlashMessenger(array('error'=>'The specified page does not exist.'));
-      $this->_helper->redirector('list', 'case');
+      $this->_helper->redirector('list', 'document');
     }
   }
 
@@ -137,12 +135,13 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         $query = 'SELECT p FROM Application_Model_Document_Page p JOIN p.document b';
         $count = 'SELECT COUNT(p.id) FROM Application_Model_Document_Page p JOIN p.document b';
 
-        $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.document'=>$input->id), 'p.pageNumber ASC', $permission));
+        $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.document'=>$input->id, 'p.isRemoved'=>false), 'p.pageNumber ASC', $permission));
         $paginator->setItemCountPerPage(100);
         $paginator->setCurrentPageNumber($input->page);
 
         $this->view->paginator = $paginator;
         $this->view->title = 'Document: ' . $document->getTitle();
+        $this->view->document = $document;
       }
     }
   }
@@ -274,16 +273,16 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $page->setDisabled($formData['disabled']);
       $page->setContent($formData["content"], "text");
 
-// write back to persistence manager and flush it
+      // write back to persistence manager and flush it
       $this->_em->persist($page);
       $this->_em->flush();
-      
-        // updates the barcode data
-        $case = Zend_Registry::getInstance()->user->getCurrentCase();
-        $case->updateBarcodeData();
-        $this->_em->persist($case);
-        $this->_em->flush();
-      
+
+      // updates the barcode data
+      $case = Zend_Registry::getInstance()->user->getCurrentCase();
+      $case->updateBarcodeData();
+      $this->_em->persist($case);
+      $this->_em->flush();
+
       return $page;
     }
 
@@ -292,27 +291,34 @@ class Document_PageController extends Unplagged_Controller_Versionable{
 
   public function deleteAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+    $this->_em->clear();
+
+    $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById(Zend_Registry::getInstance()->user->getId());
 
     if(!empty($input->id)){
       $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
       if($page){
         $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
-        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        if(!$user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }
 
-        $this->_em->remove($page);
+        Unplagged_Helper::notify('page_removed', $page, $user);
+
+        $page->remove();
+        $this->_em->persist($page);
         $this->_em->flush();
       }else{
-        $this->_helper->FlashMessenger('Page does not exist.');
+        $this->_helper->FlashMessenger(array('error'=>'Page does not exist.'));
       }
     }
 
-    $this->_helper->FlashMessenger(array('info'=>'The document page was deleted successfully.'));
+    $this->_helper->FlashMessenger(array('success'=>'The document page was deleted successfully.'));
     $params = array('id'=>$page->getDocument()->getId());
     $this->_helper->redirector('list', 'document_page', '', $params);
 
-// disable view
+    // disable view
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
   }
@@ -452,7 +458,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
 
       // start task
       $data = array();
-      $data["initiator"] = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+      $data["initiator"] = Zend_Registry::getInstance()->user;
       $data["ressource"] = $report;
       $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('page_simtext');
       $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
@@ -464,7 +470,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       /*
         //$formData["documents"]
         // notification @todo: add notification
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+        $user = Zend_Registry::getInstance()->user;
         Unplagged_Helper::notify("case_created", $case, $user);
        */
 

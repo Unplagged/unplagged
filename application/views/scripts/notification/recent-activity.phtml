@@ -3,25 +3,31 @@ $this->title = $this->translate("Recent activity");
 $this->headTitle($this->title);
 ?>
 <div id="activity-stream">
-<?php foreach($this->paginator as $notification): ?>
-  <div class="activity-item">
-    <div class="activity">
-      <div class="image"><img class="avatar-small" src="<?php echo $notification->getUser()->getAvatar(); ?>" /></div>
-      <div class="details">
-        <div class="title-wrapper">
-          <h4>
-            <span class="title"><i class="<?php echo $notification->getSource()->getIconClass(); ?> icon-fam"></i><?php echo sprintf($notification->getTitle(), "<a href=\"" . $notification->getSource()->getDirectLink() . "\">" . $notification->getSource()->getDirectName() . "</a>"); ?></span> <span class="user"><?php echo $notification->getUser()->getUsername();?>, <?php echo Unplagged_Helper::humanTiming($notification->getCreated()); ?> </span>
-          </h4>
-          <div class="links"  style="text-align: right">
-            <a class="btn toggle-conversation" href="#" for="conversation-wrapper-<?php echo $notification->getId(); ?>" class="toggle-comments"><i class="icon-comments icon-fam"></i><?php echo $this->translate('Show conversation'); ?></a>
+  <?php foreach($this->paginator as $notification): ?>
+    <div class="activity-item">
+      <div class="activity">
+        <div class="image"><img class="avatar-small" src="<?php echo $notification->getUser()->getAvatar(); ?>" /></div>
+        <div class="details">
+          <div class="title-wrapper">
+            <h4>
+              <span class="title"><i class="<?php echo $notification->getSource()->getIconClass(); ?> icon-fam"></i>
+                <?php
+                  if(!$notification->getSource()->getIsRemoved()){
+                   echo sprintf($notification->getTitle(), "<a href=\"" . $notification->getSource()->getDirectLink() . "\">" . $notification->getSource()->getDirectName() . "</a>");
+                 }else{
+                   echo sprintf($notification->getTitle(), '<span class="removed-element">' . $notification->getSource()->getDirectName() . '</span>');
+                 } ?>            </span> <span class="user"><?php echo $notification->getUser()->getUsername(); ?>, <?php echo Unplagged_Helper::humanTiming($notification->getCreated()); ?> </span>
+            </h4>
+            <div class="links"  style="text-align: right">
+              <a class="btn toggle-conversation" href="#" for="conversation-wrapper-<?php echo $notification->getId(); ?>" class="toggle-comments"><i class="icon-comments icon-fam"></i><?php echo $this->translate('Show conversation'); ?></a>
+            </div>
+          </div>
+          <p><?php echo $notification->getMessage(); ?></p>
+
         </div>
-        </div>
-        <p><?php echo $notification->getMessage(); ?></p>
-        
       </div>
+      <?php echo $this->partial('partials/conversation.phtml', array('sourceId'=>$notification->getId(), 'hidden'=>true)); ?>
     </div>
-    <?php echo $this->partial('partials/conversation.phtml', array('sourceId' => $notification->getId(), 'hidden' => true)); ?>
-  </div>
   <?php endforeach; ?>
 </div>
 

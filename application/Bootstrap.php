@@ -203,6 +203,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       array(
         //home icon gets set via js, because I didn't find a simple way to add a <span> here
         'label'=>'Home',
+        'class'=>'test',
         'title'=>'Home',
         'module'=>'default',
         'controller'=>'index',
