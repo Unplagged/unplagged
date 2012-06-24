@@ -72,7 +72,7 @@ class BibtexController extends Unplagged_Controller_Action{
         $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$bibTex->getDocument()));
         if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $action['link'] = '/document/edit/id/' . $bibTex->getDocument()->getId();
-          $action['label'] = 'Edit bibtex';
+          $action['label'] = 'Edit bibliography';
           $action['icon'] = 'images/icons/pencil.png';
           $bibTex->actions[] = $action;
         }

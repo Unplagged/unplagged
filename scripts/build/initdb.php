@@ -211,6 +211,15 @@ if(!($em->getRepository('Application_Model_State')->findOneByName("parsed"))){
 }
 
 //case states
+if(!($em->getRepository('Application_Model_State')->findOneByName('case_created'))){
+  unset($data);
+  $data["name"] = "case_created";
+  $data["title"] = "created";
+  $data["description"] = "The case is created.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+//case states
 if(!($em->getRepository('Application_Model_State')->findOneByName('case_published'))){
   unset($data);
   $data["name"] = "case_published";

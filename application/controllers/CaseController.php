@@ -40,11 +40,11 @@ class CaseController extends Unplagged_Controller_Action{
       if($result){
         // notification
         Unplagged_Helper::notify('case_created', $result, $user);
-        
+
         $user->setCurrentCase($result);
         $this->_em->persist($user);
         $this->_em->flush();
-        
+
         $this->_helper->FlashMessenger(array('success'=>'The case was created successfully.'));
         $this->_helper->redirector('list', 'case');
       }
@@ -66,13 +66,19 @@ class CaseController extends Unplagged_Controller_Action{
         $this->redirectToLastPage(true);
       }
 
-      $state = $this->_em->getRepository('Application_Model_State')->findOneByName('case_published');
-
-      $case->setState($state);
+      // state is set to published, unpublish it
+      if($case->getState()->getName() == 'case_published'){
+        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('case_created');
+        $case->setState($state);
+        $this->_helper->FlashMessenger(array('success'=>array('The case %s was unpublished successfully.', array($case->getPublishableName()))));
+      }else{
+        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('case_published');
+        $case->setState($state);
+        $this->_helper->FlashMessenger(array('success'=>array('The case %s was published successfully.', array($case->getPublishableName()))));
+      }
 
       $this->_em->persist($case);
       $this->_em->flush();
-      $this->_helper->FlashMessenger(array('success'=>array('The case %s was updated successfully.', array($case->getPublishableName()))));
     }else{
       $this->_helper->FlashMessenger(array('error'=>"Sorry, we couldn't find the requested case."));
     }
@@ -154,8 +160,12 @@ class CaseController extends Unplagged_Controller_Action{
         $case->actions[] = $action;
 
         $publishAction['link'] = '/case/publish/id/' . $case->getId();
-        $publishAction['label'] = 'Publish case';
-        $publishAction['icon'] = 'images/icons/pencil.png';
+        if($case->getState()->getName() == 'case_published'){
+          $publishAction['label'] = 'Unpublish case';
+        }else{
+          $publishAction['label'] = 'Publish case';
+        }
+        $publishAction['icon'] = 'images/icons/weather_clouds.png';
         $case->actions[] = $publishAction;
       }
     endforeach;
@@ -266,6 +276,9 @@ class CaseController extends Unplagged_Controller_Action{
         $case->setName($formData['name']);
         $case->setAlias($formData['alias']);
 
+        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('case_created');
+        $case->setState($state);
+        
         //flush here, so that we can use the id
         $this->_em->persist($case);
         $this->_em->flush();
@@ -369,4 +382,5 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
 }
+
 ?>
