@@ -7,9 +7,9 @@ $this->headTitle($this->title);
 ?>
 <div class="welcome-message well">
 <?php if($languageString === 'de'): ?>
-  <?= $defaultConfig->welcomeMessage->de ?>
+  <?php echo $defaultConfig->welcomeMessage->de ?>
 <?php else: ?>
-  <?= $defaultConfig->welcomeMessage->default ?>
+  <?php echo $defaultConfig->welcomeMessage->default ?>
 <?php endif; ?>
 </div>
 <?php if(count($this->barcodes > 0)): ?>

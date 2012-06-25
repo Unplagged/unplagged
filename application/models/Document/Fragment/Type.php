@@ -26,7 +26,7 @@
  * @Table(name="document_fragment_types")
  */
 class Application_Model_Document_Fragment_Type{
-
+  
   /**
    * The id is an unique identifier for each fragment type.
    * @var string The fragment type id.

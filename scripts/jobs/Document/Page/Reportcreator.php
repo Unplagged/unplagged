@@ -146,9 +146,9 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
     $plagiat = $array_html[0]["bibtextplag"];
 
     $content = '<div style="margin:auto; width: 500px; text-align:center; margin-top: 300px"><h1>Gemeinschaftlicher Bericht</h1><br/><br/>';
-    $content .= "<h2>Dokumentation von Plagiaten in der Dissertation \"" . $plagiat["titel"] . "\" von " .
-        $plagiat["autor"] . ". " . $plagiat["ort"] .
-        ". " . $plagiat["jahr"] . "</h2><br/><br/>";
+    $content .= "<h2>Dokumentation von Plagiaten in der Dissertation \"" . $plagiat->getContent("title") . "\" von " .
+        $plagiat->getContent("author") . ". " . $plagiat->getContent("address") .
+        ". " . $plagiat->getContent("year") . "</h2><br/><br/>";
     $content .= "<h2>VroniPlag</h2>";
     $content .= '<h2 style="font-style:italic">' . $casename . '</h2>';
     $content .= "<br/><br/>";
@@ -200,9 +200,9 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
     $source = "";
     if(isset($sce)){
       $source = "<div class='source'>"
-          . "[" . $sce["autor"] . " " . $sce["jahr"] . "]&nbsp; " . $sce["autor"] . ": "
-          . $sce["titel"] . ". " . $sce["zeitschrift"] . " " . $sce["ort"] . " "
-          . $sce["jahr"] . " " . $sce["verlag"]
+          . "[" . $sce->getContent("author") . " " . $sce->getContent("year") . "]&nbsp; " . $sce->getContent("author") . ": "
+          . $sce->getContent("title") . ". " . $sce->getContent("journal") . " " . $sce->getContent("address") . " "
+          . $sce->getContent("year") . " " . $sce->getContent("publisher")
           . "</div>";
     }
 

@@ -1,0 +1,42 @@
+<?php $this->headTitle($this->title); ?>
+<h3><?php echo $this->translate('Document'); ?>: <?php echo $this->bibTex->getDocument()->getTitle(); ?></h3>
+
+<div class="default-container clearfix">
+  <h4><?php echo $this->translate('Source Information'); ?></h4>
+
+  <?php foreach(Application_Model_BibTex::$accessibleFields as $fieldName=>$field): ?>
+    <?php if($this->bibTex->getContent($fieldName) && in_array($fieldName, Application_Model_BibTex::$sourceTypes[$this->bibTex->getSourceType()])): ?>
+      <div class="bibtex-line">
+        <div class="bibtex-label"><span><?php echo $this->translate($field['label']); ?>:</span></div>
+        <div class="bibtex-content"><span><?php echo $this->bibTex->getContent($fieldName); ?></span></div>
+      </div>
+    <?php endif; ?>
+  <?php endforeach; ?>
+</div>
+<br />
+<h4><?php echo $this->translate("Fragments"); ?></h4>
+<?php $fragments = $this->bibTex->getDocument()->getFragments(); ?>
+
+<?php
+foreach($fragments as $fragment):
+  $content = $fragment->getContent('list', true);
+  $source_bib = $fragment->getSource()->getLineFrom()->getPage()->getDocument()->getBibtex();
+  ?>
+  <?php if($source_bib->getId() == $this->bibTex->getId()): ?>
+    <div class="document-page diff clearfix">
+      <div class="src-wrapper">
+        <h4><?php echo $this->translate("Plag") . ': ' . $this->bibTex->getDocument()->getTitle(); ?></h4>
+        <p>From: page <?php echo $fragment->getPlag()->getLineFrom()->getPage()->getPageNumber(); ?>, line <?php echo $fragment->getPlag()->getLineFrom()->getLineNumber(); ?></p>
+        <p>To: page <?php echo $fragment->getPlag()->getLineTo()->getPage()->getPageNumber(); ?>, line <?php echo $fragment->getPlag()->getLineTo()->getLineNumber(); ?></p>
+        <div id="candidateText"><?php echo $content['plag']; ?></div>
+      </div>
+      <div class="src-wrapper">
+        <h4><?php echo $this->translate("Source") . ': ' . $fragment->getSource()->getLineFrom()->getPage()->getDocument()->getTitle(); ?></h4>
+        <p>From: page <?php echo $fragment->getSource()->getLineFrom()->getPage()->getPageNumber(); ?>, line <?php echo $fragment->getSource()->getLineFrom()->getLineNumber(); ?></p>
+        <p>To: page <?php echo $fragment->getSource()->getLineTo()->getPage()->getPageNumber(); ?>, line <?php echo $fragment->getSource()->getLineTo()->getLineNumber(); ?></p>
+        <div id="sourceText"><?php echo $content['source']; ?></div>
+      </div>
+    </div>
+    </div>
+  <?php endif ?>
+<?php endforeach ?>

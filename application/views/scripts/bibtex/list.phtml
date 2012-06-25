@@ -1,5 +1,4 @@
 <?php
-$this->title = $this->translate("List of bibtex sources");
 $this->headTitle($this->title);
 ?>
 <table cellpadding="0" cellspacing="0" class="default"> 
@@ -7,40 +6,29 @@ $this->headTitle($this->title);
     <tr>
       <th><?php echo $this->translate("Title"); ?></th>
       <th><?php echo $this->translate("Page"); ?></th>
-      	  <th><?php echo $this->translate("Autor"); ?></th>
-	  <th><?php echo $this->translate("Ort"); ?></th>
-	  <th><?php echo $this->translate("Jahr"); ?></th>
-	  <th><?php echo $this->translate("Lit.V."); ?></th>
-	  <th><?php echo $this->translate("FN"); ?></th>
+      <th><?php echo $this->translate("Autor"); ?></th>
+      <th><?php echo $this->translate("Ort"); ?></th>
+      <th><?php echo $this->translate("Jahr"); ?></th>
       <th class="fit-content"><?php echo $this->translate("Actions"); ?></th>
     </tr>
   </thead>
   <tbody>
     <?php if(count($this->paginator)): ?>
-      <?php foreach($this->paginator as $document): 
-			$bibtex = $document->getBibtex();?>
+      <?php foreach($this->paginator as $bibTex): ?>
         <tr>
-          <?php if($document->getState()->getName() == 'parsed'): ?>
-            <td data-label="<?php echo $this->translate("Title"); ?>"><a href="/document/bibtex/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
-          <?php else: ?>
-            <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $document->getTitle(); ?></td>
-          <?php endif; ?>
-          <td data-label="<?php echo $this->translate("Pages"); ?>"><?php if($document->getPages()->last()){ echo $document->getPages()->last()->getPageNumber(); } ?></td>
-		  <td data-label="<?php echo $this->translate("Autor"); ?>"><?php echo $bibtex['autor'];?></td>
-		  <td data-label="<?php echo $this->translate("Ort"); ?>"><?php echo $bibtex['ort'];?></td>
-		  <td data-label="<?php echo $this->translate("Jahr"); ?>"><?php echo $bibtex['jahr'];?></td>
-		  <td data-label="<?php echo $this->translate("Lit.V."); ?>"><?php echo $bibtex['inlit'];?></td>
-		  <td data-label="<?php echo $this->translate("FN"); ?>"><?php echo $bibtex['infn'];?></td>
+          <td data-label="<?php echo $this->translate("Title"); ?>"><a href="/bibtex/show/id/<?php echo $bibTex->getId(); ?>"><?php echo $bibTex->getContent('title'); ?></a></td>
+          <td data-label="<?php echo $this->translate("Pages"); ?>"><?php echo $bibTex->getContent('pages') ?></td>
+          <td data-label="<?php echo $this->translate("Autor"); ?>"><?php echo $bibTex->getContent('author'); ?></td>
+          <td data-label="<?php echo $this->translate("Ort"); ?>"><?php echo $bibTex->getContent('address'); ?></td>
+          <td data-label="<?php echo $this->translate("Jahr"); ?>"><?php echo $bibTex->getContent('year'); ?></td>
           <td data-label="<?php echo $this->translate("Actions"); ?>" class="fit-content">
-            <?php if($document->getState()->getName() == 'parsed'): ?>
-              <?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$document->actions)); ?>
-            <?php endif; ?>
+            <?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$bibTex->actions)); ?>
           </td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
       <tr>
-        <td colspan="4" class="no-label"><?php echo $this->translate("No documents found."); ?></td>
+        <td colspan="6" class="no-label"><?php echo $this->translate("No entries found."); ?></td>
       </tr>
     <?php endif; ?>
   </tbody>

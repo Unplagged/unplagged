@@ -260,7 +260,7 @@ class PermissionController extends Unplagged_Controller_Action{
 
         if($result){
           // notification
-          // $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+          // $user = Zend_Registry::getInstance()->user;
           // Unplagged_Helper::notify("case_updated", $result, $user);
 
           $this->_helper->FlashMessenger(array('success'=>'The permissions were updated successfully.'));

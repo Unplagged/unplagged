@@ -28,7 +28,6 @@
 class Application_Model_Comment extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-comment';
-  const PERMISSION_TYPE = 'comment';
   
   /**
    * @ManyToOne(targetEntity="Application_Model_User")

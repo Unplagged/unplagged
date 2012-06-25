@@ -28,7 +28,6 @@
 class Application_Model_Rating extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-star';
-  const PERMISSION_TYPE = 'rating';
 
   /**
    * @ManyToOne(targetEntity="Application_Model_User")

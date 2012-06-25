@@ -28,7 +28,6 @@
 class Application_Model_Document_Page extends Application_Model_Versionable{
 
   const ICON_CLASS = 'icon-page';
-  const PERMISSION_TYPE = 'document_page';
 
   /**
    * The page number in the origional document.
@@ -105,6 +104,14 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
       }
     }
     //@todo $data["file"] = ...
+    return $data;
+  }
+
+  public function toVersionArray(){
+    $data["id"] = $this->id;
+    $data["pageNumber"] = $this->pageNumber;
+    $data["content"] = $this->getContent('array');
+
     return $data;
   }
 
@@ -317,6 +324,70 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
           }
           return false;
         });
+  }
+  
+
+  public function getSidebarActions(){
+    $actions = array();
+
+    $action['label'] = 'Actions';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/show/id/' . $this->id;
+    $action['label'] = 'Show page';
+    $action['icon'] = 'icon-page';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/edit/id/' . $this->id;
+    $action['label'] = 'Edit page';
+    $action['icon'] = 'icon-pencil';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/delete/id/' . $this->id;
+    $action['label'] = 'Remove page';
+    $action['icon'] = 'icon-delete';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/de-hyphen/id/' . $this->id;
+    $action['label'] = 'De-hyphen page';
+    $action['icon'] = 'icon-text-padding-right';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/stopwords/id/' . $this->id;
+    $action['label'] = 'Non-stopword identification';
+    $action['icon'] = 'icon-zoom';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/simtext/id/' . $this->id;
+    $action['label'] = 'Simtext page';
+    $action['icon'] = 'icon-table-row-delete';
+    $actions[] = $action;
+
+    $action = array();
+    $action['label'] = 'Links';
+    $actions[] = $action;
+
+    $action['link'] = '/document_fragment/list/page/' . $this->id;
+    $action['label'] = 'Fragments';
+    $action['icon'] = 'icon-text-padding-right';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/detection-reports/id/' . $this->id;
+    $action['label'] = 'Plagiarism Detection Reports';
+    $action['icon'] = 'icon-report-magnify';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/simtext-reports/id/' . $this->id;
+    $action['label'] = 'Simtext Reports';
+    $action['icon'] = 'icon-table-row-delete';
+    $actions[] = $action;
+
+    $action['link'] = '/document_page/changelog/id/' . $this->id;
+    $action['label'] = 'Changelog';
+    $action['icon'] = 'icon-table-relationship';
+    $actions[] = $action;
+
+    return $actions;
   }
 
 }

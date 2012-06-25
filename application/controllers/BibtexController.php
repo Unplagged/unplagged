@@ -27,15 +27,26 @@ class BibtexController extends Unplagged_Controller_Action{
 
   public function init(){
     parent::init();
-
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
-    Zend_Layout::getMvcInstance()->menu = 'document-tools';
-    Zend_Layout::getMvcInstance()->versionableId = $input->id;
   }
 
   public function indexAction(){
     $this->_helper->redirector('list', 'bibtex');
+  }
+  
+  
+  /**
+   * Show bibtex information of a document
+   * 
+   */
+  public function showAction(){
+   $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+
+    if(!empty($input->id)){
+      $bibTex = $this->_em->getRepository('Application_Model_BibTex')->findOneById($input->id);
+      $this->view->bibTex = $bibTex;
+    }
+    
+    $this->view->title = "Bibliography";
   }
 
   
@@ -48,48 +59,31 @@ class BibtexController extends Unplagged_Controller_Action{
 
     if($case){
       $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
-      $query = 'SELECT b FROM Application_Model_Document b';
-      $count = 'SELECT COUNT(b.id) FROM Application_Model_Document b';
+      $query = 'SELECT d FROM Application_Model_BibTex d JOIN d.document b';
+      $count = 'SELECT COUNT(d.id) FROM Application_Model_BibTex d JOIN d.document b';
 	  
       $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permission));
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
       $paginator->setCurrentPageNumber($input->page);
 
       // generate the action dropdown for each file
-      foreach($paginator as $document):
-        if($document->getState()->getName() == 'task_scheduled'){
-          // find the associated task and get percentage
-          $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
-          $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$document->getId(), 'state'=>$state));
-          if(!$task){
-            $percentage = 0;
-          }else{
-            $percentage = $task->getProgressPercentage();
-          }
-          $document->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
-        }else{
-          $document->outputState = $document->getState()->getTitle();
-        }
-
-        $document->actions = array();
-        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
+      foreach($paginator as $bibTex):
+        $bibTex->actions = array();
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$bibTex->getDocument()));
         if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
-          $action['link'] = '/document/edit/id/' . $document->getId();
-          $action['label'] = 'Edit bibtex';
+          $action['link'] = '/document/edit/id/' . $bibTex->getDocument()->getId();
+          $action['label'] = 'Edit bibliography';
           $action['icon'] = 'images/icons/pencil.png';
-          $document->actions[] = $action;
+          $bibTex->actions[] = $action;
         }
-        
-        
       endforeach;
 
       $this->view->paginator = $paginator;
-
-      Zend_Layout::getMvcInstance()->sidebar = null;
-      Zend_Layout::getMvcInstance()->versionableId = null;
     }else{
       $this->_helper->FlashMessenger('You need to select a case first.');
     }
+    
+    $this->view->title = "Bibliography";
   }
 
   

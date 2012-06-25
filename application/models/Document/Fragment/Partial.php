@@ -27,7 +27,7 @@
  * @HasLifeCycleCallbacks
  */
 class Application_Model_Document_Fragment_Partial extends Application_Model_Base{
-
+  
   /**
    *
    * @ManyToOne(targetEntity="Application_Model_Document_Page_Line")

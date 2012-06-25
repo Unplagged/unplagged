@@ -592,154 +592,29 @@ $(document).ready(function(){
     return false;
   });
   
+  /**
+   * Updates the fields shown based on the current bibtex type.
+   */
   function updateBibTexForm(){
-    var type = $('#type').val();
-    
-	// form with label and element together in a line
-	  $('#autor-label').css({"float":"left","width":"80px"});
-	  $('#titel-label').css({"float":"left","width":"80px"});
-      $('#ort-label').css({"float":"left","width":"80px"});
-      $('#verlag-label').css({"float":"left","width":"80px"});
-	  $('#jahr-label').css({"float":"left","width":"80px"});
-	  $('#anmerkung-label').css({"float":"left","width":"80px"});
-      $('#url-label').css({"float":"left","width":"80px"});
-      $('#inlit-label').css({"float":"left","width":"80px"});
-	  $('#infn-label').css({"float":"left","width":"80px"});
-	  
-    if(type == 'full' || type == 'periodikum' ) 
-    { 
-      $('#zeitschrift-element').show();
-      $('#zeitschrift-label').show();	
-      $('#monat-element').show();
-      $('#monat-label').show();
-      $('#tag-element').show();
-      $('#tag-label').show();
-      $('#nummer-element').show();
-      $('#nummer-label').show();
-	  
-	  // form with label and element together in a line
-	  $('#zeitschrift-label').css({"float":"left","width":"80px"});
-	  $('#monat-label').css({"float":"left","width":"80px"});
-      $('#tag-label').css({"float":"left","width":"80px"});
-      $('#nummer-label').css({"float":"left","width":"80px"});
-	  
-    } else {
-      $('#zeitschrift-element').hide();
-      $('#zeitschrift-label').hide();
-      $('#monat-element').hide();
-      $('#monat-label').hide();									
-      $('#tag-element').hide();
-      $('#tag-label').hide();
-      $('#nummer-element').hide();
-      $('#nummer-label').hide();									
-    }
-   
-    if(type == 'full' || type == 'aufsatz' ) 
-    { 
-      $('#sammlung-element').show();
-      $('#sammlung-label').show();
-      $('#hrsg-element').show();
-      $('#hrsg-label').show();
-      $('#issn-element').show();
-      $('#issn-label').show();	
+    var type = $('#bibSourceType').val();
 
-	  // form with label and element together in a line
-	   $('#sammlung-label').css({"float":"left","width":"80px"});
-	  $('#hrsg-label').css({"float":"left","width":"80px"});
-      $('#issn-label').css({"float":"left","width":"80px"});
-      
-    } else {
-      $('#sammlung-element').hide();
-      $('#sammlung-label').hide();
-      $('#hrsg-element').hide();
-      $('#hrsg-label').hide();
-      $('#issn-element').hide();
-      $('#issn-label').hide();
-    }
-   
-    if(type == 'full' || type == 'aufsatz' || type == 'periodikum') 
-    { 
-      $('#seiten-element').show();
-      $('#seiten-label').show();
-
-	  // form with label and element together in a line
-	  $('#seiten-label').css({"float":"left","width":"80px"});
-	
-    } else {
-      $('#seiten-element').hide();
-      $('#seiten-label').hide();
-   
-    }
-   
-    if(type == 'full' || type == 'buch' || type == 'aufsatz') 
-    { 
-      $('#isbn-element').show();
-      $('#isbn-label').show();
-   
-      // form with label and element together in a line
-	  $('#isbn-label').css({"float":"left","width":"80px"});
-	  
-    } else {
-      $('#isbn-element').hide();
-      $('#isbn-label').hide();
-   
-    }
-    if(type == 'full'){
-      $('#kuerzel-element').show();
-      $('#kuerzel-label').show();
-      $('#beteiligte-element').show();
-      $('#beteiligte-label').show();
-      $('#ausgabe-element').show();
-      $('#ausgabe-label').show();
-      $('#umfang-element').show();
-      $('#umfang-label').show();
-      $('#reihe-element').show();
-      $('#reihe-label').show();
-      $('#doi-element').show();
-      $('#doi-label').show();
-      $('#urn-element').show();
-      $('#urn-label').show();
-      $('#wp-element').show();
-      $('#wp-label').show();
-      $('#schluessel-element').show();
-      $('#schluessel-label').show();
-	  
-	  // form with label and element together in a line
-	  $('#kuerzel-label').css({"float":"left","width":"80px"});
-	  $('#beteiligte-label').css({"float":"left","width":"80px"});
-	  $('#ausgabe-label').css({"float":"left","width":"80px"});
-	  $('#umfang-label').css({"float":"left","width":"80px"});
-	  $('#reihe-label').css({"float":"left","width":"80px"});
-	  $('#doi-label').css({"float":"left","width":"80px"});
-	  $('#urn-label').css({"float":"left","width":"80px"});
-	  $('#wp-label').css({"float":"left","width":"80px"});
-	  $('#schluessel-label').css({"float":"left","width":"80px"});
-	  
-    } else{
-      $('#kuerzel-element').hide();
-      $('#kuerzel-label').hide();
-      $('#beteiligte-element').hide();
-      $('#beteiligte-label').hide();
-      $('#ausgabe-element').hide();
-      $('#ausgabe-label').hide();
-      $('#umfang-element').hide();
-      $('#umfang-label').hide();
-      $('#reihe-element').hide();
-      $('#reihe-label').hide();
-      $('#doi-element').hide();
-      $('#doi-label').hide();
-      $('#urn-element').hide();
-      $('#urn-label').hide();
-      $('#wp-element').hide();
-      $('#wp-label').hide();
-      $('#schluessel-element').hide();
-      $('#schluessel-label').hide();
-    }
+    $.each($('.bibtex'), function() {
+      var id = $(this).attr('id');
+      if($(this).hasClass(type)){
+        $('#' + id + '-label').show();
+        $('#' + id + '-element').show();
+      } else {
+        $('#' + id + '-label').hide();
+        $('#' + id + '-element').hide();
+        $(this).val('');
+      }
+    });
   }
-  $("#type").change(function(){
+  $("#bibSourceType").change(function(){
     updateBibTexForm();
   });
   updateBibTexForm();
+  
   
   $('#upload-queue').unplaggedFileUpload();
   $().unplaggedContextMenu();

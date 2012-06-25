@@ -26,11 +26,6 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
   public function init(){
     parent::init();
 
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
-    Zend_Layout::getMvcInstance()->menu = 'fragment-tools';
-    Zend_Layout::getMvcInstance()->versionableId = $input->id;
-
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
     if(!$case || !$case->getTarget()){
       $errorText = 'In order to manage fragments, you need to set a target document on the case.';
@@ -50,7 +45,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $user = Zend_Registry::getInstance()->user;
 
     $this->view->fragment = $fragment;
     $this->view->plag = $fragment->getPlag();
@@ -66,8 +61,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $this->view->fragmentIsRated = $fragment->isRatedByUser($user);
 
 
-    Zend_Layout::getMvcInstance()->menu = 'fragment-tools';
-    Zend_Layout::getMvcInstance()->versionableId = $input->id;
+    Zend_Layout::getMvcInstance()->menu = $fragment->getSidebarActions();
   }
 
   /**
@@ -118,10 +112,10 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
       if($result){
         // log fragment creation
-        $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+        $user = Zend_Registry::getInstance()->user;
         Unplagged_Helper::notify("fragment_created", $result, $user);
 
-        $this->_helper->FlashMessenger('The fragment was created successfully.');
+        $this->_helper->FlashMessenger(array('success'=>'The fragment was created successfully.'));
         $params = array('id'=>$result->getId());
         $this->_helper->redirector('show', 'document_fragment', '', $params);
       }
@@ -137,14 +131,18 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
    */
   public function editAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+    $this->_em->clear();
 
     $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById(Zend_Registry::getInstance()->user->getId());
 
     if($fragment){
       $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document-fragment', 'action'=>'update', 'base'=>$fragment));
-      if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+      if(!$user->getRole()->hasPermission($permission)){
         $this->redirectToLastPage(true);
       }
+
+      Zend_Layout::getMvcInstance()->menu = $fragment->getSidebarActions();
 
       $modifyForm = new Application_Form_Document_Fragment_Modify();
       $modifyForm->setAction("/document_fragment/edit/id/" . $input->id);
@@ -159,10 +157,9 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
         if($result){
           // log fragment creation
-          $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
           Unplagged_Helper::notify("fragment_updated", $result, $user);
 
-          $this->_helper->FlashMessenger('The fragment was updated successfully.');
+          $this->_helper->FlashMessenger(array('success'=>'The fragment was updated successfully.'));
           $params = array('id'=>$fragment->getId());
           $this->_helper->redirector('show', 'document_fragment', '', $params);
         }
@@ -197,10 +194,10 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     if($case){
       $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document-fragment', 'action'=>'read', 'base'=>null));
 
-      $query = 'SELECT d FROM Application_Model_Document_Fragment d JOIN d.document b';
-      $count = 'SELECT COUNT(d.id) FROM Application_Model_Document_Fragment d JOIN d.document b';
+      $query = 'SELECT b FROM Application_Model_Document_Fragment b JOIN b.document c';
+      $count = 'SELECT COUNT(b.id) FROM Application_Model_Document_Fragment b JOIN b.document c';
 
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.id'=>$case->getTarget()->getId()), null, $permission));
+      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('c.id'=>$case->getTarget()->getId()), null, $permission));
       $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
       $paginator->setCurrentPageNumber($input->page);
 
@@ -223,7 +220,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
           $action['icon'] = 'images/icons/delete.png';
           $fragment->actions[] = $action;
         }
-        
+
         $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document-fragment', 'action'=>'authorize', 'base'=>$fragment));
         if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $action['link'] = '/permission/edit/id/' . $fragment->getId();
@@ -234,9 +231,6 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       endforeach;
 
       $this->view->paginator = $paginator;
-
-      Zend_Layout::getMvcInstance()->menu = null;
-      Zend_Layout::getMvcInstance()->versionableId = null;
     }else{
       $this->_helper->FlashMessenger('You need to select a case first.');
     }
@@ -249,27 +243,38 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     parent::changelogAction();
 
     $this->setTitle("Changelog of fragments");
-    Zend_Layout::getMvcInstance()->menu = 'fragment-tools';
+
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+    $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
+    Zend_Layout::getMvcInstance()->menu = $fragment->getSidebarActions();
   }
 
   public function deleteAction(){
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+    $this->_em->clear();
+
+    $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById(Zend_Registry::getInstance()->user->getId());
 
     if(!empty($input->id)){
       $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
       if($fragment){
         $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document-fragment', 'action'=>'delete', 'base'=>$fragment));
-        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        if(!$user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }
-        $this->_em->remove($fragment);
+
+        Unplagged_Helper::notify('fragment_removed', $fragment, $user);
+
+        $fragment->remove();
+        $this->_em->persist($fragment);
         $this->_em->flush();
       }else{
-        $this->_helper->FlashMessenger('The fragment does not exist.');
+        $this->_helper->FlashMessenger(array('error'=>'The fragment does not exist.'));
       }
     }
 
-    $this->_helper->FlashMessenger('The fragment was deleted successfully.');
+    $this->_helper->FlashMessenger(array('success'=>'The fragment was deleted successfully.'));
     $this->_helper->redirector('list', 'document_fragment');
 
     // disable view
@@ -293,8 +298,10 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
   }
 
   private function handleModifyData(Application_Form_Document_Fragment_Modify $modifyForm, Application_Model_Document_Fragment $fragment = null){
+    $create = false;
     if(!($fragment)){
       $fragment = new Application_Model_Document_Fragment();
+      $create = true;
     }
 
     $formData = $this->_request->getPost();
@@ -323,15 +330,17 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $fragment->setSource($this->handlelPartialCreation($partial, $formData['sourceLineFrom'], $formData['sourceLineTo']));
 
       $case = Zend_Registry::getInstance()->user->getCurrentCase();
-      $target = $case->getTarget();
-      $target->addFragment($fragment);
+      if($create){
+        $target = $case->getTarget();
+        $target->addFragment($fragment);
+      }
 
       // write back to persistence manager and flush it
       $this->_em->persist($fragment);
-      $this->_em->persist($target);
       $this->_em->flush();
 
       // updates the barcode data
+      $case = $this->_em->getRepository('Application_Model_Case')->findOneById($case->getId());
       $case->updateBarcodeData();
       $this->_em->persist($case);
       $this->_em->flush();

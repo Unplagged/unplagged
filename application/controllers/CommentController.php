@@ -36,7 +36,7 @@ class CommentController extends Unplagged_Controller_Action{
     $input = new Zend_Filter_Input(array('source'=>'Digits', 'title'=>'Alpha', 'text'=>'StripTags'), null, $this->_getAllParams());
 
     $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
-    $user = $this->_em->getRepository('Application_Model_User')->findOneById($this->_defaultNamespace->userId);
+    $user = Zend_Registry::getInstance()->user;
 
     if($source && $input->text){
       $data = array();

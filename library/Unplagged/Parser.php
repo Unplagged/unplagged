@@ -35,6 +35,7 @@ class Unplagged_Parser{
     , 'image/jpg' => 'Document_ImageParser'
     , 'image/*' => 'Document_ImageParser'
     , 'application/pdf' => 'Document_ImageParser'
+    , 'text/plain' => 'Document_TextParser'
   );
 
   public static function factory($mimeType){

@@ -203,6 +203,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       array(
         //home icon gets set via js, because I didn't find a simple way to add a <span> here
         'label'=>'Home',
+        'class'=>'test',
         'title'=>'Home',
         'module'=>'default',
         'controller'=>'index',
@@ -317,6 +318,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
         'action'=>'list',
         'route'=>'default',
         'resource'=>'report_list'
+      ), array(
+        'label'=>'Bibliography',
+        'title'=>'Bibliography',
+        'module'=>'default',
+        'controller'=>'bibtex',
+        'action'=>'list',
+        'route'=>'default',
+        'resource'=>'bibtex_list'
       ), array(
         'label'=>'Administration',
         'title'=>'Administration',

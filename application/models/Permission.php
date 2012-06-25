@@ -45,15 +45,15 @@ abstract class Application_Model_Permission implements Zend_Acl_Resource_Interfa
   private $action = '';
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_Base")
-   * @JoinColumn(name="base_id", referencedColumnName="id") 
+   * @ManyToOne(targetEntity="Application_Model_Base", inversedBy="permissions", cascade={"delete", "detach"}, fetch="EXTRA_LAZY")
+   * @JoinColumn(name="base_id", referencedColumnName="id", onDelete="CASCADE") 
    */
   private $base;
 
   /**
    * @var string The base element permissions.
    * 
-   * @ManyToMany(targetEntity="Application_Model_User_Role", mappedBy="permissions", cascade={"persist"})
+   * @ManyToMany(targetEntity="Application_Model_User_Role", mappedBy="permissions", cascade={"delete"})
    */
   private $roles;
 

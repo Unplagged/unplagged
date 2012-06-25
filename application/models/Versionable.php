@@ -85,6 +85,9 @@ abstract class Application_Model_Versionable extends Application_Model_Base{
   public function getAuditLog(){
     return $this->auditLog;
   }
+  
+    abstract public function toVersionArray();
+
 
 }
 ?>

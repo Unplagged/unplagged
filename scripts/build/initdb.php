@@ -69,6 +69,22 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("case_updated
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
+if(!($em->getRepository('Application_Model_Action')->findOneByName("case_published"))){
+  unset($data);
+  $data["name"] = "case_published";
+  $data["title"] = "Case %s was published";
+  $data["description"] = "The case was published.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
+if(!($em->getRepository('Application_Model_Action')->findOneByName("case_unpublished"))){
+  unset($data);
+  $data["name"] = "case_unpublished";
+  $data["title"] = "Case %s was unpublished";
+  $data["description"] = "The case was unpublished.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
 if(!($em->getRepository('Application_Model_Action')->findOneByName("file_uploaded"))){
   unset($data);
   $data["name"] = "file_uploaded";
@@ -93,11 +109,35 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("fragment_upd
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
+if(!($em->getRepository('Application_Model_Action')->findOneByName("fragment_removed"))){
+  unset($data);
+  $data["name"] = "fragment_removed";
+  $data["title"] = "Fragment %s was removed";
+  $data["description"] = "The fragment was removed.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
 if(!($em->getRepository('Application_Model_Action')->findOneByName("document_created"))){
   unset($data);
   $data["name"] = "document_created";
   $data["title"] = "Document %s was created";
   $data["description"] = "A file was parsed into a document.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
+if(!($em->getRepository('Application_Model_Action')->findOneByName("document_removed"))){
+  unset($data);
+  $data["name"] = "document_removed";
+  $data["title"] = "Document %s was removed";
+  $data["description"] = "The document was removedt.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
+if(!($em->getRepository('Application_Model_Action')->findOneByName("document_updated"))){
+  unset($data);
+  $data["name"] = "document_updated";
+  $data["title"] = "Document %s was updated";
+  $data["description"] = "The document was updated.";
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
@@ -211,6 +251,15 @@ if(!($em->getRepository('Application_Model_State')->findOneByName("parsed"))){
 }
 
 //case states
+if(!($em->getRepository('Application_Model_State')->findOneByName('case_created'))){
+  unset($data);
+  $data["name"] = "case_created";
+  $data["title"] = "created";
+  $data["description"] = "The case is created.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+//case states
 if(!($em->getRepository('Application_Model_State')->findOneByName('case_published'))){
   unset($data);
   $data["name"] = "case_published";
@@ -290,6 +339,30 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("file_parse")
   $data["name"] = "file_parse";
   $data["title"] = "Parse file %s";
   $data["description"] = "Parse a file into a document";
+  $action = new Application_Model_Action($data);
+  $em->persist($action);
+}
+if(!($em->getRepository('Application_Model_Action')->findOneByName("page_created"))){
+  unset($data);
+  $data["name"] = "page_created";
+  $data["title"] = "Page %s was created";
+  $data["description"] = "A new page in the document was created.";
+  $action = new Application_Model_Action($data);
+  $em->persist($action);
+}
+if(!($em->getRepository('Application_Model_Action')->findOneByName("page_updated"))){
+  unset($data);
+  $data["name"] = "page_updated";
+  $data["title"] = "Page %s was updated";
+  $data["description"] = "The page in a document was updated.";
+  $action = new Application_Model_Action($data);
+  $em->persist($action);
+}
+if(!($em->getRepository('Application_Model_Action')->findOneByName("page_removed"))){
+  unset($data);
+  $data["name"] = "page_removed";
+  $data["title"] = "Page %s was removed";
+  $data["description"] = "A page in the document was removed.";
   $action = new Application_Model_Action($data);
   $em->persist($action);
 }
