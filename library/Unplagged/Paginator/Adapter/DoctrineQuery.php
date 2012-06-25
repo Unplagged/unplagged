@@ -34,12 +34,16 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
     $user = Zend_Registry::getInstance()->user;
 
     $conditions = array();
-    if(!$selectRemovedItems) {
+    if(!$selectRemovedItems){
       $conditions[] = 'b.isRemoved = 0';
     }
     if(isset($additionalConditions)){
       foreach($additionalConditions as $field=>$value){
-        $conditions[] = $field . " = '" . $value . "'";
+        if($value != 'IS NULL'){
+          $conditions[] = $field . " = '" . $value . "'";
+        }else{
+          $conditions[] = $field . " IS NULL";
+        }
       }
     }
 

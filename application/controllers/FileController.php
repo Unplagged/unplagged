@@ -45,111 +45,29 @@ class FileController extends Unplagged_Controller_Action{
    * Moves the current file to the storage directory and stores an object for the file in the database.
    */
   private function storeUpload(){
-    $adapter = new Zend_File_Transfer();
-
-    $newName = $this->_request->getPost('newName');
+    $filename = $this->_request->getPost('newName');
     $description = $this->_request->getPost('description');
 
-    $pathinfo = pathinfo($adapter->getFileName());
-
     $storageDir = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
-    $fileNames = $this->findFilename($pathinfo, $newName);
-    $adapter->addFilter('Rename', $storageDir . $fileNames[1]);
+    $uploader = new Unplagged_Uploader($filename, $description, $storageDir, null);
+    $file = $uploader->upload();
 
-    //move the uploaded file to the before specified location
-    if($adapter->receive()){
-      chmod($storageDir . $fileNames[1], 0755);
-
+    if($file){
       $user = Zend_Registry::getInstance()->user;
-
-      $file = $this->createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir, $user);
-      $this->_em->persist($file);
-      $this->_em->flush();
-
       $user->addFile($file);
 
+      $this->_em->persist($file);
       $this->_em->persist($user);
-
+      $this->_em->flush();
+      
       //store in the activity stream, that the current user uploaded this file
       Unplagged_Helper::notify('file_uploaded', $file, $user);
-      $this->_helper->FlashMessenger(array('success'=>array('The file "%s" was successfully uploaded.', array($fileNames[0]))));
+      $this->_helper->FlashMessenger(array('success'=>array('The file "%s" was successfully uploaded.', array($file->getFilename()))));
 
       die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
     }else{
-      $this->_helper->FlashMessenger(array('error'=>'The file "' . $fileNames[0] . '" could not be uploaded.'));
+      $this->_helper->FlashMessenger(array('error'=>'The file "' . $file->getFilename() . '" could not be uploaded.'));
     }
-  }
-
-  /**
-   * Creates a unique filename from the specified data.
-   * 
-   * @param array $pathinfo An array as returned by the pathinfo() function for the uploaded file.
-   * @param string $newName A different name for the file from user input.
-   * @return array An array containing the original filename and a new unique filename to store the file locally. 
-   */
-  private function findFilename($pathinfo, $newName){
-    $fileExtension = $pathinfo['extension'];
-
-    $fileName = '';
-    if($newName){
-      $fileName = $newName;
-    }else{
-      $fileName = $pathinfo['filename'];
-    }
-    $localFilename = $this->sanitizeFilename($fileName) . '_' . uniqid() . '.' . $fileExtension;
-    $fileName .= '.' . $fileExtension;
-
-    return array($fileName, $localFilename);
-  }
-
-  /**
-   * Based on Wordpress.
-   * 
-   * Sanitizes a filename replacing whitespace with dashes
-   *
-   * Removes special characters that are illegal in filenames on certain
-   * operating systems and special characters requiring special escaping
-   * to manipulate at the command line. Replaces spaces and consecutive
-   * dashes with a single dash. Trim period, dash and underscore from beginning
-   * and end of filename.
-   *
-   * @param string $filename The filename to be sanitized
-   * @return string The sanitized filename
-   */
-  private function sanitizeFilename($filename){
-    $special_chars = array("?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}");
-    $filename = str_replace($special_chars, '', $filename);
-    $filename = preg_replace('/[\s-]+/', '-', $filename);
-    $filename = trim($filename, '.-_');
-    return $filename;
-  }
-
-  /**
-   * Takes the data to create an Application_Model_File object.
-   * 
-   * @param Zend_File_Transfer $adapter
-   * @param array $fileNames
-   * @param array $pathinfo
-   * @param string $description
-   * @param string $storageDir
-   * @return \Application_Model_File 
-   */
-  private function createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir, $user){
-    $data = array();
-    $data['size'] = $adapter->getFileSize();
-    //if the mime type is always application/octet-stream, then the 
-    //mime magic and fileinfo extensions are probably not installed
-    $data['mimetype'] = $adapter->getMimeType();
-    $data['filename'] = $fileNames[0];
-    $data['extension'] = $pathinfo['extension'];
-    $data['location'] = $storageDir;
-    $data['description'] = $description;
-    $data['localFilename'] = $fileNames[1];
-    $data['uploader'] = $user;
-
-    $file = new Application_Model_File($data);
-
-    return $file;
   }
 
   public function listAction(){
@@ -162,7 +80,7 @@ class FileController extends Unplagged_Controller_Action{
     $count = 'SELECT COUNT(b.id) FROM Application_Model_File b';
     $orderBy = 'b.created DESC';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, $orderBy, $permission));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.folder'=>'IS NULL'), $orderBy, $permission));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 

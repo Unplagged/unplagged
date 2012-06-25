@@ -152,6 +152,10 @@ class Application_Model_User extends Application_Model_Base{
     if(isset($data['lastname'])){
       $this->lastname = $data['lastname'];
     }
+    
+    if(isset($data["avatar"])){
+      $this->avatar = $data["avatar"];
+    }
 
     if(isset($data['verificationHash'])){
       $this->verificationHash = $data['verificationHash'];
@@ -231,6 +235,10 @@ class Application_Model_User extends Application_Model_Base{
   public function setState($state){
     $this->state = $state;
   }
+  
+  public function setAvatar($avatar){
+    $this->avatar = $avatar;
+  }
 
   public function getCurrentCase(){
     return $this->currentCase;
@@ -264,15 +272,8 @@ class Application_Model_User extends Application_Model_Base{
     return $this->files->contains($file);
   }
 
-  /**
-   * @todo Would probably be better to handle the default somewhere else to keep this class clean
-   */
   public function getAvatar(){
-    if(empty($this->avatar)){
-      return '/images/default-avatar.png';
-    }
-
-    return '/image/view/' . $this->avatar->getId();
+    return $this->avatar;
   }
 
   public function getDirectName(){
@@ -288,7 +289,7 @@ class Application_Model_User extends Application_Model_Base{
 
     $result['id'] = $this->id;
     $result['username'] = $this->username;
-    $result['avatar'] = $this->getAvatar();
+    $result['avatar'] = Unplagged_Helper::getAvatarPath($this);
 
     return $result;
   }

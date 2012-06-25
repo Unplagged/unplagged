@@ -27,7 +27,7 @@
       <div class="content clearfix">
         <?php if(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest'): ?>
           <div class="user-box">
-            <img class="avatar" src="<?php echo $this->me->getAvatar(); ?>" />
+            <img class="avatar" src="<?php echo Unplagged_Helper::getAvatarPath($this->me); ?>" />
             <div class="dropdown-button hoverable user-menu">
               <a class="button" href="<?php echo $this->baseUrl('user/edit'); ?>"><?php echo $this->me->getUsername(); ?><span class="arrow-down"></span></a>
               <ul>

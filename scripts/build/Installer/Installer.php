@@ -107,7 +107,8 @@ class Installer{
       'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR . 'proxies',
       'temp',
       'temp' . DIRECTORY_SEPARATOR . 'ocr',
-      'temp' . DIRECTORY_SEPARATOR . 'imagemagick'
+      'temp' . DIRECTORY_SEPARATOR . 'imagemagick',
+      'data' . DIRECTORY_SEPARATOR . 'avatars'
     );
 
     echo 'Starting creation of directories...' . PHP_EOL;

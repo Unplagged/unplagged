@@ -22,7 +22,7 @@ $disabled = $this->disabled || false;
         <?php $role = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User_Role')->findOneById($roleId); ?>
         <?php if($role): ?>
           <div class="well" data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $role->getUser()->getId(); ?>">
-            <img class="avatar no-shadow" src="<?php echo $role->getUser()->getAvatar(); ?>" />
+            <img class="avatar no-shadow" src="<?php echo Unplagged_Helper::getAvatarPath($role->getUser()); ?>" />
             <div class="names">
               <span class="username"><?php echo $role->getUser()->getUsername(); ?></span>
             </div>

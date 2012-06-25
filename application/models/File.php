@@ -98,6 +98,13 @@ class Application_Model_File extends Application_Model_Base{
    */
   private $uploader;
 
+  /**
+   * @var string The folder of the file.
+   * 
+   * @Column(type="string", length=255, nullable=true)
+   */
+  private $folder;
+
   public function __construct(array $data = array()){
     foreach($data as $key=>$value){
       $this->setOption($key, $value);
@@ -198,6 +205,14 @@ class Application_Model_File extends Application_Model_Base{
 
   public function getUploader(){
     return $this->uploader;
+  }
+  
+  public function getFolder(){
+    return $this->folder;
+  }
+
+  public function setFolder($folder){
+    $this->folder = $folder;
   }
 
 }
