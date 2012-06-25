@@ -34,6 +34,12 @@
       '      <dd id="description-element">' +
       '        <textarea id="description-' + modalCounter + '" class="description" rows="10" cols="160"></textarea>' + 
       '      </dd>' + 
+      '      <dt id="makePublic-label">' + 
+      '        <label for="makePublic" class="optional">' + $this.attr('data-makePublic') + ':</label>' + 
+      '      </dt>' +
+      '      <dd id="makePublic-element">' +
+      '       <input type="checkbox" id="makePublic" />' +
+      '      </dd>' +
       '    </dl>' +
       '  </div>' +
       '  <div class="modal-footer">' +
@@ -91,12 +97,14 @@
           uploader.settings['multipart_params'].newName = file.newName;
         },
         UploadComplete: function(uploader, file){
-          window.location = '/user/files';
+          window.location = $this.attr('data-redirect');
         }
       },
       multipart_params: {
         'description': '', 
-        'newName': ''
+        'newName': '',
+        'makePublic': '',
+        'addToCase': ''
       }
     });
     
@@ -110,6 +118,8 @@
       if(file){
         file.description = fileModal.find('.description').val();
         file.newName = fileModal.find('.newName').val();
+        file.makePublic = fileModal.find('.makePublic').val();
+        file.addToCase = fileModal.find('.addToCase').val();
       }
       $.data(fileModal, 'current-file', null);
       

@@ -185,13 +185,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       $log = new Zend_Log($writer);
     }
     Zend_Registry::getInstance()->Log = $log;
-    Zend_Registry::get('Log')->err('Hi');
-    //@todo can be removed when Benni and Server are tested(20.06.12)
-    /* $writer = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/application.log');
-      $logger = new Zend_Log($writer);
-      //   $logger = $this->getResource('Log');
-      // assert($logger != null);
-      Zend_Registry::set('Log', $logger); */
+    //Zend_Registry::get('Log')->err('Hi');
   }
 
   /**
@@ -199,6 +193,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    */
   protected function _initNavigation(){
 
+    $user = Zend_Registry::get('user');
+    $caseSelected = false;
+    if($user->getCurrentCase()){
+      $caseSelected = true;  
+    }
+      
+    
     $config = array(
       array(
         //home icon gets set via js, because I didn't find a simple way to add a <span> here
@@ -264,7 +265,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
             'controller'=>'case',
             'action'=>'files',
             'route'=>'default',
-            'resource'=>'case_files'
+            'resource'=>'case_files',
+            'visible'=>$caseSelected
           ),
           array(
             'label'=>'Public Files',

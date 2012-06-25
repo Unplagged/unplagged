@@ -2,4 +2,5 @@
     $this->title = $this->translate('Upload files');
     $this->headTitle($this->title);
 ?>
-<div id="upload-queue" data-close="<?php echo $this->translate('Close'); ?>" data-save="<?php echo $this->translate('Save'); ?>" data-file-information="<?php echo $this->translate('File information'); ?>" data-description="<?php echo $this->translate('Description'); ?>" data-filename="<?php echo $this->translate('Filename'); ?>"></div>
+
+<div id="upload-queue" data-close="<?php echo $this->translate('Close'); ?>" data-redirect="<?php echo $this->baseUrl('user/files'); ?>" data-makePublic="<?php echo $this->translate('Make public'); ?>" data-save="<?php echo $this->translate('Save'); ?>" data-file-information="<?php echo $this->translate('File information'); ?>" data-description="<?php echo $this->translate('Description'); ?>" data-filename="<?php echo $this->translate('Filename'); ?>"></div>
