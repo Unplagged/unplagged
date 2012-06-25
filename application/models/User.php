@@ -276,11 +276,12 @@ class Application_Model_User extends Application_Model_Base{
    * @todo Would probably be better to handle the default somewhere else to keep this class clean
    */
   public function getAvatar(){
-    if(empty($this->avatar)){
+    return $this->avatar;
+/*    if(empty($this->avatar)){
       return '/images/default-avatar.png';
     }
 
-    return '/image/view/' . $this->avatar->getId();
+    return '/image/view/' . $this->avatar->getId();*/
   }
 
   public function getDirectName(){
@@ -296,7 +297,7 @@ class Application_Model_User extends Application_Model_Base{
 
     $result['id'] = $this->id;
     $result['username'] = $this->username;
-    $result['avatar'] = $this->getAvatar();
+    //$result['avatar'] = $this->getAvatar();
 
     return $result;
   }

@@ -79,10 +79,14 @@ class Application_Form_User_Profile extends Zend_Form{
     $lastnameElement->setRequired(true);
 
     $avatar = new Zend_Form_Element_File('avatar');
-    $avatar->setLabel('Avatar-Dateipfad:');
-    $avatar->setRequired(true);   
+    $avatar->addValidator('Extension', false, 'jpg,jpeg');
+    $avatar->addValidator('Size', false, 204800);
+    $avatar->setLabel('Avatar');
     
-    
+    $removeAvatar = new Zend_Form_Element_Checkbox('removeAvatar');
+    $removeAvatar->setLabel("Remove avatar only");
+
+        
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Save');
     $submitElement->setOptions(array('class'=>'btn btn-primary'));
@@ -92,19 +96,26 @@ class Application_Form_User_Profile extends Zend_Form{
       , $usernameElement
       , $firstnameElement
       , $lastnameElement
+      , $avatar
+      , $removeAvatar
     ));
     
-    $this->addElement($avatar);
-
     $this->addDisplayGroup(array(
       'email'
       , 'username'
       , 'firstname'
       , 'lastname'
-      , 'avatar'
         )
         , 'personalGoup'
         , array('legend'=>'Personal Information')
+    );
+    
+        $this->addDisplayGroup(array(
+      'avatar'
+      , 'removeAvatar'
+        )
+        , 'avatarGoup'
+        , array('legend'=>'Avatar')
     );
 
     $this->addElements(array(

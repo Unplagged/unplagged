@@ -300,7 +300,6 @@ class UserController extends Unplagged_Controller_Action{
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($input->id);
     if(empty($user)){
-      $this->_helper->FlashMessenger('User Profile saved successfully.');
       $this->_helper->redirector('index', 'index');
     }elseif($this->_defaultNamespace->userId != $input->id){
       $this->_helper->FlashMessenger('No permission to edit other users.');
@@ -310,61 +309,87 @@ class UserController extends Unplagged_Controller_Action{
       $profileForm = new Application_Form_User_Profile($input->id);
 
       // form has been submitted through post request
-      if ($this->_request->isPost()) {
-                $formData = $this->_request->getPost();
+      if($this->_request->isPost()){
+        $formData = $this->_request->getPost();
 
-                // if the form doesn't validate, pass to view and return
-                if ($profileForm->isValid($formData)) {
-                    //print_r($formData);
-                    // echo "profileForm->isValid(formData)";
 
-                    $adapter = new Zend_File_Transfer_Adapter_Http();
-                    $adapter->setOptions(array('useByteString' => false));
-//
-//                    // collect file information
-                    $avatarfileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
-                    $fileExt = pathinfo($adapter->getFileName(), PATHINFO_EXTENSION);
+        // if the form doesn't validate, pass to view and return
+        if($profileForm->isValid($formData)){
+          // remove avatar if checkbox is set
+          if($formData['removeAvatar'] == 1){
+            $this->_em->remove($user->getAvatar());
+            $user->setAvatar(null);
+          }else{
+            // handle avatar creation
+            $filename = $user->getId();
+            $storageDir = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR;
 
-//                    // store file in database to get an id
-                    $data = array();
-                    $data["size"] = $adapter->getFileSize('avatar');
-//                    //if the mime type is always application/octet-stream, then the
-//                    //mime magic and fileinfo extensions are probably not installed
-                    /* if($file->getExtension() == 'jpg' || $file->getExtension() == 'jpeg' || $file->getExtension() == 'gif' || $file->getExtension() == 'png' || $file->getExtension() == 'tiff'){
-                      header("Content-type: image/" . $file->getExtension());
-                      }else{
-                      header("Content-type: " . $file->getMimeType());
-                      } */
-                    $data["mimetype"] = $adapter->getMimeType('avatar');
-                    $data["mimetype"] = "image/" . $fileExt;
-                    $data["filename"] = $avatarfileName;
-                    $data["extension"] = $fileExt;
-                    $data["location"] = "application" . DIRECTORY_SEPARATOR . "storage" . DIRECTORY_SEPARATOR . "files";
-//
-                    $file = new Application_Model_File($data);
-                    $id = $this->_em->persist($file);
-                    $this->_em->flush();
-
-                    // select the user and update the values
-                    $user->setFirstname($this->getRequest()->getParam('firstname'));
-                    $user->setLastname($this->getRequest()->getParam('lastname'));
-                    var_dump($file);
-                   // $user->setAvatar($file->getId());//alt
-                     Unplagged_Helper::notify("user_updated_profile", $user, $user);
-                    // write back to persistence manage and flush it
-                    $this->_em->persist($user);
-                    $this->_em->flush();
-
-                    $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
-                    // $this->_helper->redirector('index', 'index');
+            $uploader = new Unplagged_Uploader($filename, null, $storageDir, 'avatar');
+            $avatar = $uploader->upload();
+            if($avatar){
+              $avatar = $uploader->crop(50, 50);
+              if($avatar){
+                // remove old avatar, if there is one stored
+                if($user->getAvatar()){
+                  $this->_em->remove($user->getAvatar());
                 }
+                $this->_em->persist($avatar);
+
+                $user->setAvatar($avatar);
+              }
             }
+          }
+          $user->setFirstname($formData['firstname']);
+          $user->setLastname($formData['lastname']);
+
+          Unplagged_Helper::notify("user_updated_profile", $user, $user);
+
+          // write back to persistence manage and flush it
+          $this->_em->persist($user);
+          $this->_em->flush();
+
+          $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
+          // $this->_helper->redirector('index', 'index');
+        }
+      }
 
       // send form to view
       $this->view->profileForm = $profileForm;
     }
     Zend_Layout::getMvcInstance()->sidebar = null;
     Zend_Layout::getMvcInstance()->cases = null;
+  }
+
+  private function handleAvatarUpload(){
+    
+  }
+
+  /**
+   * Takes the data to create an Application_Model_File object.
+   * 
+   * @param Zend_File_Transfer $adapter
+   * @param array $fileNames
+   * @param array $pathinfo
+   * @param string $description
+   * @param string $storageDir
+   * @return \Application_Model_File 
+   */
+  private function createFileObject($adapter, $fileName, $pathinfo, $description, $storageDir, $user){
+    $data = array();
+    $data['size'] = $adapter->getFileSize();
+    //if the mime type is always application/octet-stream, then the 
+    //mime magic and fileinfo extensions are probably not installed
+    $data['mimetype'] = $adapter->getMimeType();
+    $data['filename'] = $fileName;
+    $data['extension'] = $pathinfo['extension'];
+    $data['location'] = $storageDir;
+    $data['description'] = $description;
+    $data['localFilename'] = $fileName;
+    $data['uploader'] = $user;
+
+    $file = new Application_Model_File($data);
+
+    return $file;
   }
 
   /**

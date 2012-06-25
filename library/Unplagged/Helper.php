@@ -205,6 +205,13 @@ class Unplagged_Helper{
     }
   }
 
+  public static function getAvatarPath(Application_Model_User $user){
+    if(!$user->getAvatar()){
+      return '/images/default-avatar.png';
+    }
+
+    return '/image/show/id/' . $user->getAvatar()->getId();
+  }
 }
 
 ?>

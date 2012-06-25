@@ -42,27 +42,28 @@ class ImageController extends Unplagged_Controller_Action{
 
     if(!empty($input->id)){
       $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
-
       if($file){
-        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
-        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
-          $response->setHttpResponseCode(403);
-        }else{
-          $localPath = $file->getFullPath();
-          $allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
-
-          $response = $this->getResponse();
-          if(file_exists($localPath)){
-            if(in_array($file->getExtension(), $allowedExtensions)){
-              $response->setHeader('Content-type', 'image/' . $file->getExtension());
-            }else{
-              $response->setHeader('Content-type', $file->getMimeType());
-            }
-
-            readfile($localPath);
-          }else{
-            $response->setHttpResponseCode(404);
+        if(!$file->getFolder()){
+          $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
+          if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+            $response->setHttpResponseCode(403);
           }
+        }
+        
+        $localPath = $file->getFullPath();
+        $allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
+
+        $response = $this->getResponse();
+        if(file_exists($localPath)){
+          if(in_array($file->getExtension(), $allowedExtensions)){
+            $response->setHeader('Content-type', 'image/' . $file->getExtension());
+          }else{
+            $response->setHeader('Content-type', $file->getMimeType());
+          }
+
+          readfile($localPath);
+        }else{
+          $response->setHttpResponseCode(404);
         }
       }else{
         $this->_helper->FlashMessenger('No file found.');

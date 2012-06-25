@@ -40,7 +40,7 @@ foreach($inheritedValues as $permission => $valueRoleIds){
         <?php $user = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneByRole($roleId); ?>
     <?php if($user){ ?>
         <div class="well" data-source="<?php echo $this->element->getName(); ?>" data-id="<?php echo $roleId; ?>">
-          <img class="avatar no-shadow" src="<?php echo $user->getAvatar(); ?>">
+          <img class="avatar no-shadow" src="<?php echo Unplagged_Helper::getAvatarPath($user); ?>">
           <div class="names">
             <span class="username"><?php echo $user->getUsername(); ?></span>
           </div>
