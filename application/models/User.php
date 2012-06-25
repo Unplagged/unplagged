@@ -272,16 +272,8 @@ class Application_Model_User extends Application_Model_Base{
     return $this->files->contains($file);
   }
 
-  /**
-   * @todo Would probably be better to handle the default somewhere else to keep this class clean
-   */
   public function getAvatar(){
     return $this->avatar;
-/*    if(empty($this->avatar)){
-      return '/images/default-avatar.png';
-    }
-
-    return '/image/view/' . $this->avatar->getId();*/
   }
 
   public function getDirectName(){
@@ -297,7 +289,7 @@ class Application_Model_User extends Application_Model_Base{
 
     $result['id'] = $this->id;
     $result['username'] = $this->username;
-    //$result['avatar'] = $this->getAvatar();
+    $result['avatar'] = Unplagged_Helper::getAvatarPath($this);
 
     return $result;
   }
