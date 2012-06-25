@@ -440,6 +440,10 @@ header[role=banner] h1 {
   left: 20px;
 }
 
+header[role=banner] h1 a {
+  display: block;
+}
+
 .beta-patch {
   background: url('../images/beta_patch.png') no-repeat left top;
   display: inline-block;
