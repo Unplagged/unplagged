@@ -89,6 +89,9 @@
           //take the data that was set in the file on QueueChange, so that it gets also uploaded
           uploader.settings['multipart_params'].description = file.description;
           uploader.settings['multipart_params'].newName = file.newName;
+        },
+        UploadComplete: function(uploader, file){
+          window.location = '/user/files';
         }
       },
       multipart_params: {

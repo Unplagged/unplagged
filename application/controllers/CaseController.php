@@ -56,7 +56,11 @@ class CaseController extends Unplagged_Controller_Action{
   }
 
   public function publishAction(){
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('id'=>'Digits', 'title'=> array(
+        'Alnum',
+        'StringTrim',
+        'allowEmpty' => true
+    )), null, $this->_getAllParams());
 
     $case = $this->_em->getRepository('Application_Model_Case')->findOneById($input->id);
     $user = Zend_Registry::getInstance()->user;
