@@ -310,25 +310,55 @@ class UserController extends Unplagged_Controller_Action{
       $profileForm = new Application_Form_User_Profile($input->id);
 
       // form has been submitted through post request
-      if($this->_request->isPost()){
-        $formData = $this->_request->getPost();
+      if ($this->_request->isPost()) {
+                $formData = $this->_request->getPost();
 
-        // if the form doesn't validate, pass to view and return
-        if($profileForm->isValid($formData)){
-          // select the user and update the values
-          $user->setFirstname($this->getRequest()->getParam('firstname'));
-          $user->setLastname($this->getRequest()->getParam('lastname'));
+                // if the form doesn't validate, pass to view and return
+                if ($profileForm->isValid($formData)) {
+                    //print_r($formData);
+                    // echo "profileForm->isValid(formData)";
 
-          // write back to persistence manage and flush it
-          $this->_em->persist($user);
-          $this->_em->flush();
+                    $adapter = new Zend_File_Transfer_Adapter_Http();
+                    $adapter->setOptions(array('useByteString' => false));
+//
+//                    // collect file information
+                    $avatarfileName = pathinfo($adapter->getFileName(), PATHINFO_BASENAME);
+                    $fileExt = pathinfo($adapter->getFileName(), PATHINFO_EXTENSION);
 
-          Unplagged_Helper::notify("user_updated_profile", $user, $user);
+//                    // store file in database to get an id
+                    $data = array();
+                    $data["size"] = $adapter->getFileSize('avatar');
+//                    //if the mime type is always application/octet-stream, then the
+//                    //mime magic and fileinfo extensions are probably not installed
+                    /* if($file->getExtension() == 'jpg' || $file->getExtension() == 'jpeg' || $file->getExtension() == 'gif' || $file->getExtension() == 'png' || $file->getExtension() == 'tiff'){
+                      header("Content-type: image/" . $file->getExtension());
+                      }else{
+                      header("Content-type: " . $file->getMimeType());
+                      } */
+                    $data["mimetype"] = $adapter->getMimeType('avatar');
+                    $data["mimetype"] = "image/" . $fileExt;
+                    $data["filename"] = $avatarfileName;
+                    $data["extension"] = $fileExt;
+                    $data["location"] = "application" . DIRECTORY_SEPARATOR . "storage" . DIRECTORY_SEPARATOR . "files";
+//
+                    $file = new Application_Model_File($data);
+                    $id = $this->_em->persist($file);
+                    $this->_em->flush();
 
-          $this->_helper->FlashMessenger('User Profile saved successfully.');
-          $this->_helper->redirector('index', 'index');
-        }
-      }
+                    // select the user and update the values
+                    $user->setFirstname($this->getRequest()->getParam('firstname'));
+                    $user->setLastname($this->getRequest()->getParam('lastname'));
+                    var_dump($file);
+                   // $user->setAvatar($file->getId());//alt
+                     Unplagged_Helper::notify("user_updated_profile", $user, $user);
+                    // write back to persistence manage and flush it
+                    $this->_em->persist($user);
+                    $this->_em->flush();
+
+                    $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
+                    // $this->_helper->redirector('index', 'index');
+                }
+            }
 
       // send form to view
       $this->view->profileForm = $profileForm;
