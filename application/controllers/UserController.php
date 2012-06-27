@@ -121,6 +121,7 @@ class UserController extends Unplagged_Controller_Action{
     $this->setTitle('Personal Files');
 
     $user = Zend_Registry::getInstance()->user;
+    $currentCase = $user->getCurrentCase();
     $userFiles = $user->getFiles();
 
     $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($userFiles->toArray()));
@@ -132,10 +133,12 @@ class UserController extends Unplagged_Controller_Action{
     foreach($paginator as $file){
       $file->actions = array();
 
-      $action['link'] = '/file/parse/id/' . $file->getId();
-      $action['label'] = 'Parse';
-      $action['icon'] = 'images/icons/page_gear.png';
-      $file->actions[] = $action;
+      if($currentCase){
+        $action['link'] = '/file/parse/id/' . $file->getId();
+        $action['label'] = 'Create document';
+        $action['icon'] = 'images/icons/page_gear.png';
+        $file->actions[] = $action;
+      }
 
       $action['link'] = '/file/download/id/' . $file->getId();
       $action['label'] = 'Download';
@@ -148,11 +151,14 @@ class UserController extends Unplagged_Controller_Action{
         $action['icon'] = 'images/icons/delete.png';
         $file->actions[] = $action;
       }
-      $action['link'] = '/case/add-file/id/' . $file->getId();
-      $action['label'] = 'Add to current case';
-      $action['icon'] = 'images/icons/package_add.png';
-      $file->actions[] = $action;
-
+      if($currentCase){
+        if(!$currentCase->hasFile($file)){
+          $action['link'] = '/case/add-file/id/' . $file->getId();
+          $action['label'] = 'Add to current case';
+          $action['icon'] = 'images/icons/package_add.png';
+          $file->actions[] = $action;
+        }
+      }
 
       $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'authorize', 'base'=>$file));
       if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
@@ -170,29 +176,6 @@ class UserController extends Unplagged_Controller_Action{
     $this->_helper->viewRenderer->renderBySpec('list', array('controller'=>'file'));
     Zend_Layout::getMvcInstance()->sidebar = null;
     Zend_Layout::getMvcInstance()->cases = null;
-  }
-
-  public function addFileAction(){
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
-    $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
-    if($file){
-      $user = Zend_Registry::getInstance()->user;
-
-      if(!$user->hasFile($file)){
-        $user->addFile($file);
-        $this->_em->persist($user);
-        $this->_em->flush();
-        $this->_helper->FlashMessenger(array('success'=>'The file has successfully been added to your personal files.'));
-      }else{
-        $this->_helper->FlashMessenger(array('error'=>'The file already belongs to your personal files.'));
-      }
-    }else{
-      $this->_helper->FlashMessenger(array('error'=>'The specified file does not exist.'));
-    }
-
-    $this->_helper->viewRenderer->setNoRender(true);
-    $this->redirectToLastPage();
   }
 
   /**

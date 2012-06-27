@@ -210,8 +210,9 @@ class CaseController extends Unplagged_Controller_Action{
       foreach($paginator as $file):
         $file->actions = array();
 
+      
         $action['link'] = '/file/parse/id/' . $file->getId();
-        $action['label'] = 'OCR';
+        $action['label'] = 'Create document';
         $action['icon'] = 'images/icons/page_gear.png';
         $file->actions[] = $action;
 
@@ -227,10 +228,6 @@ class CaseController extends Unplagged_Controller_Action{
           $action['icon'] = 'images/icons/delete.png';
           $file->actions[] = $action;
         }
-        $action['link'] = '/user/add-file/id/' . $file->getId();
-        $action['label'] = 'Add to personal files';
-        $action['icon'] = 'images/icons/basket_put.png';
-        $file->actions[] = $action;
 
         $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'authorize', 'base'=>$file));
         if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){

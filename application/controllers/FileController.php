@@ -302,8 +302,22 @@ class FileController extends Unplagged_Controller_Action{
         if($deleted || !file_exists($localPath)){
           // set removed state in database record
           $file->remove();
-          
           $registry = Zend_Registry::getInstance();
+          
+          //@todo could be inefficient, but I got no better solution right now
+          //remove file from all users
+          $users = $registry->entitymanager->getRepository('Application_Model_User')->findAll();
+          foreach($users as $user){
+            $user->removeFile($file); 
+            $this->_em->persist($user);
+          }
+          
+          //remove file from all cases
+          $cases = $registry->entitymanager->getRepository('Application_Model_Case')->findAll();
+          foreach($cases as $case){
+            $case->removeFile($file); 
+            $this->_em->persist($case);
+          }
           
           $user = $registry->user;
           $user->removeFile($file);
