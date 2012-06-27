@@ -2340,6 +2340,9 @@ li.plupload_droptext {
     border-bottom: 1px solid #eee; 
     position: relative;
     padding-left: 50%;
+    word-wrap: break-word;
+    height: auto;
+    min-height: 23px;
   }
   table.default td.no-label {
     padding-left: 5px;
@@ -2363,6 +2366,7 @@ li.plupload_droptext {
   nav .navigation li a {
     font-size: 12pt;
     padding: 5px 0 7px 0;
+    display: block;
   }
   nav .navigation li {
     display: block;
@@ -2370,7 +2374,14 @@ li.plupload_droptext {
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
+    width: 50%;
+    float: left;
   }
+  
+  nav .navigation .home-icon {
+    margin: auto;
+  }
+  
   nav .navigation li:hover > ul { 
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -2393,6 +2404,13 @@ li.plupload_droptext {
   }
   nav .navigation li > ul li:hover {
     background-color: #f7f7f7;
+  }
+}
+
+@media only screen and (max-width: 320px){
+  nav .navigation li{
+    width: auto;
+    float: none;
   }
 }
 

@@ -57,7 +57,7 @@ $(document).ready(function(){
 
   //wrap home menu button, so that icon gets shown
   var homeButton = $('header[role=banner] .navigation .home');
-  homeButton.wrapInner('<span class="ir"/>');
+  homeButton.wrapInner('<span class="ir home-icon"/>');
   
   // executes a simtext comparison in fragment modify form
   function compareTexts() {

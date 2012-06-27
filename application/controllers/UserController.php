@@ -170,7 +170,7 @@ class UserController extends Unplagged_Controller_Action{
     }
 
     $this->view->paginator = $paginator;
-    $this->view->uploadLink = '/file/upload?area=personal';
+    $this->view->uploadLink = '/file/upload';
 
     //change the view to the one from the file controller
     $this->_helper->viewRenderer->renderBySpec('list', array('controller'=>'file'));
