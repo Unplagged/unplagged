@@ -81,6 +81,12 @@ class FileController extends Unplagged_Controller_Action{
     }
   }
 
+  /**
+   * Adds the given file to the current case.
+   * 
+   * @param Application_Model_File $file
+   * @param Application_Model_User $user 
+   */
   private function addToCase(Application_Model_File $file, Application_Model_User $user){
     $currentCase = $user->getCurrentCase();
     
@@ -278,6 +284,9 @@ class FileController extends Unplagged_Controller_Action{
    * Deletes the file specified by the id parameter. 
    */
   public function deleteAction(){
+    $this->view->layout()->disableLayout();
+    $this->_helper->viewRenderer->setNoRender(true);
+    
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     if(!empty($input->id)){
@@ -293,6 +302,19 @@ class FileController extends Unplagged_Controller_Action{
         if($deleted || !file_exists($localPath)){
           // set removed state in database record
           $file->remove();
+          
+          $registry = Zend_Registry::getInstance();
+          
+          $user = $registry->user;
+          $user->removeFile($file);
+          $this->_em->persist($user);
+          
+          //remove from public files
+          $guestId = $registry->entitymanager->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
+          $guest = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($guestId->getValue());
+          $guest->removeFile($file);
+          $this->_em->persist($guest);
+          
           $this->_em->persist($file);
           $this->_em->flush();
           $this->_helper->FlashMessenger(array('success'=>'The file was deleted successfully.'));
@@ -304,13 +326,7 @@ class FileController extends Unplagged_Controller_Action{
       }
     }
 
-    $this->_helper->redirector('list', 'file');
-
-    // disable view
-    $this->view->layout()->disableLayout();
-    $this->_helper->viewRenderer->setNoRender(true);
+    $this->redirectToLastPage();
   }
 
 }
-
-?>

@@ -15,19 +15,36 @@
     //when files are added, but does when files are removed during the dialog phase
     var fired = false;
     
+    function getUrlVars() {
+      var vars = {};
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+      });
+      return vars;
+    }
+
     
     function createNextFileModal(dataBackdrop, fileCount){
       var addToCase = '';
+      var area = getUrlVars()['area'];
       if($this.attr('data-showAddToCase')){
+        var checked = '';
+        if(area=='case'){
+          checked = 'checked="checked"';  
+        }
         addToCase =        
-          '      <dt id="addToCase-label">' + 
-          '        <label for="addToCase" class="optional">' + $this.attr('data-addToCase') + ':</label>' + 
-          '      </dt>' +
-          '      <dd id="addToCase-element">' +
-          '       <input type="checkbox" id="addToCase" class="addToCase" />' +
-          '      </dd>'; 
+        '      <dt id="addToCase-label">' + 
+        '        <label for="addToCase" class="optional">' + $this.attr('data-addToCase') + ':</label>' + 
+        '      </dt>' +
+        '      <dd id="addToCase-element">' +
+        '       <input type="checkbox" id="addToCase" class="addToCase" ' + checked + '/>' +
+        '      </dd>'; 
       }
       
+      var checked = '';
+      if(area=='public'){
+        checked = 'checked="checked"';  
+      }
       var defaultFileModal = 
       '<div data-modal-number="' + (modalCounter + 1) + '" class="modal hide" data-backdrop="' + dataBackdrop + '">' +
       '  <div class="modal-header">' +
@@ -49,7 +66,7 @@
       '        <label for="makePublic" class="optional">' + $this.attr('data-makePublic') + ':</label>' + 
       '      </dt>' +
       '      <dd id="makePublic-element">' +
-      '       <input type="checkbox" id="makePublic" class="makePublic" />' +
+      '       <input type="checkbox" id="makePublic" class="makePublic" ' + checked + '/>' +
       '      </dd>' +
       addToCase + 
       '    </dl>' +

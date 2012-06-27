@@ -1252,10 +1252,10 @@ dl.zend_form dd dt {
   background-image: url(/images/icons/table_relationship.png);
 }
 
-#activity-stream {
-
-}
-
+.modal input, .modal textarea, .modal select, .modal .uneditable-input {
+  width: 80%;
+}  
+  
 #activity-stream .activity {
   border-bottom: 1px #EFEFEF solid;
   padding: 5px 8px 8px 8px;

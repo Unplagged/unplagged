@@ -179,7 +179,8 @@ class Application_Model_File extends Application_Model_Base{
   }
 
   public function getDirectLink(){
-    return "/file/show/id/" . $this->id;
+    //return "/file/show/id/" . $this->id;
+    return "/file/list";
   }
 
   public function toArray(){

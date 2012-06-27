@@ -250,11 +250,15 @@ class Application_Model_User extends Application_Model_Base{
   }
 
   public function addFile(Application_Model_File $file){
-    return $this->files->add($file);
+    if(!$this->files->contains($file)){
+      $this->files->add($file);
+    }
   }
 
   public function removeFile(Application_Model_File $file){
-    return $this->file->removeElement($file);
+    if($this->files->contains($file)){
+      $this->files->removeElement($file);
+    }
   }
 
   public function getFiles(){

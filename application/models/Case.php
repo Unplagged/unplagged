@@ -201,7 +201,8 @@ class Application_Model_Case extends Application_Model_Base{
   }
 
   public function getDirectLink(){
-    return "/case/show/id/" . $this->id;
+    //return "/case/show/id/" . $this->id;
+    return "/case/list";
   }
 
   public function toArray(){
