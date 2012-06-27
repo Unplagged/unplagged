@@ -190,7 +190,7 @@ abstract class Application_Model_Base{
         //if(!$permission){
           $permission = new Application_Model_ModelPermission($this->getPermissionType(), $permissionType, $this);
         //}
-        
+          $this->addPermission($permission);
         //if(!$user->getRole()->hasPermission($permission)){
           $user->getRole()->addPermission($permission);
           $em->persist($permission);
@@ -332,4 +332,9 @@ abstract class Application_Model_Base{
     return $this->isRemoved;
   }
 
+  private function addPermission($permission){
+    if($this->permissions && !$this->permissions->contains($permission)){
+      $this->permissions->add($permission);
+    }
+  }
 }

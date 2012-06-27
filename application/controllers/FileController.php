@@ -30,19 +30,13 @@ class FileController extends Unplagged_Controller_Action{
   public function uploadAction(){
     if($this->_request->isPost()){
       $this->_helper->viewRenderer->setNoRender(true);
+      $this->_helper->layout()->disableLayout();
       $post = $this->_request->getPost();
-
-      
-      Zend_Registry::get('Log')->err($this->_request->getPost('newName'));
-      Zend_Registry::get('Log')->err('hier');
-      Zend_Registry::get('Log')->err(print_r($_POST));
       
       $uploadForm = new Application_Form_File_Upload();
       if($uploadForm->isValid($post)){
         $this->storeUpload();
       }else{
-        Zend_Registry::get('Log')->err(print_r($uploadForm));
-        Zend_Registry::get('Log')->err('{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}');
         $this->_helper->FlashMessenger(array('error'=>'The file "' . $file->getFilename() . '" could not be uploaded.'));
         echo '{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}';
       }
@@ -63,8 +57,16 @@ class FileController extends Unplagged_Controller_Action{
     if($file){
       $user = Zend_Registry::getInstance()->user;
       $user->addFile($file);
-
       $this->_em->persist($file);
+
+      if($this->_request->getPost('makePublic')==='true'){
+        $this->storePublic($file);  
+      }
+      
+      if($this->_request->getPost('addToCase')==='true'){
+        $this->addToCase($file, $user);  
+      }
+      
       $this->_em->persist($user);
       $this->_em->flush();
       
@@ -79,17 +81,47 @@ class FileController extends Unplagged_Controller_Action{
     }
   }
 
+  private function addToCase(Application_Model_File $file, Application_Model_User $user){
+    $currentCase = $user->getCurrentCase();
+    
+    if($currentCase){
+      $currentCase->addFile($file);
+      $this->_em->persist($currentCase);
+    }
+  }
+  
+  /**
+   * Adds the given file to the guest user, so that it can be displayed in the public files area.
+   * 
+   * @param Application_Model_File $file 
+   */
+  private function storePublic(Application_Model_File $file){
+    $registry = Zend_Registry::getInstance();
+    $guestId = $registry->entitymanager->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
+    $guest = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($guestId->getValue());  
+    
+    $guest->addFile($file);
+    
+    $this->_em->persist($guest);
+    $this->_em->flush();
+  }
+  
+  /**
+   * Shows the public files.
+   * 
+   * Public files are essentially all the files that registered for the guest user. 
+   */
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
 
     $this->setTitle('Public Files');
 
-    $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>null));
-    $query = 'SELECT b FROM Application_Model_File b';
-    $count = 'SELECT COUNT(b.id) FROM Application_Model_File b';
-    $orderBy = 'b.created DESC';
+    $registry = Zend_Registry::getInstance();
+    $guestId = $registry->entitymanager->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
+    $guest = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($guestId->getValue());
+    $guestFiles = $guest->getFiles();
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.folder'=>'IS NULL'), $orderBy, $permission));
+    $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Array($guestFiles->toArray()));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
@@ -119,11 +151,6 @@ class FileController extends Unplagged_Controller_Action{
         $action['icon'] = 'images/icons/delete.png';
         $file->actions[] = $action;
       }
-      $action['link'] = '/user/add-file/id/' . $file->getId();
-      $action['label'] = 'Add to personal files';
-      $action['icon'] = 'images/icons/basket_put.png';
-      $file->actions[] = $action;
-
 
       $action['link'] = '/case/add-file/id/' . $file->getId();
       $action['label'] = 'Add to current case';

@@ -1,6 +1,17 @@
 <?php
     $this->title = $this->translate('Upload files');
     $this->headTitle($this->title);
+    
+    $currentCase = Zend_Registry::get('user')->getCurrentCase();
 ?>
 
-<div id="upload-queue" data-close="<?php echo $this->translate('Close'); ?>" data-redirect="<?php echo $this->baseUrl('user/files'); ?>" data-makePublic="<?php echo $this->translate('Make public'); ?>" data-save="<?php echo $this->translate('Save'); ?>" data-file-information="<?php echo $this->translate('File information'); ?>" data-description="<?php echo $this->translate('Description'); ?>" data-filename="<?php echo $this->translate('Filename'); ?>"></div>
+<div id="upload-queue"
+     data-showAddToCase="<?php echo ($currentCase) ? 'true': '';?>"
+     data-close="<?= $this->translate('Close'); ?>" 
+     data-addToCase="<?= $this->translate('Add to current case'); ?>" 
+     data-redirect="<?= $this->baseUrl('user/files'); ?>" 
+     data-makePublic="<?= $this->translate('Make public'); ?>" 
+     data-save="<?= $this->translate('Save'); ?>" 
+     data-file-information="<?= $this->translate('File information'); ?>" 
+     data-description="<?= $this->translate('Description'); ?>" 
+     data-filename="<?= $this->translate('Filename'); ?>"></div>

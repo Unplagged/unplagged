@@ -17,6 +17,17 @@
     
     
     function createNextFileModal(dataBackdrop, fileCount){
+      var addToCase = '';
+      if($this.attr('data-showAddToCase')){
+        addToCase =        
+          '      <dt id="addToCase-label">' + 
+          '        <label for="addToCase" class="optional">' + $this.attr('data-addToCase') + ':</label>' + 
+          '      </dt>' +
+          '      <dd id="addToCase-element">' +
+          '       <input type="checkbox" id="addToCase" class="addToCase" />' +
+          '      </dd>'; 
+      }
+      
       var defaultFileModal = 
       '<div data-modal-number="' + (modalCounter + 1) + '" class="modal hide" data-backdrop="' + dataBackdrop + '">' +
       '  <div class="modal-header">' +
@@ -38,8 +49,9 @@
       '        <label for="makePublic" class="optional">' + $this.attr('data-makePublic') + ':</label>' + 
       '      </dt>' +
       '      <dd id="makePublic-element">' +
-      '       <input type="checkbox" id="makePublic" />' +
+      '       <input type="checkbox" id="makePublic" class="makePublic" />' +
       '      </dd>' +
+      addToCase + 
       '    </dl>' +
       '  </div>' +
       '  <div class="modal-footer">' +
@@ -95,8 +107,12 @@
           //take the data that was set in the file on QueueChange, so that it gets also uploaded
           uploader.settings['multipart_params'].description = file.description;
           uploader.settings['multipart_params'].newName = file.newName;
+          uploader.settings['multipart_params'].makePublic = file.makePublic;
+          if($this.attr('data-showAddToCase')){
+            uploader.settings['multipart_params'].addToCase = file.addToCase;
+          }
         },
-        UploadComplete: function(uploader, file){
+        UploadComplete: function(){
           window.location = $this.attr('data-redirect');
         }
       },
@@ -118,8 +134,12 @@
       if(file){
         file.description = fileModal.find('.description').val();
         file.newName = fileModal.find('.newName').val();
-        file.makePublic = fileModal.find('.makePublic').val();
-        file.addToCase = fileModal.find('.addToCase').val();
+        if(fileModal.find('.makePublic:checked').length>0){
+          file.makePublic = true;
+        }
+        if(fileModal.find('.addToCase:checked').length>0){
+          file.addToCase = true;
+        }
       }
       $.data(fileModal, 'current-file', null);
       

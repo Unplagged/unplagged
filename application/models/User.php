@@ -115,6 +115,7 @@ class Application_Model_User extends Application_Model_Base{
    *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
    *      inverseJoinColumns={@JoinColumn(name="file_id", referencedColumnName="id")}
    *      )
+   * @OrderBy({"created" = "DESC"})
    */
   private $files;
   

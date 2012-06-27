@@ -73,6 +73,7 @@ class Application_Model_Case extends Application_Model_Base{
    *      joinColumns={@JoinColumn(name="case_id", referencedColumnName="id")},
    *      inverseJoinColumns={@JoinColumn(name="file_id", referencedColumnName="id")}
    *      )
+   * @OrderBy({"created" = "DESC"})
    */
   private $files;
 

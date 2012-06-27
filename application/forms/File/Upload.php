@@ -32,11 +32,14 @@ class Application_Form_File_Upload extends Zend_Form{
     $descriptionElement = new Zend_Form_Element_Textarea('description');
 
     $elementNewName = new Zend_Form_Element_Text('newName');
-    //$elementNewName->setRequired(true);
+    $elementMakePublic = new Zend_Form_Element_Checkbox('makePublic');
+    $elementAddToCase = new Zend_Form_Element_Checkbox('addToCase');
 
     $this->addElements(array(
       $elementNewName,
-      $descriptionElement
+      $descriptionElement,
+      $elementMakePublic,
+      $elementAddToCase
     ));
   }
 
