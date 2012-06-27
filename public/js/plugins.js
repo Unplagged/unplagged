@@ -22,13 +22,12 @@
       });
       return vars;
     }
-
     
     function createNextFileModal(dataBackdrop, fileCount){
       var addToCase = '';
       var area = getUrlVars()['area'];
+      var checked = '';
       if($this.attr('data-showAddToCase')){
-        var checked = '';
         if(area=='case'){
           checked = 'checked="checked"';  
         }
@@ -41,7 +40,7 @@
         '      </dd>'; 
       }
       
-      var checked = '';
+      checked = '';
       if(area=='public'){
         checked = 'checked="checked"';  
       }
@@ -85,7 +84,7 @@
     this.pluploadQueue({
       runtimes : 'html5,flash,silverlight,html4',
       url : '/file/upload',
-      max_file_size : '1000mb',
+      max_file_size : $this.attr('data-maxFileSize') + 'b',
       //chunk_size : '5mb', //disable because html5 + chunking kills the filename currently
       unique_names : true,
       flash_swf_url : '/js/libs/plupload/js/plupload.flash.swf',

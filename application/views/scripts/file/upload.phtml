@@ -1,12 +1,36 @@
 <?php
-    $this->title = $this->translate('Upload files');
-    $this->headTitle($this->title);
-    
-    $currentCase = Zend_Registry::get('user')->getCurrentCase();
+$this->title = $this->translate('Upload files');
+$this->headTitle($this->title);
+
+$currentCase = Zend_Registry::get('user')->getCurrentCase();
+
+function return_bytes($val){
+  $val = trim($val);
+  $last = strtolower($val[strlen($val) - 1]);
+  switch($last){
+    // The 'G' modifier is available since PHP 5.1.0
+    case 'g':
+      $val *= 1024;
+    case 'm':
+      $val *= 1024;
+    case 'k':
+      $val *= 1024;
+  }
+
+  return $val;
+}
+
+$maxFileSize = return_bytes(ini_get('upload_max_filesize'));
+$maxPostSize = return_bytes(ini_get('post_max_size'));
+
+if($maxPostSize<$maxFileSize){
+  $maxFileSize = $maxPostSize;  
+}
 ?>
 
 <div id="upload-queue"
-     data-showAddToCase="<?php echo ($currentCase) ? 'true': '';?>"
+     data-maxFileSize="<?= $maxPostSize; ?>"
+     data-showAddToCase="<?php echo ($currentCase) ? 'true' : ''; ?>"
      data-close="<?= $this->translate('Close'); ?>" 
      data-addToCase="<?= $this->translate('Add to current case'); ?>" 
      data-redirect="<?= $this->baseUrl('user/files'); ?>" 
