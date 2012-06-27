@@ -1,14 +1,25 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
- * Description of Uploader
- *
- * @author benjamin
+ * This class can be used to upload files.
  */
 class Unplagged_Uploader{
 
@@ -25,6 +36,11 @@ class Unplagged_Uploader{
     $this->folder = $folder;
   }
 
+  /**
+   * Stores the uploaded file with the parameters specified in the constructor.
+   * 
+   * @return null 
+   */
   public function upload(){
     $adapter = new Zend_File_Transfer();
     if($adapter->getFileName()){
@@ -159,5 +175,3 @@ class Unplagged_Uploader{
   }
 
 }
-
-?>

@@ -32,7 +32,7 @@ class Application_Form_File_Upload extends Zend_Form{
     $descriptionElement = new Zend_Form_Element_Textarea('description');
 
     $elementNewName = new Zend_Form_Element_Text('newName');
-    $elementNewName->setRequired(true);
+    //$elementNewName->setRequired(true);
 
     $this->addElements(array(
       $elementNewName,

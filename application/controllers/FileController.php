@@ -29,14 +29,22 @@ class FileController extends Unplagged_Controller_Action{
 
   public function uploadAction(){
     if($this->_request->isPost()){
+      $this->_helper->viewRenderer->setNoRender(true);
       $post = $this->_request->getPost();
 
+      
+      Zend_Registry::get('Log')->err($this->_request->getPost('newName'));
+      Zend_Registry::get('Log')->err('hier');
+      Zend_Registry::get('Log')->err(print_r($_POST));
+      
       $uploadForm = new Application_Form_File_Upload();
       if($uploadForm->isValid($post)){
         $this->storeUpload();
       }else{
-        var_dump($uploadForm->getErrors());
-        die('{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}');
+        Zend_Registry::get('Log')->err(print_r($uploadForm));
+        Zend_Registry::get('Log')->err('{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}');
+        $this->_helper->FlashMessenger(array('error'=>'The file "' . $file->getFilename() . '" could not be uploaded.'));
+        echo '{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}';
       }
     }
   }
@@ -64,9 +72,10 @@ class FileController extends Unplagged_Controller_Action{
       Unplagged_Helper::notify('file_uploaded', $file, $user);
       $this->_helper->FlashMessenger(array('success'=>array('The file "%s" was successfully uploaded.', array($file->getFilename()))));
 
-      die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
+      echo '{"jsonrpc" : "2.0", "result" : null, "id" : "id"}';
     }else{
       $this->_helper->FlashMessenger(array('error'=>'The file "' . $file->getFilename() . '" could not be uploaded.'));
+      echo '{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}';
     }
   }
 
@@ -169,10 +178,6 @@ class FileController extends Unplagged_Controller_Action{
       $this->_helper->FlashMessenger('The file couldn\'t be found.');
       $this->_helper->redirector('list', 'file');
     }
-  }
-
-  private function scheduleOcr(Application_Model_File $file){
-    
   }
 
   /**
