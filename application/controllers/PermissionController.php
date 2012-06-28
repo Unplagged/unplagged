@@ -26,14 +26,17 @@
 class PermissionController extends Unplagged_Controller_Action{
 
   public function editRoleAction(){
+    //get the role to edit
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
     $rolePermissions = $this->_em->getRepository('Application_Model_User_Role')->findOneById($input->id);
 
     $this->setTitle('Permissions for ' . $rolePermissions->getRoleId());
 
-    $pagePermissions = $this->_em->getRepository('Application_Model_PagePermission')->findAll();
-    $modelPermissions = $this->_em->getRepository('Application_Model_ModelPermission')->findAll();
+    //find all permissions to display
+    $pagePermissions = $this->_em->getRepository('Application_Model_PagePermission')->findByBase(null);
+    $modelPermissions = $this->_em->getRepository('Application_Model_ModelPermission')->findByBase(null);
 
+    //combine all permissions with the current state of the users allowed permissions
     $outputPermissions = array();
     $outputPermissions['pagePermissions'] = $this->initPermissionData($pagePermissions, $rolePermissions);
     $outputPermissions['modelPermissions'] = $this->initPermissionData($modelPermissions, $rolePermissions);
@@ -60,12 +63,10 @@ class PermissionController extends Unplagged_Controller_Action{
     $outputPermissions = array();
 
     foreach($permissions as $possiblePermission){
-      if($possiblePermission->getBase() === Null){
         $permissionName = $possiblePermission->getAction();
         $controllerName = $possiblePermission->getType();
 
-        $outputPermissions[$controllerName][$permissionName] = array('allowed'=>false, 'inherited'=>false);
-      }
+        $outputPermissions[$controllerName][$permissionName] = array('allowed'=>false, 'inherited'=>false, 'id'=>$possiblePermission->getId());
     }
 
     //set all permissions that this role got as active and inherited
@@ -115,26 +116,16 @@ class PermissionController extends Unplagged_Controller_Action{
     return $outputPermissions;
   }
 
-  public function handleEditData(Application_Form_Permission_EditRole $editForm, Application_Model_User_Role $role){
+  private function handleEditData(Application_Form_Permission_EditRole $editForm, Application_Model_User_Role $role){
     $formData = $this->_request->getPost();
     if($editForm->isValid($formData)){
-      foreach($formData as $groupName=>$permissionGroup){
+      foreach($formData as $permissionGroup){
         if(is_array($permissionGroup)){
           
           foreach($permissionGroup as $permissionName=>$value){
 
-            //get the ending from the checkbox name and turn camelCase into hy-phens
-            $actionName = substr(preg_replace_callback ('/([A-Z])/', create_function('$matches','return \'-\' . strtolower($matches[1]);'), substr($permissionName, strrpos($permissionName, '_') + 1)), 1);
-
-            if(!$actionName){
-              $actionName = '';
-            }
-            $permission = null;
-            if(substr($groupName, 0, stripos($groupName, '_'))==='modelPermissions'){
-              $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('action'=>$actionName, 'type'=>substr($groupName, strrpos($groupName, '_') + 1), 'base'=>null));
-            } else {
-              $permission = $this->_em->getRepository('Application_Model_PagePermission')->findOneBy(array('action'=>$actionName, 'type'=>substr($groupName, strrpos($groupName, '_') + 1), 'base'=>null));
-            }
+            $permissionId = substr($permissionName, strrpos($permissionName, '_')+1);
+            $permission = $this->_em->getRepository('Application_Model_Permission')->findOneById($permissionId);
 
             if($permission){
               if($value == '1'){

@@ -32,7 +32,7 @@ class Application_Form_Permission_EditRole extends Zend_Form{
         $elements = array();
 
         foreach($permissionGroup as $permissionName=>$permissionData){
-          $checkboxElement = new Zend_Form_Element_Checkbox($permissionKey . '_' .$groupLabel . '_' . implode('', array_map('ucwords', explode('-', $permissionName))), array('belongsTo'=>$permissionKey . '_' .$groupLabel));
+          $checkboxElement = new Zend_Form_Element_Checkbox('permission_' . $permissionData['id'], array('belongsTo'=>$permissionKey . '_' .$groupLabel));
           $checkboxElement->setLabel($permissionName);
           $class = 'btn btn-checkbox';
           if($permissionData['allowed'] === true){

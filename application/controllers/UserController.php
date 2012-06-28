@@ -284,6 +284,7 @@ class UserController extends Unplagged_Controller_Action{
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($input->id);
     if(empty($user)){
       $this->_helper->redirector('index', 'index');
+      //@todo this check doesn't make sense as it is set to this exact value above
     }elseif($this->_defaultNamespace->userId != $input->id){
       $this->_helper->FlashMessenger('No permission to edit other users.');
       $this->_helper->redirector('index', 'index');
