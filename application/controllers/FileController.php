@@ -265,6 +265,9 @@ class FileController extends Unplagged_Controller_Action{
 
               $this->_em->persist($document);
               $this->_em->flush();
+              
+              // add notification to activity stream
+              Unplagged_Helper::notify("document_created", $document, Zend_Registry::getInstance()->user);
               $this->_helper->FlashMessenger(array('success'=>'The OCR of the file was successful.'));
             }
           }

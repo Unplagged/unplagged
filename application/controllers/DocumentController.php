@@ -55,8 +55,7 @@ class DocumentController extends Unplagged_Controller_Action{
         $this->_em->flush();
 
         // notification
-        $user = Zend_Registry::getInstance()->user;
-        Unplagged_Helper::notify('document_created', $result, $user);
+        Unplagged_Helper::notify('document_created', $result, Zend_Registry::getInstance()->user);
 
         $this->_helper->FlashMessenger(array('success'=>'The document was created successfully.'));
         $this->_helper->redirector('list', 'document');
@@ -105,8 +104,7 @@ class DocumentController extends Unplagged_Controller_Action{
 
         if($result){
           // log notification
-          $user = Zend_Registry::getInstance()->user;
-          Unplagged_Helper::notify("document_updated", $result, $user);
+          Unplagged_Helper::notify("document_updated", $result, Zend_Registry::getInstance()->user);
 
           $this->_helper->FlashMessenger(array('success'=>'The document was updated successfully.'));
           $params = array('id'=>$document->getId());

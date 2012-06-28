@@ -131,8 +131,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
       $this->em->flush();
 
       // notification
-      $user = $task->getInitiator();
-      Unplagged_Helper::notify("simtext_report_created", $report, $user);
+      Unplagged_Helper::notify("simtext_report_created", $report, $task->getInitiator());
     }
   }
 

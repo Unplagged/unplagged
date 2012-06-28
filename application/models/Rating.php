@@ -79,11 +79,11 @@ class Application_Model_Rating extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    return "rating";
+    return $this->source->getDirectName();
   }
 
   public function getDirectLink(){
-    return "/rating/show/id/" . $this->id;
+    return $this->source->getDirectLink();
   }
 
   public function getUser(){
@@ -101,7 +101,7 @@ class Application_Model_Rating extends Application_Model_Base{
   public function getRating(){
     return $this->rating;
   }
-  
+
   public function setUser($user){
     $this->user = $user;
   }
@@ -125,7 +125,7 @@ class Application_Model_Rating extends Application_Model_Base{
     $result["reason"] = $this->reason;
     $result["rating"] = $this->rating;
     $result["user"] = $this->user->toArray();
-    if(!in_array('source', $hide)) {
+    if(!in_array('source', $hide)){
       $result["source"] = $this->source->toArray();
     }
     $result["created"] = Unplagged_Helper::jsTime($this->created);

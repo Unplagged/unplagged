@@ -49,6 +49,11 @@ class CommentController extends Unplagged_Controller_Action{
       $this->_em->persist($comment);
       $this->_em->flush();
 
+      // show a notification in the activity stream on comments, but on a notification
+      if(!($source instanceof Application_Model_Notification)) {
+        Unplagged_Helper::notify('comment_created', $comment, $user);
+      }
+      
       $result = $comment->toArray();
     }else{
       $result["errorcode"] = 500;

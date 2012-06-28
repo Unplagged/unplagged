@@ -112,8 +112,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
       if($result){
         // log fragment creation
-        $user = Zend_Registry::getInstance()->user;
-        Unplagged_Helper::notify("fragment_created", $result, $user);
+        Unplagged_Helper::notify("fragment_created", $result, Zend_Registry::getInstance()->user);
 
         $this->_helper->FlashMessenger(array('success'=>'The fragment was created successfully.'));
         $params = array('id'=>$result->getId());

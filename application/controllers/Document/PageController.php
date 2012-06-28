@@ -53,8 +53,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
           $this->_em->flush();
 
           // notification
-          $user = Zend_Registry::getInstance()->user;
-          Unplagged_Helper::notify('page_created', $result, $user);
+          Unplagged_Helper::notify('page_created', $result, Zend_Registry::getInstance()->user);
 
           $this->_helper->FlashMessenger(array('success'=>'The document page was created successfully.'));
           $params = array('id'=>$result->getId());
@@ -466,13 +465,6 @@ class Document_PageController extends Unplagged_Controller_Versionable{
 
       $this->_em->persist($task);
       $this->_em->flush();
-
-      /*
-        //$formData["documents"]
-        // notification @todo: add notification
-        $user = Zend_Registry::getInstance()->user;
-        Unplagged_Helper::notify("case_created", $case, $user);
-       */
 
       return $task;
     }

@@ -19,7 +19,7 @@ $cases = $query->getArrayResult();
   <h2><?php echo $this->escape($this->title); ?></h2>
   <div class="main">
     <div id="main-wrapper">
-      <div <?php if(!empty($sidebar)) echo 'id="main"'; ?>>
+      <div>
         <?php
         // content from each view, the rest of this page is global to all views
         echo $this->layout()->content;

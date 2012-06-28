@@ -44,7 +44,7 @@ class CaseController extends Unplagged_Controller_Action{
         $user->setCurrentCase($result);
         $this->_em->persist($user);
         $this->_em->flush();
-
+        
         $this->_helper->FlashMessenger(array('success'=>'The case was created successfully.'));
         $this->_helper->redirector('list', 'case');
       }

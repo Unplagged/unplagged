@@ -37,11 +37,6 @@ class SettingController extends Unplagged_Controller_Action{
       $result = $this->handleStateModifyData($modifyForm);
 
       if($result){
-        // notification
-        // @todo: add notification
-        //$user = Zend_Registry::getInstance()->user;
-        //Unplagged_Helper::notify("case_created", $result, $user);
-
         $this->_helper->FlashMessenger(array('success'=>'Your state was added successfully.'));
         $this->_redirect('setting/list-states');
       }
@@ -73,10 +68,6 @@ class SettingController extends Unplagged_Controller_Action{
         $result = $this->handleStateModifyData($modifyForm, $state);
 
         if($result){
-          // notification
-          //$user = Zend_Registry::getInstance()->user;
-          //Unplagged_Helper::notify("case_updated", $result, $user);
-
           $this->_helper->FlashMessenger(array('success'=>'The state was updated successfully.'));
           $this->_helper->redirector('list-states', 'setting');
         }
@@ -150,11 +141,6 @@ class SettingController extends Unplagged_Controller_Action{
       $result = $this->handleActionModifyData($modifyForm);
 
       if($result){
-        // notification
-        // @todo: add notification
-        //$user = Zend_Registry::getInstance()->user;
-        //Unplagged_Helper::notify("case_created", $result, $user);
-
         $this->_helper->FlashMessenger(array('success'=>'Your action was added successfully.'));
         $this->_redirect('setting/list-actions');
       }
@@ -186,10 +172,6 @@ class SettingController extends Unplagged_Controller_Action{
         $result = $this->handleActionModifyData($modifyForm, $action);
 
         if($result){
-          // notification
-          //$user = Zend_Registry::getInstance()->user;
-          //Unplagged_Helper::notify("case_updated", $result, $user);
-
           $this->_helper->FlashMessenger(array('success'=>'The action was updated successfully.'));
           $this->_helper->redirector('list-actions', 'setting');
         }
@@ -230,14 +212,14 @@ class SettingController extends Unplagged_Controller_Action{
       $action['label'] = 'Delete action';
       $action['icon'] = 'images/icons/delete.png';
       $aaction->actions[] = $action;
-      
+
     endforeach;
 
     $this->view->paginator = $paginator;
     $this->_helper->viewRenderer->renderBySpec('action/list', array('controller'=>'setting'));
   }
-  
-    /**
+
+  /**
    * Deletes a single action. 
    */
   public function deleteActionAction(){

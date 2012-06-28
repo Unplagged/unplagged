@@ -1165,6 +1165,10 @@ dl.zend_form dd dt {
   background-image: url(/images/icons/user.png);
 }
 
+.icon-star {
+  background-image: url(/images/icons/star.png);
+}
+
 .icon-case{
   background-image: url(/images/icons/package.png);
 }

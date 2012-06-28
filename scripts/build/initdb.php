@@ -165,6 +165,30 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("detection_re
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
+if(!($em->getRepository('Application_Model_Action')->findOneByName("comment_created"))){
+  unset($data);
+  $data["name"] = "comment_created";
+  $data["title"] = "New comment on %s created";
+  $data["description"] = "A new comment was created on the element.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
+if(!($em->getRepository('Application_Model_Action')->findOneByName("rating_created"))){
+  unset($data);
+  $data["name"] = "rating_created";
+  $data["title"] = "New rating for %s provided";
+  $data["description"] = "A new rating was provided for the element.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
+if(!($em->getRepository('Application_Model_Action')->findOneByName("rating_updated"))){
+  unset($data);
+  $data["name"] = "rating_updated";
+  $data["title"] = "Provided rating for %s was updated";
+  $data["description"] = "A provided rating for the element was updated.";
+  $notificationAction = new Application_Model_Action($data);
+  $em->persist($notificationAction);
+}
 // 2) init user states
 if(!($em->getRepository('Application_Model_State')->findOneByName("user_registered"))){
   unset($data);
@@ -191,6 +215,7 @@ if(!($em->getRepository('Application_Model_State')->findOneByName("user_locked")
   $state = new Application_Model_State($data);
   $em->persist($state);
 }
+
 
 // 3) report states
 if(!$em->getRepository('Application_Model_State')->findOneByName("report_running")){

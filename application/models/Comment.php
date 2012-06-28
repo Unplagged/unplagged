@@ -114,11 +114,11 @@ class Application_Model_Comment extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    return $this->title;
+    return $this->source->getDirectName();
   }
   
   public function getDirectLink(){
-    return "/comment/show/id/" . $this->id;
+    return $this->source->getDirectLink();
   }
 
   public function toArray($hide = array()){

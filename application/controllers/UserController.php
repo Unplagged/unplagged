@@ -28,7 +28,6 @@ class UserController extends Unplagged_Controller_Action{
     parent::init();
     $this->auth = Zend_Auth::getInstance();
 
-    Zend_Layout::getMvcInstance()->sidebar = 'default';
     Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository('Application_Model_Case')->findAll();
   }
 
@@ -174,7 +173,6 @@ class UserController extends Unplagged_Controller_Action{
 
     //change the view to the one from the file controller
     $this->_helper->viewRenderer->renderBySpec('list', array('controller'=>'file'));
-    Zend_Layout::getMvcInstance()->sidebar = null;
     Zend_Layout::getMvcInstance()->cases = null;
   }
 
@@ -340,7 +338,6 @@ class UserController extends Unplagged_Controller_Action{
       // send form to view
       $this->view->profileForm = $profileForm;
     }
-    Zend_Layout::getMvcInstance()->sidebar = null;
     Zend_Layout::getMvcInstance()->cases = null;
   }
 

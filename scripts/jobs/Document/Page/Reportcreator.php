@@ -121,8 +121,9 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
 
       $fragments = $task->getRessource()->getTarget()->getFragments();
 
-      $filename = $this->createReport($fragments, $task->getRessource());
-      // update task
+      $report = $this->createReport($fragments, $task->getRessource());
+      
+// update task
       $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("task_finished"));
       $task->setProgressPercentage(100);
 
@@ -130,8 +131,7 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
       $this->em->flush();
 
       // notification
-      //$user = ;
-      //Unplagged_Helper::notify("simtext_report_created", $report, $user);
+      Unplagged_Helper::notify("report_created", $report, $task->getInitiator());
     }
   }
 
@@ -183,7 +183,7 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
     $this->em->persist($report);
     $this->em->flush();
 
-    return $filename;
+    return $report;
   }
 
   private function addSources($array_html){

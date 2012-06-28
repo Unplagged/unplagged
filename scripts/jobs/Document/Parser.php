@@ -57,11 +57,11 @@ class Cron_Document_Parser extends Cron_Base{
         $this->em->persist($task);
 
         $this->em->flush();
-        $this->em->clear();
 
-        // notification
-//        $user = $task->getInitiator();
-//        Unplagged_Helper::notify("document_created", $document, $user);
+        // add notification to activity stream
+        Unplagged_Helper::notify("document_created", $document, $task->getInitiator());
+
+        $this->em->clear();
       }
     }
   }
@@ -76,6 +76,7 @@ class Cron_Document_Parser extends Cron_Base{
   }
 
 }
+
 $parser = new Cron_Document_Parser();
 $parser->start();
 ?>
