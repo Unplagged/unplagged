@@ -23,6 +23,17 @@
  */
 class Document_PageController extends Unplagged_Controller_Versionable{
 
+  public function init(){
+    parent::init();
+
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
+    if(!$case){
+      $errorText = 'You have to select a case, before you can access document pages.';
+      $this->_helper->FlashMessenger(array('error'=>$errorText));
+      $this->redirectToLastPage();
+    }
+  }
+  
   public function indexAction(){
     $this->_helper->redirector('list', 'document_page');
   }

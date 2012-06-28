@@ -168,8 +168,6 @@ class PermissionController extends Unplagged_Controller_Action{
     $this->view->systemRoles = $systemRolePaginator;
 
     $this->setTitle('Roles');
-    //var_dump($inheritableRoles);
-    Zend_Layout::getMvcInstance()->sidebar = null;
   }
 
   /**

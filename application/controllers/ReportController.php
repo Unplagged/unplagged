@@ -2,42 +2,46 @@
 
 class ReportController extends Unplagged_Controller_Versionable{
 
+  public function init(){
+    parent::init();
+
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
+    if(!$case || !$case->getTarget()){
+      $errorText = 'You have to select a case, before you can start the report creation.';
+      $this->_helper->FlashMessenger(array('error'=>$errorText));
+      $this->redirectToLastPage();
+    }
+  }
+  
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits', 'content'=>'StripTags'), null, $this->_getAllParams());
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
-    $paginator = null;
-    if($case){
-      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'report', 'action'=>'read', 'base'=>null));
-      $query = 'SELECT b FROM Application_Model_Report b';
-      $count = 'SELECT COUNT(b.id) FROM Application_Model_Report b';
+    $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'report', 'action'=>'read', 'base'=>null));
+    $query = 'SELECT b FROM Application_Model_Report b';
+    $count = 'SELECT COUNT(b.id) FROM Application_Model_Report b';
 
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permission));
-      $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-      $paginator->setCurrentPageNumber($input->page);
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permission));
+    $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+    $paginator->setCurrentPageNumber($input->page);
 
-      foreach($paginator as $report){
-        if($report->getState()->getName() == 'report_scheduled'){
-          // find the associated task and get percentage
-          $state = $this->_em->getRepository('Application_Model_State')->findOneByName('report_running');
-          $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
-          if(!$task){
-            $percentage = 0;
-          }else{
-            $percentage = $task->getProgressPercentage();
-          }
-          $report->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
+    foreach($paginator as $report){
+      if($report->getState()->getName() == 'report_scheduled'){
+        // find the associated task and get percentage
+        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('report_running');
+        $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
+        if(!$task){
+          $percentage = 0;
         }else{
-            $report->outputState = $report->getState()->getTitle();
+          $percentage = $task->getProgressPercentage();
         }
+        $report->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
+      }else{
+        $report->outputState = $report->getState()->getTitle();
       }
-      
-      $this->view->paginator = $paginator;
-    }else{
-      $this->_helper->flashMessenger->addMessage(array('error'=>'You have to select a case, before you can start the report creation.'));
-      $this->_helper->viewRenderer->setNoRender(true);
-      Zend_Layout::getMvcInstance()->sidebar = null;
     }
+
+    $this->view->paginator = $paginator;
   }
 
   /**

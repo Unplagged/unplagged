@@ -25,8 +25,6 @@ class IndexController extends Unplagged_Controller_Action{
 
   public function init(){
     parent::init();
-
-    Zend_Layout::getMvcInstance()->sidebar = null;
   }
 
   public function indexAction(){

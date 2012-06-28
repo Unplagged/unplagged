@@ -27,6 +27,13 @@ class DocumentController extends Unplagged_Controller_Action{
 
   public function init(){
     parent::init();
+
+    $case = Zend_Registry::getInstance()->user->getCurrentCase();
+    if(!$case){
+      $errorText = 'You have to select a case, before you can access documents.';
+      $this->_helper->FlashMessenger(array('error'=>$errorText));
+      $this->redirectToLastPage();
+    }
   }
 
   public function indexAction(){
@@ -85,7 +92,7 @@ class DocumentController extends Unplagged_Controller_Action{
 
       $modifyForm->getElement("title")->setValue($document->getTitle());
 
-// set bibTex information
+      // set bibTex information
       $bibTex = $document->getBibTex();
       if(!$bibTex){
         $bibTex = new Application_Model_BibTex();
@@ -127,82 +134,77 @@ class DocumentController extends Unplagged_Controller_Action{
     $input = new Zend_Filter_Input(array('page'=>'Digits'), null, $this->_getAllParams());
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
 
-    if($case){
-      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
-      $query = 'SELECT b FROM Application_Model_Document b';
-      $count = 'SELECT COUNT(b.id) FROM Application_Model_Document b';
+    $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
+    $query = 'SELECT b FROM Application_Model_Document b';
+    $count = 'SELECT COUNT(b.id) FROM Application_Model_Document b';
 
-      $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permission));
-      $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
-      $paginator->setCurrentPageNumber($input->page);
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('b.case'=>$case->getId()), null, $permission));
+    $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
+    $paginator->setCurrentPageNumber($input->page);
 
 // generate the action dropdown for each file
-      foreach($paginator as $document):
-        if($document->getState()->getName() == 'task_scheduled'){
+    foreach($paginator as $document):
+      if($document->getState()->getName() == 'task_scheduled'){
 // find the associated task and get percentage
-          $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
-          $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$document->getId(), 'state'=>$state));
-          if(!$task){
-            $percentage = 0;
-          }else{
-            $percentage = $task->getProgressPercentage();
-          }
-          $document->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
+        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
+        $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$document->getId(), 'state'=>$state));
+        if(!$task){
+          $percentage = 0;
         }else{
-          $document->outputState = $document->getState()->getTitle();
+          $percentage = $task->getProgressPercentage();
         }
+        $document->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
+      }else{
+        $document->outputState = $document->getState()->getTitle();
+      }
 
-        $document->actions = array();
-        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
-        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
-          $action['link'] = '/document/edit/id/' . $document->getId();
-          $action['label'] = 'Edit document';
-          $action['icon'] = 'images/icons/pencil.png';
-          $document->actions[] = $action;
-        }
-
-        $action['link'] = '/document/detect-plagiarism/id/' . $document->getId();
-        $action['label'] = 'Detect plagiarism';
-        $action['icon'] = 'images/icons/eye.png';
+      $document->actions = array();
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
+      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        $action['link'] = '/document/edit/id/' . $document->getId();
+        $action['label'] = 'Edit document';
+        $action['icon'] = 'images/icons/pencil.png';
         $document->actions[] = $action;
-        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'delete', 'base'=>$document));
+      }
 
-        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
-          $action['link'] = '/document/delete/id/' . $document->getId();
-          $action['label'] = 'Delete document';
-          $action['icon'] = 'images/icons/delete.png';
-          $document->actions[] = $action;
-        }
-        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'case', 'action'=>'update', 'base'=>$case));
-        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
-          if($case->getTarget() && $case->getTarget()->getId() == $document->getId()){
-            $action['link'] = '/document/unset-target/id/' . $document->getId();
-            $action['label'] = 'Unset target';
-            $action['icon'] = 'images/icons/page_find.png';
-            $document->actions[] = $action;
-            $document->isTarget = true;
-          }else{
-            $action['link'] = '/document/set-target/id/' . $document->getId();
-            $action['label'] = 'Set target';
-            $action['icon'] = 'images/icons/page.png';
-            $document->actions[] = $action;
-            $document->isTarget = false;
-          }
-        }
-        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'authorize', 'base'=>$document));
-        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
-          $action['link'] = '/permission/edit/id/' . $document->getId();
-          $action['label'] = 'Set permissions';
-          $action['icon'] = 'images/icons/shield.png';
-          $document->actions[] = $action;
-        }
-      endforeach;
+      $action['link'] = '/document/detect-plagiarism/id/' . $document->getId();
+      $action['label'] = 'Detect plagiarism';
+      $action['icon'] = 'images/icons/eye.png';
+      $document->actions[] = $action;
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'delete', 'base'=>$document));
 
-      $this->view->paginator = $paginator;
-    }else{
-      $this->_helper->FlashMessenger('You need to select a case first.');
-      $this->redirectToLastPage();
-    }
+      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        $action['link'] = '/document/delete/id/' . $document->getId();
+        $action['label'] = 'Delete document';
+        $action['icon'] = 'images/icons/delete.png';
+        $document->actions[] = $action;
+      }
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'case', 'action'=>'update', 'base'=>$case));
+      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        if($case->getTarget() && $case->getTarget()->getId() == $document->getId()){
+          $action['link'] = '/document/unset-target/id/' . $document->getId();
+          $action['label'] = 'Unset target';
+          $action['icon'] = 'images/icons/page_find.png';
+          $document->actions[] = $action;
+          $document->isTarget = true;
+        }else{
+          $action['link'] = '/document/set-target/id/' . $document->getId();
+          $action['label'] = 'Set target';
+          $action['icon'] = 'images/icons/page.png';
+          $document->actions[] = $action;
+          $document->isTarget = false;
+        }
+      }
+      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'authorize', 'base'=>$document));
+      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+        $action['link'] = '/permission/edit/id/' . $document->getId();
+        $action['label'] = 'Set permissions';
+        $action['icon'] = 'images/icons/shield.png';
+        $document->actions[] = $action;
+      }
+    endforeach;
+
+    $this->view->paginator = $paginator;
   }
 
   /**
@@ -218,7 +220,7 @@ class DocumentController extends Unplagged_Controller_Action{
         if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }
-        
+
         Unplagged_Helper::notify('document_removed', $document, Zend_Registry::getInstance()->user);
 
         $document->remove();
@@ -335,9 +337,9 @@ class DocumentController extends Unplagged_Controller_Action{
         $fieldId = 'bib' . ucfirst($fieldName);
         $bibTex->setContent($formData[$fieldId], $fieldName);
       }
-      
+
       $document->setBibTex($bibTex);
-      
+
       // write back to persistence manager and flush it
       $this->_em->persist($document);
       $this->_em->flush();

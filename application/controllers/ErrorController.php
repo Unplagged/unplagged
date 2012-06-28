@@ -23,9 +23,7 @@
  */
 class ErrorController extends Unplagged_Controller_Action{
 
-  public function errorAction(){
-    Zend_Layout::getMvcInstance()->sidebar = null;
-    
+  public function errorAction(){    
     $errors = $this->_getParam('error_handler');
 
     if(!$errors || !$errors instanceof ArrayObject){
