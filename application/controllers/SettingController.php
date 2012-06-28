@@ -117,7 +117,7 @@ class SettingController extends Unplagged_Controller_Action{
     $query = 'SELECT b FROM Application_Model_State b';
     $count = 'SELECT COUNT(b.id) FROM Application_Model_State b';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, null, null, true));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
@@ -213,7 +213,7 @@ class SettingController extends Unplagged_Controller_Action{
     $query = 'SELECT a FROM Application_Model_Action a';
     $count = 'SELECT COUNT(a.id) FROM Application_Model_Action a';
 
-    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count));
+    $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, null, null, null, true));
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
