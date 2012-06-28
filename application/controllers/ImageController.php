@@ -46,7 +46,7 @@ class ImageController extends Unplagged_Controller_Action{
         if(!$file->getFolder()){
           $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
           if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
-            $response->setHttpResponseCode(403);
+            $this->getResponse()->setHttpResponseCode(403);
           }
         }
         
@@ -55,6 +55,12 @@ class ImageController extends Unplagged_Controller_Action{
 
         $response = $this->getResponse();
         if(file_exists($localPath)){
+          $this->getResponse()->setHeader('Expires', '', true);
+          $this->getResponse()->setHeader('Cache-Control', 'private', true);
+          $this->getResponse()->setHeader('Cache-Control', 'max-age=360000');
+          $this->getResponse()->setHeader('Pragma', '', true);
+          
+          
           if(in_array($file->getExtension(), $allowedExtensions)){
             $response->setHeader('Content-type', 'image/' . $file->getExtension());
           }else{

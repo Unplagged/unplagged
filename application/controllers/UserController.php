@@ -278,7 +278,7 @@ class UserController extends Unplagged_Controller_Action{
 
     // if either the user is not logged in or no valid user id is defined
     if(empty($input->id)){
-      $input->id = $this->_defaultNamespace->userId;
+      $input->id = $this->_defaultNamespace->user->getId();
     }
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneById($input->id);
@@ -345,34 +345,6 @@ class UserController extends Unplagged_Controller_Action{
 
   private function handleAvatarUpload(){
     
-  }
-
-  /**
-   * Takes the data to create an Application_Model_File object.
-   * 
-   * @param Zend_File_Transfer $adapter
-   * @param array $fileNames
-   * @param array $pathinfo
-   * @param string $description
-   * @param string $storageDir
-   * @return \Application_Model_File 
-   */
-  private function createFileObject($adapter, $fileName, $pathinfo, $description, $storageDir, $user){
-    $data = array();
-    $data['size'] = $adapter->getFileSize();
-    //if the mime type is always application/octet-stream, then the 
-    //mime magic and fileinfo extensions are probably not installed
-    $data['mimetype'] = $adapter->getMimeType();
-    $data['filename'] = $fileName;
-    $data['extension'] = $pathinfo['extension'];
-    $data['location'] = $storageDir;
-    $data['description'] = $description;
-    $data['localFilename'] = $fileName;
-    $data['uploader'] = $user;
-
-    $file = new Application_Model_File($data);
-
-    return $file;
   }
 
   /**
