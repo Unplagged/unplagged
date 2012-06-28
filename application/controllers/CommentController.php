@@ -51,7 +51,7 @@ class CommentController extends Unplagged_Controller_Action{
 
       // show a notification in the activity stream on comments, but on a notification
       if(!($source instanceof Application_Model_Notification)) {
-        Unplagged_Helper::notify('comment_created', $comment, $user);
+        Unplagged_Helper::notify('comment_created', $comment, $user, $comment->getSource());
       }
       
       $result = $comment->toArray();

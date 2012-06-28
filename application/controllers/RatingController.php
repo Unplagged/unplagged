@@ -24,7 +24,7 @@
  * @author Unplagged Development Team
  */
 class RatingController extends Unplagged_Controller_Action{
-
+  
   /**
    * Handles the creation of a new rating. 
    */
@@ -39,7 +39,7 @@ class RatingController extends Unplagged_Controller_Action{
 
       if($result){
         // notification
-        Unplagged_Helper::notify("rating_created", $result, Zend_Registry::getInstance()->user);
+        Unplagged_Helper::notify("rating_created", $result, Zend_Registry::getInstance()->user, $result->getSource());
 
         $this->_helper->FlashMessenger(array('success'=>'Your rating was added successfully.'));
         $this->_redirect($input->redirect);
@@ -71,7 +71,7 @@ class RatingController extends Unplagged_Controller_Action{
 
         if($result){
           // notification
-          Unplagged_Helper::notify("rating_updated", $result, Zend_Registry::getInstance()->user);
+          Unplagged_Helper::notify("rating_updated", $result, Zend_Registry::getInstance()->user, $result->getSource());
 
           $this->_helper->FlashMessenger(array('success'=>'Your rating was edited successfully.'));
           $this->_redirect($input->redirect);

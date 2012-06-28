@@ -101,13 +101,14 @@ class Unplagged_Helper{
    * @integer $user The user the notification belongs to.
    * 
    */
-  public static function notify($action, $source, $user){
+  public static function notify($action, $source, $user, $permissionSource = null){
     $em = Zend_Registry::getInstance()->entitymanager;
 
     $data = array();
     $data["action"] = $em->getRepository('Application_Model_Action')->findOneBy(array('name'=>$action));
     $data["user"] = $user;
     $data["source"] = $source;
+    $data["permissionSource"] = !empty($permissionSource) ? $permissionSource : $source;
 
     $notification = new Application_Model_Notification($data);
 

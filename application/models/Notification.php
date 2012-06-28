@@ -49,6 +49,14 @@ class Application_Model_Notification extends Application_Model_Base{
    */
   private $source;
 
+    /**
+   * The element the permission is checked on.
+   *
+   * @ManyToOne(targetEntity="Application_Model_Base", inversedBy="notifications")
+   * @JoinColumn(name="permission_source_id", referencedColumnName="id", onDelete="CASCADE")
+   */
+  private $permissionSource;
+  
   public function __construct($data = array()){
     if(isset($data["user"])){
       $this->user = $data["user"];
@@ -60,6 +68,10 @@ class Application_Model_Notification extends Application_Model_Base{
 
     if(isset($data["source"])){
       $this->source = $data["source"];
+    }
+    
+    if(isset($data["permissionSource"])){
+      $this->permissionSource = $data["permissionSource"];
     }
   }
 
@@ -90,40 +102,6 @@ class Application_Model_Notification extends Application_Model_Base{
   public function getMessage(){
     return $this->action->getDescription();
   }
-  
-  /*public function getTitle(){
-    switch($this->action->getName()){
-      case "user_registered":
-        return "User " . $this->getSource()->getUsername() . " registered";
-      case "user_verified":
-        return "User " . $this->getSource()->getUsername() . " verified";
-      case "user_requested_password":
-        return "User " . $this->getSource()->getUsername() . " requested password";
-      case "case_created":
-        return "Case " . $this->getSource()->getPublishableName() . " was created";
-      case "file_uploaded":
-        return "File " . $this->getSource()->getFilename() . " was uploaded";
-      case "fragment_created":
-        return "Fragment " . $this->getSource()->getTitle() . " was created";
-    }
-  }
-
-  public function getMessage(){
-    switch($this->action->getName()){
-      case "user_registered":
-        return "User " . $this->getSource()->getUsername() . " registered.";
-      case "user_verified":
-        return "User " . $this->getSource()->getUsername() . " verified.";
-      case "user_requested_password":
-        return "User " . $this->getSource()->getUsername() . " requested password.";
-      case "case_created":
-        return "Case " . $this->getSource()->getPublishableName() . " was created.";
-      case "file_uploaded":
-        return "File " . $this->getSource()->getFilename() . " was uploaded.";
-      case "fragment_created":
-        return "Fragment " . $this->getSource()->getTitle() . " was created";
-    }
-  }*/
 
   public function toArray(){
     $result = array();
