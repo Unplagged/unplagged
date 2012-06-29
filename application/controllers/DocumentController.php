@@ -144,9 +144,9 @@ class DocumentController extends Unplagged_Controller_Action{
 
 // generate the action dropdown for each file
     foreach($paginator as $document):
-      if($document->getState()->getName() == 'task_scheduled'){
+      if($document->getState()->getName() == 'scheduled'){
 // find the associated task and get percentage
-        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
+        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('running');
         $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$document->getId(), 'state'=>$state));
         if(!$task){
           $percentage = 0;
@@ -260,7 +260,7 @@ class DocumentController extends Unplagged_Controller_Action{
           $data["user"] = Zend_Registry::getInstance()->user;
 
           $data["page"] = $page;
-          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName("report_running");
+          $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName("running");
           $data["servicename"] = $detector->getServiceName();
 
           $report = new Application_Model_Document_Page_DetectionReport($data);

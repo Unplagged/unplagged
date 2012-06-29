@@ -238,7 +238,7 @@ class FileController extends Unplagged_Controller_Action{
           if($file->getExtension() === 'pdf'){
             $data['title'] = $file->getFilename();
             $data['initialFile'] = $file;
-            $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+            $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled');
             $document = new Application_Model_Document($data);
 
             // start task
@@ -246,7 +246,7 @@ class FileController extends Unplagged_Controller_Action{
             $data['initiator'] = Zend_Registry::getInstance()->user;
             $data['ressource'] = $document;
             $data['action'] = $this->_em->getRepository('Application_Model_Action')->findOneByName('file_parse');
-            $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+            $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled');
             $task = new Application_Model_Task($data);
 
             $this->_em->persist($task);

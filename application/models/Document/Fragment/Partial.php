@@ -56,7 +56,9 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
    */
   private $characterTo = 1;
 
-  public function __construct(array $data = null){
+  public function __construct($data = array()){
+    parent::__construct($data);
+    
     if(isset($data["lineFrom"])){
       $this->lineFrom = $data["lineFrom"];
     }

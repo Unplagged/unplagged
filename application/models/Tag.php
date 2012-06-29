@@ -41,6 +41,8 @@ class Application_Model_Tag extends Application_Model_Base{
    * Constructor.
    */
   public function __construct($data = array()){
+    parent::__construct($data);
+    
     if(isset($data["title"])){
       $this->title = $data["title"];
     }

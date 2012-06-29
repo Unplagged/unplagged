@@ -61,6 +61,8 @@ class Application_Model_Comment extends Application_Model_Base{
    * Constructor.
    */
   public function __construct($data = array()){
+    parent::__construct($data);
+    
     if(isset($data["author"])){
       $this->author = $data["author"];
     }

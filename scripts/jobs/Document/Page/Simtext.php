@@ -29,7 +29,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
   public function start(){
     $query = $this->em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
     $query->setParameter("action", "page_simtext");
-    $query->setParameter("state", "task_scheduled");
+    $query->setParameter("state", "scheduled");
     $query->setMaxResults(1);
 
     $tasks = $query->getResult();
@@ -37,7 +37,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
     if($tasks){
       $task = $tasks[0];
 
-      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("task_running"));
+      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("running"));
       $this->em->persist($task);
       $this->em->flush();
 
@@ -119,10 +119,10 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
       // update report
       $report->setContent($content);
-      $report->setState($this->em->getRepository('Application_Model_State')->findOneByName("report_generated"));
+      $report->setState($this->em->getRepository('Application_Model_State')->findOneByName("generated"));
 
       // update task
-      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("task_finished"));
+      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("completed"));
       $task->setProgressPercentage(100);
 
       $this->em->persist($report);

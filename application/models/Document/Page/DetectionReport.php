@@ -47,14 +47,6 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
   private $servicename;
 
   /**
-   * The current state of the report.
-   * 
-   * @ManyToOne(targetEntity="Application_Model_State")
-   * @JoinColumn(name="state_id", referencedColumnName="id")
-   */
-  private $state;
-
-  /**
    * @ManyToOne(targetEntity="Application_Model_Document_Page", inversedBy="detection_reports")
    * @JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE")
    */
@@ -73,7 +65,9 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
    */
   private $content;
 
-  public function __construct(&$data){
+  public function __construct($data = array()){
+    parent::__construct($data);
+    
     if(isset($data["content"])){
       $this->content = $data["content"];
     }
@@ -85,9 +79,6 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
     }
     if(isset($data["page"])){
       $this->page = $data["page"];
-    }
-    if(isset($data["state"])){
-      $this->state = $data["state"];
     }
     if(isset($data["user"])){
       $this->user = $data["user"];

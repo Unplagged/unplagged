@@ -70,8 +70,9 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
   
   protected $conversationTypes = array('comment', 'rating');
 
-  public function __construct(array $data = null){
-    parent::__construct();
+  public function __construct($data = array()){
+    parent::__construct($data);
+
     if(isset($data["plag"])){
       $this->plag = $data["plag"];
     }
@@ -240,11 +241,10 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
   public function setDocument($document){
     $this->document = $document;
   }
-  
-    
+
   public function getSidebarActions(){
     $actions = array();
-    
+
     $action['label'] = 'Actions';
     $actions[] = $action;
 
@@ -253,10 +253,12 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
     $action['icon'] = 'icon-page';
     $actions[] = $action;
 
-    $action['link'] = '/document_fragment/edit/id/' . $this->id;
-    $action['label'] = 'Edit fragment';
-    $action['icon'] = 'icon-pencil';
-    $actions[] = $action;
+    if($this->getState()->getName() != 'approved'){
+      $action['link'] = '/document_fragment/edit/id/' . $this->id;
+      $action['label'] = 'Edit fragment';
+      $action['icon'] = 'icon-pencil';
+      $actions[] = $action;
+    }
 
     $action['link'] = '/document_fragment/delete/id/' . $this->id;
     $action['label'] = 'Remove fragment';
@@ -267,7 +269,7 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
     $action['label'] = 'Changelog';
     $action['icon'] = 'icon-table-relationship';
     $actions[] = $action;
-    
+
     return $actions;
   }
 

@@ -67,20 +67,8 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
    */
   private $lines;
 
-  /**
-   * Defines whether the page is disabled for being used in reports and barcodes.
-   * @var bool Whether the page is disabled or not.
-   * 
-   * @Column(type="boolean")
-   */
-  private $disabled = false;
-
-  public function __construct($data = null){
-    parent::__construct();
-
-    if(isset($data["disabled"])){
-      $this->disabled = $data["disabled"];
-    }
+  public function __construct($data = array()){
+    parent::__construct($data);
 
     if(isset($data["file"])){
       $this->originalFile = $data["file"];

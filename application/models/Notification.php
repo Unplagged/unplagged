@@ -58,6 +58,8 @@ class Application_Model_Notification extends Application_Model_Base{
   private $permissionSource;
   
   public function __construct($data = array()){
+    parent::__construct($data);
+    
     if(isset($data["user"])){
       $this->user = $data["user"];
     }

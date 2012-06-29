@@ -94,13 +94,6 @@ abstract class Application_Model_Base{
   protected $created;
 
   /**
-   * Defines whether an element is removed or not.
-   * 
-   * @Column(type="boolean")
-   */
-  private $isRemoved = false;
-
-  /**
    * @var string The base element comments.
    * 
    * @OneToMany(targetEntity="Application_Model_Comment", mappedBy="source")
@@ -146,7 +139,21 @@ abstract class Application_Model_Base{
   
   protected $conversationTypes = array('comment');
 
-  public function __construct(){
+  
+  /**
+   * @ManyToOne(targetEntity="Application_Model_State")
+   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="CASCADE")
+   */
+  private $state;
+  
+  public function __construct($data = array()){
+    if(isset($data['state'])){
+      $this->state = $data['state'];
+    } else {
+      $this->state = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_State')->findOneByName('created');
+
+    }
+    
     $this->comments = new ArrayCollection();
     $this->ratings = new ArrayCollection();
     $this->tags = new ArrayCollection();
@@ -188,18 +195,17 @@ abstract class Application_Model_Base{
         //echo $this->getId() . "<br />";
         //$permission = $em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>$this->getPermissionType(), 'action'=>$permissionType, 'base'=>$this));
         //if(!$permission){
-          $permission = new Application_Model_ModelPermission($this->getPermissionType(), $permissionType, $this);
+        $permission = new Application_Model_ModelPermission($this->getPermissionType(), $permissionType, $this);
         //}
-          $this->addPermission($permission);
+        $this->addPermission($permission);
         //if(!$user->getRole()->hasPermission($permission)){
-          $user->getRole()->addPermission($permission);
-          $em->persist($permission);
-         // echo 'has not permission';
+        $user->getRole()->addPermission($permission);
+        $em->persist($permission);
+        // echo 'has not permission';
         //} //else {
-          //echo 'has permission';
+        //echo 'has permission';
         //}
         //exit;
-        
       }
     }
   }
@@ -244,6 +250,23 @@ abstract class Application_Model_Base{
 
   public function getRatings(){
     return $this->ratings;
+  }
+  
+    public function addRating(Application_Model_Rating $rating){
+    $this->ratings->add($rating);
+  }
+
+  public function countRatingsByRating($ratingRating){
+    $count = 0;
+    $this->ratings->filter(function($rating) use (&$count, &$ratingRating){
+          if($rating->getRating() == $ratingRating){
+            $count++;
+            return true;
+          }
+          return false;
+        });
+
+    return $count;
   }
 
   public function getTags(){
@@ -325,11 +348,7 @@ abstract class Application_Model_Base{
   }
 
   public function remove(){
-    $this->isRemoved = true;
-  }
-
-  public function getIsRemoved(){
-    return $this->isRemoved;
+    $this->state = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_State')->findOneByname('deleted');
   }
 
   private function addPermission($permission){
@@ -337,4 +356,13 @@ abstract class Application_Model_Base{
       $this->permissions->add($permission);
     }
   }
+  
+  public function getState(){
+    return $this->state;
+  }
+
+  public function setState(Application_Model_State $state){
+    $this->state = $state;
+  }
+
 }

@@ -182,7 +182,8 @@ class Application_Model_BibTex extends Application_Model_Base{
     'essay'=>array('author', 'title', 'year', 'volume', 'hrsg', 'pages', 'publisher', 'address', 'isbn', 'url', 'note')
   );
 
-  public function __construct(array $data = null){
+  public function __construct($data = array()){
+    parent::__construct($data);
     
   }
 

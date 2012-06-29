@@ -91,7 +91,7 @@ class Unplagged_Detector_PlagAware{
 
       $report->setPercentage($percentage);
       $report->setContent($content);
-      $report->setState($this->_em->getRepository('Application_Model_State')->findOneByName("report_generated"));
+      $report->setState($this->_em->getRepository('Application_Model_State')->findOneByName("generated"));
 
       return $report;
     }

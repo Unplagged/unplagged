@@ -35,7 +35,7 @@ class IndexController extends Unplagged_Controller_Action{
 
     foreach($cases as $case){
       //$case = $user->getCurrentCase();
-      if($case->getState() && $case->getState()->getName() === 'case_published'){
+      if($case->getState() && $case->getState()->getName() === 'published'){
         $barcode = $case->getBarcode(100, 150, 100, true, '%');
         if($barcode){
           $barcodes[] = array(

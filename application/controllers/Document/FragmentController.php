@@ -40,10 +40,6 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     }
   }
 
-  public function indexAction(){
-    
-  }
-
   /**
    * Displays a single fragment by a given id. 
    */
@@ -61,11 +57,14 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     $this->view->ratings = $this->_em->getRepository("Application_Model_Rating")->findBySource($input->id);
 
-    $this->view->meId = $this->_defaultNamespace->userId;
+    if($fragment->getState()->getName() == 'approved'){
+      $this->_helper->FlashMessenger(array('info'=>'The fragment is approved and therefore not editable anymore.'));
+    }elseif(!$fragment->isRatedByUser($user)){
+      $this->_helper->FlashMessenger(array('info'=>'The fragment needs your approval.'));
+    }
 
     // check if the current user already rated this fragment
-    $this->view->fragmentIsRated = $fragment->isRatedByUser($user);
-
+    $this->view->rateAble = (!$fragment->isRatedByUser($user) && $fragment->getState()->getName() != 'approved');
 
     Zend_Layout::getMvcInstance()->menu = $fragment->getSidebarActions();
   }
@@ -140,11 +139,16 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
     $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
     $user = $this->_em->getRepository('Application_Model_User')->findOneById(Zend_Registry::getInstance()->user->getId());
+    Zend_Registry::getInstance()->user = $user;
 
     if($fragment){
       $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document-fragment', 'action'=>'update', 'base'=>$fragment));
       if(!$user->getRole()->hasPermission($permission)){
         $this->redirectToLastPage(true);
+      }
+      if($fragment->getState()->getName() == 'approved'){
+        $this->_helper->FlashMessenger(array('error'=>'The fragment is approved and therefore not editable anymore.'));
+        $this->redirectToLastPage();
       }
 
       Zend_Layout::getMvcInstance()->menu = $fragment->getSidebarActions();
@@ -289,8 +293,14 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
 
   public function rateAction(){
     $input = new Zend_Filter_Input(array('source'=>'Digits', 'id'=>'Digits'), null, $this->_getAllParams());
+    $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->source);
 
-    $params = array('redirect'=>'document_fragment/show/id/' . $input->source);
+    if($fragment->getState()->getName() == 'approved'){
+      $this->_helper->FlashMessenger(array('error'=>'The fragment is approved and therefore not editable anymore.'));
+      $this->redirectToLastPage();
+    }
+
+    $params = array('redirect'=>'document_fragment/rate-response/id/' . $input->source);
 
     if($input->id){
       $this->view->title = "Edit fragment rating";
@@ -302,11 +312,29 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     }
   }
 
+  public function rateResponseAction(){
+    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
+    $this->_em->clear();
+
+    $fragment = $this->_em->getRepository('Application_Model_Document_Fragment')->findOneById($input->id);
+    $user = $this->_em->getRepository('Application_Model_User')->findOneById(Zend_Registry::getInstance()->user->getId());
+    Zend_Registry::getInstance()->user = $user;
+
+    $approvals = $fragment->countRatingsByRating(true);
+    if($approvals >= Zend_Registry::getInstance()->user->getCurrentCase()->getRequiredFragmentRatings()){
+      $fragment->setState($this->_em->getRepository('Application_Model_State')->findOneByName('approved'));
+
+      $this->_em->persist($fragment);
+      $this->_em->flush();
+    }
+
+    $this->_redirect('document_fragment/show/id/' . $input->id);
+  }
+
   private function handleModifyData(Application_Form_Document_Fragment_Modify $modifyForm, Application_Model_Document_Fragment $fragment = null){
-    $create = false;
     if(!($fragment)){
       $fragment = new Application_Model_Document_Fragment();
-      $create = true;
+      $fragment->setState($this->_em->getRepository('Application_Model_State')->findOneByName('created'));
     }
 
     $formData = $this->_request->getPost();
@@ -335,7 +363,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $fragment->setSource($this->handlelPartialCreation($partial, $formData['sourceLineFrom'], $formData['sourceLineTo']));
 
       $case = Zend_Registry::getInstance()->user->getCurrentCase();
-      if($create){
+      if(!$fragment->getId()){
         $target = $case->getTarget();
         $target->addFragment($fragment);
       }

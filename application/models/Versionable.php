@@ -40,8 +40,8 @@ abstract class Application_Model_Versionable extends Application_Model_Base{
    */
   protected $auditLog;
 
-  public function __construct(){
-    parent::__construct();
+  public function __construct($data = array()){
+    parent::__construct($data);
 
     $this->auditLog = new \Doctrine\Common\Collections\ArrayCollection();
   }

@@ -106,7 +106,7 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
                 a.name = :action AND 
                 s.name = :state");
     $query->setParameter("action", "report_requested");
-    $query->setParameter("state", "task_scheduled");
+    $query->setParameter("state", "scheduled");
     $query->setMaxResults(1);
 
     $tasks = $query->getResult();
@@ -114,17 +114,23 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
     if($tasks){
       $task = $tasks[0];
 
-      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("task_running"));
+      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("running"));
 
       //some fake percentage to show it's running
       $task->setProgressPercentage(20);
 
-      $fragments = $task->getRessource()->getTarget()->getFragments();
+      $fragments = $query->getResult();
+      $query = $this->em->createQuery("SELECT f FROM Application_Model_Fragment f f.state s WHERE f.document = :document AND s.name = :state");
+      $query->setParameter("document", $task->getRessource()->getTarget()->getId());
+      $query->setParameter("state", "approved");
+
+      $fragments = $query->getResult();
+
 
       $report = $this->createReport($fragments, $task->getRessource());
-      
-// update task
-      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("task_finished"));
+
+      // update task
+      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("completed"));
       $task->setProgressPercentage(100);
 
       $this->em->persist($task);
@@ -174,11 +180,11 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
 
     // after the flush, we can access the id and put a unique identifier in the report name
     $filename = $filepath . DIRECTORY_SEPARATOR . $report->getId() . ".pdf";
-    
+
     $html2pdf->Output($filename, 'F');
 
     $report->setFilePath($filename);
-    $report->setState($this->em->getRepository('Application_Model_State')->findOneByName('report_generated'));
+    $report->setState($this->em->getRepository('Application_Model_State')->findOneByName('generated'));
 
     $this->em->persist($report);
     $this->em->flush();
@@ -387,6 +393,7 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
   }
 
 }
+
 $reportCreator = new Cron_Document_Page_Reportcreator();
 $reportCreator->start();
 ?>

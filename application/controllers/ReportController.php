@@ -26,9 +26,9 @@ class ReportController extends Unplagged_Controller_Versionable{
     $paginator->setCurrentPageNumber($input->page);
 
     foreach($paginator as $report){
-      if($report->getState()->getName() == 'report_scheduled'){
+      if($report->getState()->getName() == 'scheduled'){
         // find the associated task and get percentage
-        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('report_running');
+        $state = $this->_em->getRepository('Application_Model_State')->findOneByName('running');
         $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
         if(!$task){
           $percentage = 0;
@@ -84,7 +84,7 @@ class ReportController extends Unplagged_Controller_Versionable{
       'case' => $user->getCurrentCase(),
       'target' => $user->getCurrentCase()->getTarget(),
       'title' => $user->getCurrentCase()->getPublishableName(),
-      'state' => $this->_em->getRepository('Application_Model_State')->findOneByName('report_scheduled')
+      'state' => $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled')
     );
     $report = new Application_Model_Report($data);
     
@@ -101,7 +101,7 @@ class ReportController extends Unplagged_Controller_Versionable{
     $data = array();
     $data['initiator'] = $user;
     $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('report_requested');
-    $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+    $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled');
     $data["ressource"] = $report;
 
     $task = new Application_Model_Task($data);

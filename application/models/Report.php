@@ -31,14 +31,6 @@ class Application_Model_Report extends Application_Model_Base{
   const ICON_CLASS = 'icon-report';
 
   /**
-   * The current state of the report.
-   * 
-   * @ManyToOne(targetEntity="Application_Model_State")
-   * @JoinColumn(name="state_id", referencedColumnName="id")
-   */
-  private $state;
-
-  /**
    * @ManyToOne(targetEntity="Application_Model_User", cascade={"remove"})
    * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
    */
@@ -70,14 +62,11 @@ class Application_Model_Report extends Application_Model_Base{
    */
   private $case;
 
-  public function __construct(&$data){
+  public function __construct($data = array()){
+    parent::__construct($data);
 
     if(isset($data["title"])){
       $this->title = $data["title"];
-    }
-
-    if(isset($data["state"])){
-      $this->state = $data["state"];
     }
     if(isset($data["user"])){
       $this->user = $data["user"];
@@ -117,14 +106,6 @@ class Application_Model_Report extends Application_Model_Base{
 
   public function getUser(){
     return $this->user;
-  }
-
-  public function getState(){
-    return $this->state;
-  }
-
-  public function setState($state){
-    $this->state = $state;
   }
 
   public function getTitle(){

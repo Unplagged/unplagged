@@ -45,12 +45,6 @@ class Application_Model_Case extends Application_Model_Base{
   private $alias;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_State")
-   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="CASCADE")
-   */
-  private $state;
-
-  /**
    * @var string The date when the document was updated the last time.
    * 
    * @Column(type="datetime", nullable=true)
@@ -108,16 +102,26 @@ class Application_Model_Case extends Application_Model_Base{
    * 
    * @Column(type="array", nullable=true)
    */
-  private $barcodeData;  
-  
-  public function __construct($name = null, $alias = null){
+  private $barcodeData;
+
+  /**
+   * @var int The amount of users that have to approve a fragment in the case in order to lock it.
+   * 
+   * @Column(type="integer") 
+   */
+  private $requiredFragmentRatings;
+
+  public function __construct($data = array()){
+    parent::__construct($data);
+
     $this->documents = new ArrayCollection();
     $this->files = new ArrayCollection();
     $this->collaborators = new ArrayCollection();
     $this->defaultRoles = new ArrayCollection();
 
-    $this->name = $name;
-    $this->alias = $alias;
+    $this->name = $data['name'];
+    $this->alias = $data['alias'];
+    $this->requiredFragmentRatings = $data['requiredFragmentRatings'];
 
     $this->reports = new ArrayCollection();
     $this->documents = new ArrayCollection();
@@ -154,22 +158,11 @@ class Application_Model_Case extends Application_Model_Base{
   public function getPublishableName(){
     $publishableName = $this->getAlias();
 
-    if($this->getState() && $this->getState()->getName() === 'case_published'){
+    if($this->getState() && $this->getState()->getName() === 'published'){
       $publishableName = $this->getName();
     }
 
     return $publishableName;
-  }
-
-  /**
-   * 
-   */
-  public function getState(){
-    return $this->state;
-  }
-  
-  public function setState(Application_Model_State $state){
-    $this->state = $state;  
   }
 
   public function getUpdated(){
@@ -205,7 +198,7 @@ class Application_Model_Case extends Application_Model_Base{
   }
 
   public function getDirectLink(){
-    //return "/case/show/id/" . $this->id;
+//return "/case/show/id/" . $this->id;
     return "/case/list";
   }
 
@@ -327,7 +320,7 @@ class Application_Model_Case extends Application_Model_Base{
   public function getCollaborators(){
     return $this->collaborators;
   }
-  
+
   public function addCollaborator(Application_Model_User $collaborator){
     $this->collaborators->add($collaborator);
   }
@@ -339,7 +332,7 @@ class Application_Model_Case extends Application_Model_Base{
   public function setCollaborators($collaboratorIds = array()){
     $removedCollaborators = array();
 
-    // 1) search all collaborators that already exist by their id
+// 1) search all collaborators that already exist by their id
     if(!empty($this->collaborators)){
       $this->collaborators->filter(function($collaborator) use (&$collaboratorIds, &$removedCollaborators){
             if(in_array($collaborator->getId(), $collaboratorIds)){
@@ -351,14 +344,14 @@ class Application_Model_Case extends Application_Model_Base{
           });
     }
 
-    // 2) create new collaborators for those that don't exist yet
+// 2) create new collaborators for those that don't exist yet
     foreach($collaboratorIds as $collaboratorId){
       $collaborator = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneById($collaboratorId);
 
       $this->addCollaborator($collaborator);
     }
 
-    // 3) remove collaborators that belonged to the element before, but not anymore
+// 3) remove collaborators that belonged to the element before, but not anymore
     foreach($removedCollaborators as $collaborator){
       $this->removeCollaborator($collaborator);
     }
@@ -367,10 +360,19 @@ class Application_Model_Case extends Application_Model_Base{
   public function clearCollaborators(){
     $this->collaborators->clear();
   }
-  
-  public function hasDefaultRole(Application_Model_User_Role $defaultRole) {
+
+  public function hasDefaultRole(Application_Model_User_Role $defaultRole){
     return $this->defaultRoles->contains($defaultRole);
   }
 
+  public function getRequiredFragmentRatings(){
+    return $this->requiredFragmentRatings;
+  }
+
+  public function setRequiredFragmentRatings($requiredFragmentRatings){
+    $this->requiredFragmentRatings = $requiredFragmentRatings;
+  }
+
 }
+
 ?>

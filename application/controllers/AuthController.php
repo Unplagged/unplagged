@@ -81,7 +81,7 @@ class AuthController extends Unplagged_Controller_Action{
       $result = $this->auth->authenticate($adapter);
 
       if($result->isValid()){
-        if($result->getIdentity()->getState()->getName() == 'user_activated'){
+        if($result->getIdentity()->getState()->getName() == 'activated'){
           $defaultNamespace = new Zend_Session_Namespace('Default');
           $defaultNamespace->user = $result->getIdentity();
           $defaultNamespace->userId = $result->getIdentity()->getId();

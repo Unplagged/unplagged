@@ -61,14 +61,6 @@ class Application_Model_Document extends Application_Model_Base{
   private $bibTex;
 
   /**
-   * The current state of the report.
-   * 
-   * @ManyToOne(targetEntity="Application_Model_State")
-   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
-   */
-  private $state;
-
-  /**
    * @ManyToOne(targetEntity="Application_Model_Case", inversedBy="documents")
    * @JoinColumn(name="case_id", referencedColumnName="id", onDelete="CASCADE")
    */
@@ -88,7 +80,8 @@ class Application_Model_Document extends Application_Model_Base{
    */
   private $language = 'en';
 
-  public function __construct(array $data = null){
+  public function __construct($data = array()){
+    parent::__construct($data);
 
     if(isset($data["title"])){
       $this->title = $data["title"];
@@ -141,14 +134,6 @@ class Application_Model_Document extends Application_Model_Base{
 
   public function setTitle($title){
     $this->title = $title;
-  }
-
-  public function getState(){
-    return $this->state;
-  }
-
-  public function setState($state){
-    $this->state = $state;
   }
 
   public function setBibTex($bibTex){

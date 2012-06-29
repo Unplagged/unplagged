@@ -32,7 +32,7 @@ class Cron_Document_Parser extends Cron_Base{
 
       $taskId = $task->getId();
 
-      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName('task_running'));
+      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName('running'));
       $this->em->persist($task);
       $this->em->flush();
 
@@ -50,7 +50,7 @@ class Cron_Document_Parser extends Cron_Base{
 
         // update task
         $task = $this->em->getRepository('Application_Model_Task')->findOneById($taskId);
-        $task->setState($this->em->getRepository('Application_Model_State')->findOneByName('task_finished'));
+        $task->setState($this->em->getRepository('Application_Model_State')->findOneByName('completed'));
         $task->setProgressPercentage(100);
 
         $this->em->persist($document);
@@ -69,7 +69,7 @@ class Cron_Document_Parser extends Cron_Base{
   private function findTask(){
     $query = $this->em->createQuery('SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state');
     $query->setParameter('action', 'file_parse');
-    $query->setParameter('state', 'task_scheduled');
+    $query->setParameter('state', 'scheduled');
     $query->setMaxResults(1);
 
     return $query->getResult();

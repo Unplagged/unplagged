@@ -189,80 +189,53 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("rating_updat
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }
-// 2) init user states
-if(!($em->getRepository('Application_Model_State')->findOneByName("user_registered"))){
-  unset($data);
-  $data["name"] = "user_registered";
-  $data["title"] = "registered";
-  $data["description"] = "A user registered on the page and did not finish the verification process yet.";
-  $state = new Application_Model_State($data);
-  $em->persist($state);
-}
-$element = $em->getRepository('Application_Model_State')->findOneByName("user_activated");
-if(empty($element)){
-  unset($data);
-  $data["name"] = "user_activated";
-  $data["title"] = "activated";
-  $data["description"] = "A user that can actually use the web page.";
-  $state = new Application_Model_State($data);
-  $em->persist($state);
-}
-if(!($em->getRepository('Application_Model_State')->findOneByName("user_locked"))){
-  unset($data);
-  $data["name"] = "user_locked";
-  $data["title"] = "locked";
-  $data["description"] = "A user that was locked.";
-  $state = new Application_Model_State($data);
-  $em->persist($state);
-}
 
-
-// 3) report states
-if(!$em->getRepository('Application_Model_State')->findOneByName("report_running")){
+// states
+if(!($em->getRepository('Application_Model_State')->findOneByName('created'))){
   unset($data);
-  $data["name"] = "report_running";
+  $data["name"] = "created";
+  $data["title"] = "created";
+  $data["description"] = "The element was created.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+if(!($em->getRepository('Application_Model_State')->findOneByName('deleted'))){
+  unset($data);
+  $data["name"] = "deleted";
+  $data["title"] = "deleted";
+  $data["description"] = "The element is deleted.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+if(!($em->getRepository('Application_Model_State')->findOneByName('approved'))){
+  unset($data);
+  $data["name"] = "approved";
+  $data["title"] = "approved";
+  $data["description"] = "The amount of users required to approve the element was reached.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+if(!($em->getRepository('Application_Model_State')->findOneByName('published'))){
+  unset($data);
+  $data["name"] = "published";
+  $data["title"] = "published";
+  $data["description"] = "The element is published.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+if(!($em->getRepository('Application_Model_State')->findOneByName("running"))){
+  unset($data);
+  $data["name"] = "running";
   $data["title"] = "running";
-  $data["description"] = "The report is currently being generated.";
+  $data["description"] = "The task is currently being executed.";
   $state = new Application_Model_State($data);
   $em->persist($state);
 }
-if(!$em->getRepository('Application_Model_State')->findOneByName("report_scheduled")){
+if(!$em->getRepository('Application_Model_State')->findOneByName("scheduled")){
   unset($data);
-  $data["name"] = "report_scheduled";
+  $data["name"] = "scheduled";
   $data["title"] = "scheduled";
-  $data["description"] = "The report generation is scheduled.";
-  $state = new Application_Model_State($data);
-  $em->persist($state);
-}
-if(!($em->getRepository('Application_Model_State')->findOneByName("task_scheduled"))){
-  unset($data);
-  $data["name"] = "task_scheduled";
-  $data["title"] = "scheduled";
-  $data["description"] = "A is being scheduled, and will be generated asap.";
-  $state = new Application_Model_State($data);
-  $em->persist($state);
-}
-if(!($em->getRepository('Application_Model_State')->findOneByName("task_finished"))){
-  unset($data);
-  $data["name"] = "task_finished";
-  $data["title"] = "finished";
-  $data["description"] = "The task was finished.";
-  $state = new Application_Model_State($data);
-  $em->persist($state);
-}
-if(!($em->getRepository('Application_Model_State')->findOneByName("report_generated"))){
-  unset($data);
-  $data["name"] = "report_generated";
-  $data["title"] = "generated";
-  $data["description"] = "The report was generated successfully.";
-  $state = new Application_Model_State($data);
-  $em->persist($state);
-}
-if(!($em->getRepository('Application_Model_State')->findOneByName("report_error"))){
-  unset($data);
-  $data["name"] = "report_error";
-  $data["title"] = "error";
-  $data["description"] = "There was an error, the report could not be generated.";
+  $data["description"] = "The task is scheduled.";
   $state = new Application_Model_State($data);
   $em->persist($state);
 }
@@ -274,22 +247,51 @@ if(!($em->getRepository('Application_Model_State')->findOneByName("parsed"))){
   $state = new Application_Model_State($data);
   $em->persist($state);
 }
-
-//case states
-if(!($em->getRepository('Application_Model_State')->findOneByName('case_created'))){
+if(!($em->getRepository('Application_Model_State')->findOneByName("error"))){
   unset($data);
-  $data["name"] = "case_created";
-  $data["title"] = "created";
-  $data["description"] = "The case is created.";
+  $data["name"] = "error";
+  $data["title"] = "error";
+  $data["description"] = "There was an error during a process.";
   $state = new Application_Model_State($data);
   $em->persist($state);
 }
-//case states
-if(!($em->getRepository('Application_Model_State')->findOneByName('case_published'))){
+if(!($em->getRepository('Application_Model_State')->findOneByName("completed"))){
   unset($data);
-  $data["name"] = "case_published";
-  $data["title"] = "published";
-  $data["description"] = "The case is published.";
+  $data["name"] = "completed";
+  $data["title"] = "completed";
+  $data["description"] = "The task was finished.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+if(!($em->getRepository('Application_Model_State')->findOneByName("locked"))){
+  unset($data);
+  $data["name"] = "locked";
+  $data["title"] = "locked";
+  $data["description"] = "An element was locked.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+if(!($em->getRepository('Application_Model_State')->findOneByName("activated"))){
+  unset($data);
+  $data["name"] = "activated";
+  $data["title"] = "activated";
+  $data["description"] = "A user that can actually use the web page.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+if(!($em->getRepository('Application_Model_State')->findOneByName("registered"))){
+  unset($data);
+  $data["name"] = "registered";
+  $data["title"] = "registered";
+  $data["description"] = "A user registered on the page and did not finish the verification process yet.";
+  $state = new Application_Model_State($data);
+  $em->persist($state);
+}
+if(!($em->getRepository('Application_Model_State')->findOneByName("generated"))){
+  unset($data);
+  $data["name"] = "generated";
+  $data["title"] = "generated";
+  $data["description"] = "The report was generated successfully.";
   $state = new Application_Model_State($data);
   $em->persist($state);
 }
@@ -406,14 +408,6 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("report_reque
   $data["description"] = "A user requested a fragment report.";
   $action = new Application_Model_Action($data);
   $em->persist($action);
-}
-if(!($em->getRepository('Application_Model_State')->findOneByName("task_running"))){
-  unset($data);
-  $data["name"] = "task_running";
-  $data["title"] = "running";
-  $data["description"] = "The task is currently being executed.";
-  $state = new Application_Model_State($data);
-  $em->persist($state);
 }
 
 //default settings

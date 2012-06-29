@@ -48,8 +48,8 @@ class Application_Model_Document_Page_Line extends Application_Model_Base{
    */
   private $content;
 
-  public function __construct($data){
-    parent::__construct();
+  public function __construct($data = array()){
+    parent::__construct($data);
 
     if(isset($data["lineNumber"])){
       $this->lineNumber = $data["lineNumber"];

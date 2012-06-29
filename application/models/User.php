@@ -77,15 +77,7 @@ class Application_Model_User extends Application_Model_Base{
    * @Column(type="string", length=32, unique=true)
    */
   private $verificationHash;
-
-  /**
-   * @var Application_Model_State The current state of the user.
-   * 
-   * @ManyToOne(targetEntity="Application_Model_State")
-   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
-   */
-  private $state;
-
+  
   /**
    * @var Application_Model_User_Role 
    * 
@@ -134,6 +126,8 @@ class Application_Model_User extends Application_Model_Base{
   private $cases;
 
   public function __construct($data = array()){
+    parent::__construct($data);
+    
     if(isset($data['username'])){
       $this->username = $data['username'];
     }
@@ -162,9 +156,6 @@ class Application_Model_User extends Application_Model_Base{
       $this->verificationHash = $data['verificationHash'];
     }
 
-    if(isset($data['state'])){
-      $this->state = $data['state'];
-    }
 
     $this->files = new \Doctrine\Common\Collections\ArrayCollection();
     $this->cases = new \Doctrine\Common\Collections\ArrayCollection();
@@ -227,14 +218,6 @@ class Application_Model_User extends Application_Model_Base{
   
   public function setVerificationHash($verificationHash){
     $this->verificationHash = $verificationHash;
-  }
-
-  public function getState(){
-    return $this->state;
-  }
-
-  public function setState($state){
-    $this->state = $state;
   }
   
   public function setAvatar($avatar){

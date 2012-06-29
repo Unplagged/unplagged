@@ -61,6 +61,8 @@ class Application_Model_Rating extends Application_Model_Base{
    * Constructor.
    */
   public function __construct($data = array()){
+    parent::__construct($data);
+    
     if(isset($data["user"])){
       $this->user = $data["user"];
     }

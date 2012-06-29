@@ -87,7 +87,7 @@ class UserController extends Unplagged_Controller_Action{
     $data['password'] = Unplagged_Helper::hashString($formData['password']);
     $data['email'] = $formData['email'];
     $data['verificationHash'] = Unplagged_Helper::generateRandomHash();
-    $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('user_registered');
+    $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('registered');
 
     // @todo: change to global roleId user, when implemented
     $roleTemplate = $this->_em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'user', 'type'=>'global'));
@@ -188,11 +188,11 @@ class UserController extends Unplagged_Controller_Action{
     }
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
-    if(empty($user) || $user->getState()->getName() != 'user_registered'){
+    if(empty($user) || $user->getState()->getName() != 'registered'){
       $this->_helper->flashmessenger->addMessage(array('error'=>'Verification failed.'));
       $this->_helper->redirector('index', 'index');
     }else{
-      $user->setState($this->_em->getRepository('Application_Model_State')->findOneByName('user_activated'));
+      $user->setState($this->_em->getRepository('Application_Model_State')->findOneByName('activated'));
       $user->setVerificationHash(Unplagged_Helper::generateRandomHash());
 
       // write back to persistence manage and flush it

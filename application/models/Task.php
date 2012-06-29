@@ -41,14 +41,6 @@ class Application_Model_Task extends Application_Model_Base{
   private $endDate;
 
   /**
-   * The current state of the task.
-   * 
-   * @ManyToOne(targetEntity="Application_Model_State")
-   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="CASCADE")
-   */
-  private $state;
-
-  /**
    * The action that has to be executed by this task.
    * 
    * @ManyToOne(targetEntity="Application_Model_Action")
@@ -79,12 +71,10 @@ class Application_Model_Task extends Application_Model_Base{
   private $progressPercentage = 0;
 
   public function __construct($data = array()){
+    parent::__construct($data);
+    
     if(isset($data["initiator"])){
       $this->initiator = $data["initiator"];
-    }
-
-    if(isset($data["state"])){
-      $this->state = $data["state"];
     }
 
     if(isset($data["action"])){
@@ -112,10 +102,6 @@ class Application_Model_Task extends Application_Model_Base{
     return $this->endDate;
   }
 
-  public function getState(){
-    return $this->state;
-  }
-
   public function getAction(){
     return $this->action;
   }
@@ -130,10 +116,6 @@ class Application_Model_Task extends Application_Model_Base{
 
   public function setEndDate($endDate){
     $this->endDate = $endDate;
-  }
-
-  public function setState($state){
-    $this->state = $state;
   }
 
   public function setLog($log){

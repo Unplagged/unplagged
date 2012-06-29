@@ -13,7 +13,7 @@ $this->headTitle($this->title);
     <?php if(count($this->paginator)): ?>
       <?php foreach($this->paginator as $report): ?>
         <tr>
-          <?php if($report->getState()->getName() == "report_generated"){ ?>
+          <?php if($report->getState()->getName() == "generated"){ ?>
             <td data-label="<?php echo $this->translate("Title"); ?>"><a href="<?php echo $report->getDirectLink(); ?>"><?php echo $report->getTitle(); ?></a></td>
           <?php }else{ ?>
             <td data-label="<?php echo $this->translate("Title"); ?>"><?php echo $report->getTitle(); ?></td>

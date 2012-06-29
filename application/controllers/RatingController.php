@@ -29,6 +29,7 @@ class RatingController extends Unplagged_Controller_Action{
    * Handles the creation of a new rating. 
    */
   public function createAction(){
+    
     $input = new Zend_Filter_Input(array('source'=>'Digits', 'redirect'=>'StringTrim'), null, $this->_getAllParams());
 
     $modifyForm = new Application_Form_Rating_Modify();
@@ -100,8 +101,12 @@ class RatingController extends Unplagged_Controller_Action{
       $rating->setReason($formData['reason']);
       $rating->setUser($user);
       $rating->setSource($source);
+      
+      $source->addRating($rating);
+
 
       // write back to persistence manager and flush it
+      $this->_em->persist($source);
       $this->_em->persist($rating);
       $this->_em->flush();
 

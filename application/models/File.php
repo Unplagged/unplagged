@@ -105,7 +105,9 @@ class Application_Model_File extends Application_Model_Base{
    */
   private $folder;
 
-  public function __construct(array $data = array()){
+  public function __construct($data = array()){
+    parent::__construct($data);
+    
     foreach($data as $key=>$value){
       $this->setOption($key, $value);
     }

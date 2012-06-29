@@ -88,7 +88,8 @@ class Document_PageController extends Unplagged_Controller_Versionable{
 
     $page = $this->_em->getRepository('Application_Model_Document_Page')->findOneById($input->id);
     $user = $this->_em->getRepository('Application_Model_User')->findOneById(Zend_Registry::getInstance()->user->getId());
-
+    Zend_Registry::getInstance()->user = $user;
+    
     if($page){
       $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$page->getDocument()));
       if(!$user->getRole()->hasPermission($permission)){
@@ -142,10 +143,10 @@ class Document_PageController extends Unplagged_Controller_Versionable{
         Zend_Layout::getMvcInstance()->menu = $document->getSidebarActions();
 
         $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>null));
-        $query = 'SELECT p FROM Application_Model_Document_Page p JOIN p.document b';
-        $count = 'SELECT COUNT(p.id) FROM Application_Model_Document_Page p JOIN p.document b';
+        $query = 'SELECT p FROM Application_Model_Document_Page p JOIN p.document b JOIN p.state ps';
+        $count = 'SELECT COUNT(p.id) FROM Application_Model_Document_Page p JOIN p.document b JOIN p.state ps';
 
-        $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.document'=>$input->id, 'p.isRemoved'=>false), 'p.pageNumber ASC', $permission));
+        $paginator = new Zend_Paginator(new Unplagged_Paginator_Adapter_DoctrineQuery($query, $count, array('p.document'=>$input->id, 'ps.name'=>'created'), 'p.pageNumber ASC', $permission));
         $paginator->setItemCountPerPage(100);
         $paginator->setCurrentPageNumber($input->page);
 
@@ -394,9 +395,9 @@ class Document_PageController extends Unplagged_Controller_Versionable{
           $paginator->setCurrentPageNumber($input->page);
 
           foreach($paginator as $report):
-            if($report->getState()->getName() == 'task_scheduled'){
+            if($report->getState()->getName() == 'scheduled'){
               // find the associated task and get percentage
-              $state = $this->_em->getRepository('Application_Model_State')->findOneByName('task_running');
+              $state = $this->_em->getRepository('Application_Model_State')->findOneByName('running');
               $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
               if(!$task){
                 $percentage = 0;
@@ -463,7 +464,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $data["page"] = $page;
       $data["title"] = $formData["title"];
       $data["documents"] = $formData["documents"];
-      $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+      $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled');
       $report = new Application_Model_Document_Page_SimtextReport($data);
 
       // start task
@@ -471,7 +472,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
       $data["initiator"] = Zend_Registry::getInstance()->user;
       $data["ressource"] = $report;
       $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('page_simtext');
-      $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('task_scheduled');
+      $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled');
       $task = new Application_Model_Task($data);
 
       $this->_em->persist($task);

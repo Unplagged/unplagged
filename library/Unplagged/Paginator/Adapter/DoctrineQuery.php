@@ -33,9 +33,12 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
     $em = Zend_Registry::getInstance()->entitymanager;
     $user = Zend_Registry::getInstance()->user;
 
+    $permissionStatement = '';
+    
     $conditions = array();
     if(!$selectRemovedItems){
-      $conditions[] = 'b.isRemoved = 0';
+      $conditions[] = "s.name != 'removed'";
+      $permissionStatement .= ' JOIN b.state s';
     }
     if(isset($additionalConditions)){
       foreach($additionalConditions as $field=>$value){
@@ -47,7 +50,7 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
       }
     }
 
-    $permissionStatement = '';
+    
     if(isset($readAllPermission)){
       // 1) check if the user has the right to see all elements , then we do not have to check permission on each file
       $canAccessAll = $user->getRole()->hasPermission($readAllPermission);
@@ -55,9 +58,9 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
       // 2) if not, check permission on each file
       if(!$canAccessAll){
         if($readAllPermission->getAction()){
-          $permissionStatement = " JOIN b.permissions pe WITH (pe INSTANCE OF Application_Model_ModelPermission AND pe.base = b.id AND pe.action = :permissionAction AND :roleId MEMBER OF pe.roles)";
+          $permissionQuery = " JOIN b.permissions pe WITH (pe INSTANCE OF Application_Model_ModelPermission AND pe.base = b.id AND pe.action = :permissionAction AND :roleId MEMBER OF pe.roles)";
 
-          $permissionStatement = sprintf($permissionStatement, $readAllPermission->getAction());
+          $permissionStatement .= sprintf($permissionQuery, $readAllPermission->getAction());
         }
       }
     }

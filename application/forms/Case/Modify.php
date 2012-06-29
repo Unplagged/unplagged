@@ -74,6 +74,13 @@ class Application_Form_Case_Modify extends Zend_Form{
           'disabled'=>false
       ))));
 
+    $requiredRatingsElement = new Zend_Form_Element_Select('requiredRatings');
+    $requiredRatingsElement->setLabel("Required ratings per fragment");
+    for($i = 1; $i < 10; $i++){
+      $requiredRatingsElement->addMultiOption($i, $i);
+    }
+    $requiredRatingsElement->setRequired(true);
+
     $submitElement = new Zend_Form_Element_Submit('submit');
     $submitElement->setLabel('Create case');
     $submitElement->setOptions(array('class'=>'btn btn-primary'));
@@ -83,11 +90,17 @@ class Application_Form_Case_Modify extends Zend_Form{
       , $aliasElement
       , $collaboratorsElement
       , $tagsElement
+      , $requiredRatingsElement
     ));
 
-    $this->addDisplayGroup(array('name', 'alias', 'collaborators', 'tags')
+    $this->addDisplayGroup(array('name', 'alias', 'requiredRatings', 'tags')
         , 'credentialGroup'
-        , array('legend'=>'Case Information')
+        , array('legend'=>'Case Settings')
+    );
+    
+    $this->addDisplayGroup(array('collaborators')
+        , 'collaboratorGroup'
+        , array('legend'=>'Case Collaborators')
     );
 
     $this->addElements(array(

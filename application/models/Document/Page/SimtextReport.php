@@ -29,14 +29,6 @@
 class Application_Model_Document_Page_SimtextReport extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-report';
- 
-  /**
-   * The current state of the report.
-   * 
-   * @ManyToOne(targetEntity="Application_Model_State")
-   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="SET NULL")
-   */
-  private $state;
 
   /**
    * @ManyToOne(targetEntity="Application_Model_Document_Page", inversedBy="simtext_reports", cascade={"persist"})
@@ -71,7 +63,9 @@ class Application_Model_Document_Page_SimtextReport extends Application_Model_Ba
    */
   private $content;
 
-  public function __construct(&$data){
+  public function __construct($data = array()){
+    parent::__construct($data);
+    
     if(isset($data["content"])){
       $this->content = $data["content"];
     }
@@ -83,9 +77,6 @@ class Application_Model_Document_Page_SimtextReport extends Application_Model_Ba
     }
     if(isset($data["documents"])){
       $this->documents = $data["documents"];
-    }
-    if(isset($data["state"])){
-      $this->state = $data["state"];
     }
     if(isset($data["user"])){
       $this->user = $data["user"];
@@ -130,14 +121,6 @@ class Application_Model_Document_Page_SimtextReport extends Application_Model_Ba
 
   public function getUser(){
     return $this->user;
-  }
-
-  public function getState(){
-    return $this->state;
-  }
-
-  public function setState($state){
-    $this->state = $state;
   }
   
   public function getTitle(){
