@@ -366,14 +366,14 @@ $(document).ready(function(){
     var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
 
     if(target.is(':visible')) {
-      $(this).html("<i class=\"icon-conversation icon-fam\"></i>Show conversation");
+      $(this).html("<i class=\"icon-conversation icon-fam\"></i>" + $.t('conversation.show'));
       $(this).removeClass("expanded");
       
       target.slideUp(800, function() {
         conversation.html("");
       });
     } else {
-      $(this).html("<i class=\"icon-conversation icon-fam\"></i>Hide conversation");
+      $(this).html("<i class=\"icon-conversation icon-fam\"></i>" + $.t('conversation.hide'));
       $(this).addClass("expanded");
       target.show();
       conversation.hide();
@@ -421,7 +421,7 @@ $(document).ready(function(){
         var icon = data.rating ? 'icon-thumbs-up' : 'icon-thumbs-down';
         tpl =  '<div class="rating">' +
         '<div class="details">' +
-        '<div class="title">' + '<i class="' + icon + '"></i> <b>' + data.user.username + '</b> rated the fragment.' + 
+        '<div class="title">' + '<i class="' + icon + '"></i> <b>' + data.user.username + '</b> ' + $.t('conversation.rated') + '.' +
         ' <span class="date">' + data.created.humanTiming + '</span>' +
         '</div>' +
         '</div>' +
@@ -632,13 +632,6 @@ $(document).ready(function(){
   
   $('#source-document-select #source-document').change(function(){
     $('#source-document-select').submit();
-  });
-  
-  $.i18n.init({
-    lng: 'de', 
-    fallbackLng: 'de', 
-    resGetPath: '/js/i18n/__lng__.json', 
-    debug: false
   });
   
   $('.pager .disabled a').live('click', function() {

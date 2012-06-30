@@ -59,7 +59,7 @@ class Application_Form_User_Register extends Zend_Form{
     $passwordElement->setRequired(true);
     
     $reenterPasswordElement = new Zend_Form_Element_Password('confirmedPassword');
-    $reenterPasswordElement->setLabel("Passwort erneut eingeben");
+    $reenterPasswordElement->setLabel("Repeat password");
     $reenterPasswordElement->setAttrib('maxLength', 32);
     $reenterPasswordElement->addValidator('Identical', false, array('token' => 'password'));
     $reenterPasswordElement->setRequired(true);

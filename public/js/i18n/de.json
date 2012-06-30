@@ -1,10 +1,31 @@
 {
-  "permission": {
-    "create": "erstellen",
-    "read": "lesen",
-    "update": "editieren",
-    "delete": "löschen",
-    "authorize": "freigeben"
-
-  }
+    "permission": {
+        "create": "erstellen",
+        "read": "lesen",
+        "update": "editieren",
+        "delete": "löschen",
+        "authorize": "freigeben"
+    },
+    "contextmenu": {
+        "tip": {
+            "title": "Tipp: Benuzten Sie das Kontextmenü",
+            "text": "Sie können Wörter mit der linken Maustaste markieren und dann mit einem Rechtsklick das Kontextmenü öffnen"
+        },
+        "google": {
+            "open": "Google öffnen",
+            "remove": "Google-Suchwörter löschen",
+            "search": "Google Suche nach"
+        },
+        "fragment": {
+            "candidate": "Als Fragmentverdacht setzen",
+            "source": "Als Fragmentquelle setzen",
+            "create": "Fragment erstellen"
+        },
+        "print": "Seite drucken"
+    },
+    "conversation": {
+        "rated": "hat das Fragment bewertet",
+        "show": "Konversation anzeigen",
+        "hide": "Konversation verbergen"
+    }
 }

@@ -227,19 +227,19 @@
    */
     function addContextMenu(){
       var contextMenuElement = '<ul id="contextmenu" class="contextmenu dropdown-menu">' + 
-      '<li class="google-search-for start-search"><a href="#"><i class="icon-search"></i> Google Suche nach <span id="google-search-words"></span></a></li>' +
-      '<li class="google-search-for delete-search-words"><a href="#"><i class="icon-remove"></i> Google-Suchwörter löschen</a></li>' +
+      '<li class="google-search-for start-search"><a href="#"><i class="icon-search"></i> ' + $.t('contextmenu.google.search') + ' <span id="google-search-words"></span></a></li>' +
+      '<li class="google-search-for delete-search-words"><a href="#"><i class="icon-remove"></i>' + $.t('contextmenu.google.remove') + '</a></li>' +
       '<li class="divider"></li>' +
       
-      '<li><a href="#" class="set-candidate-fragment"><i class="icon-bookmark"></i> Set as candidate of fragment</a></li>' +
-      '<li class="hidden"><a class="reset-candidate-fragment"href="#"><i class="icon-remove"></i> <span id="candidate-text">test</span></a></li>' +
-      '<li><a href="#" class="set-source-fragment"><i class="icon-bookmark"></i> Set as source of fragment</a></li>' +
-      '<li class="hidden"><a class="reset-source-fragment" href="#"><i class="icon-remove"></i> <span id="source-text">test</span></a></li>' +
-      '<li class="disabled"><a href="#" class="create-fragment"><i class="icon-tasks"></i> Create fragment</a></li>' +
+      '<li><a href="#" class="set-candidate-fragment"><i class="icon-bookmark"></i> ' + $.t('contextmenu.fragment.candidate') + '</a></li>' +
+      '<li class="hidden"><a class="reset-candidate-fragment"href="#"><i class="icon-remove"></i> <span id="candidate-text"></span></a></li>' +
+      '<li><a href="#" class="set-source-fragment"><i class="icon-bookmark"></i> ' + $.t('contextmenu.fragment.source') + '</a></li>' +
+      '<li class="hidden"><a class="reset-source-fragment" href="#"><i class="icon-remove"></i> <span id="source-text"></span></a></li>' +
+      '<li class="disabled"><a href="#" class="create-fragment"><i class="icon-tasks"></i> ' + $.t('contextmenu.fragment.create') + '</a></li>' +
 
       '<li class="divider"></li>' +
-      '<li><a href="http://www.google.de"><i class="icon-globe"></i> Open Google</a></li>' +
-      '<li><a href="#" onclick="window.print();"><i class="icon-print"></i> Print page</a></li>' +
+      '<li><a href="http://www.google.de"><i class="icon-globe"></i> ' + $.t('contextmenu.google.open') + '</a></li>' +
+      '<li><a href="#" onclick="window.print();"><i class="icon-print"></i> ' + $.t('contextmenu.print') + '</a></li>' +
       '</ul>';
   
       $('body').append(contextMenuElement);
@@ -252,8 +252,8 @@
     //to make it possible to show the contextmenu only on certain elements, 
     //we only use it when the class show-contextmenu is present
     $('.show-contextmenu')
-    .attr('title', 'Tip: Use Contextmenu')
-    .attr('data-content', 'You can mark words with a leftclick and then open a contexmenu on right click.')
+    .attr('title', $.t('contextmenu.tip.title'))
+    .attr('data-content', $.t('contextmenu.tip.text'))
     .popover({
       placement: 'top'
     }).bind('contextmenu', showCustomContextmenu);
