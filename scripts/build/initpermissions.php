@@ -305,13 +305,13 @@ if(!$caseAdmin){
 $caseCollaborator = $em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'case-collaborator', 'type'=>Application_Model_User_Role::TYPE_CASE_DEFAULT));
 if(!$caseCollaborator){
   $caseCollaborator = new Application_Model_User_InheritableRole(Application_Model_User_Role::TYPE_CASE_DEFAULT);
-  $caseAdmin->setRoleId('case-collaborator');
+  $caseCollaborator->setRoleId('case-collaborator');
 
   foreach($modelPermissions as $modelPermission){
-    $caseAdmin->addPermission($modelPermission);
+    $caseCollaborator->addPermission($modelPermission);
   }
 
-  $em->persist($caseAdmin);
+  $em->persist($caseCollaborator);
 }
 
 
