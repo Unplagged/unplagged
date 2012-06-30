@@ -34,7 +34,7 @@ class Application_Form_Document_Modify extends Zend_Form{
 
     // general group
     $titleElement = new Zend_Form_Element_Text('title');
-    $titleElement->setLabel("Title*");
+    $titleElement->setLabel("Title");
     $titleElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
     $titleElement->addValidator('stringLength', false, array(2, 64));
     $titleElement->setRequired(true);

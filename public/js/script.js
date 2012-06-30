@@ -643,6 +643,8 @@ $(document).ready(function(){
   
   $('.pager .disabled a').live('click', function() {
     return false;
-  })
+  });
+  
+  $('label.required').append(' <span class="red">*</span>');
   
 });

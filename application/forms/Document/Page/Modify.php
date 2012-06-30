@@ -31,12 +31,12 @@ class Application_Form_Document_Page_Modify extends Zend_Form{
     $this->setMethod('post');
 
     $pageNumberElement = new Zend_Form_Element_Text('pageNumber');
-    $pageNumberElement->setLabel("Seitenzahl");
+    $pageNumberElement->setLabel("Page number");
     $pageNumberElement->addValidator('regex', false, array('/^[0-9]/i'));
     $pageNumberElement->setRequired(true);
 
     $disabledElement = new Zend_Form_Element_Checkbox('disabled');
-    $disabledElement->setLabel("Deaktiviert");
+    $disabledElement->setLabel("Disabled");
     
     $contentElement = new Zend_Form_Element_Textarea('content');
     $contentElement->setLabel("Content");

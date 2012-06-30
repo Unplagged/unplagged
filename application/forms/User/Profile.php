@@ -68,7 +68,6 @@ class Application_Form_User_Profile extends Zend_Form{
     $firstnameElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
     $firstnameElement->addValidator('stringLength', false, array(2, 64));
     $firstnameElement->setAttrib('maxLength', 64);
-    $firstnameElement->setRequired(true);
 
     $lastnameElement = new Zend_Form_Element_Text('lastname');
     $lastnameElement->setLabel("Lastname");
@@ -76,11 +75,10 @@ class Application_Form_User_Profile extends Zend_Form{
     $lastnameElement->addValidator('regex', false, array('/^[a-z0-9ßöäüâáàéèñ]/i'));
     $lastnameElement->addValidator('stringLength', false, array(2, 64));
     $lastnameElement->setAttrib('maxLength', 64);
-    $lastnameElement->setRequired(true);
 
     $avatar = new Zend_Form_Element_File('avatar');
     $avatar->addValidator('Extension', false, 'jpg,jpeg');
-    $avatar->addValidator('Size', false, 204800);
+    $avatar->addValidator('Size', false, 409600);
     $avatar->setLabel('Avatar');
     
     $removeAvatar = new Zend_Form_Element_Checkbox('removeAvatar');

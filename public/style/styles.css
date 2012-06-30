@@ -2215,6 +2215,10 @@ li.plupload_droptext {
   font-weight: normal;
 }
 
+.red {
+color: red;
+}
+
 /* ==|== media queries ====================================================== */
 
 @media only screen and (max-width: 768px) {
