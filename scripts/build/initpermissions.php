@@ -119,7 +119,8 @@ if(!$guestRole){
     array('user', 'recover-password'),
     array('document', 'response-plagiarism'),
     array('user', 'set-current-case'),
-    array('index', 'imprint')
+    array('index', 'imprint'),
+    array('user', 'activate-user')
   );
 
   foreach($defaultPermissions as $permissionName){

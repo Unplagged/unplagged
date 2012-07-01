@@ -64,9 +64,9 @@ class ReportController extends Unplagged_Controller_Versionable{
       
       $this->_em->flush();
       
-      $this->_helper->flashMessenger->addMessage(array('success'=>'The report generation has been scheduled.'));
+      $this->_helper->FlashMessenger(array('success'=>'The report generation has been scheduled.'));
     }else{
-      $this->_helper->flashMessenger->addMessage(array('error'=>'You have to select a case, before you can start the report creation.'));
+      $this->_helper->FlashMessenger(array('error'=>'You have to select a case, before you can start the report creation.'));
     }
     $this->_helper->redirector('list', 'report');
   }
@@ -131,11 +131,11 @@ class ReportController extends Unplagged_Controller_Versionable{
 
         readfile($downloadPath);
       }else{
-        $this->_helper->flashMessenger->addMessage(array('error' => "Sorry, we couldn't find the requested report."));
+        $this->_helper->FlashMessenger(array('error' => "Sorry, we couldn't find the requested report."));
         $this->_helper->redirector('list', 'report');
       }
     }else{
-      $this->_helper->flashMessenger->addMessage(array('error' => "Sorry, we couldn't find the requested report."));
+      $this->_helper->FlashMessenger(array('error' => "Sorry, we couldn't find the requested report."));
       $this->_helper->redirector('list', 'report');
     }
   }

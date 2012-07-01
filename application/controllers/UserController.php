@@ -191,7 +191,7 @@ class UserController extends Unplagged_Controller_Action{
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneByVerificationHash($input->hash);
     if(empty($user) || $user->getState()->getName() != 'registered'){
-      $this->_helper->flashmessenger->addMessage(array('error'=>'Verification failed.'));
+      $this->_helper->FlashMessenger(array('error'=>'Verification failed.'));
       $this->_helper->redirector('index', 'index');
     }else{
       $user->setState($this->_em->getRepository('Application_Model_State')->findOneByName('activated'));
@@ -207,7 +207,7 @@ class UserController extends Unplagged_Controller_Action{
       // send registration mail
       Unplagged_Mailer::sendActivationMail($user);
 
-      $this->_helper->flashmessenger->addMessage(array('success'=>'Verification finished successfully.'));
+      $this->_helper->FlashMessenger(array('success'=>'Verification finished successfully.'));
       $this->_helper->redirector('index', 'index');
     }
   }
@@ -332,7 +332,7 @@ class UserController extends Unplagged_Controller_Action{
           $this->_em->persist($user);
           $this->_em->flush();
 
-          $this->_helper->flashMessenger->addMessage('User Profile saved successfully.');
+          $this->_helper->FlashMessenger(array('success', 'User Profile saved successfully.'));
           // $this->_helper->redirector('index', 'index');
         }
       }
@@ -443,4 +443,18 @@ class UserController extends Unplagged_Controller_Action{
     $this->view->roleForm = new Application_Form_User_Role();
   }
 
+  /**
+   * @todo: need to remove this, since it is just for testing 
+   */
+  public function activateUserAction(){
+    $input = new Zend_Filter_Input(array('username'=>'Alnum'), null, $this->_getAllParams());
+
+    $user = $this->_em->getRepository('Application_Model_User')->findOneByUsername($input->username);
+    if($user){
+      $params = array('hash'=>$user->getVerificationHash());
+      $this->_helper->redirector('verify', 'user', '', $params);
+    }else{
+      $this->_helper->redirector('index', 'index');
+    }
+  }
 }
