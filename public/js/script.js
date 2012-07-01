@@ -104,11 +104,11 @@ $(document).ready(function(){
     if(btn.attr('data-colors') == 'true') {
       btn.attr('data-colors', 'false');
       compareFragmentTexts(btn.attr('data-value'), 'false');
-      btn.html('<i class="icon-ok-circle"></i>Show colors');
+      btn.html('<i class="icon-ok-circle"></i>' + $.t('showcolors'));
     } else {
       btn.attr('data-colors', 'true');
       compareFragmentTexts(btn.attr('data-value'), 'true');
-      btn.html('<i class="icon-remove-circle"></i>Hide colors');
+      btn.html('<i class="icon-remove-circle"></i>' + $.t('hidecolors'));
     }
     return false;
   });

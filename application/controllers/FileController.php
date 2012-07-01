@@ -41,6 +41,8 @@ class FileController extends Unplagged_Controller_Action{
         echo '{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}';
       }
     }
+    
+    $this->setTitle('Upload files');
   }
 
   /**

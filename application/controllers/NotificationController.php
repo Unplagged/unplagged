@@ -43,6 +43,7 @@ class NotificationController extends Unplagged_Controller_Action{
     $paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     $paginator->setCurrentPageNumber($input->page);
 
+    $this->setTitle('Recent activity');
     $this->view->paginator = $paginator;
   }
 

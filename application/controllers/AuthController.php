@@ -61,6 +61,7 @@ class AuthController extends Unplagged_Controller_Action{
         $this->handleLoginData($loginForm);
       }
 
+      $this->setTitle('Login');
       $this->view->loginForm = $loginForm;
     }
   }

@@ -1,22 +1,3 @@
-<?php
-/*
- * Unplagged - The plagiarism detection cockpit.
- * Copyright (C) 2012 Unplagged
- *  
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-?>
 <table cellpadding="0" cellspacing="0" class="default">
   <thead>
     <tr>
@@ -29,7 +10,7 @@
       <?php foreach($this->userRoles as $role): ?>
         <tr>
           <td data-label="<?php echo $this->translate("User role"); ?>"><?php echo $role->getRoleId(); ?></td>
-          <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn">Edit</a></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn"><?php echo $this->translate("Edit"); ?></a></td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
@@ -52,7 +33,7 @@
       <?php foreach($this->caseRoles as $role): ?>
         <tr>
           <td data-label="<?php echo $this->translate("Case Role"); ?>"><?php echo $role->getRoleId(); ?></td>
-          <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn">Edit</a></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn"><?php echo $this->translate("Edit"); ?></a></td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
@@ -75,7 +56,7 @@
       <?php foreach($this->systemRoles as $role): ?>
         <tr>
           <td data-label="<?php echo $this->translate("System Role"); ?>"><?php echo $role->getRoleId(); ?></td>
-          <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn">Edit</a></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn"><?php echo $this->translate("Edit"); ?></a></td>
         </tr>
       <?php endforeach; ?>
     <?php else: ?>

@@ -1,6 +1,7 @@
 # Unplagged csv file [de]
 Register now;Jetzt registrieren
 login;einloggen
+Login;Einloggen
 or;oder
 Edit profile;Profil bearbeiten
 List of cases;Liste der Fälle
@@ -136,3 +137,107 @@ Create document;Dokument erstellen
 Language;Sprache
 Please select the language of the text in the file, you want to create a document of.;Bitte wählen Sie die Sprache des in der Datei vorkommenden Textes aus.
 Abort;Abbrechen
+Did you lose your password?;Passwort verloren?
+Recover password;Passwort wiederherstellen
+Repeat password;Passwort wiederholen
+Login failed.;Einloggen fehlgeschlagen.
+
+A user registered on the plattform;Ein Benutzer hat sich im System registriert.
+
+Show conversation;Konversation anzeigen
+
+User %s registered;Benutzer %s hat sich registriert
+User %s updated the own profile.;Benutzer %s hat das eigene Profile aktualisiert
+User %s verified;Benutzer %s freigeschaltet
+User %s requested password;Benutzer %s hat sein Passwort angefordert
+Case %s was created;Fall %s wurde erstellt
+Case %s was updated;Fall %s wurde aktualisiert
+Case %s was published;Fall %s wurde publiziert
+Case %s was unpublished;Publizierung von Fall %s zurückgezogen
+File %s was uploaded;Datei %s wurde hochgeladen
+Fragment %s was created;Fragment %s wurde erstellt
+Fragment %s was updated;Fragment %s wurde aktualisiert
+Fragment %s was removed;Fragment %s wurde gelöscht
+Document %s was created;Dokument %s wurde erstellt
+Document %s was removed;Dokument %s wurde gelöscht
+Document %s was updated;Dokument %s wurde aktualisiert
+Simtext report %s was created;Textvergleichreport %s wurde erstellt
+report %s was created;Bericht %s wurde erstellt
+Detection report %s was created;Erkennungsbericht %s wurde erstellt
+New comment on %s created;Neuer Kommentar für %s abgegeben
+New rating for %s provided;Neue Bewertung für %s abgegeben
+Provided rating for %s was updated;Bewertung für %s wurde aktualisiert
+Parse file %s;Datei %s parsen
+Page %s was created;Seite %s wurde erstellt
+Page %s was updated;Seite %s wurde aktualisiert
+Page %s was removed;Seite %s wurde gelöscht
+Simtext page %s;Textvergleich Seite %s
+User requested a report;Benutzer hat einen Bericht angefordert
+
+No entries found.;Keine Einträge gefunden.
+Create a fragment;Fragment erstellen
+List of fragments;Liste von Fragmenten
+Type;Typ
+Create fragment;Fragment erstellen
+Candidate Information;Informationen zum Kandidaten
+Source Information;Informationen zur Quelle
+Page from;Seite von
+Page to;Seite bis
+Line from;Zeile von
+Line to;Zeile bis
+Document;Dokument
+General Information;Allgemeine Informationen
+The fragment was created successfully.;Das Fragment wurde erfolgreich erstellt.
+The fragment needs your approval.;Das Fragment benötigt Ihre Bewertung.
+Ratings;Bewertungen
+Conversation;Konversation
+Approve / decline;Bestätigen / ablehnen
+Candidate;Kandidat
+Source;Quelle
+No reason set.;Kein Grund angegeben.
+Hide colors;Farben ausblenden
+Rate fragment;Fragment bewerten
+Rating details;Details der Bewertung
+Rating;Bewertung
+Approve;Bestätigen
+Decline;Ablehnen
+Reason;Grund
+Create rating;Bewertung abgeben
+Your rating was added successfully.;Ihre Bewertung wurde erfolgreich hinzugefügt.
+Edit fragment;Fragment bearbeiten
+Remove fragment;Fragmen löschen
+Set permissions;Berechtigungen setzten
+Permissions Information;Informationen zu den Berechtigungen
+Save permissions;Berechtigungen speichern
+Manage permissions;Bewertungen verwalten
+People having access to the element;Benutzer mit Zugriff zum Element
+Unset target;Zieldokument zurücksetzen
+Set target;Zieldokument setzen
+Create a document;Dokument erstellen
+Detect plagiarism;Plagiat erkennen
+Document type:Dokumentart
+Document Information; Informationen des Dokuments
+BibTex Information;BibTex Informationen
+Download;Herunterladen
+Delete;Löschen
+Create a report;Bericht erstellen
+Report;Bericht
+No reports found.;Keine Berichte gefunden.
+List of final reports;Liste finaler Berichte
+Edit case;Fall bearbeiten
+Case Settings;Einstellungen des Falls
+Case Collaborators;Mitwirkende des Falls
+Required ratings per fragment;Notwendige Bewertungen pro Fragment
+Collaborators;Mitwirkende
+Save case;Fall speichern
+Publish case;Fall veröffentlichen
+Unpublish case;Veröffentlichung zurücksetzen
+The case %s was published successfully.;Der Fall %s wurde erfolgreich veröffentlicht.
+The case %s was unpublished successfully.;Die Veröffentlichung des Falls %s wurde erfolgreich zurückgesetzt.
+Create a new case;Neuen Fall erstellen
+User Roles;Benutzerrollen
+Case Roles;Fallrollen
+System Roles;Systemrollen
+Edit;Bearbeiten
+Save role;Rolle speichern
+Home;Startseite

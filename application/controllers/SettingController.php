@@ -42,7 +42,7 @@ class SettingController extends Unplagged_Controller_Action{
       }
     }
 
-    $this->view->title = 'Create state';
+    $this->setTitle('Create state');
     $this->view->modifyForm = $modifyForm;
     $this->_helper->viewRenderer->renderBySpec('state/modify', array('controller'=>'setting'));
   }
@@ -73,7 +73,7 @@ class SettingController extends Unplagged_Controller_Action{
         }
       }
 
-      $this->view->title = "Edit state";
+      $this->setTitle('Edit state');
       $this->view->modifyForm = $modifyForm;
       $this->_helper->viewRenderer->renderBySpec('state/modify', array('controller'=>'setting'));
     }else{
@@ -127,6 +127,7 @@ class SettingController extends Unplagged_Controller_Action{
       $state->actions[] = $action;
     endforeach;
 
+    $this->setTitle('List of states');
     $this->view->paginator = $paginator;
     $this->_helper->viewRenderer->renderBySpec('state/list', array('controller'=>'setting'));
   }
@@ -146,7 +147,7 @@ class SettingController extends Unplagged_Controller_Action{
       }
     }
 
-    $this->view->title = 'Create action';
+    $this->setTitle('Create action');
     $this->view->modifyForm = $modifyForm;
     $this->_helper->viewRenderer->renderBySpec('action/modify', array('controller'=>'setting'));
   }
@@ -177,7 +178,7 @@ class SettingController extends Unplagged_Controller_Action{
         }
       }
 
-      $this->view->title = "Edit action";
+     $this->setTitle('Edit action');
       $this->view->modifyForm = $modifyForm;
       $this->_helper->viewRenderer->renderBySpec('action/modify', array('controller'=>'setting'));
     }else{
@@ -215,6 +216,7 @@ class SettingController extends Unplagged_Controller_Action{
 
     endforeach;
 
+    $this->setTitle('List of actions');
     $this->view->paginator = $paginator;
     $this->_helper->viewRenderer->renderBySpec('action/list', array('controller'=>'setting'));
   }

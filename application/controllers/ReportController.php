@@ -41,6 +41,7 @@ class ReportController extends Unplagged_Controller_Versionable{
       }
     }
 
+    $this->setTitle('List of final reports');
     $this->view->paginator = $paginator;
   }
 

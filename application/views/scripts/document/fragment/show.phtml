@@ -1,8 +1,3 @@
-<?php
-$this->title = $this->fragment->getTitle();
-$this->headTitle($this->title);
-?>
-
 <h3>Details</h3>
 <p>
   <?php echo $this->translate("Type"); ?>: <?php echo $this->fragment->getType()->getName(); ?><br/>
@@ -10,15 +5,15 @@ $this->headTitle($this->title);
 <p>
 <div class="document-page diff clearfix">
   <div class="src-wrapper">
-    <h4><?php echo $this->translate("Fragment"); ?></h4>
-    <p>From: page <?php echo $this->plag->getLineFrom()->getPage()->getPageNumber(); ?>, line <?php echo $this->plag->getLineFrom()->getLineNumber(); ?></p>
-    <p>To: page <?php echo $this->plag->getLineTo()->getPage()->getPageNumber(); ?>, line <?php echo $this->plag->getLineTo()->getLineNumber(); ?></p>    
+    <h4><?php echo $this->translate("Candidate"); ?></h4>
+    <p><?php echo $this->translate("Page from"); ?>: <?php echo $this->plag->getLineFrom()->getPage()->getPageNumber(); ?>, <?php echo $this->translate("Line from"); ?>: <?php echo $this->plag->getLineFrom()->getLineNumber(); ?></p>
+    <p><?php echo $this->translate("Page to"); ?>: page <?php echo $this->plag->getLineTo()->getPage()->getPageNumber(); ?>, <?php echo $this->translate("Line to"); ?>: <?php echo $this->plag->getLineTo()->getLineNumber(); ?></p>    
     <div id="candidateText"><?php echo $this->content['plag']; ?></div>
   </div>
   <div class="src-wrapper">
     <h4><?php echo $this->translate("Source"); ?></h4>
-    <p>From: page <?php echo $this->source->getLineFrom()->getPage()->getPageNumber(); ?>, line <?php echo $this->source->getLineFrom()->getLineNumber(); ?></p>
-    <p>To: page <?php echo $this->source->getLineTo()->getPage()->getPageNumber(); ?>, line <?php echo $this->source->getLineTo()->getLineNumber(); ?></p>
+    <p><?php echo $this->translate("Page from"); ?>: <?php echo $this->source->getLineFrom()->getPage()->getPageNumber(); ?>, <?php echo $this->translate("Line from"); ?>: <?php echo $this->source->getLineFrom()->getLineNumber(); ?></p>
+    <p><?php echo $this->translate("Page to"); ?>: <?php echo $this->source->getLineTo()->getPage()->getPageNumber(); ?>, <?php echo $this->translate("Line to"); ?>: <?php echo $this->source->getLineTo()->getLineNumber(); ?></p>
     <div id="sourceText"><?php echo $this->content['source']; ?></div>
   </div>
 </div>
@@ -26,11 +21,11 @@ $this->headTitle($this->title);
 <p><?php echo $this->translate("Note"); ?>: <?php echo $this->fragment->getNote(); ?></p>
 
 <p class="pagination-right">
-  <a href="#" class="btn compare-with-color" data-colors="true" data-value="<?php echo $this->fragment->getId(); ?>"><i class="icon-remove-circle"></i>Hide colors</a>
+  <a href="#" class="btn compare-with-color" data-colors="true" data-value="<?php echo $this->fragment->getId(); ?>"><i class="icon-remove-circle"></i><?php echo $this->translate("Hide colors"); ?></a>
 </p>
 
 
-<h3>Ratings</h3>
+<h3><?php echo $this->translate("Ratings"); ?></h3>
 <p>
 <div class="accordion" id="ratings-accordion">
   <?php foreach($this->ratings as $rating): ?>
@@ -45,7 +40,7 @@ $this->headTitle($this->title);
           <?php if($rating->getUser()->getId() == Zend_Registry::getInstance()->user->getId() && $this->fragment->getState()->getName() != 'approved'){ ?>
             <a href="/document_fragment/rate/id/<?php echo $rating->getId(); ?>/source/<?php echo $this->fragment->getId(); ?>"><i class="icon-edit icon-fam float-right edit-rating"></i></a>
           <?php } ?>
-          <?php echo $rating->getReason() ? $rating->getReason() : '<i>No reason set</i>'; ?>
+          <?php echo $rating->getReason() ? $rating->getReason() : '<i>' . $this->translate("No reason set.") . '</i>'; ?>
         </div>
       </div>
     </div>
@@ -54,12 +49,12 @@ $this->headTitle($this->title);
 </p>
 <?php if($this->rateAble) { ?>
 <p>
-<a class="btn" href="/document_fragment/rate/source/<?php echo $this->fragment->getId(); ?>"><i class="icon-rate icon-fam"></i>Approve / decline</a>
+<a class="btn" href="/document_fragment/rate/source/<?php echo $this->fragment->getId(); ?>"><i class="icon-rate icon-fam"></i><?php echo $this->translate("Approve / decline"); ?></a>
 </p>
 <?php } ?>
 <h3>Conversation</h3>
 <div>
-  <a class="btn toggle-conversation" href="#" for="conversation-wrapper-<?php echo $this->fragment->getId(); ?>"><i class="icon-comments icon-fam"></i>Show conversation</a>
+  <a class="btn toggle-conversation" href="#" for="conversation-wrapper-<?php echo $this->fragment->getId(); ?>"><i class="icon-comments icon-fam"></i><?php echo $this->translate("Show conversation"); ?></a>
   <br /><br />
   <?php echo $this->partial('partials/conversation.phtml', array('sourceId'=>$this->fragment->getId(), 'hidden'=>true)); ?>
 </div>

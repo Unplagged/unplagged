@@ -1,11 +1,3 @@
-<?php
-    $this->title = $this->translate("Edit profile");
-    $this->headTitle($this->title);
-?>
-
-<?php 
-    // Output the form including the user data.
-    echo $this->profileForm;	
-?>
+<?php echo $this->profileForm;?>
 <br />
 <p><?php echo $this->translate("Do you want to remove your account?"); ?> <a href="/user/remove-account"><?php echo $this->translate("Remove account"); ?></a></p>

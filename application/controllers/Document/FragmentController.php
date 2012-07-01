@@ -125,7 +125,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       }
     }
 
-    $this->view->title = "Create fragment";
+    $this->setTitle('Create fragment');
     $this->view->modifyForm = $modifyForm;
     $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document_fragment'));
   }
@@ -188,7 +188,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
         $this->initalisePartial($modifyForm, 'source', $formData);
       }
 
-      $this->view->title = "Edit fragment";
+      $this->setTitle('Edit fragment');
       $this->view->modifyForm = $modifyForm;
       $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document_fragment'));
     }else{
@@ -238,7 +238,8 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
           $fragment->actions[] = $action;
         }
       endforeach;
-
+      
+      $this->setTitle('List of fragments');
       $this->view->paginator = $paginator;
     }else{
       $this->_helper->FlashMessenger('You need to select a case first.');
@@ -303,11 +304,11 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     $params = array('redirect'=>'document_fragment/rate-response/id/' . $input->source);
 
     if($input->id){
-      $this->view->title = "Edit fragment rating";
+      $this->setTitle('Edit fragment rating');
       $params['id'] = $input->id;
       $this->_forward('edit', 'rating', '', $params);
     }else{
-      $this->view->title = "Rate fragment";
+      $this->setTitle('Rate fragment');
       $this->_forward('create', 'rating', '', $params);
     }
   }

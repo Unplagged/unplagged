@@ -52,7 +52,7 @@ class BibtexController extends Unplagged_Controller_Action{
       $this->view->bibTex = $bibTex;
     }
 
-    $this->view->title = "Bibliography";
+    $this->setTitle('Bibliography');
   }
 
   /**
@@ -83,7 +83,7 @@ class BibtexController extends Unplagged_Controller_Action{
     endforeach;
 
     $this->view->paginator = $paginator;
-    $this->view->title = "Bibliography";
+    $this->setTitle('Bibliography');
   }
 
 }

@@ -1,7 +1,3 @@
-<?php
-$this->title = $this->translate("Recent activity");
-$this->headTitle($this->title);
-?>
 <div id="activity-stream">
   <?php foreach($this->paginator as $notification): ?>
     <div class="activity-item">
@@ -13,9 +9,9 @@ $this->headTitle($this->title);
               <span class="title"><i class="<?php echo $notification->getSource()->getIconClass(); ?> icon-fam"></i>
                 <?php
                   if($notification->getSource()->getState()->getName() != 'deleted'){
-                   echo sprintf($notification->getTitle(), "<a href=\"" . $notification->getSource()->getDirectLink() . "\">" . $notification->getSource()->getDirectName() . "</a>");
+                   echo sprintf($this->translate($notification->getTitle()), "<a href=\"" . $notification->getSource()->getDirectLink() . "\">" . $notification->getSource()->getDirectName() . "</a>");
                  }else{
-                   echo sprintf($notification->getTitle(), '<span class="removed-element">' . $notification->getSource()->getDirectName() . '</span>');
+                   echo sprintf($this->translate($notification->getTitle()), '<span class="removed-element">' . $notification->getSource()->getDirectName() . '</span>');
                  } ?>            </span> <span class="user"><?php echo $notification->getUser()->getUsername(); ?>, <?php echo Unplagged_Helper::humanTiming($notification->getCreated()); ?> </span>
             </h4>
             <div class="links"  style="text-align: right">

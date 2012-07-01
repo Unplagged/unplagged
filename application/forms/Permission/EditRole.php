@@ -50,7 +50,7 @@ class Application_Form_Permission_EditRole extends Zend_Form{
       }
     }
     $submitElement = new Zend_Form_Element_Submit('submit');
-    $submitElement->setLabel('Save Role');
+    $submitElement->setLabel('Save role');
     $submitElement->setOptions(array('class'=>'btn btn-primary'));
 
     $this->addElements(array($submitElement));

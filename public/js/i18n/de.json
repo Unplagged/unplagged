@@ -27,5 +27,7 @@
         "rated": "hat das Fragment bewertet",
         "show": "Konversation anzeigen",
         "hide": "Konversation verbergen"
-    }
+    },
+    "showcolors": "Farben anzeigen",
+    "hidecolors": "Farben ausblenden"
 }

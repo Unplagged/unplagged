@@ -27,5 +27,7 @@
         "rated": "rated the fragment",
         "show": "Show conversation",
         "hide": "Hide conversation"
-    }
+    },
+    "showcolors": "Show colors",
+    "hidecolors": "Hide colors"
 }

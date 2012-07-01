@@ -48,6 +48,7 @@ class UserController extends Unplagged_Controller_Action{
     }
 
     // send form to view
+    $this->setTitle('Registration');
     $this->view->registerForm = $registerForm;
   }
 
@@ -267,6 +268,7 @@ class UserController extends Unplagged_Controller_Action{
     }
 
     // send form to view
+    $this->setTitle('Recover password');
     $this->view->recoverForm = $recoverForm;
   }
 
@@ -338,6 +340,7 @@ class UserController extends Unplagged_Controller_Action{
       }
 
       // send form to view
+      $this->setTitle('Edit profile');
       $this->view->profileForm = $profileForm;
     }
     Zend_Layout::getMvcInstance()->cases = null;
@@ -436,10 +439,12 @@ class UserController extends Unplagged_Controller_Action{
     }
 
     // send form to view
+    $this->setTitle('Remove account');
     $this->view->removalForm = $removalForm;
   }
 
   public function editRoleAction(){
+    $this->setTitle('Roles');
     $this->view->roleForm = new Application_Form_User_Role();
   }
 

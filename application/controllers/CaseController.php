@@ -50,7 +50,7 @@ class CaseController extends Unplagged_Controller_Action{
       }
     }
 
-    $this->view->title = 'Create case';
+    $this->setTitle('Create case');
     $this->view->modifyForm = $modifyForm;
     $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
   }
@@ -141,7 +141,7 @@ class CaseController extends Unplagged_Controller_Action{
         }
       }
 
-      $this->view->title = "Edit case";
+      $this->setTitle('Edit case');
       $this->view->modifyForm = $modifyForm;
       $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'case'));
     }else{
@@ -182,6 +182,7 @@ class CaseController extends Unplagged_Controller_Action{
       }
     endforeach;
 
+    $this->setTitle('List of cases');
     $this->view->paginator = $paginator;
   }
 

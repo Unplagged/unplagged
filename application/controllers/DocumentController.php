@@ -69,7 +69,7 @@ class DocumentController extends Unplagged_Controller_Action{
       }
     }
 
-    $this->view->title = "Create document";
+    $this->setTitle('Create document');
     $this->view->modifyForm = $modifyForm;
     $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document'));
   }
@@ -119,7 +119,7 @@ class DocumentController extends Unplagged_Controller_Action{
         }
       }
 
-      $this->view->title = "Edit document";
+      $this->setTitle('Edit document');
       $this->view->modifyForm = $modifyForm;
       $this->_helper->viewRenderer->renderBySpec('modify', array('controller'=>'document'));
     }else{
@@ -203,7 +203,8 @@ class DocumentController extends Unplagged_Controller_Action{
         $document->actions[] = $action;
       }
     endforeach;
-
+    
+    $this->setTitle('List of documents');
     $this->view->paginator = $paginator;
   }
 
