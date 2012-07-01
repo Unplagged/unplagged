@@ -211,10 +211,11 @@ class CaseController extends Unplagged_Controller_Action{
       foreach($paginator as $file):
         $file->actions = array();
 
-
-        $action['link'] = '/file/parse/id/' . $file->getId();
+        $action['link'] = '#parseFile';
         $action['label'] = 'Create document';
         $action['icon'] = 'images/icons/page_gear.png';
+        $action['data-toggle'] = 'modal';
+        $action['data-id'] = $file->getId();
         $file->actions[] = $action;
 
         $action['link'] = '/file/download/id/' . $file->getId();

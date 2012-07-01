@@ -93,7 +93,10 @@ class Application_Model_Document extends Application_Model_Base{
     if(isset($data["initialFile"])){
       $this->initialFile = $data["initialFile"];
     }
-
+    if(isset($data["language"])){
+      $this->language = $data["language"];
+    }
+    
     $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
     $this->fragments = new \Doctrine\Common\Collections\ArrayCollection();
   }

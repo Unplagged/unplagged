@@ -133,9 +133,11 @@ class UserController extends Unplagged_Controller_Action{
       $file->actions = array();
 
       if($currentCase){
-        $action['link'] = '/file/parse/id/' . $file->getId();
+        $action['link'] = '#parseFile';
         $action['label'] = 'Create document';
         $action['icon'] = 'images/icons/page_gear.png';
+        $action['data-toggle'] = 'modal';
+        $action['data-id'] = $file->getId();
         $file->actions[] = $action;
       }
 

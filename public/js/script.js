@@ -640,4 +640,9 @@ $(document).ready(function(){
   
   $('label.required').append(' <span class="red">*</span>');
   
+  // update the file id in the parse file modal
+  $('a[data-toggle=modal][href=#parseFile]').live('click', function(){
+    $('#parseFile #file-id').val($(this).attr('data-id'));
+  });
+  
 });

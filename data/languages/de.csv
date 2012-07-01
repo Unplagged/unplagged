@@ -130,3 +130,9 @@ Full;Vollständig
 Bibliography;Literaturverzeichnis
 Make public;Öffentlich verfügbar
 Add to current case;Zum Fall hinzufügen
+de;Deutsch
+en;Englisch
+Create document;Dokument erstellen
+Language;Sprache
+Please select the language of the text in the file, you want to create a document of.;Bitte wählen Sie die Sprache des in der Datei vorkommenden Textes aus.
+Abort;Abbrechen

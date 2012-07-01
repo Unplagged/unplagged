@@ -44,7 +44,7 @@ class Unplagged_Parser_Page_TesseractAdapter{
    * it is assumed, that tesseract can be called from anywhere.
    * @param string $language The language which tesseract should use for it's parsing.
    */
-  public function __construct($inputFileLocation, $outputFileLocation, $language = 'eng'){
+  public function __construct($inputFileLocation, $outputFileLocation, $language = 'en'){
     $message = $this->checkForInvalidArguments($inputFileLocation, $outputFileLocation);
 
     if($message === false){
@@ -53,7 +53,10 @@ class Unplagged_Parser_Page_TesseractAdapter{
       //@todo it would probably be better to supply this also via a constructor argument
       //this would ensure the best independece from the rest of the application
       $this->tesseractCall = Zend_Registry::get('config')->parser->tesseractPath;
-      $this->language = $language;
+      
+      // tesseract uses the 3 character language notation, although we use two characters, so let's map them
+      $tesseractLangauges = array('de'=>'deu','en'=>'eng');
+      $this->language = $tesseractLangauges[$language];
     }else{
       throw new InvalidArgumentException($message);
     }

@@ -32,7 +32,7 @@ class FileController extends Unplagged_Controller_Action{
       $this->_helper->viewRenderer->setNoRender(true);
       $this->_helper->layout()->disableLayout();
       $post = $this->_request->getPost();
-      
+
       $uploadForm = new Application_Form_File_Upload();
       if($uploadForm->isValid($post)){
         $this->storeUpload();
@@ -59,17 +59,17 @@ class FileController extends Unplagged_Controller_Action{
       $user->addFile($file);
       $this->_em->persist($file);
 
-      if($this->_request->getPost('makePublic')==='true'){
-        $this->storePublic($file);  
+      if($this->_request->getPost('makePublic') === 'true'){
+        $this->storePublic($file);
       }
-      
-      if($this->_request->getPost('addToCase')==='true'){
-        $this->addToCase($file, $user);  
+
+      if($this->_request->getPost('addToCase') === 'true'){
+        $this->addToCase($file, $user);
       }
-      
+
       $this->_em->persist($user);
       $this->_em->flush();
-      
+
       //store in the activity stream, that the current user uploaded this file
       Unplagged_Helper::notify('file_uploaded', $file, $user);
       $this->_helper->FlashMessenger(array('success'=>array('The file "%s" was successfully uploaded.', array($file->getFilename()))));
@@ -89,13 +89,13 @@ class FileController extends Unplagged_Controller_Action{
    */
   private function addToCase(Application_Model_File $file, Application_Model_User $user){
     $currentCase = $user->getCurrentCase();
-    
+
     if($currentCase){
       $currentCase->addFile($file);
       $this->_em->persist($currentCase);
     }
   }
-  
+
   /**
    * Adds the given file to the guest user, so that it can be displayed in the public files area.
    * 
@@ -104,14 +104,14 @@ class FileController extends Unplagged_Controller_Action{
   private function storePublic(Application_Model_File $file){
     $registry = Zend_Registry::getInstance();
     $guestId = $registry->entitymanager->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
-    $guest = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($guestId->getValue());  
-    
+    $guest = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($guestId->getValue());
+
     $guest->addFile($file);
-    
+
     $this->_em->persist($guest);
     $this->_em->flush();
   }
-  
+
   /**
    * Shows the public files.
    * 
@@ -136,12 +136,12 @@ class FileController extends Unplagged_Controller_Action{
     foreach($paginator as $file){
       $file->actions = array();
 
-      $parseAction['link'] = '/file/parse/id/' . $file->getId();
-      $parseAction['title'] = Zend_Registry::getInstance()->Zend_Translate->translate('The character recognition of big files can take very long, you will be notified when this action is finished.');
-      $parseAction['name'] = 'parse';
-      $parseAction['label'] = 'OCR';
-      $parseAction['icon'] = 'images/icons/page_gear.png';
-      $file->actions[] = $parseAction;
+      $action['link'] = '#parseFile';
+      $action['label'] = 'Create document';
+      $action['icon'] = 'images/icons/page_gear.png';
+      $action['data-toggle'] = 'modal';
+      $action['data-id'] = $file->getId();
+      $file->actions[] = $action;
 
       $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
       if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
@@ -217,15 +217,14 @@ class FileController extends Unplagged_Controller_Action{
    * Parses a single file into a document using OCR. 
    */
   public function parseAction(){
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
+    $input = new Zend_Filter_Input(array('id'=>'Digits', 'language'=>'Alpha'), null, $this->_getAllParams());
+    $language = !empty($input->language) ? $input->language : 'en';
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
     if($case){
       if(empty($input->id)){
         $this->_helper->FlashMessenger(array('info'=>'A file id must be set to tell us what to OCR.'));
       }else{
         $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
-        $language = 'eng';
 
         if(empty($file)){
           $this->_helper->FlashMessenger(array('error'=>"Sorry, we couldn't find a file with the specified id."));
@@ -239,6 +238,7 @@ class FileController extends Unplagged_Controller_Action{
             $data['title'] = $file->getFilename();
             $data['initialFile'] = $file;
             $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled');
+            $data['language'] = $language;
             $document = new Application_Model_Document($data);
 
             // start task
@@ -265,7 +265,7 @@ class FileController extends Unplagged_Controller_Action{
 
               $this->_em->persist($document);
               $this->_em->flush();
-              
+
               // add notification to activity stream
               Unplagged_Helper::notify("document_created", $document, Zend_Registry::getInstance()->user);
               $this->_helper->FlashMessenger(array('success'=>'The OCR of the file was successful.'));
@@ -289,7 +289,7 @@ class FileController extends Unplagged_Controller_Action{
   public function deleteAction(){
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender(true);
-    
+
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 
     if(!empty($input->id)){
@@ -306,32 +306,32 @@ class FileController extends Unplagged_Controller_Action{
           // set removed state in database record
           $file->remove();
           $registry = Zend_Registry::getInstance();
-          
+
           //@todo could be inefficient, but I got no better solution right now
           //remove file from all users
           $users = $registry->entitymanager->getRepository('Application_Model_User')->findAll();
           foreach($users as $user){
-            $user->removeFile($file); 
+            $user->removeFile($file);
             $this->_em->persist($user);
           }
-          
+
           //remove file from all cases
           $cases = $registry->entitymanager->getRepository('Application_Model_Case')->findAll();
           foreach($cases as $case){
-            $case->removeFile($file); 
+            $case->removeFile($file);
             $this->_em->persist($case);
           }
-          
+
           $user = $registry->user;
           $user->removeFile($file);
           $this->_em->persist($user);
-          
+
           //remove from public files
           $guestId = $registry->entitymanager->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
           $guest = $registry->entitymanager->getRepository('Application_Model_User')->findOneById($guestId->getValue());
           $guest->removeFile($file);
           $this->_em->persist($guest);
-          
+
           $this->_em->persist($file);
           $this->_em->flush();
           $this->_helper->FlashMessenger(array('success'=>'The file was deleted successfully.'));

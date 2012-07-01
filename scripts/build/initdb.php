@@ -129,7 +129,7 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("document_rem
   unset($data);
   $data["name"] = "document_removed";
   $data["title"] = "Document %s was removed";
-  $data["description"] = "The document was removedt.";
+  $data["description"] = "The document was removed.";
   $notificationAction = new Application_Model_Action($data);
   $em->persist($notificationAction);
 }

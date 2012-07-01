@@ -34,10 +34,10 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
     $user = Zend_Registry::getInstance()->user;
 
     $permissionStatement = '';
-    
+
     $conditions = array();
     if(!$selectRemovedItems){
-      $conditions[] = "s.name != 'removed'";
+      $conditions[] = "s.name != 'deleted'";
       $permissionStatement .= ' JOIN b.state s';
     }
     if(isset($additionalConditions)){

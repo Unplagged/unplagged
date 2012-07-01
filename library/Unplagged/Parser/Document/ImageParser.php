@@ -49,7 +49,8 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
       if(!$documentId){
         $data["file"] = $file;
         $data["title"] = $file->getFilename();
-
+        $data["language"] = $language;
+      
         $document = new Application_Model_Document($data);
         $this->_em->persist($document);
         $this->_em->flush();

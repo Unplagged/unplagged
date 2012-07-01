@@ -125,14 +125,6 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
     return $this->user;
   }
 
-  public function getState(){
-    return $this->state;
-  }
-
-  public function setState($state){
-    $this->state = $state;
-  }
-
   public function getDirectName(){
     return $this->getContent();
   }
