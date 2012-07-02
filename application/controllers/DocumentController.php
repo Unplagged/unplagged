@@ -159,51 +159,56 @@ class DocumentController extends Unplagged_Controller_Action{
       }
 
       $document->actions = array();
-      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
-      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
-        $action['link'] = '/document/edit/id/' . $document->getId();
-        $action['label'] = 'Edit document';
-        $action['icon'] = 'images/icons/pencil.png';
+      if($document->getState()->getName() == 'parsed'){
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
+        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $action['link'] = '/document/edit/id/' . $document->getId();
+          $action['label'] = 'Edit document';
+          $action['icon'] = 'images/icons/pencil.png';
+          $document->actions[] = $action;
+        }
+
+        $action['link'] = '/document/detect-plagiarism/id/' . $document->getId();
+        $action['label'] = 'Detect plagiarism';
+        $action['icon'] = 'images/icons/eye.png';
         $document->actions[] = $action;
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'delete', 'base'=>$document));
       }
-
-      $action['link'] = '/document/detect-plagiarism/id/' . $document->getId();
-      $action['label'] = 'Detect plagiarism';
-      $action['icon'] = 'images/icons/eye.png';
-      $document->actions[] = $action;
-      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'delete', 'base'=>$document));
-
+      
       if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
         $action['link'] = '/document/delete/id/' . $document->getId();
         $action['label'] = 'Delete document';
         $action['icon'] = 'images/icons/delete.png';
         $document->actions[] = $action;
       }
-      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'case', 'action'=>'update', 'base'=>$case));
-      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
-        if($case->getTarget() && $case->getTarget()->getId() == $document->getId()){
-          $action['link'] = '/document/unset-target/id/' . $document->getId();
-          $action['label'] = 'Unset target';
-          $action['icon'] = 'images/icons/page_find.png';
+      
+      if($document->getState()->getName() == 'parsed'){
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'case', 'action'=>'update', 'base'=>$case));
+        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          if($case->getTarget() && $case->getTarget()->getId() == $document->getId()){
+            $action['link'] = '/document/unset-target/id/' . $document->getId();
+            $action['label'] = 'Unset target';
+            $action['icon'] = 'images/icons/page_find.png';
+            $document->actions[] = $action;
+            $document->isTarget = true;
+          }else{
+            $action['link'] = '/document/set-target/id/' . $document->getId();
+            $action['label'] = 'Set target';
+            $action['icon'] = 'images/icons/page.png';
+            $document->actions[] = $action;
+            $document->isTarget = false;
+          }
+        }
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'authorize', 'base'=>$document));
+        if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
+          $action['link'] = '/permission/edit/id/' . $document->getId();
+          $action['label'] = 'Set permissions';
+          $action['icon'] = 'images/icons/shield.png';
           $document->actions[] = $action;
-          $document->isTarget = true;
-        }else{
-          $action['link'] = '/document/set-target/id/' . $document->getId();
-          $action['label'] = 'Set target';
-          $action['icon'] = 'images/icons/page.png';
-          $document->actions[] = $action;
-          $document->isTarget = false;
         }
       }
-      $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'authorize', 'base'=>$document));
-      if(Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
-        $action['link'] = '/permission/edit/id/' . $document->getId();
-        $action['label'] = 'Set permissions';
-        $action['icon'] = 'images/icons/shield.png';
-        $document->actions[] = $action;
-      }
     endforeach;
-    
+
     $this->setTitle('List of documents');
     $this->view->paginator = $paginator;
   }

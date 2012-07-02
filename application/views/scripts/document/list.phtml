@@ -19,7 +19,7 @@
           <td data-label="<?php echo $this->translate("Pages"); ?>"><?php if($document->getPages()->last()){ echo $document->getPages()->last()->getPageNumber(); } ?></td>
           <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $document->outputState; ?></td>
           <td data-label="<?php echo $this->translate("Actions"); ?>" class="fit-content">
-            <?php if($document->getState()->getName() == 'parsed'): ?>
+            <?php if(in_array($document->getState()->getName(), array('parsed', 'error'))): ?>
               <?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$document->actions)); ?>
             <?php endif; ?>
           </td>

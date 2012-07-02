@@ -174,6 +174,34 @@ Page %s was removed;Seite %s wurde gelöscht
 Simtext page %s;Textvergleich Seite %s
 User requested a report;Benutzer hat einen Bericht angefordert
 
+A user registerd on the plattform.;Ein Benutzer hat sich im System registriert.
+A user updated the own account.;Ein Benutzer hat das eigene Profil aktualisiert.
+A user verified the own account.;Ein Benutzer hat den eigenen Account bestätigt.
+A user requested the own password.;Ein Benutzer hat das eigene Passwort angefragt.
+A case was created.;Ein Fall wurde erstellt
+The case was updated.;Der Fall wurde aktualisiert.
+The case was published.;Der Fall wurde publiziert.
+The case was unpublished.;Die Publizierung des Falls wurde zurückgezogen.
+A file was uploaded.;Eine Datei wurde hochgeladen.
+A new fragment was created.;Ein neues Fragment wurde erstellt.
+The fragment was updated.;Das Fragment wurde aktualisiert.
+The fragment was removed.;Das Fragment wurde gelöscht.
+A file was parsed into a document.;Es wurde ein Dokument aus einer Datei erstellt.
+The document was removed.;Das Dokument wurde gelöscht.
+The document was updated.;Das Dokument wurde aktualisiert.
+The chosen files were compared, the report is available now.;Die gewählten Dateien wurden verglichen, der Bericht ist jetzt verfügbar.
+The report is available now.;Der Bericht ist jetzt verfügbar.
+The report for the automatic plagiarism detection on the document is available now.;Der Bericht für die automatische Plagiatserkennung liegt nun vor.
+A new comment was created on the element.;Ein neuer Kommentar wurde abgegeben.
+A new rating was provided for the element.;Eine neue Bewertung wurde abgegeben.
+A provided rating for the element was updated.;Eine abgegebene Bewertung wurde aktualisiert.
+Parse a file into a document;Ein Dokument aus einer Datei erstellen
+A new page in the document was created.;Eine neue Seite wurde dem Dokument hinzugefügt.
+The page in a document was updated.;Eine Seite im Dokument wurde aktualisiert.
+A page in the document was removed.;Eine Seite wurde aus dem Dokument entfernt.
+Create a simtext report for a single page;Erstellen eines Textvergleichberichts für eine einzelne Seite.
+A user requested a fragment report.; Ein Benutzer hat einen Fragmentbericht angefordert.
+
 No entries found.;Keine Einträge gefunden.
 Create a fragment;Fragment erstellen
 List of fragments;Liste von Fragmenten

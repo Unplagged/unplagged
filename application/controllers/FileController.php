@@ -41,7 +41,7 @@ class FileController extends Unplagged_Controller_Action{
         echo '{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}';
       }
     }
-    
+
     $this->setTitle('Upload files');
   }
 
@@ -274,15 +274,20 @@ class FileController extends Unplagged_Controller_Action{
             }
           }
 
-          $case->addDocument($document);
-          $this->_em->persist($case);
-          $this->_em->flush();
+          if($document){
+            $case->addDocument($document);
+            $this->_em->persist($case);
+            $this->_em->flush();
+
+            $this->_helper->redirector('list', 'document');
+          } else {
+            $this->redirectToLastPage();
+          }
         }
       }
     }else{
       $this->_helper->FlashMessenger(array('error'=>'You need to select a case for which this document should be parsed.'));
     }
-    $this->_helper->redirector('list', 'document');
   }
 
   /**

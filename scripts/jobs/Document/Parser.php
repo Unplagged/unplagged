@@ -61,6 +61,16 @@ class Cron_Document_Parser extends Cron_Base{
         Unplagged_Helper::notify("document_created", $document, $task->getInitiator());
 
         $this->em->clear();
+      }else{
+        $task->setState($this->em->getRepository('Application_Model_State')->findOneByName('completed'));
+        $task->setProgressPercentage(100);
+        $this->em->persist($task);
+
+        $document = $task->getRessource();
+        $document->setState($this->em->getRepository('Application_Model_State')->findOneByName('error'));
+
+        $this->em->persist($document);
+        $this->em->flush();
       }
     }
   }
