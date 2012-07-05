@@ -75,7 +75,7 @@ Edit Profile;Profil editieren
 Home;Home
 Case Files;Fall Dateien
 # See here for bug with first char Umlauts: http://framework.zend.com/issues/browse/ZF-5757
-Public Files;Oeffentliche Dateien
+Public Files;Öffentliche Dateien
 Personal Files;Persönliche Dateien
 Administration;Administration
 Roles;Rollen
@@ -269,3 +269,74 @@ System Roles;Systemrollen
 Edit;Bearbeiten
 Save role;Rolle speichern
 Home;Startseite
+
+Permission denied.;Zugriff verweigert.
+You were logged in successfully.;Ihr Account ist noch nicht freigeschaltet.
+You have to select a case, before you can access the bibliography.;Sie müssen einen Fall wählen, bevor Sie auf das Literaturverzeichnis zugreifen können.
+The case was created successfully.;Der Fall wurde erfolgreich erstellt.
+Sorry, we couldn't find the requested case.;Tut uns leid, wir konnten den angefragen Fall nicht finden.
+The case was updated successfully.;Der Fall wurde erfolgreich bearbeitet.
+The specified case does not exist.;Der angegebene Fall existiert nicht.
+You need to select a case first, before you can view files of it.;Sie müssen einen Fall wählen, bevor Sie auf auf Dateien zugreifen können.
+The file was added to your current case.;Die Datei wurde dem aktuellen Fall hinzugefügt.
+The file already belongs to the current case.;Die Datei gehört bereits zum aktuellen Fall.
+The specified file does not exist.;Die angegebene Datei existiert nicht.
+You have to select a case, before you can access documents.;Sie müssen einen Fall wählen, bevor Sie auf auf Dokumente zugreifen können.
+The document was created successfully.;Das Dokument wurde erfolgreich erstellt.
+The document was updated successfully.;Das Dokument wurde erfolgreich bearbeitet.
+The document was deleted successfully.;Das Dokument wurde erfolgreich gelöscht.
+The document does not exist.;Das Dokument existiert nicht.
+The detection was started successfully for the following pages: %s, you will be notified, when it is finished.;Die automatische Plagiatserkennung wurde erfolgreich für folgende Seiten gestartet: %s, Sie werden informiert, sobald der Prozess beendet ist.
+The detection could not be started for the following pages: %s, please try again later.;Die automatische Plagiatserkennung für folgende Seiten konnte nicht gestartet werden: %s, versuchen Sie es später erneut.
+No document found.;Kein Dokument gefunden.
+The file "%s" was successfully uploaded.;Die Datei "%s" wurde erfolgreich hochgeladen.
+The file "%s" could not be uploaded.;Die Datei "%s" konnte nicht hochgeladen werden.
+No file found.;Keine Datei gefunden.
+A file id must be set to tell us what to OCR.;Eine Datei-Id muss gesetzt sein, um die Texterkennung zu starten.
+Sorry, we couldn't find a file with the specified id.;Tut uns leid, wir konnten keine Datei mit dieser Id finden.
+The OCR of "%s" was scheduled, you will be notified as soon as the process finished.
+We are sorry, but an error occured during the OCR, please try again later.;Tut uns leid, aber es ist ein Fehler während der Texterkennung aufgetreten, versuchen Sie es später erneut.
+The OCR of the file was successful.;Die Texterkennung der Datei war erfolgreich.
+You need to select a case for which this document should be parsed.;Sie müssen einen Fall auswählen, in welchem das Dokument erstellt wird.
+The file was deleted successfully.;Die Datei wurde erfolgreich gelöscht.
+We are sorry, but the file could not be deleted.;Tut uns leid, aber die Datei konnte nicht gelöscht werden.
+The file you specified does not exist.;Die angegebene Datei existiert nicht.
+Create a page;Eine Seite erstellen
+Pages overview;Seitenübersicht
+Document: %s;Dokument: %s
+Page number;Seitenzahl
+Disabled;Deaktiviert
+Content;Inhalt
+Create page;Seite erstellen
+Previous page;Vorherige Seite
+Next page;Nächste Seite
+Actions menu;Aktionsmenü
+Remove document;Dokument löschen
+Detect Plagiarism;Automatische Plagiatserkennung
+Add new page to document;Neue Seite in Dokument erstellen
+Show document pages;Seitenübersicht
+Page details;Details zur Seite
+Create;Erstellen
+Show page;Seite anzeigen
+Edit page;Seite bearbeiten
+Remove page;Seite löschen
+De-hyphen page;Zeilenumbrüche entfernen
+Fragments;Fragmente
+Simtext reports;Berichte Textvergleich
+Plagiarism Detection Reports;Berichte Plagiatserkennung
+Simtext page;Textvergleich der Seite
+Page %s of %s;Seite %s von %s
+Stopwords highlighting;Füllwörter ausblenden
+Show;Anzeigen
+Page content;Seiteninhalt
+De-hyphen;Bindestriche entfernen
+created;erstellt
+Save fragment;Fragment speichern
+List of detection reports;Liste von Plagiatserkennungsberichten
+List of simtext reports;Liste von Textvergleichsberichten
+Document selection;Dokumentenauswahl
+Report title;Berichtstitel
+What document do you want this page to compare to?;Mit welchen Dokumenten möchten Sie die Seite vergleichen?
+The simtext process was started, you will be notified, when it finished.;Der Textvergleich wurde gestartet, Sie werden informiert, sobald der Prozess beendet ist.
+The report was deleted successfully.;Der Bericht wurde erfolgreich gelöscht.
+Report of the automatic simtext;Bericht des automatischen Textvergleiches

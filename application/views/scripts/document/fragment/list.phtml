@@ -16,7 +16,7 @@
           <td data-label="<?php echo $this->translate("Title"); ?>"><a href="<?php echo $fragment->getDirectLink(); ?>"><?php echo $fragment->getTitle(); ?></a></td>
           <td data-label="<?php echo $this->translate("Page from"); ?>"><?php echo $fragment->getPlag()->getLineFrom()->getPage()->getPageNumber(); ?></td>
           <td data-label="<?php echo $this->translate("Page to"); ?>"><?php echo $fragment->getPlag()->getLineTo()->getPage()->getPageNumber(); ?></td>
-          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $fragment->getState()->getName(); ?></td>
+          <td data-label="<?php echo $this->translate("State"); ?>"><?php echo $this->translate($fragment->getState()->getName()); ?></td>
           <td data-label="<?php echo $this->translate("Source"); ?>"><a href="<?php echo "/document_page/list/id/" . $fragment->getSource()->getLineFrom()->getPage()->getDocument()->getId(); ?>"><?php echo $fragment->getSource()->getLineFrom()->getPage()->getDocument()->getTitle(); ?></a></td>
           <td data-label="<?php echo $this->translate("Actions"); ?>" class="fit-content"><?php echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$fragment->actions)); ?></td>
         </tr>

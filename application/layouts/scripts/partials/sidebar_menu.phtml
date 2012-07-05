@@ -1,5 +1,6 @@
 <nav id="actions-menu" class="well poped-in">
-  <h5>Actions menu</h5>
+  <span class="arrow">&laquo;</span>
+  <h5><?php echo $this->translate('Actions menu'); ?></h5>
   <ul class="nav nav-list">
     <?php foreach($this->actions as $action): ?>
       <?php if(empty($action['link'])): ?>
@@ -7,7 +8,7 @@
       <?php else: ?>
         <li>
           <a href="<?php echo $action['link']; ?>">
-            <i class="<?php echo $action['icon']; ?> icon-fam"></i><span><?php echo $this->translate($action['label']); ?></span>
+            <i class="<?php echo $action['icon']; ?> icon-fam"></i><span><?php echo $this->translate($this->translate($action['label'])); ?></span>
           </a>
         </li>
       <?php endif; ?>

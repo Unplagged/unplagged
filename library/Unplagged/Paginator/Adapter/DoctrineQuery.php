@@ -43,14 +43,17 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
     if(isset($additionalConditions)){
       foreach($additionalConditions as $field=>$value){
         if($value != 'IS NULL'){
-          $conditions[] = $field . " = '" . $value . "'";
+          if(!is_array($value)){
+            $conditions[] = $field . " = '" . $value . "'";
+          }elseif(count($value) == 2){
+            $conditions[] = $field . sprintf(" %s '%s'", $value[0], $value[1]);
+          }
         }else{
           $conditions[] = $field . " IS NULL";
         }
       }
     }
 
-    
     if(isset($readAllPermission)){
       // 1) check if the user has the right to see all elements , then we do not have to check permission on each file
       $canAccessAll = $user->getRole()->hasPermission($readAllPermission);

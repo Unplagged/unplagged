@@ -41,7 +41,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * ,"document_page" = "Application_Model_Document_Page"
  * ,"file" = "Application_Model_File"
  * ,"notification" = "Application_Model_Notification"
- * ,"simtext_report" = "Application_Model_Document_Page_SimtextReport"
+ * ,"simtext_report" = "Application_Model_Simtext_Report"
  * ,"report" = "Application_Model_Report"
  * ,"tag" = "Application_Model_Tag"
  * ,"user" = "Application_Model_User"
@@ -77,7 +77,7 @@ abstract class Application_Model_Base{
     'document-page-line',
     'rating',
     'versionable-version',
-    'document-page-simtextreport',
+    'simtext-report',
     'document-page-detectionreport',
   );
 

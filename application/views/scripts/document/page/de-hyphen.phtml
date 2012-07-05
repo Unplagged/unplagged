@@ -1,5 +1,4 @@
-<?php $this->headTitle($this->title); ?>
-<h3><?php echo $this->subtitle; ?> <small>De-hyphanator</small></h3>
+<h3><?php echo vprintf($this->translate($this->subtitle[0]), $this->subtitle[1]); ?> <small><?php echo $this->translate("De-hyphen"); ?></small></h3>
 
 <div class="src-wrapper de-hyphen">
 <?php echo $this->deHyphenForm; ?>

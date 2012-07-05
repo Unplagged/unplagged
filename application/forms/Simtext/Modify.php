@@ -21,7 +21,7 @@
 /**
  * Creates a form to select documents for simtext.
  */
-class Application_Form_Document_Page_Simtext extends Zend_Form{
+class Application_Form_Simtext_Modify extends Zend_Form{
 
   private $documents = array();
 
@@ -49,7 +49,7 @@ class Application_Form_Document_Page_Simtext extends Zend_Form{
     $this->setMethod('post');
 
     $titleElement = new Zend_Form_Element_Text('title');
-    $titleElement->setLabel("Report Title");
+    $titleElement->setLabel("Report title");
     $titleElement->setRequired(true);
     
     $documentsElement = new Zend_Form_Element_Multiselect('documents');

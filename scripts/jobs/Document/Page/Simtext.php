@@ -92,15 +92,15 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
           // if simtext found something on that page, append it to the report
           if(strpos($result['left'], "fragmark-") !== false){
-            $content .= "<div style='clear:both;padding-top:10px;'><b>Document " . $document->getTitle() . " - Page " . $page->getPageNumber() . "</b><br />";
+            $content .= "<h3>Document " . $document->getTitle() . " <small>Page " . $page->getPageNumber() . "</small></h3>";
 
             $content .= '<div class="document-page diff clearfix">
                         <div class="src-wrapper">
-                          <h3>Left</h3>
+                          <h4>Candidate</h3>
                           <div id="candidateText">' . $result['left'] . '</div>
                         </div>
                         <div class="src-wrapper">
-                          <h3>Right</h3>
+                          <h4>Source</h3>
                           <div id="sourceText">' . $result['right'] . '</div>
                         </div>
                       </div>';

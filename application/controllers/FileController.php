@@ -78,7 +78,7 @@ class FileController extends Unplagged_Controller_Action{
 
       echo '{"jsonrpc" : "2.0", "result" : null, "id" : "id"}';
     }else{
-      $this->_helper->FlashMessenger(array('error'=>'The file "' . $file->getFilename() . '" could not be uploaded.'));
+      $this->_helper->FlashMessenger(array('error'=>'The file "%s" could not be uploaded.', array($file->getFilename())));
       echo '{"jsonrpc" : "2.0", "error" : {"code": 500, "message": "File upload failed."}, "id" : "id"}';
     }
   }
@@ -210,7 +210,7 @@ class FileController extends Unplagged_Controller_Action{
         $this->_helper->redirector('list', 'file');
       }
     }else{
-      $this->_helper->FlashMessenger('The file couldn\'t be found.');
+      $this->_helper->FlashMessenger("No file found.");
       $this->_helper->redirector('list', 'file');
     }
   }

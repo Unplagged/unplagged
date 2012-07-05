@@ -66,6 +66,13 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
    * @OrderBy({"lineNumber" = "ASC"})
    */
   private $lines;
+  
+    /**
+   * The content of the report.
+   * 
+   * @Column(type="boolean")
+   */
+  private $disabled = false;
 
   public function __construct($data = array()){
     parent::__construct($data);
@@ -337,16 +344,16 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     $actions[] = $action;
 
     $action['link'] = '/document_page/de-hyphen/id/' . $this->id;
-    $action['label'] = 'De-hyphen page';
+    $action['label'] = 'De-hyphen';
     $action['icon'] = 'icon-text-padding-right';
     $actions[] = $action;
 
     $action['link'] = '/document_page/stopwords/id/' . $this->id;
-    $action['label'] = 'Non-stopword identification';
+    $action['label'] = 'Stopwords highlighting';
     $action['icon'] = 'icon-zoom';
     $actions[] = $action;
 
-    $action['link'] = '/document_page/simtext/id/' . $this->id;
+    $action['link'] = '/document_page/create-simtextreport/id/' . $this->id;
     $action['label'] = 'Simtext page';
     $action['icon'] = 'icon-table-row-delete';
     $actions[] = $action;
@@ -365,8 +372,8 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     $action['icon'] = 'icon-report-magnify';
     $actions[] = $action;
 
-    $action['link'] = '/document_page/simtext-reports/id/' . $this->id;
-    $action['label'] = 'Simtext Reports';
+    $action['link'] = '/document_page/list-simtextreports/id/' . $this->id;
+    $action['label'] = 'Simtext reports';
     $action['icon'] = 'icon-table-row-delete';
     $actions[] = $action;
 

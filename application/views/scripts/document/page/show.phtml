@@ -1,5 +1,4 @@
-<?php $this->headTitle($this->title); ?>
-<h3><?php echo $this->subtitle; ?> <small>Show</small></h3>
+<h3><?php echo vprintf($this->translate($this->subtitle[0]), $this->subtitle[1]); ?> <small><?php echo $this->translate("Show"); ?></small></h3>
 
 <?php if($this->case->getTarget() && $this->page->getDocument()->getId() == $this->case->getTarget()->getId()): ?>
 <p class="pagination-right switch-two-columns">

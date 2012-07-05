@@ -653,7 +653,7 @@ nav#actions-menu {
 nav#actions-menu h5 {
   position: absolute;
   margin-left: -21px;
-  margin-top: 100%;
+  top: 130px;
   padding-left: 5px;
   transform: rotate(-90deg);
   transform-origin:0 0;
@@ -661,10 +661,18 @@ nav#actions-menu h5 {
   -ms-transform-origin:0 0; /* IE 9 */
   -webkit-transform: rotate(-90deg); /* Safari and Chrome */
   -webkit-transform-origin:0 0; /* Safari and Chrome */
-  -moz-transform: rotate(-90deg); /* Firefox */
   -moz-transform-origin:0 0; /* Firefox */
+  -moz-transform: rotate(-90deg); /* Firefox */
   -o-transform: rotate(-90deg); /* Opera */
   -o-transform-origin:0 0; /* Opera */
+  font-size: 13px;
+}
+nav#actions-menu .arrow {
+  position: absolute;
+  margin-left: -21px;
+  top: 3px;
+  padding-left: 5px;
+  font-size: 20px;
 }
 nav#actions-menu ul {
   background: white;
@@ -684,6 +692,9 @@ nav#actions-menu img {
   background-color: #fbfbfb;
   border-bottom: 1px #d4d4d4 solid;
 
+}
+.state-column {
+  width: 150px;
 }
 .default-container h4,
 .diff h4{
@@ -2217,6 +2228,10 @@ li.plupload_droptext {
 
 .red {
 color: red;
+}
+
+td .btn-group {
+  min-width: 75px;
 }
 
 /* ==|== media queries ====================================================== */
