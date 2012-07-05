@@ -11,6 +11,8 @@
 /docs/Developers Manual/parts/*.aux
 /application/configs/unplagged-config.ini
 
+/data/doctrine/*
+/data/logs/*
 
 /nbproject/private/
 !.gitignore
