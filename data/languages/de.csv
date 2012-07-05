@@ -75,7 +75,7 @@ Edit Profile;Profil editieren
 Home;Home
 Case Files;Fall Dateien
 # See here for bug with first char Umlauts: http://framework.zend.com/issues/browse/ZF-5757
-Public Files;Öffentliche Dateien
+Public Files;"Öffentliche Dateien"
 Personal Files;Persönliche Dateien
 Administration;Administration
 Roles;Rollen
@@ -129,7 +129,7 @@ Book;Buch
 Essay;Aufsatzsammlung
 Full;Vollständig
 Bibliography;Literaturverzeichnis
-Make public;Öffentlich verfügbar
+Make public;"Öffentlich verfügbar"
 Add to current case;Zum Fall hinzufügen
 de;Deutsch
 en;Englisch
