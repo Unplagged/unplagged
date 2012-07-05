@@ -76,19 +76,19 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
           $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
 
-          $left = $simtextResult['left'];
-          $right = $simtextResult['right'];
+          $leftRes = $simtextResult['left'];
+          $rightRes = $simtextResult['right'];
 
-          foreach($left as $lineNumber=>$lineContent){
+          foreach($leftRes as $lineNumber=>$lineContent){
             $left[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
           }
 
-          foreach($right as $lineNumber=>$lineContent){
+          foreach($rightRes as $lineNumber=>$lineContent){
             $right[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
           }
 
-          $result['left'] = '<ol>' . implode("\n", $left) . '</ol>';
-          $result['right'] = '<ol>' . implode("\n", $right) . '</ol>';
+          $result['left'] = '<ol>' . implode("\n", $leftRes) . '</ol>';
+          $result['right'] = '<ol>' . implode("\n", $rightRes) . '</ol>';
 
           // if simtext found something on that page, append it to the report
           if(strpos($result['left'], "fragmark-") !== false){
