@@ -80,11 +80,11 @@ class Cron_Document_Page_Simtext extends Cron_Base{
           $rightRes = $simtextResult['right'];
 
           foreach($leftRes as $lineNumber=>$lineContent){
-            $left[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+            $leftRes[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
           }
 
           foreach($rightRes as $lineNumber=>$lineContent){
-            $right[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+            $rightRes[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
           }
 
           $result['left'] = '<ol>' . implode("\n", $leftRes) . '</ol>';

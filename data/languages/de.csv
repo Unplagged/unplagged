@@ -340,3 +340,4 @@ What document do you want this page to compare to?;Mit welchen Dokumenten möcht
 The simtext process was started, you will be notified, when it finished.;Der Textvergleich wurde gestartet, Sie werden informiert, sobald der Prozess beendet ist.
 The report was deleted successfully.;Der Bericht wurde erfolgreich gelöscht.
 Report of the automatic simtext;Bericht des automatischen Textvergleiches
+Simtext report: %s;Bericht Textvergleich: %s
