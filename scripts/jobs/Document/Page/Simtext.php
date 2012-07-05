@@ -46,6 +46,9 @@ class Cron_Document_Page_Simtext extends Cron_Base{
       // generate the simtext result
       $content = "";
       $left = $report->getPage()->getContent('array');
+      foreach($left as $lineNumber=>$lineContent){
+        $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
+      }
 
       // count the pages to compare
       $documents = $report->getDocuments();
@@ -65,10 +68,6 @@ class Cron_Document_Page_Simtext extends Cron_Base{
         foreach($pages as $page){
           $i++;
           $right = $page->getContent('array');
-
-          foreach($left as $lineNumber=>$lineContent){
-            $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
-          }
 
           foreach($right as $lineNumber=>$lineContent){
             $right[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
@@ -136,6 +135,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
   }
 
 }
+
 $simtext = new Cron_Document_Page_Simtext();
 $simtext->start();
 ?>
