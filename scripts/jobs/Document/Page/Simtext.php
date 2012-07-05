@@ -44,7 +44,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
       $report = $task->getRessource();
 
       // generate the simtext result
-      $content = "";
+      $content = array();
       $left = $report->getPage()->getContent('array');
       foreach($left as $lineNumber=>$lineContent){
         $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
@@ -91,19 +91,18 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
           // if simtext found something on that page, append it to the report
           if(strpos($result['left'], "fragmark-") !== false){
-            $content .= "<h3>Document " . $document->getTitle() . " <small>Page " . $page->getPageNumber() . "</small></h3>";
+            
+            $pageResult = array();
 
-            $content .= '<div class="document-page diff clearfix">
-                        <div class="src-wrapper">
-                          <h4>Candidate</h3>
-                          <div id="candidateText">' . $result['left'] . '</div>
-                        </div>
-                        <div class="src-wrapper">
-                          <h4>Source</h3>
-                          <div id="sourceText">' . $result['right'] . '</div>
-                        </div>
-                      </div>';
-            $content .= '</div>';
+            $pageResult['candidate']['page'] = $report->getPage()->getPageNumber();
+            $pageResult['candidate']['document'] = $report->getPage()->getDocument()->getTitle();
+            $pageResult['candidate']['text'] = $result['left'];
+            
+            $pageResult['source']['page'] = $page->getPageNumber();
+            $pageResult['source']['document'] = $document->getTitle();
+            $pageResult['source']['text'] = $result['right'];
+            
+            $content[] = $pageResult;
           }
 
           $perc = round($i * 1.0 / $pagesCount * 100 / 10) * 10;

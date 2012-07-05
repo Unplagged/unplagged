@@ -341,3 +341,5 @@ The simtext process was started, you will be notified, when it finished.;Der Tex
 The report was deleted successfully.;Der Bericht wurde erfolgreich gelöscht.
 Report of the automatic simtext;Bericht des automatischen Textvergleiches
 Simtext report: %s;Bericht Textvergleich: %s
+Back to reports list;Zurück zur Berichtsliste
+No similarities found.;Keine Übereinstimmungen gefunden.

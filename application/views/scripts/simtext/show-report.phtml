@@ -1,4 +1,17 @@
-<?php echo $this->report->getContent() ? $this->report->getContent() : "No content"; ?>
-
-<?php // @todo: implement valid php back link ?>
-<p><a href="javascript: history.back();"><?php echo $this->translate('back to reports list'); ?></a></p>
+<?php if(!$this->report->getContent()) echo $this->translate("No similarities found."); ?>
+<?php foreach($this->report->getContent() as $pageResult): ?>
+  <div class="document-page diff clearfix">
+    <div class="src-wrapper">
+      <h4><?php echo sprintf($this->translate('Document %s'), $pageResult['candidate']['document']); ?> <small><?php echo $this->translate('Page'); ?> <?php echo $pageResult['candidate']['page']; ?></small></h3>
+        <div id="candidateText"><?php echo $pageResult['candidate']['text']; ?></div>
+    </div>
+    <div class="src-wrapper">
+      <h4><?php echo sprintf($this->translate('Document %s'), $pageResult['source']['document']); ?> <small><?php echo $this->translate('Page'); ?> <?php echo $pageResult['source']['page']; ?></small></h3>
+        <div id="sourceText"><?php echo $pageResult['source']['text']; ?></div>
+    </div>
+  </div>
+  </div>
+  <p>
+    <a class="btn" href="javascript: history.back();"><i class="icon-step-backward"></i> <?php echo $this->translate('Back to reports list'); ?></a>
+  </p>
+<?php endforeach; ?>

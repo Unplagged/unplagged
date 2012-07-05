@@ -59,7 +59,7 @@ class Application_Model_Simtext_Report extends Application_Model_Base{
   /**
    * The content of the report.
    * 
-   * @Column(type="text", nullable=true)
+   * @Column(type="array", nullable=true)
    */
   private $content;
 
