@@ -1,4 +1,4 @@
-<h3><?php echo is_array($this->subtitle) ? vprintf($this->translate($this->subtitle[0]), $this->subtitle[1]) : $this->subtitle; ?> <small><?php echo $this->translate($this->tooltitle); ?></small></h3>
+<h3><?php echo is_array($this->subtitle) ? vsprintf($this->translate($this->subtitle[0]), $this->subtitle[1]) : $this->subtitle; ?> <small><?php echo $this->translate($this->tooltitle); ?></small></h3>
 <?php echo $this->modifyForm; ?>
 
 <?php echo $this->partial('partials/next-prev-paginator.phtml', array('prevLink'=>$this->prevPageLink, 'nextLink'=>$this->nextPageLink)); ?>
