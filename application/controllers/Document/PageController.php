@@ -135,7 +135,7 @@ class Document_PageController extends Unplagged_Controller_Versionable{
     if(!empty($input->id)){
       $document = $this->_em->getRepository('Application_Model_Document')->findOneById($input->id);
       if($document){
-        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'update', 'base'=>$document));
+        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'document', 'action'=>'read', 'base'=>$document));
         if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
           $this->redirectToLastPage(true);
         }
