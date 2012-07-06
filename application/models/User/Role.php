@@ -140,7 +140,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     }else{
       // we need only permissions with base null when global is true
       $permissions = array();
-        $this->permissions->filter(function($permission) use (&$permissions){
+      $this->permissions->filter(function($permission) use (&$permissions){
             if(null == $permission->getBase()){
               $permissions[] = $permission;
               return true;
@@ -148,6 +148,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
             return false;
           });
 
+      $permissions = array_merge($inheritedPermissions, $permissions);
     }
     return $permissions;
   }
@@ -192,9 +193,23 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    * 
    * @return array
    */
-  public function getBasicPermissions($asCollection = false){
+  public function getBasicPermissions($asCollection = false, $global = false){
     if($asCollection){
-      return $this->permissions;
+      if(!$global){
+         return $this->permissions;
+      }else{
+        // we need only permissions with base null when global is true
+        $permissions = array();
+        $this->permissions->filter(function($permission) use (&$permissions){
+              if(null == $permission->getBase()){
+                $permissions[] = $permission;
+                return true;
+              }
+              return false;
+            });
+
+       return $permissions;
+      }
     }
     return $this->permissions->toArray();
   }
@@ -206,7 +221,14 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   }
 
   public function removePermission(Application_Model_Permission $permission){
+    /* echo $permission->getId() . '___' . $this->permissions->count() . '.....<br />';
+      foreach($this->permissions as $perm) {
+      echo $this->getId() . '...' . $perm->getId() . '__?????????<br/>';
+      }exit;
+     */
     if($this->permissions->contains($permission)){
+
+      // $permission->getId() . '.....<br />';
       $this->permissions->removeElement($permission);
     }
   }

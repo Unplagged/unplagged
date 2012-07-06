@@ -136,24 +136,21 @@ abstract class Application_Model_Base{
    * @todo private without getter and setter?
    */
   private $notifications;
-  
   protected $conversationTypes = array('comment');
 
-  
   /**
    * @ManyToOne(targetEntity="Application_Model_State")
    * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $state;
-  
+
   public function __construct($data = array()){
     if(isset($data['state'])){
       $this->state = $data['state'];
-    } else {
+    }else{
       $this->state = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_State')->findOneByName('created');
-
     }
-    
+
     $this->comments = new ArrayCollection();
     $this->ratings = new ArrayCollection();
     $this->tags = new ArrayCollection();
@@ -243,8 +240,8 @@ abstract class Application_Model_Base{
   public function getRatings(){
     return $this->ratings;
   }
-  
-    public function addRating(Application_Model_Rating $rating){
+
+  public function addRating(Application_Model_Rating $rating){
     $this->ratings->add($rating);
   }
 
@@ -335,8 +332,20 @@ abstract class Application_Model_Base{
     $this->tags->clear();
   }
 
-  public function getPermissions(){
-    return $this->permissions;
+  public function getPermissions($instanceType = null){
+    if(empty($instanceType)){
+      return $this->permissions;
+    }else{
+      $permissions = array();
+      $this->permissions->filter(function($permission) use (&$permissions, &$instanceType){
+            if($permission instanceof $instanceType){
+              $permissions[] = $permission;
+              return true;
+            }
+            return false;
+          });
+          return $permissions;
+    }
   }
 
   public function remove(){
@@ -348,7 +357,7 @@ abstract class Application_Model_Base{
       $this->permissions->add($permission);
     }
   }
-  
+
   public function getState(){
     return $this->state;
   }
