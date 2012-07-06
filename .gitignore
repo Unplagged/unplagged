@@ -23,3 +23,8 @@ docs/Developers Manual/Developers-Manual.lof
 docs/Developers Manual/Developers-Manual.pdf
 
 docs/Developers Manual/biblio.bib
+/data/doctrine/__CG__Application_Model_State.php
+/data/doctrine/__CG__Application_Model_Document.php
+/data/doctrine/__CG__Application_Model_Case.php
+/data/doctrine/__CG__Application_Model_User.php
+/data/doctrine/__CG__Application_Model_Document_Page.php

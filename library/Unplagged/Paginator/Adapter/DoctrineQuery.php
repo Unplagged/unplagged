@@ -54,7 +54,7 @@ class Unplagged_Paginator_Adapter_DoctrineQuery implements Zend_Paginator_Adapte
       }
     }
 
-    if(isset($readAllPermission)){
+    if(isset($readAllPermission)){      
       // 1) check if the user has the right to see all elements , then we do not have to check permission on each file
       $canAccessAll = $user->getRole()->hasPermission($readAllPermission);
 

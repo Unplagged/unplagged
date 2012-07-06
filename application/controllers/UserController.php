@@ -97,16 +97,14 @@ class UserController extends Unplagged_Controller_Action{
     foreach($roleTemplate->getPermissions() as $permission){
       $role->addPermission($permission);
     }
-    $adminRole = $this->_em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'admin', 'type'=>'global'));
-    $role->addInheritedRole($adminRole);
 
     $this->_em->persist($role);
     $data['role'] = $role;
-
     $user = new Application_Model_User($data);
 
     // write back to persistence manager and flush it
     $this->_em->persist($user);
+    
     $this->_em->flush();
     $role->setRoleId($user->getId());
     $this->_em->persist($role);
@@ -208,8 +206,8 @@ class UserController extends Unplagged_Controller_Action{
       // send registration mail
       Unplagged_Mailer::sendActivationMail($user);
 
-      $this->_helper->FlashMessenger(array('success'=>'Verification finished successfully.'));
-      $this->_helper->redirector('index', 'index');
+      $this->_helper->FlashMessenger(array('success'=>'Verification finished successfully, you can now login.'));
+      $this->_helper->redirector('login', 'auth');
     }
   }
 
@@ -334,8 +332,7 @@ class UserController extends Unplagged_Controller_Action{
           $this->_em->persist($user);
           $this->_em->flush();
 
-          $this->_helper->FlashMessenger(array('success', 'User Profile saved successfully.'));
-          // $this->_helper->redirector('index', 'index');
+          $this->_helper->FlashMessenger(array('success' => 'User Profile saved successfully.'));
         }
       }
 
@@ -452,13 +449,14 @@ class UserController extends Unplagged_Controller_Action{
    * @todo: need to remove this, since it is just for testing 
    */
   public function activateUserAction(){
-    $input = new Zend_Filter_Input(array('username'=>'Alnum'), null, $this->_getAllParams());
+    $input = new Zend_Filter_Input(array('username'=>'StringTrim'), null, $this->_getAllParams());
 
     $user = $this->_em->getRepository('Application_Model_User')->findOneByUsername($input->username);
     if($user){
       $params = array('hash'=>$user->getVerificationHash());
       $this->_helper->redirector('verify', 'user', '', $params);
     }else{
+      $this->_helper->FlashMessenger('Verification failed, no user found by that username.');
       $this->_helper->redirector('index', 'index');
     }
   }

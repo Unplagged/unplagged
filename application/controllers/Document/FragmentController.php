@@ -27,17 +27,16 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
     parent::init();
 
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
-    if(!$case || !$case->getTarget()){
       if(!$case){
         $errorText = 'You have to select a case, before you can access fragments.';
         $this->_helper->FlashMessenger(array('error'=>$errorText));
         $this->redirectToLastPage();
-      }else{
+      }elseif(!$case->getTarget()){
         $errorText = 'You have to define a target document in your case, before you can access fragments.';
         $this->_helper->FlashMessenger(array('error'=>$errorText));
         $this->_helper->redirector('list', 'document');
       }
-    }
+    
   }
 
   /**

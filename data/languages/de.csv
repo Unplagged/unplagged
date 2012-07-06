@@ -80,7 +80,6 @@ Personal Files;Persönliche Dateien
 Administration;Administration
 Roles;Rollen
 States;Status
-In order to manage fragments, you need to set a target document on the case.;Um Fragmente zu erstellen ist es erforderlich ein Zieldokument für den Fall auszuwählen.
 Pages;Seiten
 Set target;Als Zieldokument setzen
 State;Status
@@ -237,7 +236,7 @@ Remove fragment;Fragmen löschen
 Set permissions;Berechtigungen setzten
 Permissions Information;Informationen zu den Berechtigungen
 Save permissions;Berechtigungen speichern
-Manage permissions;Bewertungen verwalten
+Manage permissions;Berechtigungen verwalten
 People having access to the element;Benutzer mit Zugriff zum Element
 Unset target;Zieldokument zurücksetzen
 Set target;Zieldokument setzen
@@ -324,7 +323,7 @@ De-hyphen page;Zeilenumbrüche entfernen
 Fragments;Fragmente
 Simtext reports;Berichte Textvergleich
 Plagiarism Detection Reports;Berichte Plagiatserkennung
-Simtext page;Textvergleich der Seite
+Simtext page;Text vergleichen
 Page %s of %s;Seite %s von %s
 Stopwords highlighting;Füllwörter ausblenden
 Show;Anzeigen
@@ -343,3 +342,23 @@ Report of the automatic simtext;Bericht des automatischen Textvergleiches
 Simtext report: %s;Bericht Textvergleich: %s
 Back to reports list;Zurück zur Berichtsliste
 No similarities found.;Keine Übereinstimmungen gefunden.
+Verification finished successfully, you can now login.;Die Verifizierung Ihres Accounts ist abgeschlossen, Sie können sich jetzt einloggen.
+User Profile saved successfully.;Profil erfolgreich gespeichert.
+Personal Information;Persönliche Informationen
+Firstname;Vorname
+Lastname;Nachname
+Avatar;Profilbild
+Save;Speichern
+Remove avatar only;Nur Profilbild löschen
+Do you want to remove your account?;Möchten Sie Ihren Account löschen?
+Remove account;Account löschen
+The role was updated successfully.;Die Rolle wurde erfolgreich gespeichert.
+Permissions for %s;Berechtigungen für %s
+No cases found.;Keine Fälle gefunden.
+The permissions were updated successfully.;Die Berechtigungen wurden erfolgreich gespeichert.
+You have to select a case, before you can access fragments.;Sie müssen einen Fall auswählen, bevor Sie auf Fragmente zugreifen können.
+No documents found.;Keine Dokumente gefunden.
+You have to define a target document in your case, before you can access fragments.;Um Fragmente zu erstellen, ist es erforderlich ein Zieldokument für den Fall auszuwählen.
+You have to select a case, before you can start the report creation.;Sie müssen einen Fall auswählen, bevor Sie auf Berichte zugreifen können.
+You have to define a target document in your case, before you can start the report creation.;Um Berichte zu erstellen, ist es erforderlich ein Zieldokument für den Fall auszuwählen.
+No fragments found.;Keine Fragmente gefunden.

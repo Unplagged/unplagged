@@ -30,7 +30,7 @@ class PermissionController extends Unplagged_Controller_Action{
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
     $rolePermissions = $this->_em->getRepository('Application_Model_User_Role')->findOneById($input->id);
 
-    $this->setTitle('Permissions for ' . $rolePermissions->getRoleId());
+    $this->setTitle('Permissions for %s', array($rolePermissions->getRoleId()));
 
     //find all permissions to display
     $pagePermissions = $this->_em->getRepository('Application_Model_PagePermission')->findByBase(null);
@@ -70,7 +70,7 @@ class PermissionController extends Unplagged_Controller_Action{
     }
 
     //set all permissions that this role got as active and inherited
-    foreach($rolePermissions->getPermissions() as $allowedPermission){
+    foreach($rolePermissions->getPermissions(true) as $allowedPermission){
       if($allowedPermission->getAction() === '*' && $allowedPermission->getType() === 'global'){
         foreach($outputPermissions as $permissionGroupKey=>$permissionGroup){
           foreach($permissionGroup as $outputPermissionKey=>$outputPermission){
@@ -92,7 +92,7 @@ class PermissionController extends Unplagged_Controller_Action{
     }
 
     //remove the inherited flag for every permission that this role got on it's own
-    foreach($rolePermissions->getBasicPermissions() as $basicPermissions){
+    foreach($rolePermissions->getBasicPermissions(true) as $basicPermissions){
       if($allowedPermission->getAction() === '*' && $allowedPermission->getType() === 'global'){
         foreach($outputPermissions as $permissionGroupKey=>$permissionGroup){
           foreach($permissionGroup as $outputPermissionKey=>$outputPermission){
@@ -119,11 +119,10 @@ class PermissionController extends Unplagged_Controller_Action{
   private function handleEditData(Application_Form_Permission_EditRole $editForm, Application_Model_User_Role $role){
     $formData = $this->_request->getPost();
     if($editForm->isValid($formData)){
+      
       foreach($formData as $permissionGroup){
         if(is_array($permissionGroup)){
-          
           foreach($permissionGroup as $permissionName=>$value){
-
             $permissionId = substr($permissionName, strrpos($permissionName, '_')+1);
             $permission = $this->_em->getRepository('Application_Model_Permission')->findOneById($permissionId);
 

@@ -6,13 +6,17 @@ class ReportController extends Unplagged_Controller_Versionable{
     parent::init();
 
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
-    if(!$case || !$case->getTarget()){
+    if(!$case){
       $errorText = 'You have to select a case, before you can start the report creation.';
       $this->_helper->FlashMessenger(array('error'=>$errorText));
       $this->redirectToLastPage();
+    }elseif(!$case->getTarget()){
+      $errorText = 'You have to define a target document in your case, before you can start the report creation.';
+      $this->_helper->FlashMessenger(array('error'=>$errorText));
+      $this->_helper->redirector('list', 'document');
     }
   }
-  
+
   public function listAction(){
     $input = new Zend_Filter_Input(array('page'=>'Digits', 'content'=>'StripTags'), null, $this->_getAllParams());
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
@@ -52,19 +56,19 @@ class ReportController extends Unplagged_Controller_Versionable{
     $registry = Zend_Registry::getInstance();
     $case = $registry->user->getCurrentCase();
 
-    if($case){      
+    if($case){
       //create an empty report to show the user something in the list
       $emptyReport = $this->createEmptyReport($registry->user, $case);
       $this->_em->persist($emptyReport);
-      
+
       $task = $this->createTask($registry->user, $emptyReport);
       $this->_em->persist($task);
-      
+
       $case->addReport($emptyReport);
       $this->_em->persist($case);
-      
+
       $this->_em->flush();
-      
+
       $this->_helper->FlashMessenger(array('success'=>'The report generation has been scheduled.'));
     }else{
       $this->_helper->FlashMessenger(array('error'=>'You have to select a case, before you can start the report creation.'));
@@ -81,17 +85,17 @@ class ReportController extends Unplagged_Controller_Versionable{
    */
   private function createEmptyReport(Application_Model_User $user){
     $data = array(
-      'user' => $user,
-      'case' => $user->getCurrentCase(),
-      'target' => $user->getCurrentCase()->getTarget(),
-      'title' => $user->getCurrentCase()->getPublishableName(),
-      'state' => $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled')
+      'user'=>$user,
+      'case'=>$user->getCurrentCase(),
+      'target'=>$user->getCurrentCase()->getTarget(),
+      'title'=>$user->getCurrentCase()->getPublishableName(),
+      'state'=>$this->_em->getRepository('Application_Model_State')->findOneByName('scheduled')
     );
     $report = new Application_Model_Report($data);
-    
+
     return $report;
   }
-  
+
   /**
    * Creates the task for the cronjob to create the actual report PDF.
    * 
@@ -132,11 +136,11 @@ class ReportController extends Unplagged_Controller_Versionable{
 
         readfile($downloadPath);
       }else{
-        $this->_helper->FlashMessenger(array('error' => "Sorry, we couldn't find the requested report."));
+        $this->_helper->FlashMessenger(array('error'=>"Sorry, we couldn't find the requested report."));
         $this->_helper->redirector('list', 'report');
       }
     }else{
-      $this->_helper->FlashMessenger(array('error' => "Sorry, we couldn't find the requested report."));
+      $this->_helper->FlashMessenger(array('error'=>"Sorry, we couldn't find the requested report."));
       $this->_helper->redirector('list', 'report');
     }
   }

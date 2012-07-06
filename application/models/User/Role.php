@@ -56,7 +56,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   /**
    * A list of all the permissions that are allowed for an owner of this role.
    *
-   * @ManyToMany(targetEntity="Application_Model_Permission", cascade={"delete", "persist"})
+   * @ManyToMany(targetEntity="Application_Model_Permission")
    * @JoinTable(name="role_has_permission",
    *      joinColumns={@JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")},
    *      inverseJoinColumns={@JoinColumn(name="permission_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -113,14 +113,14 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     $this->roleId = $roleId;
   }
 
-  public function getInheritedPermissions(){
+  public function getInheritedPermissions($global = false){
     $permissions = array();
 
     $inheritedRoles = $this->getInheritedRoles();
 
     if($inheritedRoles->count() > 0){
-      foreach($this->getInheritedRoles() as $inheritedRole){
-        $permissions = array_merge($inheritedRole->getPermissions(), $permissions);
+      foreach($inheritedRoles as $inheritedRole){
+        $permissions = array_merge($inheritedRole->getPermissions($global), $permissions);
       }
     }
 
@@ -132,9 +132,23 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
    * 
    * @return array
    */
-  public function getPermissions(){
-    $inheritedPermissions = $this->getInheritedPermissions();
-    $permissions = array_merge($inheritedPermissions, $this->permissions->toArray());
+  public function getPermissions($global = false){
+    $inheritedPermissions = $this->getInheritedPermissions($global);
+
+    if(!$global){
+      $permissions = array_merge($inheritedPermissions, $this->permissions->toArray());
+    }else{
+      // we need only permissions with base null when global is true
+      $permissions = array();
+        $this->permissions->filter(function($permission) use (&$permissions){
+            if(null == $permission->getBase()){
+              $permissions[] = $permission;
+              return true;
+            }
+            return false;
+          });
+
+    }
     return $permissions;
   }
 
@@ -143,10 +157,10 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     $case = $user->getCurrentCase();
 
     //check if the ressource related to this element is already removed.
-    if($permission->getBase() && $permission->getBase()->getState()->getName() == 'removed') {
+    if($permission->getBase() && $permission->getBase()->getState()->getName() == 'removed'){
       return false;
     }
-    
+
     // check the main user role on that right
     if($this->getBasicPermissions(true)->contains($permission)){
       return true;
@@ -156,7 +170,6 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
       if($permission->getBase()){
         $condition = array(
           'type'=>$permission->getType(),
-          'action'=>$permission->getAction(),
           'action'=>$permission->getAction());
 
         $permissionAny = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Permission')->findOneBy($condition);

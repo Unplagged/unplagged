@@ -109,7 +109,7 @@ $guestRole = $em->getRepository('Application_Model_User_Role')->findOneByRoleId(
 if(!$guestRole){
   $guestRole = new Application_Model_User_Role(Application_Model_User_Role::TYPE_GLOBAL);
   $guestRole->setRoleId('guest');
-  $defaultPermissions = array(
+  $defaultPagePermissions = array(
     array('auth', 'login'),
     array('auth', 'logout'),
     array('index', 'index'),
@@ -123,8 +123,8 @@ if(!$guestRole){
     array('user', 'activate-user')
   );
 
-  foreach($defaultPermissions as $permissionName){
-    $permission = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$permissionName[0], 'action'=>$permissionName[1]));
+  foreach($defaultPagePermissions as $permissionName){
+    $permission = $em->getRepository('Application_Model_PagePermission')->findOneBy(array('type'=>$permissionName[0], 'action'=>$permissionName[1]));
 
     if($permission){
       $guestRole->addPermission($permission);
@@ -139,7 +139,7 @@ $userRole = $em->getRepository('Application_Model_User_Role')->findOneByRoleId('
 if(!$userRole){
   $userRole = new Application_Model_User_Role(Application_Model_User_Role::TYPE_GLOBAL);
   $userRole->setRoleId('user');
-  $defaultPermissions = array(
+  $defaultPagePermissions = array(
     array('admin', 'index'),
     array('auth', 'login'),
     array('auth', 'logout'),
@@ -148,6 +148,7 @@ if(!$userRole){
     array('case', 'files'),
     array('case', 'list'),
     array('case', 'edit'),
+    array('case', 'publish'),
     array('case', 'create'),
     array('comment', 'list'),
     array('comment', 'create'),
@@ -158,12 +159,13 @@ if(!$userRole){
     array('document_fragment', 'edit'),
     array('document_fragment', 'create'),
     array('document_fragment', 'show'),
+    array('document_fragment', 'rate-fragment'),
     array('document_page', 'compare'),
     array('document_page', 'fragment'),
     array('document_page', 'read'),
     array('document_page', 'changelog'),
-    array('document_page', 'simtext'),
-    array('document_page', 'simtext-reports'),
+    array('document_page', 'list-simtextreports'),
+    array('document_page', 'create-simtextreport'),
     array('document_page', 'stopwords'),
     array('document_page', 'delete'),
     array('document_page', 'de-hyphen'),
@@ -180,6 +182,7 @@ if(!$userRole){
     array('document', 'list'),
     array('document', 'edit'),
     array('document', 'read'),
+    array('document', 'create'),
     array('file', 'delete'),
     array('file', 'parse'),
     array('file', 'download'),
@@ -193,7 +196,7 @@ if(!$userRole){
     array('user', 'autocomplete'),
     array('user', 'add-file'),
     array('user', 'files'),
-    array('user', 'edit-profile'),
+    array('user', 'edit'),
     array('user', 'remove-account'),
     array('user', 'set-current-case'),
     array('notification', 'conversation'),
@@ -212,13 +215,20 @@ if(!$userRole){
     array('report', 'list'),
     array('simtext', 'ajax'),
     array('simtext', 'download-report'),
-    array('simtext', 'compare'),
+    array('simtext', 'create-report'),
+    array('simtext', 'delete-report'),
+    array('simtext', 'list-reports'),
+    array('simtext', 'show-report'),
+    array('simtext', 'compare'),   
     array('image', 'show'),
-    array('tag', 'autocomplete')
+    array('tag', 'autocomplete'),
+    array('index', 'imprint'),
+        array('bibtex', 'show'),
+    array('bibtex', 'list')
   );
 
-  foreach($defaultPermissions as $permissionName){
-    $permission = $em->getRepository('Application_Model_Permission')->findOneBy(array('type'=>$permissionName[0], 'action'=>$permissionName[1], 'base'=>null));
+  foreach($defaultPagePermissions as $permissionName){
+    $permission = $em->getRepository('Application_Model_PagePermission')->findOneBy(array('type'=>$permissionName[0], 'action'=>$permissionName[1], 'base'=>null));
 
     if($permission){
       $userRole->addPermission($permission);
@@ -267,6 +277,7 @@ if(!$guestUser){
   $em->persist($guestUserSetting);
 }
 
+
 //create the admin user role
 $element = $em->getRepository('Application_Model_User_Role')->findOneByRoleId('admin');
 if(!$element){
@@ -296,7 +307,8 @@ if(!$caseAdmin){
   $caseAdmin->setRoleId('case-admin');
 
   foreach($modelPermissions as $modelPermission){
-    $caseAdmin->addPermission($modelPermission);
+    if($modelPermission->getType() != 'user') 
+      $caseAdmin->addPermission($modelPermission);
   }
 
   $em->persist($caseAdmin);
@@ -309,7 +321,8 @@ if(!$caseCollaborator){
   $caseCollaborator->setRoleId('case-collaborator');
 
   foreach($modelPermissions as $modelPermission){
-    $caseCollaborator->addPermission($modelPermission);
+    if($modelPermission->getType() != 'user') 
+      $caseCollaborator->addPermission($modelPermission);
   }
 
   $em->persist($caseCollaborator);

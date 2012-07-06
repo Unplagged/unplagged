@@ -54,6 +54,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 abstract class Application_Model_Base{
 
   const ICON_CLASS = '';
+  const PERMISSION_TYPE = 'base';
 
   public static $permissionTypes = array(
     'read',
@@ -66,7 +67,6 @@ abstract class Application_Model_Base{
    * @var array An array containing all classes that don't need permission management. 
    */
   public static $blacklist = array(
-    'base',
     'task',
     'document-fragment-type',
     'document-fragment-partial',
@@ -180,6 +180,7 @@ abstract class Application_Model_Base{
    * @PrePersist 
    */
   public function storePermissions(){
+    // @todo: what was ths part good for?
     $registry = Zend_Registry::getInstance();
     $em = $registry->entitymanager;
 
@@ -192,20 +193,11 @@ abstract class Application_Model_Base{
 
     foreach(self::$permissionTypes as $permissionType){
       if(!in_array($this->getPermissionType(), self::$blacklist)){
-        //echo $this->getId() . "<br />";
-        //$permission = $em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>$this->getPermissionType(), 'action'=>$permissionType, 'base'=>$this));
-        //if(!$permission){
         $permission = new Application_Model_ModelPermission($this->getPermissionType(), $permissionType, $this);
-        //}
+
         $this->addPermission($permission);
-        //if(!$user->getRole()->hasPermission($permission)){
         $user->getRole()->addPermission($permission);
         $em->persist($permission);
-        // echo 'has not permission';
-        //} //else {
-        //echo 'has permission';
-        //}
-        //exit;
       }
     }
   }
