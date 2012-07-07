@@ -166,6 +166,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     if($this->getBasicPermissions(true)->contains($permission)){
       return true;
     }
+
     if($case){
       // when a role without a base was sent, we do not need to select it
       if($permission->getBase()){
@@ -173,10 +174,18 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
           'type'=>$permission->getType(),
           'action'=>$permission->getAction());
 
-        $permissionAny = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Permission')->findOneBy($condition);
+        $instanceType = ($permission instanceof Application_Model_PagePermission) ? 'Application_Model_PagePermission' : 'Application_Model_ModelPermission';
+        
+        $permissionAny = Zend_Registry::getInstance()->entitymanager->getRepository($instanceType)->findOneBy($condition);
       }else{
         $permissionAny = $permission;
       }
+
+      // check the main user role on that right
+      if($this->getBasicPermissions(true)->contains($permissionAny)){
+        return true;
+      }
+
       foreach($case->getDefaultRoles() as $caseRole){
         if($this->getInheritedRoles()->contains($caseRole)){
           if($caseRole->getBasicPermissions(true)->contains($permissionAny)){
@@ -196,7 +205,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   public function getBasicPermissions($asCollection = false, $global = false){
     if($asCollection){
       if(!$global){
-         return $this->permissions;
+        return $this->permissions;
       }else{
         // we need only permissions with base null when global is true
         $permissions = array();
@@ -208,7 +217,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
               return false;
             });
 
-       return $permissions;
+        return $permissions;
       }
     }
     return $this->permissions->toArray();
