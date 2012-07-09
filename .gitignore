@@ -11,6 +11,7 @@
 /docs/Developers Manual/parts/*.aux
 /application/configs/unplagged-config.ini
 
+/data
 
 /nbproject/private/
 !.gitignore

@@ -69,17 +69,17 @@ class Application_Form_Report_Modify extends Zend_Form {
         $pageExistsValidator = new Unplagged_Validate_RecordExists('Application_Model_Document_Page', 'pageNumber', array("document" => 6));
 
         $this->setMethod('post');
-        $this->setAction("/report/list");
+        $this->setAction("/report/save");
 
-       /* $submitElement = new Zend_Form_Element_Submit('submit');
-        $submitElement->setLabel('Create report');
+        $submitElement = new Zend_Form_Element_Submit('submit');
+        $submitElement->setLabel('Save the report');
         $submitElement->setIgnore(true);
         $submitElement->setAttrib('class', 'btn btn-primary');
         $submitElement->removeDecorator('DtDdWrapper');       
 
         $this->addElements(array(
             $submitElement
-        ));*/
+        ));
     }
 
 }
