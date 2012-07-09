@@ -33,6 +33,17 @@ class Templates {
         return $html;
     }
     
+    public static function getFirstPage($title, $author, $address, $year, $casename, $date) {
+        $html = file_get_contents("firstPage.html", true);
+        $html = self::replace($html, "{TITLE}", $title);
+        $html = self::replace($html, "{AUTHOR}", $author);
+        $html = self::replace($html, "{ADDRESS}", $address);
+        $html = self::replace($html, "{YEAR}", $year);
+        $html = self::replace($html, "{CASENAME}", $casename);
+        $html = self::replace($html, "{DATE}", $date);
+        return $html;
+    }
+    
     public static function getPage($title1, $title2, $td1, $td2, $footer) {
         $html = file_get_contents("page.html", true);
         $html = self::replace($html, "{TITLE1}", $title1);
@@ -52,6 +63,10 @@ class Templates {
         $html = self::replace($html,"{ADDRESS}", $address);
         $html = self::replace($html,"{PUBLISHER}", $publisher);
         return $html;
+    }
+    
+    public static function getStyle() {
+        return file_get_contents("style.html", true);
     }
     
     private static function replace($str, $tag, $value) {

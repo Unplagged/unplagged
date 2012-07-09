@@ -46,7 +46,7 @@ class Unplagged_Barcode{
   private $widthUnit;
 
   public function __construct($width = 100, $height = 200, $barHeight = 100, $showLabels = true, $widthUnit = '%', $data){
-    $this->widthUnit = $widthUnit;
+      $this->widthUnit = $widthUnit;
     $this->width = $width;
     $this->height = $height;
     $this->showLabels = $showLabels;
