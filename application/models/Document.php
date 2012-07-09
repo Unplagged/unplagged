@@ -212,8 +212,8 @@ class Application_Model_Document extends Application_Model_Base{
     $action['icon'] = 'icon-page-add';
     $actions[] = $action;
 
-    $action['link'] = '/document_page/create/documen/' . $this->id;
-    $action['label'] = 'Detect Plagiarism';
+    $action['link'] = '/document/detect-plagiarism/id/' . $this->id;
+    $action['label'] = 'Detect plagiarism';
     $action['icon'] = 'icon-eye';
     $actions[] = $action;
 

@@ -622,10 +622,12 @@ $(document).ready(function(){
   $('#actions-menu').css('margin-top', '-' + $('#actions-menu').height()/2 + 'px');
 
   $('#actions-menu.poped-in').live('click', function() {
+    $(this).children('.arrow').html('&raquo;');
     $(this).css('margin-right', '0px');
     $(this).removeClass('poped-in').addClass('poped-out');
   });
   $('#actions-menu.poped-out').live('click', function() {
+    $(this).children('.arrow').html('&laquo;');
     $(this).css('margin-right', '-250px');
     $(this).removeClass('poped-out').addClass('poped-in');
   });

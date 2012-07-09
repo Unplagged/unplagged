@@ -41,7 +41,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * ,"document_page" = "Application_Model_Document_Page"
  * ,"file" = "Application_Model_File"
  * ,"notification" = "Application_Model_Notification"
- * ,"simtext_report" = "Application_Model_Document_Page_SimtextReport"
+ * ,"simtext_report" = "Application_Model_Simtext_Report"
  * ,"report" = "Application_Model_Report"
  * ,"tag" = "Application_Model_Tag"
  * ,"user" = "Application_Model_User"
@@ -54,6 +54,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 abstract class Application_Model_Base{
 
   const ICON_CLASS = '';
+  const PERMISSION_TYPE = 'base';
 
   public static $permissionTypes = array(
     'read',
@@ -66,7 +67,6 @@ abstract class Application_Model_Base{
    * @var array An array containing all classes that don't need permission management. 
    */
   public static $blacklist = array(
-    'base',
     'task',
     'document-fragment-type',
     'document-fragment-partial',
@@ -77,7 +77,7 @@ abstract class Application_Model_Base{
     'document-page-line',
     'rating',
     'versionable-version',
-    'document-page-simtextreport',
+    'simtext-report',
     'document-page-detectionreport',
   );
 
@@ -136,24 +136,21 @@ abstract class Application_Model_Base{
    * @todo private without getter and setter?
    */
   private $notifications;
-  
   protected $conversationTypes = array('comment');
 
-  
   /**
    * @ManyToOne(targetEntity="Application_Model_State")
    * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $state;
-  
+
   public function __construct($data = array()){
     if(isset($data['state'])){
       $this->state = $data['state'];
-    } else {
+    }else{
       $this->state = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_State')->findOneByName('created');
-
     }
-    
+
     $this->comments = new ArrayCollection();
     $this->ratings = new ArrayCollection();
     $this->tags = new ArrayCollection();
@@ -180,6 +177,7 @@ abstract class Application_Model_Base{
    * @PrePersist 
    */
   public function storePermissions(){
+    // @todo: what was ths part good for?
     $registry = Zend_Registry::getInstance();
     $em = $registry->entitymanager;
 
@@ -192,20 +190,11 @@ abstract class Application_Model_Base{
 
     foreach(self::$permissionTypes as $permissionType){
       if(!in_array($this->getPermissionType(), self::$blacklist)){
-        //echo $this->getId() . "<br />";
-        //$permission = $em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>$this->getPermissionType(), 'action'=>$permissionType, 'base'=>$this));
-        //if(!$permission){
         $permission = new Application_Model_ModelPermission($this->getPermissionType(), $permissionType, $this);
-        //}
+
         $this->addPermission($permission);
-        //if(!$user->getRole()->hasPermission($permission)){
         $user->getRole()->addPermission($permission);
         $em->persist($permission);
-        // echo 'has not permission';
-        //} //else {
-        //echo 'has permission';
-        //}
-        //exit;
       }
     }
   }
@@ -251,8 +240,8 @@ abstract class Application_Model_Base{
   public function getRatings(){
     return $this->ratings;
   }
-  
-    public function addRating(Application_Model_Rating $rating){
+
+  public function addRating(Application_Model_Rating $rating){
     $this->ratings->add($rating);
   }
 
@@ -343,8 +332,20 @@ abstract class Application_Model_Base{
     $this->tags->clear();
   }
 
-  public function getPermissions(){
-    return $this->permissions;
+  public function getPermissions($instanceType = null){
+    if(empty($instanceType)){
+      return $this->permissions;
+    }else{
+      $permissions = array();
+      $this->permissions->filter(function($permission) use (&$permissions, &$instanceType){
+            if($permission instanceof $instanceType){
+              $permissions[] = $permission;
+              return true;
+            }
+            return false;
+          });
+          return $permissions;
+    }
   }
 
   public function remove(){
@@ -356,7 +357,7 @@ abstract class Application_Model_Base{
       $this->permissions->add($permission);
     }
   }
-  
+
   public function getState(){
     return $this->state;
   }

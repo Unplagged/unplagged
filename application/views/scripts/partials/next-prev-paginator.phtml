@@ -1,11 +1,11 @@
 <ul class="pager">
   <?php if(!empty($this->prevLink)): ?>
-  <li class="previous"><a href="<?php echo $this->prevLink ?>"><?php echo $this->translate("previous page"); ?></a></li>
+  <li class="previous"><a href="<?php echo $this->prevLink ?>"><?php echo $this->translate("Previous page"); ?></a></li>
   <?php else: ?>
     <li class="previous disabled"><a href="#"><?php echo $this->translate('Previous page'); ?></a></li>
   <?php endif; ?>
   <?php if(!empty($this->nextLink)): ?>
-  <li class="next"><a href="<?php echo $this->nextLink ?>"><?php echo $this->translate("next page"); ?></a></li>
+  <li class="next"><a href="<?php echo $this->nextLink ?>"><?php echo $this->translate("Next page"); ?></a></li>
   <?php else: ?>
     <li class="next disabled"><a href="#"><?php echo $this->translate('Next page'); ?></a></li>
   <?php endif; ?>

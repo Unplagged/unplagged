@@ -284,25 +284,19 @@ class DocumentController extends Unplagged_Controller_Action{
           }
         }
 
-        $successPagesStr = implode(", ", $successPages);
-        $errorPagesStr = implode(", ", $errorPages);
-
-        $successText = 'The detection was started successfully for the following pages: %s, you will be notified, when it is finished.';
-        $errorText = 'The detection could not be started for the following pages: %s, please try again later.';
-
-        if(!empty($successPagesStr)){
-          $this->_helper->FlashMessenger(array('success'=>sprintf($successText, $successPagesStr)));
+        if(!empty($successPages)){
+          $this->_helper->FlashMessenger(array('success'=> array('The detection was started successfully for the following pages: %s, you will be notified, when it is finished.', array(implode(", ", $successPages)))));
         }
-        if(!empty($errorPagesStr)){
-          $this->_helper->FlashMessenger(array('error'=>sprintf($errorText, $errorPagesStr)));
+        if(!empty($errorPages)){
+          $this->_helper->FlashMessenger(array('error'=> array('The detection could not be started for the following pages: %s, please try again later.', array(implode(", ", $errorPages)))));
         }
       }else{
-        $this->_helper->FlashMessenger('Dcument does not exist.');
+        $this->_helper->FlashMessenger('The dcument does not exist.');
       }
     }else{
       $this->_helper->FlashMessenger('No document selected.');
     }
-    $this->_helper->redirector('list', 'document');
+    $this->redirectToLastPage();
   }
 
   /**

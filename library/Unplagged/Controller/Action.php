@@ -42,9 +42,9 @@ abstract class Unplagged_Controller_Action extends Zend_Controller_Action{
    * 
    * @param string $title 
    */
-  protected function setTitle($title){
+  protected function setTitle($title, $values = array()){
     $title = Zend_Registry::get('Zend_Translate')->translate($title);
-    
+    $title = vsprintf($title, $values);
     $this->view->title = $title;
     $this->view->headTitle()->prepend($title);
   }

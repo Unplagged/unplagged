@@ -44,8 +44,11 @@ class Cron_Document_Page_Simtext extends Cron_Base{
       $report = $task->getRessource();
 
       // generate the simtext result
-      $content = "";
+      $content = array();
       $left = $report->getPage()->getContent('array');
+      foreach($left as $lineNumber=>$lineContent){
+        $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
+      }
 
       // count the pages to compare
       $documents = $report->getDocuments();
@@ -66,45 +69,40 @@ class Cron_Document_Page_Simtext extends Cron_Base{
           $i++;
           $right = $page->getContent('array');
 
-          foreach($left as $lineNumber=>$lineContent){
-            $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
-          }
-
           foreach($right as $lineNumber=>$lineContent){
             $right[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
           }
 
           $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
 
-          $left = $simtextResult['left'];
-          $right = $simtextResult['right'];
+          $leftRes = $simtextResult['left'];
+          $rightRes = $simtextResult['right'];
 
-          foreach($left as $lineNumber=>$lineContent){
-            $left[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+          foreach($leftRes as $lineNumber=>$lineContent){
+            $leftRes[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
           }
 
-          foreach($right as $lineNumber=>$lineContent){
-            $right[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+          foreach($rightRes as $lineNumber=>$lineContent){
+            $rightRes[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
           }
 
-          $result['left'] = '<ol>' . implode("\n", $left) . '</ol>';
-          $result['right'] = '<ol>' . implode("\n", $right) . '</ol>';
+          $result['left'] = '<ol>' . implode("\n", $leftRes) . '</ol>';
+          $result['right'] = '<ol>' . implode("\n", $rightRes) . '</ol>';
 
           // if simtext found something on that page, append it to the report
           if(strpos($result['left'], "fragmark-") !== false){
-            $content .= "<div style='clear:both;padding-top:10px;'><b>Document " . $document->getTitle() . " - Page " . $page->getPageNumber() . "</b><br />";
+            
+            $pageResult = array();
 
-            $content .= '<div class="document-page diff clearfix">
-                        <div class="src-wrapper">
-                          <h3>Left</h3>
-                          <div id="candidateText">' . $result['left'] . '</div>
-                        </div>
-                        <div class="src-wrapper">
-                          <h3>Right</h3>
-                          <div id="sourceText">' . $result['right'] . '</div>
-                        </div>
-                      </div>';
-            $content .= '</div>';
+            $pageResult['candidate']['page'] = $report->getPage()->getPageNumber();
+            $pageResult['candidate']['document'] = $report->getPage()->getDocument()->getTitle();
+            $pageResult['candidate']['text'] = $result['left'];
+            
+            $pageResult['source']['page'] = $page->getPageNumber();
+            $pageResult['source']['document'] = $document->getTitle();
+            $pageResult['source']['text'] = $result['right'];
+            
+            $content[] = $pageResult;
           }
 
           $perc = round($i * 1.0 / $pagesCount * 100 / 10) * 10;
@@ -136,6 +134,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
   }
 
 }
+
 $simtext = new Cron_Document_Page_Simtext();
 $simtext->start();
 ?>

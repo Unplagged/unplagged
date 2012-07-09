@@ -141,30 +141,27 @@ class Unplagged_Uploader{
   public function crop($thumbWidth, $thumbHeight){
     //getting the image dimensions
     list($width, $height) = getimagesize($this->file->getFullPath());
-
+    $ratio = $width * 1. / $height;
+    
     //saving the image into memory (for manipulation with GD Library)
     $myImage = imagecreatefromjpeg($this->file->getFullPath());
-    ///--------------------------------------------------------
-    //setting the crop size
-    //--------------------------------------------------------
-    if($width > $height)
-      $biggestSide = $width;
-    else
-      $biggestSide = $height;
 
-    //The crop size will be half that of the largest side
-    $cropPercent = .5;
-    $cropWidth = $biggestSide * $cropPercent;
-    $cropHeight = $biggestSide * $cropPercent;
+    // setting the crop size
+    if($width < $height) {
+      $twidth = $width;
+      $theight = $width;
+      $x = 0;
+      $y = $height / 2. - $width / 2.;
+    } else {
+      $twidth = $height;
+      $theight = $height;
+      $x = $width / 2. - $height / 2.;
+      $y = 0;
+    }
 
-    //getting the top left coordinate
-    $c1 = array("x"=>($width - $cropWidth) / 2, "y"=>($height - $cropHeight) / 2);
-
-    //--------------------------------------------------------
-    // Creating the thumbnail
-    //--------------------------------------------------------
+    // creating the thumbnail
     $thumb = imagecreatetruecolor($thumbWidth, $thumbHeight);
-    imagecopyresampled($thumb, $myImage, 0, 0, $c1['x'], $c1['y'], $thumbWidth, $thumbHeight, $cropWidth, $cropHeight);
+    imagecopyresampled($thumb, $myImage, 0, 0, $x, $y, $thumbWidth, $thumbHeight, $twidth, $theight);
 
     imagejpeg($thumb, $this->file->getFullPath());
 

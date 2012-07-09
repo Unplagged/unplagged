@@ -23,10 +23,10 @@
  * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
- * @Table(name="document_page_simtext_reports")
+ * @Table(name="simtext_reports")
  * @HasLifeCycleCallbacks
  */
-class Application_Model_Document_Page_SimtextReport extends Application_Model_Base{
+class Application_Model_Simtext_Report extends Application_Model_Base{
 
   const ICON_CLASS = 'icon-report';
 
@@ -59,7 +59,7 @@ class Application_Model_Document_Page_SimtextReport extends Application_Model_Ba
   /**
    * The content of the report.
    * 
-   * @Column(type="text", nullable=true)
+   * @Column(type="array", nullable=true)
    */
   private $content;
 
@@ -137,7 +137,7 @@ class Application_Model_Document_Page_SimtextReport extends Application_Model_Ba
   }
 
   public function getDirectLink(){
-    return "/document_page/simtext-reports/id/" . $this->page->getId() . "/show/" . $this->id;
+    return "/simtext/show-report/id/" . $this->id;
   }
 
 }
