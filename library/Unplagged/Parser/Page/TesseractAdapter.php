@@ -69,6 +69,7 @@ class Unplagged_Parser_Page_TesseractAdapter{
    */
   public function execute(){
     $command = sprintf($this->tesseractCall, $this->inputFileLocation, $this->outputFileLocation, $this->language);
+      echo $command . "\n";;
     Zend_Registry::get('Log')->debug($command);
     exec($command, $op, $returnVal);
 

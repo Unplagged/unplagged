@@ -98,7 +98,7 @@ class Document_FragmentController extends Unplagged_Controller_Versionable{
       $startline = $this->_em->getRepository('Application_Model_Document_Page_Line')->findOneBy(array('lineNumber'=>$input->sourceStartLine, 'page'=>$input->sourcePage));
       $endline = $this->_em->getRepository('Application_Model_Document_Page_Line')->findOneBy(array('lineNumber'=>$input->sourceEndLine, 'page'=>$input->sourcePage));
 
-      $formData['sourceDocument'] = $case->getTarget()->getId();
+      $formData['sourceDocument'] = $page->getDocument()->getId();
 
       if($page && $startline && $endline){
         $modifyForm->getElement("sourceDocument")->setValue($page->getDocument()->getId());

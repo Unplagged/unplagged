@@ -28,10 +28,11 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
   }
 
   public function parseToDocument(Application_Model_File $file, $language, $documentId = null, $taskId = null){
+ 
     // create temp folder
     $imagemagickTempPath = TEMP_PATH . DIRECTORY_SEPARATOR . 'imagemagick' . DIRECTORY_SEPARATOR . uniqid();
     mkdir($imagemagickTempPath, 0777);
-
+    
     try{
       $inputFileLocation = $file->getFullPath();
 
@@ -69,7 +70,7 @@ class Unplagged_Parser_Document_ImageParser implements Unplagged_Parser_Document
       $handler = opendir($imagemagickTempPath);
       while($tifFile = readdir($handler)){
         if($tifFile != "." && $tifFile != ".."){
-
+            echo 'read:' . $tifFile . "\n";
           // for loop over pages
           $fileData = array('filename'=>$tifFile, 'localFilename'=>$tifFile, 'extension'=>'tif', 'mimeType'=>'image/tiff', 'location'=>$imagemagickTempPath . DIRECTORY_SEPARATOR);
           $tempFile = new Application_Model_File($fileData);

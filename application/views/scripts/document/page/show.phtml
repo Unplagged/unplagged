@@ -2,7 +2,7 @@
 
 <?php if($this->case->getTarget() && $this->page->getDocument()->getId() == $this->case->getTarget()->getId()): ?>
 <p class="pagination-right switch-two-columns">
-  <a href="/document_page/fragment/id/<?php echo $this->page->getId(); ?>" class="btn"><i class="icon-ok-circle"></i>Switch to two column view for fragment creation</a>
+  <a href="/document_page/fragment/id/<?php echo $this->page->getId(); ?>" class="btn"><i class="icon-ok-circle"></i><?php echo $this->translate('Switch to two column view for fragment creation'); ?></a>
 </p>
 <?php endif; ?>
 

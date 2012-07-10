@@ -42,7 +42,7 @@ class Cron_Document_Parser extends Cron_Base{
 
       $parser = Unplagged_Parser::factory($file->getMimeType());
       $document = $parser->parseToDocument($file, $document->getLanguage(), $documentId, $taskId);
-
+      
       if($document instanceof Application_Model_Document){
         // update document
         $document->setState($this->em->getRepository('Application_Model_State')->findOneByName('parsed'));
