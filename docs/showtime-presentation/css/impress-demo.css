@@ -82,9 +82,9 @@ table {
     want to leave anybody behind.
 */
 body {
-    font-family: SansationLight;
+    font-family: SansationRegular;
     min-height: 740px;
-    
+
     background: rgb(215, 215, 215);
     background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190)));
     background: -webkit-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
@@ -110,7 +110,7 @@ a {
     background: rgba(255,255,255,0.5);
     text-shadow: -1px -1px 2px rgba(100,100,100,0.9);
     border-radius: 0.2em;
-    
+
     -webkit-transition: 0.5s;
     -moz-transition:    0.5s;
     -ms-transition:     0.5s;
@@ -139,7 +139,7 @@ a:focus {
 .fallback-message {
     font-family: sans-serif;
     line-height: 1.3;
-    
+
     width: 780px;
     padding: 10px 10px 0;
     margin: 20px auto;
@@ -165,110 +165,130 @@ a:focus {
 
 /* 1) slide logo */
 #step-logo h1 {
-  background: #43bfe9;
-  padding: 10px 30px 0 75px;
-  display: inline-block;
-  margin: 0;
-  
+    background: #43bfe9;
+    padding: 10px 30px 0 75px;
+    display: inline-block;
+    margin: 0;
+
 }
 #step-logo h1 img {
     width: 420px;
     margin: 0;
 }
-
 #step-logo p {
-  padding: 5px 30px 5px 75px;
-  width: 370px;
-  text-transform: uppercase;
-  font-size: 36px;
-  background-color: #4d5658;
-  color: #ffffff;
-  font-family: LeagueGothicRegular;
-  margin: 0;
+    padding: 5px 30px 5px 75px;
+    width: 370px;
+    text-transform: uppercase;
+    font-size: 36px;
+    background-color: #4d5658;
+    color: #ffffff;
+    font-family: LeagueGothicRegular;
+    margin: 0;
 }
 
 /* 2) slide team */
 #step-team img {
- -webkit-transition: all 4s ease;    
+    -webkit-transition: all 4s ease;    
 }
 #step-team.active img { 
     -webkit-transform: scale(1.9);
 }
 
 /* 3) slide introduction */
-.step-introduction {
-    background-color: white;
-    height: 675px;
-    width: 900px;
-    font-size: 30px;
-    line-height: 34px;
+#step-marketing-question h2{
+    -webkit-transition: all 1.5s ease;  
 }
-.step-introduction.past{
-    display: block;
-}
-.step-introduction.active {
-    display: block;
-}
-.step-introduction:not(.active) {
-    z-index: 1;
+#step-marketing-question.active h2 {
+    -webkit-transform: scale(1.9);
+    -webkit-transform-origin-x: -50px;
 }
 
-.step-introduction p {
-    margin-left: 75px;
-    margin-top: 25px;
+#step-exursion-1.past {
+    text-decoration: line-through;
 }
 
 /* 4) slide vroni */
-#step-vroni {
- width: 900px;
- height: 675px;
-}
-
-#step-vroni p {
-    margin-left: 75px;
-    margin-top: 25px;
-}
 
 /* 4) slide game */
-#step-game {
- width: 900px;
- height: 675px;
-}
-
-#step-game p {
-    margin-left: 75px;
-    margin-top: 25px;
-}
-
 
 /* 5) slide video */
-
+#step-game-outro.future {
+    opacity: 0;
+}
 /* 6) slide features */
-#step-features {
-    
-}
-
-.step-feature img {
-    
-}
 
 
 .step {
     position: relative;
-    max-width: 900px;
+    max-width: 1100px;
 }
-
 .step h2 {
-  padding: 5px 30px 5px 75px;
-  text-transform: uppercase;
-  font-size: 36px;
-  background-color: #43bfe9;
-  color: #ffffff;
-  font-family: LeagueGothicRegular;
-  margin: 0;
-  display: block;
+    padding: 10px 30px 10px 75px;
+    text-transform: uppercase;
+    font-size: 48px;
+    background-color: #43bfe9;
+    color: #ffffff;
+    font-family: LeagueGothicRegular;
+    margin: 0;
+    display: inline-block;
 }
 
+.step h3 {
+    padding: 10px 30px 10px 75px;
+    text-transform: uppercase;
+    font-size: 36px;
+    background-color: #4d5658;
+    color: #ffffff;
+    font-family: LeagueGothicRegular;
+    margin: 0;
+    display: inline-block;
+}
+
+.left-step {
+    width: 1050px;
+}
+
+.step ul {
+    list-style-type:disc;
+    color: #43BFE9;
+}
+.step ul li {
+    font-size: 50px;
+    
+}
+.step ul li span {
+    font-size: 30px;
+    color: black;
+}
+.left-step p,
+.left-step ul{
+    margin-left: 75px;
+    margin-top: 25px;
+    font-size: 30px;
+    line-height: 38px;
+}
+
+.right-step {
+    width: 1100px;
+    text-align: right;
+}
+.right-step p,
+.right-step ul {
+    margin-top: 25px;
+    font-size: 30px;
+    line-height: 34px;
+    margin-right: 75px;
+}
+
+.right-step h2 {
+    text-align: right;
+    padding: 10px 75px 10px 30px;
+}
+
+.right-step h3 {
+    text-align: right;
+    padding: 10px 75px 10px 30px;
+}
 /*
     ... and we enhance the styles for impress.js.
     
@@ -291,17 +311,17 @@ a:focus {
 .step { z-index: 5000;}
 
 .paper-page{
-  background-color: white;
-  height: 3800px;
-  width: 2660px;
-  margin-left: -50%;
-  margin-top: -70%;
-  z-index: -5000;
-  border: 1px solid rgba(0, 0, 0, .3);
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
-  opacity: 1.0 !important;
-  position: absolute; -webkit-transform: translate(-50%, -50%) translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1); -webkit-transform-style: preserve-3d;
+    background-color: white;
+    height: 3400px;
+    width: 2380px;
+    margin-left: -50%;
+    margin-top: -70%;
+    z-index: -5000;
+    border: 1px solid rgba(0, 0, 0, .3);
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+    opacity: 1.0 !important;
+    position: absolute; -webkit-transform: translate(-50%, -50%) translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1); -webkit-transform-style: preserve-3d;
 }
 
 #overview { display: none }
@@ -364,7 +384,7 @@ a:focus {
         impress.js, as they will have a linear scrollable view ...
     */
     display: none;
-    
+
     /*
         ... and give it some fixed position and nice styles.
     */
@@ -372,21 +392,21 @@ a:focus {
     left: 0;
     right: 0;
     bottom: 200px;
-    
+
     background: rgba(0,0,0,0.5);
     color: #EEE;
     text-align: center;
-    
+
     font-size: 50px;
     padding: 20px;
-    
+
     z-index: 100;
-    
+
     /*
         By default we don't want the hint to be visible, so we make it transparent ...
     */
     opacity: 0;
-    
+
     /*
         ... and position it below the bottom of the screen (relative to it's fixed position)
     */
@@ -427,13 +447,13 @@ a:focus {
         position.
     */
     opacity: 1;
-    
+
     -webkit-transform: translateY(0px);
     -moz-transform:    translateY(0px);
     -ms-transform:     translateY(0px);
     -o-transform:      translateY(0px);
     transform:         translateY(0px);
-    
+
     /*
         Now for fade in transition we have the oposite situation from the one
         above.

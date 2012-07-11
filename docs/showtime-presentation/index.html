@@ -25,19 +25,18 @@
             </div>
 
             <!-- step logo -->
-            <div id="step-logo" class="step" data-scale="2.0" data-x="-803" data-y="-1500" >
+            <div id="step-logo" class="step" data-scale="1.7" data-x="-744" data-y="-1400" >
                 <h1 class="logo"><img src="images/unplagged-logo.png" /></h1>
                 <p>Plagiarism detection workbench</p>
             </div>
 
             <!-- step team -->
-            <div id="step-team" class="step" data-x="650" data-y="1500" data-scale="2">
-                <img src="images/team-members.png" width="600" />
+            <div id="step-team" class="step" data-x="650" data-y="1450" data-scale="2">
+                <img src="images/team-members.png" width="500" />
             </div>
 
             <!-- step introduction -->
-            <div class="step step-introduction" id="step-introduction-1" data-x="-883" data-y="-900">
-                <h2>Marketing Catch Phrase 1</h2>
+            <div class="step left-step" id="step-marketing-phrase" data-x="-643" data-y="-1050">
                 <p> Unplagged is a <em>collaborative</em> open source tool to
                     help you <em>discover, collect and reliably document</em>
                     plagiarism in scientific theses, papers, books
@@ -47,59 +46,145 @@
                     and GuttenPlag-Wiki.</p>
             </div>
 
-            <div class="step step-introduction" id="step-introduction-2" data-x="-873" data-y="-910">
-                <h2>Marketing Catch Phrase 2</h2>
-
-                <p>Aren't there already tools like that?</p>
+            <div class="step left-step" id="step-marketing-question" data-x="-665" data-y="-750">
+                <h2>What's Special about this?</h2>
             </div>
 
-            <div class="step step-introduction" id="step-introduction-3" data-x="-863" data-y="-920">
+            <div class="step left-step" id="step-exursion-1" data-x="-665" data-y="-390">
                 <h2>Excursion: Our Definition of Plagiarism</h2>
-                <p>Plagiarism is the claim of intellectual work of others. This may be the adoption of foreign texts or other representations
-                    (e.g., newspapers, magazine articles, photographs, films, sound recordings), foreign ideas (e.g., inventions, design, scientific
-                    discoveries, melodies) or both (e.g. scientific publications, art, novels).</p>
+                <p style="padding-top: 50px">Plagiarism is the claim of intellectual work of others. This may be the adoption of foreign texts or other representations
+                    <em>(e.g., newspapers, magazine articles, photographs, films, sound recordings)</em>, foreign ideas <em>(e.g., inventions, design, scientific
+                    discoveries, melodies)</em> or both <em>(e.g. scientific publications, art, novels)</em>.</p>
             </div>
-            
+
+            <div class="step left-step" id="step-exursion-2" data-x="-665" data-y="100">
+                <h2>Well, not really ours...</h2>
+                <p>
+                    "Ein Plagiat (über frz. aus lat. plagium ‚Menschenraub‘[1]) ist die Anmaßung fremder geistiger Leistungen. Dies kann sich auf die
+                    Übernahme fremder Texte oder anderer Darstellungen (z. B. Zeitungs-, Magazinartikel, Fotos, Filme, Tonaufnahmen), fremder Ideen
+                    (z. B. Erfindungen, Design, Wissenschaftliche Erkenntnisse, Melodien) oder beides gleichzeitig (z. B. Wissenschaftliche
+                    Veröffentlichungen, Kunstwerke, Romane) beziehen."
+                    <span style="font-size: 16px; line-height: 12px">
+                    Seite „Plagiat“. In: Wikipedia, Die freie Enzyklopädie. Bearbeitungsstand: 1. Juli 2012, 07:45 UTC. URL: http://de.wikipedia.org/w/index.php?title=Plagiat&oldid=104973973 (Abgerufen: 6. Juli 2012, 12:25 UTC)</span>
+                </p>
+            </div>
+
+            <div class="step left-step" id="step-other-tools" data-x="-665" data-y="500">
+                <h2>What's Special about this?</h2>
+                <p>Others: Completely automated process.</p>
+                <p>We: Facilitate swarm intelligence and assist user workflows.</p>
+            </div>
+
             <!-- step vroniplag -->
-            <div id="step-vroni" class="step" data-x="-883" data-y="-400">
-                <h2>vroniplag</h2>
-                <p> blub</p>
+            <div id="step-vroni" class="step left-step" data-x="-665" data-y="820">
+                <h2>vroniplag-wiki – the foundation</h2>
+                <ul>
+                    <li><span>founded on 28th March 2011</span></li>
+                    <li><span>Plagiarism investigation for theses and dissertations</span></li>
+                    <li><span>documentation and categorization of similar texts</span></li>
+                    <li><span>named after Veronica Saß</span></li>
+                    <li><span>6335 pages on wiki, 189 accounts, 21 admins, 3 bureaucrats</span></li>
+                    <li><span>26 published cases (until June 2012)</span></li>
+                    <li><span>handwork</span></li>
+                </ul>
             </div>
 
-            <!-- step game -->
-            <div id="step-game" class="step" data-x="-883" data-y="-100">
+            <!-- step game intro -->
+            <div id="step-game-intro" class="step left-step" data-x="-665" data-y="1350">
                 <h2>game</h2>
-                <p> blub</p>
+                <p><img src="images/game_handout.png" width="800" /></p>
             </div>
-            
+
+
+            <!-- right column -->
+
+            <!-- step video -->
+            <div id="step-video" class="step right-step" data-x="641" data-y="-1300">
+                <h2>General working process</h2>
+                <p><video width="720" height="540" onclick="this.paused == true ? this.play() : this.pause();">
+                        <source src="images/video.m4v">
+                    </video>
+                </p>
+            </div>
+
+            <!-- step game outro -->
+            <div id="step-game-outro" class="step left-step" data-x="-665" data-y="1350">
+                <h2>game</h2>
+                <p><img src="images/game_handout_end.png" width="800" /></p>
+            </div>
+
             <!-- step features -->
-            <div id="step-features" class="step" data-x="683" data-y="-500" data-scale="1">
-                <h2>game</h2>
-                <p>Description</p>
-            </div>
-            
-            <div id="step-feature-1" class="step" data-x="683" data-y="-300" data-scale="0.5" data-rotate="30">
-                <p><img src="images/team-members.png" width="400" height="200" /></p>
-                <p>Description</p>
-            </div>
-            
-            <div id="step-feature-2" class="step" data-x="983" data-y="-300" data-scale="0.5" data-rotate="-30">
-                <p><img src="images/team-members.png" width="400" height="200" /></p>
-                <p>Description</p>
-            </div>
-            
-            
-            
-            <div id="step-feature-3" class="step" data-x="683" data-y="-100" data-scale="0.5" data-rotate="30">
-                <p><img src="images/team-members.png" width="400" height="200" /></p>
-                <p>Description</p>
-            </div>
-            
-            <div id="step-feature-4" class="step" data-x="983" data-y="-100" data-scale="0.5" data-rotate="-30">
-                <p><img src="images/team-members.png" width="400" height="200" /></p>
-                <p>Description</p>
+            <div id="step-features" class="step right-step" data-x="641" data-y="-900">
+                <h2>features</h2>
             </div>
 
+            <div id="step-feature-simtext" class="step" data-x="453" data-y="-660" data-scale="0.5" data-rotate="25">
+                <h3>simtext</h3>
+                <p><img src="images/feature-simtext.png" width="640" height="480" /></p>
+            </div>
+
+
+            <div id="step-feature-plagaware" class="step" data-x="941" data-y="-660" data-scale="0.5" data-rotate="-25">
+                <h3>plagaware webservice</h3>
+                <p><img src="images/feature-plagaware.png" width="640" height="480" /></p>
+            </div>
+
+            <div id="step-feature-stopword" class="step" data-x="453" data-y="-320" data-scale="0.5" data-rotate="25">
+                <h3>stopwords masking</h3>
+                <p><img src="images/feature-stopwords.png" width="640" height="480" /></p>
+            </div>
+
+            <div id="step-feature-dehyphen" class="step" data-x="941" data-y="-320" data-scale="0.5" data-rotate="-25">
+                <h3>de-hyphen</h3>
+                <p><img src="images/feature-dehyphen.png" width="640" height="480" /></p>
+            </div>
+
+            <div id="step-feature-report" class="step" data-x="783" data-y="20" data-scale="0.5">
+                <h3>report</h3>
+                <p><img src="images/feature-report.png" width="686" height="526" /></p>
+            </div>
+
+            <!-- step technical features -->
+            <div id="step-languages" class="step right-step" data-x="641" data-y="350">
+                <h2>programming environment</h2>
+                <ul dir="rtl">
+                    <li><span>PHP, MySQL, Javascript, CSS3, HTML5</span></li>
+                    <li><span>GitHub for version control</span></li>
+                    <li><span>modular built, easily extendable</span></li>
+                </ul>
+            </div>
+
+            <div id="step-techniques" class="step right-step" data-x="641" data-y="630">
+                <h2>technical features</h2>
+                <ul dir="rtl">
+                    <li><span>role management</span></li>
+                    <li><span>i18n support</span></li>
+                    <li><span>responsive design</span></li>
+                </ul>
+            </div>
+            
+            <div id="step-responsive" class="step right-step" data-x="301" data-y="690" data-scale="0.8" data-rotate="-90">
+                <h3>responsive design</h3>
+                <p><img src="images/responsive-design.png" /></p>
+            </div>
+
+            <!-- step summary -->
+            <div id="step-summary" class="step right-step" data-x="641" data-y="950">
+                <h2>Summary and Outlook</h2>
+                <ul dir="rtl">
+                    <li><span>made a good progress during this year</span></li>
+                    <li><span>still many ideas for improvements</span></li>
+                    <li><span>some of us will keep on working ICs</span></li>
+                </ul>
+                <ul dir="rtl">
+                    <li><span>http://www.unplagged.com</span></li>
+                    <li><span>https://github.com/Unplagged/unplagged</span></li>
+                </ul>
+            </div>
+            
+            <div id="step-questions" class="step" data-x="924" data-y="986" data-scale="0.001" style="font-size: 120px;">
+                questions?
+            </div>
         </div>
 
         <!--
