@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=1024" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <title>Unplagged Showtime</title>
+
+        <meta name="description" content="The Unplagged showtime presentation" />
+        <meta name="author" content="Bartek Szopka" />
+
+        <link href="css/impress-demo.css" rel="stylesheet" />
+        <link href="css/fonts.css" rel="stylesheet" />
+
+        <link rel="shortcut icon" href="favicon.png" />
+        <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    </head>
+
+
+    <body class="impress-not-supported">
+
+        <div id="impress">
+            <div class="paper-page"></div>
+            <div id="overview" class="step" data-x="0" data-y="0" data-scale="5">
+            </div>
+
+            <!-- step logo -->
+            <div id="step-logo" class="step" data-scale="2.0" data-x="-803" data-y="-1500" >
+                <h1 class="logo"><img src="images/unplagged-logo.png" /></h1>
+                <p>Plagiarism detection workbench</p>
+            </div>
+
+            <!-- step team -->
+            <div id="step-team" class="step" data-x="650" data-y="1500" data-scale="2">
+                <img src="images/team-members.png" width="600" />
+            </div>
+
+            <!-- step introduction -->
+            <div class="step step-introduction" id="step-introduction-1" data-x="-883" data-y="-900">
+                <h2>Marketing Catch Phrase 1</h2>
+                <p> Unplagged is a <em>collaborative</em> open source tool to
+                    help you <em>discover, collect and reliably document</em>
+                    plagiarism in scientific theses, papers, books
+                    and other scientific or school-based writing. It is
+                    based on the workflows that were employed and
+                    developed by the german websites VroniPlag-Wiki
+                    and GuttenPlag-Wiki.</p>
+            </div>
+
+            <div class="step step-introduction" id="step-introduction-2" data-x="-873" data-y="-910">
+                <h2>Marketing Catch Phrase 2</h2>
+
+                <p>Aren't there already tools like that?</p>
+            </div>
+
+            <div class="step step-introduction" id="step-introduction-3" data-x="-863" data-y="-920">
+                <h2>Excursion: Our Definition of Plagiarism</h2>
+                <p>Plagiarism is the claim of intellectual work of others. This may be the adoption of foreign texts or other representations
+                    (e.g., newspapers, magazine articles, photographs, films, sound recordings), foreign ideas (e.g., inventions, design, scientific
+                    discoveries, melodies) or both (e.g. scientific publications, art, novels).</p>
+            </div>
+            
+            <!-- step vroniplag -->
+            <div id="step-vroni" class="step" data-x="-883" data-y="-400">
+                <h2>vroniplag</h2>
+                <p> blub</p>
+            </div>
+
+            <!-- step game -->
+            <div id="step-game" class="step" data-x="-883" data-y="-100">
+                <h2>game</h2>
+                <p> blub</p>
+            </div>
+            
+            <!-- step features -->
+            <div id="step-features" class="step" data-x="683" data-y="-500" data-scale="1">
+                <h2>game</h2>
+                <p>Description</p>
+            </div>
+            
+            <div id="step-feature-1" class="step" data-x="683" data-y="-300" data-scale="0.5" data-rotate="30">
+                <p><img src="images/team-members.png" width="400" height="200" /></p>
+                <p>Description</p>
+            </div>
+            
+            <div id="step-feature-2" class="step" data-x="983" data-y="-300" data-scale="0.5" data-rotate="-30">
+                <p><img src="images/team-members.png" width="400" height="200" /></p>
+                <p>Description</p>
+            </div>
+            
+            
+            
+            <div id="step-feature-3" class="step" data-x="683" data-y="-100" data-scale="0.5" data-rotate="30">
+                <p><img src="images/team-members.png" width="400" height="200" /></p>
+                <p>Description</p>
+            </div>
+            
+            <div id="step-feature-4" class="step" data-x="983" data-y="-100" data-scale="0.5" data-rotate="-30">
+                <p><img src="images/team-members.png" width="400" height="200" /></p>
+                <p>Description</p>
+            </div>
+
+        </div>
+
+        <!--
+            
+            Hint is not related to impress.js in any way.
+            
+            But it can show you how to use impress.js features in creative way.
+            
+            When the presentation step is shown (selected) its element gets the class of "active" and the body element
+            gets the class based on active step id `impress-on-ID` (where ID is the step's id)... It may not be
+            so clear because of all these "ids" in previous sentence, so for example when the first step (the one with
+            the id of `bored`) is active, body element gets a class of `impress-on-bored`.
+            
+            This class is used by this hint below. Check CSS file to see how it's shown with delayed CSS animation when
+            the first step of presentation is visible for a couple of seconds.
+            
+            ...
+            
+            And when it comes to this piece of JavaScript below ... kids, don't do this at home ;)
+            It's just a quick and dirty workaround to get different hint text for touch devices.
+            In a real world it should be at least placed in separate JS file ... and the touch content should be
+            probably just hidden somewhere in HTML - not hard-coded in the script.
+            
+            Just sayin' ;)
+            
+        -->
+        <div class="hint">
+            <p>Use a spacebar or arrow keys to navigate</p>
+        </div>
+        <script>
+            if ("ontouchstart" in document.documentElement) { 
+                document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
+            }
+        </script>
+
+        <!--
+            
+            Last, but not least.
+            
+            To make all described above really work, you need to include impress.js in the page.
+            I strongly encourage to minify it first.
+            
+            In here I just include full source of the script to make it more readable.
+            
+            You also need to call a `impress().init()` function to initialize impress.js presentation.
+            And you should do it in the end of your document. Not only because it's a good practice, but also
+            because it should be done when the whole document is ready.
+            Of course you can wrap it in any kind of "DOM ready" event, but I was too lazy to do so ;)
+            
+        -->
+        <script src="js/impress.js"></script>
+        <script>impress().init();</script>
+
+        <!--
+            
+            The `impress()` function also gives you access to the API that controls the presentation.
+            
+            Just store the result of the call:
+            
+                var api = impress();
+            
+            and you will get three functions you can call:
+            
+                `api.init()` - initializes the presentation,
+                `api.next()` - moves to next step of the presentation,
+                `api.prev()` - moves to previous step of the presentation,
+                `api.goto( idx | id | element, [duration] )` - moves the presentation to the step given by its index number
+                        id or the DOM element; second parameter can be used to define duration of the transition in ms,
+                        but it's optional - if not provided default transition duration for the presentation will be used.
+            
+            You can also simply call `impress()` again to get the API, so `impress().next()` is also allowed.
+            Don't worry, it wont initialize the presentation again.
+            
+            For some example uses of this API check the last part of the source of impress.js where the API
+            is used in event handlers.
+            
+        -->
+
+    </body>
+</html>
+
+<!--
+    
+    Now you know more or less everything you need to build your first impress.js presentation, but before
+    you start...
+    
+    Oh, you've already cloned the code from GitHub?
+    
+    You have it open in text editor?
+    
+    Stop right there!
+    
+    That's not how you create awesome presentations. This is only a code. Implementation of the idea that
+    first needs to grow in your mind.
+    
+    So if you want to build great presentation take a pencil and piece of paper. And turn off the computer.
+    
+    Sketch, draw and write. Brainstorm your ideas on a paper. Try to build a mind-map of what you'd like
+    to present. It will get you closer and closer to the layout you'll build later with impress.js.
+    
+    Get back to the code only when you have your presentation ready on a paper. It doesn't make sense to do
+    it earlier, because you'll only waste your time fighting with positioning of useless points.
+    
+    If you think I'm crazy, please put your hands on a book called "Presentation Zen". It's all about 
+    creating awesome and engaging presentations.
+    
+    Think about it. 'Cause impress.js may not help you, if you have nothing interesting to say.
+    
+-->
+
+<!--
+    
+    Are you still reading this?
+    
+    For real?
+    
+    I'm impressed! Feel free to let me know that you got that far (I'm @bartaz on Twitter), 'cause I'd like
+    to congratulate you personally :)
+    
+    But you don't have to do it now. Take my advice and take some time off. Make yourself a cup of coffee, tea,
+    or anything you like to drink. And raise a glass for me ;)
+    
+    Cheers!
+    
+-->
+
