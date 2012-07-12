@@ -56,14 +56,14 @@ class ReportController extends Unplagged_Controller_Versionable {
         $registry = Zend_Registry::getInstance();
         $case = $registry->user->getCurrentCase();
 
-        if ($case) {            
-            if($this->_request->isPost()){
+        if ($case) {
+            if ($this->_request->isPost()) {
                 //var_dump($this->_request->getPost());
                 //$report = new Application_Model_Report($this->_request->getPost());
-                
+
                 $report = $this->createReport($registry->user, $this->_request->getPost());
                 $this->saveAction($report);
-                
+
                 //echo $report->getReportEvaluation();
             } else {
                 $this->view->modifyForm = new Application_Form_Report_Modify();
@@ -77,7 +77,7 @@ class ReportController extends Unplagged_Controller_Versionable {
     public function saveAction($report) {
         $registry = Zend_Registry::getInstance();
         $case = $registry->user->getCurrentCase();
-        
+
         //create an empty report to show the user something in the list
         //$emptyReport = $this->createEmptyReport($registry->user, $case);
         $this->_em->persist($report);
@@ -91,13 +91,40 @@ class ReportController extends Unplagged_Controller_Versionable {
         $this->_em->flush();
 
         $this->_helper->FlashMessenger(array('success' => 'The report generation has been scheduled.'));
-        $this->_helper->redirector('list','report');
+        $this->_helper->redirector('list', 'report');
     }
-    
+
     public function deleteAction() {
+        $input = new Zend_Filter_Input(array('id' => 'Digits'), null, $this->_getAllParams());
         
+        if (!empty($input->id)) {
+            $report = $this->_em->getRepository('Application_Model_Report')->findOneById($input->id);
+            if ($report) {
+                /* $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type' => 'document', 'action' => 'delete', 'base' => $report));
+                  if (!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)) {
+                  $this->redirectToLastPage(true);
+                  } */
+
+                Unplagged_Helper::notify('report_removed', $report, Zend_Registry::getInstance()->user);
+
+                $report->remove();
+                $this->_em->persist($report);
+                $this->_em->flush();
+
+                $this->_helper->FlashMessenger(array('success' => 'The report was deleted successfully.'));
+            } else {
+                $this->_helper->FlashMessenger('The report does not exist.');
+            }
+        } else {
+            $this->_helper->FlashMessenger('The report id should not be empty.');
+        }
+
+        $this->_helper->redirector('list', 'report');
+        // disable view
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
     }
-    
+
     /**
      * Create an empty report on which the PDF creation in the cronjob will be based.
      * 
@@ -114,11 +141,11 @@ class ReportController extends Unplagged_Controller_Versionable {
             'title' => $user->getCurrentCase()->getPublishableName(),
             'state' => $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled')
         );
-    
-        foreach($report as $key => $value) {
+
+        foreach ($report as $key => $value) {
             $data[$key] = $value;
         }
-        
+
         $report = new Application_Model_Report($data);
 
         return $report;
@@ -131,7 +158,7 @@ class ReportController extends Unplagged_Controller_Versionable {
      * @param Application_Model_Case $case 
      */
     private function createTask(Application_Model_User $user, Application_Model_Report $report) {
-        
+
         $data = array();
         $data['initiator'] = $user;
         $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('report_requested');

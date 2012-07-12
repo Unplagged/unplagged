@@ -4,6 +4,7 @@
       <th><?php echo $this->translate("Report"); ?></th>
       <th style="width: 110px;"><?php echo $this->translate("State"); ?></th>
       <th style="width: 110px;"><?php echo $this->translate("Source"); ?></th>
+      <th style="width: 30px;"></th>
     </tr>
   </thead>
   <tbody>
@@ -25,6 +26,11 @@
                 <?php echo $report->getTarget()->getTitle(); ?>
               </a>
             <?php } ?>
+          </td>
+          <td data-label="test">
+              <a href="/report/delete/id/<?php echo $report->getId();?>">
+                <img class="icon" src="<?php echo $this->baseUrl('images/icons/delete.png'); ?>" alt="Löschen" />
+              </a>
           </td>
         </tr>
       <?php endforeach; ?>
