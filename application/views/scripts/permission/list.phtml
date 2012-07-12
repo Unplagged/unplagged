@@ -47,6 +47,29 @@
 <table cellpadding="0" cellspacing="0" class="default">
   <thead>
     <tr>
+      <th style="width: 85%;"><?php echo $this->translate("Case Inherited Roles"); ?></th>
+      <th><?php echo $this->translate("Actions"); ?></th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if(count($this->caseInheritedRoles)): ?>
+      <?php foreach($this->caseInheritedRoles as $role): ?>
+        <tr>
+          <td data-label="<?php echo $this->translate("Case Role"); ?>"><?php echo $role->getRoleId(); ?></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn"><?php echo $this->translate("Edit"); ?></a></td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr>
+        <td colspan="4" class="no-label"><?php echo $this->translate("No roles found."); ?></td>
+      </tr>
+    <?php endif; ?>
+  </tbody>
+</table>
+
+<table cellpadding="0" cellspacing="0" class="default">
+  <thead>
+    <tr>
       <th style="width: 85%;"><?php echo $this->translate("System Roles"); ?></th>
       <th><?php echo $this->translate("Actions"); ?></th>
     </tr>

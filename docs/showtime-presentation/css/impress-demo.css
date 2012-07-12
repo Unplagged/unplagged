@@ -289,6 +289,10 @@ a:focus {
     text-align: right;
     padding: 10px 75px 10px 30px;
 }
+
+.step em {
+    font-weight: bold;
+}
 /*
     ... and we enhance the styles for impress.js.
     

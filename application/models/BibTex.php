@@ -207,10 +207,12 @@ class Application_Model_BibTex extends Application_Model_Base{
     $fieldName = 'b' . ucfirst($fieldName);
 
     if($this->$fieldName){
-
+      if(empty($this->$fieldName)) {
+          return '';
+      }
       return $this->$fieldName;
     }
-    return null;
+     return '';
   }
 
   public function setContent($content, $fieldName){

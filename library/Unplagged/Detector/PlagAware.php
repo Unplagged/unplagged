@@ -35,9 +35,9 @@ class Unplagged_Detector_PlagAware{
     $this->_em = Zend_Registry::getInstance()->entitymanager;
 
     // user code will be set in ini file 
-    $this->paUserCode = "57947ed4d4130c7ff0a057c8654dd1a3";
+    $this->paUserCode = "82d3149fc1f8d2305e7c6d56a6c5689d";
     $this->paDryRun = false;
-    $this->paResultUrl = "http://unplagged:Guttenberg@preview.unplagged.com/document/response-plagiarism/detector/plagaware/report/";
+    $this->paResultUrl = "http://preview.unplagged.com/document/response-plagiarism/detector/plagaware/report/";
   }
 
   /**

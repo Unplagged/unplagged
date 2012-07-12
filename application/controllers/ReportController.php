@@ -90,8 +90,8 @@ class ReportController extends Unplagged_Controller_Versionable {
 
         $this->_em->flush();
 
-        //$this->_helper->FlashMessenger(array('success' => 'The report generation has been scheduled.'));
-        //$this->_helper->redirector('list','report');
+        $this->_helper->FlashMessenger(array('success' => 'The report generation has been scheduled.'));
+        $this->_helper->redirector('list','report');
     }
     
     public function deleteAction() {
@@ -106,7 +106,7 @@ class ReportController extends Unplagged_Controller_Versionable {
      * @return Application_Model_Report 
      */
     private function createReport(Application_Model_User $user, $report) {
-        echo "target: ".$user->getCurrentCase()->getTarget()->getId();
+        echo $user->getCurrentCase()->getTarget()->getId();
         $data = array(
             'user' => $user,
             'case' => $user->getCurrentCase(),
@@ -131,7 +131,7 @@ class ReportController extends Unplagged_Controller_Versionable {
      * @param Application_Model_Case $case 
      */
     private function createTask(Application_Model_User $user, Application_Model_Report $report) {
-        echo 'report '.$report->getReportTitle();
+        
         $data = array();
         $data['initiator'] = $user;
         $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('report_requested');
