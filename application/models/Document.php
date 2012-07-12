@@ -106,6 +106,9 @@ class Application_Model_Document extends Application_Model_Base{
   }
 
   public function getBibTex(){
+      if(empty($this->bibTex)) {
+          return new Application_Model_BibTex();
+      }
     return $this->bibTex;
   }
 

@@ -29,7 +29,7 @@ class DocumentController extends Unplagged_Controller_Action{
     parent::init();
 
     $case = Zend_Registry::getInstance()->user->getCurrentCase();
-    if(!$case){
+    if(!$case && $this->getRequest()->getActionName() != 'response-plagiarism'){
       $errorText = 'You have to select a case, before you can access documents.';
       $this->_helper->FlashMessenger(array('error'=>$errorText));
       $this->redirectToLastPage();

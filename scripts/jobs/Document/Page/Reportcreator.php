@@ -119,8 +119,7 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
       //some fake percentage to show it's running
       $task->setProgressPercentage(20);
 
-      $fragments = $query->getResult();
-      $query = $this->em->createQuery("SELECT f FROM Application_Model_Fragment f f.state s WHERE f.document = :document AND s.name = :state");
+      $query = $this->em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.state s WHERE f.document = :document AND s.name = :state");
       $query->setParameter("document", $task->getRessource()->getTarget()->getId());
       $query->setParameter("state", "approved");
 
@@ -149,6 +148,7 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
     $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
 
     $array_html = Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
+
     $plagiat = $array_html[0]["bibtextplag"];
 
     $content = '<div style="margin:auto; width: 500px; text-align:center; margin-top: 300px"><h1>Gemeinschaftlicher Bericht</h1><br/><br/>';
