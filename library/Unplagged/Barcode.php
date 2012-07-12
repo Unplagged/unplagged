@@ -46,12 +46,12 @@ class Unplagged_Barcode {
     private $widthUnit;
 
     public function __construct($width = 100, $height = 200, $barHeight = 100, $showLabels = true, $widthUnit = '%', $data) {
-        $data = array();
+     /*   $data = array();
         for ($i = 1; $i < 200; $i++) {
             $disabled = ($i < 10 || $i > 180) ? true : false;
             $data[] = array('pageNumber' => $i, 'plagPercentage' => rand(0, 100), 'disabled' => $disabled);
         }
-        
+        */
         $this->widthUnit = $widthUnit;
         $this->width = $width;
         $this->height = $height;
