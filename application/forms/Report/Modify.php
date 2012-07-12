@@ -23,41 +23,7 @@
  */
 class Application_Form_Report_Modify extends Zend_Form {
 
-    private $cases = array();
-    private $fragments = array();
-
-    //private $documents = array();
-
     public function __construct() {
-        $em = Zend_Registry::getInstance()->entitymanager;
-
-        $query = $em->createQuery("SELECT t FROM Application_Model_Case t");
-        $cases = $query->getResult();
-        //$cases = $this->getCurrentCase()->getPublishableName();
-
-        $params["cases"] = array();
-        foreach ($cases as $case) {
-            $params["cases"][$case->getId()] = $case->getName();
-        }
-
-        $query = $em->createQuery("SELECT d FROM Application_Model_Document_Fragment d");
-        $fragments = $query->getResult();
-
-        $params["fragments"] = array();
-        foreach ($fragments as $fragment) {
-            $params["fragments"][$fragment->getId()] = $fragment->getTitle();
-        }
-        /*
-          $params["documents"] = array();
-          foreach($documents as $document){
-          $params["documents"][$document->getId()] = $document->getTitle();
-          }
-
-          $this->documents = $params['documents'];
-         */
-        $this->cases = $params['cases'];
-        $this->fragments = $params['fragments'];
-
         parent::__construct();
     }
 
@@ -66,19 +32,66 @@ class Application_Form_Report_Modify extends Zend_Form {
      * @see Zend_Form::init()
      */
     public function init() {
-        $pageExistsValidator = new Unplagged_Validate_RecordExists('Application_Model_Document_Page', 'pageNumber', array("document" => 6));
-
         $this->setMethod('post');
-        $this->setAction("/report/save");
+        $this->setAction('/report/create');
+        
+        $reportTitle = new Zend_Form_Element_Text('reportTitle');
+        $reportTitle->setLabel("Report Titel");
+        $reportTitle->setValue('Dokumentation von Plagiaten in der Dissertation {...} von {...}. Berlin. 2012');
+        $reportTitle->setIgnore(true);
 
-        $submitElement = new Zend_Form_Element_Submit('submit');
-        $submitElement->setLabel('Save the report');
-        $submitElement->setIgnore(true);
-        $submitElement->setAttrib('class', 'btn btn-primary');
-        $submitElement->removeDecorator('DtDdWrapper');       
+        $groupName = new Zend_Form_Element_Text('reportGroupName');
+        $groupName->setLabel("Name der Arbeitsgruppe");
+        $groupName->setValue('VroniPlag');
+        $groupName->setIgnore(true);
+
+        $intro = new Zend_Form_Element_Textarea('reportIntroduction');
+        $intro->setLabel('Bitte geben sie den Einleitungstext für den Bericht ein.');
+        $intro->setValue('Gegenstand dieses Berichts ist die Untersuchung der {...} im Verlag {...} veröffentlichten Dissertation.');
+        
+        $evaluation = new Zend_Form_Element_Textarea('reportEvaluation');
+        $evaluation->setLabel('Bitte geben sie den Text für die Vorläufige Bewertung ein.');
+        $evaluation->setValue('Bezüglich der in diesem Bericht dokumentierten Plagiate lässt sich zusammenfassend feststellen:');
+        $evaluation->setAttrib('rows', '500');
+        
+        $submit = new Zend_Form_Element_Submit('submit');
+        $submit->setLabel('Save');
+        $submit->setOptions(array('class' => 'btn btn-primary'));
 
         $this->addElements(array(
-            $submitElement
+            $groupName
+            , $reportTitle
+            , $intro
+            , $evaluation
+        ));
+
+        $this->addDisplayGroup(
+                array(
+            'reportTitle'
+            , 'reportGroupName'
+                ), 'personalGoup', array(
+            'legend' => 'Deckblatt Informationen'
+                )
+        );
+
+        $this->addDisplayGroup(
+            array(
+                'reportIntroduction'                
+            ), 
+            'introductionGroup', 
+            array('legend' => 'Einleitung')
+        );
+        
+        $this->addDisplayGroup(
+            array(
+              'reportEvaluation'  
+            ),
+            'evaluationGroup',
+            array('legend' => 'Vorläufige Bewertung')
+        );
+
+        $this->addElements(array(
+            $submit
         ));
     }
 

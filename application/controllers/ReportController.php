@@ -56,26 +56,36 @@ class ReportController extends Unplagged_Controller_Versionable {
         $registry = Zend_Registry::getInstance();
         $case = $registry->user->getCurrentCase();
 
-        if ($case) {
-            $this->view->modifyForm = new Application_Form_Report_Modify();
+        if ($case) {            
+            if($this->_request->isPost()){
+                //var_dump($this->_request->getPost());
+                //$report = new Application_Model_Report($this->_request->getPost());
+                
+                $report = $this->createReport($registry->user, $this->_request->getPost());
+                $this->saveAction($report);
+                
+                //echo $report->getReportEvaluation();
+            } else {
+                $this->view->modifyForm = new Application_Form_Report_Modify();
+            }
         } else {
             $this->_helper->FlashMessenger(array('error' => 'You have to select a case, before you can start the report creation.'));
             $this->_helper->redirector('list', 'report');
         }
     }
 
-    public function saveAction() {
+    public function saveAction($report) {
         $registry = Zend_Registry::getInstance();
         $case = $registry->user->getCurrentCase();
         
         //create an empty report to show the user something in the list
-        $emptyReport = $this->createEmptyReport($registry->user, $case);
-        $this->_em->persist($emptyReport);
+        //$emptyReport = $this->createEmptyReport($registry->user, $case);
+        $this->_em->persist($report);
 
-        $task = $this->createTask($registry->user, $emptyReport);
+        $task = $this->createTask($registry->user, $report);
         $this->_em->persist($task);
 
-        $case->addReport($emptyReport);
+        $case->addReport($report);
         $this->_em->persist($case);
 
         $this->_em->flush();
@@ -87,7 +97,7 @@ class ReportController extends Unplagged_Controller_Versionable {
     public function deleteAction() {
         
     }
-
+    
     /**
      * Create an empty report on which the PDF creation in the cronjob will be based.
      * 
@@ -95,7 +105,8 @@ class ReportController extends Unplagged_Controller_Versionable {
      * @param Application_Model_Case $case
      * @return Application_Model_Report 
      */
-    private function createEmptyReport(Application_Model_User $user) {
+    private function createReport(Application_Model_User $user, $report) {
+        
         $data = array(
             'user' => $user,
             'case' => $user->getCurrentCase(),
@@ -103,6 +114,11 @@ class ReportController extends Unplagged_Controller_Versionable {
             'title' => $user->getCurrentCase()->getPublishableName(),
             'state' => $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled')
         );
+    
+        foreach($report as $key => $value) {
+            $data[$key] = $value;
+        }
+        
         $report = new Application_Model_Report($data);
 
         return $report;

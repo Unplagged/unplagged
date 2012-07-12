@@ -33,13 +33,10 @@ class Cron_Document_Page_Reportcreator extends Cron_Base{
 
   private $pagenumber;
   private $defaultText = "<div class='introduction'><h2>1. Einleitung</h2>
-Gegenstand dieses Berichts ist die Untersuchung der 2005 im Verlag Peter Lang veröffentlichten
-Dissertation Die Begrenzung kriegerischer Konflikte durch das moderne
-Völkerrecht von Daniel Volk auf Plagiatstellen.
-Die dokumentierten Fragmente erlauben es der akademischen und allgemeinen
+{#PLACE_1}Die dokumentierten Fragmente erlauben es der akademischen und allgemeinen
 Öffentlichkeit, sich ein eigenes Bild des Falls zu machen. Eine detaillierte, kontinuierlich
-erweiterte Dokumentation der Projektergebnisse ist unter <a href=\"http://de.vroniplag.wikia.
-com/wiki/Dv\">http://de.vroniplag.wikia.com</a> zu finden.
+erweiterte Dokumentation der Projektergebnisse ist unter <a href=\"http://http://www.unplagged.com/\">
+http://www.unplagged.com</a> zu finden.
 <h2>2. Vorgehensweise</h2>
 Die Analyse der Dissertation fand in mehreren Schritten statt. Im ersten Schritt wurden
 vermutete Plagiate der Dissertation in Form von Fragmenten dokumentiert, welche
@@ -61,17 +58,9 @@ Text, dessen Quelle ausgewiesen ist, der jedoch ohne Kenntlichmachung einer wör
 oder sinngemäßen Übernahme kopiert wurde.
 
 <h2>4. Vorläufige Ergebnisse</h2>
-<h3>4.1. Überblick</h3>
 Bis zum jetzigen Zeitpunkt wurden auf 80 von 186 Textseiten Plagiatstellen nachgewiesen.
 Dokumentiert sind Textübernahmen aus insgesamt 19 verschiedenen Quellen.
-<h3>4.2. Herausragende Fundstellen</h3>
-Aus der Vielzahl der Fundstellen ragen einige heraus, die sich durch ihre Art oder ihren
-Umfang besonders auszeichnen. Eine Auflistung ist unter Herausragende Fundstellen
-abrufbar.
-<h3>4.3. Fehlerhafte Quellenangaben</h3>
-In der untersuchten Arbeit findet sich eine Reihe von inkorrekten Quellenangaben. Diese
-stützen den Plagiatsverdacht. Eine Auflistung ist unter Fehlerhafte Quellenangaben
-abrufbar.</div>";
+</div>";
   private $defaultText2 = "<div class='introduction'><h2>5. Vorläufige Bewertung</h2>
 Bezüglich der in diesem Bericht dokumentierten Plagiate lässt sich zusammenfassend
 feststellen:

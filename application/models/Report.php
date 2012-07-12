@@ -61,7 +61,37 @@ class Application_Model_Report extends Application_Model_Base{
    * @JoinColumn(name="case_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $case;
+  
+  /**
+   * Title of the report. 
+   * It will be shown on the first page
+   * 
+   * @Column(type="string", nullable=true)
+   */
+  private $reportTitle;
 
+  /**
+   * Group name of the report. 
+   * It will be shown on the first page
+   * 
+   * @Column(type="string", nullable=true)
+   */
+  private $reportGroupName;
+  
+  /**
+   * Introduction of the report. 
+   * 
+   * @Column(type="string", nullable=true)
+   */
+  private $reportIntroduction;
+  
+  /**
+   * Evaluation text of the report. 
+   * 
+   * @Column(type="string", nullable=true)
+   */
+  private $reportEvaluation;
+  
   public function __construct($data = array()){
     parent::__construct($data);
 
@@ -74,13 +104,23 @@ class Application_Model_Report extends Application_Model_Base{
     if(isset($data["target"])){
       $this->target = $data["target"];
     }
-
     if(isset($data['case'])){
       $this->case = $data['case'];
     }
-    
     if(isset($data["filePath"])){
       $this->filePath = $data["filePath"];
+    }
+    if(isset($data["reportTitle"])) {
+        $this->reportTitle = $data["reportTitle"];
+    }
+    if(isset($data["reportGroupName"])) {
+        $this->reportGroupName = $data["reportGroupName"];
+    }
+    if(isset($data["reportIntroduction"])) {
+        $this->reportIntroduction = $data["reportIntroduction"];
+    }   
+    if(isset($data["reportEvaluation"])) {
+        $this->reportEvaluation = $data["reportEvaluation"];
     }
   }
 
@@ -142,5 +182,21 @@ class Application_Model_Report extends Application_Model_Base{
   
   public function setFilePath($filePath){
     $this->filePath = $filePath;
+  }
+  
+  public function getReportTitle() {
+    return $this->reportTitle;
+  }
+  
+  public function getReportGroupName() {
+      return $this->reportGroupName;
+  }
+  
+  public function getReportEvaluation() {
+      return $this->reportEvaluation;
+  }
+  
+  public function getReportIntroduction() {
+      return $this->reportIntroduction;
   }
 }
