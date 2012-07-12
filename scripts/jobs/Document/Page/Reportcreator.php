@@ -99,7 +99,7 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
     $query->setMaxResults(1);
 
     $tasks = $query->getResult();
-
+    var_dump($tasks[0]->getRessource()->getTarget());
     if($tasks){
       $task = $tasks[0];
 
@@ -120,15 +120,15 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
 
       $fragments = $query->getResult();
 
-
+      echo $task->getRessource()->getReportTitle();
       $report = $this->createReport($fragments, $task->getRessource());
 
       // update task
-      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("completed"));
+      /*$task->setState($this->em->getRepository('Application_Model_State')->findOneByName("completed"));
       $task->setProgressPercentage(100);
 
       $this->em->persist($task);
-      $this->em->flush();
+      $this->em->flush();*/
 
       // notification
       Unplagged_Helper::notify("report_created", $report, $task->getInitiator());
