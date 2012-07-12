@@ -32,8 +32,9 @@ define("GT", ">");
 class Cron_Document_Page_Reportcreator extends Cron_Base {
 
     private $pagenumber;
+    private $nbSources;
     private $defaultText = "<div class='introduction'><h2>1. Einleitung</h2>
-{#PLACE_1}Die dokumentierten Fragmente erlauben es der akademischen und allgemeinen
+{#PLACE_1} Die dokumentierten Fragmente erlauben es der akademischen und allgemeinen
 Öffentlichkeit, sich ein eigenes Bild des Falls zu machen. Eine detaillierte, kontinuierlich
 erweiterte Dokumentation der Projektergebnisse ist unter <a href=\"http://http://www.unplagged.com/\">
 http://www.unplagged.com</a> zu finden.
@@ -55,35 +56,25 @@ Text, der erkennbar aus fremder Quelle stammt, jedoch umformuliert und weder als
 Paraphrase noch als Zitat gekennzeichnet wurde.
 <h3>3.3. Bauernopfer</h3>
 Text, dessen Quelle ausgewiesen ist, der jedoch ohne Kenntlichmachung einer wörtlichen
-oder sinngemäßen Übernahme kopiert wurde.
-
-<h2>4. Vorläufige Ergebnisse</h2>
-Bis zum jetzigen Zeitpunkt wurden auf 80 von 186 Textseiten Plagiatstellen nachgewiesen.
-Dokumentiert sind Textübernahmen aus insgesamt 19 verschiedenen Quellen.
-</div>";
-    private $defaultText2 = "<div class='introduction'><h2>5. Vorläufige Bewertung</h2>
+oder sinngemäßen Übernahme kopiert wurde.</div>
+<div class='introduction'><h2>4. Vorläufige Bewertung</h2>
 Bezüglich der in diesem Bericht dokumentierten Plagiate lässt sich zusammenfassend
 feststellen:
-<ul>
-<li>In der untersuchten Dissertation wurden in erheblichem Ausmaß fremde Quellen
-verwendet, die nicht oder nicht hinreichend als Zitat gekennzeichnet wurden.
-Dies stellt eine eklatante Verletzung wissenschaftlicher Standards dar.</li>
-<li>Quantitativ sticht hierbei A. Randelzhofers Kommentar zu Art. 51 der UN-Charta
-als Plagiatsquelle hervor. Auffällig ist zudem die Verwendung der im Jahr 2001
-ebenfalls am damaligen Lehrstuhl für Völkerrecht, allgemeine Staatslehre, deutsches
-und bayerisches Staatsrecht und politische Wissenschaften der Juristischen
-Fakultät der Universität Würzburg fertig gestellten Dissertation von K. Wodarz als
-Quelle.</li>
-<li> Die Tatsache, dass die Plagiate über die gesamte Dissertation hinweg – bis auf
-Teil 1 II, der noch nicht ausführlich untersucht worden ist – zu finden sind, und
-insbesondere die systematische, meist seitenzahlgenaue Nennung von Literaturreferenzen
-aus den Quellen lassen darauf schließen, dass die nicht kenntlich
-gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.</li></ul>
+{#PLACE_2}</div>";
 
-<h2>6. Weiterführende Links</h2>
+/*<h2>4. Vorläufige Ergebnisse</h2>
+Bis zum jetzigen Zeitpunkt wurden auf %plagnumber% von %pagenumber% Textseiten Plagiatstellen nachgewiesen.
+Dokumentiert sind Textübernahmen aus insgesamt %sourcesnumber% verschiedenen Quellen.
+</div>";*/
+    /*private $defaultText2 = "<div class='introduction'><h2>4. Vorläufige Bewertung</h2>
+Bezüglich der in diesem Bericht dokumentierten Plagiate lässt sich zusammenfassend
+feststellen:
+{#PLACE_2}</div>";*/
+
+/*<h2>6. Weiterführende Links</h2>
 <ul>
 <li>Übersicht über die Dissertation</li>
-<li>Übersicht über die plagiierten Quellen</li></ul></div>";
+<li>Übersicht über die plagiierten Quellen</li></ul></div>";*/
 
     public function start() {
         //$query = $this->em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
@@ -141,26 +132,33 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
 
     private function createReport($fragments, $report) {
         $this->pagenumber = 3;
-
+        $this->nbSources = 0;
+        
         $currentCase = $report->getCase();
         $casename = $currentCase->getAlias();
         $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
 
         $array_html = Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
 
-        $plagiat = $array_html[0]["bibtextplag"];
-
+        //$plagiat = $array_html[0]["bibtextplag"];
+        
         $content = '<div style="margin:auto; width: 500px; text-align:center; margin-top: 300px"><h1>Gemeinschaftlicher Bericht</h1><br/><br/>';
-        $content .= "<h2>Dokumentation von Plagiaten in der Dissertation \"" . $plagiat->getContent("title") . "\" von " .
+        /*$content .= "<h2>Dokumentation von Plagiaten in der Dissertation \"" . $plagiat->getContent("title") . "\" von " .
                 $plagiat->getContent("author") . ". " . $plagiat->getContent("address") .
-                ". " . $plagiat->getContent("year") . "</h2><br/><br/>";
-        $content .= "<h2>VroniPlag</h2>";
+                ". " . $plagiat->getContent("year") . "</h2><br/><br/>";*/
+        $content .= "<h2>".$report->getReportTitle()."</h2><br/><br/>";
+        //$content .= "<h2>VroniPlag</h2>";
+        $content .= "<h2>".$report->getReportGroupName()."</h2>";
         $content .= '<h2 style="font-style:italic">' . $casename . '</h2>';
         $content .= "<br/><br/>";
         $content .= "<h3>" . date("d M Y") . "</h3></div>";
         $content .= $this->getBarCode($currentCase);
-        $content .= "<page>" . $this->defaultText . $this->getFooter(2) . "</page>";
-        $content .= "<page>" . $this->defaultText2 . $this->getFooter(3) . "</page>";
+        
+        $intro1 = str_replace('{#PLACE_1}', $report->getReportIntroduction(), $this->defaultText);
+        $intro1 = str_replace('{#PLACE_2}', $report->getReportEvaluation(), $intro1);
+        $content .= "<page>" . $intro1 . $this->getFooter(2) . "</page>";
+        //$intro2 = str_replace('{#PLACE_2}', $report->getReportEvaluation(), $this->defaultText2);
+        //$content .= "<page>" . $intro2 . $this->getFooter(3) . "</page>";
         foreach ($array_html as $fragment) {
             $col1 = $this->cut_text_into_pages($fragment["left"]);
             $col2 = $this->cut_text_into_pages($fragment["right"]);
@@ -169,7 +167,9 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
 
         $content .= $this->addSources($array_html);
         $content = str_replace('%pagenumber%', $this->pagenumber, $content);
-
+        $content = str_replace('%sourcesnumber%', $this->nbSources, $content);
+        $content = str_replace('%plagnumber%', $this->pagenumber, $content);
+        
         /* $fp = fopen('test.html','w');
           fwrite($fp, $content);
           fclose($fp); */
@@ -196,6 +196,7 @@ gemachten Textübernahmen kein Versehen waren, sondern bewusst getätigt wurden.
         $sources = "<page><h2>Quellenverzeichnis</h2>";
         foreach ($array_html as $fragment) {//array_expression as $value
             $sources .= $this->writeSource($fragment["bibtextsource"]);
+            $this->nbSources++;
         }
         $sources .=$this->getFooter($this->pagenumber) . "</page>";
         return $sources;
