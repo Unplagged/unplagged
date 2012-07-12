@@ -362,3 +362,5 @@ You have to define a target document in your case, before you can access fragmen
 You have to select a case, before you can start the report creation.;Sie müssen einen Fall auswählen, bevor Sie auf Berichte zugreifen können.
 You have to define a target document in your case, before you can start the report creation.;Um Berichte zu erstellen, ist es erforderlich ein Zieldokument für den Fall auszuwählen.
 No fragments found.;Keine Fragmente gefunden.
+Switch to two column view for fragment creation;Zur zweispaltigen Ansicht für die Fragmenterstellung wechseln
+Hide to two column view for fragment creation;Zur einspaltigen Ansicht wechseln

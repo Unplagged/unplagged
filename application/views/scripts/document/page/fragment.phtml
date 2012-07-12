@@ -2,7 +2,7 @@
 <h3><?php echo vsprintf($this->translate($this->subtitle[0]), $this->subtitle[1]); ?> <small><?php echo $this->translate("Fragment"); ?></small></h3>
 
 <p class="pagination-right switch-two-columns">
-  <a href="/document_page/show/id/<?php echo $this->page->getId(); ?>" class="btn"><i class="icon-ok-circle"></i>Hide to two column view for fragment creation</a>
+  <a href="/document_page/show/id/<?php echo $this->page->getId(); ?>" class="btn"><i class="icon-ok-circle"></i><?php echo $this->translate('Hide to two column view for fragment creation'); ?></a>
 </p>
 
 <div class="diff clearfix">
