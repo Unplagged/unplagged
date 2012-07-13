@@ -58,8 +58,6 @@ Paraphrase noch als Zitat gekennzeichnet wurde.
 Text, dessen Quelle ausgewiesen ist, der jedoch ohne Kenntlichmachung einer wörtlichen
 oder sinngemäßen Übernahme kopiert wurde.</div>
 <div class='introduction'><h2>4. Vorläufige Bewertung</h2>
-Bezüglich der in diesem Bericht dokumentierten Plagiate lässt sich zusammenfassend
-feststellen:
 {#PLACE_2}</div>";
 
 /*<h2>4. Vorläufige Ergebnisse</h2>
