@@ -131,7 +131,7 @@ feststellen:
     }
 
     private function createReport($fragments, $report) {
-        $this->pagenumber = 3;
+        $this->pagenumber = 2;
         $this->nbSources = 0;
         
         $currentCase = $report->getCase();
