@@ -57,29 +57,61 @@ class ReportController extends Unplagged_Controller_Versionable {
         $case = $registry->user->getCurrentCase();
 
         if ($case) {
-            if ($this->_request->isPost()) {
-                //var_dump($this->_request->getPost());
-                //$report = new Application_Model_Report($this->_request->getPost());
-
-                $report = $this->createReport($registry->user, $this->_request->getPost());
-                $this->saveAction($report);
-
-                //echo $report->getReportEvaluation();
+            $caseId = $case->getTarget()->getId();
+            if ($this->doFragmentExist($caseId)) {
+                if ($this->doApprovedFragmentExist($caseId)) {
+                    if ($this->_request->isPost()) {
+                        $report = $this->createReport($registry->user, $this->_request->getPost());
+                        $this->saveAction($report);
+                    } else {
+                        $this->view->modifyForm = new Application_Form_Report_Modify();
+                    }
+                } else {
+                    $this->showErrorAndRedirect('There have to be approved fragments for the case, 
+                        before you can start the report creation.');
+                }
             } else {
-                $this->view->modifyForm = new Application_Form_Report_Modify();
+                $this->showErrorAndRedirect('You have to create a fragment, 
+                    before you can start the report creation.');
             }
         } else {
-            $this->_helper->FlashMessenger(array('error' => 'You have to select a case, before you can start the report creation.'));
-            $this->_helper->redirector('list', 'report');
+            $this->showErrorAndRedirect('You have to select a case, 
+                before you can start the report creation.');
         }
+    }
+
+    private function showErrorAndRedirect($message) {
+        $this->_helper->FlashMessenger(array('error' => $message));
+            $this->_helper->redirector('list', 'report');
+    }
+    
+    public function doFragmentExist($documentId) {
+        $query = $this->_em->createQuery("SELECT f 
+            FROM Application_Model_Document_Fragment f  
+            WHERE f.document = :document");
+        //$query = $this->em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.state s WHERE f.document = :document AND s.name = :state");
+        $query->setParameter("document", $documentId);
+
+        $fragments = $query->getResult();
+        return (count($fragments) > 0);
+    }
+
+    public function doApprovedFragmentExist($documentId) {
+        $query = $this->_em->createQuery("SELECT f 
+            FROM Application_Model_Document_Fragment f, Application_Model_State s 
+            WHERE f.document = :document AND s.name = :state AND f.state=s.id");
+        //$query = $this->em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.state s WHERE f.document = :document AND s.name = :state");
+        $query->setParameter("document", $documentId);
+        $query->setParameter("state", "approved");
+
+        $fragments = $query->getResult();
+        return (count($fragments) > 0);
     }
 
     public function saveAction($report) {
         $registry = Zend_Registry::getInstance();
         $case = $registry->user->getCurrentCase();
 
-        //create an empty report to show the user something in the list
-        //$emptyReport = $this->createEmptyReport($registry->user, $case);
         $this->_em->persist($report);
 
         $task = $this->createTask($registry->user, $report);
@@ -96,7 +128,7 @@ class ReportController extends Unplagged_Controller_Versionable {
 
     public function deleteAction() {
         $input = new Zend_Filter_Input(array('id' => 'Digits'), null, $this->_getAllParams());
-        
+
         if (!empty($input->id)) {
             $report = $this->_em->getRepository('Application_Model_Report')->findOneById($input->id);
             if ($report) {
@@ -126,14 +158,13 @@ class ReportController extends Unplagged_Controller_Versionable {
     }
 
     /**
-     * Create an empty report on which the PDF creation in the cronjob will be based.
+     * Create a report on which the PDF creation in the cronjob will be based.
      * 
      * @param Application_Model_User $user
      * @param Application_Model_Case $case
      * @return Application_Model_Report 
      */
     private function createReport(Application_Model_User $user, $report) {
-        echo $user->getCurrentCase()->getTarget()->getId();
         $data = array(
             'user' => $user,
             'case' => $user->getCurrentCase(),

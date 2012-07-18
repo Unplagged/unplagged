@@ -75,6 +75,7 @@ feststellen:
 <li>Übersicht über die plagiierten Quellen</li></ul></div>";*/
 
     public function start() {
+
         //$query = $this->em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
         $query = $this->em->createQuery("SELECT t, a, s 
             FROM Application_Model_Task t, Application_Model_Action a, Application_Model_State s 
@@ -86,7 +87,6 @@ feststellen:
         $query->setParameter("action", "report_requested");
         $query->setParameter("state", "scheduled");
         $query->setMaxResults(1);
-
         $tasks = $query->getResult();
         if ($tasks) {
             $task = $tasks[0];
@@ -97,19 +97,18 @@ feststellen:
             $task->setProgressPercentage(20);
 
 
-            // $query = $this->em->createQuery("SELECT f 
-            //FROM Application_Model_Document_Fragment f, Application_Model_State s 
-            //WHERE f.document = :document AND s.name = :state AND f.state=s.id");
-            $query = $this->em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.state s WHERE f.document = :document AND s.name = :state");
+            $query = $this->em->createQuery("SELECT f 
+            FROM Application_Model_Document_Fragment f, Application_Model_State s 
+            WHERE f.document = :document AND s.name = :state AND f.state=s.id");
+            //$query = $this->em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.state s WHERE f.document = :document AND s.name = :state");
             $query->setParameter("document", $task->getRessource()->getTarget()->getId());
             $query->setParameter("state", "approved");
 
             $fragments = $query->getResult();
-
-
+            echo "LINE: ".count($fragments)."\n";
             if (count($fragments) > 0) {
                 $report = $this->createReport($fragments, $task->getRessource());
-
+                                         echo "report START\n";
                 // update task
                 $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("completed"));
                 $task->setProgressPercentage(100);
@@ -117,7 +116,6 @@ feststellen:
                 $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("error"));
                 $task->setProgressPercentage(100);
             }
-
             $this->em->persist($task);
             $this->em->flush();
 
@@ -126,6 +124,7 @@ feststellen:
                 Unplagged_Helper::notify("report_created", $report, $task->getInitiator());
             }
         }
+        else {echo "\nWARNING: there is no task to proceed. Maybe no fragments exists for this case.\n";}
     }
 
     private function createReport($fragments, $report) {

@@ -57,7 +57,7 @@ class Application_Form_Report_Modify extends Zend_Form {
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel('Save');
         $submit->setOptions(array('class' => 'btn btn-primary'));
-
+        
         $this->addElements(array(
             $groupName
             , $reportTitle
