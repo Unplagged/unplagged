@@ -73,11 +73,11 @@ class Application_Model_Tag extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    return "tag";
+    return 'tag';
   }
 
   public function getDirectLink(){
-    return "/tag/show/id/" . $this->id;
+    return '/tag/show/id/' . $this->id;
   }
 
 }

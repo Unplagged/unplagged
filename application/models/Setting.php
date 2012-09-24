@@ -29,14 +29,12 @@ class Application_Model_Setting{
 
   /**
    * @var int
-   * 
    * @Id @GeneratedValue @Column(type="integer")
    */
   private $id;
 
   /**
    * @var string
-   * 
    * @Column(type="string", unique=true, length=255)
    */
   private $settingKey;
@@ -55,12 +53,14 @@ class Application_Model_Setting{
    */
   private $label = '';
   
-  public function getSettingKey(){
-    return $this->settingKey;
+  public function __construct($settingKey, $value='', $label=''){
+      $this->settingKey = $settingKey;
+      $this->value = $value;
+      $this->label = $label;
   }
   
-  public function setSettingKey($settingKey){
-    $this->settingKey = $settingKey;      
+  public function getSettingKey(){
+    return $this->settingKey;
   }
 
   public function getValue(){

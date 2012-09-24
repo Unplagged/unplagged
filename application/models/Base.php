@@ -133,7 +133,7 @@ abstract class Application_Model_Base{
    * 
    * @OneToMany(targetEntity="Application_Model_Notification", mappedBy="source")
    * 
-   * @todo private without getter and setter?
+   * @todo private without getter and setter? Could be a doctrine thing
    */
   private $notifications;
   protected $conversationTypes = array('comment');
@@ -143,12 +143,16 @@ abstract class Application_Model_Base{
    * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $state;
+  
+  private $entityManager;
 
-  public function __construct($data = array()){
+  public function __construct(array $data = array()){
     if(isset($data['state'])){
       $this->state = $data['state'];
     }else{
-      $this->state = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_State')->findOneByName('created');
+      //@todo dependency injection for entitymanager
+      $this->entityManager = Zend_Registry::getInstance()->entitymanager;
+      $this->state = $this->entityManager->getRepository('Application_Model_State')->findOneByName('created');
     }
 
     $this->comments = new ArrayCollection();
@@ -163,7 +167,7 @@ abstract class Application_Model_Base{
 
   /**
    * Sets the creation time to the current time, if it is null.
-   * This will normally be auto called the first time the object is persisted by doctrine.
+   * This will be auto called the first time the object is persisted by doctrine.
    * 
    * @PrePersist
    */
@@ -174,12 +178,12 @@ abstract class Application_Model_Base{
   }
 
   /**
+   * Creates the permission objects. so that users can gain access to this particular object.
+   * 
    * @PrePersist 
    */
   public function storePermissions(){
-    // @todo: what was ths part good for?
-    $registry = Zend_Registry::getInstance();
-    $em = $registry->entitymanager;
+    $em = $this->entityManager;
 
     $user = null;
     if($this->getPermissionType() === 'user'){

@@ -413,8 +413,7 @@ if(!($em->getRepository('Application_Model_Action')->findOneByName("report_reque
 //default settings
 if(!($em->getRepository('Application_Model_Setting')->findOneBySettingKey("language"))){
   unset($data);
-  $setting = new Application_Model_Setting();
-  $setting->setSettingKey('language');
+  $setting = new Application_Model_Setting('language');
   $setting->setValue('de_DE');
   $em->persist($setting);
 }

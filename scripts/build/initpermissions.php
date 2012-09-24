@@ -270,8 +270,7 @@ if(!$guestUser){
   //write the guest id into the settings
   $guestUserSetting = $em->getRepository('Application_Model_Setting')->findOneBySettingKey('guest-id');
   if(!$guestUserSetting){
-    $guestUserSetting = new Application_Model_Setting();
-    $guestUserSetting->setSettingKey('guest-id');
+    $guestUserSetting = new Application_Model_Setting('guest-id');
   }
   $guestUserSetting->setValue($guestUser->getId());
   $em->persist($guestUserSetting);
@@ -292,8 +291,7 @@ if(!$element){
 
   $adminSetting = $em->getRepository('Application_Model_Setting')->findOneBySettingKey('admin-role-id');
   if(!$adminSetting){
-    $adminSetting = new Application_Model_Setting();
-    $adminSetting->setSettingKey('admin-role-id');
+    $adminSetting = new Application_Model_Setting('admin-role-id');
   }
   $adminSetting->setValue($adminRole->getId());
 

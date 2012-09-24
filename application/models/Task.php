@@ -50,11 +50,11 @@ class Application_Model_Task extends Application_Model_Base{
 
   /**
    * @ManyToOne(targetEntity="Application_Model_Base", cascade={"persist"})
-   * @JoinColumn(name="ressource_id", referencedColumnName="id", onDelete="CASCADE")
+   * @JoinColumn(name="resource_id", referencedColumnName="id", onDelete="CASCADE")
    * 
    * @todo this is misspelled, should be resource, but too lazy to change now..
    */
-  private $ressource;
+  private $resource;
 
   /**
    * @var string The log message returned by the cron execution.
@@ -82,7 +82,7 @@ class Application_Model_Task extends Application_Model_Base{
     }
 
     if(isset($data["ressource"])){
-      $this->ressource = $data["ressource"];
+      $this->resource = $data["ressource"];
     }
   }
 
@@ -107,7 +107,7 @@ class Application_Model_Task extends Application_Model_Base{
   }
 
   public function getRessource(){
-    return $this->ressource;
+    return $this->resource;
   }
 
   public function getLog(){

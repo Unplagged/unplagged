@@ -28,7 +28,7 @@ class Unplagged_Parser_Page_TesseractParser implements Unplagged_Parser_Page_Par
       $inputFileLocation = $file->getFullPath();
       $outputFileLocation = TEMP_PATH . DIRECTORY_SEPARATOR . 'ocr' . DIRECTORY_SEPARATOR . $hash;
 
-      $adapter = new Unplagged_Parser_Page_TesseractAdapter($inputFileLocation, $outputFileLocation, $language);
+      $adapter = new Unplagged_Parser_Page_TesseractAdapter($inputFileLocation, $outputFileLocation, $language, Zend_Registry::get('config')->parser->tesseractPath);
       $adapter->execute();
 
       // tesseract adds .txt extension automatically, so filename is different than previously specified

@@ -25,10 +25,10 @@
  * @Entity
  * @Table(name="comments")
  */
-class Application_Model_Comment extends Application_Model_Base{
+class Application_Model_Comment extends Application_Model_Base {
 
   const ICON_CLASS = 'icon-comment';
-  
+
   /**
    * @ManyToOne(targetEntity="Application_Model_User")
    * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
@@ -60,22 +60,22 @@ class Application_Model_Comment extends Application_Model_Base{
   /**
    * Constructor.
    */
-  public function __construct($data = array()){
+  public function __construct($data = array(), $author = null, Application_Model_Base $source = null, $title = null, $text = null) {
     parent::__construct($data);
-    
-    if(isset($data["author"])){
+
+    if (isset($data["author"])) {
       $this->author = $data["author"];
     }
 
-    if(isset($data["source"])){
+    if (isset($data["source"])) {
       $this->source = $data["source"];
     }
 
-    if(isset($data["title"])){
+    if (isset($data["title"])) {
       $this->title = $data["title"];
     }
 
-    if(isset($data["text"])){
+    if (isset($data["text"])) {
       $this->text = $data["text"];
     }
   }
@@ -85,7 +85,7 @@ class Application_Model_Comment extends Application_Model_Base{
    * 
    * @return int Returns the tag id.
    */
-  public function getId(){
+  public function getId() {
     return $this->id;
   }
 
@@ -94,7 +94,7 @@ class Application_Model_Comment extends Application_Model_Base{
    * 
    * @return int Returns the title.
    */
-  public function getTitle(){
+  public function getTitle() {
     return $this->title;
   }
 
@@ -103,37 +103,41 @@ class Application_Model_Comment extends Application_Model_Base{
    * 
    * @return int Returns the text.
    */
-  public function getText(){
+  public function getText() {
     return $this->text;
   }
 
-  public function getAuthor(){
+  public function getAuthor() {
     return $this->author;
   }
 
-  public function getSource(){
+  public function getSource() {
     return $this->source;
   }
 
-  public function getDirectName(){
-    return $this->source->getDirectName();
-  }
-  
-  public function getDirectLink(){
-    return $this->source->getDirectLink();
+  public function getDirectName() {
+    if ($this->source instanceof Application_Model_Base) {
+      return $this->source->getDirectName();
+    }
   }
 
-  public function toArray($hide = array()){
+  public function getDirectLink() {
+    if ($this->object instanceof Application_Model_Base) {
+      return $this->source->getDirectLink();
+    }
+  }
+
+  public function toArray($hide = array()) {
     $result = array();
 
     $result["id"] = $this->id;
     $result["text"] = $this->text;
     $result["author"] = $this->author->toArray();
-    if(!in_array('source', $hide)) {
+    if (!in_array('source', $hide)) {
       $result["source"] = $this->source->toArray();
     }
     $result["created"] = Unplagged_Helper::jsTime($this->created);
-    if(!empty($this->title)){
+    if (!empty($this->title)) {
       $result["title"] = $this->title;
     }
     $result['type'] = 'comment';

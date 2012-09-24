@@ -26,76 +26,77 @@
  * @todo handing over the tesseract path from user input is a possible security issue, because this gets executed on the
  * command line, we should at least think about, whether we want to keep it that way
  */
-class Unplagged_Parser_Page_TesseractAdapter{
+final class Unplagged_Parser_Page_TesseractAdapter{
 
-  private $tesseractCall;
+  private $tesseractPath;
   private $inputFileLocation;
   private $outputFileLocation;
   private $language;
 
+  // tesseract uses a 3 character language notation, although we use two characters, so let's map them
+  private $installedLanguages;
+  
   /**
    * This constructor needs to be provided with all arguments, that would also make a normal command line call of 
    * tesseract work. The documentation of the projects is a bit sparse, but some parts can be found 
    * {@link http://code.google.com/p/tesseract-ocr/ at google code}.
    * 
    * @param string $inputFileLocation The name of the input tiff file.
-   * @param string $outputFileLocation The name of the output file name, the extension will be .txt.
-   * @param string $tesseractPath The path to the tesseract tool, must be callable via the command line. If nothing is specified
-   * it is assumed, that tesseract can be called from anywhere.
-   * @param string $language The language which tesseract should use for it's parsing.
+   * @param string $outputFileLocation The name of the output file name, the extension .txt is added automatically.
+   * @param string $tesseractPath The path of the directory from which the tesseract command can be called. 
+   * If nothing is specified, it is assumed, that the tesseract call works from everywhere, beause it can be found via
+   * the $PATH environment variable. Should have a trailing slash if specified.
+   * @param string $language The language which tesseract should use as the basis for it's parsing, silently falls back 
+   * to english if the given language isn't found.
    */
-  public function __construct($inputFileLocation, $outputFileLocation, $language = 'en'){
+  public function __construct($inputFileLocation, $outputFileLocation, $language = 'en', $tesseractPath = '', array $installedLanguages = array('en'=>'eng')){
     $message = $this->checkForInvalidArguments($inputFileLocation, $outputFileLocation);
-
+    $this->installedLanguages = $installedLanguages;
+    
     if($message === false){
       $this->inputFileLocation = $inputFileLocation;
       $this->outputFileLocation = $outputFileLocation;
-      //@todo it would probably be better to supply this also via a constructor argument
-      //this would ensure the best independece from the rest of the application
-      $this->tesseractCall = Zend_Registry::get('config')->parser->tesseractPath;
+      $this->tesseractPath = $tesseractPath;
       
-      // tesseract uses the 3 character language notation, although we use two characters, so let's map them
-      $tesseractLangauges = array('de'=>'deu','en'=>'eng');
-      $this->language = $tesseractLangauges[$language];
+      if(array_key_exists($language, $this->installedLanguages)){
+        $this->language = $this->installedLanguages[$language];
+      }else {
+        //fallback to english, because it should always be present, as it is the default language, with which tesseract gets shipped
+        $this->language = 'eng';
+      }
     }else{
       throw new InvalidArgumentException($message);
     }
   }
-
+  
   /**
    * This function executes the command line call.
    * 
    * The result should be a .txt file with the name that was provided to the constructor as the $outputFileName.
    */
   public function execute(){
-    $command = sprintf($this->tesseractCall, $this->inputFileLocation, $this->outputFileLocation, $this->language);
-      echo $command . "\n";;
-    Zend_Registry::get('Log')->debug($command);
+    $command = $this->tesseractPath . 'tesseract ' . $this->inputFileLocation . ' ' . $this->outputFileLocation . ' ' . $this->language;
     exec($command, $op, $returnVal);
 
-    // language package not found, try with english again
-    if($returnVal == 11){
-      $this->language = "eng";
-      $this->execute();
-    }else{
+    if(file_exists($this->outputFileLocation . '.txt')){
       return true;
-      //   throw new Exception("File could not be parsed.");
+    }else{
+      return false;
     }
   }
 
   /**
    * This function returns true if it could confirm, that tesseract is working.
    * 
-   * @return bool 
-   * @todo See note in class doc about possible security issues with executing any given command.
+   * @return bool
    */
-  public static function checkTesseract($command = 'tesseract'){
+  public function checkTesseract(){
     //we simply try to call tesseract without arguments
     //the 2>&1 bit is to supress output on stderr
-    $output = shell_exec($command . ' 2>&1');
+    $output = shell_exec($this->tesseractPath . 'tesseract 2>&1');
 
-    //the common bit of the ouput between windows and Linux seems to be 'Usage:tesseract'
-    if(stripos($output, 'Usage:tesseract') !== false){
+    //the common bit of the ouput between windows and Linux seems to be 'Usage:'
+    if(stripos($output, 'Usage:') !== false){
       return true;
     }else{
       return false;
@@ -112,8 +113,8 @@ class Unplagged_Parser_Page_TesseractAdapter{
 
     if(!file_exists($inputFileLocation)){
       $message = 'The input file doesn\'t exist.';
-    }elseif(!is_string($outputFileLocation) || $outputFileLocation === ''){
-      $message = 'The output file name needs to be specified as a string';
+    }elseif(!is_string($outputFileLocation) || $outputFileLocation === '' || file_exists($outputFileLocation)){
+      $message = 'The output file name needs to be specified as a string and can not exist.';
     }elseif(!is_writable(dirname($outputFileLocation))){
       $message = 'The location for the output file is not writeable.';
     }
@@ -122,5 +123,3 @@ class Unplagged_Parser_Page_TesseractAdapter{
   }
 
 }
-
-?>

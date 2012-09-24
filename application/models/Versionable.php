@@ -25,7 +25,7 @@
  * @Table(name="versionables") 
  * @HasLifeCycleCallbacks
  */
-abstract class Application_Model_Versionable extends Application_Model_Base{
+abstract class Application_Model_Versionable extends Application_Model_Base {
 
   /**
    * @var integer The current version of this object.
@@ -40,7 +40,7 @@ abstract class Application_Model_Versionable extends Application_Model_Base{
    */
   protected $auditLog;
 
-  public function __construct($data = array()){
+  public function __construct($data = array()) {
     parent::__construct($data);
 
     $this->auditLog = new \Doctrine\Common\Collections\ArrayCollection();
@@ -53,7 +53,7 @@ abstract class Application_Model_Versionable extends Application_Model_Base{
    * 
    * @PrePersist @PreUpdate
    */
-  public function logVersion(){
+  public function logVersion() {
 
     $versionableVersion = new Application_Model_Versionable_Version($this);
     $versionableVersion->setVersionable($this);
@@ -66,28 +66,25 @@ abstract class Application_Model_Versionable extends Application_Model_Base{
    * 
    * @PostPersist @PostUpdate
    */
-  public function persistVersions(){
-    foreach($this->auditLog as $logEntry){
+  public function persistVersions() {
+    foreach ($this->auditLog as $logEntry) {
       $this->_em->persist($logEntry);
     }
 
     $this->_em->flush();
   }
 
-  public function getCurrentVersion(){
+  public function getCurrentVersion() {
     return !empty($this->version) ? ($this->version + 1) : 1;
   }
 
-  public function setVersion($version){
+  public function setVersion($version) {
     $this->version = $version;
   }
 
-  public function getAuditLog(){
+  public function getAuditLog() {
     return $this->auditLog;
   }
-  
-    abstract public function toVersionArray();
 
-
+  abstract public function toVersionArray();
 }
-?>

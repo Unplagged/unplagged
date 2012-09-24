@@ -31,28 +31,24 @@ class Application_Model_State {
 
   /**
    * @var int The state id.
-   * 
    * @Id @GeneratedValue @Column(type="integer")
    */
   private $id;
 
   /**
    * @var string The name of the State.
-   * 
    * @Column(type="string", unique=true, length=255)
    */
   private $name;
   
   /**
    * @var string The title of this State.
-   * 
    * @Column(type="string", length=255)
    */
   private $title;
 
   /**
    * @var string The description of this State.
-   * 
    * @Column(type="string", length=255)
    */
   private $description;

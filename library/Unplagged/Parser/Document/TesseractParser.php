@@ -21,7 +21,7 @@
 /**
  *
  */
-class Unplagged_Parser_Document_TesseractParser implements Unplagged_Parser_Document_Parser{
+class Unplagged_Parser_Document_TesseractParser {
 
   public function __construct(){
     $this->_em = Zend_Registry::getInstance()->entitymanager;

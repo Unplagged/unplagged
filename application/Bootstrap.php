@@ -101,6 +101,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
 
     $connectionOptions = $this->loadDatabaseConnectionCredentials();
     $em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
+    
+    try{
+      @$em->getConnection()->connect();
+    }catch(Exception $e){
+      die('Sorry, there seems to be a problem with our database server.');
+    }
+    
     $registry = Zend_Registry::getInstance();
     $registry->entitymanager = $em;
 
@@ -119,7 +126,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       'dbname'=>$doctrineConfig['conn']['dbname'],
       'host'=>$doctrineConfig['conn']['host']
     );
-
+    
     return $connectionOptions;
   }
 
