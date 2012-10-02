@@ -1,14 +1,35 @@
 <?php
 
+/*
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 require_once('../application/models/Comment.php');
 
-class Application_Model_CommentTest extends ControllerTestCase {
+class Application_Model_CommentTest extends PHPUnit_Framework_TestCase {
 
-  protected $object;
+  private $object;
+  private $document;
+  private $author;
 
   public function setUp() {
-    parent::setUp();
-    $this->object = new Application_Model_Comment(array('author'=>'an-author', 'source'=>'a-source', 'title'=>'a-title', 'text'=>'the-text'));
+    $this->document = new Application_Model_Document();
+    $this->author = new Application_Model_User();
+    $this->object = new Application_Model_Comment(array('author'=>$this->author, 'source'=>$this->document, 'title'=>'a-title', 'text'=>'the-text'));
   }
 
   public function testStandardIdIsNullByDefault() {
@@ -20,15 +41,15 @@ class Application_Model_CommentTest extends ControllerTestCase {
   }
   
   public function testGetDirectLink(){
-    $this->assertEquals('', $this->object->getDirectLink());
+    $this->assertEquals('/document_page/list/id/', $this->object->getDirectLink());
   }
   
   public function testGetAuthor(){
-    $this->assertEquals('an-author', $this->object->getAuthor());
+    $this->assertEquals($this->author, $this->object->getAuthor());
   }
   
   public function testGetSource(){
-    $this->assertEquals('a-source', $this->object->getSource());
+    $this->assertEquals($this->document, $this->object->getSource());
   }
   
   public function testGetText(){
@@ -37,5 +58,10 @@ class Application_Model_CommentTest extends ControllerTestCase {
   
   public function testGetTitle(){
     $this->assertEquals('a-title', $this->object->getTitle());
+  }
+  
+  public function testToArrayAlwaysReturnsArray(){
+    $this->object->created();
+    $this->assertInternalType('array', $this->object->toArray());
   }
 }

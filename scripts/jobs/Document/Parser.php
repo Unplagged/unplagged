@@ -36,7 +36,7 @@ class Cron_Document_Parser extends Cron_Base{
       $this->em->persist($task);
       $this->em->flush();
 
-      $document = $task->getRessource();
+      $document = $task->getResource();
       $file = $document->getInitialFile();
       $documentId = $document->getId();
 
@@ -66,7 +66,7 @@ class Cron_Document_Parser extends Cron_Base{
         $task->setProgressPercentage(100);
         $this->em->persist($task);
 
-        $document = $task->getRessource();
+        $document = $task->getResource();
         $document->setState($this->em->getRepository('Application_Model_State')->findOneByName('error'));
 
         $this->em->persist($document);

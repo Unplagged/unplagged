@@ -110,10 +110,6 @@ class Application_Model_Document_Page extends Application_Model_Versionable{
     return $data;
   }
 
-  public function getId(){
-    return $this->id;
-  }
-
   public function getOriginalFile(){
     return $this->originalFile;
   }

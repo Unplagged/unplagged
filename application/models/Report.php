@@ -26,7 +26,7 @@
  * @Table(name="reports")
  * @HasLifeCycleCallbacks
  */
-class Application_Model_Report extends Application_Model_Base{
+class Application_Model_Report extends Application_Model_Base {
 
   const ICON_CLASS = 'icon-report';
 
@@ -34,13 +34,13 @@ class Application_Model_Report extends Application_Model_Base{
    * @ManyToOne(targetEntity="Application_Model_User", cascade={"remove"})
    * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
    */
-  private $user;
+  private $creator;
 
   /**
-     * @ManyToOne(targetEntity="Application_Model_Document")
-     * @JoinColumn(name="target_document_id", referencedColumnName="id")
-     */
-  private $target;
+   * @ManyToOne(targetEntity="Application_Model_Document")
+   * @JoinColumn(name="target_document_id", referencedColumnName="id")
+   */
+  private $targetDocument;
 
   /**
    * The title of the report.
@@ -61,7 +61,7 @@ class Application_Model_Report extends Application_Model_Base{
    * @JoinColumn(name="case_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $case;
-  
+
   /**
    * Title of the report. 
    * It will be shown on the first page
@@ -77,126 +77,114 @@ class Application_Model_Report extends Application_Model_Base{
    * @Column(type="string", nullable=true)
    */
   private $reportGroupName;
-  
+
   /**
    * Introduction of the report. 
    * 
    * @Column(type="string", nullable=true)
    */
   private $reportIntroduction;
-  
+
   /**
    * Evaluation text of the report. 
    * 
    * @Column(type="string", nullable=true)
    */
   private $reportEvaluation;
-  
-  public function __construct($data = array()){
+
+  public function __construct(array $data = array(), Application_Model_User $creator, Application_Model_Case $case, Application_Model_Document $targetDocument = null) {
     parent::__construct($data);
 
-    if(isset($data["title"])){
-      $this->title = $data["title"];
+    if (isset($data['title'])) {
+      $this->title = $data['title'];
     }
-    if(isset($data["user"])){
-      $this->user = $data["user"];
+    $this->creator = $creator;
+    $this->targetDocument = $targetDocument;
+    $this->case = $case;
+
+    if (isset($data['filePath'])) {
+      $this->filePath = $data['filePath'];
     }
-    if(isset($data["target"])){
-      $this->target = $data["target"];
+    if (isset($data['reportTitle'])) {
+      $this->reportTitle = $data['reportTitle'];
     }
-    if(isset($data['case'])){
-      $this->case = $data['case'];
+    if (isset($data['reportGroupName'])) {
+      $this->reportGroupName = $data['reportGroupName'];
     }
-    if(isset($data["filePath"])){
-      $this->filePath = $data["filePath"];
+    if (isset($data['reportIntroduction'])) {
+      $this->reportIntroduction = $data['reportIntroduction'];
     }
-    if(isset($data["reportTitle"])) {
-        $this->reportTitle = $data["reportTitle"];
-    }
-    if(isset($data["reportGroupName"])) {
-        $this->reportGroupName = $data["reportGroupName"];
-    }
-    if(isset($data["reportIntroduction"])) {
-        $this->reportIntroduction = $data["reportIntroduction"];
-    }   
-    if(isset($data["reportEvaluation"])) {
-        $this->reportEvaluation = $data["reportEvaluation"];
+    if (isset($data['reportEvaluation'])) {
+      $this->reportEvaluation = $data['reportEvaluation'];
     }
   }
 
-  public function getId(){
-    return $this->id;
-  }
-
-  public function getPercentage(){
+  public function getPercentage() {
     return $this->percentage;
   }
 
-  public function setPercentage($percentage){
+  public function setPercentage($percentage) {
     $this->percentage = $percentage;
   }
 
-  public function getServicename(){
+  public function getServicename() {
     return $this->servicename;
   }
 
-  public function setServicename($servicename){
+  public function setServicename($servicename) {
     $this->servicename = $servicename;
   }
 
-  public function getUser(){
-    return $this->user;
+  public function getUser() {
+    return $this->creator;
   }
 
-  public function getTitle(){
+  public function getTitle() {
     return $this->title;
   }
 
-  public function getTarget(){
-    return $this->target;
+  public function getTarget() {
+    return $this->targetDocument;
   }
 
-  public function getSource(){
-    return $this->source;
-  }
-
-  public function getDirectName(){
+  public function getDirectName() {
     return $this->getTitle();
   }
 
-  public function getFilePath(){
+  public function getFilePath() {
     return $this->filePath;
   }
 
-  public function getDirectLink(){
-    return "/report/list/id/" . $this->id;
+  public function getDirectLink() {
+    return '/report/list/id/' . $this->id;
   }
 
-  public function setCase($case){
-    $this->case = $case;
+  public function getCase() {
+    return $this->case;
   }
- 
-  public function getCase(){
-    return $this->case;  
-  }
-  
-  public function setFilePath($filePath){
+
+  public function setFilePath($filePath) {
     $this->filePath = $filePath;
   }
-  
+
   public function getReportTitle() {
     return $this->reportTitle;
   }
-  
+
   public function getReportGroupName() {
-      return $this->reportGroupName;
+    return $this->reportGroupName;
   }
-  
+
   public function getReportEvaluation() {
-      return $this->reportEvaluation;
+    return $this->reportEvaluation;
   }
-  
+
   public function getReportIntroduction() {
-      return $this->reportIntroduction;
+    return $this->reportIntroduction;
   }
+
+  public function setCase(Application_Model_Case $case) {
+    $this->case = $case;
+  }
+
 }

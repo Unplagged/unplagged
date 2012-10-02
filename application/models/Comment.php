@@ -116,15 +116,11 @@ class Application_Model_Comment extends Application_Model_Base {
   }
 
   public function getDirectName() {
-    if ($this->source instanceof Application_Model_Base) {
-      return $this->source->getDirectName();
-    }
+    return $this->source->getDirectName();
   }
 
   public function getDirectLink() {
-    if ($this->object instanceof Application_Model_Base) {
-      return $this->source->getDirectLink();
-    }
+    return $this->source->getDirectLink();
   }
 
   public function toArray($hide = array()) {
@@ -132,11 +128,15 @@ class Application_Model_Comment extends Application_Model_Base {
 
     $result["id"] = $this->id;
     $result["text"] = $this->text;
-    $result["author"] = $this->author->toArray();
-    if (!in_array('source', $hide)) {
+    if ($this->author instanceof Application_Model_User) {
+      $result["author"] = $this->author->toArray();
+    }
+    if (!in_array('source', $hide) && $this->source instanceof Application_Model_Base) {
       $result["source"] = $this->source->toArray();
     }
-    $result["created"] = Unplagged_Helper::jsTime($this->created);
+    if ($this->created) {
+      $result["created"] = Unplagged_Helper::jsTime($this->created);
+    }
     if (!empty($this->title)) {
       $result["title"] = $this->title;
     }

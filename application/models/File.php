@@ -21,8 +21,8 @@
 /**
  * This class can be used to handle the data of an uploaded file.
  * 
- * It is able to keep track of the original filename, but also a
- * new one that was used to store the file locally. This 
+ * It keeps track of the original filename for display purposes, but 
+ * makes it also to store the file locally with a different name. This 
  * functionality can be useful to hide the storage specific aspects
  * from the user that should only get to see the original filename.
  * 
@@ -36,71 +36,61 @@ class Application_Model_File extends Application_Model_Base{
 
   /**
    * @var string The latest modification date.
-   * 
    * @Column(type="datetime")
    */
   private $updated;
 
   /**
    * @var string The original name of the file.
-   * 
    * @Column(type="string", length=255)
    */
   private $filename;
 
   /**
    * @var string The filename under which the file is actually stored in the file system.
-   * 
    * @Column(type="string", length=255);
    */
   private $localFilename;
 
   /**
    * @var string The mimetype of the file.
-   * 
    * @Column(type="string", length=32)
    */
   private $mimetype;
 
   /**
    * @var string The filesize in bytes.
-   * 
    * @Column(type="integer", length=255)
    */
   private $size;
 
   /**
    * @var string The location of the file in the filesystem.
-   * 
    * @Column(type="string", length=255)
    */
   private $location;
 
   /**
    * @var string The file extension.
-   * 
    * @Column(type="string", length=255)
    */
   private $extension;
 
   /**
-   * @var string A text that the describes the file, e. g. the origin, the reason for the upload or the like.
-   *  
+   * @var string A text that describes the file, e. g. the origin, the reason for the upload or similar things.
    * @Column(type="text")
    */
   private $description = '';
 
   /**
    * @var Application_Model_User The user who uploaded this specific file.
-   * 
    * @ManyToOne(targetEntity="Application_Model_User")
    * @JoinColumn(name="uploader_id", referencedColumnName="id")
    */
   private $uploader;
 
   /**
-   * @var string The folder of the file.
-   * 
+   * @var string The folder location of the file.
    * @Column(type="string", length=255, nullable=true)
    */
   private $folder;
@@ -109,7 +99,7 @@ class Application_Model_File extends Application_Model_Base{
     parent::__construct($data);
     
     foreach($data as $key=>$value){
-      $this->setOption($key, $value);
+      $this->setField($key, $value);
     }
   }
 
@@ -122,7 +112,7 @@ class Application_Model_File extends Application_Model_Base{
     $this->updated = new DateTime('now');
   }
 
-  private function setOption($key, $value){
+  private function setField($key, $value){
     if(!empty($key) && !empty($value) && property_exists($this, $key)){
       $this->$key = $value;
     }
@@ -145,7 +135,7 @@ class Application_Model_File extends Application_Model_Base{
   }
 
   public function getSize(){
-    return round($this->size / 1024, 2) . " KB";
+    return round($this->size / 1024, 2) . ' KB';
   }
 
   public function getExtension(){
@@ -153,10 +143,6 @@ class Application_Model_File extends Application_Model_Base{
   }
 
   public function getLocation(){
-    return $this->location;
-  }
-
-  public function getAbsoluteLocation(){
     return $this->location;
   }
 
@@ -168,12 +154,8 @@ class Application_Model_File extends Application_Model_Base{
     $this->location = $location;
   }
 
-  public function setExtension($extension){
-    $this->extension = $extension;
-  }
-
   public function isImage(){
-    return in_array($this->extension, array('jpg', 'jpeg', 'png', 'gif', 'tiff'));
+    return in_array($this->extension, array('jpg', 'jpeg', 'png', 'gif'));
   }
 
   public function getDirectName(){
@@ -184,7 +166,7 @@ class Application_Model_File extends Application_Model_Base{
     //return "/file/show/id/" . $this->id;
     return "/file/list";
   }
-
+  
   public function toArray(){
     $result = array();
 
@@ -213,9 +195,4 @@ class Application_Model_File extends Application_Model_Base{
   public function getFolder(){
     return $this->folder;
   }
-
-  public function setFolder($folder){
-    $this->folder = $folder;
-  }
-
 }

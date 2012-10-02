@@ -63,8 +63,8 @@ class Application_Model_Rating extends Application_Model_Base{
   public function __construct($data = array()){
     parent::__construct($data);
     
-    if(isset($data["user"])){
-      $this->user = $data["user"];
+    if(isset($data['user'])){
+      $this->user = $data['user'];
     }
 
     if(isset($data["source"])){
@@ -104,11 +104,11 @@ class Application_Model_Rating extends Application_Model_Base{
     return $this->rating;
   }
 
-  public function setUser($user){
+  public function setUser(Application_Model_User $user){
     $this->user = $user;
   }
 
-  public function setSource($source){
+  public function setSource(Application_Model_Document $source){
     $this->source = $source;
   }
 

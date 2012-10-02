@@ -60,25 +60,21 @@ class Application_Model_Notification extends Application_Model_Base{
   public function __construct($data = array()){
     parent::__construct($data);
     
-    if(isset($data["user"])){
-      $this->user = $data["user"];
+    if(isset($data['user'])){
+      $this->user = $data['user'];
     }
 
-    if(isset($data["action"])){
-      $this->action = $data["action"];
+    if(isset($data['action'])){
+      $this->action = $data['action'];
     }
 
-    if(isset($data["source"])){
-      $this->source = $data["source"];
+    if(isset($data['source'])){
+      $this->source = $data['source'];
     }
     
-    if(isset($data["permissionSource"])){
-      $this->permissionSource = $data["permissionSource"];
+    if(isset($data['permissionSource'])){
+      $this->permissionSource = $data['permissionSource'];
     }
-  }
-
-  public function getId(){
-    return $this->id;
   }
 
   public function getUser(){
@@ -90,25 +86,21 @@ class Application_Model_Notification extends Application_Model_Base{
   }
 
   public function getDirectName(){
-    return "notification";
+    return 'notification';
   }
 
   public function getDirectLink(){
-    return "/notification/show/id/" . $this->id;
+    return '/notification/show/id/' . $this->id;
   }
 
-  public function getTitle(){
-    return $this->action->getTitle();
-  }
-
-  public function getMessage(){
-    return $this->action->getDescription();
+  public function getAction(){
+    return $this->action;
   }
 
   public function toArray(){
     $result = array();
 
-    $result["id"] = $this->id;
+    $result['id'] = $this->id;
 
     return $result;
   }

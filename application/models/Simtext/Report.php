@@ -83,10 +83,6 @@ class Application_Model_Simtext_Report extends Application_Model_Base{
     }
   }
 
-  public function getId(){
-    return $this->id;
-  }
-
   public function getContent(){
     return $this->content;
   }

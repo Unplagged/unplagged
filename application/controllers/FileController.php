@@ -246,7 +246,7 @@ class FileController extends Unplagged_Controller_Action{
             // start task
             $data = array();
             $data['initiator'] = Zend_Registry::getInstance()->user;
-            $data['ressource'] = $document;
+            $data['resource'] = $document;
             $data['action'] = $this->_em->getRepository('Application_Model_Action')->findOneByName('file_parse');
             $data['state'] = $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled');
             $task = new Application_Model_Task($data);

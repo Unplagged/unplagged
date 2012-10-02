@@ -5,9 +5,7 @@
   </testsuite>
   <filter>
     <whitelist>
-      <directory suffix=".php">./../application/models</directory>
-      <directory suffix=".php">./../application/controllers</directory>
-      <directory suffix=".php">./../application/ocr</directory>
+      <directory suffix=".php">./../application/</directory>
       <directory suffix=".php">./../library/Unplagged</directory>
     </whitelist>
   </filter>  

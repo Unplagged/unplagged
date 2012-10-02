@@ -10,8 +10,8 @@ class Application_Model_StateTest extends ControllerTestCase {
     parent::setUp();
     $this->state = new Application_Model_State(array(
                 'title' => 'Titel',
-                'name' => 'a-name'
-                , 'description' => 'Beschreibung'
+                'name' => 'a-name',
+                'description' => 'Beschreibung'
             ));
   }
 

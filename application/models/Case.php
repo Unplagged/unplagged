@@ -26,7 +26,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Table(name="cases")
  * @HasLifeCycleCallbacks
  */
-class Application_Model_Case extends Application_Model_Base{
+class Application_Model_Case extends Application_Model_Base {
 
   const ICON_CLASS = 'icon-case';
 
@@ -110,18 +110,32 @@ class Application_Model_Case extends Application_Model_Base{
    * @Column(type="integer") 
    */
   private $requiredFragmentRatings;
+  
+  private $em;
 
-  public function __construct($data = array()){
+  public function __construct($data = array(), Doctrine\ORM\EntityManager $em = null) {
     parent::__construct($data);
 
+    if($em){
+      $this->em = $em;
+    } else {
+      $this->em = Zend_Registry::getInstance()->entitymanager;
+    }
+    
     $this->documents = new ArrayCollection();
     $this->files = new ArrayCollection();
     $this->collaborators = new ArrayCollection();
     $this->defaultRoles = new ArrayCollection();
 
-    $this->name = $data['name'];
-    $this->alias = $data['alias'];
-    $this->requiredFragmentRatings = $data['requiredFragmentRatings'];
+    if (array_key_exists('name', $data)) {
+      $this->name = $data['name'];
+    }
+    if (array_key_exists('alias', $data)) {
+      $this->alias = $data['alias'];
+    }
+    if (array_key_exists('requiredFragmentRatings', $data)) {
+      $this->requiredFragmentRatings = $data['requiredFragmentRatings'];
+    }
 
     $this->reports = new ArrayCollection();
     $this->documents = new ArrayCollection();
@@ -133,21 +147,21 @@ class Application_Model_Case extends Application_Model_Base{
    * 
    * @PreUpdate
    */
-  public function updated(){
+  public function updated() {
     $this->updated = new DateTime('now');
   }
 
   /**
    * @return string 
    */
-  public function getName(){
+  public function getName() {
     return $this->name;
   }
 
   /**
    * @return string
    */
-  public function getAlias(){
+  public function getAlias() {
     return $this->alias;
   }
 
@@ -155,75 +169,75 @@ class Application_Model_Case extends Application_Model_Base{
    * This function returns the current name of the case depending on the state it is in, i. e. the alias at default and
    * the name if the case is already public.
    */
-  public function getPublishableName(){
+  public function getPublishableName() {
     $publishableName = $this->getAlias();
 
-    if($this->getState() && $this->getState()->getName() === 'published'){
-      $publishableName = $this->getName();
-    }
+//    if ($this->getState() && $this->getState()->getName() === 'published') {
+//      $publishableName = $this->getName();
+//    }
 
     return $publishableName;
   }
 
-  public function getUpdated(){
+  public function getUpdated() {
     return $this->updated;
   }
 
-  public function addFile(Application_Model_File $file){
-    if(!$this->hasFile($file)){
+  public function addFile(Application_Model_File $file) {
+    if (!$this->hasFile($file)) {
       $this->files->add($file);
     }
   }
 
-  public function removeFile(Application_Model_File $file){
-    if($this->hasFile($file)){
+  public function removeFile(Application_Model_File $file) {
+    if ($this->hasFile($file)) {
       $this->files->removeElement($file);
     }
   }
 
-  public function getFiles(){
+  public function getFiles() {
     return $this->files;
   }
 
-  public function hasFile(Application_Model_File $file){
+  public function hasFile(Application_Model_File $file) {
     return $this->files->contains($file);
   }
 
-  public function clearFiles(){
+  public function clearFiles() {
     $this->files->clear();
   }
 
-  public function getDirectName(){
+  public function getDirectName() {
     return $this->name; // @todo: change to getpublishablename
   }
 
-  public function getDirectLink(){
+  public function getDirectLink() {
 //return "/case/show/id/" . $this->id;
     return "/case/list";
   }
 
-  public function toArray(){
+  public function toArray() {
     $result = array();
 
-    if(!empty($this->name)){
+    if (!empty($this->name)) {
       $result["name"] = $this->name;
     }
-    if(!empty($this->alias)){
+    if (!empty($this->alias)) {
       $result["alias"] = $this->alias;
     }
 
     return $result;
   }
 
-  public function setName($name){
+  public function setName($name) {
     $this->name = $name;
   }
 
-  public function setAlias($alias){
+  public function setAlias($alias) {
     $this->alias = $alias;
   }
 
-  public function getRoles(){
+  public function getRoles() {
     return $this->defaultRoles;
   }
 
@@ -232,53 +246,57 @@ class Application_Model_Case extends Application_Model_Base{
    * 
    * @return percentage value of plagiarism 
    */
-  public function getPlagiarismPercentage(){
-    if(is_array($this->barcodeData)){
+  public function getPlagiarismPercentage() {
+    if (is_array($this->barcodeData)) {
       $pagesCount = count($this->barcodeData);
       $percentageSum = 0;
 
-      foreach($this->barcodeData as $page){
+      foreach ($this->barcodeData as $page) {
         $percentageSum += $page['plagPercentage'];
       }
-    }else{
+    } else {
       $pagesCount = 0;
     }
     return ($pagesCount != 0) ? round($percentageSum * 1. / $pagesCount / 10) * 10 : 0;
   }
 
-  public function addDefaultRole(Application_Model_User_InheritableRole $role){
+  public function addDefaultRole(Application_Model_User_InheritableRole $role) {
     $this->defaultRoles->add($role);
   }
 
-  public function getDefaultRoles(){
+  public function getDefaultRoles() {
     return $this->defaultRoles;
   }
 
-  public function getBarcode($width, $height, $barHeight, $showLabels, $widthUnit){
-    if($this->barcodeData){
-      return new Unplagged_Barcode($width, $height, $barHeight, $showLabels, $widthUnit, $this->barcodeData);
+  public function getBarcode($width, $height, $barHeight, $showLabels, $widthUnit) {
+    $barcode = null;
+    
+    if ($this->getBarcodeData()) {
+      $barcode = new Unplagged_Barcode($width, $height, $barHeight, $showLabels, $widthUnit, $this->getBarcodeData());
     }
+    
+    return $barcode;
   }
 
-  public function getTarget(){
+  public function getTarget() {
     return $this->target;
   }
 
-  public function setTarget($target){
+  public function setTarget($target) {
     $this->target = $target;
   }
 
-  public function getBarcodeData(){
+  public function getBarcodeData() {
     return $this->barcodeData;
   }
 
   /**
    * Updates the data used for barcode generation. 
    */
-  public function updateBarcodeData(){
-    if($this->target){
+  public function updateBarcodeData() {
+    if ($this->target) {
       $barcodeData = array();
-      foreach($this->target->getPages() as $page){
+      foreach ($this->target->getPages() as $page) {
         $pageData = array();
         $pageData['pageNumber'] = $page->getPageNumber();
         $pageData['plagPercentage'] = $page->getPlagiarismPercentage();
@@ -291,88 +309,86 @@ class Application_Model_Case extends Application_Model_Base{
     }
   }
 
-  public function getDocuments(){
+  public function getDocuments() {
     return $this->documents;
   }
 
-  public function addDocument(Application_Model_Document $document){
+  public function addDocument(Application_Model_Document $document) {
     $document->setCase($this);
     $this->documents->add($document);
   }
 
-  public function getReports(){
+  public function getReports() {
     return $this->reports;
   }
 
-  public function addReport(Application_Model_Report $report){
+  public function addReport(Application_Model_Report $report) {
     $report->setCase($this);
     $this->reports->add($report);
   }
 
-  public function getCollaboratorIds(){
+  public function getCollaboratorIds() {
     $collaboratorIds = array();
-    foreach($this->collaborators as $collaborator){
+    foreach ($this->collaborators as $collaborator) {
       $collaboratorIds[] = $collaborator->getId();
     }
     return $collaboratorIds;
   }
 
-  public function getCollaborators(){
+  public function getCollaborators() {
     return $this->collaborators;
   }
 
-  public function addCollaborator(Application_Model_User $collaborator){
+  public function addCollaborator(Application_Model_User $collaborator) {
     $this->collaborators->add($collaborator);
   }
 
-  public function removeCollaborator(Application_Model_User $collaborator){
+  public function removeCollaborator(Application_Model_User $collaborator) {
     $this->collaborators->removeElement($collaborator);
   }
 
-  public function setCollaborators($collaboratorIds = array()){
+  public function setCollaborators($collaboratorIds = array()) {
     $removedCollaborators = array();
 
 // 1) search all collaborators that already exist by their id
-    if(!empty($this->collaborators)){
-      $this->collaborators->filter(function($collaborator) use (&$collaboratorIds, &$removedCollaborators){
-            if(in_array($collaborator->getId(), $collaboratorIds)){
-              $collaboratorIds = array_diff($collaboratorIds, array($collaborator->getId()));
-              return true;
-            }
-            $removedCollaborators[] = $collaborator;
-            return false;
-          });
+    if (!empty($this->collaborators)) {
+      $this->collaborators->filter(function($collaborator) use (&$collaboratorIds, &$removedCollaborators) {
+                if (in_array($collaborator->getId(), $collaboratorIds)) {
+                  $collaboratorIds = array_diff($collaboratorIds, array($collaborator->getId()));
+                  return true;
+                }
+                $removedCollaborators[] = $collaborator;
+                return false;
+              });
     }
 
 // 2) create new collaborators for those that don't exist yet
-    foreach($collaboratorIds as $collaboratorId){
-      $collaborator = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_User')->findOneById($collaboratorId);
+    foreach ($collaboratorIds as $collaboratorId) {
+      $collaborator = $this->em->getRepository('Application_Model_User')->findOneById($collaboratorId);
 
       $this->addCollaborator($collaborator);
     }
 
 // 3) remove collaborators that belonged to the element before, but not anymore
-    foreach($removedCollaborators as $collaborator){
+    foreach ($removedCollaborators as $collaborator) {
       $this->removeCollaborator($collaborator);
     }
   }
 
-  public function clearCollaborators(){
+  public function clearCollaborators() {
     $this->collaborators->clear();
   }
 
-  public function hasDefaultRole(Application_Model_User_Role $defaultRole){
+  public function hasDefaultRole(Application_Model_User_Role $defaultRole) {
     return $this->defaultRoles->contains($defaultRole);
   }
 
-  public function getRequiredFragmentRatings(){
+  public function getRequiredFragmentRatings() {
     return $this->requiredFragmentRatings;
   }
 
-  public function setRequiredFragmentRatings($requiredFragmentRatings){
+  public function setRequiredFragmentRatings($requiredFragmentRatings) {
     $this->requiredFragmentRatings = $requiredFragmentRatings;
   }
 
 }
-
-?>

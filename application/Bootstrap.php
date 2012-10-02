@@ -110,7 +110,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     
     $registry = Zend_Registry::getInstance();
     $registry->entitymanager = $em;
-
     return $em;
   }
 

@@ -70,7 +70,7 @@ class SimtextController extends Unplagged_Controller_Action{
           if($report->getState()->getName() == 'scheduled'){
             // find the associated task and get percentage
             $state = $this->_em->getRepository('Application_Model_State')->findOneByName('running');
-            $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$report->getId(), 'state'=>$state));
+            $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('resource'=>$report->getId(), 'state'=>$state));
             if(!$task){
               $percentage = 0;
             }else{
@@ -167,7 +167,7 @@ class SimtextController extends Unplagged_Controller_Action{
       // start task
       $data = array();
       $data["initiator"] = Zend_Registry::getInstance()->user;
-      $data["ressource"] = $report;
+      $data["resource"] = $report;
       $data["action"] = $this->_em->getRepository('Application_Model_Action')->findOneByName('page_simtext');
       $data["state"] = $this->_em->getRepository('Application_Model_State')->findOneByName('scheduled');
       $task = new Application_Model_Task($data);

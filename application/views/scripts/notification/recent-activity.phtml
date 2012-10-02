@@ -9,16 +9,16 @@
               <span class="title"><i class="<?php echo $notification->getSource()->getIconClass(); ?> icon-fam"></i>
                 <?php
                   if($notification->getSource()->getState()->getName() != 'deleted'){
-                   echo sprintf($this->translate($notification->getTitle()), "<a href=\"" . $notification->getSource()->getDirectLink() . "\">" . $notification->getSource()->getDirectName() . "</a>");
+                   echo sprintf($this->translate($notification->getAction()->getTitle()), "<a href=\"" . $notification->getSource()->getDirectLink() . "\">" . $notification->getSource()->getDirectName() . "</a>");
                  }else{
-                   echo sprintf($this->translate($notification->getTitle()), '<span class="removed-element">' . $notification->getSource()->getDirectName() . '</span>');
+                   echo sprintf($this->translate($notification->getAction()->getTitle()), '<span class="removed-element">' . $notification->getSource()->getDirectName() . '</span>');
                  } ?>            </span> <span class="user"><?php echo $notification->getUser()->getUsername(); ?>, <?php echo Unplagged_Helper::humanTiming($notification->getCreated()); ?> </span>
             </h4>
             <div class="links"  style="text-align: right">
               <a class="btn toggle-conversation" href="#" for="conversation-wrapper-<?php echo $notification->getId(); ?>" class="toggle-comments"><i class="icon-comments icon-fam"></i><?php echo $this->translate('Show conversation'); ?></a>
             </div>
           </div>
-          <p><?php echo $this->translate($notification->getMessage()); ?></p>
+          <p><?php echo $this->translate($notification->getAction()->getDescription()); ?></p>
 
         </div>
       </div>

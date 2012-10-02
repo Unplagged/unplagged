@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html>
   <head>
     <title></title>
@@ -20,8 +20,8 @@
       <li>Call without action should pull from index action
       </li>
     </ul>
-    <h2 id="Application_Model_ActionTest">
-      Application_Model_Action
+    <h2 id="ActionTest">
+      Action
     </h2>
     <ul>
       <li>Check default id is null
@@ -39,27 +39,84 @@
       <li>Set description
       </li>
     </ul>
+    <h2 id="BibtexTest">
+      Bibtex
+    </h2>
+    <ul>
+      <li>Get direct link
+      </li>
+      <li>Get direct name
+      </li>
+      <li>Source type can be changed
+      </li>
+      <li>Document can be set
+      </li>
+      <li>Empty field returns empty string
+      </li>
+      <li>Field can be set and retrieved
+      </li>
+    </ul>
     <h2 id="CaseTest">
       Case
     </h2>
     <ul>
-      <li>
-        <strike>Case can have name</strike>
+      <li>Case can have name
       </li>
-      <li>
-        <strike>Case name can have whitespace</strike>
+      <li>Case name can have whitespace
       </li>
-      <li>
-        <strike>Case can have alias</strike>
+      <li>Case can have alias
       </li>
-      <li>
-        <strike>Case name can be different than alias</strike>
+      <li>Case name can be different than alias
       </li>
-      <li>
-        <strike>Updated is date time</strike>
+      <li>Updated is date time
       </li>
-      <li>
-        <strike>Created is date time</strike>
+      <li>Created is date time
+      </li>
+      <li>Get direct link
+      </li>
+      <li>Name can be changed
+      </li>
+      <li>Target can be changed
+      </li>
+      <li>Default role can be changed
+      </li>
+      <li>Alias can be changed
+      </li>
+      <li>Required fragment ratings can be set
+      </li>
+      <li>Get publishable name
+      </li>
+      <li>Get direct name
+      </li>
+      <li>Files can be cleared
+      </li>
+      <li>Single file can be removed
+      </li>
+      <li>Get files
+      </li>
+      <li>To array
+      </li>
+      <li>Document can be added
+      </li>
+      <li>Collaborators can be added
+      </li>
+      <li>Collaborator can be removed
+      </li>
+      <li>Collaborators can be cleared
+      </li>
+      <li>Collaborator ids can be retrieved
+      </li>
+      <li>Report can be added
+      </li>
+      <li>Barcode has correct type
+      </li>
+      <li>Get roles
+      </li>
+      <li>Empty plagiarism percentage
+      </li>
+      <li>Real plagiarism percentage
+      </li>
+      <li>Set collaborators
       </li>
     </ul>
     <h2 id="Application_Model_CommentTest">
@@ -70,8 +127,7 @@
       </li>
       <li>Get direct name
       </li>
-      <li>
-        <strike>Get direct link</strike>
+      <li>Get direct link
       </li>
       <li>Get author
       </li>
@@ -81,12 +137,118 @@
       </li>
       <li>Get title
       </li>
+      <li>To array always returns array
+      </li>
     </ul>
     <h2 id="DocumentTest">
       Document
     </h2>
     <ul>
       <li>Standard id is null
+      </li>
+    </ul>
+    <h2 id="FileTest">
+      File
+    </h2>
+    <ul>
+      <li>Updated
+      </li>
+      <li>Description is changeable
+      </li>
+      <li>Is image
+      </li>
+      <li>Get direct name
+      </li>
+      <li>Get filename
+      </li>
+      <li>Get local filename
+      </li>
+      <li>Get size
+      </li>
+      <li>Get folder
+      </li>
+      <li>Get uploader
+      </li>
+      <li>Get extension
+      </li>
+      <li>Get mimetype
+      </li>
+      <li>To array
+      </li>
+      <li>Get direct link
+      </li>
+      <li>Location is changeable
+      </li>
+    </ul>
+    <h2 id="NotificationTest">
+      Notification
+    </h2>
+    <ul>
+      <li>To array
+      </li>
+      <li>Get user
+      </li>
+      <li>Get source
+      </li>
+      <li>Get direct name
+      </li>
+      <li>Get direct link
+      </li>
+      <li>Get action
+      </li>
+    </ul>
+    <h2 id="RatingTest">
+      Rating
+    </h2>
+    <ul>
+      <li>Get source is document
+      </li>
+      <li>Get direct name
+      </li>
+      <li>Get direct link
+      </li>
+      <li>Rating can be set
+      </li>
+      <li>Reason can be set
+      </li>
+      <li>Source can be set
+      </li>
+      <li>To array
+      </li>
+      <li>User can be set
+      </li>
+    </ul>
+    <h2 id="ReportTest">
+      Report
+    </h2>
+    <ul>
+      <li>Percentage can be set
+      </li>
+      <li>Servicename can be set
+      </li>
+      <li>Creator is always type user
+      </li>
+      <li>Target is always type document
+      </li>
+      <li>Get direct link
+      </li>
+      <li>Case is always type case
+      </li>
+      <li>Case can be set
+      </li>
+      <li>Get title
+      </li>
+      <li>Get report title
+      </li>
+      <li>Get report group name
+      </li>
+      <li>Get report evaluation
+      </li>
+      <li>Get report introduction
+      </li>
+      <li>Get direct name
+      </li>
+      <li>Filepath can be set
       </li>
     </ul>
     <h2 id="Application_Model_SettingTest">
@@ -136,6 +298,27 @@
       <li>Title is changeable
       </li>
     </ul>
+    <h2 id="TaskTest">
+      Task
+    </h2>
+    <ul>
+      <li>Get direct link
+      </li>
+      <li>Get direct name
+      </li>
+      <li>Get initiator
+      </li>
+      <li>Get resource
+      </li>
+      <li>Get action
+      </li>
+      <li>End date can be changed
+      </li>
+      <li>Log can be changed
+      </li>
+      <li>Progress percentage
+      </li>
+    </ul>
     <h2 id="Application_Model_UserTest">
       Application_Model_User
     </h2>
@@ -146,6 +329,51 @@
       </li>
       <li>User can have state
       </li>
+      <li>Password can be changed
+      </li>
+      <li>Updated changes date
+      </li>
+      <li>Avatar can be changed
+      </li>
+      <li>Get direct link is the username
+      </li>
+      <li>Get direct link
+      </li>
+      <li>Verification hash can be changed
+      </li>
+      <li>Get email
+      </li>
+      <li>Get settings
+      </li>
+      <li>File can be added
+      </li>
+      <li>Default file count is zero
+      </li>
+      <li>Current case can be changed
+      </li>
+      <li>Files can be cleared
+      </li>
+      <li>Single file can be removed
+      </li>
+      <li>Get files
+      </li>
+    </ul>
+    <h2 id="VersionTest">
+      Version
+    </h2>
+    <ul>
+      <li>Get direct name
+      </li>
+      <li>Get direct link
+      </li>
+      <li>Versionable can be changed
+      </li>
+      <li>Get version
+      </li>
+      <li>Get data
+      </li>
+      <li>To array
+      </li>
     </ul>
     <h2 id="ImagemagickAdapterTest">
       ImagemagickAdapter
@@ -153,8 +381,7 @@
     <ul>
       <li>Constructor arguments must be valid
       </li>
-      <li>
-        <strike>File gets parse</strike>
+      <li>File gets parse
       </li>
     </ul>
     <h2 id="TesseractAdapterTest">

@@ -20,8 +20,6 @@
 
 /**
  * Description of DocumentController
- *
- * @author benjamin
  */
 class BibtexController extends Unplagged_Controller_Action{
 

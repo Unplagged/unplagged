@@ -101,14 +101,14 @@ feststellen:
             //FROM Application_Model_Document_Fragment f, Application_Model_State s 
             //WHERE f.document = :document AND s.name = :state AND f.state=s.id");
             $query = $this->em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.state s WHERE f.document = :document AND s.name = :state");
-            $query->setParameter("document", $task->getRessource()->getTarget()->getId());
+            $query->setParameter("document", $task->getResource()->getTarget()->getId());
             $query->setParameter("state", "approved");
 
             $fragments = $query->getResult();
 
 
             if (count($fragments) > 0) {
-                $report = $this->createReport($fragments, $task->getRessource());
+                $report = $this->createReport($fragments, $task->getResource());
 
                 // update task
                 $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("completed"));

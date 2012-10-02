@@ -63,6 +63,7 @@ class Application_Model_Document_Page_Line extends Application_Model_Base{
   }
 
   public function toArray(){
+    $data = array();
     $data["id"] = $this->id;
     $data["lineNumber"] = $this->lineNumber;
     $data["content"] = $this->content;

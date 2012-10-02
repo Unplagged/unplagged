@@ -31,8 +31,6 @@ class Application_Model_BibTex extends Application_Model_Base{
   const ICON_CLASS = 'icon-bibtex';
 
   /**
-   * The current state of the report.
-   * 
    * @OneToOne(targetEntity="Application_Model_Document", mappedBy="bibTex")
    */
   private $document;
@@ -184,14 +182,13 @@ class Application_Model_BibTex extends Application_Model_Base{
 
   public function __construct($data = array()){
     parent::__construct($data);
-    
   }
 
   public function getDocument(){
     return $this->document;
   }
 
-  public function setDocument($document){
+  public function setDocument(Application_Model_Document $document){
     $this->document = $document;
   }
 
@@ -203,16 +200,20 @@ class Application_Model_BibTex extends Application_Model_Base{
     $this->sourceType = $sourceType;
   }
 
+  /**
+   *
+   * @param string $fieldName
+   * @return string
+   * 
+   * @todo Maybe magic __get and __set or even better classes for every bibtex type. 
+   */
   public function getContent($fieldName){
     $fieldName = 'b' . ucfirst($fieldName);
 
-    if($this->$fieldName){
-      if(empty($this->$fieldName)) {
-          return '';
-      }
+    if(!empty($this->$fieldName)){
       return $this->$fieldName;
     }
-     return '';
+    return '';
   }
 
   public function setContent($content, $fieldName){

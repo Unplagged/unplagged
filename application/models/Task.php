@@ -19,7 +19,8 @@
  */
 
 /**
- * The class represents a task that have to be fullfilled through cronjobs.
+ * This class represents a task, which is most likely to be triggered by a user.
+ * 
  * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
@@ -34,15 +35,13 @@ class Application_Model_Task extends Application_Model_Base{
   private $initiator;
 
   /**
-   * @var string The date when the cron finished.
-   * 
+   * @var string The date when the task finished.
    * @Column(type="datetime", nullable=true)
    */
   private $endDate;
 
   /**
-   * The action that has to be executed by this task.
-   * 
+   * @var The action that has to be executed by this task.
    * @ManyToOne(targetEntity="Application_Model_Action")
    * @JoinColumn(name="action_id", referencedColumnName="id", onDelete="CASCADE")
    */
@@ -51,21 +50,17 @@ class Application_Model_Task extends Application_Model_Base{
   /**
    * @ManyToOne(targetEntity="Application_Model_Base", cascade={"persist"})
    * @JoinColumn(name="resource_id", referencedColumnName="id", onDelete="CASCADE")
-   * 
-   * @todo this is misspelled, should be resource, but too lazy to change now..
    */
   private $resource;
 
   /**
    * @var string The log message returned by the cron execution.
-   * 
    * @Column(type="text", nullable=true)
    */
   private $log;
   
   /**
    * @var string The current progress in percent of the task.
-   * 
    * @Column(type="integer")
    */
   private $progressPercentage = 0;
@@ -73,16 +68,16 @@ class Application_Model_Task extends Application_Model_Base{
   public function __construct($data = array()){
     parent::__construct($data);
     
-    if(isset($data["initiator"])){
-      $this->initiator = $data["initiator"];
+    if(isset($data['initiator'])){
+      $this->initiator = $data['initiator'];
     }
 
-    if(isset($data["action"])){
-      $this->action = $data["action"];
+    if(isset($data['action'])){
+      $this->action = $data['action'];
     }
 
-    if(isset($data["ressource"])){
-      $this->resource = $data["ressource"];
+    if(isset($data['resource'])){
+      $this->resource = $data['resource'];
     }
   }
 
@@ -106,7 +101,7 @@ class Application_Model_Task extends Application_Model_Base{
     return $this->action;
   }
 
-  public function getRessource(){
+  public function getResource(){
     return $this->resource;
   }
 

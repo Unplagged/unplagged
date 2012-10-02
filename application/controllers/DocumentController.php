@@ -147,7 +147,7 @@ class DocumentController extends Unplagged_Controller_Action{
       if($document->getState()->getName() == 'scheduled'){
 // find the associated task and get percentage
         $state = $this->_em->getRepository('Application_Model_State')->findOneByName('running');
-        $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('ressource'=>$document->getId(), 'state'=>$state));
+        $task = $this->_em->getRepository('Application_Model_Task')->findOneBy(array('resource'=>$document->getId(), 'state'=>$state));
         if(!$task){
           $percentage = 0;
         }else{

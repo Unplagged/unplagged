@@ -157,7 +157,7 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     $user = Zend_Registry::getInstance()->user;
     $case = $user->getCurrentCase();
 
-    //check if the ressource related to this element is already removed.
+    //check if the resource related to this element is already removed.
     if($permission->getBase() && $permission->getBase()->getState()->getName() == 'removed'){
       return false;
     }

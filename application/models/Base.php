@@ -147,11 +147,12 @@ abstract class Application_Model_Base{
   private $entityManager;
 
   public function __construct(array $data = array()){
+    $this->entityManager = Zend_Registry::getInstance()->entitymanager;
+    
     if(isset($data['state'])){
       $this->state = $data['state'];
     }else{
       //@todo dependency injection for entitymanager
-      $this->entityManager = Zend_Registry::getInstance()->entitymanager;
       $this->state = $this->entityManager->getRepository('Application_Model_State')->findOneByName('created');
     }
 
@@ -173,7 +174,7 @@ abstract class Application_Model_Base{
    */
   public function created(){
     if($this->created == null){
-      $this->created = new DateTime("now");
+      $this->created = new DateTime('now');
     }
   }
 
@@ -189,7 +190,7 @@ abstract class Application_Model_Base{
     if($this->getPermissionType() === 'user'){
       $user = $this;
     }else{
-      $user = $registry->user;
+      $user = Zend_Registry::getInstance()->user;
     }
 
     foreach(self::$permissionTypes as $permissionType){
@@ -317,7 +318,7 @@ abstract class Application_Model_Base{
     // 2) create new tags for those that don't exist yet
     foreach($tagIds as $tagId){
       if(is_numeric($tagId)){
-        $tag = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_Tag')->findOneById($tagId);
+        $tag = $this->entityManager->getRepository('Application_Model_Tag')->findOneById($tagId);
       }else{
         $data['title'] = $tagId;
         $tag = new Application_Model_Tag($data);
@@ -353,7 +354,7 @@ abstract class Application_Model_Base{
   }
 
   public function remove(){
-    $this->state = Zend_Registry::getInstance()->entitymanager->getRepository('Application_Model_State')->findOneByname('deleted');
+    $this->state = $this->entityManager->getRepository('Application_Model_State')->findOneByname('deleted');
   }
 
   private function addPermission($permission){

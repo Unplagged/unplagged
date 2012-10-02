@@ -41,7 +41,7 @@ class Cron_Document_Page_Simtext extends Cron_Base{
       $this->em->persist($task);
       $this->em->flush();
 
-      $report = $task->getRessource();
+      $report = $task->getResource();
 
       // generate the simtext result
       $content = array();

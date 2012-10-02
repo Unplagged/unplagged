@@ -91,5 +91,3 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
   }
 
 }
-
-?>
