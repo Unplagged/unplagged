@@ -48,12 +48,14 @@ $classesArr = array();
 //if we have later on, this probably needs to be included into the 
 //permission name
 foreach($front->getControllerDirectory() as $module=>$path){
-  recursiveDirectories($path);
-  recursiveDirectories(str_replace('controllers', 'models', $path));
+  recursiveDirectories($path, $classesArr);
+  recursiveDirectories(str_replace('controllers', 'models', $path), $classesArr);
 }
+
 
 //get the actions of every included controller to store them in the db
 foreach($classesArr as $class){
+    $class = $class[0];
   if(strpos($class, 'Controller') > 0){
     $controller = strtolower(substr($class, 0, strpos($class, 'Controller')));
     foreach(get_class_methods($class) as $action){
@@ -133,7 +135,7 @@ if(!$guestRole){
   $em->persist($guestRole);
 }
 
-//create the guest users role
+//create the default users role
 $userRole = $em->getRepository('Application_Model_User_Role')->findOneByRoleId('user');
 
 if(!$userRole){
@@ -338,36 +340,37 @@ function file_get_php_classes($filepath){
 }
 
 function get_php_classes($php_code){
-  global $classesArr;
+  $classes = array();
 
   $tokens = token_get_all($php_code);
+
   $count = count($tokens);
   for($i = 2; $i < $count; $i++){
     if($tokens[$i - 2][0] == T_CLASS
         && $tokens[$i - 1][0] == T_WHITESPACE
         && $tokens[$i][0] == T_STRING){
 
-      $class_name = $tokens[$i][1];
-      $classesArr[] = $class_name;
+      $class_name = (String) $tokens[$i][1];
+      $classes[] = $class_name;
     }
   }
-  return;
+  return $classes;
 }
 
 /**
  * Include all *Controller.php files from the given path and it's subdirectories.
  * @param string $path 
  */
-function recursiveDirectories($path){
+function recursiveDirectories($path, &$classesArr){
   $content = scandir($path);
   foreach($content as $directoryContent){
     if($directoryContent !== '..' && $directoryContent !== '.' && is_dir($path . DIRECTORY_SEPARATOR . $directoryContent)){
-      recursiveDirectories($path . DIRECTORY_SEPARATOR . $directoryContent);
+      recursiveDirectories($path . DIRECTORY_SEPARATOR . $directoryContent, &$classesArr);
     }else{
       $filePath = $path . DIRECTORY_SEPARATOR . $directoryContent;
       if(strstr($filePath, '.php')){
         require_once($filePath);
-        file_get_php_classes($filePath);
+        array_push($classesArr, file_get_php_classes($filePath));
       }
     }
   }
