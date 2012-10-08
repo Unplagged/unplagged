@@ -54,7 +54,6 @@ abstract class Application_Model_Versionable extends Application_Model_Base {
    * @PrePersist @PreUpdate
    */
   public function logVersion() {
-
     $versionableVersion = new Application_Model_Versionable_Version($this);
     $versionableVersion->setVersionable($this);
 
