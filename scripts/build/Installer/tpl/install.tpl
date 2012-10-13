@@ -69,13 +69,13 @@
                 <div class="control-group">
                     <label class="control-label" for="dbHost">Host<span class="text-error">*</span></label>
                     <div class="controls">
-                        <input class="input-xlarge" name="dbHost" type="text" id="dbHost" placeholder="127.0.0.1" required />
+                        <input class="input-xlarge" name="dbHost" type="text" id="dbHost" placeholder="127.0.0.1" value="127.0.0.1" required />
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="dbUser">User<span class="text-error">*</span></label>
                     <div class="controls">
-                        <input class="input-xlarge" name="dbUser" type="text" id="dbUser" placeholder="root" required />
+                        <input class="input-xlarge" name="dbUser" type="text" id="dbUser" placeholder="root" value="unplagged" required />
                     </div>
                 </div>
                 <div class="control-group">
@@ -87,7 +87,7 @@
                 <div class="control-group">
                     <label class="control-label" for="dbName">Databasename<span class="text-error">*</span></label>
                     <div class="controls">
-                        <input class="input-xlarge" name="dbName" type="text" id="dbName" placeholder="unplagged" required />
+                        <input class="input-xlarge" name="dbName" type="text" id="dbName" placeholder="unplagged" value="unplagged" required />
                     </div>
                 </div>
 
@@ -99,7 +99,7 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="adminUsername">Shown username<span class="text-error">*</span></label>
+                    <label class="control-label" for="adminUsername">Username<span class="text-error">*</span></label>
                     <div class="controls">
                         <input class="input-xlarge" name="adminUsername" type="text" id="adminUsername" placeholder="admin" required />
                     </div>

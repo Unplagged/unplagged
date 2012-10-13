@@ -35,10 +35,10 @@ class VersionableTest extends PHPUnit_Framework_TestCase {
   
   public function testVersionIsChangeable(){
     $this->object->setVersion(1.0);
-    $this->assertEquals(1.0, $this->object->getCurrentVersion());
+    $this->assertEquals(2.0, $this->object->getCurrentVersion());
   }
   
   public function testGetAuditLog(){
-    $this->assertNull($this->object->getAuditLog());
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->object->getAuditLog());
   }
 }
