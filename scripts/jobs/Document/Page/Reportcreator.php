@@ -29,11 +29,11 @@ define("GT", ">");
  *
  * @author elsa
  */
-class Cron_Document_Page_Reportcreator extends Cron_Base {
+class Cron_Document_Page_Reportcreator extends Cron_Base{
 
-    private $pagenumber;
-    private $nbSources;
-    private $defaultText = "<div class='introduction'><h2>1. Einleitung</h2>
+  private $pagenumber;
+  private $nbSources;
+  private $defaultText="<div class='introduction'><h2>1. Einleitung</h2>
 {#PLACE_1} Die dokumentierten Fragmente erlauben es der akademischen und allgemeinen
 Öffentlichkeit, sich ein eigenes Bild des Falls zu machen. Eine detaillierte, kontinuierlich
 erweiterte Dokumentation der Projektergebnisse ist unter <a href=\"http://http://www.unplagged.com/\">
@@ -60,182 +60,182 @@ oder sinngemäßen Übernahme kopiert wurde.</div>
 <div class='introduction'><h2>4. Vorläufige Bewertung</h2>
 {#PLACE_2}</div>";
 
-/*<h2>4. Vorläufige Ergebnisse</h2>
-Bis zum jetzigen Zeitpunkt wurden auf %plagnumber% von %pagenumber% Textseiten Plagiatstellen nachgewiesen.
-Dokumentiert sind Textübernahmen aus insgesamt %sourcesnumber% verschiedenen Quellen.
-</div>";*/
-    /*private $defaultText2 = "<div class='introduction'><h2>4. Vorläufige Bewertung</h2>
-Bezüglich der in diesem Bericht dokumentierten Plagiate lässt sich zusammenfassend
-feststellen:
-{#PLACE_2}</div>";*/
+  /* <h2>4. Vorläufige Ergebnisse</h2>
+    Bis zum jetzigen Zeitpunkt wurden auf %plagnumber% von %pagenumber% Textseiten Plagiatstellen nachgewiesen.
+    Dokumentiert sind Textübernahmen aus insgesamt %sourcesnumber% verschiedenen Quellen.
+    </div>"; */
+  /* private $defaultText2 = "<div class='introduction'><h2>4. Vorläufige Bewertung</h2>
+    Bezüglich der in diesem Bericht dokumentierten Plagiate lässt sich zusammenfassend
+    feststellen:
+    {#PLACE_2}</div>"; */
 
-/*<h2>6. Weiterführende Links</h2>
-<ul>
-<li>Übersicht über die Dissertation</li>
-<li>Übersicht über die plagiierten Quellen</li></ul></div>";*/
+  /* <h2>6. Weiterführende Links</h2>
+    <ul>
+    <li>Übersicht über die Dissertation</li>
+    <li>Übersicht über die plagiierten Quellen</li></ul></div>"; */
 
-    public function start() {
-        //$query = $this->em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
-        $query = $this->em->createQuery("SELECT t, a, s 
+  public function run(){
+    //$query = $this->em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
+    $query=$this->em->createQuery("SELECT t, a, s 
             FROM Application_Model_Task t, Application_Model_Action a, Application_Model_State s 
             WHERE
                 t.action=a.id AND 
                 t.state=s.id AND 
                 a.name = :action AND 
                 s.name = :state");
-        $query->setParameter("action", "report_requested");
-        $query->setParameter("state", "scheduled");
-        $query->setMaxResults(1);
+    $query->setParameter("action", "report_requested");
+    $query->setParameter("state", "scheduled");
+    $query->setMaxResults(1);
 
-        $tasks = $query->getResult();
-        if ($tasks) {
-            $task = $tasks[0];
+    $tasks=$query->getResult();
+    if($tasks){
+      $task=$tasks[0];
 
-            $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("running"));
+      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("running"));
 
-            //some fake percentage to show it's running
-            $task->setProgressPercentage(20);
-
-
-            // $query = $this->em->createQuery("SELECT f 
-            //FROM Application_Model_Document_Fragment f, Application_Model_State s 
-            //WHERE f.document = :document AND s.name = :state AND f.state=s.id");
-            $query = $this->em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.state s WHERE f.document = :document AND s.name = :state");
-            $query->setParameter("document", $task->getResource()->getTarget()->getId());
-            $query->setParameter("state", "approved");
-
-            $fragments = $query->getResult();
+      //some fake percentage to show it's running
+      $task->setProgressPercentage(20);
 
 
-            if (count($fragments) > 0) {
-                $report = $this->createReport($fragments, $task->getResource());
+      // $query = $this->em->createQuery("SELECT f 
+      //FROM Application_Model_Document_Fragment f, Application_Model_State s 
+      //WHERE f.document = :document AND s.name = :state AND f.state=s.id");
+      $query=$this->em->createQuery("SELECT f FROM Application_Model_Document_Fragment f JOIN f.state s WHERE f.document = :document AND s.name = :state");
+      $query->setParameter("document", $task->getResource()->getTarget()->getId());
+      $query->setParameter("state", "approved");
 
-                // update task
-                $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("completed"));
-                $task->setProgressPercentage(100);
-            } else {
-                $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("error"));
-                $task->setProgressPercentage(100);
-            }
+      $fragments=$query->getResult();
 
-            $this->em->persist($task);
-            $this->em->flush();
 
-            if (count($fragments) > 0) {
-                // notification
-                Unplagged_Helper::notify("report_created", $report, $task->getInitiator());
-            }
-        }
+      if(count($fragments) > 0){
+        $report=$this->createReport($fragments, $task->getResource());
+
+        // update task
+        $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("completed"));
+        $task->setProgressPercentage(100);
+      }else{
+        $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("error"));
+        $task->setProgressPercentage(100);
+      }
+
+      $this->em->persist($task);
+      $this->em->flush();
+
+      if(count($fragments) > 0){
+        // notification
+        Unplagged_Helper::notify("report_created", $report, $task->getInitiator());
+      }
+    }
+  }
+
+  private function createReport($fragments, $report){
+    $this->pagenumber=2;
+    $this->nbSources=0;
+
+    $currentCase=$report->getCase();
+    $casename=$currentCase->getAlias();
+    $filepath=BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
+
+    $array_html=Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
+
+    //$plagiat = $array_html[0]["bibtextplag"];
+
+    $content='<div style="margin:auto; width: 500px; text-align:center; margin-top: 300px"><h1>Gemeinschaftlicher Bericht</h1><br/><br/>';
+    /* $content .= "<h2>Dokumentation von Plagiaten in der Dissertation \"" . $plagiat->getContent("title") . "\" von " .
+      $plagiat->getContent("author") . ". " . $plagiat->getContent("address") .
+      ". " . $plagiat->getContent("year") . "</h2><br/><br/>"; */
+    $content .= "<h2>" . $report->getReportTitle() . "</h2><br/><br/>";
+    //$content .= "<h2>VroniPlag</h2>";
+    $content .= "<h2>" . $report->getReportGroupName() . "</h2>";
+    $content .= '<h2 style="font-style:italic">' . $casename . '</h2>';
+    $content .= "<br/><br/>";
+    $content .= "<h3>" . date("d M Y") . "</h3></div>";
+    $content .= $this->getBarCode($currentCase);
+
+    $intro1=str_replace('{#PLACE_1}', $report->getReportIntroduction(), $this->defaultText);
+    $intro1=str_replace('{#PLACE_2}', $report->getReportEvaluation(), $intro1);
+    $content .= "<page>" . $intro1 . $this->getFooter(2) . "</page>";
+    //$intro2 = str_replace('{#PLACE_2}', $report->getReportEvaluation(), $this->defaultText2);
+    //$content .= "<page>" . $intro2 . $this->getFooter(3) . "</page>";
+    foreach($array_html as $fragment) {
+      $col1=$this->cut_text_into_pages($fragment["left"]);
+      $col2=$this->cut_text_into_pages($fragment["right"]);
+      $content .= $this->mix_two_columns($col1, $col2, "plagiat", "source");
     }
 
-    private function createReport($fragments, $report) {
-        $this->pagenumber = 2;
-        $this->nbSources = 0;
-        
-        $currentCase = $report->getCase();
-        $casename = $currentCase->getAlias();
-        $filepath = BASE_PATH . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR . "reports";
+    $content .= $this->addSources($array_html);
+    $content=str_replace('%pagenumber%', $this->pagenumber, $content);
+    $content=str_replace('%sourcesnumber%', $this->nbSources, $content);
+    $content=str_replace('%plagnumber%', $this->pagenumber, $content);
 
-        $array_html = Unplagged_HtmlLayout::htmlLayout($casename, $fragments);
+    /* $fp = fopen('test.html','w');
+      fwrite($fp, $content);
+      fclose($fp); */
 
-        //$plagiat = $array_html[0]["bibtextplag"];
-        
-        $content = '<div style="margin:auto; width: 500px; text-align:center; margin-top: 300px"><h1>Gemeinschaftlicher Bericht</h1><br/><br/>';
-        /*$content .= "<h2>Dokumentation von Plagiaten in der Dissertation \"" . $plagiat->getContent("title") . "\" von " .
-                $plagiat->getContent("author") . ". " . $plagiat->getContent("address") .
-                ". " . $plagiat->getContent("year") . "</h2><br/><br/>";*/
-        $content .= "<h2>".$report->getReportTitle()."</h2><br/><br/>";
-        //$content .= "<h2>VroniPlag</h2>";
-        $content .= "<h2>".$report->getReportGroupName()."</h2>";
-        $content .= '<h2 style="font-style:italic">' . $casename . '</h2>';
-        $content .= "<br/><br/>";
-        $content .= "<h3>" . date("d M Y") . "</h3></div>";
-        $content .= $this->getBarCode($currentCase);
-        
-        $intro1 = str_replace('{#PLACE_1}', $report->getReportIntroduction(), $this->defaultText);
-        $intro1 = str_replace('{#PLACE_2}', $report->getReportEvaluation(), $intro1);
-        $content .= "<page>" . $intro1 . $this->getFooter(2) . "</page>";
-        //$intro2 = str_replace('{#PLACE_2}', $report->getReportEvaluation(), $this->defaultText2);
-        //$content .= "<page>" . $intro2 . $this->getFooter(3) . "</page>";
-        foreach ($array_html as $fragment) {
-            $col1 = $this->cut_text_into_pages($fragment["left"]);
-            $col2 = $this->cut_text_into_pages($fragment["right"]);
-            $content .= $this->mix_two_columns($col1, $col2, "plagiat", "source");
-        }
+    $html2pdf=new HTML2PDF('P', 'A4', 'en');
+    $html2pdf->WriteHTML($content);
 
-        $content .= $this->addSources($array_html);
-        $content = str_replace('%pagenumber%', $this->pagenumber, $content);
-        $content = str_replace('%sourcesnumber%', $this->nbSources, $content);
-        $content = str_replace('%plagnumber%', $this->pagenumber, $content);
-        
-        /* $fp = fopen('test.html','w');
-          fwrite($fp, $content);
-          fclose($fp); */
+    // after the flush, we can access the id and put a unique identifier in the report name
+    $filename=$filepath . DIRECTORY_SEPARATOR . $report->getId() . ".pdf";
 
-        $html2pdf = new HTML2PDF('P', 'A4', 'en');
-        $html2pdf->WriteHTML($content);
+    $html2pdf->Output($filename, 'F');
 
-        // after the flush, we can access the id and put a unique identifier in the report name
-        $filename = $filepath . DIRECTORY_SEPARATOR . $report->getId() . ".pdf";
+    $report->setFilePath($filename);
+    $report->setState($this->em->getRepository('Application_Model_State')->findOneByName('generated'));
 
-        $html2pdf->Output($filename, 'F');
+    $this->em->persist($report);
+    $this->em->flush();
 
-        $report->setFilePath($filename);
-        $report->setState($this->em->getRepository('Application_Model_State')->findOneByName('generated'));
+    return $report;
+  }
 
-        $this->em->persist($report);
-        $this->em->flush();
+  private function addSources($array_html){
+    $this->pagenumber++;
+    $sources="<page><h2>Quellenverzeichnis</h2>";
+    foreach($array_html as $fragment) {//array_expression as $value
+      $sources .= $this->writeSource($fragment["bibtextsource"]);
+      $this->nbSources++;
+    }
+    $sources .=$this->getFooter($this->pagenumber) . "</page>";
+    return $sources;
+  }
 
-        return $report;
+  private function writeSource($sce){
+    $source="";
+    if(isset($sce)){
+      $source="<div class='source'>"
+              . "[" . $sce->getContent("author") . " " . $sce->getContent("year") . "]&nbsp; " . $sce->getContent("author") . ": "
+              . $sce->getContent("title") . ". " . $sce->getContent("journal") . " " . $sce->getContent("address") . " "
+              . $sce->getContent("year") . " " . $sce->getContent("publisher")
+              . "</div>";
     }
 
-    private function addSources($array_html) {
-        $this->pagenumber++;
-        $sources = "<page><h2>Quellenverzeichnis</h2>";
-        foreach ($array_html as $fragment) {//array_expression as $value
-            $sources .= $this->writeSource($fragment["bibtextsource"]);
-            $this->nbSources++;
-        }
-        $sources .=$this->getFooter($this->pagenumber) . "</page>";
-        return $sources;
-    }
+    return $source;
+  }
 
-    private function writeSource($sce) {
-        $source = "";
-        if (isset($sce)) {
-            $source = "<div class='source'>"
-                    . "[" . $sce->getContent("author") . " " . $sce->getContent("year") . "]&nbsp; " . $sce->getContent("author") . ": "
-                    . $sce->getContent("title") . ". " . $sce->getContent("journal") . " " . $sce->getContent("address") . " "
-                    . $sce->getContent("year") . " " . $sce->getContent("publisher")
-                    . "</div>";
-        }
+  private function getBarCode($case){
+    $str_svg=$case->getBarcode(80, 150, 100, false, '%')->render();
 
-        return $source;
-    }
+    $str_svg=str_replace('svg', 'draw', $str_svg);
+    $str_svg=str_replace('width=', 'w=', $str_svg);
+    $str_svg=str_replace('height=', 'h=', $str_svg);
 
-    private function getBarCode($case) {
-        $str_svg = $case->getBarcode(80, 150, 100, false, '%')->render();
+    return "<h2>Barcode</h2>" . $str_svg;
+  }
 
-        $str_svg = str_replace('svg', 'draw', $str_svg);
-        $str_svg = str_replace('width=', 'w=', $str_svg);
-        $str_svg = str_replace('height=', 'h=', $str_svg);
+  private function getFooter($pagenumber){
+    return "<page_footer>" . $pagenumber . "/%pagenumber%</page_footer> ";
+  }
 
-        return "<h2>Barcode</h2>" . $str_svg;
-    }
-
-    private function getFooter($pagenumber) {
-        return "<page_footer>" . $pagenumber . "/%pagenumber%</page_footer> ";
-    }
-
-    /**
-     * Creates an html page element, containing a table
-     * with three columns. The first parameter is set in
-     * the first column and the second parameter is set
-     * in the third column.
-     */
-    private function create_a_page($td1, $td2, $title1, $title2) {
-        $this->pagenumber++;
-        return '
+  /**
+   * Creates an html page element, containing a table
+   * with three columns. The first parameter is set in
+   * the first column and the second parameter is set
+   * in the third column.
+   */
+  private function create_a_page($td1, $td2, $title1, $title2){
+    $this->pagenumber++;
+    return '
 <page>
 <table>
 <tr>
@@ -253,98 +253,98 @@ feststellen:
 </td>
 </tr>
 </table>' . $this->getFooter($this->pagenumber) . '</page>';
+  }
+
+  /**
+   * Removes the multiple blank spaces from the given parameter.
+   */
+  private function remove_spaces($text){
+    while(true){
+      $replaced=str_replace('  ', ' ', $text);
+      if($replaced != $text){
+        $text=$replaced;
+      }else{
+        break;
+      }
+    }
+    return $text;
+  }
+
+  /**
+   * Cuts the given text into an array, which each element contains
+   * $nbWordsProPage words.
+   */
+  private function cut_text_into_pages($text){
+    $text=$this->remove_spaces($text);
+    $exploded=array_slice(explode(' ', $text), 0);
+    $nbWordsProPage=400;
+    $nbPage=0;
+    $pages=array();
+    $rest="";
+    $nbRest=0;
+
+    for($i=0; $i < sizeof($exploded); $i+=$nbWordsProPage) {
+      $page=$rest . implode(' ', array_slice($exploded, $i, $nbWordsProPage - $nbRest));
+      $result=$this->check($page);
+      $rest=$result["toRetrieve"] . " ";
+      $nbRest=str_word_count($rest);
+      $pages[$nbPage++]=$result["s"];
     }
 
-    /**
-     * Removes the multiple blank spaces from the given parameter.
-     */
-    private function remove_spaces($text) {
-        while (true) {
-            $replaced = str_replace('  ', ' ', $text);
-            if ($replaced != $text) {
-                $text = $replaced;
-            } else {
-                break;
-            }
-        }
-        return $text;
+    return $pages;
+  }
+
+  private function result($length, $s){
+    $array=array();
+    $array["toRetrieve"]=substr($s, $length, strlen($s) - $length);
+    $array["s"]=substr($s, 0, $length);
+    $array["original"]=$s;
+    return $array;
+  }
+
+  private function check($s){
+    $nbST=substr_count($s, ST);
+    $nbBT=substr_count($s, GT);
+    if($nbST == $nbBT){
+      $nbSpanOpen=substr_count($s, SPAN_OPEN);
+      $nbSpanClose=substr_count($s, SPAN_CLOSE);
+      if($nbSpanOpen == $nbSpanClose){
+        return $this->result(strlen($s), $s);
+      }else{
+        // 'halli hallo <span>'
+        return $this->result(strrpos($s, SPAN_OPEN), $s);
+      }
+    }else{
+      // one tag is not closed
+      //'halli hallofff <span></span'
+      //'halli hallofff <span'
+      $nbSpanOpen=substr_count($s, SPAN_OPEN);
+      $nbSpanClose=substr_count($s, SPAN_CLOSE);
+
+      return $this->result(strrpos($s, SPAN_OPEN), $s);
     }
+  }
 
-    /**
-     * Cuts the given text into an array, which each element contains
-     * $nbWordsProPage words.
-     */
-    private function cut_text_into_pages($text) {
-        $text = $this->remove_spaces($text);
-        $exploded = array_slice(explode(' ', $text), 0);
-        $nbWordsProPage = 400;
-        $nbPage = 0;
-        $pages = array();
-        $rest = "";
-        $nbRest = 0;
-
-        for ($i = 0; $i < sizeof($exploded); $i+=$nbWordsProPage) {
-            $page = $rest . implode(' ', array_slice($exploded, $i, $nbWordsProPage - $nbRest));
-            $result = $this->check($page);
-            $rest = $result["toRetrieve"] . " ";
-            $nbRest = str_word_count($rest);
-            $pages[$nbPage++] = $result["s"];
-        }
-
-        return $pages;
+  /**
+   * Returns the $index elements of the array.
+   * If this element does not exist, a blank
+   * space is returned.
+   */
+  private function get_col($array, $index){
+    if(isset($array[$index])){
+      return $array[$index];
+    }else{
+      return "&nbsp;";
     }
+  }
 
-    private function result($length, $s) {
-        $array = array();
-        $array["toRetrieve"] = substr($s, $length, strlen($s) - $length);
-        $array["s"] = substr($s, 0, $length);
-        $array["original"] = $s;
-        return $array;
-    }
-
-    private function check($s) {
-        $nbST = substr_count($s, ST);
-        $nbBT = substr_count($s, GT);
-        if ($nbST == $nbBT) {
-            $nbSpanOpen = substr_count($s, SPAN_OPEN);
-            $nbSpanClose = substr_count($s, SPAN_CLOSE);
-            if ($nbSpanOpen == $nbSpanClose) {
-                return $this->result(strlen($s), $s);
-            } else {
-                // 'halli hallo <span>'
-                return $this->result(strrpos($s, SPAN_OPEN), $s);
-            }
-        } else {
-            // one tag is not closed
-            //'halli hallofff <span></span'
-            //'halli hallofff <span'
-            $nbSpanOpen = substr_count($s, SPAN_OPEN);
-            $nbSpanClose = substr_count($s, SPAN_CLOSE);
-
-            return $this->result(strrpos($s, SPAN_OPEN), $s);
-        }
-    }
-
-    /**
-     * Returns the $index elements of the array.
-     * If this element does not exist, a blank
-     * space is returned.
-     */
-    private function get_col($array, $index) {
-        if (isset($array[$index])) {
-            return $array[$index];
-        } else {
-            return "&nbsp;";
-        }
-    }
-
-    /**
-     * Builds a string from two arrays containing
-     * x and y elements.
-     */
-    private function mix_two_columns($col1, $col2, $title1, $title2) {
-        $html = '<style type="text/css">' .
-                'body {text-align: justify}
+  /**
+   * Builds a string from two arrays containing
+   * x and y elements.
+   */
+  private function mix_two_columns($col1, $col2, $title1, $title2){
+    $html='<style type="text/css">' .
+            'body {text-align: justify}
                 .fragmark-0 { background-color: #f5cf9f; }
                 .fragmark-1 { background-color: #c2f598; }
                 .fragmark-2 { background-color: #a7c6f2; }
@@ -356,7 +356,7 @@ feststellen:
                 .fragmark-8 { background-color: #f5cf9f; }
                 .fragmark-9 { background-color: #a5e6ed; }
                 .text {margin: 3px; padding: 3px; border: 1px solid grey}' .
-                ' 
+            ' 
              ol li{
                 list-style: none;
                 background-color: white;
@@ -376,22 +376,22 @@ feststellen:
              .introduction{
                 margin-left: 25px;
              }' .
-                '</style>';
-        $size1 = sizeof($col1);
-        $size2 = sizeof($col2);
-        $size = $size1 > $size2 ? $size1 : $size2;
+            '</style>';
+    $size1=sizeof($col1);
+    $size2=sizeof($col2);
+    $size=$size1 > $size2 ? $size1 : $size2;
 
-        for ($i = 0; $i < $size; $i++) {
-            $c1 = $this->get_col($col1, $i);
-            $c2 = $this->get_col($col2, $i);
+    for($i=0; $i < $size; $i++) {
+      $c1=$this->get_col($col1, $i);
+      $c2=$this->get_col($col2, $i);
 
-            $html .= $this->create_a_page($c1, $c2, $title1, $title2);
-        }
-        return $html;
+      $html .= $this->create_a_page($c1, $c2, $title1, $title2);
     }
+    return $html;
+  }
 
 }
 
-$reportCreator = new Cron_Document_Page_Reportcreator();
+$reportCreator=new Cron_Document_Page_Reportcreator();
 $reportCreator->start();
-?>
+$reportCreator->printBenchmark();

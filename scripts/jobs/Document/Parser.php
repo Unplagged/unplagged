@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(realpath(dirname(__FILE__)) . "/../Base.php");
+require_once realpath(dirname(__FILE__)) . "/../Base.php";
 
 /**
  * This class represents a cronjob for parsing larger files into documents using OCR.
  */
 class Cron_Document_Parser extends Cron_Base{
 
-  public function start(){
+  protected function run(){
     $tasks = $this->findTask();
 
     if($tasks){
@@ -88,4 +88,4 @@ class Cron_Document_Parser extends Cron_Base{
 
 $parser = new Cron_Document_Parser();
 $parser->start();
-?>
+$parser->printBenchmark();

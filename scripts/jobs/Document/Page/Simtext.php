@@ -26,7 +26,7 @@ require_once(realpath(dirname(__FILE__)) . "/../../Base.php");
  */
 class Cron_Document_Page_Simtext extends Cron_Base{
 
-  public function start(){
+  public function run(){
     $query = $this->em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
     $query->setParameter("action", "page_simtext");
     $query->setParameter("state", "scheduled");
@@ -137,4 +137,4 @@ class Cron_Document_Page_Simtext extends Cron_Base{
 
 $simtext = new Cron_Document_Page_Simtext();
 $simtext->start();
-?>
+$simtext->printBenchmark();
