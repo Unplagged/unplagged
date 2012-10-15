@@ -16,6 +16,13 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * 
+ * This file sets common constants and the include path. It also provides a method to 
+ * bootstrap the ZEND application.
+ * 
+ * IMPORTANT: If you want set a different value for the APPLICATION_ENV constant, this
+ * to happen before this file gets included.
  */
 
 /**
@@ -23,6 +30,8 @@
  */
 defined('APPLICATION_ENV')
         || define('APPLICATION_ENV', 'production');
+
+define('BASE_PATH', realpath(dirname(__FILE__)));
 
 /**
  * @const APPLICATION_PATH The path to the main source directory.

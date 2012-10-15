@@ -18,12 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//set only as development environment, when no parameter is present
-defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', 'production');
-
-define('BASE_PATH', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR));
-require_once BASE_PATH . DIRECTORY_SEPARATOR . 'initApplication.php';
+require_once '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 
 // Create application, bootstrap, and run
 $application = bootstrapApplication();
@@ -31,4 +26,3 @@ $application = bootstrapApplication();
 //make sure doctrine was initialized, so we can get access to the db via the entity manager
 $application->getBootstrap()->bootstrap('doctrine');
 $em = $application->getBootstrap()->getResource('doctrine');
-?>

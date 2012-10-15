@@ -25,8 +25,7 @@
 /**
  * @const BASE_PATH The path to the application directory.
  */
-define('BASE_PATH', realpath(dirname(__FILE__) . '/../'));
-require_once BASE_PATH . DIRECTORY_SEPARATOR . 'initApplication.php';
+require_once '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 
 require_once BASE_PATH . '/scripts/build/Installer/Installer.php';
 

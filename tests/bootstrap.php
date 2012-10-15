@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 define('APPLICATION_ENV', 'testing');
-define('BASE_PATH', realpath(dirname(__FILE__) . '/../'));
-require_once BASE_PATH . DIRECTORY_SEPARATOR . 'initApplication.php';
+require_once '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 
 require_once 'ControllerTestCase.php';

@@ -20,9 +20,7 @@
  * 
  * This file runs all the needed Unplagged jobs.
  */
-defined('BASE_PATH') || define('BASE_PATH', realpath(dirname(__FILE__) . '/../../'));
-require_once BASE_PATH . DIRECTORY_SEPARATOR . 'initApplication.php';
-
+require_once '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 bootstrapApplication();
 
 $entityManager = Zend_Registry::getInstance()->entitymanager;

@@ -19,7 +19,8 @@
  */
 
 /**
- * This class bundles common functionalities that every cronjob class needs.
+ * This class bundles common benchmark functionalities and exposes a common 
+ * interface for cronjobs.
  */
 abstract class Unplagged_Cron_Base{
 
@@ -43,11 +44,23 @@ abstract class Unplagged_Cron_Base{
     $this->stopMemory = memory_get_usage();
   }
 
+  /**
+   * This function can be called to get the runtime of this job.
+   * 
+   * It will only return useful data after the start() function has been called.
+   * 
+   * @return int
+   */
   final public function getRunTime(){
     $resulttime = $this->stopTime - $this->startTime;
     return $resulttime;
   }
 
+  /**
+   * Creates and prints a string that includes all gathered benchmark data.
+   * 
+   * It will only return useful data after the start() function has been called.
+   */
   final public function printBenchmark(){
     echo 'Time [' . $this->getRunTime() . '] Memory [' . ($this->getUsedMemory() / 1024) . 'MB]' . PHP_EOL;
   }
@@ -59,11 +72,17 @@ abstract class Unplagged_Cron_Base{
     return ($this->stopMemory - $this->startMemory) / 1024;
   }
 
+  /**
+   * Runs the cronjobs and gathers the benchmark data.
+   */
   final public function start(){
     $this->startBenchmark();
     $this->run();
     $this->stopBenchmark();
   }
 
+  /**
+   * Executes the actual functionality of this cronjob.
+   */
   abstract protected function run();
 }
