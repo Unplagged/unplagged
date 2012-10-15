@@ -60,9 +60,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    */
   protected function _initAutoloadCrons(){
     $autoloader = new Zend_Loader_Autoloader_Resource(array(
-          'namespace'=>'Cron_',
-          'basePath'=>APPLICATION_PATH . '/../scripts/jobs/',
-        ));
+                'namespace'=>'Cron_',
+                'basePath'=>APPLICATION_PATH . '/../scripts/jobs/',
+            ));
   }
 
   /**
@@ -85,29 +85,29 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    * @return EntityManager
    */
   public function _initDoctrine(){
-    $classLoader = new ClassLoader('Doctrine', BASE_PATH . DIRECTORY_SEPARATOR . 'library');
-    $classLoader->register();
-    $classLoader = new ClassLoader('models', APPLICATION_PATH);
-    $classLoader->register();
-    $classLoader = new ClassLoader('proxies', BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR);
-    $classLoader->register();
+    $classLoaderDoctrine = new ClassLoader('Doctrine', BASE_PATH . DIRECTORY_SEPARATOR . 'library');
+    $classLoaderDoctrine->register();
 
     $config = new \Doctrine\ORM\Configuration();
     $driverImpl = $config->newDefaultAnnotationDriver(APPLICATION_PATH . DIRECTORY_SEPARATOR . 'models');
     $config->setMetadataDriverImpl($driverImpl);
 
-    $config->setProxyDir(BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'doctrine');
+    $cache = new \Doctrine\Common\Cache\ArrayCache;
+    $config->setMetadataCacheImpl($cache);
+    $config->setQueryCacheImpl($cache);
+
+    $config->setProxyDir(TEMP_PATH);
     $config->setProxyNamespace('Proxies');
 
     $connectionOptions = $this->loadDatabaseConnectionCredentials();
     $em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
-    
-    try{
+
+    try {
       @$em->getConnection()->connect();
-    }catch(Exception $e){
+    }catch(Exception $e) {
       die('Sorry, there seems to be a problem with our database server.');
     }
-    
+
     $registry = Zend_Registry::getInstance();
     $registry->entitymanager = $em;
     return $em;
@@ -119,13 +119,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   private function loadDatabaseConnectionCredentials(){
     $doctrineConfig = $this->getOption('doctrine');
     $connectionOptions = array(
-      'driver'=>$doctrineConfig['conn']['driv'],
-      'user'=>$doctrineConfig['conn']['user'],
-      'password'=>$doctrineConfig['conn']['pass'],
-      'dbname'=>$doctrineConfig['conn']['dbname'],
-      'host'=>$doctrineConfig['conn']['host']
+        'driver'=>$doctrineConfig['conn']['driv'],
+        'user'=>$doctrineConfig['conn']['user'],
+        'password'=>$doctrineConfig['conn']['pass'],
+        'dbname'=>$doctrineConfig['conn']['dbname'],
+        'host'=>$doctrineConfig['conn']['host']
     );
-    
+
     return $connectionOptions;
   }
 
@@ -202,242 +202,242 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $user = Zend_Registry::get('user');
     $caseSelected = false;
     if($user->getCurrentCase()){
-      $caseSelected = true;  
+      $caseSelected = true;
     }
-      
-    
+
+
     $config = array(
-      array(
-        //home icon gets set via js, because I didn't find a simple way to add a <span> here
-        'label'=>'Home',
-        'class'=>'test',
-        'title'=>'Home',
-        'module'=>'default',
-        'controller'=>'index',
-        'action'=>'index',
-        'class'=>'home',
-        'route'=>'default',
-        'order'=>-100, // make sure home is the first page
-        'pages'=>array(
-          array(
-            'label'=>'Login',
-            'title'=>'Login',
-            'module'=>'default',
-            'controller'=>'auth',
-            'action'=>'login',
-            'visible'=>false,
-            'resource'=>'auth_login'
-          ),
-          array(
-            'label'=>'Register',
-            'title'=>'Register',
-            'module'=>'default',
-            'controller'=>'user',
-            'action'=>'register',
-            'visible'=>false,
-            'resource'=>'user_register'
-          ),
-          array(
-            'label'=>'Impressum',
-            'title'=>'Impressum',
+        array(
+            //home icon gets set via js, because I didn't find a simple way to add a <span> here
+            'label'=>'Home',
+            'class'=>'test',
+            'title'=>'Home',
             'module'=>'default',
             'controller'=>'index',
-            'action'=>'imprint',
-            'visible'=>false,
-            'resource'=>'index_imprint'
-          )
-        )
-      ), array(
-        'label'=>'Activity',
-        'title'=>'Activity',
-        'module'=>'default',
-        'controller'=>'notification',
-        'action'=>'recent-activity',
-        'route'=>'default',
-        'resource'=>'notification_recent-activity'
-      ), array(
-        'label'=>'Files',
-        'title'=>'Files',
-        'module'=>'default',
-        'controller'=>'user',
-        'action'=>'files',
-        'route'=>'default',
-        'resource'=>'user_files',
-        'pages'=>array(
-          array(
-            'label'=>'Case Files',
-            'title'=>'Case Files',
-            'module'=>'default',
-            'controller'=>'case',
-            'action'=>'files',
+            'action'=>'index',
+            'class'=>'home',
             'route'=>'default',
-            'resource'=>'case_files',
-            'visible'=>$caseSelected
-          ),
-          array(
-            'label'=>'Public Files',
-            'title'=>'Public Files',
+            'order'=>-100, // make sure home is the first page
+            'pages'=>array(
+                array(
+                    'label'=>'Login',
+                    'title'=>'Login',
+                    'module'=>'default',
+                    'controller'=>'auth',
+                    'action'=>'login',
+                    'visible'=>false,
+                    'resource'=>'auth_login'
+                ),
+                array(
+                    'label'=>'Register',
+                    'title'=>'Register',
+                    'module'=>'default',
+                    'controller'=>'user',
+                    'action'=>'register',
+                    'visible'=>false,
+                    'resource'=>'user_register'
+                ),
+                array(
+                    'label'=>'Impressum',
+                    'title'=>'Impressum',
+                    'module'=>'default',
+                    'controller'=>'index',
+                    'action'=>'imprint',
+                    'visible'=>false,
+                    'resource'=>'index_imprint'
+                )
+            )
+        ), array(
+            'label'=>'Activity',
+            'title'=>'Activity',
             'module'=>'default',
-            'controller'=>'file',
-            'action'=>'list',
+            'controller'=>'notification',
+            'action'=>'recent-activity',
             'route'=>'default',
-            'resource'=>'file_list'
-          ),
-          array(
-            'label'=>'Personal Files',
-            'title'=>'Personal Files',
+            'resource'=>'notification_recent-activity'
+        ), array(
+            'label'=>'Files',
+            'title'=>'Files',
             'module'=>'default',
             'controller'=>'user',
             'action'=>'files',
             'route'=>'default',
-            'resource'=>'user_files'
-          ),
-          array(
-            'label'=>'Upload',
-            'title'=>'Upload',
-            'module'=>'default',
-            'controller'=>'file',
-            'action'=>'upload',
-            'visible'=>false,
-            'resource'=>'file_upload'
-          )
-        )
-      ), array(
-        'label'=>'Documents',
-        'title'=>'Documents',
-        'module'=>'default',
-        'controller'=>'document',
-        'action'=>'list',
-        'route'=>'default',
-        'resource'=>'document_list'
-      ), array(
-        'label'=>'Fragments',
-        'title'=>'Fragments',
-        'module'=>'default',
-        'controller'=>'document_fragment',
-        'action'=>'list',
-        'route'=>'default',
-        'resource'=>'document_fragment_list'
-      ), array(
-        'label'=>'Reports',
-        'title'=>'Reports',
-        'module'=>'default',
-        'controller'=>'report',
-        'action'=>'list',
-        'route'=>'default',
-        'resource'=>'report_list'
-      ), array(
-        'label'=>'Bibliography',
-        'title'=>'Bibliography',
-        'module'=>'default',
-        'controller'=>'bibtex',
-        'action'=>'list',
-        'route'=>'default',
-        'resource'=>'bibtex_list'
-      ), array(
-        'label'=>'Administration',
-        'title'=>'Administration',
-        'uri'=>'#',
-        'resource'=>'admin_index',
-        'pages'=>array(
-          array(
-            'label'=>'Cases',
-            'title'=>'Cases',
-            'module'=>'default',
-            'controller'=>'case',
-            'action'=>'list',
-            'route'=>'default',
-            'resource'=>'case_list',
+            'resource'=>'user_files',
             'pages'=>array(
-              array(
-                'label'=>'Create Case',
-                'title'=>'Create Case',
-                'module'=>'default',
-                'controller'=>'case',
-                'action'=>'create',
-                'visible'=>false,
-                'resource'=>'case_create'
-              )
-            ),
-          ),
-          array(
-            'label'=>'Roles',
-            'title'=>'Roles',
-            'module'=>'default',
-            'controller'=>'permission',
-            'action'=>'list',
-            'route'=>'default',
-            'resource'=>'permission_list',
-            'pages'=>array(
-              array(
-                'label'=>'Edit Role',
-                'title'=>'Edit Role',
-                'module'=>'default',
-                'controller'=>'permission',
-                'action'=>'edit-role',
-                'visible'=>false,
-                'resource'=>'permission_edit-role'
-              )
-            ),
-          ),
-          array(
-            'label'=>'States',
-            'title'=>'States',
-            'module'=>'default',
-            'controller'=>'setting',
-            'route'=>'default',
-            'action'=>'list-states',
-            'pages'=>array(
-              array(
-                'label'=>'Edit State',
-                'title'=>'Edit State',
-                'module'=>'default',
-                'controller'=>'setting',
-                'action'=>'edit-state',
-                'visible'=>false,
-                'resource'=>'setting_edit-state'
-              ),
-              array(
-                'label'=>'Create State',
-                'title'=>'Create State',
-                'module'=>'default',
-                'controller'=>'setting',
-                'action'=>'create-state',
-                'visible'=>false,
-                'resource'=>'setting_create-state'
-              )
-            ),
-          ),
-          array(
-            'label'=>'Actions',
-            'title'=>'Actions',
-            'module'=>'default',
-            'controller'=>'setting',
-            'route'=>'default',
-            'action'=>'list-actions',
-            'pages'=>array(
-              array(
-                'label'=>'Edit Action',
-                'title'=>'Edit Action',
-                'module'=>'default',
-                'controller'=>'setting',
-                'action'=>'edit-action',
-                'visible'=>false,
-                'resource'=>'setting_edit-action'
-              ),
-              array(
-                'label'=>'Create Action',
-                'title'=>'Create Action',
-                'module'=>'default',
-                'controller'=>'setting',
-                'action'=>'create-action',
-                'visible'=>false,
-                'resource'=>'setting_create-action'
-              )
+                array(
+                    'label'=>'Case Files',
+                    'title'=>'Case Files',
+                    'module'=>'default',
+                    'controller'=>'case',
+                    'action'=>'files',
+                    'route'=>'default',
+                    'resource'=>'case_files',
+                    'visible'=>$caseSelected
+                ),
+                array(
+                    'label'=>'Public Files',
+                    'title'=>'Public Files',
+                    'module'=>'default',
+                    'controller'=>'file',
+                    'action'=>'list',
+                    'route'=>'default',
+                    'resource'=>'file_list'
+                ),
+                array(
+                    'label'=>'Personal Files',
+                    'title'=>'Personal Files',
+                    'module'=>'default',
+                    'controller'=>'user',
+                    'action'=>'files',
+                    'route'=>'default',
+                    'resource'=>'user_files'
+                ),
+                array(
+                    'label'=>'Upload',
+                    'title'=>'Upload',
+                    'module'=>'default',
+                    'controller'=>'file',
+                    'action'=>'upload',
+                    'visible'=>false,
+                    'resource'=>'file_upload'
+                )
             )
-          )
+        ), array(
+            'label'=>'Documents',
+            'title'=>'Documents',
+            'module'=>'default',
+            'controller'=>'document',
+            'action'=>'list',
+            'route'=>'default',
+            'resource'=>'document_list'
+        ), array(
+            'label'=>'Fragments',
+            'title'=>'Fragments',
+            'module'=>'default',
+            'controller'=>'document_fragment',
+            'action'=>'list',
+            'route'=>'default',
+            'resource'=>'document_fragment_list'
+        ), array(
+            'label'=>'Reports',
+            'title'=>'Reports',
+            'module'=>'default',
+            'controller'=>'report',
+            'action'=>'list',
+            'route'=>'default',
+            'resource'=>'report_list'
+        ), array(
+            'label'=>'Bibliography',
+            'title'=>'Bibliography',
+            'module'=>'default',
+            'controller'=>'bibtex',
+            'action'=>'list',
+            'route'=>'default',
+            'resource'=>'bibtex_list'
+        ), array(
+            'label'=>'Administration',
+            'title'=>'Administration',
+            'uri'=>'#',
+            'resource'=>'admin_index',
+            'pages'=>array(
+                array(
+                    'label'=>'Cases',
+                    'title'=>'Cases',
+                    'module'=>'default',
+                    'controller'=>'case',
+                    'action'=>'list',
+                    'route'=>'default',
+                    'resource'=>'case_list',
+                    'pages'=>array(
+                        array(
+                            'label'=>'Create Case',
+                            'title'=>'Create Case',
+                            'module'=>'default',
+                            'controller'=>'case',
+                            'action'=>'create',
+                            'visible'=>false,
+                            'resource'=>'case_create'
+                        )
+                    ),
+                ),
+                array(
+                    'label'=>'Roles',
+                    'title'=>'Roles',
+                    'module'=>'default',
+                    'controller'=>'permission',
+                    'action'=>'list',
+                    'route'=>'default',
+                    'resource'=>'permission_list',
+                    'pages'=>array(
+                        array(
+                            'label'=>'Edit Role',
+                            'title'=>'Edit Role',
+                            'module'=>'default',
+                            'controller'=>'permission',
+                            'action'=>'edit-role',
+                            'visible'=>false,
+                            'resource'=>'permission_edit-role'
+                        )
+                    ),
+                ),
+                array(
+                    'label'=>'States',
+                    'title'=>'States',
+                    'module'=>'default',
+                    'controller'=>'setting',
+                    'route'=>'default',
+                    'action'=>'list-states',
+                    'pages'=>array(
+                        array(
+                            'label'=>'Edit State',
+                            'title'=>'Edit State',
+                            'module'=>'default',
+                            'controller'=>'setting',
+                            'action'=>'edit-state',
+                            'visible'=>false,
+                            'resource'=>'setting_edit-state'
+                        ),
+                        array(
+                            'label'=>'Create State',
+                            'title'=>'Create State',
+                            'module'=>'default',
+                            'controller'=>'setting',
+                            'action'=>'create-state',
+                            'visible'=>false,
+                            'resource'=>'setting_create-state'
+                        )
+                    ),
+                ),
+                array(
+                    'label'=>'Actions',
+                    'title'=>'Actions',
+                    'module'=>'default',
+                    'controller'=>'setting',
+                    'route'=>'default',
+                    'action'=>'list-actions',
+                    'pages'=>array(
+                        array(
+                            'label'=>'Edit Action',
+                            'title'=>'Edit Action',
+                            'module'=>'default',
+                            'controller'=>'setting',
+                            'action'=>'edit-action',
+                            'visible'=>false,
+                            'resource'=>'setting_edit-action'
+                        ),
+                        array(
+                            'label'=>'Create Action',
+                            'title'=>'Create Action',
+                            'module'=>'default',
+                            'controller'=>'setting',
+                            'action'=>'create-action',
+                            'visible'=>false,
+                            'resource'=>'setting_create-action'
+                        )
+                    )
+                )
+            )
         )
-      )
     );
 
     $container = new Zend_Navigation($config);
@@ -479,12 +479,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     //translate standard zend framework messages and supress errors which occur when language was not found
     //should default to english
     $translator = @new Zend_Translate(
-            array(
-              'adapter'=>'array',
-              'content'=>BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages',
-              'locale'=>$locale,
-              'scan'=>Zend_Translate::LOCALE_FILENAME
-            )
+                    array(
+                        'adapter'=>'array',
+                        'content'=>BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages',
+                        'locale'=>$locale,
+                        'scan'=>Zend_Translate::LOCALE_FILENAME
+                    )
     );
     Zend_Validate_Abstract::setDefaultTranslator($translator);
 
@@ -493,14 +493,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $untranslatedLog = new Zend_Log($untranslatedWriter);
 
     $translator->setOptions(array(
-      'log'=>$untranslatedLog,
-      'logUntranslated'=>true)
+        'log'=>$untranslatedLog,
+        'logUntranslated'=>true)
     );
 
     if(!empty($translate)){
       $translate->setOptions(array(
-        'log'=>$untranslatedLog,
-        'logUntranslated'=>true)
+          'log'=>$untranslatedLog,
+          'logUntranslated'=>true)
       );
     }
     return $registry;
@@ -518,17 +518,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $defaultConfig = $this->getOption('default');
     $view->headTitle()->setSeparator(' - ')->append($defaultConfig['applicationName']);
     return $view;
-  }
-
-  /**
-   * @todo seems unused
-   */
-  protected function setConstants($constants){
-    foreach($constants as $key=>$value){
-      if(!defined($key)){
-        define($key, $value);
-      }
-    }
   }
 
 }

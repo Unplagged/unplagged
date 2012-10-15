@@ -22,11 +22,7 @@
  * the environment variables and initiates the bootstrapping process.
  */
 
-/**
- * @const BASE_PATH The path to the application directory.
- */
 require_once '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
-
 require_once BASE_PATH . '/scripts/build/Installer/Installer.php';
 
 $installer = new Installer();

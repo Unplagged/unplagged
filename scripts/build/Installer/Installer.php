@@ -56,8 +56,7 @@ class Installer {
         'data' . DIRECTORY_SEPARATOR . 'logs',
         'data' . DIRECTORY_SEPARATOR . 'cache',
         'data' . DIRECTORY_SEPARATOR . 'reports',
-        'data' . DIRECTORY_SEPARATOR . 'doctrine',
-        'data' . DIRECTORY_SEPARATOR . 'doctrine' . DIRECTORY_SEPARATOR . 'proxies',
+        'temp' . DIRECTORY_SEPARATOR . 'proxies',
         'temp' . DIRECTORY_SEPARATOR . 'ocr',
         'temp' . DIRECTORY_SEPARATOR . 'imagemagick',
         'data' . DIRECTORY_SEPARATOR . 'avatars'

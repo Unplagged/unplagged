@@ -1,8 +1,3 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 $(document).ready(function(){  
     $("input,select,textarea").not("[type=submit]").jqBootstrapValidation({
         preventSubmit: true,
@@ -100,6 +95,4 @@ $(document).ready(function(){
         });
     }
     
-    
-  
 });
