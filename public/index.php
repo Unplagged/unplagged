@@ -1,6 +1,6 @@
 <?php
+
 /**
- *
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
  *  
@@ -28,12 +28,6 @@
 define('BASE_PATH', realpath(dirname(__FILE__) . '/../'));
 require_once BASE_PATH . DIRECTORY_SEPARATOR . 'initApplication.php';
 
-/**
- * @const APPLICATION_ENV The application environment, from which the config values are taken..
- */
-defined('APPLICATION_ENV')
-        || define('APPLICATION_ENV', 'production');
-
 require_once BASE_PATH . '/scripts/build/Installer/Installer.php';
 
 $installer = new Installer();
@@ -41,6 +35,6 @@ $installer = new Installer();
 if($installer->isInstalled()){
   $application = bootstrapApplication();
   $application->run();
-} else {
+}else{
   $installer->install();
 }

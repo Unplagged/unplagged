@@ -1,5 +1,7 @@
 <phpunit bootstrap="bootstrap.php" 
          colors="true" 
+         backupGlobals="false"
+         backupStaticAttributes="false"
          stopOnError="true"
          stopOnFailure="true"
          stopOnIncomplete="true"
@@ -8,13 +10,12 @@
         <directory>./application/</directory>
     </testsuite>
     <testsuite name="lib">
-        <directory>./library</directory>
+        <directory>./library/</directory>
     </testsuite>
     <filter>
         <whitelist>
             <directory suffix=".php">./../application/</directory>
             <directory suffix=".php">./../library/Unplagged</directory>
-            <directory suffix=".php">./../scripts/</directory>
         </whitelist>
     </filter>  
     <logging>

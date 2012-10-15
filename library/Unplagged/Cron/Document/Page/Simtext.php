@@ -17,14 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(realpath(dirname(__FILE__)) . "/../../Base.php");
 
 /**
  * This class represents a cronjob for parsing larger files into documents using OCR.
  *
  * @author benjamin
  */
-class Cron_Document_Page_Simtext extends Cron_Base{
+class Unplagged_Cron_Document_Page_Simtext extends Unplagged_Cron_Base{
 
   public function run(){
     $query = $this->em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
@@ -134,7 +133,3 @@ class Cron_Document_Page_Simtext extends Cron_Base{
   }
 
 }
-
-$simtext = new Cron_Document_Page_Simtext();
-$simtext->start();
-$simtext->printBenchmark();

@@ -17,6 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * @const APPLICATION_ENV The application environment, from which the config values are taken. 
+ */
+defined('APPLICATION_ENV')
+        || define('APPLICATION_ENV', 'production');
+
 /**
  * @const APPLICATION_PATH The path to the main source directory.
  */
@@ -52,9 +59,9 @@ require_once 'Zend/Application.php';
 /**
  * Create application, bootstrap, and run.
  */
-function bootstrapApplication() {
-  $application = new Zend_Application(APPLICATION_ENV, array(
-              'config' => array(
+function bootstrapApplication(){
+  $application=new Zend_Application(APPLICATION_ENV, array(
+              'config'=>array(
                   APPLICATION_PATH . '/configs/application.ini',
                   APPLICATION_PATH . '/configs/log.ini',
                   APPLICATION_PATH . '/configs/routes.ini',

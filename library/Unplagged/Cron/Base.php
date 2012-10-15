@@ -19,44 +19,32 @@
  */
 
 /**
- * @const APPLICATION_ENV The application environment, from which the config values are taken. 
+ * This class bundles common functionalities that every cronjob class needs.
  */
-defined('APPLICATION_ENV') || define('APPLICATION_ENV', 'production');
+abstract class Unplagged_Cron_Base{
 
-define('BASE_PATH', realpath(dirname(__FILE__) . '/../../'));
-require_once BASE_PATH . DIRECTORY_SEPARATOR . 'initApplication.php';
+  private $startTime = 0;
+  private $stopTime = 0;
+  private $startMemory = 0;
+  private $stopMemory = 0;
+  protected $em = null;
 
-bootstrapApplication();
-
-/**
- * This class represents an abstract class that initalizes any cron, each
- * cron should extend it.
- */
-abstract class Cron_Base{
-
-  private $startTime=0;
-  private $stopTime=0;
-  private $startMemory=0;
-  private $stopMemory=0;
-  protected $em=null;
-
-  public function __construct($em=null){
-    Zend_Registry::get('Log')->info('Starting cronjob ' . get_class());
-    $this->em=Zend_Registry::getInstance()->entitymanager;
+  public function __construct(Doctrine\ORM\EntityManager $entityManager){
+    $this->em = $entityManager;
   }
 
   final private function startBenchmark(){
-    $this->startTime=microtime(true);
-    $this->startMemory=memory_get_usage();
+    $this->startTime = microtime(true);
+    $this->startMemory = memory_get_usage();
   }
 
   final private function stopBenchmark(){
-    $this->stopTime=microtime(true);
-    $this->stopMemory=memory_get_usage();
+    $this->stopTime = microtime(true);
+    $this->stopMemory = memory_get_usage();
   }
 
   final public function getRunTime(){
-    $resulttime=$this->stopTime - $this->startTime;
+    $resulttime = $this->stopTime - $this->startTime;
     return $resulttime;
   }
 
