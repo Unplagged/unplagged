@@ -56,16 +56,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   }
 
   /**
-   * @todo does this do anything? 
-   */
-  protected function _initAutoloadCrons(){
-    $autoloader = new Zend_Loader_Autoloader_Resource(array(
-                'namespace'=>'Cron_',
-                'basePath'=>APPLICATION_PATH . '/../scripts/jobs/',
-            ));
-  }
-
-  /**
    * Loads the config and sets it in the registry.
    * 
    * @return \Zend_Config 
