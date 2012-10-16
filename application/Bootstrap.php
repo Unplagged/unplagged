@@ -92,7 +92,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $driverImpl = $config->newDefaultAnnotationDriver(APPLICATION_PATH . DIRECTORY_SEPARATOR . 'models');
     $config->setMetadataDriverImpl($driverImpl);
 
-    $cache = new \Doctrine\Common\Cache\ArrayCache;
+    if(APPLICATION_ENV === 'production' && extension_loaded('apc') && ini_get('apc.enabled')){
+      $cache = new \Doctrine\Common\Cache\ApcCache;
+    }else{
+      $cache = new \Doctrine\Common\Cache\ArrayCache;
+    }
     $config->setMetadataCacheImpl($cache);
     $config->setQueryCacheImpl($cache);
 
