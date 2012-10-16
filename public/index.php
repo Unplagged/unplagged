@@ -21,7 +21,6 @@
  * This file is the main entry point into the Unplagged application. It defines 
  * the environment variables and initiates the bootstrapping process.
  */
-
 require_once '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 require_once BASE_PATH . '/scripts/build/Installer/Installer.php';
 
