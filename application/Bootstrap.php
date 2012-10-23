@@ -82,11 +82,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $driverImpl = $config->newDefaultAnnotationDriver(APPLICATION_PATH . DIRECTORY_SEPARATOR . 'models');
     $config->setMetadataDriverImpl($driverImpl);
 
-    if(APPLICATION_ENV === 'production' && extension_loaded('apc') && ini_get('apc.enabled')){
-      $cache = new \Doctrine\Common\Cache\ApcCache;
-    }else{
-      $cache = new \Doctrine\Common\Cache\ArrayCache;
-    }
+    $cache = $this->initCache();
     $config->setMetadataCacheImpl($cache);
     $config->setQueryCacheImpl($cache);
 
@@ -107,6 +103,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     return $em;
   }
 
+  private function initCache(){
+    $cache = null;
+    
+    if(APPLICATION_ENV === 'production' && extension_loaded('apc') && ini_get('apc.enabled')){
+      $cache = new \Doctrine\Common\Cache\ApcCache;
+    }else{
+      $cache = new \Doctrine\Common\Cache\ArrayCache;
+    }
+    
+    return $cache;
+  }
+  
   /**
    * Loads the database connection credentials from the config file.
    */
@@ -194,14 +202,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   protected function _initNavigation(){
     $config = new Zend_Config_Xml(BASE_PATH . '/data/navigation.xml', 'nav');
     $container = new Zend_Navigation($config);
-    
+
     //show case files if a case is selected
     $user = Zend_Registry::get('user');
     if($user->getCurrentCase()){
       $caseFiles = $container->findOneBy('title', 'Case Files');
       $caseFiles->setVisible();
     }
-    
+
     $this->bootstrap('layout');
     $layout = $this->getResource('layout');
     $view = $layout->getView();

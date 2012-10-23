@@ -28,7 +28,7 @@
 class Unplagged_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface{
 
   /**
-   * @var string The Entity/Classname which holds  the authentication data .
+   * @var string The Entity/Classname which holds the authentication data .
    */
   private $authEntityName;
 
@@ -54,8 +54,8 @@ class Unplagged_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface{
 
   private $entityManager;
 
-  public function __construct(\Doctrine\ORM\EntityManager $em = null, $authEntityName = null, $authIdentityField = null, 
-          $authCredentialField = null, $identity = null, $credential = null){
+  public function __construct(\Doctrine\ORM\EntityManager $em, $authEntityName = '', $authIdentityField = '', 
+          $authCredentialField = '', $identity = '', $credential = ''){
     $this->authEntityName = $authEntityName;
     $this->authIdentityField = $authIdentityField;
     $this->authCredentialField = $authCredentialField;

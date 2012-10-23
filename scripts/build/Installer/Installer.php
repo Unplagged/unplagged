@@ -31,7 +31,7 @@ use \Doctrine\Common\ClassLoader;
 /**
  * Installs all necessary components of the Unplagged application.
  * 
- * @todo check max file upload size, check for apc cache, create doctrine proxies
+ * @todo check max file upload size, php version, check for apc cache, create doctrine proxies, checkbox for develompent mode
  */
 class Installer {
 
