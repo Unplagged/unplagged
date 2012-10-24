@@ -1,15 +1,20 @@
 RewriteEngine On
 
-#redirect default routes of Zend here to the customly 
-#defined ones of /config/routes.ini
+# redirect default routes of Zend here to the customly 
+# defined ones of /config/routes.ini
 redirect 301 /auth/login /login
 redirect 301 /user/register /register
 redirect 301 /index/imprint /imprint
 
-#rewrite anything that is not an existing file to the 
-#index.php so that Zend can handle everything else
+# rewrite anything that is not an existing file to the 
+# index.php so that Zend can handle everything else
 RewriteCond %{REQUEST_FILENAME} -s [OR]
 RewriteCond %{REQUEST_FILENAME} -l [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^.*$ - [NC,L]
 RewriteRule ^.*$ index.php [NC,L]
+
+# As Compass employs cache busting, we cache images nearly endless(1 year).
+<FilesMatch ".(flv|gif|jpg|jpeg|png|ico|swf)$">
+Header set Cache-Control "max-age=29030400"
+</FilesMatch>
