@@ -202,7 +202,7 @@ class Installer {
 
     $success = true;
     
-    $tessractParser = new Unplagged_Parser_Page_TesseractAdapter();
+    $tesseractParser = new Unplagged_Parser_Page_TesseractAdapter();
     foreach ($scripts as $name => $call) {
       if (!empty($call)) {
         exec($call, $output, $returnVal);

@@ -162,7 +162,7 @@ class CaseController extends Unplagged_Controller_Action {
     $paginator->setCurrentPageNumber($input->page);
 
     // generate the action dropdown for each fragment
-    foreach ($paginator as $case):
+    foreach ($paginator as $case){
       $case->actions = array();
       $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type' => 'case', 'action' => 'update', 'base' => $case));
       if (Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)) {
@@ -180,7 +180,7 @@ class CaseController extends Unplagged_Controller_Action {
         $publishAction['icon'] = 'images/icons/weather_clouds.png';
         $case->actions[] = $publishAction;
       }
-    endforeach;
+    }
 
     $this->setTitle('List of cases');
     $this->view->paginator = $paginator;

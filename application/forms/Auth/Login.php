@@ -35,14 +35,14 @@ class Application_Form_Auth_Login extends Zend_Form{
     $this->setAction($view->baseUrl('login'));
 
     $usernameElement = new Zend_Form_Element_Text('username');
-    $usernameElement->setLabel("Username");
+    $usernameElement->setLabel('Username');
     $usernameElement->addValidator('regex', false, array('/^[a-z0-9]/i'));
     $usernameElement->addValidator('stringLength', false, array(2, 64));
     $usernameElement->setAttrib('maxLength', 64);
     $usernameElement->setRequired(true);
 
     $passwordElement = new Zend_Form_Element_Password('password');
-    $passwordElement->setLabel("Password");
+    $passwordElement->setLabel('Password');
     $passwordElement->addValidator('regex', false, array('/^[a-z0-9]/i'));
     $passwordElement->addValidator('stringLength', false, array(8, 32));
     $passwordElement->setAttrib('maxLength', 32);

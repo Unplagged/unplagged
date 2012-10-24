@@ -11,10 +11,7 @@
     <?php echo $this->headTitle(); ?>
     <?php
     echo $this->headLink()
-        ->appendStylesheet($this->baseUrl('style/jquery.lightbox-0.5.css'))
-        ->appendStylesheet($this->baseUrl('style/styles.css'))
-        ->prependStylesheet($this->baseUrl('style/flick/jquery-ui-1.8.17.custom.css'))
-        ->prependStylesheet($this->baseUrl('style/bootstrap.min.css'));
+        ->appendStylesheet($this->baseUrl('style/styles.css'));
     ?>
     <!-- Modernizr needs to stay in the head to work properly -->
     <script src="<?php echo $this->baseUrl('js/libs/modernizr-2.5.3.min.js'); ?>"></script>
