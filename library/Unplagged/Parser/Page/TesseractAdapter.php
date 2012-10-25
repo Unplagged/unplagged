@@ -28,7 +28,8 @@
  */
 final class Unplagged_Parser_Page_TesseractAdapter{
 
-  private $tesseractPath;
+  private static $tesseractPath;
+  
   private $inputFileLocation;
   private $outputFileLocation;
   private $language;
@@ -56,7 +57,7 @@ final class Unplagged_Parser_Page_TesseractAdapter{
     if($message === false){
       $this->inputFileLocation = $inputFileLocation;
       $this->outputFileLocation = $outputFileLocation;
-      $this->tesseractPath = $tesseractPath;
+      self::$tesseractPath = $tesseractPath;
       
       if(array_key_exists($language, $this->installedLanguages)){
         $this->language = $this->installedLanguages[$language];
@@ -75,7 +76,7 @@ final class Unplagged_Parser_Page_TesseractAdapter{
    * The result should be a .txt file with the name that was provided to the constructor as the $outputFileName.
    */
   public function execute(){
-    $command = $this->tesseractPath . 'tesseract ' . $this->inputFileLocation . ' ' . $this->outputFileLocation . ' ' . $this->language;
+    $command = self::$tesseractPath . 'tesseract ' . $this->inputFileLocation . ' ' . $this->outputFileLocation . ' ' . $this->language;
     exec($command, $op, $returnVal);
 
     if(file_exists($this->outputFileLocation . '.txt')){
@@ -90,10 +91,10 @@ final class Unplagged_Parser_Page_TesseractAdapter{
    * 
    * @return bool
    */
-  public function checkTesseract(){
+  public static function checkTesseract(){
     //we simply try to call tesseract without arguments
     //the 2>&1 bit is to supress output on stderr
-    $output = shell_exec($this->tesseractPath . 'tesseract 2>&1');
+    $output = shell_exec(self::$tesseractPath . 'tesseract 2>&1');
 
     //the common bit of the ouput between windows and Linux seems to be 'Usage:'
     if(stripos($output, 'Usage:') !== false){

@@ -1,17 +1,30 @@
-<phpunit bootstrap="bootstrap.php" colors="true">
-  <testsuite name="Unplagged">
-    <directory>./application/</directory>
-    <directory>./library</directory>
-  </testsuite>
-  <filter>
-    <whitelist>
-      <directory suffix=".php">./../application/</directory>
-      <directory suffix=".php">./../library/Unplagged</directory>
-    </whitelist>
-  </filter>  
-  <logging>
-    <log type="coverage-html" target="../docs/phpunit/coverage" charset="UTF-8"
-         yui="true" highlight="true" lowUpperBound="50" highLowerBound="70" />
-    <log type="testdox-html" target="../docs/phpunit/testlog.html" />
-  </logging>
+<phpunit bootstrap="bootstrap.php" 
+         colors="true" 
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         stopOnError="true"
+         stopOnFailure="true"
+         stopOnIncomplete="true"
+         stopOnSkipped="true">
+    <testsuite name="app">
+        <directory>./application/</directory>
+    </testsuite>
+    <testsuite name="lib">
+        <directory>./library/</directory>
+    </testsuite>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./../application/</directory>
+            <directory suffix=".php">./../library/Unplagged</directory>
+        </whitelist>
+    </filter>  
+    <logging>
+        <log type="coverage-html" 
+             target="../docs/phpunit/coverage" 
+             charset="UTF-8"
+             yui="true" 
+             highlight="true" 
+             lowUpperBound="50" 
+             highLowerBound="70" />
+    </logging>
 </phpunit>

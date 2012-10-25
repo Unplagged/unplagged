@@ -10,11 +10,7 @@
  */
 class CaseControllerTest extends ControllerTestCase{
   
-  public function testCaseCreateNotLoggedInDispatchesCorrectly(){
-    //$this->dispatch('/case/create');
-    //$this->assertController('auth');
-    //$this->assertAction('login'); 
-  }  
+ public function testSomething(){
+   
+ }
 }
-
-?>

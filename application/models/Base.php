@@ -51,34 +51,34 @@ use Doctrine\Common\Collections\ArrayCollection;
  * ,"bibtex" = "Application_Model_BibTex"
  * })
  */
-abstract class Application_Model_Base{
+abstract class Application_Model_Base {
 
   const ICON_CLASS = '';
   const PERMISSION_TYPE = 'base';
 
   public static $permissionTypes = array(
-    'read',
-    'update',
-    'delete',
-    'authorize'
+      'read',
+      'update',
+      'delete',
+      'authorize'
   );
 
   /**
    * @var array An array containing all classes that don't need permission management. 
    */
   public static $blacklist = array(
-    'task',
-    'document-fragment-type',
-    'document-fragment-partial',
-    'notification',
-    'tag',
-    'versionable',
-    'document-page',
-    'document-page-line',
-    'rating',
-    'versionable-version',
-    'simtext-report',
-    'document-page-detectionreport',
+      'task',
+      'document-fragment-type',
+      'document-fragment-partial',
+      'notification',
+      'tag',
+      'versionable',
+      'document-page',
+      'document-page-line',
+      'rating',
+      'versionable-version',
+      'simtext-report',
+      'document-page-detectionreport',
   );
 
   /**
@@ -143,15 +143,14 @@ abstract class Application_Model_Base{
    * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $state;
-  
   private $entityManager;
 
-  public function __construct(array $data = array()){
+  public function __construct(array $data = array()) {
     $this->entityManager = Zend_Registry::getInstance()->entitymanager;
-    
-    if(isset($data['state'])){
+
+    if (isset($data['state'])) {
       $this->state = $data['state'];
-    }else{
+    } else {
       //@todo dependency injection for entitymanager
       $this->state = $this->entityManager->getRepository('Application_Model_State')->findOneByName('created');
     }
@@ -162,7 +161,7 @@ abstract class Application_Model_Base{
     $this->permissions = new ArrayCollection();
   }
 
-  public function getId(){
+  public function getId() {
     return $this->id;
   }
 
@@ -172,8 +171,8 @@ abstract class Application_Model_Base{
    * 
    * @PrePersist
    */
-  public function created(){
-    if($this->created == null){
+  public function created() {
+    if ($this->created == null) {
       $this->created = new DateTime('now');
     }
   }
@@ -183,18 +182,18 @@ abstract class Application_Model_Base{
    * 
    * @PrePersist 
    */
-  public function storePermissions(){
+  public function storePermissions() {
     $em = $this->entityManager;
 
     $user = null;
-    if($this->getPermissionType() === 'user'){
+    if ($this->getPermissionType() === 'user') {
       $user = $this;
-    }else{
+    } else {
       $user = Zend_Registry::getInstance()->user;
     }
 
-    foreach(self::$permissionTypes as $permissionType){
-      if(!in_array($this->getPermissionType(), self::$blacklist)){
+    foreach (self::$permissionTypes as $permissionType) {
+      if (!in_array($this->getPermissionType(), self::$blacklist)) {
         $permission = new Application_Model_ModelPermission($this->getPermissionType(), $permissionType, $this);
 
         $this->addPermission($permission);
@@ -224,102 +223,105 @@ abstract class Application_Model_Base{
    * const ICON_CLASS = 'my-icon-class';
    * </code>
    */
-  public function getIconClass(){
+  public function getIconClass() {
+    $iconClass = '';
     $childClass = get_called_class();
 
-    if($childClass::ICON_CLASS !== null){
-      return $childClass::ICON_CLASS;
+    if ($childClass::ICON_CLASS !== null) {
+      $iconClass = $childClass::ICON_CLASS;
     }
+
+    return $iconClass;
   }
 
-  public function getPermissionType(){
+  public function getPermissionType() {
     $childClass = get_called_class();
 
     return strtolower(str_replace('_', '-', substr($childClass, strlen('Application_Model_'))));
   }
 
-  public function getComments(){
+  public function getComments() {
     return $this->comments;
   }
 
-  public function getRatings(){
+  public function getRatings() {
     return $this->ratings;
   }
 
-  public function addRating(Application_Model_Rating $rating){
+  public function addRating(Application_Model_Rating $rating) {
     $this->ratings->add($rating);
   }
 
-  public function countRatingsByRating($ratingRating){
+  public function countRatingsByRating($ratingRating) {
     $count = 0;
-    $this->ratings->filter(function($rating) use (&$count, &$ratingRating){
-          if($rating->getRating() == $ratingRating){
-            $count++;
-            return true;
-          }
-          return false;
-        });
+    $this->ratings->filter(function($rating) use (&$count, &$ratingRating) {
+              if ($rating->getRating() == $ratingRating) {
+                $count++;
+                return true;
+              }
+              return false;
+            });
 
     return $count;
   }
 
-  public function getTags(){
+  public function getTags() {
     return $this->tags;
   }
 
-  public function getCreated(){
+  public function getCreated() {
     return $this->created;
   }
 
-  public function getConversationTypes(){
+  public function getConversationTypes() {
     return $this->conversationTypes;
   }
 
-  public function isRatedByUser($user){
-    foreach($this->ratings as $rating){
-      if($rating->getUser()->getId() == $user->getId()){
+  public function isRatedByUser($user) {
+    foreach ($this->ratings as $rating) {
+      if ($rating->getUser()->getId() == $user->getId()) {
         return true;
       }
     }
     return false;
   }
 
-  public function getTagIds(){
+  public function getTagIds() {
     $tagIds = array();
-    foreach($this->tags as $tag){
+    foreach ($this->tags as $tag) {
       $tagIds[] = $tag->getId();
     }
     return $tagIds;
   }
 
-  public function addTag(Application_Model_Tag $tag){
+  public function addTag(Application_Model_Tag $tag) {
     $this->tags->add($tag);
   }
 
-  public function removeTag(Application_Model_Tag $tag){
+  public function removeTag(Application_Model_Tag $tag) {
     $this->tags->removeElement($tag);
   }
 
-  public function setTags($tagIds = array()){
+  public function setTags($tagIds = array()) {
     $removedTags = array();
 
     // 1) search all tags that already exist by their id
-    if(!empty($this->tags)){
-      $this->tags->filter(function($tag) use (&$tagIds, &$removedTags){
-            if(in_array($tag->getId(), $tagIds)){
-              $tagIds = array_diff($tagIds, array($tag->getId()));
-              return true;
-            }
-            $removedTags[] = $tag;
-            return false;
-          });
+    if (!empty($this->tags)) {
+      $this->tags->filter(function($tag) use (&$tagIds, &$removedTags) {
+                if (in_array($tag->getId(), $tagIds)) {
+                  $tagIds = array_diff($tagIds, array($tag->getId()));
+                  return true;
+                }
+                $removedTags[] = $tag;
+                return false;
+              });
     }
 
     // 2) create new tags for those that don't exist yet
-    foreach($tagIds as $tagId){
-      if(is_numeric($tagId)){
+    foreach ($tagIds as $tagId) {
+      if (is_numeric($tagId)) {
         $tag = $this->entityManager->getRepository('Application_Model_Tag')->findOneById($tagId);
-      }else{
+      } else {
         $data['title'] = $tagId;
         $tag = new Application_Model_Tag($data);
       }
@@ -328,46 +330,46 @@ abstract class Application_Model_Base{
     }
 
     // 3) remove tags that belonged to the element before, but not anymore
-    foreach($removedTags as $tag){
+    foreach ($removedTags as $tag) {
       $this->removeTag($tag);
     }
   }
 
-  public function clearTags(){
+  public function clearTags() {
     $this->tags->clear();
   }
 
-  public function getPermissions($instanceType = null){
-    if(empty($instanceType)){
+  public function getPermissions($instanceType = null) {
+    if (empty($instanceType)) {
       return $this->permissions;
-    }else{
+    } else {
       $permissions = array();
-      $this->permissions->filter(function($permission) use (&$permissions, &$instanceType){
-            if($permission instanceof $instanceType){
-              $permissions[] = $permission;
-              return true;
-            }
-            return false;
-          });
-          return $permissions;
+      $this->permissions->filter(function($permission) use (&$permissions, &$instanceType) {
+                if ($permission instanceof $instanceType) {
+                  $permissions[] = $permission;
+                  return true;
+                }
+                return false;
+              });
+      return $permissions;
     }
   }
 
-  public function remove(){
+  public function remove() {
     $this->state = $this->entityManager->getRepository('Application_Model_State')->findOneByname('deleted');
   }
 
-  private function addPermission($permission){
-    if($this->permissions && !$this->permissions->contains($permission)){
+  private function addPermission($permission) {
+    if ($this->permissions && !$this->permissions->contains($permission)) {
       $this->permissions->add($permission);
     }
   }
 
-  public function getState(){
+  public function getState() {
     return $this->state;
   }
 
-  public function setState(Application_Model_State $state){
+  public function setState(Application_Model_State $state) {
     $this->state = $state;
   }
 

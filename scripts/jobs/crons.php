@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
  *  
@@ -16,31 +16,22 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * 
+ * This file runs all the needed Unplagged jobs.
  */
+require_once '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
+bootstrapApplication();
 
-/**
- *
- */
-class TemplateParser {
+$entityManager = Zend_Registry::getInstance()->entitymanager;
 
-  private $templateDirectory;
+runCronjob('Unplagged_Cron_Document_Parser', $entityManager);
+runCronjob('Unplagged_Cron_Document_Page_Reportcreator', $entityManager);
+runCronjob('Unplagged_Cron_Document_Page_Simtext', $entityManager);
 
-  public function __construct($templateDirectory) {
-    $this->templateDirectory = $templateDirectory;
-  }
-
-  public function parse($template, $data) {
-    $response = $template;
-    if (!empty($data) || is_array($data)) {
-      foreach ($data as $key => $value) {
-        $response = str_replace('{$' . $key . '}', $value, $response);
-      }
-    }
-    return $response;
-  }
-
-  public function parseFile($filename, $data) {
-    return $this->parse(file_get_contents($this->templateDirectory . $filename), $data);
-  }
-
+function runCronjob($cronClass, $entityManager){
+  Zend_Registry::get('Log')->info('Starting cronjob: ' . $cronClass);
+  $simtext = new $cronClass($entityManager);
+  $simtext->start();
+  $simtext->printBenchmark();
 }

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
  *  
@@ -18,19 +18,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'init.php';
-
 /**
- * This class represents an abstract class that initalizes any cron, each
- * cron should extend it.
+ * 
  */
-abstract class Cron_Base{
-  protected $em;
+class ParserTest extends PHPUnit_Framework_TestCase{
   
-  public function __construct() {
-    Zend_Registry::get('Log')->info('Starting cronjob ' . get_class());
-    $this->em = Zend_Registry::getInstance()->entitymanager;
+  private $object;
+  
+  public function setUp(){
+    $entityManager = Zend_Registry::getInstance()->entitymanager;
+    $this->object = new Unplagged_Cron_Document_Parser($entityManager);
   }
   
-  abstract public function start();
+  public function testStart(){
+    $result = $this->object->start();
+    
+    //$this->assertTrue($result);
+  }
+  
+  public function testRunTimeIsInitiallyZero(){
+    $this->assertEquals(0, $this->object->getRunTime());
+  }
+  
+  public function testMemoryIsInitiallyZero(){
+    $this->assertEquals(0, $this->object->getUsedMemory());
+  }
+  
+  public function testBenchmarkIsPrinted(){
+    $this->expectOutputRegex('/Time/');
+    $this->object->printBenchmark();
+  }
 }

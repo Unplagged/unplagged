@@ -19,28 +19,32 @@
  */
 
 /**
- *
+ * 
  */
-class TemplateParser {
+class BaseTest extends PHPUnit_Framework_TestCase {
 
-  private $templateDirectory;
-
-  public function __construct($templateDirectory) {
-    $this->templateDirectory = $templateDirectory;
+  private $object;
+  
+  public function setUp() {
+    $stub = $this->getMockForAbstractClass('Application_Model_Base');
+    $stub->expects($this->any())
+            ->method('getDirectLink')
+            ->will($this->returnValue(TRUE));
+    $stub->expects($this->any())
+            ->method('getDirectName')
+            ->will($this->returnValue(TRUE));
+    $this->object = $stub;
   }
-
-  public function parse($template, $data) {
-    $response = $template;
-    if (!empty($data) || is_array($data)) {
-      foreach ($data as $key => $value) {
-        $response = str_replace('{$' . $key . '}', $value, $response);
-      }
-    }
-    return $response;
+  
+  public function testStateCanBeState(){
+    $state = new Application_Model_State();
+    $this->object->setState($state);
+    
+    $this->assertEquals($state, $this->object->getState());
   }
-
-  public function parseFile($filename, $data) {
-    return $this->parse(file_get_contents($this->templateDirectory . $filename), $data);
+  
+  public function testGetIconClass(){
+    $this->assertEquals('', $this->object->getIconClass());
   }
 
 }

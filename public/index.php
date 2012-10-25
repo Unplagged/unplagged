@@ -1,61 +1,34 @@
 <?php
+
 /**
- * This file is the main entry point into the Unplagged application.
+ * Unplagged - The plagiarism detection cockpit.
+ * Copyright (C) 2012 Unplagged
+ *  
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * It defines some environment variables and initiates the bootstrapping process.
+ *
+ * This file is the main entry point into the Unplagged application. It defines 
+ * the environment variables and initiates the bootstrapping process.
  */
-
-/**
- * @const BASE_PATH The path to the application directory.
- */
-defined('BASE_PATH')
-    || define('BASE_PATH', realpath(dirname(__FILE__) . '/../'));
-
-/**
- * @const APPLICATION_PATH The path to the application directory.
- */
-defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'application');
-
-
-/**
- * @const TEMP_PATH The path to the directory where temporary data should be stored.
- */
-defined('TEMP_PATH')
-    || define('TEMP_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'temp');
-
-/**
- * @const APPLICATION_ENV The application environment, from which the config values are taken. Defaults to the most 
- * secure environment 'production', but only if nothing has been set before, e. g. by defininig it in the vhost.conf or 
- * some similar meachanism.
- */
-defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
-
-
+require_once '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 require_once BASE_PATH . '/scripts/build/Installer/Installer.php';
 
 $installer = new Installer();
+
 if($installer->isInstalled()){
-  // Ensure library folder is on the include_path
-  set_include_path(implode(PATH_SEPARATOR, array(
-      realpath(APPLICATION_PATH . '/../library'),
-      get_include_path(),
-  )));
-  
-  require_once 'Zend/Application.php';
-  
-  //Create application, bootstrap, and run
-  $application = new Zend_Application(APPLICATION_ENV, array(
-    'config'=>array(
-      APPLICATION_PATH . '/configs/application.ini',
-      APPLICATION_PATH . '/configs/log.ini',
-      APPLICATION_PATH . '/configs/routes.ini',
-      APPLICATION_PATH . '/configs/unplagged-config.ini'
-    )
-  ));
-  $application->bootstrap();
+  $application = bootstrapApplication();
   $application->run();
-} else {
+}else{
   $installer->install();
 }

@@ -54,7 +54,8 @@ class Unplagged_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface{
 
   private $entityManager;
 
-  public function __construct($em = null, $authEntityName = null, $authIdentityField = null, $authCredentialField = null, $identity = null, $credential = null){
+  public function __construct(\Doctrine\ORM\EntityManager $em = null, $authEntityName = null, $authIdentityField = null, 
+          $authCredentialField = null, $identity = null, $credential = null){
     $this->authEntityName = $authEntityName;
     $this->authIdentityField = $authIdentityField;
     $this->authCredentialField = $authCredentialField;
@@ -75,7 +76,7 @@ class Unplagged_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface{
     if($authEntity !== null){
       $passwordHash = $authEntity->getPassword();
 
-      if($authEntity !== null && Unplagged_Helper::checkStringAndHash($this->credential, $passwordHash)){
+      if(Unplagged_Helper::checkStringAndHash($this->credential, $passwordHash)){
         return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $authEntity);
       }
     }
@@ -84,4 +85,3 @@ class Unplagged_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface{
   }
 
 }
-?>

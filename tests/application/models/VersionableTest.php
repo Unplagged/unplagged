@@ -19,28 +19,26 @@
  */
 
 /**
- *
+ * 
  */
-class TemplateParser {
-
-  private $templateDirectory;
-
-  public function __construct($templateDirectory) {
-    $this->templateDirectory = $templateDirectory;
+class VersionableTest extends PHPUnit_Framework_TestCase {
+  
+  private $object;
+  
+  public function setUp() {
+    $stub = $this->getMockForAbstractClass('Application_Model_Versionable');
+    $stub->expects($this->any())
+            ->method('toVersionArray')
+            ->will($this->returnValue(TRUE));
+    $this->object = $stub;
   }
-
-  public function parse($template, $data) {
-    $response = $template;
-    if (!empty($data) || is_array($data)) {
-      foreach ($data as $key => $value) {
-        $response = str_replace('{$' . $key . '}', $value, $response);
-      }
-    }
-    return $response;
+  
+  public function testVersionIsChangeable(){
+    $this->object->setVersion(1.0);
+    $this->assertEquals(2.0, $this->object->getCurrentVersion());
   }
-
-  public function parseFile($filename, $data) {
-    return $this->parse(file_get_contents($this->templateDirectory . $filename), $data);
+  
+  public function testGetAuditLog(){
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->object->getAuditLog());
   }
-
 }

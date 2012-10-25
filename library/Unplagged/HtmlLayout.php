@@ -83,5 +83,3 @@ class Unplagged_HtmlLayout {
     }
 
 }
-
-?>

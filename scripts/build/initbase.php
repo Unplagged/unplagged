@@ -18,41 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$arguments = getopt("e:");
-
-/**
- * @todo could it lead to problems to have development as default? Can't think of anything
- * right now, but 'production' would feel more secure as a default even though it would be
- * inconvenient 
- */
-//set only as development environment, when no parameter is present
-defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (isset($arguments["e"]) ? $arguments["e"] : 'production'));
-
-defined('BASE_PATH')
-    || define('BASE_PATH', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR));
-
-defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'application'));
-
-set_include_path(implode(PATH_SEPARATOR, array(
-      realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'library'),
-      get_include_path(),
-    )));
-
-require_once ('Zend/Application.php');
+require_once '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 
 // Create application, bootstrap, and run
-$application = new Zend_Application(APPLICATION_ENV, array(
-    'config'=>array(
-      APPLICATION_PATH . '/configs/application.ini',
-      APPLICATION_PATH . '/configs/log.ini',
-      APPLICATION_PATH . '/configs/routes.ini',
-      APPLICATION_PATH . '/configs/unplagged-config.ini'
-    )
-  ));
+$application = bootstrapApplication();
 
 //make sure doctrine was initialized, so we can get access to the db via the entity manager
 $application->getBootstrap()->bootstrap('doctrine');
 $em = $application->getBootstrap()->getResource('doctrine');
-?>
