@@ -10,6 +10,28 @@
             <action>index</action>
             <route>default</route>
             <order>-100</order>
+            <pages>
+                <login>
+                    <label>Login</label>
+                    <title>Login</title>
+                    <module>default</module>
+                    <controller>auth</controller>
+                    <action>login</action>
+                    <route>default</route>
+                    <resource>auth_login</resource>
+                    <visible>0</visible>
+                </login>
+                <imprint>
+                    <label>Imprint</label>
+                    <title>Imprint</title>
+                    <module>default</module>
+                    <controller>index</controller>
+                    <action>imprint</action>
+                    <route>default</route>
+                    <resource>index_imprint</resource>
+                    <visible>0</visible>
+                </imprint>
+            </pages>
         </home>
         <activity>
             <label>Activity</label>

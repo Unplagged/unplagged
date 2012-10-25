@@ -32,3 +32,5 @@ docs/Developers Manual/biblio.bib
 !/data/
 /data/logs/application.log
 /data/logs/untranslated.log
+
+.sass-cache
