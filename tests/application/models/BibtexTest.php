@@ -18,13 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once '../application/models/Base.php';
+require_once '../application/models/BibTex.php';
+
 /**
  * Description of BibtexTest
  */
 class BibtexTest extends PHPUnit_Framework_TestCase {
   private $object;
   
-  public function setUp(){
+  public function setUp(){ 
     $this->object = new Application_Model_BibTex(array());
   }
   

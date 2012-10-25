@@ -349,7 +349,7 @@ class CaseController extends Unplagged_Controller_Action {
 
       $caseDefaultRole = clone $templateRole;
       $caseDefaultRole->setId(null);
-      $caseDefaultRole->setRoleId($caseDefaultRole->getRoleId() . ' - ' . $case->getId());
+      $caseDefaultRole->setRoleId($caseDefaultRole->getRoleId() . ' - ' . $case->getAlias() . ' (' . $case->getId() . ')');
       $caseDefaultRole->setType('case');
 
       $this->_em->persist($caseDefaultRole);

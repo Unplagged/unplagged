@@ -348,7 +348,7 @@ $(document).ready(function(){
     
     cb.attr('checked', !cb.is(':checked'));
     
-    if(cb.hasClass('inherited')){
+    if(cb.hasClass('inherited') && !cb.hasClass('disabled')){
       if($(this).hasClass('btn-primary')) {
         $(this).removeClass('btn-primary');
       } else {
@@ -647,4 +647,5 @@ $(document).ready(function(){
     $('#parseFile #file-id').val($(this).attr('data-id'));
   });
   
+  $('a[rel=tooltip]').tooltip();
 });

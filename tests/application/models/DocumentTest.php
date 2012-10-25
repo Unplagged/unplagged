@@ -3,6 +3,9 @@
  * File for class {@link DocumentTest}.
  */
 
+require_once '../application/models/Base.php';
+require_once '../application/models/Document.php';
+
 /**
  *
  * @author Dominik Horb <dominik.horb@googlemail.com>

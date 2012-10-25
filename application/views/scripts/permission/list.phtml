@@ -1,15 +1,16 @@
+
 <table cellpadding="0" cellspacing="0" class="default">
   <thead>
     <tr>
-      <th style="width: 85%;"><?php echo $this->translate("User Roles"); ?></th>
+      <th style="width: 85%;"><a href="#" rel="tooltip" title="<?php echo $this->translate("The permissions a new user of that type get's after registration."); ?>"><?php echo $this->translate("User Role Templates"); ?></a></th>
       <th><?php echo $this->translate("Actions"); ?></th>
     </tr>
   </thead>
   <tbody>
-    <?php if(count($this->userRoles)): ?>
-      <?php foreach($this->userRoles as $role): ?>
+    <?php if(count($this->systemRoles)): ?>
+      <?php foreach($this->systemRoles as $role): ?>
         <tr>
-          <td data-label="<?php echo $this->translate("User role"); ?>"><?php echo $role->getRoleId(); ?></td>
+          <td data-label="<?php echo $this->translate("User Role Templates"); ?>"><?php echo $role->getRoleId(); ?></td>
           <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn"><?php echo $this->translate("Edit"); ?></a></td>
         </tr>
       <?php endforeach; ?>
@@ -24,7 +25,30 @@
 <table cellpadding="0" cellspacing="0" class="default">
   <thead>
     <tr>
-      <th style="width: 85%;"><?php echo $this->translate("Case Roles"); ?></th>
+      <th style="width: 85%;"><a href="#" rel="tooltip" title="<?php echo $this->translate("User roles define permissions a unique user has independent of a case."); ?>"><?php echo $this->translate("User Roles"); ?></a></th>
+      <th><?php echo $this->translate("Actions"); ?></th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if(count($this->userRoles)): ?>
+      <?php foreach($this->userRoles as $role): ?>
+        <tr>
+          <td data-label="<?php echo $this->translate("User role"); ?>"><?php echo $role->getUser()->getUsername(); ?></td>
+          <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn"><?php echo $this->translate("Edit"); ?></a></td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr>
+        <td colspan="4" class="no-label"><?php echo $this->translate("No roles found."); ?></td>
+      </tr>
+    <?php endif; ?>
+  </tbody>
+</table>
+
+<table cellpadding="0" cellspacing="0" class="default">
+  <thead>
+    <tr>
+      <th style="width: 85%;"><a href="#" rel="tooltip" title="<?php echo $this->translate("Case role templates define all role types being used in a new case, a copy of them is created when a new case is created."); ?>"><?php echo $this->translate("Case Role Templates"); ?></a></th>
       <th><?php echo $this->translate("Actions"); ?></th>
     </tr>
   </thead>
@@ -47,7 +71,7 @@
 <table cellpadding="0" cellspacing="0" class="default">
   <thead>
     <tr>
-      <th style="width: 85%;"><?php echo $this->translate("Case Inherited Roles"); ?></th>
+      <th style="width: 85%;"><a href="#" rel="tooltip" title="<?php echo $this->translate("Case Roles define the permissions for different user types in a specific case."); ?>"><?php echo $this->translate("Case Roles"); ?></a></th>
       <th><?php echo $this->translate("Actions"); ?></th>
     </tr>
   </thead>
@@ -56,29 +80,6 @@
       <?php foreach($this->caseInheritedRoles as $role): ?>
         <tr>
           <td data-label="<?php echo $this->translate("Case Role"); ?>"><?php echo $role->getRoleId(); ?></td>
-          <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn"><?php echo $this->translate("Edit"); ?></a></td>
-        </tr>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <tr>
-        <td colspan="4" class="no-label"><?php echo $this->translate("No roles found."); ?></td>
-      </tr>
-    <?php endif; ?>
-  </tbody>
-</table>
-
-<table cellpadding="0" cellspacing="0" class="default">
-  <thead>
-    <tr>
-      <th style="width: 85%;"><?php echo $this->translate("System Roles"); ?></th>
-      <th><?php echo $this->translate("Actions"); ?></th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php if(count($this->systemRoles)): ?>
-      <?php foreach($this->systemRoles as $role): ?>
-        <tr>
-          <td data-label="<?php echo $this->translate("System Role"); ?>"><?php echo $role->getRoleId(); ?></td>
           <td data-label="<?php echo $this->translate("Actions"); ?>"><a href="/permission/edit-role/id/<?php echo $role->getId(); ?>" class="btn"><?php echo $this->translate("Edit"); ?></a></td>
         </tr>
       <?php endforeach; ?>

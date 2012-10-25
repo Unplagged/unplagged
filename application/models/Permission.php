@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use \Doctrine\Common\Collections\ArrayCollection;
+
 /**
  *
  * @Entity
@@ -61,7 +63,7 @@ abstract class Application_Model_Permission implements Zend_Acl_Resource_Interfa
     $this->type = $type;
     $this->base = $base;
     $this->action = $action;
-    $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->roles = new ArrayCollection();
   }
 
   

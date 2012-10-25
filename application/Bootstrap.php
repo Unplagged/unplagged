@@ -358,7 +358,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
                 'visible'=>false,
                 'resource'=>'case_create'
               )
-            ),
+            )
           ),
           array(
             'label'=>'Roles',
@@ -377,62 +377,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
                 'action'=>'edit-role',
                 'visible'=>false,
                 'resource'=>'permission_edit-role'
-              )
-            ),
-          ),
-          array(
-            'label'=>'States',
-            'title'=>'States',
-            'module'=>'default',
-            'controller'=>'setting',
-            'route'=>'default',
-            'action'=>'list-states',
-            'pages'=>array(
-              array(
-                'label'=>'Edit State',
-                'title'=>'Edit State',
-                'module'=>'default',
-                'controller'=>'setting',
-                'action'=>'edit-state',
-                'visible'=>false,
-                'resource'=>'setting_edit-state'
-              ),
-              array(
-                'label'=>'Create State',
-                'title'=>'Create State',
-                'module'=>'default',
-                'controller'=>'setting',
-                'action'=>'create-state',
-                'visible'=>false,
-                'resource'=>'setting_create-state'
-              )
-            ),
-          ),
-          array(
-            'label'=>'Actions',
-            'title'=>'Actions',
-            'module'=>'default',
-            'controller'=>'setting',
-            'route'=>'default',
-            'action'=>'list-actions',
-            'pages'=>array(
-              array(
-                'label'=>'Edit Action',
-                'title'=>'Edit Action',
-                'module'=>'default',
-                'controller'=>'setting',
-                'action'=>'edit-action',
-                'visible'=>false,
-                'resource'=>'setting_edit-action'
-              ),
-              array(
-                'label'=>'Create Action',
-                'title'=>'Create Action',
-                'module'=>'default',
-                'controller'=>'setting',
-                'action'=>'create-action',
-                'visible'=>false,
-                'resource'=>'setting_create-action'
               )
             )
           )
