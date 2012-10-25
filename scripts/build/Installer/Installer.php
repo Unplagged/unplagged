@@ -17,16 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-defined('BASE_PATH')
-        || define('BASE_PATH', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR));
 
-defined('INSTALLATION_PATH')
-        || define('INSTALLATION_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'build' . DIRECTORY_SEPARATOR . 'Installer' . DIRECTORY_SEPARATOR);
+defined('INSTALLER_PATH')
+        || define('INSTALLER_PATH', BUILD_PATH . DIRECTORY_SEPARATOR . 'Installer');
 
-require_once INSTALLATION_PATH . 'TemplateParser.php';
-require_once(BASE_PATH . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'Doctrine' . DIRECTORY_SEPARATOR . 'Common' . DIRECTORY_SEPARATOR . 'ClassLoader.php');
+require_once INSTALLER_PATH . DIRECTORY_SEPARATOR . 'TemplateParser.php';
+require_once(LIBRARY_PATH . DIRECTORY_SEPARATOR . 'Doctrine' . DIRECTORY_SEPARATOR . 'Common' . DIRECTORY_SEPARATOR . 'ClassLoader.php');
 
 use \Doctrine\Common\ClassLoader;
+
+
 
 /**
  * Installs all necessary components of the Unplagged application.
@@ -44,8 +44,6 @@ class Installer {
   public function __construct($configFilePath = '', $setupType = 'gui') {
     $this->configFilePath = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . 'unplagged-config.ini';
     $this->setupType = $setupType;
-
-    define('UNP_EOL', $this->setupType == 'gui' ? '<br />' . PHP_EOL : PHP_EOL);
 
     $this->writeableDirectories = array(
         'data',
@@ -89,7 +87,7 @@ class Installer {
     } else {
       // 1) validate all input fields
       $data = filter_input_array(INPUT_POST);
-      error_reporting(E_ALL);
+
       // 1) check write permissions on directories.
       $done = $this->checkWritePermissions();
       if (!$done) {
@@ -136,7 +134,7 @@ class Installer {
   }
 
   private function renderStartPage() {
-    $parser = new TemplateParser(INSTALLATION_PATH . 'tpl' . DIRECTORY_SEPARATOR);
+    $parser = new TemplateParser(INSTALLER_PATH . DIRECTORY_SEPARATOR . 'tpl' . DIRECTORY_SEPARATOR);
     $data = array('welcome.title' => 'Installation wizard');
     echo $parser->parseFile('header.tpl', $data);
     echo $parser->parseFile('install.tpl', null);
@@ -233,13 +231,13 @@ class Installer {
    * Checks if the database conncetion can be established with the given parameters.
    */
   private function checkDatabaseParams($data) {
-    $classLoader = new ClassLoader('Doctrine', BASE_PATH . DIRECTORY_SEPARATOR . 'library');
+    $classLoader = new ClassLoader('Doctrine', LIBRARY_PATH);
     $classLoader->register();
 
     $config = new \Doctrine\ORM\Configuration();
-    $driverImpl = $config->newDefaultAnnotationDriver(INSTALLATION_PATH);
+    $driverImpl = $config->newDefaultAnnotationDriver(INSTALLER_PATH);
     $config->setMetadataDriverImpl($driverImpl);
-    $config->setProxyDir(INSTALLATION_PATH);
+    $config->setProxyDir(INSTALLER_PATH);
     $config->setProxyNamespace('Proxies');
 
     $this->response['steps'][] = array('type' => 'status', 'message' => 'Checking database connection params...');
@@ -277,14 +275,14 @@ class Installer {
         , 'default.senderName' => $data['defaultSender']
         , 'default.senderMail' => $data['defaultEmail']
         , 'imprint.address' => $data['imprintAddress']
-        , 'imprint.telephone' => $data['imprintTelephone']
+        , 'imprint.telephone' => $data['imprintPhone']
         , 'imprint.email' => $data['imprintEmail']
         , 'parser.tesseractPath' => $data['tesseractPath']
         , 'parser.imagemagickPath' => $data['imagemagickPath']
         , 'parser.ghostscriptPath' => $data['ghostscriptPath']
     );
 
-    $parser = new TemplateParser(INSTALLATION_PATH);
+    $parser = new TemplateParser(INSTALLER_PATH);
     $response = $parser->parseFile('unplagged-config-sample.ini', $params);
 
     $this->response['steps'][] = array('type' => 'success', 'message' => 'Config file created successfully.');
@@ -343,9 +341,9 @@ class Installer {
    * Initializes the database.
    */
   private function initDatabase() {
-    require_once(INSTALLATION_PATH . '..' . DIRECTORY_SEPARATOR . 'doctrine.php');
-    require_once(INSTALLATION_PATH . '..' . DIRECTORY_SEPARATOR . 'initdb.php');
-    require_once(INSTALLATION_PATH . '..' . DIRECTORY_SEPARATOR . 'initpermissions.php');
+    require_once(BUILD_PATH . DIRECTORY_SEPARATOR . 'doctrine.php');
+    require_once(BUILD_PATH . DIRECTORY_SEPARATOR . 'initdb.php');
+    require_once(BUILD_PATH . DIRECTORY_SEPARATOR . 'initpermissions.php');
   }
 
   /**
@@ -357,7 +355,7 @@ class Installer {
   private function createAdmin($formData) {
     $this->response['steps'][] = array('type' => 'status', 'message' => 'Creating admin user...');
 
-    require INSTALLATION_PATH . '..' . DIRECTORY_SEPARATOR . 'initbase.php';
+    require BUILD_PATH . DIRECTORY_SEPARATOR . 'initbase.php';
 
     $data = array();
     $data['username'] = $formData['adminUsername'];
