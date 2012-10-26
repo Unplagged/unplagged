@@ -21,52 +21,55 @@
 /**
  *
  */
-class Application_Form_Permission_EditRole extends Zend_Form{
+class Application_Form_Permission_EditRole extends Zend_Form {
 
-  private $permissions;
+    private $permissions;
 
-  public function init(){
-    $this->setMethod('post');
-    foreach($this->permissions as $permissionKey=>$permissionType){
-      foreach($permissionType as $groupLabel=>$permissionGroup){
-        $elements = array();
+    public function init() {
+        $this->setMethod('post');
 
-        foreach($permissionGroup as $permissionName=>$permissionData){
-          $cbId = 'permission_' . $permissionData['id'];
-          
-           if($permissionData['inherited'] === true){
-             $cbId .= 'inherited';
-           }
-          $checkboxElement = new Zend_Form_Element_Checkbox($cbId, array('belongsTo'=>$permissionKey . '_' .$groupLabel));
-          $checkboxElement->setLabel($permissionName);
+        $displayGroups = array();
 
-          $class = 'btn btn-checkbox';
-          if($permissionData['allowed'] === true){
-            $class .= ' active';
-            $checkboxElement->setChecked(true);
-          }
-          if($permissionData['inherited'] === true){
-            $class .= ' btn-primary disabled';
-            $checkboxElement->setAttrib('disabled', 'disabled');
-          }
-          $checkboxElement->setOptions(array('class'=>$class));
-          $elements[] = $checkboxElement;
-          
-          $this->addElement($checkboxElement);
+        foreach ($this->permissions as $permissionType => $permissionTypePermission) {
+            foreach ($permissionTypePermission as $permissionId => $permissionData) {
+                $checkboxElement = new Zend_Form_Element_Checkbox('p' . $permissionId, array('belongsTo' => 'permission'));
+                $checkboxElement->setLabel($permissionData['action']);
+                $class = 'btn btn-checkbox';
+                if ($permissionData['inherited'] === true) {
+                    $class .= ' inherited';
+                }
+                if ($permissionData['allowed'] === true) {
+                    $class .= ' active';
+                    $checkboxElement->setChecked(true);
+                }
+                if ($permissionData['inherited'] === true) {
+                    $class .= ' btn-primary disabled';
+                    $checkboxElement->setAttrib('disabled', 'disabled');
+                }
+                $checkboxElement->setOptions(array('class' => $class));
+
+                $displayGroups[$permissionType . '_' . $permissionData['type']]['elements'][] = $checkboxElement;
+                $displayGroups[$permissionType . '_' . $permissionData['type']]['label'] = $permissionData['type'];
+
+                $this->addElement($checkboxElement);
+            }
         }
-        $this->addDisplayGroup($elements, $permissionKey . '_' .$groupLabel, array('legend'=>$groupLabel));
-      }
+
+        foreach ($displayGroups as $groupId => $data) {
+            $this->addDisplayGroup($data['elements'], $groupId, array('legend' => $data['label']));
+        }
+
+        $submitElement = new Zend_Form_Element_Submit('submit');
+        $submitElement->setLabel('Save role');
+        $submitElement->setOptions(array('class' => 'btn btn-primary'));
+
+        $this->addElements(array($submitElement));
     }
-    $submitElement = new Zend_Form_Element_Submit('submit');
-    $submitElement->setLabel('Save role');
-    $submitElement->setOptions(array('class'=>'btn btn-primary'));
 
-    $this->addElements(array($submitElement));
-  }
-
-  public function setPermissions($permissions){
-    $this->permissions = $permissions;
-  }
+    public function setPermissions($permissions) {
+        $this->permissions = $permissions;
+    }
 
 }
+
 ?>

@@ -1,30 +1,25 @@
-<!doctype html>
-<!--[if lte IE 7]> <html class="no-js ie7 oldie"> <![endif]-->
-<!--[if IE 8]> <html class="no-js ie8 oldie"> <![endif]-->
-<!--[if IE 9]> <html class="no-js ie9"> <![endif]-->
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <!-- Design based on http://www.premiumpixels.com/ -->
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Unplagged - Willkommen bei Unplagged.</title>    
-        <link href="/style/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" >
-        <link href="/style/install.css" media="screen" rel="stylesheet" type="text/css" >    
-        <!-- Modernizr needs to stay in the head to work properly -->
-        <script src="/js/libs/jquery-1.7.2.min.js"></script>
-        <script src="/js/libs/bootstrap.min.js"></script>
-        <script src="/js/libs/jqBootstrapValidation.js"></script>
-        <script src="/js/install.js"></script>
-        <script src="/js/libs/modernizr-2.5.3.min.js"></script>
-    </head>
-    <body>
-
-        <div style="width: 80%; max-width: 800px; margin: 20px auto 10px auto;" class="well">
-            <img src="/images/logo-blue.png" />
-
-            <legend >{$welcome.title}</legend>
-            <div class="progress" style="margin-bottom: 0">
-                <div class="bar" style="width: 20%;"></div>
-            </div>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Unplagged Installation Wizard.</title>    
+    <link href="/style/install.css" rel="stylesheet" >    
+    <!-- Modernizr needs to stay in the head to work properly -->
+    <script src="/js/libs/modernizr-2.5.3.min.js"></script>
+</head>
+<body>
+    <div class="well">
+        <h1><img class="logo" src="/images/logo-blue.png" /> {$welcome.title}</h1>
+        
+<div class="wizard-steps" id="navigation">
+    <a class="current" id="tab-btn-1" data-tab-id="1" href="#"><span class="badge">1</span> General</a>
+    <a id="tab-btn-2" data-tab-id="2" href="#"><span class="badge">2</span> Database</a>
+    <a id="tab-btn-3" data-tab-id="3" href="#"><span class="badge">3</span> Dependencies</a>
+    <a id="tab-btn-4" data-tab-id="4" href="#"><span class="badge">4</span> Check</a>
+    <a id="tab-btn-5" data-tab-id="5" href="#"><span class="badge">5</span> Finish</a>
+</div>
         </div>
-        <div style="width: 80%; max-width: 800px; margin: 20px auto 10px auto;" class="well">

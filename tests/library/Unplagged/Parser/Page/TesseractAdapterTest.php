@@ -3,6 +3,8 @@
  * File for class {@link TesseractAdapterTest}.
  */
 
+require_once '../library/Unplagged/Parser/Page/TesseractAdapter.php';
+
 /**
  *
  */

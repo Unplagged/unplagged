@@ -22,9 +22,10 @@
  * the environment variables and initiates the bootstrapping process.
  */
 require_once '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
-require_once BASE_PATH . '/scripts/build/Installer/Installer.php';
+require_once BUILD_PATH . DIRECTORY_SEPARATOR . 'Installer' . DIRECTORY_SEPARATOR . 'Installer.php';
 
 $installer = new Installer();
+
 
 if($installer->isInstalled()){
   $application = bootstrapApplication();

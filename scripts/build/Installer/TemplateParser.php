@@ -40,7 +40,10 @@ class TemplateParser {
   }
 
   public function parseFile($filename, $data) {
-    return $this->parse(file_get_contents($this->templateDirectory . $filename), $data);
+    return $this->parse(file_get_contents($this->templateDirectory . DIRECTORY_SEPARATOR . $filename), $data);
   }
 
+  private function setValueAttribute($default = ''){
+    
+  }
 }

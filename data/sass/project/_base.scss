@@ -1,1 +1,20 @@
-$variable: #f5f5f5;
+// colors -- DON'T use directly as described here: http://sachagreif.com/sass-color-variables/
+// for best matching color names see http://chir.ag/projects/name-that-color/
+$pictonBlue: #40C0E9;
+$alto: #ddd;
+$mineShaft: #333;
+$wildSand: #f5f5f5;
+
+// actual color assignments
+$mainBackgroundColor: $wildSand;
+$headerColor: $pictonBlue;
+$headingsColor: $mineShaft;
+$linkColor: $pictonBlue;
+$borderColor: $alto;
+$linkActiveColor: "";
+$mainTextColor: $mineShaft;
+
+/*
+ * Common default styles.
+ */
+

@@ -18,10 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
-
 // Create application, bootstrap, and run
-$application = bootstrapApplication();
+$application = createApplication();
 
 //make sure doctrine was initialized, so we can get access to the db via the entity manager
 $application->getBootstrap()->bootstrap('doctrine');

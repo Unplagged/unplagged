@@ -24,7 +24,7 @@
  * IMPORTANT: If you want set a different value for the APPLICATION_ENV constant, this
  * to happen before this file gets included.
  */
-
+error_reporting(E_ALL);
 /**
  * @const APPLICATION_ENV The application environment, from which the config values are taken. 
  */
@@ -57,6 +57,13 @@ defined('WEBROOT_PATH')
 defined('LIBRARY_PATH')
         || define('LIBRARY_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'library');
 
+/**
+ * @const BUILD_PATH The directory of all the build files.
+ */
+defined('BUILD_PATH')
+        || define('BUILD_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'build');
+
+
 // Ensure library folder is on the include_path
 set_include_path(implode(PATH_SEPARATOR, array(
             LIBRARY_PATH,
@@ -66,9 +73,10 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once 'Zend/Application.php';
 
 /**
- * Create application, bootstrap, and run.
+ * Create application, without bootstraping it, because we do not always want to bootstrap
+ * all steps.
  */
-function bootstrapApplication(){
+function createApplication(){
   $application=new Zend_Application(APPLICATION_ENV, array(
               'config'=>array(
                   APPLICATION_PATH . '/configs/application.ini',
@@ -77,6 +85,16 @@ function bootstrapApplication(){
                   APPLICATION_PATH . '/configs/unplagged-config.ini'
               )
           ));
-  $application->bootstrap();
   return $application;
+}
+
+/**
+ * Executes the whole bootstrap process.
+ * @return type
+ */
+function bootstrapApplication(){
+    $application = createApplication();
+    $application->bootstrap();
+    
+    return $application;
 }

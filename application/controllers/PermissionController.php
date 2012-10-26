@@ -59,99 +59,78 @@ class PermissionController extends Unplagged_Controller_Action {
         }
     }
 
-    private function initPermissionData($permissions, $role, $instanceType) {
+    /**
+     * Selects a list of all permissions and flags the ones the user has.
+     * 
+     * @param type $permissions
+     * @param type $role
+     * @param type $instanceType Whether it is a pagePermission or a modelPermission
+     * @return boolean
+     */
+    private function initPermissionData($allPermissions, $role, $instanceType) {
         $outputPermissions = array();
 
-        foreach ($permissions as $possiblePermission) {
-            if ($possiblePermission instanceof $instanceType) {
-                $permissionName = $possiblePermission->getAction();
-                $controllerName = $possiblePermission->getType();
-
-                $outputPermissions[$controllerName][$permissionName] = array('allowed' => false, 'inherited' => false, 'id' => $possiblePermission->getId());
-            }
-        }
-
-        //set all permissions that this role got as active and inherited
-        foreach ($role->getPermissions(true) as $allowedPermission) {
-
-            if ($allowedPermission instanceof $instanceType) {
-                if ($allowedPermission->getAction() === '*' && $allowedPermission->getType() === 'global') {
-                    foreach ($outputPermissions as $permissionGroupKey => $permissionGroup) {
-                        foreach ($permissionGroup as $outputPermissionKey => $outputPermission) {
-                            $outputPermissions[$permissionGroupKey][$outputPermissionKey]['allowed'] = true;
-                        }
-                    }
-                } else {
-                    $permissionGroupName = $allowedPermission->getType();
-
-                    if (isset($outputPermissions[$permissionGroupName])) {
-                        $permissionName = $allowedPermission->getAction();
-
-                        if (isset($outputPermissions[$permissionGroupName][$permissionName])) {
-                            $outputPermissions[$permissionGroupName][$permissionName]['allowed'] = true;
-                            $outputPermissions[$permissionGroupName][$permissionName]['inherited'] = true;
-                        }
-                    }
+        foreach ($allPermissions as $permission) {
+            if ($permission instanceof $instanceType) {
+                // the global flag can be set for user and global roles only, not allowed on case level
+                if(!in_array($role->getType(), array('user', 'global')) && $permission->getType() == 'global' && $permission->getAction() == '*') {
+                    continue;
                 }
+                
+                $outputPermissions[$permission->getId()] = array(
+                    'allowed' => false
+                    , 'inherited' => false
+                    , 'type' => $permission->getType()
+                    , 'action' => $permission->getAction());
             }
         }
 
-        //remove the inherited flag for every permission that this role got on it's own
-        foreach ($role->getBasicPermissions(true, true) as $basicPermission) {
-            if ($basicPermission instanceof $instanceType) {
-                if ($basicPermission->getAction() === '*' && $basicPermission->getType() === 'global') {
-                    foreach ($outputPermissions as $permissionGroupKey => $permissionGroup) {
-                        foreach ($permissionGroup as $outputPermissionKey => $outputPermission) {
-                            $outputPermissions[$permissionGroupKey][$outputPermissionKey]['inherited'] = false;
-                        }
-                    }
-                } else {
-                    $permissionGroupName = $basicPermission->getType();
-                    if (isset($outputPermissions[$permissionGroupName])) {
-                        $permissionName = $basicPermission->getAction();
-                        if (isset($outputPermissions[$permissionGroupName][$permissionName])) {
-
-                            $outputPermissions[$permissionGroupName][$permissionName]['inherited'] = false;
-                        }
-                    }
-                }
+        // set all permissions that this role got as active and inherited
+        foreach ($role->getInheritedPermissions() as $permission) {
+            if (isset($outputPermissions[$permission->getId()])) {
+                $outputPermissions[$permission->getId()]['inherited'] = true;
+                $outputPermissions[$permission->getId()]['allowed'] = true;
             }
         }
+
+        // set the inherited flag to false on the permissions the user has as basic ones
+        foreach ($role->getBasicPermissions() as $permission) {
+            if (isset($outputPermissions[$permission->getId()])) {
+                $outputPermissions[$permission->getId()]['inherited'] = false;
+                $outputPermissions[$permission->getId()]['allowed'] = true;
+            }
+        }
+
         return $outputPermissions;
     }
 
+    /**
+     * Saves the previousely selected permissions to the user role.
+     * 
+     * @param Application_Form_Permission_EditRole $editForm
+     * @param Application_Model_User_Role $role
+     * @return boolean
+     */
     private function handleEditData(Application_Form_Permission_EditRole $editForm, Application_Model_User_Role $role) {
         $formData = $this->_request->getPost();
+
         if ($editForm->isValid($formData)) {
+            foreach ($formData['permission'] as $permissionId => $value) {
+                $permissionId = substr($permissionId, 1);
 
-            foreach ($formData as $permissionGroup) {
-                if (is_array($permissionGroup)) {
-                    foreach ($permissionGroup as $permissionName => $value) {
-                        $permissionId = substr($permissionName, strrpos($permissionName, '_') + 1);
-
-                        $inherited = false;
-                        if (substr($permissionId, -9) == 'inherited') {
-                            $permissionId = substr($permissionId, -9);
-                            $inherited = true;
-                        }
-                        $permission = $this->_em->getRepository('Application_Model_Permission')->findOneById($permissionId);
-
-                        if ($permission) {
-                            // skip active inherited roles
-                            if ($inherited) {
-                                continue;
-                            }
-                            if ($value == '1') {
-                                $role->addPermission($permission);
-                            } else {
-                                $role->removePermission($permission);
-                            }
-                            $this->_em->persist($role);
-                        }
+                $permission = $this->_em->getRepository('Application_Model_Permission')->findOneById($permissionId);
+                if ($role->hasInheritedPermission($permission)) {
+                    continue;
+                } else {
+                    if ($value == '1') {
+                        $role->addPermission($permission);
+                    } else {
+                        $role->removePermission($permission);
                     }
                 }
             }
 
+            $this->_em->persist($role);
             $this->_em->flush();
 
             return true;

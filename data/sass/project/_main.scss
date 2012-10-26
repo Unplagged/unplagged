@@ -1,15 +1,11 @@
-/* ==|== primary styles =====================================================
-   Author: Unplagged
-   ========================================================================== */
-
 body { 
-  background-color: #f5f5f5;
-  color: #323232;
+  background-color: $mainBackgroundColor;
+  color: $mineShaft;
   min-width: 240px;
 }
 
 h2 {
-  color: #40c0e9;
+  color: $pictonBlue;
   margin: 0 0 10px 0;
   font-weight: 200;
   font-size: 17pt;
@@ -1996,10 +1992,7 @@ td .btn-group {
   }
 }
 
-
-
 #line_numbers {clear:both; float: left; text-align: right}
-
 
 @media (max-width:767px){body{padding-left:0;padding-right:0;}}
 

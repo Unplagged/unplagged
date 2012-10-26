@@ -172,62 +172,6 @@
                         </edit-role>
                     </pages>
                 </roles>
-                <states>
-                    <label>States</label>
-                    <title>States</title>
-                    <module>default</module>
-                    <controller>setting</controller>
-                    <route>default</route>
-                    <action>list-states</action>
-                    <pages>
-                        <edit-state>
-                            <label>Edit State</label>
-                            <title>Edit State</title>
-                            <module>default</module>
-                            <controller>setting</controller>
-                            <action>edit-state</action>
-                            <visible>0</visible>
-                            <resource>setting_edit-state</resource>
-                        </edit-state>
-                        <create-state>
-                            <label>Create State</label>
-                            <title>Create State</title>
-                            <module>default</module>
-                            <controller>setting</controller>
-                            <action>create-state</action>
-                            <visible>0</visible>
-                            <resource>setting_create-state</resource>
-                        </create-state>
-                    </pages>
-                </states>
-                <actions>
-                    <label>Actions</label>
-                    <title>Actions</title>
-                    <module>default</module>
-                    <controller>setting</controller>
-                    <route>default</route>
-                    <action>list-actions</action>
-                    <pages>
-                        <edit-action>
-                            <label>Edit Action</label>
-                            <title>Edit Action</title>
-                            <module>default</module>
-                            <controller>setting</controller>
-                            <action>edit-action</action>
-                            <visible>0</visible>
-                            <resource>setting_edit-action</resource>
-                        </edit-action>
-                        <create-action>
-                            <label>Create Action</label>
-                            <title>Create Action</title>
-                            <module>default</module>
-                            <controller>setting</controller>
-                            <action>create-action</action>
-                            <visible>0</visible>
-                            <resource>setting_create-action</resource>
-                        </create-action>
-                    </pages>
-                </actions>
             </pages>
         </admin>
     </nav>

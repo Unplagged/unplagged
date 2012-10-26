@@ -365,7 +365,7 @@ function recursiveDirectories($path, &$classesArr){
   $content = scandir($path);
   foreach($content as $directoryContent){
     if($directoryContent !== '..' && $directoryContent !== '.' && is_dir($path . DIRECTORY_SEPARATOR . $directoryContent)){
-      recursiveDirectories($path . DIRECTORY_SEPARATOR . $directoryContent, &$classesArr);
+      recursiveDirectories($path . DIRECTORY_SEPARATOR . $directoryContent, $classesArr);
     }else{
       $filePath = $path . DIRECTORY_SEPARATOR . $directoryContent;
       if(strstr($filePath, '.php')){

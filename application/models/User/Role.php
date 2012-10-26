@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * This class can be used to store a list of permissions to certain resources, which are identified by a simple string.
  * 
@@ -88,8 +90,8 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   protected $user;
 
   public function __construct($type = null){
-    $this->inheritedRoles = new \Doctrine\Common\Collections\ArrayCollection();
-    $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+    $this->inheritedRoles = new ArrayCollection();
+    $this->permissions = new ArrayCollection();
     if($type === null){
       $this->type = self::TYPE_USER;
     }else{
@@ -113,6 +115,25 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     $this->roleId = $roleId;
   }
 
+  public function getType(){
+    return $this->type;
+  }
+
+  public function getUser(){
+    return $this->user;
+  }
+
+  public function setId($id){
+    $this->id = $id;
+  }
+
+  public function setType($type){
+    $this->type = $type;
+  }
+  
+  
+  
+  
   public function getInheritedPermissions($global = false){
     $permissions = array();
 
@@ -128,18 +149,20 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
   }
 
   /**
-   * Returns all permissions of this Role including the inherited.
+   * Returns all permissions of this Role including the inherited ones.
    * 
-   * @return array
+   * @param bool $global Whether to check for the global permissions only (e.g. any page or any any case can be modified)
+   * 
+   * @return array All permissions the role does have
    */
   public function getPermissions($global = false){
     $inheritedPermissions = $this->getInheritedPermissions($global);
 
+    $permissions = array();
     if(!$global){
       $permissions = array_merge($inheritedPermissions, $this->permissions->toArray());
     }else{
       // we need only permissions with base null when global is true
-      $permissions = array();
       $this->permissions->filter(function($permission) use (&$permissions){
             if(null == $permission->getBase()){
               $permissions[] = $permission;
@@ -150,55 +173,16 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
 
       $permissions = array_merge($inheritedPermissions, $permissions);
     }
+    
     return $permissions;
   }
 
-  public function hasPermission(Application_Model_Permission $permission){
-    $user = Zend_Registry::getInstance()->user;
-    $case = $user->getCurrentCase();
-
-    //check if the resource related to this element is already removed.
-    if($permission->getBase() && $permission->getBase()->getState()->getName() == 'removed'){
-      return false;
-    }
-
-    // check the main user role on that right
-    if($this->getBasicPermissions(true)->contains($permission)){
-      return true;
-    }
-
-    if($case){
-      // when a role without a base was sent, we do not need to select it
-      if($permission->getBase()){
-        $condition = array(
-          'type'=>$permission->getType(),
-          'action'=>$permission->getAction());
-
-        $instanceType = ($permission instanceof Application_Model_PagePermission) ? 'Application_Model_PagePermission' : 'Application_Model_ModelPermission';
-        
-        $permissionAny = Zend_Registry::getInstance()->entitymanager->getRepository($instanceType)->findOneBy($condition);
-      }else{
-        $permissionAny = $permission;
-      }
-
-      // check the main user role on that right
-      if($this->getBasicPermissions(true)->contains($permissionAny)){
-        return true;
-      }
-
-      foreach($case->getDefaultRoles() as $caseRole){
-        if($this->getInheritedRoles()->contains($caseRole)){
-          if($caseRole->getBasicPermissions(true)->contains($permissionAny)){
-            return true;
-          }
-        }
-      }
-    }
-    return false;
-  }
-
+  
   /**
    * Returns only the explicitly set permissions for the current object.
+   * 
+   * @param bool $asCollection Whether the permissions should be returned as collection of objects or array.
+   * @param bool $global Whether to check for the global permissions only (e.g. any page or any any case can be modified)
    * 
    * @return array
    */
@@ -222,6 +206,64 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     }
     return $this->permissions->toArray();
   }
+  
+  public function hasInheritedPermission(Application_Model_Permission $permission) {
+      foreach($this->inheritedRoles as $role) {
+          if($role->hasPermission($permission)) {
+              return true;
+          }
+      }
+      
+      return false;
+  }
+  
+  
+  public function hasPermission(Application_Model_Permission $permission){
+    $user = Zend_Registry::getInstance()->user;
+    $case = $user->getCurrentCase();
+
+    // 1) check if the resource related to this element is already removed.
+    if($permission->getBase() && $permission->getBase()->getState()->getName() == 'removed'){
+      return false;
+    }
+
+    // 2) check the main user role on that specific permission
+    if($this->getBasicPermissions(true, false)->contains($permission)){
+      return true;
+    }
+    
+    // 3) check the main user role on the 'any permission' (e.g. access to read all files
+      if($permission->getBase()){
+        $condition = array(
+          'type'=>$permission->getType(),
+          'action'=>$permission->getAction());
+
+        $instanceType = ($permission instanceof Application_Model_PagePermission) ? 'Application_Model_PagePermission' : 'Application_Model_ModelPermission';
+        
+        $permissionAny = Zend_Registry::getInstance()->entitymanager->getRepository($instanceType)->findOneBy($condition);
+      }else{
+        $permissionAny = $permission;
+      }
+
+      // check the main user role on that right
+      if($this->getBasicPermissions(true, false)->contains($permissionAny)){
+        return true;
+      }
+    
+
+    
+    // when a case is selected, check if the user has a right in this case
+    if($case){
+      // check if the user has one of the case default roles as an inherited role and if this role has the permission
+      foreach($case->getDefaultRoles() as $caseRole){
+        if($this->getInheritedRoles()->contains($caseRole) && $caseRole->getBasicPermissions(true)->contains($permissionAny)){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
 
   public function addPermission(Application_Model_Permission $permission){
     if(!$this->permissions->contains($permission)){
@@ -256,20 +298,5 @@ class Application_Model_User_Role implements Zend_Acl_Role_Interface{
     return $this->inheritedRoles;
   }
 
-  public function getType(){
-    return $this->type;
-  }
-
-  public function getUser(){
-    return $this->user;
-  }
-
-  public function setId($id){
-    $this->id = $id;
-  }
-
-  public function setType($type){
-    $this->type = $type;
-  }
 
 }

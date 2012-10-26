@@ -18,6 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once '../application/models/Base.php';
+require_once '../application/models/Versionable.php';
+require_once '../application/models/Versionable/Version.php';
+require_once '../application/models/Document/Page.php';
+
+
 /**
  * 
  */

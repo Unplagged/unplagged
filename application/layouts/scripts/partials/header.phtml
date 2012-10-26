@@ -26,10 +26,10 @@
           <div class="user-box">
             <div class="avatar-box">
               <img class="avatar" src="<?php echo Unplagged_Helper::getAvatarPath($this->me); ?>" />
-              <a href="<?php echo $this->baseUrl('user/edit'); ?>" class="edit-link">Edit</a>
+              <a href="<?php echo $this->baseUrl('user/edit'); ?>" class="edit-link"><i class="icon-pencil icon-white"></i></a>
             </div>
             <div class="dropdown-button hoverable user-menu">
-              <a class="button" href="<?php echo $this->baseUrl('user/edit'); ?>"><?php echo $this->me->getUsername(); ?><span class="arrow-down"></span></a>
+              <a class="button" href="<?php echo $this->baseUrl('user/edit'); ?>"><i class="icon-user icon-white"></i> <?php echo $this->me->getUsername(); ?><span class="arrow-down"></span></a>
               <ul>
                 <li><a href="<?php echo $this->baseUrl('auth/logout'); ?>"><?php echo $this->translate("Logout"); ?></a></li>
                 <li><a href="<?php echo $this->baseUrl('user/edit'); ?>"><?php echo $this->translate("Edit Profile"); ?></a></li>

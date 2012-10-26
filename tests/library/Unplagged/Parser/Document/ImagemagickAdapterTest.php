@@ -4,6 +4,8 @@
  * File for class {@link ImagemagickAdapterTest}.
  */
 
+require_once '../library/Unplagged/Parser/Document/ImagemagickAdapter.php';
+
 /**
  *
  * @author Dominik Horb <dominik.horb@googlemail.com>

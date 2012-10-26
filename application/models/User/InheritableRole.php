@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use \Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * This class has nearly the same functionality as Application_Model_User_Role, it
  * just removes the ability to inherit roles in order to avoid infinite loops while
@@ -32,7 +34,7 @@
 class Application_Model_User_InheritableRole extends Application_Model_User_Role{
 
   public function getInheritedRoles(){
-    return new \Doctrine\Common\Collections\ArrayCollection();  
+    return new ArrayCollection();  
   }
   
   /**
