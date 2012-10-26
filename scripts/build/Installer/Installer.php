@@ -137,7 +137,7 @@ class Installer {
 
   private function renderStartPage() {
     $parser = new TemplateParser(INSTALLER_PATH . DIRECTORY_SEPARATOR . 'tpl' . DIRECTORY_SEPARATOR);
-    $data = array('welcome.title' => 'Installation Wizard');
+    $data = array('welcome.title' => 'Setup Wizard');
     echo $parser->parseFile('header.tpl', $data);
     echo $parser->parseFile('install.tpl', null);
     echo $parser->parseFile('footer.tpl', null);

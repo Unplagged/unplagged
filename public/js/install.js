@@ -1,14 +1,20 @@
 $(document).ready(function(){  
     
+  $('.alert .close').click(function(){
+    $(this).parent().slideUp();
+  }) 
+    
   // use plugin to validate all inputs like html5 would/should
   $("input,select,textarea").not("[type=submit]").jqBootstrapValidation({
     preventSubmit: true,
     submitError: function ($form, event, errors) {
+      $('.alert').slideDown();
       event.preventDefault();
     },
     submitSuccess: function ($form, event) {
+      $('.alert').slideUp();
       var nextTab = $form.find('button[type=submit]').attr('data-step-id');
-      switchToTab(nextTab);
+      switchToStep(nextTab);
 
       event.preventDefault();
     }
@@ -16,43 +22,44 @@ $(document).ready(function(){
   
   
   $('#navigation a').click(function(){
-    if(!$(this).parent().hasClass('disabled')){
-      var activeTab = $('#navigation li.active a').attr('data-tab-id');
-      var form = $('#step' + activeTab + ' form');
+    if(!$(this).hasClass('disabled')){
+      var form = $('.tab-pane.active form');
       var submitBtn = form.find('button[type=submit]');
 
       if(submitBtn.length == 1) {
         var nextStep = submitBtn.attr('data-step-id');
-        submitBtn.attr('data-step-id', $(this).attr('data-tab-id'));
-        form.submit();
-        submitBtn.attr('data-step-id', nextStep);
+        console.log(form.index());
+        console.log(nextStep);
+        if(nextStep-1 < form.index()){
+          switchToStep($(this).attr('data-tab-id'));
+        } else {
+          submitBtn.attr('data-step-id', $(this).attr('data-tab-id'));
+          form.submit();
+          submitBtn.attr('data-step-id', nextStep);
+        }
       } else {
-        switchToTab($(this).attr('data-tab-id'));
+        switchToStep($(this).attr('data-tab-id'));
       }
     }
     return false;
   });
     
-  function switchToTab(tabId) {
-    $('.progress').removeClass('progress-success, progress-danger');
-        
-    // before switching, validate the current page first        
+  function switchToStep(stepNumber) {         
     $('.tab-pane').removeClass('active');
-    $('#navigation li').removeClass('active');
             
-    $('#tab-btn-' + tabId).parent()
-      .removeClass('disabled')
-      .addClass('active');
-    $('#step' + tabId).addClass('active');
-        
-    if(tabId < $('.nav-pills').length) {
-      $('.progress .bar').width((tabId * 20) + '%');       
-    } else {        
+    // change color of all step navigation elements before the current
+    var navigationElements = $('#navigation a');
+    navigationElements.removeClass('current').addClass('disabled').slice(0, stepNumber).addClass('current');
+    navigationElements.slice(0, stepNumber + 1).removeClass('disabled');
+    $('.tab-content .tab-pane').eq(stepNumber-1).addClass('active');
+    
+    if(stepNumber == $('#navigation a').length){
       startInstallation();
     }
   }
     
   function startInstallation() {
+      console.log('hier');
     var checksConsole = $('#checks-console');
     var installationConsole = $('#installation-console');
     installationConsole.html('');
