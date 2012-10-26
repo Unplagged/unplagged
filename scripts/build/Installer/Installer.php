@@ -3,17 +3,17 @@
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
- *  
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,18 +30,18 @@ use \Doctrine\Common\ClassLoader;
 
 /**
  * Installs all necessary components of the Unplagged application.
- * 
+ *
  * @todo check max file upload size, php version, check for apc cache, create doctrine proxies, checkbox for develompent mode
  */
 class Installer {
 
   private $configFilePath = '';
-  private $writeableDirectories = array();
-  private $installationDirectories = array();
+  private $writeableDirectories = null;
+  private $installationDirectories = null;
   private $response = array();
 
-  public function __construct($configFilePath = '', $setupType = 'gui') {
-    $this->configFilePath = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . 'unplagged-config.ini';
+  public function __construct($configFilePath) {
+    $this->configFilePath = $configFilePath;
 
     $this->writeableDirectories = array(
         'data',
@@ -63,7 +63,7 @@ class Installer {
 
   /**
    * Checks all necessary indicators for whether the system is installed successfully.
-   * 
+   *
    * @return boolean
    */
   public function isInstalled() {
@@ -74,6 +74,12 @@ class Installer {
     return false;
   }
 
+  private function validateInputData(){
+    $data = filter_input_array(INPUT_POST);
+    
+    return $data;
+  }
+  
   /**
    * Executes all the steps required for installing unplagged.
    * @return type
@@ -82,53 +88,16 @@ class Installer {
     if (empty($_POST)) {
       $this->renderStartPage();
     } else {
-      // 1) validate all input fields
-      $data = filter_input_array(INPUT_POST);
+      $data = $this->validateInputData();
 
-      // 1) check write permissions on directories.
-      $done = $this->checkWritePermissions();
-      if (!$done) {
-        $this->parseResponse();
-        return;
-      }
-
-      die('hier');
-      // 2) check console scripts
-      $done = $this->checkConsoleCommands($data);
-      if (!$done) {
-        $this->parseResponse();
-        return;
-      }
-
-      // 3) validate db connection params
-      $done = $this->checkDatabaseParams($data);
-      if (!$done) {
-        $this->parseResponse();
-        return;
-      }
-
-      // 4) create config
-      $done = $this->createConfig($data);
-      if (!$done) {
-        $this->parseResponse();
-        return;
-      }
-
-      // 5) init directories
-      $done = $this->initDirectories();
-      if (!$done) {
-        $this->parseResponse();
-        return;
-      }
-
-      try{
-      // 6) init db and permissions
-      $this->initDatabase();
-
-      // 7) create admin user
-      $this->createAdmin($data);
-      } catch(Exception $e) {
-        var_dump($e);
+      $this->initDirectories();
+      $this->checkWritePermissions();
+      $this->checkConsoleCommands($data);
+      if($this->checkDatabaseParams($data)){
+        if($this->createConfig($data)){
+          $this->initDatabase();
+          $this->createAdmin($data);
+        }
       }
 
       $this->parseResponse();
@@ -157,13 +126,16 @@ class Installer {
     } else {
       $this->response['summary'] = array('type' => 'success', 'message' => 'Installation successful. Please reload the page and you are done.');
     }
-
+    //set correct json headers necessary for some browsers
+    header('Cache-Control: no-cache, must-revalidate');
+    header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+    header('Content-type: application/json');
     echo json_encode($this->response);
   }
 
   /**
    * Checks all the directories that need to be writeable.
-   * 
+   *
    * @return boolean Whether all permissions are as required or not.
    */
   private function checkWritePermissions() {
@@ -186,8 +158,6 @@ class Installer {
     if (!$success) {
       $this->response['steps'][] = array('type' => 'error', 'message' => 'Some directories are not writeable, please change the permissions on them and start again.');
     }
-
-    return $success;
   }
 
   /**
@@ -201,7 +171,7 @@ class Installer {
     $this->response['steps'][] = array('type' => 'status', 'message' => 'Checking availability of console commands...');
 
     $success = true;
-    
+
    // $tessractParser = new Unplagged_Parser_Page_TesseractAdapter(); @todo: make class loadable
     foreach ($scripts as $name => $call) {
       if (!empty($call)) {
@@ -225,12 +195,10 @@ class Installer {
         }
       }
     }
-
-    return $success;
   }
 
   /**
-   * Checks if the database conncetion can be established with the given parameters.
+   * Checks if the database connection can be established with the given parameters.
    */
   private function checkDatabaseParams($data) {
     $classLoader = new ClassLoader('Doctrine', LIBRARY_PATH);
@@ -242,7 +210,7 @@ class Installer {
     $config->setProxyDir(INSTALLER_PATH);
     $config->setProxyNamespace('Proxies');
 
-    $this->response['steps'][] = array('type' => 'status', 'message' => 'Checking database connection params...');
+    $this->response['steps'][] = array('type' => 'status', 'message' => 'Checking database connection...');
 
     $connectionOptions = array(
         'driver' => 'pdo_mysql',
@@ -287,21 +255,23 @@ class Installer {
     $parser = new TemplateParser(INSTALLER_PATH);
     $response = $parser->parseFile('unplagged-config-sample.ini', $params);
 
-    $this->response['steps'][] = array('type' => 'success', 'message' => 'Config file created successfully.');
-
-    return (bool) file_put_contents($this->configFilePath, $response);
+    $result = false;
+    $result = (bool) file_put_contents($this->configFilePath, $response);
+    if($result){
+      $this->response['steps'][] = array('type' => 'success', 'message' => 'Config file created successfully.');
+    }else {
+      $this->response['steps'][] = array('type' => 'error', 'message' => 'An error occured during the creation of the config file.');  
+    }
+    return $result;
   }
 
   /**
-   * Creates all necessary directories 
+   * Creates all necessary directories.
    */
   private function initDirectories() {
-    //add directories that need to be created here
-    //make sure to include them in the right order, so that dependencies occur beforehand
-    //i. e. /data -> /data/uploads
-
     $this->response['steps'][] = array('type' => 'status', 'message' => 'Creating directories...');
-
+    $error = false;
+    
     foreach ($this->installationDirectories as $directory) {
       $fullPath = BASE_PATH . DIRECTORY_SEPARATOR . $directory;
       if ($this->createDirectory($fullPath)) {
@@ -309,32 +279,35 @@ class Installer {
       } else {
         if (!is_dir($fullPath)) {
           $this->response['steps'][] = array('type' => 'error', 'message' => 'Creating directory ' . $fullPath);
+          $error = true;
         }
       }
     }
 
-    return true;
+    if(!$error){
+      $this->response['steps'][] = array('type' => 'success', 'message' => 'All necessary directories were successfully created.');
+    }
   }
 
   /**
    * Creates the given directory if it didn't exist and sets the Linux permissions to 777.
-   * 
+   *
    * @param string $directory The full path of the directory to create.
    * @return bool A boolean indicating whether the directory was created. False probably just means, that the directory
    * already existed, but could also mean that no write access was there.
-   * 
+   *
    * @todo check if 0777 is really necessary
    */
   private function createDirectory($directory) {
     if (!is_dir($directory)) {
       mkdir($directory);
 
-      chmod($directory, 0777);
+      @chmod($directory, 0777);
       return true;
     }
 
     //use chmod even if the directory already existed, to make sure the directory can be accessed later on
-    chmod($directory, 0777);
+    @chmod($directory, 0777);
 
     return false;
   }
@@ -350,7 +323,7 @@ class Installer {
 
   /**
    * Creates an admin user with all rights.
-   * 
+   *
    * @param type $formData
    * @return boolean
    */

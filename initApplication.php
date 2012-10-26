@@ -3,30 +3,30 @@
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
- *  
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * This file sets common constants and the include path. It also provides a method to 
+ *
+ *
+ * This file sets common constants and the include path. It also provides a method to
  * bootstrap the ZEND application.
- * 
+ *
  * IMPORTANT: If you want set a different value for the APPLICATION_ENV constant, this
  * to happen before this file gets included.
  */
-error_reporting(E_ALL);
+
 /**
- * @const APPLICATION_ENV The application environment, from which the config values are taken. 
+ * @const APPLICATION_ENV The application environment, from which the config values are taken.
  */
 defined('APPLICATION_ENV')
         || define('APPLICATION_ENV', 'production');
@@ -95,6 +95,6 @@ function createApplication(){
 function bootstrapApplication(){
     $application = createApplication();
     $application->bootstrap();
-    
+
     return $application;
 }

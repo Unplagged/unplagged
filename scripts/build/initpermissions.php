@@ -3,21 +3,21 @@
 /*
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
- *  
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
+ *
+ *
  * This file searches the controller directory for all actions and stores
  * them in the permissions table as $controller_$action.
  */
@@ -44,8 +44,8 @@ if(!$allowAll){
 
 $classesArr = array();
 
-//find all controllers and include them; we currently have no modules, 
-//if we have later on, this probably needs to be included into the 
+//find all controllers and include them; we currently have no modules,
+//if we have later on, this probably needs to be included into the
 //permission name
 foreach($front->getControllerDirectory() as $module=>$path){
   recursiveDirectories($path, $classesArr);
@@ -221,7 +221,7 @@ if(!$userRole){
     array('simtext', 'delete-report'),
     array('simtext', 'list-reports'),
     array('simtext', 'show-report'),
-    array('simtext', 'compare'),   
+    array('simtext', 'compare'),
     array('image', 'show'),
     array('tag', 'autocomplete'),
     array('index', 'imprint'),
@@ -307,7 +307,7 @@ if(!$caseAdmin){
   $caseAdmin->setRoleId('case-admin');
 
   foreach($modelPermissions as $modelPermission){
-    if($modelPermission->getType() != 'user') 
+    if($modelPermission->getType() != 'user')
       $caseAdmin->addPermission($modelPermission);
   }
 
@@ -321,7 +321,7 @@ if(!$caseCollaborator){
   $caseCollaborator->setRoleId('case-collaborator');
 
   foreach($modelPermissions as $modelPermission){
-    if($modelPermission->getType() != 'user') 
+    if($modelPermission->getType() != 'user')
       $caseCollaborator->addPermission($modelPermission);
   }
 
@@ -359,7 +359,7 @@ function get_php_classes($php_code){
 
 /**
  * Include all *Controller.php files from the given path and it's subdirectories.
- * @param string $path 
+ * @param string $path
  */
 function recursiveDirectories($path, &$classesArr){
   $content = scandir($path);

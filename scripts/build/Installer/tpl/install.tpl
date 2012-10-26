@@ -7,7 +7,7 @@
     <div class="tab-content">
         <div class="tab-pane active">
             <form class="form-horizontal" novalidate>
-              <p class="lead">Welcome plagiarism hunter! We are excited that you would like to install <a href="http://unplagged.com">Unplagged</a> on 
+              <p class="lead">Welcome plagiarism hunter! We are excited that you would like to install <a href="http://unplagged.com">Unplagged</a> on
                 your server.
                 This setup wizard will walk you through all necessary steps to make this happen.</p>
                 <legend>MySQL Connection</legend>
@@ -121,14 +121,14 @@
                     <button type="submit" class="btn btn-primary" data-step-id="3">Proceed</button>
                 </div>
             </form>
-            
+
         </div>
 
         <div class="tab-pane">
             <form class="form-horizontal" novalidate>
                 <legend>Script paths</legend>
-                <p><em>To use the whole feature set of Unplagged, it is recommended to install the command 
-                        line tools listed below on your server. If they are not registered with your PATH 
+                <p><em>To use the whole feature set of Unplagged, it is recommended to install the command
+                        line tools listed below on your server. If they are not registered with your PATH
                         enironment variable, please provide the full server path here.</em></p>
                 <div class="control-group">
                     <label class="control-label" for="inputTesseract">Tesseract</label>
@@ -153,18 +153,14 @@
                 </div>
             </form>
         </div>
-        
+
         <div class="tab-pane">
-            <p><img src="/images/throbber.gif" id="loader" /></p>
-            <div id="checks-console"></div>
+            <div id="check-console">
+            </div>
+            <p class="loader"><img src="/images/throbber.gif" id="loader" /></p>
             <div class="control-group pagination-right">
               <button type="submit" class="btn btn-primary" data-step-id="5">Install Unplagged</button>
             </div>
-        </div>
-        <div class="tab-pane">
-            <p><img src="/images/throbber.gif" class="loader" /></p>
-            <div id="installation-console"></div>
-            <div id="config-file"></div>
         </div>
     </div>
 </div>

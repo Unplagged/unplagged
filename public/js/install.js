@@ -53,58 +53,48 @@ $(document).ready(function(){
     navigationElements.slice(0, stepNumber + 1).removeClass('disabled');
     $('.tab-content .tab-pane').eq(stepNumber-1).addClass('active');
     
-    if(stepNumber == $('#navigation a').length){
+    if(stepNumber == $('#navigation a').length - 1){
       startInstallation();
     }
   }
     
   function startInstallation() {
-      console.log('hier');
-    var checksConsole = $('#checks-console');
-    var installationConsole = $('#installation-console');
-    installationConsole.html('');
-    $('#installation-loading').show();
+    var checkConsole = $('#check-console');
+    var loader = $('.loader');
+    checkConsole.html('');
+    loader.show();
             
     var data = $('input,select,textarea').serializeArray();
     $.post('/index.php', data, function(response) {
-      response = $.parseJSON(response);
-            
-      var count = response.steps.length;
-      var pos = 0;
-            
-      // on each installation step, the progress bar has to increase            
-      var intVar = setInterval(function(){
-        var message = response.steps[pos].message;
-        var type = response.steps[pos].type;
-                
-        if(type == 'error') {
-          installationConsole.append('<p class="text-error">' + message + ' [error]</p>');
-        } else if(type == 'success') {
-          installationConsole.append('<p class="text-success">' + message + ' [ok]</p>');
-        } else {
-          installationConsole.append('<p class="text-status">' + message + '</p>');
-        }
-                
-        pos++;
-                
-        // update the progress bar on each step
-        $('.progress .bar').width(( 60 + (40 * pos / count)) + '%'); 
-        if(pos == count) {
-          clearInterval(intVar);
-                    
-          var summaryClass = response.summary.type == 'success' ? 'text-success' : 'text-error';
-          installationConsole.append('<p class="' + summaryClass + '"><strong>' + response.summary.message + '</strong></p>');
-          $('#installation-loading').hide();
-                    
-          var barClass = response.summary.type == 'success' ? 'progress-success' : 'progress-danger';
-          $('.progress').addClass(barClass);
-          $('.progress .bar').width('100%');     
-        }
-            
-      }, 100);
-            
-            
+      if(response.steps){
+        var count = response.steps.length;
+        var pos = 0;
+
+        var intVar = setInterval(function(){
+          var message = response.steps[pos].message;
+          var type = response.steps[pos].type;
+
+          if(type == 'error') {
+              checkConsole.append('<p class="text-error">' + message + ' [error]</p>');
+          } else if(type == 'success') {
+              checkConsole.append('<p class="text-success">' + message + ' [ok]</p>');
+          } else {
+              checkConsole.append('<p class="text-status">' + message + '</p>');
+          }
+
+          pos++;
+
+          if(pos == count) {
+            clearInterval(intVar);
+
+            var summaryClass = response.summary.type == 'success' ? 'text-success' : 'text-error';
+            checkConsole.append('<p class="' + summaryClass + '"><strong>' + response.summary.message + '</strong></p>');
+            loader.hide();  
+          }
+        }, 100);                   
+      } else {
+        window.location.reload()
+      }
     });
-  }
-    
+  }    
 });
