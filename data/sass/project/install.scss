@@ -29,19 +29,14 @@
 @import 'base';
 
 h1 {
-  font-weight: normal;
-  color: $mineShaft;
-  font-family: Futura, "Trebuchet MS", Arial, sans-serif;;
-  font-weight: lighter;
+  font-weight: 100;
+  color: $pictonBlue;
   font-size: 30px;
-}
-
-legend {
-  font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+  margin-top: -10px;
 }
 
 .tabbable {
-  margin-bottom: 18px;    
+  margin-bottom: 18px;
 }
 
 .tab-content {
@@ -56,10 +51,12 @@ legend {
 }
 
 .logo {
-  display: block;
-  margin: auto;
+  margin-top: 10px;  
 }
 
+.wizard-steps {
+    font-size: 15px;
+}
 .wizard-steps a {
     min-width: 15%;
     padding: 10px 12px 10px;
@@ -67,6 +64,12 @@ legend {
     background: #ddd;
     position: relative;
     display: inline-block;
+}
+.wizard-steps a:hover {
+    text-decoration: none;
+}
+.wizard-steps a:hover .text {
+    text-decoration: underline;
 }
 .wizard-steps a:before {
     width: 0;
@@ -110,6 +113,7 @@ legend {
     margin: 0 5px 0 18px;
     position: relative;
     top: -1px;
+    font-size: 13px;
 }
 .wizard-steps a:first-child .badge {
     margin-left: 0;
@@ -120,4 +124,9 @@ legend {
 }
 .wizard-steps .current:after {
     border-left-color: #007ACC;
+}
+
+.lead {
+    font-size: 14px;
+    line-height: 18px;
 }

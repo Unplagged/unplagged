@@ -50,7 +50,7 @@ class Unplagged_Mailer{
     $config = Zend_Registry::get('config');
 
     $html = new Zend_View();
-    $html->assign('verificationLink', $config->link->accountVerification . $user->getVerificationHash());
+    $html->assign('verificationLink', $config->default->applicationUrl . $config->link->accountVerification . $user->getVerificationHash());
 
     $html->setScriptPath(APPLICATION_PATH . '/views/emails/de/plain/');
     $bodyText = $html->render('registration.phtml');
@@ -72,7 +72,7 @@ class Unplagged_Mailer{
     $config = Zend_Registry::get('config');
 
     $mailView = new Zend_View();
-    $mailView->assign('verificationLink', $config->link->accountVerification . $user->getVerificationHash());
+    $mailView->assign('verificationLink', $config->default->applicationUrl . $config->link->accountVerification . $user->getVerificationHash());
     $mailView->assign('sender', $config->default->senderName);
     $mailView->assign('recipient', $user->getUsername());
     
@@ -139,7 +139,7 @@ class Unplagged_Mailer{
     $bodyText .= 'this E-Mail address. If it wasn\'t you, simply ignore this mail. ' . "\r" . "\n" . "\r" . "\n";
 
     $bodyText .= 'Otherwise click the following link: ' . "\r" . "\n";
-    $bodyText .= $config->link->passwordRecovery . $user->getVerificationHash() . "\r" . "\n" . "\r" . "\n";
+    $bodyText .= $config->default->applicationUrl . $config->link->passwordRecovery . $user->getVerificationHash() . "\r" . "\n" . "\r" . "\n";
 
     $bodyText .= 'Username: ' . $user->getUsername() . "\r" . "\n";
 

@@ -16,9 +16,9 @@
         <h1><img class="logo" src="/images/logo-blue.png" /> {$welcome.title}</h1>
 
         <div class="wizard-steps" id="navigation">
-            <a class="current" data-tab-id="1" href="#"><span class="badge">1</span>Connection</a>
-            <a data-tab-id="2" href="#"><span class="badge">2</span>General</a>
-            <a class="disabled" data-tab-id="3" href="#"><span class="badge">3</span>Dependencies</a>
-            <a class="disabled" data-tab-id="4" href="#"><span class="badge">4</span>Check</a>
+            <a class="current" data-tab-id="1" href="#"><span class="badge">1</span><span class="text">Connection</span></a>
+            <a data-tab-id="2" href="#"><span class="badge">2</span><span class="text">General</span></a>
+            <a class="disabled" data-tab-id="3" href="#"><span class="badge">3</span><span class="text">Dependencies</span></a>
+            <a class="disabled" data-tab-id="4" href="#"><span class="badge">4</span><span class="text">Check</span></a>
         </div>
     </div>

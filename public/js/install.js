@@ -28,8 +28,6 @@ $(document).ready(function(){
 
       if(submitBtn.length == 1) {
         var nextStep = submitBtn.attr('data-step-id');
-        console.log(form.index());
-        console.log(nextStep);
         if(nextStep-1 < form.index()){
           switchToStep($(this).attr('data-tab-id'));
         } else {
@@ -66,35 +64,37 @@ $(document).ready(function(){
             
     var data = $('input,select,textarea').serializeArray();
     $.post('/index.php', data, function(response) {
-      if(response.steps){
-        var count = response.steps.length;
-        var pos = 0;
+        setTimeout(function(){
+            if(response.steps){
+              var count = response.steps.length;
+              var pos = 0;
 
-        var intVar = setInterval(function(){
-          var message = response.steps[pos].message;
-          var type = response.steps[pos].type;
+              var intVar = setInterval(function(){
+                var message = response.steps[pos].message;
+                var type = response.steps[pos].type;
 
-          if(type == 'error') {
-              checkConsole.append('<p class="text-error">' + message + ' [error]</p>');
-          } else if(type == 'success') {
-              checkConsole.append('<p class="text-success">' + message + ' [ok]</p>');
-          } else {
-              checkConsole.append('<p class="text-status">' + message + '</p>');
-          }
+                if(type == 'error') {
+                    checkConsole.append('<p class="text-error">' + message + ' [error]</p>');
+                } else if(type == 'success') {
+                    checkConsole.append('<p class="text-success">' + message + ' [ok]</p>');
+                } else {
+                    checkConsole.append('<p class="text-status">' + message + '</p>');
+                }
 
-          pos++;
+                pos++;
 
-          if(pos == count) {
-            clearInterval(intVar);
+                if(pos == count) {
+                  clearInterval(intVar);
 
-            var summaryClass = response.summary.type == 'success' ? 'text-success' : 'text-error';
-            checkConsole.append('<p class="' + summaryClass + '"><strong>' + response.summary.message + '</strong></p>');
-            loader.hide();  
-          }
-        }, 100);                   
-      } else {
-        window.location.reload()
-      }
+                  var summaryClass = response.summary.type == 'success' ? 'text-success' : 'text-error';
+                  checkConsole.append('<p class="' + summaryClass + '"><strong>' + response.summary.message + '</strong></p>');
+                  loader.hide();  
+                }
+              }, 150);
+            } else {
+              window.location.reload()
+            }
+         }, 2500);
     });
-  }    
+  }
 });

@@ -232,6 +232,12 @@ class Installer {
     return true;
   }
 
+  /**
+   * Writes the previousely set settings to a config file in the file system.
+   * 
+   * @param type $data
+   * @return type
+   */
   private function createConfig($data) {
     $this->response['steps'][] = array('type' => 'status', 'message' => 'Creating config file...');
 
