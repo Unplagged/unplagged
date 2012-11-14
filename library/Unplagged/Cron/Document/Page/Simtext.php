@@ -19,33 +19,22 @@
  */
 
 /**
- * This class represents a cronjob for parsing larger files into documents using OCR.
- *
- * @author benjamin
+ * This class retrieves all scheduled cronjobs for simtext reports and runs them.
  */
 class Unplagged_Cron_Document_Page_Simtext extends Unplagged_Cron_Base{
 
   public function run(){
-    $query = $this->em->createQuery("SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state");
-    $query->setParameter("action", "page_simtext");
-    $query->setParameter("state", "scheduled");
-    $query->setMaxResults(1);
+    $tasks = $this->findTasks('page_simtext');
 
-    $tasks = $query->getResult();
-
-    if($tasks){
-      $task = $tasks[0];
-
-      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("running"));
-      $this->em->persist($task);
-      $this->em->flush();
+    foreach($tasks as $task){
+      $this->updateTaskProgress($task, true, 'running', 0);
 
       $report = $task->getResource();
 
       // generate the simtext result
       $content = array();
       $left = $report->getPage()->getContent('array');
-      foreach($left as $lineNumber=>$lineContent){
+      foreach($left as $lineNumber=> $lineContent){
         $left[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
       }
 
@@ -59,7 +48,6 @@ class Unplagged_Cron_Document_Page_Simtext extends Unplagged_Cron_Base{
       $prevPerc = 0; // the percentage of the previous iteration
 
       $i = 0;
-      $documents = $report->getDocuments();
       foreach($documents as $documentId){
         $document = $this->em->getRepository('Application_Model_Document')->findOneById($documentId);
         $pages = $document->getPages();
@@ -68,47 +56,34 @@ class Unplagged_Cron_Document_Page_Simtext extends Unplagged_Cron_Base{
           $i++;
           $right = $page->getContent('array');
 
-          foreach($right as $lineNumber=>$lineContent){
+          foreach($right as $lineNumber=> $lineContent){
             $right[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
           }
 
-          $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
+          $comparer = new Unplagged_CompareText(4);
+          $simtextResult = $comparer->compare($left, $right); // do simtext with left and right
 
-          $leftRes = $simtextResult['left'];
-          $rightRes = $simtextResult['right'];
-
-          foreach($leftRes as $lineNumber=>$lineContent){
-            $leftRes[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
-          }
-
-          foreach($rightRes as $lineNumber=>$lineContent){
-            $rightRes[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
-          }
-
-          $result['left'] = '<ol>' . implode("\n", $leftRes) . '</ol>';
-          $result['right'] = '<ol>' . implode("\n", $rightRes) . '</ol>';
+          $resultLeft = $this->makeHtmlList($simtextResult['left']);
 
           // if simtext found something on that page, append it to the report
-          if(strpos($result['left'], "fragmark-") !== false){
-            
+          if(strpos($resultLeft, 'fragmark-') !== false){
+            $resultRight = $this->makeHtmlList($simtextResult['right']);
             $pageResult = array();
 
             $pageResult['candidate']['page'] = $report->getPage()->getPageNumber();
             $pageResult['candidate']['document'] = $report->getPage()->getDocument()->getTitle();
-            $pageResult['candidate']['text'] = $result['left'];
-            
+            $pageResult['candidate']['text'] = $resultLeft;
+
             $pageResult['source']['page'] = $page->getPageNumber();
             $pageResult['source']['document'] = $document->getTitle();
-            $pageResult['source']['text'] = $result['right'];
-            
+            $pageResult['source']['text'] = $resultRight;
+
             $content[] = $pageResult;
           }
 
           $perc = round($i * 1.0 / $pagesCount * 100 / 10) * 10;
           if($perc > $prevPerc){
-            $task->setProgressPercentage($perc);
-            $this->em->persist($task);
-            $this->em->flush();
+            $this->updateTaskProgress($task, true, 'running', $perc);
             $prevPerc = $perc;
           }
         }
@@ -117,19 +92,23 @@ class Unplagged_Cron_Document_Page_Simtext extends Unplagged_Cron_Base{
       // update report
       $report->setContent($content);
       $report->setState($this->em->getRepository('Application_Model_State')->findOneByName("generated"));
-
-      // update task
-      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName("completed"));
-      $task->setProgressPercentage(100);
-
       $this->em->persist($report);
-      $this->em->persist($task);
 
+      $this->updateTaskProgress($task);
       $this->em->flush();
 
       // notification
-      Unplagged_Helper::notify("simtext_report_created", $report, $task->getInitiator());
+      Unplagged_Helper::notify('simtext_report_created', $report, $task->getInitiator());
     }
+  }
+
+  private function makeHtmlList(array $lines){
+    $taggedLines = array();
+
+    foreach($lines as $lineNumber=> $lineContent){
+      $taggedLines[$lineNumber] = '<li value="' . $lineNumber . '">' . $lineContent . '</li>';
+    }
+    return '<ol>' . implode('', $taggedLines) . '</ol>';
   }
 
 }

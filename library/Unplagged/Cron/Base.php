@@ -19,8 +19,9 @@
  */
 
 /**
- * This class bundles common benchmark functionalities and exposes a common 
- * interface for cronjobs.
+ * This class can be used to build scheduled asynchronous services(i. e. cronjobs), that retrieve necessary data from 
+ * the database. It exposes a common interface and gives functionalities to benchmark the runtime and memory usage
+ * of the service.
  */
 abstract class Unplagged_Cron_Base{
 
@@ -30,24 +31,14 @@ abstract class Unplagged_Cron_Base{
   private $stopMemory = 0;
   protected $em = null;
 
-  public function __construct(Doctrine\ORM\EntityManager $entityManager){
+  final public function __construct(Doctrine\ORM\EntityManager $entityManager){
     $this->em = $entityManager;
-  }
-
-  final private function startBenchmark(){
-    $this->startTime = microtime(true);
-    $this->startMemory = memory_get_usage();
-  }
-
-  final private function stopBenchmark(){
-    $this->stopTime = microtime(true);
-    $this->stopMemory = memory_get_usage();
   }
 
   /**
    * This function can be called to get the runtime of this job.
    * 
-   * It will only return useful data after the start() function has been called.
+   * It will only return useful data after {@see start()} has been called.
    * 
    * @return int
    */
@@ -59,7 +50,7 @@ abstract class Unplagged_Cron_Base{
   /**
    * Creates and prints a string that includes all gathered benchmark data.
    * 
-   * It will only return useful data after the start() function has been called.
+   * It will only return useful data after {@see start()} has been called.
    */
   final public function printBenchmark(){
     echo 'Time [' . $this->getRunTime() . '] Memory [' . ($this->getUsedMemory() / 1024) . 'MB]' . PHP_EOL;
@@ -73,7 +64,7 @@ abstract class Unplagged_Cron_Base{
   }
 
   /**
-   * Runs the cronjobs and gathers the benchmark data.
+   * Runs the service and gathers the benchmark data.
    */
   final public function start(){
     $this->startBenchmark();
@@ -82,7 +73,62 @@ abstract class Unplagged_Cron_Base{
   }
 
   /**
-   * Executes the actual functionality of this cronjob.
+   * Queries the database for tasks.
+   * 
+   * @param string $action
+   * @param string $state
+   * @param int $maxResults
+   * @return array
+   */
+  final protected function findTasks($action, $state = 'scheduled', $maxResults = 1){
+    $query = $this->em->createQuery('SELECT t, a, s 
+      FROM Application_Model_Task t 
+      JOIN t.action a 
+      JOIN t.state s 
+      WHERE a.name = :action 
+      AND s.name = :state'
+    );
+    $query->setParameter('action', $action);
+    $query->setParameter('state', $state);
+    $query->setMaxResults($maxResults);
+
+    return $query->getResult();
+  }
+
+  /**
+   * @param Application_Model_Task $task The task that should be changed.
+   * @param bool $flush Indicates whether the entity manager should be flushed.
+   * @param string $stateName The name of the state that should be set for the task.
+   * @param int $percentage The progress percentage of the task.
+   */
+  final protected function updateTaskProgress(Application_Model_Task $task, $flush = false, $stateName = 'completed', $percentage = 100){
+    $task->setState($this->em->getRepository('Application_Model_State')->findOneByName($stateName));
+    $task->setProgressPercentage($percentage);
+    $this->em->persist($task);
+
+    if($flush === true){
+      $this->em->flush();
+    }
+  }
+
+  /**
+   * Stores the current time and memory to calculate the benchmark. Should be called before {@see run()}.
+   */
+  final private function startBenchmark(){
+    $this->startTime = microtime(true);
+    $this->startMemory = memory_get_usage();
+  }
+
+  /**
+   * Stores the current time and memory to calculate the benchmark. Should be called after {@see run()}.
+   */
+  final private function stopBenchmark(){
+    $this->stopTime = microtime(true);
+    $this->stopMemory = memory_get_usage();
+  }
+
+  /**
+   * Executes the actual functionality of this service.
    */
   abstract protected function run();
 }

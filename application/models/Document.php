@@ -20,7 +20,6 @@
 
 /**
  * The class represents a single document.
- * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
  * @Table(name="documents")
@@ -53,8 +52,7 @@ class Application_Model_Document extends Application_Model_Base{
   private $fragments;
 
   /**
-   * @var string The bibtex information of the document.
-   * 
+   * @var Application_Model_BibTex Contains the bibliographic meta information of the document.
    * @OneToOne(targetEntity="Application_Model_BibTex", cascade={"persist"})
    * @JoinColumn(name="bibtex_id", referencedColumnName="id", onDelete="SET NULL")
    */
@@ -73,7 +71,7 @@ class Application_Model_Document extends Application_Model_Base{
    * @JoinColumn(name="initial_file_id", referencedColumnName="id", onDelete="SET NULL")
    */
   private $initialFile;
-  
+
   /**
    *
    * @Column(type="string", length=2)
@@ -96,7 +94,7 @@ class Application_Model_Document extends Application_Model_Base{
     if(isset($data["language"])){
       $this->language = $data["language"];
     }
-    
+    $this->bibTex = new Application_Model_BibTex();
     $this->pages = new \Doctrine\Common\Collections\ArrayCollection();
     $this->fragments = new \Doctrine\Common\Collections\ArrayCollection();
   }
@@ -105,10 +103,10 @@ class Application_Model_Document extends Application_Model_Base{
     return $this->title;
   }
 
+  /**
+   * @return Application_Model_BibTex
+   */
   public function getBibTex(){
-      if(empty($this->bibTex)) {
-          return new Application_Model_BibTex();
-      }
     return $this->bibTex;
   }
 
@@ -142,14 +140,25 @@ class Application_Model_Document extends Application_Model_Base{
     $this->title = $title;
   }
 
-  public function setBibTex($bibTex){
-    $this->bibTex = $bibTex;
+  /**
+   * 
+   * @param Application_Model_BibTex $bibTex
+   */
+  public function setBibTex(Application_Model_BibTex $bibliographicInformation){
+    $this->bibTex = $bibliographicInformation;
   }
 
+  /**
+   * @return string
+   */
   public function getLanguage(){
-    return $this->language;  
+    return $this->language;
   }
-  
+ 
+  /**
+   * 
+   * @param type $language
+   */
   public function setLanguage($language){
     $this->language = $language;
   }

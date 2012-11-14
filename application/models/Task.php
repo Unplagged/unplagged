@@ -19,9 +19,8 @@
  */
 
 /**
- * This class represents a task, which is most likely to be triggered by a user.
- * 
- * It defines also the structure of the database table for the ORM.
+ * This class represents a task that needs processeing later on. Most likely this will be retrieved from within a 
+ * scheduled cronjob or a similar asynchronous service, that needs access to it's data.
  * 
  * @Entity 
  * @Table(name="cron_tasks")
@@ -58,16 +57,16 @@ class Application_Model_Task extends Application_Model_Base{
    * @Column(type="text", nullable=true)
    */
   private $log;
-  
+
   /**
-   * @var string The current progress in percent of the task.
+   * @var string The current progress of the task in percent.
    * @Column(type="integer")
    */
   private $progressPercentage = 0;
 
   public function __construct($data = array()){
     parent::__construct($data);
-    
+
     if(isset($data['initiator'])){
       $this->initiator = $data['initiator'];
     }
@@ -116,12 +115,19 @@ class Application_Model_Task extends Application_Model_Base{
   public function setLog($log){
     $this->log = $log;
   }
-  
+
+  /**
+   * @return int
+   */
   public function getProgressPercentage(){
     return $this->progressPercentage;
   }
 
+  /**
+   * @param int $progressPercentage
+   */
   public function setProgressPercentage($progressPercentage){
     $this->progressPercentage = $progressPercentage;
   }
+
 }

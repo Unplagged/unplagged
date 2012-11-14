@@ -29,7 +29,8 @@ class SimtextController extends Unplagged_Controller_Action{
     $this->view->layout()->disableLayout();
     $this->_helper->viewRenderer->setNoRender();
 
-    echo Unplagged_CompareText::compare($input->left, $input->right, 4);
+    $comparer = new Unplagged_CompareText();
+    echo $comparer->compare($input->left, $input->right, 4);
   }
 
   public function showReportAction(){
@@ -37,11 +38,9 @@ class SimtextController extends Unplagged_Controller_Action{
 
     if(!empty($input->id)){
       $report = $this->_em->getRepository('Application_Model_Simtext_Report')->findOneById($input->id);
-      if($report) {
-      $this->view->report = $report;
-      $this->setTitle("Simtext report: %s", array($report->getTitle()));
-      } else {
-        
+      if($report){
+        $this->view->report = $report;
+        $this->setTitle("Simtext report: %s", array($report->getTitle()));
       }
     }
   }
@@ -78,14 +77,14 @@ class SimtextController extends Unplagged_Controller_Action{
             }
             $report->outputState = '<div class="progress"><div class="bar" style="width: ' . $percentage . '%;"></div></div>';
             $report->actions = null;
-
           }else{
             $report->outputState = $report->getState()->getTitle();
             $report->actions = array();
             $action['link'] = '/simtext/delete-report/id/' . $report->getId();
             $action['label'] = 'Delete report';
             $action['icon'] = 'images/icons/delete.png';
-            $report->actions[] = $action;          }
+            $report->actions[] = $action;
+          }
         endforeach;
 
         $this->setTitle("List of simtext reports");
@@ -113,7 +112,7 @@ class SimtextController extends Unplagged_Controller_Action{
   }
 
   /**
-   * Does a simtext comparision with a page and multiple sources.
+   * Does a simtext comparison with a page and multiple sources.
    */
   public function createReportAction(){
     $input = new Zend_Filter_Input(array('source'=>'Digits', 'redirect'=>'StringTrim'), null, $this->_getAllParams());
@@ -130,20 +129,20 @@ class SimtextController extends Unplagged_Controller_Action{
         $this->view->page = $page;
 
         $simtextForm = new Application_Form_Simtext_Modify();
-        
+
         if($this->_request->isPost()){
           $result = $this->handleSimtextData($simtextForm, $page);
 
           if($result){
-            $this->_helper->FlashMessenger(array('success' => 'The simtext process was started, you will be notified, when it finished.'));
+            $this->_helper->FlashMessenger(array('success'=>'The simtext process was started, you will be notified, when it finished.'));
             $this->_helper->redirector('list-reports', 'simtext', '', array('source'=>$input->source));
-            if($input->redirect) {
-          $simtextForm->setAction($input->redirect);
-        }
+            if($input->redirect){
+              $simtextForm->setAction($input->redirect);
+            }
           }
         }
 
-       // $this->initPageView($page, '/document_page/simtext/id');
+        // $this->initPageView($page, '/document_page/simtext/id');
         $this->view->simtextForm = $simtextForm;
         $this->setTitle("Create simtext report");
       }
@@ -182,5 +181,3 @@ class SimtextController extends Unplagged_Controller_Action{
   }
 
 }
-
-?>

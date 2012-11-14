@@ -19,7 +19,7 @@
  */
 
 /**
- * 
+ * Can be used to send mails.
  */
 class Unplagged_Mailer{
 
@@ -196,4 +196,3 @@ class Unplagged_Mailer{
   }
 
 }
-?>

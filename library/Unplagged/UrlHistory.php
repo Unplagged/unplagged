@@ -19,18 +19,17 @@
  */
 
 /**
- * This class can be registered in the Bootstrap and then stores the current
+ * A Zend Bootstrap plugin, that can be registered to store the current
  * URI in the session to make it possible to redirect the user back to the
- * last page that was visited.
+ * last page that was visited during the next request.
  *
  * This can for example be necessary during the case selection in order to
  * stay on the same page, but with different data.
- *
- * @author Unplagged
  */
 class Unplagged_UrlHistory extends Zend_Controller_Plugin_Abstract{
 
   public function postDispatch(Zend_Controller_Request_Abstract $request){
+    //make sure to not store AJAX requests, because they tend to make no sense when using the back button
     if(!$request->isXmlHttpRequest()){
       if(!($request->getControllerName() == 'permission' && $request->getActionName() == 'edit')){
         $historySessionNamespace = new Zend_Session_Namespace('history');

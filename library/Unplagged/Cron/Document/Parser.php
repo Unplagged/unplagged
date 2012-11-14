@@ -19,68 +19,42 @@
  */
 
 /**
- * This class represents a cronjob for parsing larger files into documents using OCR.
+ * Gets the scheduled OCR tasks and runs them.
+ * 
+ * @todo should we run all that we find or just one? All sounds better, but we need to check somewhere, 
+ * that the crons don't get in each others way..
  */
 class Unplagged_Cron_Document_Parser extends Unplagged_Cron_Base{
 
   protected function run(){
-    $tasks = $this->findTasks();
+    $tasks = $this->findTasks('file_parse');
 
-    if($tasks){
-      $task = $tasks[0];
-
-      $taskId = $task->getId();
-
-      $task->setState($this->em->getRepository('Application_Model_State')->findOneByName('running'));
-      $this->em->persist($task);
-      $this->em->flush();
+    foreach($tasks as $task){
+      $this->updateTaskProgress($task, true, 'running', 20);
 
       $document = $task->getResource();
       $file = $document->getInitialFile();
-      $documentId = $document->getId();
 
       $parser = Unplagged_Parser::factory($file->getMimeType());
-      $document = $parser->parseToDocument($file, $document->getLanguage(), $documentId, $taskId);
-      
+      $document = $parser->parseToDocument($file, $document->getLanguage(), $document->getId(), $task->getId());
+
       if($document instanceof Application_Model_Document){
-        // update document
-        $document->setState($this->em->getRepository('Application_Model_State')->findOneByName('parsed'));
-
-        // update task
-        $task = $this->em->getRepository('Application_Model_Task')->findOneById($taskId);
-        $task->setState($this->em->getRepository('Application_Model_State')->findOneByName('completed'));
-        $task->setProgressPercentage(100);
-
-        $this->em->persist($document);
-        $this->em->persist($task);
-
-        $this->em->flush();
-
+        $this->setDocumentState($document, 'parsed');
         // add notification to activity stream
         Unplagged_Helper::notify("document_created", $document, $task->getInitiator());
-
-        $this->em->clear();
       }else{
-        $task->setState($this->em->getRepository('Application_Model_State')->findOneByName('completed'));
-        $task->setProgressPercentage(100);
-        $this->em->persist($task);
-
         $document = $task->getResource();
-        $document->setState($this->em->getRepository('Application_Model_State')->findOneByName('error'));
-
-        $this->em->persist($document);
-        $this->em->flush();
+        $this->setDocumentState($document, 'error');
       }
+      $this->updateTaskProgress($task);
+
+      $this->em->persist($document);
+      $this->em->flush();
     }
   }
 
-  private function findTasks(){
-    $query = $this->em->createQuery('SELECT t, a, s FROM Application_Model_Task t JOIN t.action a JOIN t.state s WHERE a.name = :action AND s.name = :state');
-    $query->setParameter('action', 'file_parse');
-    $query->setParameter('state', 'scheduled');
-    $query->setMaxResults(1);
-
-    return $query->getResult();
+  protected function setDocumentState(Application_Model_Document $document, $stateName){
+    $document->setState($this->em->getRepository('Application_Model_State')->findOneByName($stateName));
   }
 
 }

@@ -103,5 +103,3 @@ class Unplagged_Detector_PlagAware{
   }
 
 }
-
-?>

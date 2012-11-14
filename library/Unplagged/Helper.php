@@ -214,5 +214,3 @@ class Unplagged_Helper{
     return '/image/show/id/' . $user->getAvatar()->getId();
   }
 }
-
-?>

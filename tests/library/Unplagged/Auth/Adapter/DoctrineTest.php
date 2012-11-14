@@ -27,7 +27,7 @@ class DoctrineTest extends PHPUnit_Framework_TestCase{
   private $em;
 
   public function setUp(){
-    $this->em = $this->getEmMock();
+    //$this->em = $this->getEmMock();
 
     $this->object = new Unplagged_Auth_Adapter_Doctrine($this->em);
   }

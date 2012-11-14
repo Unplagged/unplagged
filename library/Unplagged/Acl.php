@@ -54,4 +54,3 @@ class Unplagged_Acl extends Zend_Acl{
   }
 
 }
-?>

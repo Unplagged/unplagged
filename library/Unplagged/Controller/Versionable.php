@@ -88,5 +88,3 @@ abstract class Unplagged_Controller_Versionable extends Unplagged_Controller_Act
   }
 
 }
-
-?>

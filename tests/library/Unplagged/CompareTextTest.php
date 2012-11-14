@@ -18,19 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once '../library/Unplagged/Parser/Page/Parser.php';
-require_once '../library/Unplagged/Parser/Page/TesseractParser.php';
-
 /**
- *
- * @author Dominik Horb <dominik.horb@googlemail.com>
+ * 
  */
-class TesseractParserTest extends PHPUnit_Framework_TestCase{
+class CompareTextTest extends PHPUnit_Framework_TestCase{
   
-  public function testParseDocumentReturnsNullOnEmptyFile(){
-    $tesseractParser = new Unplagged_Parser_Page_TesseractParser();
-    $document = $tesseractParser->parseToPage(new Application_Model_File(), 'eng');
-    
-    $this->assertNull($document);
-  }  
 }

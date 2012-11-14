@@ -19,8 +19,6 @@
  */
 
 /**
- * The class represents a single page in a document.
- * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
  * @Table(name="document_page_detection_reports")
@@ -83,10 +81,6 @@ class Application_Model_Document_Page_DetectionReport extends Application_Model_
     if(isset($data["user"])){
       $this->user = $data["user"];
     }
-  }
-
-  public function getId(){
-    return $this->id;
   }
 
   public function getContent(){

@@ -19,7 +19,7 @@
  */
 
 /**
- * This class can be used to upload files.
+ * This class helps to handle file uploads.
  */
 class Unplagged_Uploader{
 
@@ -29,7 +29,13 @@ class Unplagged_Uploader{
   private $folder;
   private $file;
 
-  public function __construct($filename, $description, $storageDir, $folder = null){
+  /**
+   * @param string $filename
+   * @param string $description
+   * @param string $storageDir
+   * @param string $folder
+   */
+  public function __construct($filename, $description = '', $storageDir = './', $folder = null){
     $this->filename = $filename;
     $this->description = $description;
     $this->storageDir = $storageDir;
@@ -39,9 +45,12 @@ class Unplagged_Uploader{
   /**
    * Stores the uploaded file with the parameters specified in the constructor.
    * 
-   * @return null 
+   * @return Application_Model_File
    */
-  public function upload(){
+  public function upload(Application_Model_User $user = null){
+    //@todo move registry call out of this class
+    $user = Zend_Registry::getInstance()->user;
+    
     $adapter = new Zend_File_Transfer();
     if($adapter->getFileName()){
       $pathinfo = pathinfo($adapter->getFileName());
@@ -53,30 +62,26 @@ class Unplagged_Uploader{
       if($adapter->receive()){
         chmod($this->storageDir . $fileNames[1], 0755);
 
-        $file = $this->createFileObject($adapter, $fileNames, $pathinfo, null, $this->storageDir, Zend_Registry::getInstance()->user, $this->folder);
+        $file = $this->createFileObject($adapter, $fileNames, $pathinfo, $this->description, $this->storageDir, $user, $this->folder);
         $this->file = $file;
 
         return $file;
-      }else{
-        return null;
       }
-    }else{
-      return null;
     }
   }
 
   /**
    * Creates a unique filename from the specified data.
    * 
-   * @param array $pathinfo An array as returned by the pathinfo() function for the uploaded file.
-   * @param string $newName A different name for the file from user input.
-   * @return array An array containing the original filename and a new unique filename to store the file locally. 
+   * @param array $pathinfo An array as returned by the {@see pathinfo()} function for the uploaded file.
+   * @param string $newName Replaces the filename from the pathinfo() array if specified.
+   * @return array An array containing the visible filename and a new unique filename to store the file locally.
    */
-  private function findFilename($pathinfo, $newName){
+  private function findFilename($pathinfo, $newName = ''){
     $fileExtension = $pathinfo['extension'];
 
     $fileName = '';
-    if($newName){
+    if(!empty($newName)){
       $fileName = $newName;
     }else{
       $fileName = $pathinfo['filename'];
@@ -88,29 +93,30 @@ class Unplagged_Uploader{
   }
 
   /**
-   * Based on Wordpress.
+   * Sanitizes a filename by removing special chars and replacing whitespace with dashes.
    * 
-   * Sanitizes a filename replacing whitespace with dashes
-   *
    * Removes special characters that are illegal in filenames on certain
    * operating systems and special characters requiring special escaping
    * to manipulate at the command line. Replaces spaces and consecutive
    * dashes with a single dash. Trim period, dash and underscore from beginning
    * and end of filename.
    *
-   * @param string $filename The filename to be sanitized
-   * @return string The sanitized filename
+   * Based on a Wordpress function.
+   *
+   * @param string $filename The filename to be sanitized.
+   * @return string The sanitized filename.
    */
   private function sanitizeFilename($filename){
-    $special_chars = array("?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}");
-    $filename = str_replace($special_chars, '', $filename);
+    $specialChars = array("?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",",
+        "'", "\"", "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}");
+    $filename = str_replace($specialChars, '', $filename);
     $filename = preg_replace('/[\s-]+/', '-', $filename);
     $filename = trim($filename, '.-_');
     return $filename;
   }
 
   /**
-   * Takes the data to create an Application_Model_File object.
+   * Takes the data to create an {@see Application_Model_File} object.
    * 
    * @param Zend_File_Transfer $adapter
    * @param array $fileNames
@@ -119,7 +125,8 @@ class Unplagged_Uploader{
    * @param string $storageDir
    * @return \Application_Model_File 
    */
-  private function createFileObject($adapter, $fileNames, $pathinfo, $description, $storageDir, $user, $folder = null){
+  private function createFileObject(Zend_File_Transfer $adapter, array $fileNames, array $pathinfo, 
+          $description, $storageDir, $user, $folder = null){
     $data = array();
     $data['size'] = $adapter->getFileSize();
     //if the mime type is always application/octet-stream, then the 
@@ -133,26 +140,32 @@ class Unplagged_Uploader{
     $data['uploader'] = $user;
     $data['folder'] = $folder;
 
-    $file = new Application_Model_File($data);
-
-    return $file;
+    return new Application_Model_File($data);
   }
 
+  /**
+   * 
+   * @param type $thumbWidth
+   * @param type $thumbHeight
+   * @return type
+   * 
+   * @todo maybe move into another class with more specialized image functionality
+   */
   public function crop($thumbWidth, $thumbHeight){
     //getting the image dimensions
     list($width, $height) = getimagesize($this->file->getFullPath());
     $ratio = $width * 1. / $height;
-    
+
     //saving the image into memory (for manipulation with GD Library)
     $myImage = imagecreatefromjpeg($this->file->getFullPath());
 
     // setting the crop size
-    if($width < $height) {
+    if($width < $height){
       $twidth = $width;
       $theight = $width;
       $x = 0;
       $y = $height / 2. - $width / 2.;
-    } else {
+    }else{
       $twidth = $height;
       $theight = $height;
       $x = $width / 2. - $height / 2.;

@@ -31,16 +31,12 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
   const ICON_CLASS = 'icon-fragment';
 
   /**
-   * The note.
    * @var string The note.
-   * 
    * @Column(type="text")
    */
   private $note;
 
   /**
-   * The lines in the document.
-   * 
    * @ManyToOne(targetEntity="Application_Model_Document_Fragment_Type")
    * @JoinColumn(name="fragment_type_id", referencedColumnName="id", onDelete="CASCADE")
    */
@@ -123,6 +119,9 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
     return $this->source;
   }
 
+  /**
+   * @return Application_Model_Fragment_Type
+   */
   public function getType(){
     return $this->type;
   }
@@ -172,7 +171,8 @@ class Application_Model_Document_Fragment extends Application_Model_Versionable{
 
     // before converting the content to the correct return type, do simtext highlighting if requested
     if($highlight){
-      $simtextResult = Unplagged_CompareText::compare($plagLines, $sourceLines, 4);
+      $comparer = new Unplagged_CompareText();
+      $simtextResult = $comparer->compare($plagLines, $sourceLines, 4);
       // print_r($simtextResult);
       $plagLines = $simtextResult['left'];
       $sourceLines = $simtextResult['right'];

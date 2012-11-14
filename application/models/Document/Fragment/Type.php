@@ -20,7 +20,6 @@
 
 /**
  * The class represents a fragment type.
- * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
  * @Table(name="document_fragment_types")
@@ -36,9 +35,7 @@ class Application_Model_Document_Fragment_Type{
   private $id;
 
   /**
-   * A unique name for the fragment type.
    * @var string The name of the fragment type.
-   * 
    * @Column(type="string", unique=true, length=32)
    */
   private $name;

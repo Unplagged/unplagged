@@ -19,31 +19,30 @@
  */
 
 /**
- * The class represents a single line in a document.
- * It defines also the structure of the database table for the ORM.
+ * Represents a single line in a document.
+ * 
+ * @todo Is having the line number here really necessary, couldn't we ask the page to calculate this?
  * 
  * @Entity 
  * @Table(name="document_page_lines")
  */
-class Application_Model_Document_Page_Line extends Application_Model_Base{
+final class Application_Model_Document_Page_Line extends Application_Model_Base{
     
   /**
-   * The line number in the page.
-   * @var integer The line number.
-   * 
+   * @var int The line number relative to the page.
    * @Column(type="integer")
    */
   private $lineNumber;
 
   /**
+   * @var Application_Model_Document_Page The page this line comes from.
    * @ManyToOne(targetEntity="Application_Model_Document_Page", inversedBy="lines", cascade={"persist"})
    * @JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $page;
 
   /**
-   * The content of the line.
-   * 
+   * @var string The content of the line.
    * @Column(type="text", nullable=true)
    */
   private $content;
@@ -51,28 +50,27 @@ class Application_Model_Document_Page_Line extends Application_Model_Base{
   public function __construct($data = array()){
     parent::__construct($data);
 
-    if(isset($data["lineNumber"])){
-      $this->lineNumber = $data["lineNumber"];
+    if(isset($data['lineNumber'])){
+      $this->lineNumber = $data['lineNumber'];
     }
-    if(isset($data["page"])){
-      $this->page = $data["page"];
+    if(isset($data['page'])){
+      $this->page = $data['page'];
     }
-    if(isset($data["content"])){
-      $this->content = $data["content"];
+    if(isset($data['content'])){
+      $this->content = $data['content'];
     }
   }
 
+  /**
+   * @return array
+   */
   public function toArray(){
     $data = array();
-    $data["id"] = $this->id;
-    $data["lineNumber"] = $this->lineNumber;
-    $data["content"] = $this->content;
+    $data['id'] = $this->id;
+    $data['lineNumber'] = $this->lineNumber;
+    $data['content'] = $this->content;
     
     return $data;
-  }
-
-  public function getId(){
-    return $this->id;
   }
 
   public function getDirectName(){
@@ -87,29 +85,47 @@ class Application_Model_Document_Page_Line extends Application_Model_Base{
     return null;
   }
 
+  /**
+   * @return int
+   * @todo Check if necessary. See above.
+   */
   public function getLineNumber(){
     return $this->lineNumber;
   }
 
+  /**
+   * @param int $lineNumber
+   * @todo Check if necessary. See above.
+   */
   public function setLineNumber($lineNumber){
     $this->lineNumber = $lineNumber;
   }
 
+  /**
+   * @return string
+   */
   public function getContent(){
     return $this->content;
   }
 
+  /**
+   * @param string $content
+   */
   public function setContent($content){
     $this->content = $content;
   }
 
-  public function setPage($page){
+  /**
+   * @param Application_Model_Document_Page $page The page this line is on.
+   */
+  public function setPage(Application_Model_Document_Page $page){
     $this->page = $page;
   }
+  
+  /**
+   * @return Application_Model_Document_Page The page this line is on.
+   */
   public function getPage(){
     return $this->page;
   }
-
-
-
 }

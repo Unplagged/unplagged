@@ -482,7 +482,8 @@ class Document_PageController extends Unplagged_Controller_Versionable{
             $right[$lineNumber] = htmlentities($lineContent, ENT_COMPAT, 'UTF-8');
           }
 
-          $simtextResult = Unplagged_CompareText::compare($left, $right, 4); // do simtext with left and right
+          $comparer = new Unplagged_CompareText();
+          $simtextResult = $comparer->compare($left, $right, 4); // do simtext with left and right
 
           $left = $simtextResult['left'];
           $right = $simtextResult['right'];

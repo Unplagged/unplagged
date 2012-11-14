@@ -19,46 +19,42 @@
  */
 
 /**
- * The class represents a partial (page, line, text) of a fragment within a document.
- * It defines also the structure of the database table for the ORM.
+ * This class represents a continuous block of a document, i. e. a single line or a collection
+ * of lines with an indicator of the first and the last character of the block.
+ * 
+ * It can for example be used to store data of marked plagiarized fragments or highlighted text.
  * 
  * @Entity 
  * @Table(name="document_fragment_partials")
  * @HasLifeCycleCallbacks
  */
 class Application_Model_Document_Fragment_Partial extends Application_Model_Base{
-  
+
   /**
-   *
    * @ManyToOne(targetEntity="Application_Model_Document_Page_Line")
    * @JoinColumn(name="line_from_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $lineFrom;
 
   /**
-   * The character position.
-   * 
    * @Column(type="integer", length=64, nullable=true)
    */
   private $characterFrom = 1;
 
   /**
-   *
    * @ManyToOne(targetEntity="Application_Model_Document_Page_Line")
    * @JoinColumn(name="line_to_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $lineTo;
 
   /**
-   * The character position.
-   * 
    * @Column(type="integer", length=64, nullable=true)
    */
   private $characterTo = 1;
 
   public function __construct($data = array()){
     parent::__construct($data);
-    
+
     if(isset($data["lineFrom"])){
       $this->lineFrom = $data["lineFrom"];
     }
@@ -77,10 +73,10 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
   }
 
   public function toArray(){
-    $data["lineFrom"] = $this->lineFrom->toArray();
-    $data["characterFrom"] = $this->characterFrom;
-    $data["lineTo"] = $this->lineTo->toArray();
-    $data["characterTo"] = $this->characterTo;
+    $data['lineFrom'] = $this->lineFrom->toArray();
+    $data['characterFrom'] = $this->characterFrom;
+    $data['lineTo'] = $this->lineTo->toArray();
+    $data['characterTo'] = $this->characterTo;
 
     return $data;
   }
@@ -129,6 +125,11 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
     $this->characterTo = $characterTo;
   }
 
+  /**
+   * 
+   * 
+   * @return string 
+   */
   public function getContent(){
     $startPageNumber = $this->lineFrom->getPage()->getPageNumber();
     $endPageNumber = $this->lineTo->getPage()->getPageNumber();
@@ -144,7 +145,7 @@ class Application_Model_Document_Fragment_Partial extends Application_Model_Base
         foreach($page->getLines() as $line){
           // iterate over all the pages in between start and end page
           if($page->getPageNumber() != $startPageNumber || $line->getLineNumber() >= $this->lineFrom->getLineNumber()){
-              $result[$line->getLineNumber()] = $line->getContent();
+            $result[$line->getLineNumber()] = $line->getContent();
           }
 
           // if linenumber on last page is bigger than the last line number

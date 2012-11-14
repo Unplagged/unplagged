@@ -19,8 +19,6 @@
  */
 
 /**
- * The class represents a single page in a document.
- * It defines also the structure of the database table for the ORM.
  * 
  * @Entity 
  * @Table(name="simtext_reports")

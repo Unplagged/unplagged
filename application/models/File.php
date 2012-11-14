@@ -22,9 +22,10 @@
  * This class can be used to handle the data of an uploaded file.
  * 
  * It keeps track of the original filename for display purposes, but 
- * makes it also to store the file locally with a different name. This 
- * functionality can be useful to hide the storage specific aspects
- * from the user that should only get to see the original filename.
+ * makes it also possible to store the file locally with a different 
+ * name. This functionality can be useful to hide the storage 
+ * specific aspects from the user that should only get to see the 
+ * original filename.
  * 
  * @Entity 
  * @Table(name="files")
@@ -35,7 +36,7 @@ class Application_Model_File extends Application_Model_Base{
   const ICON_CLASS = 'icon-file';
 
   /**
-   * @var string The latest modification date.
+   * @var string The date of the latest modification.
    * @Column(type="datetime")
    */
   private $updated;
@@ -54,7 +55,7 @@ class Application_Model_File extends Application_Model_Base{
 
   /**
    * @var string The mimetype of the file.
-   * @Column(type="string", length=32)
+   * @Column(type="string", length=255)
    */
   private $mimetype;
 
@@ -134,10 +135,16 @@ class Application_Model_File extends Application_Model_Base{
     return $this->mimetype;
   }
 
+  /**
+   * @return string
+   */
   public function getSize(){
     return round($this->size / 1024, 2) . ' KB';
   }
 
+  /**
+   * @return string
+   */
   public function getExtension(){
     return $this->extension;
   }
@@ -180,18 +187,28 @@ class Application_Model_File extends Application_Model_Base{
     return $result;
   }
 
+  /**
+   * @return string
+   */
   public function getDescription(){
     return $this->description;
   }
 
+  
   public function setDescription($description){
     $this->description = $description;
   }
 
+  /**
+   * @return Application_Model_User
+   */
   public function getUploader(){
     return $this->uploader;
   }
   
+  /**
+   * @return string
+   */
   public function getFolder(){
     return $this->folder;
   }
