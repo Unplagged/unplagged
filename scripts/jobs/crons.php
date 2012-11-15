@@ -29,9 +29,9 @@ runCronjob('Unplagged_Cron_Document_Parser', $entityManager);
 runCronjob('Unplagged_Cron_Document_Page_Reportcreator', $entityManager);
 runCronjob('Unplagged_Cron_Document_Page_Simtext', $entityManager);
 
-function runCronjob($cronClass, $entityManager){
+function runCronjob(Unplagged_Cron_Base $cronClass, $entityManager){
   Zend_Registry::get('Log')->info('Starting cronjob: ' . $cronClass);
-  $simtext = new $cronClass($entityManager);
-  $simtext->start();
-  $simtext->printBenchmark();
+  $cron = new $cronClass($entityManager);
+  $cron->start();
+  $cron->printBenchmark();
 }
