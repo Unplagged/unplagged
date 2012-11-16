@@ -343,10 +343,6 @@ class UserController extends Unplagged_Controller_Action{
     Zend_Layout::getMvcInstance()->cases = null;
   }
 
-  private function handleAvatarUpload(){
-    
-  }
-
   /**
    * Sets the current Case of this User based on the request parameter 'case' if the user has
    * the permission for the case. 

@@ -75,6 +75,8 @@ require_once 'Zend/Application.php';
 /**
  * Create application, without bootstraping it, because we do not always want to bootstrap
  * all steps.
+ * 
+ * @return Zend_Application
  */
 function createApplication(){
   $application=new Zend_Application(APPLICATION_ENV, array(
@@ -90,7 +92,8 @@ function createApplication(){
 
 /**
  * Executes the whole bootstrap process.
- * @return type
+ * 
+ * @return Zend_Application
  */
 function bootstrapApplication(){
     $application = createApplication();

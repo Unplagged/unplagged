@@ -27,7 +27,6 @@ require_once BUILD_PATH . DIRECTORY_SEPARATOR . 'Installer' . DIRECTORY_SEPARATO
 $configFile = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . 'unplagged-config.ini';
 $installer = new Installer($configFile);
 
-
 if($installer->isInstalled()){
   $application = bootstrapApplication();
   $application->run();
