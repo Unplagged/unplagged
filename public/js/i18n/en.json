@@ -7,17 +7,13 @@
         "authorize": "authorize"
     },
     "contextmenu": {
-        "tip": {
-            "title": "Tip: Use Contextmenu",
-            "text": "You can mark words with a leftclick and then open a contexmenu on right click."
-        },
         "google": {
             "open": "Open Google",
             "remove": "Remove Google search words",
             "search": "Search Google for"
         },
         "fragment": {
-            "candidate": "Set as candidate of fragmen",
+            "candidate": "Set as candidate of fragment",
             "source": "Set as source of fragment",
             "create": "Create fragment"
         },

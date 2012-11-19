@@ -2,15 +2,17 @@
 $languageString = Zend_Registry::getInstance()->Zend_Locale->getLanguage();
 $defaultConfig = Zend_Registry::getInstance()->config->default;
 $applicationName = $defaultConfig->applicationName;
-$this->title = $this->translate('Welcome to %s', $applicationName);
-$this->headTitle($this->title);
+//$this->title = $this->translate('Welcome to %s', $applicationName);
+//$this->headTitle($this->title);
 ?>
 <div class="welcome-message well">
-<?php if($languageString === 'de'): ?>
-  <?php echo $defaultConfig->welcomeMessage->de ?>
-<?php else: ?>
-  <?php echo $defaultConfig->welcomeMessage->default ?>
-<?php endif; ?>
+  <p>
+  <?php if($languageString === 'de'): ?>
+    <?php echo $defaultConfig->welcomeMessage->de ?>
+  <?php else: ?>
+    <?php echo $defaultConfig->welcomeMessage->default ?>
+  <?php endif; ?>
+  </p>
 </div>
 <?php if(count($this->barcodes > 0)): ?>
   <div class="barcodes-big">  

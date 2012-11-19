@@ -19,62 +19,119 @@
  */
 
 /**
- * 
+ * This controller is reached when any error occured during the processing of the 
+ * users request.
  */
 class ErrorController extends Unplagged_Controller_Action{
 
-  public function errorAction(){    
-    $errors = $this->_getParam('error_handler');
+  private $priority;
 
+  /**
+   * This action will mostly be autocalled when an error occurs during the processing of
+   * the users request.
+   */
+  public function errorAction(){
+    $errors = $this->_getParam('error_handler');
+    
+    //if the error controller gets called directly, we have no $errors
+    //so we need to get out here
     if(!$errors || !$errors instanceof ArrayObject){
-      $this->view->message = 'You have reached the error page';
+      $this->view->message = 'You have reached the error page.';
       return;
     }
+    
+    $this->handleErrorSpecifically($errors);
+    $this->appendWebmasterMail();
+    $this->logException($errors);
+    $this->checkExceptionDisplay($errors);
 
+    $this->view->request = $errors->request;
+  }
+
+  /**
+   * Finds out whether the exception needs to be displayed.
+   */
+  private function checkExceptionDisplay($errors){
+    if($this->getInvokeArg('displayExceptions') == true){
+      $this->view->exception = $errors->exception;
+    }
+  }
+  
+  /**
+   * Checks the error type and takes appropriate action.
+   */
+  private function handleErrorSpecifically($errors){
     switch($errors->type){
       case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE:
       case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
       case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
-        // 404 error -- controller or action not found
-        $this->getResponse()->setHttpResponseCode(404);
-        $priority = Zend_Log::NOTICE;
-        $this->setTitle('404 - Not Found');
-        $this->view->message = "<strong>We are sorry, but we couldn't find the page you requested.</strong><br /><br />This is probably our fault, but just to make sure, please check if you spelled the URL correctly.";
-        
-        
+        $this->notFoundError();
         break;
       default:
-        // application error
-        $this->getResponse()->setHttpResponseCode(500);
-        $priority = Zend_Log::CRIT;
-        $this->setTitle('500 - Internal Server Error');
-        $this->view->message = "<strong>We are sorry, but we encountered an internal problem that couldn't be resolved.</strong>";
+        $this->applicationError();
         break;
     }
-
+  }
+  
+  /**
+   * Looks up the webmaster email and appends it to the message displayed to the user.
+   */
+  private function appendWebmasterMail(){
     $registry = Zend_Registry::getInstance();
     $webmasterConfig = $registry->config->get('contact')->get('webmaster');
     $webmasterEmail = $webmasterConfig->get('email');
     
     if(!empty($webmasterEmail)){
-      $this->view->message .= ' If you think this is a severe problem, please notify our webmaster at: <a href="mailto:' . $webmasterEmail . '">' . $webmasterEmail . '</a>';
+      $this->view->message .= ' If you think this is a severe problem, please be so kind to contact our webmaster at: <a href="mailto:' . $webmasterEmail . '">' . $webmasterEmail . '</a>';
     }
-    
-    // Log exception, if logger available
-    if($log = $this->getLog()){
-      $log->log($this->view->message, $priority, $errors->exception);
-      $log->log('Request Parameters', $priority, $errors->request->getParams());
-    }
-
-    // conditionally display exceptions
-    if($this->getInvokeArg('displayExceptions') == true){
-      $this->view->exception = $errors->exception;
-    }
-
-    $this->view->request = $errors->request;
+  }
+  
+  /**
+   * Send a 500 error page.
+   */
+  private function applicationError(){
+    $this->setResponseData(500, Zend_Log::CRIT, '500 - Internal Server Error', "<strong>We are sorry, but we encountered an internal problem that couldn't be resolved.</strong>");
   }
 
-  public function getLog(){
+  /**
+   * Send a 404 error page.
+   */
+  private function notFoundError(){
+    $this->setResponseData(404, Zend_Log::NOTICE, '404 - Not Found', "<strong>We are sorry, but we couldn't find the page you requested.</strong><br /><br />This is probably our fault, but just to make sure, please check if you spelled the URL correctly.");
+  }
+
+  /**
+   * Set the data for the current response.
+   * 
+   * @param int $statusCode
+   * @param string $priority
+   * @param string $title
+   * @param string $message
+   */
+  private function setResponseData($statusCode, $priority, $title, $message){
+    $this->getResponse()->setHttpResponseCode($statusCode);
+    $this->priority = $priority;
+    $this->setTitle($title);
+    $this->view->message = $message;
+  }
+  
+  /**
+   * Writes the exception into a logfile.
+   * 
+   * @param array|ArrayObject $errors
+   */
+  private function logException($errors){
+    $log = $this->getLog();
+    if($log){
+      $log->log($this->view->message, $this->priority, $errors->exception);
+      $log->log('Request Parameters', $this->priority, $errors->request->getParams());
+    }
+  }
+
+  /**
+   * Tries to find the logger object.
+   */
+  private function getLog(){
     $bootstrap = $this->getInvokeArg('bootstrap');
     if(!$bootstrap->hasResource('Log')){
       return false;

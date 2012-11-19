@@ -216,6 +216,7 @@
   $.fn.unplaggedContextMenu = function(){
     //unobtrusively add the context menu, so that users without js don't see it
     addContextMenu();
+    addMenuIndicator();
   
     var searchBuffer='';
     // tells whether the click was on the contextmenu or not
@@ -228,7 +229,7 @@
     function addContextMenu(){
       var contextMenuElement = '<ul id="contextmenu" class="contextmenu dropdown-menu">' + 
       '<li class="google-search-for start-search"><a href="#"><i class="icon-search"></i> ' + $.t('contextmenu.google.search') + ' <span id="google-search-words"></span></a></li>' +
-      '<li class="google-search-for delete-search-words"><a href="#"><i class="icon-remove"></i>' + $.t('contextmenu.google.remove') + '</a></li>' +
+      '<li class="google-search-for delete-search-words"><a href="#"><i class="icon-remove"></i> ' + $.t('contextmenu.google.remove') + '</a></li>' +
       '<li class="divider"></li>' +
       
       '<li><a href="#" class="set-candidate-fragment"><i class="icon-bookmark"></i> ' + $.t('contextmenu.fragment.candidate') + '</a></li>' +
@@ -251,12 +252,7 @@
   
     //to make it possible to show the contextmenu only on certain elements, 
     //we only use it when the class show-contextmenu is present
-    $('.show-contextmenu')
-    .attr('title', $.t('contextmenu.tip.title'))
-    .attr('data-content', $.t('contextmenu.tip.text'))
-    .popover({
-      placement: 'top'
-    }).bind('contextmenu', showCustomContextmenu);
+    $('.show-contextmenu').bind('contextmenu', showCustomContextmenu);
 
     //we probably only need mouseup, because then we know that the selection is finished
     $('.show-contextmenu').bind('mouseup', clickHandler);
@@ -290,6 +286,18 @@
 
       // avoid showing default contextMenu
       return false;
+    }
+
+    function addMenuIndicator(){
+      //add div element that contains the mouse following indicator for the contextment
+      $('body').append('<div class="mouse-icon icon-tasks hidden"></div>');
+      $('.show-contextmenu').hover(function(){
+        $('.mouse-icon').removeClass('hidden');
+      }, function(){
+        $('.mouse-icon').addClass('hidden');
+      }).mousemove(function(e){
+        $('.mouse-icon').css('left', e.clientX +7).css('top', e.clientY - 8);
+      });
     }
 
     function clickHandler(event)

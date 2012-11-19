@@ -282,8 +282,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
    */
   protected function _initView(){
     $view = new Zend_View();
-
-    $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html;charset=utf-8');
     $defaultConfig = $this->getOption('default');
     $view->headTitle()->setSeparator(' - ')->append($defaultConfig['applicationName']);
     return $view;

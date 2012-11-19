@@ -7,10 +7,6 @@
         "authorize": "freigeben"
     },
     "contextmenu": {
-        "tip": {
-            "title": "Tipp: Benuzten Sie das Kontextmenü",
-            "text": "Sie können Wörter mit der linken Maustaste markieren und dann mit einem Rechtsklick das Kontextmenü öffnen"
-        },
         "google": {
             "open": "Google öffnen",
             "remove": "Google-Suchwörter löschen",

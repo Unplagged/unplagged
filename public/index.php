@@ -18,8 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
- * This file is the main entry point into the Unplagged application. It defines
- * the environment variables and initiates the bootstrapping process.
+ * This file is the main entry point into the Unplagged application. It checks 
+ * whether the application is installed and either starts the installation or 
+ * the application.
  */
 require_once '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 require_once BUILD_PATH . DIRECTORY_SEPARATOR . 'Installer' . DIRECTORY_SEPARATOR . 'Installer.php';

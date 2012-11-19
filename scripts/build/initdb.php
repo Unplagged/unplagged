@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 include 'initbase.php';
 
 $actions = array(
@@ -50,18 +49,17 @@ $actions = array(
     array('name'=>'report_requested', 'title'=>'User requested a report', 'description'=>'A user requested a fragment report.'),
 );
 
-function setupActions(array $actions, $em){
-  foreach($actions as $action){
-    if(!($em->getRepository('Application_Model_Action')->findOneByName($action['name']))){
-      $actionObject = new Application_Model_Action($action);
-      $em->persist($actionObject);
-    }
-  }
-  $em->flush();
-}
-
-setupActions($actions, $em);
-
+$fragmentTypes = array(
+    array('name'=>'UnbekannteQuelle', 'description'=>'UnbekannteQuelle'),
+    array('name'=>'KeinPlagiat', 'description'=>'KeinPlagiat'),
+    array('name'=>'Verschleierung', 'description'=>'Verschleierung'),
+    array('name'=>'HalbsatzFlickerei', 'description'=>'HalbsatzFlickerei'),
+    array('name'=>'ShakeAndPaste', 'description'=>'ShakeAndPaste'),
+    array('name'=>'ÜbersetzungsPlagiat', 'description'=>'ÜbersetzungsPlagiat'),
+    array('name'=>'StrukturPlagiat', 'description'=>'StrukturPlagiat'),
+    array('name'=>'BauernOpfer', 'description'=>'BauernOpfer'),
+    array('name'=>'VerschaerftesBauernOpfer', 'description'=>'VerschaerftesBauernOpfer')
+);
 
 $states = array(
     array('name'=>'created', 'title'=>'created', 'description'=>'The element was created.'),
@@ -90,20 +88,15 @@ function setupStates(array $states, $em){
   $em->flush();
 }
 
-setupStates($states, $em);
-
-
-$fragmentTypes = array(
-    array('name'=>'UnbekannteQuelle', 'description'=>'UnbekannteQuelle'),
-    array('name'=>'KeinPlagiat', 'description'=>'KeinPlagiat'),
-    array('name'=>'Verschleierung', 'description'=>'Verschleierung'),
-    array('name'=>'HalbsatzFlickerei', 'description'=>'HalbsatzFlickerei'),
-    array('name'=>'ShakeAndPaste', 'description'=>'ShakeAndPaste'),
-    array('name'=>'ÜbersetzungsPlagiat', 'description'=>'ÜbersetzungsPlagiat'),
-    array('name'=>'StrukturPlagiat', 'description'=>'StrukturPlagiat'),
-    array('name'=>'BauernOpfer', 'description'=>'BauernOpfer'),
-    array('name'=>'VerschaerftesBauernOpfer', 'description'=>'VerschaerftesBauernOpfer')
-);
+function setupActions(array $actions, $em){
+  foreach($actions as $action){
+    if(!($em->getRepository('Application_Model_Action')->findOneByName($action['name']))){
+      $actionObject = new Application_Model_Action($action);
+      $em->persist($actionObject);
+    }
+  }
+  $em->flush();
+}
 
 function setupFragmentTypes(array $fragmentTypes, $em){
   foreach($fragmentTypes as $fragmentType){
@@ -116,14 +109,5 @@ function setupFragmentTypes(array $fragmentTypes, $em){
 }
 
 setupFragmentTypes($fragmentTypes, $em);
-
-
-//default settings
-if(!($em->getRepository('Application_Model_Setting')->findOneBySettingKey("language"))){
-  unset($data);
-  $setting = new Application_Model_Setting('language');
-  $setting->setValue('de_DE');
-  $em->persist($setting);
-}
-
-$em->flush();
+setupStates($states, $em);
+setupActions($actions, $em);

@@ -419,5 +419,3 @@ class DocumentController extends Unplagged_Controller_Action{
   }
 
 }
-
-?>
