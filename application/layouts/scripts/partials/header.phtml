@@ -14,59 +14,73 @@
     <script src="<?php echo $this->baseUrl('js/libs/modernizr-2.5.3.min.js'); ?>"></script>
   </head>
   <body>
-    <noscript><div class="alert-danger top-alert"><div class="alert alert-danger"><h4 class="alert-heading"><?php echo $this->translate('Attention!'); ?></h4><p><?php echo $this->translate('Unfortunately JavaScript is currently not supported or is disabled in your browser. Please enable JavaScript for full functionality.'); ?></p></div></div></noscript>
-    <!-- Prompt users of IE 7 and lower to install Chrome Frame. -->
-    <!--[if lt IE 8]><div class="alert-danger top-alert"><div class="alert alert-danger"><p><?php echo $this->translate('Your browser is'); ?><em> <?php echo $this->translate('ancient!'); ?></em> <a href="http://browsehappy.com/"><?php echo $this->translate('Upgrade to a different browser'); ?></a> <?php echo $this->translate('or'); ?> <a href="http://www.google.com/chromeframe/?redirect=true"><?php echo $this->translate('install Google Chrome Frame'); ?></a> <?php echo $this->translate('to experience this site.'); ?></p></div></div><![endif]-->
-    <header role="toolbar">
-      <div class="content clearfix">
-        <?php if(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest'): ?>
-          <div class="user-box">
-            <div class="avatar-box">
-              <img class="avatar" src="<?php echo Unplagged_Helper::getAvatarPath($this->me); ?>" />
-              <a href="<?php echo $this->baseUrl('user/edit'); ?>" class="edit-link"><i class="icon-pencil icon-white"></i></a>
+    <?php echo $this->partial('partials/noscript.phtml'); ?>
+    <?php echo $this->partial('partials/chrome-frame.phtml'); ?>
+    <header class="navbar navbar-inverse"role="toolbar">
+      <div class="navbar-inner">
+        <div class="container content">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <!-- <a class="brand" href="#">unplagged</a> -->
+          <div class="nav-collapse collapse navbar-responsive-collapse">
+            <ul class="nav">
+              <!--<li class="active"><a href="#">Home</a></li>
+              <li><a href="#">Link</a></li>
+              <li><a href="#">Link</a></li>-->
+              <?php if(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest'): ?>
+                <li class="dropdown">
+                  <a href="<?php echo $this->baseUrl('user/edit'); ?>" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="icon-user icon-white"></i><?php echo $this->me->getUsername(); ?> <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu user-dropdown">
+                    <li><a href="<?php echo $this->baseUrl('user/edit'); ?>"><?php echo $this->translate("Edit Profile"); ?></a></li>
+                    <li><a href="<?php echo $this->baseUrl('user/files'); ?>"><?php echo $this->translate("My Files"); ?></a></li>
+                    <li><a href="<?php //echo $this->baseUrl('user/settings');        ?>"><?php echo $this->translate("My Settings"); ?></a></li>
+                    <li><a href="<?php echo $this->baseUrl('auth/logout'); ?>"><?php echo $this->translate("Logout"); ?></a></li>
+                    <li class="avatar-wrap"><img class="avatar" src="<?php echo Unplagged_Helper::getAvatarPath($this->me); ?>" /></li>
+                  </ul>
+                </li>
+              <?php endif; ?>
+            </ul>
+            <div class="case-settings-box clearfix pull-left">
+              <?php
+              $currentLabel = '';
+              $currentValue = null;
+              if($this->me->getCurrentCase() instanceof Application_Model_Case){
+                $currentLabel = $this->me->getCurrentCase()->getPublishableName();
+                $currentValue = $this->me->getCurrentCase()->getId();
+              }
+              ?>
+              <?php if(count($this->cases) > 0): ?>
+                <form class="current-case" method="POST" action="<?php echo $this->baseUrl('user/set-current-case'); ?>">
+                  <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
+                    <option></option>
+                    <?php foreach($this->cases as $case): ?>
+                      <option <?php if($case['value'] == $currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                  <button class="button">Ok</button>  
+                </form>
+              <?php endif; ?>
             </div>
-            <div class="btn-group user-menu">
-              <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="<?php echo $this->baseUrl('user/edit'); ?>"><i class="icon-user"></i><?php echo $this->me->getUsername(); ?> <span class="caret"></span></a>
-              <ul cLass="dropdown-menu">
-                <li><a href="<?php echo $this->baseUrl('auth/logout'); ?>"><?php echo $this->translate("Logout"); ?></a></li>
-                <li><a href="<?php echo $this->baseUrl('user/edit'); ?>"><?php echo $this->translate("Edit Profile"); ?></a></li>
-                <li><a href="<?php echo $this->baseUrl('user/files'); ?>"><?php echo $this->translate("My Files"); ?></a></li>
-                <li><a href="<?php //echo $this->baseUrl('user/settings'); ?>"><?php echo $this->translate("My Settings"); ?></a></li>
-              </ul>
-            </div>
-          </div>
-        <?php else: ?>
-          <div class="login-register-box">
-            <a href="<?php echo $this->baseUrl('register'); ?>"><?php echo $this->translate("Register now"); ?></a>
-            <span><?php echo $this->translate('or') . ' '; ?></span>
-            <a href="<?php echo $this->baseUrl('login'); ?>"><?php echo $this->translate("login"); ?></a>
-          </div>
-        <?php endif; ?>
-        <div class="case-settings-box clearfix">
-          <?php
-          $currentLabel = '';
-          $currentValue = null;
-          if($this->me->getCurrentCase() instanceof Application_Model_Case){
-            $currentLabel = $this->me->getCurrentCase()->getPublishableName();
-            $currentValue = $this->me->getCurrentCase()->getId();
-          }
-          ?>
-          <?php if(count($this->cases) > 0): ?>
-            <?php if($currentValue): ?>
-              <a href="<?php echo $this->baseUrl('case/edit/id/' . $currentValue); ?>"><?php echo $this->translate("Edit Case"); ?></a>
+
+            <?php if(!(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest')): ?>
+              <div class="login-register-box pull-left">
+                <a href="<?php echo $this->baseUrl('register'); ?>"><?php echo $this->translate("Register now"); ?></a>
+                <span><?php echo $this->translate('or') . ' '; ?></span>
+                <a href="<?php echo $this->baseUrl('login'); ?>"><?php echo $this->translate("login"); ?></a>
+              </div>
             <?php endif; ?>
-            <form class="current-case" method="POST" action="<?php echo $this->baseUrl('user/set-current-case'); ?>">
-              <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
-                <option></option>
-                <?php foreach($this->cases as $case): ?>
-                  <option <?php if($case['value'] == $currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
-                <?php endforeach; ?>
-              </select>
-              <button class="button">Ok</button>  
+            <form class="input-append pull-right form-inline">
+              <input placeholder="<?php echo $this->translate("Search Term"); ?>"type="text" class="input-medium">
+              <button type="submit" class="btn"><i class="icon-search"></i></button>
             </form>
-          <?php endif; ?>
+          </div><!-- /.nav-collapse -->
         </div>
-      </div>
+      </div><!-- /navbar-inner -->
     </header>
     <div class="pagewrap">
       <header role="banner" class="clearfix">

@@ -10,4 +10,5 @@ http_images_path = "/images"
 http_stylesheets_path = "/style"
 http_javascripts_path = "/js"
 
+# When compiling also minify the CSS
 output_style = :compressed

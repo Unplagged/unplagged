@@ -266,6 +266,11 @@ h2 {
 
 /* ==|== toolbar styles ======================================================= */
 header[role=toolbar]{
+  margin-bottom: 100px;
+  position: relative; /* for the js close button */  
+}
+
+header[role=toolbar] .navbar-inner{
   background: #333333;
   background: -moz-linear-gradient(top, #4c4f54 0%, #000000 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4c4f54), color-stop(100%,#000000));
@@ -274,9 +279,28 @@ header[role=toolbar]{
   background: -ms-linear-gradient(top, #4c4f54 0%,#000000 100%);
   background: linear-gradient(top, #4c4f54 0%,#000000 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4f54', endColorstr='#000000',GradientType=0 );
-  padding: 10px 0;
-  margin-bottom: 115px;
-  position: relative; /* for the js close button */
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.user-dropdown {
+  padding-left: 60px;
+  min-width: 100px;
+  }
+
+.user-dropdown a{
+  padding: 3px 10px 3px 10px;    
+}
+  
+.user-dropdown .avatar-wrap {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
+.user-dropdown .avatar {
+  border: none;  
 }
 
 header[role=toolbar] .login-register-box {
@@ -299,38 +323,9 @@ header[role=toolbar] a:hover{
   text-decoration: none;
 }
 
-.user-box {
-  float: left;
-  position: relative;
-  padding-left: 60px; /* space for the absolute positioned avatar */
-}
-
-.user-box .avatar-box{
-  position: absolute;
-  left: 0;
-}
-
-  .avatar-box .edit-link {
-    position: absolute;
-    bottom: 3px;
-    left: 3px;
-  }
-
-.user-menu {
-  float: left;
-}
-
-.user-menu.dropdown-button ul {
-  min-width: 100px;
-}
-
-.user-menu.dropdown-button li a{
-  padding-left: 8px;
-}
-
 .case-settings-box {
-  float: right;
   height: 24px;
+  line-height: 40px;
 }
 
 .case-settings-box form {
@@ -409,6 +404,10 @@ header[role=banner] h1 a {
   border-radius: 2px;
 }
 
+.navbar-inverse .navbar-inner {
+  background: none;
+  border: none;
+  }
 
 /* ==|== footer styles ======================================================= */
 
@@ -1810,10 +1809,6 @@ td .btn-group {
     width: auto;
   }
 
-  header[role=toolbar] {
-    padding: 5px 0;
-  }
-
   header[role=toolbar] .content {
     margin: 0 10px;
     width: auto;
@@ -1884,9 +1879,6 @@ td .btn-group {
   .avatar-box {
     position: relative;
     float: left;
-  }
-
-  header[role=toolbar] .content {
   }
 
   header[role=banner] h1 {
