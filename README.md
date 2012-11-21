@@ -1,21 +1,16 @@
-Unplagged the plagiarism detection cockpit.
-Copyright (C) 2012 Unplagged
+Unplagged
+=========
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Unplagged is a collaborative open source tool to help you discover, collect and reliably document plagiarism in scientific theses, papers, books and other scientific or school-based writing. It is based on the workflows that were employed and developed by the german websites VroniPlag-Wiki and GuttenPlag-Wiki.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Things to write about
+---------------------
 
-######################################################################
-
-Unplagged is a simple, web-based, collaborative system to help
-discover, collect and document plagiarism in scientic pa-
-pers.
+* installer
+* composer
+* compass
+* tesseract
+* imagemagick
+* testing
+* apigen

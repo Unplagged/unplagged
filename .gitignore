@@ -1,37 +1,19 @@
+nbproject
+._*
+.~lock.*
+.buildpath
 .DS_Store
-/docs/phpdoc
-/docs/phpunit
-/docs/Developers Manual/*.aux
-/docs/Developers Manual/*.toc
-/docs/Developers Manual/*.log
-/docs/Developers Manual/*.out
-/docs/Developers Manual/*.blg
-/docs/Developers Manual/*.bbl
-/docs/Developers Manual/*.synctex.gz
-/docs/Developers Manual/parts/*.aux
+.idea
+.project
+.settings
+composer.lock
+
 /application/configs/unplagged-config.ini
-
-/data
-
-/nbproject/private/
-!.gitignore
-/application/storage/files/4.png
-/application/storage/files/2.potx
-/application/storage/files/3.docx
-/nbproject/
-docs/Developers Manual/Developers-Manual.lof
-
-docs/Developers Manual/Developers-Manual.pdf
-
-docs/Developers Manual/biblio.bib
-/data/doctrine/__CG__Application_Model_State.php
-/data/doctrine/__CG__Application_Model_Document.php
-/data/doctrine/__CG__Application_Model_Case.php
-/data/doctrine/__CG__Application_Model_User.php
-/data/doctrine/__CG__Application_Model_Document_Page.php
-!/data/
+/docs/phpunit
+/docs/api-docs/
 /data/logs/application.log
 /data/logs/untranslated.log
-
+/vendor
 .sass-cache
-/docs/api-docs/
+
+!.gitignore
