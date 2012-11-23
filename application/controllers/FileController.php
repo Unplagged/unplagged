@@ -309,7 +309,7 @@ class FileController extends Unplagged_Controller_Action{
         // remove file from file system
         $localPath = $file->getFullPath();
         $deleted = unlink($localPath);
-        if($deleted || !file_exists($localPath)){
+        if($deleted || !is_readable($localPath)){
           // set removed state in database record
           $file->remove();
           $registry = Zend_Registry::getInstance();

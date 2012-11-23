@@ -79,7 +79,7 @@ class Unplagged_Parser_Document_ImagemagickAdapter{
   private function checkForInvalidArguments($inputFileLocation, $outputFileLocation){
     $message = false;
 
-    if(!file_exists($inputFileLocation)){
+    if(!is_readable($inputFileLocation)){
       $message = 'The input file doesn\'t exist.';
     }elseif(!is_string($outputFileLocation) || $outputFileLocation === ''){
       $message = 'The output file name needs to be specified as a string';

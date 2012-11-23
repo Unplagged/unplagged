@@ -79,7 +79,7 @@ final class Unplagged_Parser_Page_TesseractAdapter{
     $command = self::$tesseractPath . 'tesseract ' . $this->inputFileLocation . ' ' . $this->outputFileLocation . ' ' . $this->language;
     exec($command, $op, $returnVal);
 
-    if(file_exists($this->outputFileLocation . '.txt')){
+    if(is_readable($this->outputFileLocation . '.txt')){
       return true;
     }else{
       return false;
@@ -112,9 +112,9 @@ final class Unplagged_Parser_Page_TesseractAdapter{
   private function checkForInvalidArguments($inputFileLocation, $outputFileLocation){
     $message = false;
 
-    if(!file_exists($inputFileLocation)){
+    if(!is_readable($inputFileLocation)){
       $message = 'The input file doesn\'t exist.';
-    }elseif(!is_string($outputFileLocation) || $outputFileLocation === '' || file_exists($outputFileLocation)){
+    }elseif(!is_string($outputFileLocation) || $outputFileLocation === '' || is_readable($outputFileLocation)){
       $message = 'The output file name needs to be specified as a string and can not exist.';
     }elseif(!is_writable(dirname($outputFileLocation))){
       $message = 'The location for the output file is not writeable.';

@@ -99,7 +99,7 @@ class Unplagged_Mailer{
    */
   private function getBodyContent($mailView, $type = 'plain'){
     $bodyHtml = '';
-    if(file_exists($this->templatePath . $type . DIRECTORY_SEPARATOR . $this->templateName)){
+    if(is_readable($this->templatePath . $type . DIRECTORY_SEPARATOR . $this->templateName)){
       $mailView->setScriptPath($this->templatePath . $type . DIRECTORY_SEPARATOR);
       $bodyHtml = $mailView->render($this->templateName);
     }

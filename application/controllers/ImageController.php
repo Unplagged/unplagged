@@ -54,7 +54,7 @@ class ImageController extends Unplagged_Controller_Action{
         $allowedExtensions = array('jpg', 'jpeg', 'gif', 'png');
 
         $response = $this->getResponse();
-        if(file_exists($localPath)){
+        if(is_readable($localPath)){
           $this->getResponse()->setHeader('Expires', '', true);
           $this->getResponse()->setHeader('Cache-Control', 'private', true);
           $this->getResponse()->setHeader('Cache-Control', 'max-age=360000');

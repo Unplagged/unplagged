@@ -237,7 +237,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $translationFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $languageString . '.csv';
 
     //try to load the language file
-    if(file_exists($translationFilePath)){
+    if(is_readable($translationFilePath)){
       $translate = new Zend_Translate('csv', $translationFilePath, $languageString);
       $registry->set('Zend_Translate', $translate);
     }else{

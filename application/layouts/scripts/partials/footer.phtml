@@ -23,7 +23,7 @@
 <?php //Language files for plupload ?>
 <?php $languageString = Zend_Registry::getInstance()->Zend_Locale->getLanguage(); ?>
 <?php $pluploadTranslationPath = 'js/libs/plupload/js/i18n/' . $languageString . '.js'; ?>
-<?php if(file_exists(BASE_PATH . DIRECTORY_SEPARATOR . 'public' . $pluploadTranslationPath)): ?>
+<?php if(is_readable(BASE_PATH . DIRECTORY_SEPARATOR . 'public' . $pluploadTranslationPath)): ?>
   <script defer src="<?php echo $this->baseUrl($pluploadTranslationPath); ?>"></script>
 <?php endif; ?>
 <script>

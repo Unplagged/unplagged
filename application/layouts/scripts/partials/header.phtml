@@ -38,7 +38,7 @@
                   <ul class="dropdown-menu user-dropdown">
                     <li><a href="<?php echo $this->baseUrl('user/edit'); ?>"><?php echo $this->translate("Edit Profile"); ?></a></li>
                     <li><a href="<?php echo $this->baseUrl('user/files'); ?>"><?php echo $this->translate("My Files"); ?></a></li>
-                    <li><a href="<?php //echo $this->baseUrl('user/settings');        ?>"><?php echo $this->translate("My Settings"); ?></a></li>
+                    <li><a href="<?php //echo $this->baseUrl('user/settings');         ?>"><?php echo $this->translate("My Settings"); ?></a></li>
                     <li><a href="<?php echo $this->baseUrl('auth/logout'); ?>"><?php echo $this->translate("Logout"); ?></a></li>
                     <li class="avatar-wrap"><img class="avatar" src="<?php echo Unplagged_Helper::getAvatarPath($this->me); ?>" /></li>
                   </ul>
@@ -55,7 +55,7 @@
               }
               ?>
               <?php if(count($this->cases) > 0): ?>
-                <form class="current-case" method="POST" action="<?php echo $this->baseUrl('user/set-current-case'); ?>">
+                <form class="current-case form-inline" method="POST" action="<?php echo $this->baseUrl('user/set-current-case'); ?>">           <label for="case">Cases:</label>
                   <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
                     <option></option>
                     <?php foreach($this->cases as $case): ?>
@@ -74,10 +74,11 @@
                 <a href="<?php echo $this->baseUrl('login'); ?>"><?php echo $this->translate("login"); ?></a>
               </div>
             <?php endif; ?>
-            <form class="input-append pull-right form-inline">
-              <input placeholder="<?php echo $this->translate("Search Term"); ?>"type="text" class="input-medium">
-              <button type="submit" class="btn"><i class="icon-search"></i></button>
-            </form>
+            <!--<form class="form-search pull-right">
+              <div class="input-append">
+                <input type="text" class="span2 search-query" placeholder="<?php echo $this->translate("Search"); ?>" type="text">
+                <button type="submit" class="btn">Go <i class="icon-search"></i></button>
+            </form>-->
           </div><!-- /.nav-collapse -->
         </div>
       </div><!-- /navbar-inner -->
