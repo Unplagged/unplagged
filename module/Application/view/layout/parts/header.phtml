@@ -8,14 +8,15 @@
     <!-- Design based on http://www.premiumpixels.com/ -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <?php echo $this->headTitle(); ?>
-    <?php echo $this->headLink()->appendStylesheet($this->baseUrl('style/styles.css')); ?>
+    <?php //echo $this->headTitle(); ?>
+    <?php //echo $this->headLink()->appendStylesheet($this->baseUrl('style/styles.css')); ?>
     <!-- Modernizr needs to stay in the head to work properly, every other scripts should go in the bottom. -->
-    <script src="<?php echo $this->baseUrl('js/libs/modernizr-2.5.3.min.js'); ?>"></script>
+    <script src="<?php //echo $this->baseUrl('js/libs/modernizr-2.5.3.min.js'); ?>"></script>
   </head>
   <body>
-    <?php echo $this->partial('partials/noscript.phtml'); ?>
-    <?php echo $this->partial('partials/chrome-frame.phtml'); ?>
+    <?php //echo $this->render('partials/noscript.phtml'); ?>
+    <?php //echo $this->render('partials/chrome-frame.phtml'); ?>
+    <?php die('hier'); ?>
     <header class="navbar navbar-inverse"role="toolbar">
       <div class="navbar-inner">
         <div class="container content">

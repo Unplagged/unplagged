@@ -25,13 +25,7 @@
  * to happen before this file gets included.
  */
 
-/**
- * @const APPLICATION_ENV The application environment, from which the config values are taken.
- */
-defined('APPLICATION_ENV')
-        || define('APPLICATION_ENV', 'production');
-
-define('BASE_PATH', realpath(dirname(__FILE__)));
+define('BASE_PATH', realpath('.' . DIRECTORY_SEPARATOR));
 
 /**
  * @const APPLICATION_PATH The path to the main source directory.
@@ -63,41 +57,7 @@ defined('LIBRARY_PATH')
 defined('BUILD_PATH')
         || define('BUILD_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'build');
 
-
-// Ensure library folder is on the include_path
-set_include_path(implode(PATH_SEPARATOR, array(
-            LIBRARY_PATH,
-            get_include_path(),
-        )));
-
-require_once 'Zend/Application.php';
-
-/**
- * Create application, without bootstraping it, because we do not always want to bootstrap
- * all steps.
- * 
- * @return Zend_Application
- */
-function createApplication(){
-  $application=new Zend_Application(APPLICATION_ENV, array(
-              'config'=>array(
-                  APPLICATION_PATH . '/configs/application.ini',
-                  APPLICATION_PATH . '/configs/log.ini',
-                  APPLICATION_PATH . '/configs/routes.ini',
-                  APPLICATION_PATH . '/configs/unplagged-config.ini'
-              )
-          ));
-  return $application;
-}
-
-/**
- * Executes the whole bootstrap process.
- * 
- * @return Zend_Application
- */
-function bootstrapApplication(){
-    $application = createApplication();
-    $application->bootstrap();
-
-    return $application;
+// Composer autoloading
+if (is_readable('vendor/autoload.php')) {
+  include 'vendor/autoload.php';
 }
