@@ -1,30 +1,32 @@
-<phpunit bootstrap="bootstrap.php" 
-         colors="true" 
+<phpunit bootstrap="bootstrap.php"
+         colors="true"
          backupGlobals="false"
          backupStaticAttributes="false"
          stopOnError="true"
          stopOnFailure="true"
          stopOnIncomplete="true"
          stopOnSkipped="true">
-    <testsuite name="app">
-        <directory>./application/</directory>
-    </testsuite>
-    <testsuite name="lib">
-        <directory>./library/</directory>
+    <testsuite name="Application">
+        <directory>./module/Application</directory>
+        <exclude>./_application</exclude>
+        <exclude>./_library</exclude>
     </testsuite>
     <filter>
         <whitelist>
-            <directory suffix=".php">./../application/</directory>
-            <directory suffix=".php">./../library/Unplagged</directory>
+            <directory suffix=".php">./../module/Aplication</directory>
         </whitelist>
-    </filter>  
+        <blacklist>
+            <directory suffix=".php">./../module/Application/src/Application/Model/</directory>
+            <directory suffix=".php">./../module/Application/src/Application/Model/</directory>
+        </blacklist>
+    </filter>
     <logging>
-        <log type="coverage-html" 
-             target="../docs/phpunit/coverage" 
+        <log type="coverage-html"
+             target="../docs/coverage"
              charset="UTF-8"
-             yui="true" 
-             highlight="true" 
-             lowUpperBound="50" 
+             yui="true"
+             highlight="true"
+             lowUpperBound="50"
              highLowerBound="70" />
     </logging>
 </phpunit>

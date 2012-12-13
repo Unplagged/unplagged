@@ -19,8 +19,10 @@
  */
 namespace Application;
 
-use Zend\Mvc\ModuleRouteListener;
 use Zend\EventManager\EventInterface;
+use Zend\Config\Factory;
+use Zend\Config\Config;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * This class is the starting point for the Unplagged application and initalizes 
@@ -28,42 +30,76 @@ use Zend\EventManager\EventInterface;
  */
 class Module{
 
+  /**
+   * Initalizes the application during the bootstrapping process.
+   * 
+   * @param \Zend\EventManager\EventInterface $e
+   */
   public function onBootstrap(EventInterface $e){
     $serviceManager = $e->getApplication()->getServiceManager();
-    $eventManager = $e->getApplication()->getEventManager();
 
-    $this->initTranslator($eventManager, $serviceManager);
-    $this->initDoctrineDependencyInjection($serviceManager);
+    $this->initDoctrine($serviceManager);
   }
 
-  private function initTranslator($eventManager, $serviceManager){
-    $serviceManager->get('translator');
-    $moduleRouteListener = new ModuleRouteListener();
-    $moduleRouteListener->attach($eventManager);
-  }
-
-  private function initDoctrineDependencyInjection($serviceManager){
+  /**
+   * Injects Doctrines entitymanager into every created controller.
+   * 
+   * @param \Zend\ServiceManager\ServiceManager $serviceManager
+   */
+  private function initDoctrine(ServiceManager $serviceManager){
+    $entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');
     $controllerLoader = $serviceManager->get('ControllerLoader');
-
-    // Add initializer to Controller Service Manager that check if controllers needs entity manager injection
-    $controllerLoader->addInitializer(function ($instance) use ($serviceManager){
-              if(method_exists($instance, 'setEntityManager')){
-                $instance->setEntityManager($serviceManager->get('doctrine.entitymanager.unplagged_orm'));
+    $controllerLoader->addInitializer(function ($controller) use ($entityManager){
+              if($controller instanceof Controller\BaseController){
+                $controller->setEntityManager($entityManager);
               }
             });
   }
 
-  public function getConfig(){
-    return include __DIR__ . '/config/module.config.php';
+  public function getViewHelperConfig(){
+    return array(
+        'factories'=>array(
+            'flashMessages'=>function($sm){
+
+              $flashmessenger = $sm->getServiceLocator()
+                      ->get('ControllerPluginManager')
+                      ->get('flashmessenger');
+
+              $message = new \Application\Helper\FlashMessages();
+              $message->setFlashMessenger($flashmessenger);
+
+              return $message;
+            }
+        ),
+    );
   }
 
+  /**
+   * This method provides all configuration information of this module. It is expected by ZEND2, so it will be called
+   * when the configuration is needed.
+   * 
+   * @return \Zend\Config\Config
+   */
+  public function getConfig(){
+    $defaultConfig = new Config(include __DIR__ . '/config/module.config.php');
+    $navigationConfig = Factory::fromFile(__DIR__ . '/config/navigation.xml', true);
+
+    $defaultConfig->merge($navigationConfig);
+    return $defaultConfig;
+  }
+
+  /**
+   * Provides information about all modules and libraries that need to be loaded for this module.
+   * 
+   * @return array The autoloader configuration.
+   */
   public function getAutoloaderConfig(){
     return array(
         'Zend\Loader\StandardAutoloader'=>array(
             'namespaces'=>array(
                 __NAMESPACE__=>__DIR__ . '/src/' . __NAMESPACE__,
-            ),
-        ),
+            )
+        )
     );
   }
 

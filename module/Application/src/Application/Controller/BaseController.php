@@ -27,7 +27,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 abstract class BaseController extends AbstractActionController{
 
   protected $em;
-  protected $entityManager;
 
   /**
    * This constructor is just for testing purposes in order to easily inject the
@@ -35,24 +34,15 @@ abstract class BaseController extends AbstractActionController{
    * 
    * @param \Doctrine\ORM\EntityManager $entityManager
    */
-  public function __construct(\Doctrine\ORM\EntityManager $entityManager = null){
+  /*public function __construct(\Doctrine\ORM\EntityManager $entityManager = null){
+    //parent::__construct();
     if($entityManager){
       $this->setEntityManager($entityManager);
     }
-  }
+  }*/
 
   public function setEntityManager(\Doctrine\ORM\EntityManager $entityManager){
     $this->em = $entityManager;
-    $this->entityManager = $entityManager;
-  }
-
-  /**
-   * Initalizes registry and namespace instance in the controller and allows to display flash messages in the view.
-   * 
-   * @see Zend_Controller_Action::init()
-   */
-  public function init(){
-    //$this->_defaultNamespace = new Zend_Session_Namespace('Default');
   }
 
   /**

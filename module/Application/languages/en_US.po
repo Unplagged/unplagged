@@ -1,0 +1,179 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Unplagged\n"
+"POT-Creation-Date: 2012-12-05 22:47+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Unplagged\n"
+"Language: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: translate;setLegend;setValue;setLabel;_;_refresh\n"
+"X-Poedit-Basepath: /Users/dominik/Projects/unplagged/\n"
+"X-Poedit-SearchPath-0: module/Application\n"
+
+#: module/Application/src/Application/Controller/IndexController.php:31
+msgid "Hallo"
+msgstr ""
+
+#: module/Application/src/Application/Controller/IndexController.php:45
+msgid "Barcode for"
+msgstr "Barcode für"
+
+#: module/Application/src/Application/Controller/IndexController.php:73
+#: module/Application/view/layout/parts/footer.phtml:2
+msgid "Imprint"
+msgstr "Impressum"
+
+#: module/Application/view/error/404.phtml:1
+msgid "A 404 error occurred"
+msgstr ""
+
+#: module/Application/view/error/404.phtml:10
+msgid "The requested controller was unable to dispatch the request."
+msgstr ""
+
+#: module/Application/view/error/404.phtml:13
+msgid ""
+"The requested controller could not be mapped to an existing controller class."
+msgstr ""
+
+#: module/Application/view/error/404.phtml:16
+msgid "The requested controller was not dispatchable."
+msgstr ""
+
+#: module/Application/view/error/404.phtml:19
+msgid "The requested URL could not be matched by routing."
+msgstr ""
+
+#: module/Application/view/error/404.phtml:22
+msgid "We cannot determine at this time why a 404 was generated."
+msgstr ""
+
+#: module/Application/view/error/404.phtml:34
+msgid "Controller"
+msgstr ""
+
+#: module/Application/view/error/404.phtml:41
+#, php-format
+msgid "resolves to %s"
+msgstr ""
+
+#: module/Application/view/error/404.phtml:53
+#: module/Application/view/error/index.phtml:8
+msgid "Additional information"
+msgstr ""
+
+#: module/Application/view/error/404.phtml:56
+#: module/Application/view/error/404.phtml:80
+#: module/Application/view/error/index.phtml:11
+#: module/Application/view/error/index.phtml:35
+msgid "File"
+msgstr ""
+
+#: module/Application/view/error/404.phtml:60
+#: module/Application/view/error/404.phtml:84
+#: module/Application/view/error/index.phtml:15
+#: module/Application/view/error/index.phtml:39
+msgid "Message"
+msgstr ""
+
+#: module/Application/view/error/404.phtml:64
+#: module/Application/view/error/404.phtml:88
+#: module/Application/view/error/index.phtml:19
+#: module/Application/view/error/index.phtml:43
+msgid "Stack trace"
+msgstr ""
+
+#: module/Application/view/error/404.phtml:74
+#: module/Application/view/error/index.phtml:29
+msgid "Previous exceptions"
+msgstr ""
+
+#: module/Application/view/error/404.phtml:103
+#: module/Application/view/error/index.phtml:58
+msgid "No Exception available"
+msgstr ""
+
+#: module/Application/view/error/index.phtml:1
+msgid "An error occurred"
+msgstr ""
+
+#: module/Application/view/layout/parts/chrome-frame.phtml:5
+msgid "Your browser is"
+msgstr ""
+
+#: module/Application/view/layout/parts/chrome-frame.phtml:5
+msgid "ancient!"
+msgstr ""
+
+#: module/Application/view/layout/parts/chrome-frame.phtml:5
+msgid "Upgrade to a different browser"
+msgstr ""
+
+#: module/Application/view/layout/parts/chrome-frame.phtml:5
+#: module/Application/view/layout/parts/header.phtml:74
+msgid "or"
+msgstr ""
+
+#: module/Application/view/layout/parts/chrome-frame.phtml:5
+msgid "install Google Chrome Frame"
+msgstr ""
+
+#: module/Application/view/layout/parts/chrome-frame.phtml:5
+msgid "to experience this site."
+msgstr ""
+
+#: module/Application/view/layout/parts/header.phtml:19
+msgid "hier"
+msgstr "hia"
+
+#: module/Application/view/layout/parts/header.phtml:40
+msgid "Edit Profile"
+msgstr ""
+
+#: module/Application/view/layout/parts/header.phtml:41
+msgid "My Files"
+msgstr ""
+
+#: module/Application/view/layout/parts/header.phtml:42
+msgid "My Settings"
+msgstr ""
+
+#: module/Application/view/layout/parts/header.phtml:43
+msgid "Logout"
+msgstr ""
+
+#: module/Application/view/layout/parts/header.phtml:60
+msgid "Select a Case"
+msgstr ""
+
+#: module/Application/view/layout/parts/header.phtml:73
+msgid "Register now"
+msgstr ""
+
+#: module/Application/view/layout/parts/header.phtml:75
+msgid "login"
+msgstr ""
+
+#: module/Application/view/layout/parts/header.phtml:80
+msgid "Search"
+msgstr ""
+
+#: module/Application/view/layout/parts/noscript.phtml:4
+msgid "Attention!"
+msgstr ""
+
+#: module/Application/view/layout/parts/noscript.phtml:6
+msgid ""
+"Unfortunately JavaScript is currently not supported or is disabled in your "
+"browser. Please enable JavaScript for full functionality."
+msgstr ""
+
+#: module/Application/view/layout/parts/sidebar_menu.phtml:3
+msgid "Actions menu"
+msgstr ""

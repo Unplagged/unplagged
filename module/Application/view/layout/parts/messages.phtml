@@ -1,6 +1,12 @@
 <?php
-$messenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
-$flashMessages = array_merge($messenger->getCurrentMessages(), $messenger->getMessages());
+var_dump($this);
+/*
+$children = $this->viewModel()
+                 ->getCurrent()
+                 ->getChildren();
+$ourView  = $children[0];
+//$messenger = $this->flashMessenger();
+$flashMessages = array_merge($messenger->getCurrentMessages(), $messenger->getMessages());*/
 ?>
 <?php if(!empty($flashMessages)): ?>
   <?php foreach($flashMessages as $messages): ?>

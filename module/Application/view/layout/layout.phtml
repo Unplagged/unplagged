@@ -12,7 +12,7 @@
 ?>
 <?php echo $this->partial('layout/header');//, array('defaultNamespace'=>$defaultNamespace, 'me'=>$me, 'cases'=>$cases)); ?>
 <div role="main" class="clearfix">
-  <?php echo $this->partial('layout/messages', array('defaultNamespace'=>$defaultNamespace, 'flashMessages'=>$this->flashMessages)); ?>
+  <?php echo $this->flashMessages();  ?>
   <!--<div class="breadcrumbs">
   <?php //echo $this->navigation()->breadcrumbs(); ?>
   </div>-->
@@ -22,17 +22,14 @@
   <div class="main">
     <div id="main-wrapper">
       <div>
-        <?php
-        // content from each view, the rest of this page is global to all views
-        echo $this->layout()->content;
-        ?>
+        <?php echo $this->content; ?>
       </div>
     </div>
   </div>
 </div>
 <?php
 if(!empty($menu)){
-  echo $this->partial('layout/sidebar_menu', array('actions'=>$this->layout()->menu));
+  //echo $this->render('layout/sidebar_menu', array('actions'=>$this->layout()->menu));
 }
 ?>
 <?php echo $this->partial('layout/footer'); ?>

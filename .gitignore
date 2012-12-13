@@ -9,7 +9,7 @@ nbproject
 composer.lock
 
 /application/configs/unplagged-config.ini
-/docs/phpunit
+/docs/coverage/
 /docs/api-docs/
 /data/logs/application.log
 /data/logs/untranslated.log

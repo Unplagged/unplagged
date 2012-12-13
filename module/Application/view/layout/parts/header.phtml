@@ -8,15 +8,14 @@
     <!-- Design based on http://www.premiumpixels.com/ -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <?php //echo $this->headTitle(); ?>
-    <?php //echo $this->headLink()->appendStylesheet($this->baseUrl('style/styles.css')); ?>
-    <!-- Modernizr needs to stay in the head to work properly, every other scripts should go in the bottom. -->
-    <script src="<?php //echo $this->baseUrl('js/libs/modernizr-2.5.3.min.js'); ?>"></script>
+    <?php echo $this->headTitle(); ?>
+    <?php echo $this->headLink()->appendStylesheet($this->basePath('style/styles.css')); ?>
+    <!-- Modernizr needs to stay in the head to work properly, every other script should go in the bottom. -->
+    <script src="<?php echo $this->basePath('js/libs/modernizr-2.5.3.min.js'); ?>"></script>
   </head>
   <body>
-    <?php //echo $this->render('partials/noscript.phtml'); ?>
-    <?php //echo $this->render('partials/chrome-frame.phtml'); ?>
-    <?php die('hier'); ?>
+    <?php echo $this->partial('layout/noscript'); ?>
+    <?php echo $this->partial('layout/chrome-frame'); ?>
     <header class="navbar navbar-inverse"role="toolbar">
       <div class="navbar-inner">
         <div class="container content">
@@ -31,62 +30,66 @@
               <!--<li class="active"><a href="#">Home</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>-->
-              <?php if(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest'): ?>
+              <?php //if(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest'): ?>
                 <li class="dropdown">
-                  <a href="<?php echo $this->baseUrl('user/edit'); ?>" class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-user icon-white"></i><?php echo $this->me->getUsername(); ?> <span class="caret"></span>
+                  <a href="<?php echo $this->basePath('user/edit'); ?>" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="icon-user icon-white"></i><?php //echo $this->me->getUsername(); ?> <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu user-dropdown">
-                    <li><a href="<?php echo $this->baseUrl('user/edit'); ?>"><?php echo $this->translate("Edit Profile"); ?></a></li>
-                    <li><a href="<?php echo $this->baseUrl('user/files'); ?>"><?php echo $this->translate("My Files"); ?></a></li>
+                    <li><a href="<?php echo $this->basePath('user/edit'); ?>"><?php echo $this->translate("Edit Profile"); ?></a></li>
+                    <li><a href="<?php echo $this->basePath('user/files'); ?>"><?php echo $this->translate("My Files"); ?></a></li>
                     <li><a href="<?php //echo $this->baseUrl('user/settings');         ?>"><?php echo $this->translate("My Settings"); ?></a></li>
-                    <li><a href="<?php echo $this->baseUrl('auth/logout'); ?>"><?php echo $this->translate("Logout"); ?></a></li>
-                    <li class="avatar-wrap"><img class="avatar" src="<?php echo Unplagged_Helper::getAvatarPath($this->me); ?>" /></li>
+                    <li><a href="<?php echo $this->basePath('auth/logout'); ?>"><?php echo $this->translate("Logout"); ?></a></li>
+                    <li class="avatar-wrap"><img class="avatar" src="<?php //echo Unplagged_Helper::getAvatarPath($this->me); ?>" /></li>
                   </ul>
                 </li>
-              <?php endif; ?>
+              <?php //endif; ?>
             </ul>
             <div class="case-settings-box clearfix pull-left">
               <?php
-              $currentLabel = '';
+              /*$currentLabel = '';
               $currentValue = null;
               if($this->me->getCurrentCase() instanceof Application_Model_Case){
                 $currentLabel = $this->me->getCurrentCase()->getPublishableName();
                 $currentValue = $this->me->getCurrentCase()->getId();
-              }
+              }*/
               ?>
-              <?php if(count($this->cases) > 0): ?>
-                <form class="current-case form-inline" method="POST" action="<?php echo $this->baseUrl('user/set-current-case'); ?>">           <label for="case">Cases:</label>
+              <?php //if(count($this->cases) > 0): ?>
+                <form class="current-case form-inline" method="POST" action="<?php echo $this->basePath('user/set-current-case'); ?>">           <label for="case"><?php echo $this->translate('Cases'); ?>:</label>
                   <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
                     <option></option>
-                    <?php foreach($this->cases as $case): ?>
-                      <option <?php if($case['value'] == $currentValue) echo 'selected'; ?> value="<?php echo $case['value']; ?>"><?php echo $case['label']; ?></option>
-                    <?php endforeach; ?>
+                    <?php //foreach($this->cases as $case): ?>
+                      <option <?php //if($case['value'] == $currentValue) echo 'selected'; ?> 
+                        value="<?php echo $case['value']; ?>">
+                          <?php echo $case['label']; ?>
+                      </option>
+                    <?php //endforeach; ?>
                   </select>
                   <button class="button">Ok</button>  
                 </form>
-              <?php endif; ?>
+              <?php //endif; ?>
             </div>
-
-            <?php if(!(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest')): ?>
+<!--
+            <?php //if(!(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest')): ?>
               <div class="login-register-box pull-left">
-                <a href="<?php echo $this->baseUrl('register'); ?>"><?php echo $this->translate("Register now"); ?></a>
+                <a href="<?php echo $this->basePath('register'); ?>"><?php echo $this->translate("Register now"); ?></a>
                 <span><?php echo $this->translate('or') . ' '; ?></span>
-                <a href="<?php echo $this->baseUrl('login'); ?>"><?php echo $this->translate("login"); ?></a>
+                <a href="<?php echo $this->basePath('login'); ?>"><?php echo $this->translate("login"); ?></a>
               </div>
-            <?php endif; ?>
+            <?php //endif; ?>
+-->
             <!--<form class="form-search pull-right">
               <div class="input-append">
                 <input type="text" class="span2 search-query" placeholder="<?php echo $this->translate("Search"); ?>" type="text">
                 <button type="submit" class="btn">Go <i class="icon-search"></i></button>
             </form>-->
-          </div><!-- /.nav-collapse -->
+          </div>
         </div>
-      </div><!-- /navbar-inner -->
+      </div>
     </header>
     <div class="pagewrap">
       <header role="banner" class="clearfix">
-        <a href="https://github.com/Unplagged/unplagged"><img style="position: absolute; top: -2px; right: -1px; border: 0; width: 129px" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+        <a href="https://github.com/Unplagged/unplagged"><img class="fork-me-ribbon" style="position: absolute; top: -2px; right: -1px; border: 0; width: 129px" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
         <h1 class="ir">Unplagged - The Plagiarism Detection Cockpit</h1>
-        <nav><?php echo $this->navigation()->menu(); ?></nav>
+        <nav><?php echo $this->navigation('navigation')->menu(); ?></nav>
       </header>
