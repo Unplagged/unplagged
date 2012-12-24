@@ -58,6 +58,6 @@ defined('BUILD_PATH')
         || define('BUILD_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'build');
 
 // Composer autoloading
-if (is_readable('vendor/autoload.php')) {
-  include 'vendor/autoload.php';
+if (is_readable(__DIR__ . '/vendor/autoload.php')) {
+  include __DIR__ . '/vendor/autoload.php';
 }

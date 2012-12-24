@@ -1,12 +1,11 @@
 <?php
-
 return array(
     'doctrine' => array(
         'driver' => array(
             'unplagged_orm' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'cache' => 'array',
-                'paths' => array(__DIR__ . '../src/Application/Model')
+                'paths' => array(__DIR__ . '/../src/Application/Model')
             )
         )
     ),
@@ -21,6 +20,16 @@ return array(
                         'action'     => 'index',
                     ),
                 ),
+            ),
+            'imprint' => array(
+              'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/imprint',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action'     => 'imprint',
+                    ),
+                ), 
             ),
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
@@ -85,6 +94,7 @@ return array(
         'template_map'=>array(
             'layout/layout'=>__DIR__ . '/../view/layout/layout.phtml',
             'application/index/index'=>__DIR__ . '/../view/application/index/index.phtml',
+            'application/index/imprint'=>__DIR__ . '/../view/application/index/imprint.phtml',
             'error/404'=>__DIR__ . '/../view/error/404.phtml',
             'error/index'=>__DIR__ . '/../view/error/index.phtml',
             'layout/header'=>__DIR__ . '/../view/layout/parts/header.phtml',

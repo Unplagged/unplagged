@@ -19,7 +19,6 @@
  */
 namespace Application\Controller;
 
-use Zend\View\Model\ViewModel;
 use Application\Controller\BaseController;
 
 /**
@@ -29,8 +28,7 @@ class IndexController extends BaseController{
   
   public function indexAction(){
     $barcodes = array();
-    //$this->translate('Cases');
-    //$cases = $this->em->getRepository("\Application\Model\PlagCase")->findAll();
+    $cases = $this->em->getRepository('\Application\Model\PlagCase')->findAll();
     //var_dump($cases);
     /*
 
@@ -47,31 +45,21 @@ class IndexController extends BaseController{
         }
       }
     }*/
-    $translator = $this->getServiceLocator()->get('translator');
-    $this->flashMessenger()->setNamespace('success')->addMessage($translator->translate('The case was created successfully.'));
+    //$translator = $this->getServiceLocator()->get('translator'); 
+    //$this->flashMessenger()->setNamespace('success')->addMessage($translator->translate('The case was created successfully.'));
     return array('barcodes'=>$barcodes);
-  }
-
-  /**
-   * Used to render an empty page when the user is not allowed to access the actual data. This is necessary in order
-   * to always at least show some error message, when really nothing is allowed.
-   */
-  public function emptyAction(){
-    $this->_helper->viewRenderer->setNoRender(true);
   }
 
   /**
    * Page that shows contact information required at least by german law. 
    */
   public function imprintAction(){
-    $registry = Zend_Registry::getInstance();
-    $imprintConfig = $registry->config->get('contact')->get('imprint');
+    $config = $this->getServiceLocator()->get('Config');
+    $imprintConfig = $config['contact'];
 
-    $this->view->address = $imprintConfig->get('address');
-    $this->view->telephone = $imprintConfig->get('telephone');
-    $this->view->email = $imprintConfig->get('email');
-
-    $this->setTitle($registry->get('Zend_Translate')->translate('Imprint'));
+    $translator = $this->getServiceLocator()->get('translator'); 
+    $this->setTitle($translator->translate('Imprint'));
+    return $imprintConfig;
   }
 
 }

@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
  *  
@@ -16,15 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-?>
-<h2><?php echo $this->translate('Imprint'); ?>:</h2>
-<address>
-  <strong><?php echo $this->firstname . ' ' . $this->lastname; ?></strong><br>
-  <?php echo $this->address['street']; ?><br>
-  <?php  echo $this->address['zip'] . ', ' . $this->address['city']; ?><br>
-  <abbr title="<?php echo $this->translate('Telephone'); ?>"><?php echo $this->translate('Tel') . ':';?></abbr> <?php echo $this->address['telephone']; ?>
-</address>
-<address>
-  <strong><?php echo $this->translate('Email') . ':'; ?></strong><br>
-  <a href="mailto:<?php echo $this->email; ?>"><?php echo $this->email; ?></a>
-</address>
+namespace UnpInstaller\Controller;
+
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+
+
+/**
+ * Controller to serve the index and other mostly static pages.
+ */
+class InstallerController extends AbstractActionController{
+  
+  public function indexAction(){
+    return new ViewModel();
+  }
+
+}

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace ApplicationTest; //Change this namespace for your test
+namespace ApplicationTest; 
 
 require_once '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 
@@ -32,17 +32,11 @@ chdir(__DIR__);
 
 class Bootstrap{
 
-  protected static $serviceManager;
-  protected static $config;
-  protected static $bootstrap;
+  private static $serviceManager;
+  private static $config;
 
-  public static function init(){
-    // Load the user-defined test configuration file, if it exists; otherwise, load
-    if(is_readable(__DIR__ . '/TestConfig.php')){
-      $testConfig = include __DIR__ . '/TestConfig.php';
-    }else{
-      $testConfig = include __DIR__ . '/TestConfig.php.dist';
-    }
+  public function init(){
+    $testConfig = include __DIR__ . '/TestConfig.php.dist';
 
     $zf2ModulePaths = array();
 
@@ -58,7 +52,7 @@ class Bootstrap{
     $zf2ModulePaths = implode(PATH_SEPARATOR, $zf2ModulePaths) . PATH_SEPARATOR;
     $zf2ModulePaths .= getenv('ZF2_MODULES_TEST_PATHS') ? : (defined('ZF2_MODULES_TEST_PATHS') ? ZF2_MODULES_TEST_PATHS : '');
 
-    static::initAutoloader();
+    $this->initAutoloader();
 
     // use ModuleManager to load this module and it's dependencies
     $baseConfig = array(
@@ -73,20 +67,20 @@ class Bootstrap{
     $serviceManager->setService('ApplicationConfig', $config);
     $serviceManager->get('ModuleManager')->loadModules();
 
-    static::$serviceManager = $serviceManager;
-    static::$config = $config;
+    self::$serviceManager = $serviceManager;
+    self::$config = $config;
   }
 
   public static function getServiceManager(){
-    return static::$serviceManager;
+    return self::$serviceManager;
   }
 
   public static function getConfig(){
-    return static::$config;
+    return self::$config;
   }
 
-  protected static function initAutoloader(){
-    $vendorPath = static::findParentPath('vendor');
+  private function initAutoloader(){
+    $vendorPath = $this->findParentPath('vendor');
 
     if(is_readable($vendorPath . '/autoload.php')){
       $loader = include $vendorPath . '/autoload.php';
@@ -110,7 +104,7 @@ class Bootstrap{
     ));
   }
 
-  protected static function findParentPath($path){
+  private function findParentPath($path){
     $dir = __DIR__;
     $previousDir = '.';
     while(!is_dir($dir . '/' . $path)){
@@ -124,4 +118,5 @@ class Bootstrap{
 
 }
 
-Bootstrap::init();
+$bootstrap = new Bootstrap();
+$bootstrap->init();

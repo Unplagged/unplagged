@@ -25,13 +25,15 @@
 chdir(dirname(__DIR__));
 
 require 'initApplication.php';
-require_once BUILD_PATH . DIRECTORY_SEPARATOR . 'Installer' . DIRECTORY_SEPARATOR . 'Installer.php';
 
-$configFile = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'configs' . DIRECTORY_SEPARATOR . 'unplagged-config.ini';
-$installer = new Installer($configFile);
+$configFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'application.config.php';
+$application = Zend\Mvc\Application::init(require $configFilePath);
+//@todo maybe better $application->getConfig() or something similar for the Installer?
+$installer = new UnpInstaller\Installer($configFilePath);
 
 if($installer->isInstalled()){
-  Zend\Mvc\Application::init(require 'config/application.config.php')->run();
+  $application->run();
 }else{
+  //maybe better redirect, so that installer can be always accessed if devel version is turned on
   $installer->install();
 }

@@ -36,9 +36,12 @@ class Module{
    * @param \Zend\EventManager\EventInterface $e
    */
   public function onBootstrap(EventInterface $e){
-    $serviceManager = $e->getApplication()->getServiceManager();
-
-    $this->initDoctrine($serviceManager);
+    try{
+      $serviceManager = $e->getApplication()->getServiceManager();
+      $this->initDoctrine($serviceManager);
+    }catch(\Zend\ServiceManager\Exception\ExceptionInterface $e){
+      echo "Sorry, there seems to be a problem with our database server, which couldn't be resolved.";
+    }
   }
 
   /**
@@ -56,11 +59,16 @@ class Module{
             });
   }
 
+  /**
+   * Provides the configuration for views.
+   * 
+   * @return array
+   */
   public function getViewHelperConfig(){
     return array(
         'factories'=>array(
+            //sets the flashMessages service during the creation of views
             'flashMessages'=>function($sm){
-
               $flashmessenger = $sm->getServiceLocator()
                       ->get('ControllerPluginManager')
                       ->get('flashmessenger');
@@ -73,7 +81,7 @@ class Module{
         ),
     );
   }
-
+  
   /**
    * This method provides all configuration information of this module. It is expected by ZEND2, so it will be called
    * when the configuration is needed.

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Unplagged\n"
-"POT-Creation-Date: 2012-12-12 19:53+0100\n"
+"POT-Creation-Date: 2012-12-18 15:09+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Dominik Horb <dominik.horb@gmail.com>\n"
 "Language-Team: Unplagged\n"
@@ -16,7 +16,11 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../src/Application/Controller/IndexController.php:72
+#: ../src/Application/Controller/IndexController.php:51
+msgid "The case was created successfully."
+msgstr "Der Fall wurde erfolgreich erstellt."
+
+#: ../src/Application/Controller/IndexController.php:74
 #: ../view/layout/parts/footer.phtml:2 ../config/navigation.xml:24
 #: ../config/navigation.xml:25
 msgid "Imprint"
@@ -67,10 +71,14 @@ msgid ""
 "version, you can download the software from Github and install it on your on "
 "server."
 msgstr ""
+"Achtung: Bitte sei dir bewusst, dass eingegebene Daten gelöscht werden "
+"können, wenn Änderungen an der Datenbankstruktur notwendig werden. Falls "
+"eine stabile Version, benötigt wird, lade Unplagged bitte bei Github "
+"herunter und installiere es auf einem eigenen Server."
 
 #: ../view/error/404.phtml:1
 msgid "A 404 error occurred"
-msgstr ""
+msgstr "Die Seite wurde leid"
 
 #: ../view/error/404.phtml:10
 msgid "The requested controller was unable to dispatch the request."
@@ -104,7 +112,7 @@ msgstr ""
 
 #: ../view/error/404.phtml:53 ../view/error/index.phtml:8
 msgid "Additional information"
-msgstr ""
+msgstr "Weitere Informationen"
 
 #: ../view/error/404.phtml:56 ../view/error/404.phtml:80
 #: ../view/error/index.phtml:11 ../view/error/index.phtml:35
@@ -119,11 +127,11 @@ msgstr "Nachricht"
 #: ../view/error/404.phtml:64 ../view/error/404.phtml:88
 #: ../view/error/index.phtml:19 ../view/error/index.phtml:43
 msgid "Stack trace"
-msgstr ""
+msgstr "Stack trace"
 
 #: ../view/error/404.phtml:74 ../view/error/index.phtml:29
 msgid "Previous exceptions"
-msgstr ""
+msgstr "Vorherige Exceptions "
 
 #: ../view/error/404.phtml:103 ../view/error/index.phtml:58
 msgid "No Exception available"
@@ -131,48 +139,33 @@ msgstr "Keine Exception Verfügbar"
 
 #: ../view/error/index.phtml:1
 msgid "An error occurred"
-msgstr ""
+msgstr "Ein Fehler ist aufgetreten"
 
 #: ../view/layout/parts/chrome-frame.phtml:5
-msgid "Your browser is"
+#, php-format
+msgid ""
+"Your browser is %sancient!%s %sUpgrade to a different browser%s or %sinstall "
+"Google Chrome Frame%s to experience this site."
 msgstr ""
-
-#: ../view/layout/parts/chrome-frame.phtml:5
-msgid "ancient!"
-msgstr ""
-
-#: ../view/layout/parts/chrome-frame.phtml:5
-msgid "Upgrade to a different browser"
-msgstr ""
-
-#: ../view/layout/parts/chrome-frame.phtml:5
-#: ../view/layout/parts/header.phtml:76
-msgid "or"
-msgstr ""
-
-#: ../view/layout/parts/chrome-frame.phtml:5
-msgid "install Google Chrome Frame"
-msgstr ""
-
-#: ../view/layout/parts/chrome-frame.phtml:5
-msgid "to experience this site."
-msgstr ""
+"Dein Browser ist %sveraltet!%s Bitte %saktualisiere deinen Browser%s oder "
+"%sinstalliere Google Chrome Frame%s um diese Seite in guter Qualität "
+"benutzen zu können."
 
 #: ../view/layout/parts/header.phtml:39
 msgid "Edit Profile"
-msgstr ""
+msgstr "Profil editieren"
 
 #: ../view/layout/parts/header.phtml:40
 msgid "My Files"
-msgstr ""
+msgstr "Meine Dateien"
 
 #: ../view/layout/parts/header.phtml:41
 msgid "My Settings"
-msgstr ""
+msgstr "Meine Einstellungen"
 
 #: ../view/layout/parts/header.phtml:42
 msgid "Logout"
-msgstr ""
+msgstr "Logout"
 
 #: ../view/layout/parts/header.phtml:58 ../config/navigation.xml:135
 #: ../config/navigation.xml:136
@@ -181,29 +174,33 @@ msgstr "Fälle"
 
 #: ../view/layout/parts/header.phtml:59
 msgid "Select a Case"
-msgstr ""
+msgstr "Fall auswählen"
 
 #: ../view/layout/parts/header.phtml:75
-msgid "Register now"
-msgstr ""
+#, php-format
+msgid "%sRegister now%s or %slogin%s."
+msgstr "%sRegistriere dich jetzt%s oder %slogge dich ein%s"
 
-#: ../view/layout/parts/header.phtml:77
-msgid "login"
-msgstr ""
-
-#: ../view/layout/parts/header.phtml:83
+#: ../view/layout/parts/header.phtml:81
 msgid "Search"
-msgstr ""
+msgstr "Suche"
+
+#: ../view/layout/parts/header.phtml:91
+msgid "Unplagged - The Plagiarism Detection Cockpit"
+msgstr "Unplagged - Die Plagiatserkennungs-Werkbank"
 
 #: ../view/layout/parts/noscript.phtml:4
 msgid "Attention!"
-msgstr ""
+msgstr "Achtung!"
 
 #: ../view/layout/parts/noscript.phtml:6
 msgid ""
-"Unfortunately JavaScript is currently not supported or is disabled in your "
+"Unfortunately JavaScript is currently not supported or disabled in your "
 "browser. Please enable JavaScript for full functionality."
 msgstr ""
+"Leider wird JavaScript in deinem Browser nicht unterstützt oder ist "
+"abgeschaltet. Bitte schalte JavaScript ein, um die vollständige "
+"Funktionalität der Seite zu gewährleisten."
 
 #: ../view/layout/parts/sidebar_menu.phtml:3
 msgid "Actions menu"
@@ -267,11 +264,17 @@ msgstr ""
 
 #: ../config/navigation.xml:155 ../config/navigation.xml:156
 msgid "Roles"
-msgstr ""
+msgstr "Rollen"
 
 #: ../config/navigation.xml:164 ../config/navigation.xml:165
 msgid "Edit Role"
 msgstr "Rolle editieren"
+
+#~ msgid "Your browser is"
+#~ msgstr "Dein Browser ist"
+
+#~ msgid "ancient!"
+#~ msgstr "veraltet"
 
 #~ msgid "Barcode for"
 #~ msgstr "Barcode für"

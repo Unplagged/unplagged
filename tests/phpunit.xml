@@ -12,12 +12,9 @@
         <exclude>./_library</exclude>
     </testsuite>
     <filter>
-        <whitelist>
-            <directory suffix=".php">./../module/Aplication</directory>
-        </whitelist>
         <blacklist>
             <directory suffix=".php">./../module/Application/src/Application/Model/</directory>
-            <directory suffix=".php">./../module/Application/src/Application/Model/</directory>
+            <directory suffix=".php">./../module/Application/config/</directory>
         </blacklist>
     </filter>
     <logging>

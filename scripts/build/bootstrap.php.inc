@@ -1,30 +1,26 @@
 <?php
+
 /*
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
- *  
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-?>
-<h2><?php echo $this->translate('Imprint'); ?>:</h2>
-<address>
-  <strong><?php echo $this->firstname . ' ' . $this->lastname; ?></strong><br>
-  <?php echo $this->address['street']; ?><br>
-  <?php  echo $this->address['zip'] . ', ' . $this->address['city']; ?><br>
-  <abbr title="<?php echo $this->translate('Telephone'); ?>"><?php echo $this->translate('Tel') . ':';?></abbr> <?php echo $this->address['telephone']; ?>
-</address>
-<address>
-  <strong><?php echo $this->translate('Email') . ':'; ?></strong><br>
-  <a href="mailto:<?php echo $this->email; ?>"><?php echo $this->email; ?></a>
-</address>
+chdir(dirname(__DIR__));
+
+require __DIR__ . '/../../initApplication.php';
+
+$configFilePath = __DIR__ . '/../../config/application.config.php';
+$application = Zend\Mvc\Application::init(require $configFilePath);
+$em = $application->getServiceManager()->get('doctrine.entitymanager.orm_default');

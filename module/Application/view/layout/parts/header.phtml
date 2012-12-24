@@ -72,15 +72,13 @@
 <!--
             <?php //if(!(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest')): ?>
               <div class="login-register-box pull-left">
-                <a href="<?php echo $this->basePath('register'); ?>"><?php echo $this->translate("Register now"); ?></a>
-                <span><?php echo $this->translate('or') . ' '; ?></span>
-                <a href="<?php echo $this->basePath('login'); ?>"><?php echo $this->translate("login"); ?></a>
+                <?php echo sprintf($this->translate('%sRegister now%s or %slogin%s.'),  '<a href="' . $this->basePath('register') . '">', '</a>', '<span>', '</span>', '<a href="' . $this->basePath('login') . '">', '</a>'); ?>
               </div>
             <?php //endif; ?>
 -->
             <!--<form class="form-search pull-right">
               <div class="input-append">
-                <input type="text" class="span2 search-query" placeholder="<?php echo $this->translate("Search"); ?>" type="text">
+                <input type="text" class="span2 search-query" placeholder="<?php echo $this->translate('Search'); ?>" type="text">
                 <button type="submit" class="btn">Go <i class="icon-search"></i></button>
             </form>-->
           </div>
@@ -90,6 +88,6 @@
     <div class="pagewrap">
       <header role="banner" class="clearfix">
         <a href="https://github.com/Unplagged/unplagged"><img class="fork-me-ribbon" style="position: absolute; top: -2px; right: -1px; border: 0; width: 129px" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
-        <h1 class="ir">Unplagged - The Plagiarism Detection Cockpit</h1>
+        <h1 class="ir"><?php $this->translate('Unplagged - The Plagiarism Detection Cockpit'); ?></h1>
         <nav><?php echo $this->navigation('navigation')->menu(); ?></nav>
       </header>

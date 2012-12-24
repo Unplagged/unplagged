@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -16,15 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-?>
-<h2><?php echo $this->translate('Imprint'); ?>:</h2>
-<address>
-  <strong><?php echo $this->firstname . ' ' . $this->lastname; ?></strong><br>
-  <?php echo $this->address['street']; ?><br>
-  <?php  echo $this->address['zip'] . ', ' . $this->address['city']; ?><br>
-  <abbr title="<?php echo $this->translate('Telephone'); ?>"><?php echo $this->translate('Tel') . ':';?></abbr> <?php echo $this->address['telephone']; ?>
-</address>
-<address>
-  <strong><?php echo $this->translate('Email') . ':'; ?></strong><br>
-  <a href="mailto:<?php echo $this->email; ?>"><?php echo $this->email; ?></a>
-</address>
+namespace UnpInstaller;
+
+/**
+ *
+ */
+class TemplateParser {
+
+  private $templateDirectory;
+
+  public function __construct($templateDirectory) {
+    $this->templateDirectory = $templateDirectory;
+  }
+
+  public function parse($template, $data) {
+    $response = $template;
+    if (!empty($data) || is_array($data)) {
+      foreach ($data as $key => $value) {
+        $response = str_replace('{$' . $key . '}', $value, $response);
+      }
+    }
+    return $response;
+  }
+
+  public function parseFile($filename, $data) {
+    return $this->parse(file_get_contents($this->templateDirectory . DIRECTORY_SEPARATOR . $filename), $data);
+  }
+
+  private function setValueAttribute($default = ''){
+    
+  }
+}

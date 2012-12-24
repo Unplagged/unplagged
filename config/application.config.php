@@ -3,7 +3,10 @@ return array(
     'modules' => array(
         'DoctrineModule',
         'DoctrineORMModule',
-        'Application'
+        'Application',
+        'UnpInstaller',
+        'ZfcBase',
+        'ZfcUser',
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(

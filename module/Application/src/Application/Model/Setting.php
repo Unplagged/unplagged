@@ -19,7 +19,7 @@
  */
 
 /**
- * This class can be used to store simple settings with their key and value.
+ * This class can be used to store simple settings with an ini style key and their value.
  * 
  * @Entity
  * @Table(name="setting")
@@ -79,4 +79,3 @@ class Application_Model_Setting{
     $this->label = $label;  
   }
 }
-?>
