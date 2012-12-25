@@ -22,14 +22,28 @@ namespace UnpInstaller\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-
 /**
  * Controller to serve the index and other mostly static pages.
  */
 class InstallerController extends AbstractActionController{
+
+  private $em;
   
+  public function setEntityManager(\Doctrine\ORM\EntityManager $entityManager){
+    $this->em = $entityManager;
+  }
+
   public function indexAction(){
-    return new ViewModel();
+    //return new ViewModel();
+  }
+
+  public function updateSchemaAction(){
+    echo 'Reading Model classes.';
+    $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
+    $metadata = $this->em->getMetadataFactory()->getAllMetadata();
+    echo 'Updating database schema';
+    $schemaTool->updateSchema($metadata);
+    echo 'Finished updating database schema.';
   }
 
 }

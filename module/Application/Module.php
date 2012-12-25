@@ -19,27 +19,33 @@
  */
 namespace Application;
 
-use Zend\EventManager\EventInterface;
-use Zend\Config\Factory;
+use Application\Helper\FlashMessages;
 use Zend\Config\Config;
+use Zend\Config\Factory;
+use Zend\EventManager\EventInterface;
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\ModuleManager\Feature\BootstrapListenerInterface;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
+use Zend\ServiceManager\Exception\ExceptionInterface;
 use Zend\ServiceManager\ServiceManager;
 
 /**
  * This class is the starting point for the Unplagged application and initalizes 
  * all base components.
  */
-class Module{
+class Module implements AutoloaderProviderInterface, BootstrapListenerInterface, ConfigProviderInterface, ViewHelperProviderInterface{
 
   /**
    * Initalizes the application during the bootstrapping process.
    * 
-   * @param \Zend\EventManager\EventInterface $e
+   * @param EventInterface $e
    */
   public function onBootstrap(EventInterface $e){
     try{
       $serviceManager = $e->getApplication()->getServiceManager();
       $this->initDoctrine($serviceManager);
-    }catch(\Zend\ServiceManager\Exception\ExceptionInterface $e){
+    }catch(ExceptionInterface $e){
       echo "Sorry, there seems to be a problem with our database server, which couldn't be resolved.";
     }
   }
@@ -47,7 +53,7 @@ class Module{
   /**
    * Injects Doctrines entitymanager into every created controller.
    * 
-   * @param \Zend\ServiceManager\ServiceManager $serviceManager
+   * @param ServiceManager $serviceManager
    */
   private function initDoctrine(ServiceManager $serviceManager){
     $entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');
@@ -73,7 +79,7 @@ class Module{
                       ->get('ControllerPluginManager')
                       ->get('flashmessenger');
 
-              $message = new \Application\Helper\FlashMessages();
+              $message = new FlashMessages();
               $message->setFlashMessenger($flashmessenger);
 
               return $message;
@@ -81,12 +87,12 @@ class Module{
         ),
     );
   }
-  
+
   /**
    * This method provides all configuration information of this module. It is expected by ZEND2, so it will be called
    * when the configuration is needed.
    * 
-   * @return \Zend\Config\Config
+   * @return Config
    */
   public function getConfig(){
     $defaultConfig = new Config(include __DIR__ . '/config/module.config.php');

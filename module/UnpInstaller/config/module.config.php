@@ -1,27 +1,43 @@
 <?php
+
 return array(
-    'doctrine' => array(
-        'driver' => array(
-            'unplagged_orm' => array(
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache' => 'array',
-                'paths' => array(__DIR__ . '/../src/Application/Model')
+    'doctrine'=>array(
+        'driver'=>array(
+            'unplagged_orm'=>array(
+                'class'=>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache'=>'array',
+                'paths'=>array(__DIR__ . '/../src/Application/Model')
             )
         )
     ),
-    'router' => array(
-        'routes' => array(
-            'installer' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/installer',
-                    'defaults' => array(
-                        'controller' => 'unpinstaller',
-                        'action'     => 'index',
+    'router'=>array(
+        'routes'=>array(
+            'installer'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Literal',
+                'options'=>array(
+                    'route'=>'/installer',
+                    'defaults'=>array(
+                        'controller'=>'unpinstaller',
+                        'action'=>'index',
                     ),
                 ),
             ),
         ),
+    ),
+    'console'=>array(
+        'router'=>array(
+            'routes'=>array(
+                'update-schema'=>array(
+                    'options'=>array(
+                        'route'=>'update schema',
+                        'defaults'=>array(
+                            'controller'=>'unpinstaller',
+                            'action'=>'updateSchema'
+                        )
+                    )
+                )
+            )
+        )
     ),
     'service_manager'=>array(
         'factories'=>array(
