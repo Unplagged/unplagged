@@ -28,7 +28,7 @@ class IndexController extends BaseController{
   
   public function indexAction(){
     $barcodes = array();
-    $cases = $this->em->getRepository('\Application\Model\PlagCase')->findAll();
+    //$cases = $this->em->getRepository('\Application\Model\PlagCase')->findAll();
     //var_dump($cases);
     /*
 
