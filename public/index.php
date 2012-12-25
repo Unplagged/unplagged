@@ -18,22 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
- * This file is the main entry point into the Unplagged application. It checks 
- * whether the application is installed and either starts the installation or 
- * the application.
+ * This file is the main entry point into the Unplagged application. 
+ * It checks whether the application is installed and either redirects 
+ * to the Installer or starts the application.
  */
 chdir(dirname(__DIR__));
 
 require 'initApplication.php';
 
-$configFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'application.config.php';
-$application = Zend\Mvc\Application::init(require $configFilePath);
-//@todo maybe better $application->getConfig() or something similar for the Installer?
-$installer = new UnpInstaller\Installer($configFilePath);
+$configFilePath = BASE_PATH . '/config/application.config.php';
+$config = require $configFilePath;
+$application = Zend\Mvc\Application::init($config);
 
-if($installer->isInstalled()){
+if(UnpInstaller\Installer::isInstalled($config)){
   $application->run();
 }else{
-  //maybe better redirect, so that installer can be always accessed if devel version is turned on
-  $installer->install();
+  header('Location: ' . $application->getRequest()->getBaseUrl() . 'installer');
 }
