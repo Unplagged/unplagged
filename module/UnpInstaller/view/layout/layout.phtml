@@ -6,14 +6,14 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Unplagged Installation Wizard.</title>
-    <link href="/style/install.css" rel="stylesheet" >
+    <title><?php echo $this->translate('Unplagged Installation Wizard'); ?></title>
+    <?php echo $this->headLink()->appendStylesheet($this->basePath('style/install.css')); ?>
     <!-- Modernizr needs to stay in the head to work properly -->
-    <script src="/js/libs/modernizr-2.5.3.min.js"></script>
+    <script src="<?php echo $this->basePath('js/libs/modernizr-2.5.3.min.js'); ?>"></script>
   </head>
   <body>
     <div class="well">
-      <h1><img class="logo" src="/images/logo-blue.png" /><?php echo $this->title; ?></h1>
+      <h1><img class="logo" src="<?php echo $this->basePath('images/logo-blue.png'); ?>" /><?php echo $this->translate('Setup Wizard'); ?></h1>
       <div class="wizard-steps" id="navigation">
         <a class="current" data-tab-id="1" href="#"><span class="badge">1</span><span class="text">Connection</span></a>
         <a data-tab-id="2" href="#"><span class="badge">2</span><span class="text">General</span></a>
@@ -21,13 +21,12 @@
         <a class="disabled" data-tab-id="4" href="#"><span class="badge">4</span><span class="text">Check</span></a>
       </div>
     </div>
-
-     <?php echo $this->content; ?>
+    <?php echo $this->content; ?>
   </div>
-  <script src="/js/libs/jquery-1.7.2.min.js"></script>
-  <script src="/js/libs/bootstrap.min.js"></script>
-  <script src="/js/libs/jqBootstrapValidation.js"></script>
-  <script src="/js/install.js"></script>
+  <script src="<?php echo $this->basePath('js/libs/jquery-1.7.2.min.js'); ?>"></script>
+  <script src="<?php echo $this->basePath('js/libs/bootstrap.min.js'); ?>"></script>
+  <script src="<?php echo $this->basePath('js/libs/jqBootstrapValidation.js'); ?>"></script>
+  <script src="<?php echo $this->basePath('js/install.js'); ?>"></script>
 </body>
 </html>
 

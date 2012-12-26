@@ -17,19 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-return array(
-    'modules'=>array(
-        //'UnpCommon',
-        'UnpInstaller',
-        'Application',
-    ),
-    'module_listener_options'=>array(
-        'config_glob_paths'=>array(
-            '../config/autoload/{,*.}{global,local}.php',
-        ),
-        'module_paths'=>array(
-            '../module',
-            '../vendor',
-        ),
-    ),
-);
+namespace UnpInstallerTest;
+
+use UnpInstaller\Installer;
+
+/**
+ * 
+ */
+class InstallerTest extends \PHPUnit_Framework_TestCase{
+  
+  public function testIsInstalled(){
+    //$this->assertTrue(Installer::isInstalled());
+    //$installer = new Installer('asdf');
+  }
+}

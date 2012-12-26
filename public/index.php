@@ -22,16 +22,22 @@
  * It checks whether the application is installed and either redirects 
  * to the Installer or starts the application.
  */
+
 chdir(dirname(__DIR__));
 
+//file that initalizes basic constants and autoloading
 require 'initApplication.php';
 
+//the main configuration file
 $configFilePath = BASE_PATH . '/config/application.config.php';
-$config = require $configFilePath;
-$application = Zend\Mvc\Application::init($config);
+$application = Zend\Mvc\Application::init(require $configFilePath);
+
+//query the application for the merged configs
+$config = $application->getConfig();
 
 if(UnpInstaller\Installer::isInstalled($config)){
   $application->run();
 }else{
+  //redirect to the installer
   header('Location: ' . $application->getRequest()->getBaseUrl() . 'installer');
 }

@@ -29,20 +29,20 @@ return array(
             'routes'=>array(
                 'update-schema'=>array(
                     'options'=>array(
-                        'route'=>'update schema',
+                        'route'=>'--update-schema',
                         'defaults'=>array(
                             'controller'=>'unpinstaller',
-                            'action'=>'updateSchema'
-                        )
-                    )
-                )
-            )
-        )
+                            'action'=>'updateSchema',
+                        ),
+                    ),
+                ),
+            ),
+        ),
     ),
     'service_manager'=>array(
         'factories'=>array(
             'translator'=>'Zend\I18n\Translator\TranslatorServiceFactory',
-        )
+        ),
     ),
     'translator'=>array(
         'locale'=>'en_EN',
@@ -52,13 +52,13 @@ return array(
                 'type'=>'gettext',
                 'base_dir'=>__DIR__ . '/../languages',
                 'pattern'=>'%s.mo',
-            )
-        )
+            ),
+        ),
     ),
     'controllers'=>array(
         'invokables'=>array(
-            'unpinstaller'=>'UnpInstaller\Controller\InstallerController'
-        )
+            'unpinstaller'=>'UnpInstaller\Controller\InstallerController',
+        ),
     ),
     'view_manager'=>array(
         'display_not_found_reason'=>true,
@@ -67,7 +67,7 @@ return array(
         'not_found_template'=>'error/404',
         'exception_template'=>'error/index',
         'template_map'=>array(
-            'layout/layout'=>__DIR__ . '/../view/layout/layout.phtml',
+            'layout/installer'=>__DIR__ . '/../view/layout/layout.phtml',
             'installer/index'=>__DIR__ . '/../view/unpinstaller/installer/index.phtml',
         ),
         'template_path_stack'=>array(

@@ -45,7 +45,7 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
    */
   public function onBootstrap(EventInterface $e){
     try{
-      $serviceManager = $e->getApplication()->getServiceManager();
+      //$serviceManager = $e->getApplication()->getServiceManager();
       //$this->initDoctrine($serviceManager);
     }catch(ExceptionInterface $e){
       echo "Sorry, there seems to be a problem with our database server, which couldn't be resolved.";
@@ -67,7 +67,7 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
             });
   }
 
-  /**
+ /**
    * Provides information about all modules and libraries that need to be loaded for this module.
    * 
    * @return array The autoloader configuration.

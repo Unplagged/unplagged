@@ -26,24 +26,38 @@ use Zend\View\Model\ViewModel;
  * Controller to serve the index and other mostly static pages.
  */
 class InstallerController extends AbstractActionController{
-
   private $em;
+  private $configFilePath = '';
+  
+  public function setConfigFilePath($configFilePath){
+    $this->configFilePath = $configFilePath;
+  }
   
   public function setEntityManager(\Doctrine\ORM\EntityManager $entityManager){
     $this->em = $entityManager;
   }
 
   public function indexAction(){
-    //return new ViewModel();
+    $this->layout('layout/installer');
   }
 
+  private function createInstaller(){
+    $installer = new \UnpInstaller\Installer($this->configFilePath, $this->flashMessenger(), $this->getServiceLocator()->get('translator'));
+    
+    return $installer;
+  }
+  
   public function updateSchemaAction(){
-    echo 'Reading Model classes.';
-    $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
-    $metadata = $this->em->getMetadataFactory()->getAllMetadata();
-    echo 'Updating database schema';
-    $schemaTool->updateSchema($metadata);
-    echo 'Finished updating database schema.';
+    if($this->em){
+      echo 'Reading Model classes.';
+      $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->em);
+      $metadata = $this->em->getMetadataFactory()->getAllMetadata();
+      echo 'Updating database schema';
+      $schemaTool->updateSchema($metadata);
+      echo 'Finished updating database schema.';
+    }else{
+      echo 'Sorry, there seems to be a problem with the database access. Are the provided credentials correct?';
+    }
   }
 
 }

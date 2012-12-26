@@ -6,24 +6,26 @@
          stopOnFailure="true"
          stopOnIncomplete="true"
          stopOnSkipped="true">
-    <testsuite name="Application">
-        <directory>./module/Application</directory>
-        <exclude>./_application</exclude>
-        <exclude>./_library</exclude>
-    </testsuite>
-    <filter>
-        <blacklist>
-            <directory suffix=".php">./../module/Application/src/Application/Model/</directory>
-            <directory suffix=".php">./../module/Application/config/</directory>
-        </blacklist>
-    </filter>
-    <logging>
-        <log type="coverage-html"
+  <testsuite name="application">
+    <directory>./module</directory>
+  </testsuite>
+  <filter>
+    <whitelist processUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">./../module/</directory>
+      <exclude>
+        <directory suffix=".php">./../module/Application/src/Application/Model/</directory>
+      <directory suffix=".php">./../module/Application/config/</directory>
+      <directory suffix=".php">./../module/UnpInstaller/config/</directory>
+      </exclude>
+    </whitelist>
+  </filter>
+  <logging>
+    <log type="coverage-html"
              target="../docs/coverage"
              charset="UTF-8"
              yui="true"
              highlight="true"
              lowUpperBound="50"
              highLowerBound="70" />
-    </logging>
+  </logging>
 </phpunit>

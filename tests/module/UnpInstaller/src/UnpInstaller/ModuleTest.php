@@ -24,23 +24,32 @@ use UnpInstaller\Module;
 /**
  * 
  */
-class ModuleTest{
+class ModuleTest extends \PHPUnit_Framework_TestCase{
   private $object;
 
   protected function setUp(){
     $this->object = new Module();
   }
 
+  public function testOnBootstrap(){
+    
+  }
+  
   public function testGetAutoloaderConfigReturnsArray(){
     $this->assertInternalType('array', $this->object->getAutoloaderConfig());
   }
 
   public function testGetConfig(){
-    $this->assertInstanceOf('\Zend\Config\Config', $this->object->getConfig());
+    $this->assertInternalType('array', $this->object->getConfig());
   }
 
-  public function testGetViewHelperConfig(){
-    $this->assertInternalType('array', $this->object->getViewHelperConfig());
+  public function testGetConsoleUsage(){
+    $console = $this->getMock('\Zend\Console\Adapter\AdapterInterface');
+    $this->assertInternalType('array', $this->object->getConsoleUsage($console));
   }
-
+  
+  public function testGetConsoleBanner(){
+    $console = $this->getMock('\Zend\Console\Adapter\AdapterInterface');
+    $this->assertInternalType('string', $this->object->getConsoleBanner($console));
+  }
 }

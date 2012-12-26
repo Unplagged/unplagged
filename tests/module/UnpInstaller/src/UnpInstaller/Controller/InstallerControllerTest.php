@@ -17,20 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace ApplicationTest\Controller;
+namespace UnpInstallerTest\Controller;
 
+use PHPUnit_Framework_TestCase;
+use UnpInstaller\Controller\InstallerController;
 use UnplaggedTest\Bootstrap;
-use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
-use Application\Controller\IndexController;
 use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use Zend\Mvc\Router\RouteMatch;
 
 /**
  * 
  */
-class IndexControllerTest extends \PHPUnit_Framework_TestCase{
-
+class InstallerControllerTest extends PHPUnit_Framework_TestCase{
   protected $controller;
   protected $request;
   protected $response;
@@ -39,7 +39,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase{
 
   protected function setUp(){
     $serviceManager = Bootstrap::getServiceManager();
-    $this->controller = new IndexController();
+    $this->controller = new InstallerController();
     $this->request = new Request();
     $this->routeMatch = new RouteMatch(array('controller'=>'index'));
     $this->event = new MvcEvent();
@@ -53,15 +53,6 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase{
     $this->controller->setServiceLocator($serviceManager);
   }
 
-  public function testImprintActionGetsDispatched(){
-    $this->routeMatch->setParam('action', 'imprint');
-
-    $result = $this->controller->dispatch($this->request);
-    $response = $this->controller->getResponse();
-
-    $this->assertEquals(200, $response->getStatusCode());
-  }
-
   public function testIndexActionGetsDispatched(){
     $this->routeMatch->setParam('action', 'index');
 
@@ -70,13 +61,4 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase{
 
     $this->assertEquals(200, $response->getStatusCode());
   }
-  
-  public function testIndexActionReturnsBarcodes(){
-    $this->routeMatch->setParam('action', 'index');
-
-    $result = $this->controller->dispatch($this->request);
-
-    $this->assertTrue(array_key_exists('barcodes', $result));
-  }
-  
 }
