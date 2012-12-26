@@ -1,0 +1,9 @@
+<?php
+/**
+ * This file was created by the Unplagged Installer. If you know what you are doing, 
+ * it is possible to change the below configuration values, it is however recommended
+ * to use the Installer again, by simply deleting this file and loading the 
+ * application in the browser.
+ */
+
+return 
