@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Application;
+namespace UnpApplication;
 
-use Application\Helper\FlashMessages;
+use UnpApplication\Helper\FlashMessages;
 use Zend\Config\Config;
 use Zend\Config\Factory;
 use Zend\EventManager\EventInterface;
@@ -111,7 +111,7 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
     return array(
         'Zend\Loader\StandardAutoloader'=>array(
             'namespaces'=>array(
-                __NAMESPACE__=>__DIR__ . '/src/' . __NAMESPACE__,
+                __NAMESPACE__=>__DIR__ . '/src',
             )
         )
     );

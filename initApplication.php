@@ -18,44 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
- * This file sets common constants and the include path. It also provides a method to
- * bootstrap the ZEND application.
- *
- * IMPORTANT: If you want set a different value for the APPLICATION_ENV constant, this
- * to happen before this file gets included.
+ * This file sets common constants and the include path.
  */
 
 define('BASE_PATH', realpath('.' . DIRECTORY_SEPARATOR));
 
 /**
- * @const APPLICATION_PATH The path to the main source directory.
- */
-defined('APPLICATION_PATH')
-        || define('APPLICATION_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'application');
-
-/**
  * @const TEMP_PATH The path to the directory where temporary data should be stored.
  */
-defined('TEMP_PATH')
-        || define('TEMP_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'temp');
+defined('DATA_PATH')
+        || define('TEMP_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'data');
 
 /**
  * @const WEBROOT_PATH The webroot directory.
  */
 defined('WEBROOT_PATH')
         || define('WEBROOT_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'public');
-
-/**
- * @const LIBRARY_PATH The directory of all the library files.
- */
-defined('LIBRARY_PATH')
-        || define('LIBRARY_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'library');
-
-/**
- * @const BUILD_PATH The directory of all the build files.
- */
-defined('BUILD_PATH')
-        || define('BUILD_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'build');
 
 // Composer autoloading
 if (is_readable(__DIR__ . '/vendor/autoload.php')) {

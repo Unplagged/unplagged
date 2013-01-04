@@ -45,10 +45,10 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
    */
   public function onBootstrap(EventInterface $e){
     try{
-      //$serviceManager = $e->getApplication()->getServiceManager();
-      //$this->initDoctrine($serviceManager);
+      $serviceManager = $e->getApplication()->getServiceManager();
+      $this->initDoctrine($serviceManager);
     }catch(ExceptionInterface $e){
-      echo "Sorry, there seems to be a problem with our database server, which couldn't be resolved.";
+      //
     }
   }
 
@@ -82,22 +82,41 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
     );
   }
 
+  /**
+   * Loads the config file and returns it's content.
+   * 
+   * @return array
+   */
   public function getConfig(){
     return include __DIR__ . '/config/module.config.php';
   }
 
+  /**
+   * Provides information on how to use the Unplagged console interface.
+   * 
+   * @param \Zend\Console\Adapter\AdapterInterface $console
+   * @return array
+   */
   public function getConsoleUsage(AdapterInterface $console){
     return array(
         // Describe available commands
         '--install'=>'Installs the application',
-        '--update-schema'=>'Updates the database schema from the model files. Keeps existing data or fails.',
-        '--reset-databse'=>'Deletes the database completely and resets it to the initial state',
+        '--update-database'=>'Updates the database schema from the model files.',
+        '--delete-databse'=>'Deletes the database completely and resets it to the initial state',
         '--test-data'=>'Adds a basic set of test data to the database',
+        '--uninstall'=>'(Re)Enables the webinstaller.',
         // Describe expected parameters
-        array('--verbose|-v', '(optional) turn on verbose mode'),
+        //array('--verbose|-v', '(optional) turn on verbose mode'),
     );
   }
 
+  /**
+   * The first strig that gets displayed when Unplagged is called via the command line. Simply
+   * identifies the console interface for the user.
+   * 
+   * @param \Zend\Console\Adapter\AdapterInterface $console
+   * @return string
+   */
   public function getConsoleBanner(AdapterInterface $console){
     return 'Unplagged Console interface';
   }

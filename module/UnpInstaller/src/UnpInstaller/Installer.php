@@ -19,14 +19,12 @@
  */
 namespace UnpInstaller;
 
-defined('INSTALLER_PATH')
-        || define('INSTALLER_PATH', BUILD_PATH . DIRECTORY_SEPARATOR . 'Installer');
-
 use Application_Model_User;
 use Application_Model_User_Role;
 use Doctrine\Common\ClassLoader;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\SchemaTool;
 use Unplagged_Helper;
 use Zend\I18n\Translator\Translator;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
@@ -39,38 +37,36 @@ use ZendTest\XmlRpc\Server\Exception;
  */
 class Installer{
 
-  private $writeableDirectories;
-  private $installationDirectories;
-  private $configFilePath = '';
-  private $flashMessenger;
-  private $translator;
+  private $installationDirectories = array(
+      'writeableDirectories'=>array(
+          'resources',
+          'config/autoload',
+      ),
+      'subdirectories'=>array(
+          'resources/temp',
+          'resources/uploads',
+          'resources/uploads/avatars',
+          'resources/logs',
+          'resources/reports',
+          'resources/temp/cache',
+          'resources/temp/proxies',
+          'resources/temp/ocr',
+          'resources/temp/imagemagick',
+      ),
+  );
+  private $baseDirectory = '';
+  private $flashMessenger = null;
+  private $translator = null;
 
   /**
-   * 
-   * 
-   * @param string $configFilePath
-   * @param \Zend\Mvc\Controller\Plugin\FlashMessenger $flashMessenger
-   * @param \Zend\I18n\Translator\Translator $translator
+   * @param string $baseDirectory
+   * @param FlashMessenger $flashMessenger
+   * @param Translator $translator
    */
-  public function __construct($configFilePath, FlashMessenger $flashMessenger = null, Translator $translator = null){
-    $this->configFilePath = $configFilePath;
+  public function __construct($baseDirectory = '', Translator $translator = null, FlashMessenger $flashMessenger = null){
+    $this->baseDirectory = $baseDirectory;
     $this->flashMessenger = $flashMessenger;
     $this->translator = $translator;
-    $this->writeableDirectories = array(
-        'resources',
-        'configs/autoload',
-    );
-    $this->installationDirectories = array(
-        'reources/temp',
-        'resources/uploads',
-        'resources/logs',
-        'resources/temp/cache',
-        'resources/reports',
-        'resources/avatars',
-        'resources/temp/proxies',
-        'resources/temp/ocr',
-        'resources/temp/imagemagick',
-    );
   }
 
   /**
@@ -136,7 +132,7 @@ class Installer{
       $wrappedMessage = '<p class="' . $namespace . '">' . $message . '</p>';
       $this->flashMessenger->addMessage($wrappedMessage);
     }else{
-      echo $message;
+      echo $message . '' . PHP_EOL;
     }
   }
 
@@ -144,8 +140,8 @@ class Installer{
    * Executes all the steps required for installing unplagged.
    * @return type
    */
-  public function install(){
-    if(empty($_POST)){
+  public function install(array $input){
+    if(empty($input)){
       $this->renderStartPage();
     }else{
       $data = $this->validateInputData();
@@ -164,58 +160,37 @@ class Installer{
     }
   }
 
-  private function parseResponse(){
-    $hasError = false;
-    foreach($this->response['steps'] as $step){
-      if($step['type'] == 'error'){
-        $hasError = true;
-        break;
-      }
-    }
-
-    if($hasError){
-      $this->response['summary'] = array('type'=>'error', 'message'=>'There are errors, please fix them and start again.');
-    }else{
-      $this->response['summary'] = array('type'=>'success', 'message'=>'Installation successful. Please reload the page and you are done.');
-    }
-    //set correct json headers necessary for some browsers
-    header('Cache-Control: no-cache, must-revalidate');
-    header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-    header('Content-type: application/json');
-    echo json_encode($this->response);
-  }
-
   /**
    * Checks all the directories that need to be writeable.
    *
    * @return boolean Whether all permissions are as required or not.
    */
-  private function checkWritePermissions(){
+  public function checkWritePermissions($directories = array()){
     $success = true;
 
-    $this->response['steps'][] = array('type'=>'status', 'message'=>'Checking permissions on installation directories...');
+    $this->output('Checking permissions on installation directories...', 'status');
 
     foreach($this->writeableDirectories as $directory){
       $directory = BASE_PATH . DIRECTORY_SEPARATOR . $directory;
       $writeable = is_writeable($directory);
 
       if($writeable){
-        $this->response['steps'][] = array('type'=>'success', 'message'=>$directory . ' is writeable');
+        $this->output('The directory ' . $directory . ' is writeable', 'success');
       }else{
-        $this->response['steps'][] = array('type'=>'error', 'message'=>$directory . ' not writeable');
+        $this->output('The directory ' . $directory . ' is not writeable', 'error');
         $success = false;
       }
     }
 
     if(!$success){
-      $this->response['steps'][] = array('type'=>'error', 'message'=>'Some directories are not writeable, please change the permissions on them and start again.');
+      $this->output('Some directories are not writeable, please change the permissions on them and start again.', 'error');
     }
   }
 
   /**
    * Checks if the specified console scripts are working.
    */
-  private function checkConsoleCommands(&$data){
+  public function checkConsoleCommands(&$data){
     $scripts['tesseract'] = $data['tesseractPath'];
     $scripts['ghostscript'] = $data['ghostscriptPath'];
     $scripts['imagemagick'] = $data['imagemagickPath'];
@@ -251,37 +226,29 @@ class Installer{
 
   /**
    * Checks if the database connection can be established with the given parameters.
+   * 
+   * @param $config Expects an array like the following: 
+   *        array(
+   *          'driverClass'=>'',
+   *          'params'=>array(
+   *            //the necessary Doctrine parameters for this driver
+   *          )
+   *        )
    */
-  private function checkDatabaseParams($data){
-    $classLoader = new ClassLoader('Doctrine', LIBRARY_PATH);
-    $classLoader->register();
-
-    $config = new Configuration();
-    $driverImpl = $config->newDefaultAnnotationDriver(INSTALLER_PATH);
-    $config->setMetadataDriverImpl($driverImpl);
-    $config->setProxyDir(INSTALLER_PATH);
-    $config->setProxyNamespace('Proxies');
-
-    $this->response['steps'][] = array('type'=>'status', 'message'=>'Checking database connection...');
-
-    $connectionOptions = array(
-        'driver'=>'pdo_mysql',
-        'user'=>$data['dbUser'],
-        'password'=>$data['dbPassword'],
-        'dbname'=>$data['dbName'],
-        'host'=>$data['dbHost']
-    );
-    $em = EntityManager::create($connectionOptions, $config);
+  public function checkDatabaseConnection(array $config){
+    $this->output('Checking database connection...');
+    $driverName = $config['driverClass'];
+    $driver = new $driverName();
 
     try{
-      @$em->getConnection()->connect();
-    }catch(Exception $e){
-      $this->response['steps'][] = array('type'=>'error', 'message'=>'Database connection could not be established.');
+      $driver->connect($config['params'], $config['params']['user'], $config['params']['password']);
+      $this->output('Database connection established.', 'success');
+      return true;
+    }catch(\PDOException $e){
+      $this->output('Database connection could not be established, please check your credentials.', 'error');
+      $this->output('Exception: ' . $e->getMessage());
       return false;
     }
-
-    $this->response['steps'][] = array('type'=>'success', 'message'=>'Database connection established.');
-    return true;
   }
 
   /**
@@ -355,7 +322,7 @@ class Installer{
   /**
    * Creates all necessary directories.
    */
-  private function initDirectories(){
+  public function installDirectories(){
     $this->response['steps'][] = array('type'=>'status', 'message'=>'Creating directories');
     $error = false;
 
@@ -377,26 +344,52 @@ class Installer{
   }
 
   /**
-   * Creates the given directory if it didn't exist and sets the Linux permissions to 777.
+   * Creates the given directory if it didn't exist and sets the Linux permissions to 755.
    *
    * @param string $directory The full path of the directory to create.
    * @return bool A boolean indicating whether the directory was created. False probably just means, that the directory
    * already existed, but could also mean that no write access was there.
-   *
-   * @todo check if 0777 is really necessary
    */
   private function createDirectory($directory){
     if(!is_dir($directory)){
       mkdir($directory);
 
-      @chmod($directory, 0777);
+      @chmod($directory, 0755);
       return true;
     }
 
     //use chmod even if the directory already existed, to make sure the directory can be accessed later on
-    @chmod($directory, 0777);
+    @chmod($directory, 0755);
 
     return false;
+  }
+
+  /**
+   * Uses the model classes to update the database schema.
+   * 
+   * @param \Doctrine\ORM\EntityManager $entityManager
+   */
+  public function updateDatabaseSchema(\Doctrine\ORM\EntityManager $entityManager){
+    $this->output('Reading Model classes');
+    $schemaTool = new SchemaTool($entityManager);
+    $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
+    $this->output('Updating database schema');
+    $schemaTool->updateSchema($metadata);
+    $this->output('Finished updating database schema');
+  }
+
+  public function installBasicSettings(){
+    
+  }
+
+  /**
+   * 
+   * @param \Doctrine\ORM\EntityManager $entityManager
+   */
+  public function deleteDatabaseSchema(\Doctrine\ORM\EntityManager $entityManager){
+    $schemaTool = new SchemaTool($entityManager);
+    $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
+    $schemaTool->dropSchema($metadata);
   }
 
   /**

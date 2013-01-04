@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace UnplaggedTest; 
+namespace UnplaggedTest;
 
 require_once '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 
@@ -25,7 +25,6 @@ use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\ArrayUtils;
-use RuntimeException;
 
 error_reporting(E_ALL | E_WARNING);
 chdir(__DIR__);
@@ -39,18 +38,14 @@ class Bootstrap{
     $testConfig = include __DIR__ . '/TestConfig.php.dist';
 
     $zf2ModulePaths = array();
-
-    if(isset($testConfig['module_listener_options']['module_paths'])){
-      $modulePaths = $testConfig['module_listener_options']['module_paths'];
-      foreach($modulePaths as $modulePath){
-        if(($path = static::findParentPath($modulePath))){
-          $zf2ModulePaths[] = $path;
-        }
+    $modulePaths = $testConfig['module_listener_options']['module_paths'];
+    foreach($modulePaths as $modulePath){
+      if(($path = $this->findParentPath($modulePath))){
+        $zf2ModulePaths[] = $path;
       }
     }
 
     $zf2ModulePaths = implode(PATH_SEPARATOR, $zf2ModulePaths) . PATH_SEPARATOR;
-    $zf2ModulePaths .= getenv('ZF2_MODULES_TEST_PATHS') ? : (defined('ZF2_MODULES_TEST_PATHS') ? ZF2_MODULES_TEST_PATHS : '');
 
     $this->initAutoloader();
 
@@ -81,18 +76,7 @@ class Bootstrap{
 
   private function initAutoloader(){
     $vendorPath = $this->findParentPath('vendor');
-
-    if(is_readable($vendorPath . '/autoload.php')){
-      $loader = include $vendorPath . '/autoload.php';
-    }else{
-      $zf2Path = getenv('ZF2_PATH') ? : (defined('ZF2_PATH') ? ZF2_PATH : (is_dir($vendorPath . '/ZF2/library') ? $vendorPath . '/ZF2/library' : false));
-
-      if(!$zf2Path){
-        throw new RuntimeException('Unable to load ZF2. Run `php composer.phar install` or define a ZF2_PATH environment variable.');
-      }
-
-      include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
-    }
+    include $vendorPath . '/autoload.php';
 
     AutoloaderFactory::factory(array(
         'Zend\Loader\StandardAutoloader'=>array(
@@ -104,6 +88,12 @@ class Bootstrap{
     ));
   }
 
+  /**
+   * Traverse the directories upwards and see if the given path exists there.
+   * 
+   * @param string $path
+   * @return boolean
+   */
   private function findParentPath($path){
     $dir = __DIR__;
     $previousDir = '.';

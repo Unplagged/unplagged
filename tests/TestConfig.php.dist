@@ -19,9 +19,13 @@
  */
 return array(
     'modules'=>array(
-        //'UnpCommon',
+        'UnpCommon',
         'UnpInstaller',
         'Application',
+         'DoctrineModule',
+        'DoctrineORMModule',
+        'ZfcBase',
+        'ZfcUser',
     ),
     'module_listener_options'=>array(
         'config_glob_paths'=>array(
@@ -31,5 +35,15 @@ return array(
             '../module',
             '../vendor',
         ),
+    ),
+    'doctrine'=>array(
+        'connection'=>array(
+            'orm_default'=>array(
+                'driverClass'=>'Doctrine\DBAL\Driver\PDOSqlite\Driver',
+                'params' => array(
+                    'path'     => __DIR__ . '/resources/basic.db',
+                )
+            )
+        )
     ),
 );

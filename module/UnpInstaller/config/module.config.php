@@ -1,15 +1,6 @@
 <?php
 
 return array(
-    'doctrine'=>array(
-        'driver'=>array(
-            'unplagged_orm'=>array(
-                'class'=>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache'=>'array',
-                'paths'=>array(__DIR__ . '/../src/Application/Model')
-            )
-        )
-    ),
     'router'=>array(
         'routes'=>array(
             'installer'=>array(
@@ -27,12 +18,30 @@ return array(
     'console'=>array(
         'router'=>array(
             'routes'=>array(
-                'update-schema'=>array(
+                'update-db-schema'=>array(
                     'options'=>array(
-                        'route'=>'--update-schema',
+                        'route'=>'--update-db-schema',
                         'defaults'=>array(
                             'controller'=>'unpinstaller',
-                            'action'=>'updateSchema',
+                            'action'=>'updateDatabaseSchema',
+                        ),
+                    ),
+                ),
+                'delete-db-schema'=>array(
+                    'options'=>array(
+                        'route'=>'--delete-db-schema',
+                        'defaults'=>array(
+                            'controller'=>'unpinstaller',
+                            'action'=>'deleteDatabaseSchema',
+                        ),
+                    ),
+                ),
+                'check-db-connection'=>array(
+                    'options'=>array(
+                        'route'=>'--check-db-connection',
+                        'defaults'=>array(
+                            'controller'=>'unpinstaller',
+                            'action'=>'checkDatabaseConnection',
                         ),
                     ),
                 ),

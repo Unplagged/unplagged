@@ -1,14 +1,12 @@
 <?php
 
 return array(
-    'unp_settings'=>array(
-      'notifications_time_interval' => 86400  
-    ),
     'modules'=>array(
+        'UnpCommon',
+        'UnpInstaller',
+        'UnpApplication',
         'DoctrineModule',
         'DoctrineORMModule',
-        'Application',
-        'UnpInstaller',
         'ZfcBase',
         'ZfcUser',
     ),
@@ -19,13 +17,6 @@ return array(
         'module_paths'=>array(
             './module',
             './vendor',
-        ),
-    ),
-    'doctrine'=>array(
-        'connection'=>array(
-            'orm_default'=>array(
-                'driverClass'=>'Doctrine\DBAL\Driver\PDOMySql\Driver',
-            ),
         ),
     ),
 );

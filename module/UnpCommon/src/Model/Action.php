@@ -17,41 +17,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace UnpCommon\Model;
+
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * The class represents a notification action.
- * It defines also the structure of the database table for the ORM.
  * 
- * @Entity 
- * @Table(name="actions")
+ * @ORM\Entity 
+ * @ORM\Table(name="action")
  */
-class Application_Model_Action{
+class Action{
 
   /**
    * @var int The notification action id.
    * 
-   * @Id @GeneratedValue @Column(type="integer")
+   * @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer")
    */
   private $id;
 
   /**
    * @var string The unique name of the notification action.
    * 
-   * @Column(type="string", unique=true, length=255)
+   * @ORM\Column(type="string", unique=true, length=255)
    */
   private $name;
 
   /**
    * @var string The unique name of the notification action.
    * 
-   * @Column(type="string", length=255)
+   * @ORM\Column(type="string", length=255)
    */
   private $title;
 
   /**
    * @var string The description for the notification action
    * 
-   * @Column(type="string", length=255)
+   * @ORM\Column(type="string", length=255)
    */
   private $description;
 

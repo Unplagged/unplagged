@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace UnpCommon\Model;
 
 /**
  * The class represents a single tag used to categorize an article.
@@ -25,7 +26,7 @@
  * @Entity
  * @Table(name="tags")
  */
-class Application_Model_Tag extends Application_Model_Base{
+class Tag extends Base{
 
   const ICON_CLASS = 'icon-tag';
 
