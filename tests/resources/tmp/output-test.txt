@@ -1,0 +1,3 @@
+Reading Model classes
+Updating database schema
+Finished updating database schema

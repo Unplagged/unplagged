@@ -84,7 +84,7 @@ class Installer{
     }
     return false;
   }
-  
+
   /**
    * @param array $config
    * @param string $key
@@ -125,12 +125,6 @@ class Installer{
     return $result;
   }
 
-  private function validateInputData(){
-    $data = filter_input_array(INPUT_POST);
-
-    return $data;
-  }
-
   /**
    * Uses the flash messenger and translator if provided or simply echoes the given message.
    * 
@@ -139,8 +133,9 @@ class Installer{
    */
   private function output($message = '', $namespace = 'status', $variables = array()){
     if($this->translator){
-      $message = vsprintf($this->translator->translate($message), $variables);
+      $message = $this->translator->translate($message);
     }
+    $message = vsprintf($message, $variables);
 
     if($this->flashMessenger){
       //we need to wrap the message into html here, because the reults should be in order
@@ -151,7 +146,7 @@ class Installer{
       fwrite($this->outputStream, $message . '' . PHP_EOL);
     }
   }
-  
+
   /**
    * Takes an array and simply ouputs everything inside it.
    * 
@@ -241,6 +236,14 @@ class Installer{
     $driver = new $driverName();
 
     try{
+      //some dbs don't need those parameters, but to simplify connect call, we set those empty then
+      if(!isset($config['params']['user'])){
+        $config['params']['user'] = '';
+      }
+      if(!isset($config['params']['password'])){
+        $config['params']['password'] = '';
+      }
+
       $driver->connect($config['params'], $config['params']['user'], $config['params']['password']);
       $this->output('Database connection established.', 'success');
       return true;
@@ -257,7 +260,7 @@ class Installer{
    * @param type $data
    * @return type
    */
-  private function createConfig($data, $overwrite = false){
+  public function createConfigFile($data, $overwrite = false){
     $this->output('Creating config file', 'status');
     $success = false;
 
@@ -320,27 +323,25 @@ class Installer{
   }
 
   /**
-   * Creates all necessary directories.
+   * Creates the given directories relative to the base directory given to the constructor. You should check whether all
+   * parent directories are writeable with checkWritePermissions() first.
    */
-  public function installDirectories(){
-    $this->response['steps'][] = array('type'=>'status', 'message'=>'Creating directories');
-    $error = false;
+  public function installDirectories(array $directories){
+    $this->output('Creating directories');
+    $result = true;
 
-    foreach($this->installationDirectories as $directory){
-      $fullPath = BASE_PATH . DIRECTORY_SEPARATOR . $directory;
+    foreach($directories as $directory){
+      $fullPath = $this->baseDirectory . '/' . $directory;
       if($this->createDirectory($fullPath)){
-        $this->response['steps'][] = array('type'=>'success', 'message'=>'Creating directory ' . $fullPath);
+        $this->output('Creating directory %s', 'success', array($fullPath));
       }else{
         if(!is_dir($fullPath)){
-          $this->response['steps'][] = array('type'=>'error', 'message'=>'Creating directory ' . $fullPath);
-          $error = true;
+          $this->output('Creating directory %s failed.', 'error', array($fullPath));
+          $result = false;
         }
       }
     }
-
-    if(!$error){
-      $this->response['steps'][] = array('type'=>'success', 'message'=>'All necessary directories were successfully created.');
-    }
+    return $result;
   }
 
   /**
@@ -352,10 +353,12 @@ class Installer{
    */
   private function createDirectory($directory){
     if(!is_dir($directory)){
-      mkdir($directory);
-
-      @chmod($directory, 0755);
-      return true;
+      @mkdir($directory);
+      
+      if(is_dir($directory)){
+        @chmod($directory, 0755);
+        return true;
+      }
     }
 
     //use chmod even if the directory already existed, to make sure the directory can be accessed later on
@@ -378,10 +381,6 @@ class Installer{
     $this->output('Finished updating database schema');
   }
 
-  public function installBasicSettings(){
-    
-  }
-
   /**
    * 
    * @param \Doctrine\ORM\EntityManager $entityManager
@@ -393,10 +392,10 @@ class Installer{
   }
 
   /**
-   * Initializes the database.
+   * Updates the schema and creates all necessary default data.
    */
-  private function initDatabase(){
-    require_once 'updateDatabase.php';
+  public function initDatabaseData(\Doctrine\ORM\EntityManager $entityManager){
+    $this->updateDatabaseSchema($entityManager);
     require_once 'initdb.php';
     require_once 'initpermissions.php';
   }
@@ -407,7 +406,7 @@ class Installer{
    * @param type $formData
    * @return boolean
    */
-  private function createAdmin($formData){
+  public function createAdmin($formData){
     $this->response['steps'][] = array('type'=>'status', 'message'=>'Creating admin user...');
 
     require BUILD_PATH . DIRECTORY_SEPARATOR . 'initbase.php';

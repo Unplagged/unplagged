@@ -40,11 +40,19 @@ class InstallerTest extends PHPUnit_Framework_TestCase{
     $this->assertTrue($this->installer->isInstalled($config));
   }
   
-  public function testWritePermissionsWithUnreadableDir(){
+  public function testWritePermissions(){
     $directories = array(
+        'tests/resources',
         'tests/resources/unreadable-dir'
     );
     $this->assertFalse($this->installer->checkWritePermissions($directories));
+  }
+  
+  public function testIsInstalledWithoutComposer(){
+    $serviceManager = Bootstrap::getServiceManager();
+    $config = $serviceManager->get('Config');
+    $installer = new Installer('', null, null, STDOUT);
+    $this->assertFalse($installer->isInstalled($config));
   }
   
   public function testRunComposer(){
@@ -54,5 +62,49 @@ class InstallerTest extends PHPUnit_Framework_TestCase{
   public function testRunComposerWithWrongBasePath(){
     $installer = new Installer('', null, null, STDOUT);
     $this->assertFalse($installer->runComposer());
+  }
+  
+  public function testIsInstalledWithMissingDatabaseParameter(){
+    $serviceManager = Bootstrap::getServiceManager();
+    $config = $serviceManager->get('Config');
+    unset($config['doctrine']['connection']['orm_default']['params']['user']);
+    $this->assertFalse($this->installer->isInstalled($config));
+  }
+  
+  public function testCheckDatabaseConnection(){
+    $databaseConfig = array(
+            'driverClass'=>'Doctrine\DBAL\Driver\PDOSqlite\Driver',
+                'params' => array(
+                    'path'     => __DIR__ . '/../../../../resources/basic.db',
+                )
+           );
+    
+    $this->assertTrue($this->installer->checkDatabaseConnection($databaseConfig));
+  }
+  
+  public function testCheckDatabaseConnectionFailing(){
+    $databaseConfig = array(
+            'driverClass'=>'Doctrine\DBAL\Driver\PDOSqlite\Driver',
+                'params' => array(
+                    //not existent on purpose
+                    'path'     => __DIR__ . '/resources/basic.db',
+                )
+           );
+    $this->assertFalse($this->installer->checkDatabaseConnection($databaseConfig));
+  }
+  
+  public function testCreateConfigFile(){
+    $filePath = BASE_PATH . '/tests/resources/tmp/config-file-test.php';
+  }
+  
+  public function testInstallDirectories(){
+    $directories = array(
+        'tests/resources/unreadable-dir/test-directory/',
+        'tests/resources/tmp/test-directory/'
+    );
+    
+    $this->assertFalse($this->installer->installDirectories($directories));
+    $this->assertTrue(is_dir(BASE_PATH . '/tests/resources/tmp/test-directory/'));
+    rmdir(BASE_PATH . '/tests/resources/tmp/test-directory/');
   }
 }
