@@ -20,40 +20,39 @@
 namespace UnpCommon\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * The class represents a base class for any type of item that can receive 
  * comments or can be the source of a notification.
  * 
- * It defines also the structure of the database table for the ORM.
- * 
- * @Entity 
- * @HasLifeCycleCallbacks
- * @Table(name="bases") 
- * @InheritanceType("JOINED") 
- * @DiscriminatorColumn(name="type", type="string") 
- * @DiscriminatorMap({ 
- *  "case" = "Application_Model_Case"
- * ,"comment" = "Application_Model_Comment"
- * ,"cron_task" = "Application_Model_Task"
- * ,"detection_report" = "Application_Model_Document_Page_DetectionReport"
- * ,"document" = "Application_Model_Document"
- * ,"document_fragment" = "Application_Model_Document_Fragment"
- * ,"document_fragment_partial" = "Application_Model_Document_Fragment_Partial"
- * ,"document_page" = "Application_Model_Document_Page"
- * ,"file" = "Application_Model_File"
- * ,"notification" = "Application_Model_Notification"
- * ,"simtext_report" = "Application_Model_Simtext_Report"
- * ,"report" = "Application_Model_Report"
- * ,"tag" = "Application_Model_Tag"
- * ,"user" = "Application_Model_User"
- * ,"versionable_version" = "Application_Model_Versionable_Version"
- * ,"document_page_line" = "Application_Model_Document_Page_Line"
- * ,"rating" = "Application_Model_Rating"
- * ,"bibtex" = "Application_Model_BibTex"
+ * @ORM\Entity 
+ * @ORM\HasLifeCycleCallbacks
+ * @ORM\Table(name="bases") 
+ * @ORM\InheritanceType("JOINED") 
+ * @ORM\DiscriminatorColumn(name="type", type="string") 
+ * @ORM\DiscriminatorMap({ 
+ *  "case" = "\UnpCommon\Model\PlagCase"
+ * ,"comment" = "\UnpCommon\Model\Comment"
+ * ,"cron_task" = "\UnpCommon\Model\Task"
+ * ,"detection_report" = "\UnpCommon\Model\Document_Page_DetectionReport"
+ * ,"document" = "\UnpCommon\Model\Document"
+ * ,"document_fragment" = "\UnpCommon\Model\Document_Fragment"
+ * ,"document_fragment_partial" = "\UnpCommon\Model\Document_Fragment_Partial"
+ * ,"document_page" = "\UnpCommon\Model\Document_Page"
+ * ,"file" = "\UnpCommon\Model\File"
+ * ,"notification" = "\UnpCommon\Model\Notification"
+ * ,"simtext_report" = "\UnpCommon\Model\Simtext_Report"
+ * ,"report" = "\UnpCommon\Model\Report"
+ * ,"tag" = "\UnpCommon\Model\Tag"
+ * ,"user" = "\UnpCommon\Model\User"
+ * ,"versionable_version" = "\UnpCommon\Model\Versionable_Version"
+ * ,"document_page_line" = "\UnpCommon\Model\Document_Page_Line"
+ * ,"rating" = "\UnpCommon\Model\Rating"
+ * ,"bibtex" = "\UnpCommon\Model\BibTex"
  * })
  */
-abstract class Base {
+abstract class Base implements Linkable{
 
   const ICON_CLASS = '';
   const PERMISSION_TYPE = 'base';
@@ -84,30 +83,30 @@ abstract class Base {
   );
 
   /**
-   * @Id @GeneratedValue @Column(type="integer") 
+   * @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer") 
    */
   protected $id;
 
   /**
    * @var string The date and time when the object was created initially.
    * 
-   * @Column(type="datetime")
+   * @ORM\Column(type="datetime")
    */
   protected $created;
 
   /**
    * @var string The base element comments.
    * 
-   * @OneToMany(targetEntity="Application_Model_Comment", mappedBy="source")
-   * @JoinColumn(name="comment_id", referencedColumnName="id")
+   * @ORM\OneToMany(targetEntity="\UnpCommon\Model\Comment", mappedBy="source")
+   * @ORM\JoinColumn(name="comment_id", referencedColumnName="id")
    */
   private $comments;
 
   /**
    * @var string The base element comments.
    * 
-   * @ManyToMany(targetEntity="Application_Model_Tag", cascade={"persist"})
-   * @JoinTable(name="base_has_tag",
+   * @ORM\ManyToMany(targetEntity="\UnpCommon\Model\Tag", cascade={"persist"})
+   * @ORM\JoinTable(name="base_has_tag",
    *      joinColumns={@JoinColumn(name="base_id", referencedColumnName="id")},
    *      inverseJoinColumns={@JoinColumn(name="tag_id", referencedColumnName="id")}
    *      )
@@ -117,23 +116,23 @@ abstract class Base {
   /**
    * @var string The base element ratings.
    * 
-   * @OneToMany(targetEntity="Application_Model_Rating", mappedBy="source")
-   * @JoinColumn(name="rating_id", referencedColumnName="id")
+   * @ORM\OneToMany(targetEntity="\UnpCommon\Model\Rating", mappedBy="source")
+   * @ORM\JoinColumn(name="rating_id", referencedColumnName="id")
    */
   private $ratings;
 
   /**
    * @var string The base element permissions.
    * 
-   * @OneToMany(targetEntity="Application_Model_ModelPermission", mappedBy="base")
-   * @JoinColumn(name="permission_id", referencedColumnName="id")
+   * @ORM\OneToMany(targetEntity="\UnpCommon\Model\ModelPermission", mappedBy="base")
+   * @ORM\JoinColumn(name="permission_id", referencedColumnName="id")
    */
   private $permissions;
 
   /**
    * @var ArrayCollection The notifications related to this object.
    * 
-   * @OneToMany(targetEntity="Application_Model_Notification", mappedBy="source")
+   * @ORM\OneToMany(targetEntity="\UnpCommon\Model\Notification", mappedBy="source")
    * 
    * @todo private without getter and setter? Could be a doctrine thing
    */
@@ -141,22 +140,12 @@ abstract class Base {
   protected $conversationTypes = array('comment');
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_State")
-   * @JoinColumn(name="state_id", referencedColumnName="id", onDelete="CASCADE")
+   * @ORM\ManyToOne(targetEntity="\UnpCommon\Model\State")
+   * @ORM\JoinColumn(name="state_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $state;
-  private $entityManager;
 
-  public function __construct(array $data = array()) {
-    /*$this->entityManager = Zend_Registry::getInstance()->entitymanager;
-
-    if (isset($data['state'])) {
-      $this->state = $data['state'];
-    } else {
-      //@todo dependency injection for entitymanager
-      $this->state = $this->entityManager->getRepository('Application_Model_State')->findOneByName('created');
-    }
-*/
+  public function __construct() {
     $this->comments = new ArrayCollection();
     $this->ratings = new ArrayCollection();
     $this->tags = new ArrayCollection();
@@ -171,7 +160,7 @@ abstract class Base {
    * Sets the creation time to the current time, if it is null.
    * This will be auto called the first time the object is persisted by doctrine.
    * 
-   * @PrePersist
+   * @ORM\PrePersist
    */
   public function created() {
     if ($this->created == null) {
@@ -182,7 +171,7 @@ abstract class Base {
   /**
    * Creates the permission objects. so that users can gain access to this particular object.
    * 
-   * @PrePersist 
+   * @ORM\PrePersist 
    */
   public function storePermissions() {
     /*$em = $this->entityManager;
@@ -196,7 +185,7 @@ abstract class Base {
 
     foreach (self::$permissionTypes as $permissionType) {
       if (!in_array($this->getPermissionType(), self::$blacklist)) {
-        $permission = new Application_Model_ModelPermission($this->getPermissionType(), $permissionType, $this);
+        $permission = new \UnpCommon\Model\ModelPermission($this->getPermissionType(), $permissionType, $this);
 
         $this->addPermission($permission);
         $user->getRole()->addPermission($permission);
@@ -205,15 +194,7 @@ abstract class Base {
     }*/
   }
 
-  /**
-   * Returns a direct link to an element by id. 
-   */
-  abstract public function getDirectLink();
 
-  /**
-   * Returns the title or name of the specific object of the element. 
-   */
-  abstract public function getDirectName();
 
   /**
    * Returns a class name for a direct link icon of this element. When no icon is used the return will be an
@@ -225,7 +206,7 @@ abstract class Base {
    * const ICON_CLASS = 'my-icon-class';
    * </code>
    */
-  /*public function getIconClass() {
+  public function getIconClass() {
     $iconClass = '';
     $childClass = get_called_class();
 
@@ -235,11 +216,11 @@ abstract class Base {
 
     return $iconClass;
   }
-
+/*
   public function getPermissionType() {
     $childClass = get_called_class();
 
-    return strtolower(str_replace('_', '-', substr($childClass, strlen('Application_Model_'))));
+    return strtolower(str_replace('_', '-', substr($childClass, strlen('\UnpCommon\Model\'))));
   }
 
   public function getComments() {
@@ -266,7 +247,7 @@ abstract class Base {
 
     return $count;
   }
-
+*/
   public function getTags() {
     return $this->tags;
   }
@@ -274,7 +255,7 @@ abstract class Base {
   public function getCreated() {
     return $this->created;
   }
-
+/*
   public function getConversationTypes() {
     return $this->conversationTypes;
   }
@@ -325,7 +306,7 @@ abstract class Base {
         $tag = $this->entityManager->getRepository('Application\Model\Tag')->findOneById($tagId);
       } else {
         $data['title'] = $tagId;
-        $tag = new Application_Model_Tag($data);
+        $tag = new \UnpCommon\Model\Tag($data);
       }
 
       $this->addTag($tag);
@@ -358,9 +339,9 @@ abstract class Base {
   }
 
   public function remove() {
-    $this->state = $this->entityManager->getRepository('Application_Model_State')->findOneByname('deleted');
+    $this->state = $this->entityManager->getRepository('\UnpCommon\Model\State')->findOneByname('deleted');
   }
-
+*/
   private function addPermission($permission) {
     if ($this->permissions && !$this->permissions->contains($permission)) {
       $this->permissions->add($permission);
@@ -373,6 +354,6 @@ abstract class Base {
 
   public function setState(Application\Model\State $state) {
     $this->state = $state;
-  }*/
+  }
 
 }

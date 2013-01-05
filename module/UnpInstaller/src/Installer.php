@@ -37,33 +37,18 @@ use ZendTest\XmlRpc\Server\Exception;
  */
 class Installer{
 
-  private $installationDirectories = array(
-      'writeableDirectories'=>array(
-          'resources',
-          'config/autoload',
-      ),
-      'subdirectories'=>array(
-          'resources/temp',
-          'resources/uploads',
-          'resources/uploads/avatars',
-          'resources/logs',
-          'resources/reports',
-          'resources/temp/cache',
-          'resources/temp/proxies',
-          'resources/temp/ocr',
-          'resources/temp/imagemagick',
-      ),
-  );
   private $baseDirectory = '';
+  private $outputStream = null;
   private $flashMessenger = null;
   private $translator = null;
 
   /**
    * @param string $baseDirectory
-   * @param FlashMessenger $flashMessenger
+   * @param FlashMessenger| $flashMessenger
    * @param Translator $translator
    */
-  public function __construct($baseDirectory = '', Translator $translator = null, FlashMessenger $flashMessenger = null){
+  public function __construct($baseDirectory = '', Translator $translator = null, FlashMessenger $flashMessenger = null, $outputStream = null){
+    $this->outputStream = $outputStream;
     $this->baseDirectory = $baseDirectory;
     $this->flashMessenger = $flashMessenger;
     $this->translator = $translator;
@@ -72,12 +57,13 @@ class Installer{
   /**
    * Checks all necessary indicators for whether the application was installed successfully.
    *
+   * @param array $config The complete config as it would be used if the real application would be tried to be started.
    * @return boolean
    */
-  public static function isInstalled($config){
-    if(self::composerWasRun() &&
-            self::databaseSettingIsPresent($config, 'user') &&
-            self::databaseSettingIsPresent($config, 'password')){
+  public function isInstalled($config){
+    if($this->composerWasRun() &&
+            $this->databaseSettingIsPresent($config, 'user') &&
+            $this->databaseSettingIsPresent($config, 'password')){
       return true;
     }
 
@@ -85,28 +71,58 @@ class Installer{
   }
 
   /**
-   * This is probably not a really reliable test for whether composer really ran successfully, but it's
+   * Checks whether the composer.lock file is present.
+   * 
+   * This is probably not a really reliable test for whether Composer really ran successfully, but it's
    * very simple and therefore probably fast.
    * 
    * @return boolean
    */
-  private static function composerWasRun(){
-    if(is_file(BASE_PATH . '/composer.lock')){
+  private function composerWasRun(){
+    if(is_file($this->baseDirectory . '/composer.lock')){
       return true;
     }
     return false;
   }
-
+  
   /**
    * @param array $config
    * @param string $key
    * @return boolean
    */
-  private static function databaseSettingIsPresent(array $config, $key){
+  private function databaseSettingIsPresent(array $config, $key){
     if(isset($config['doctrine']['connection']['orm_default']['params'][$key])){
       return true;
     }
     return false;
+  }
+
+  /**
+   * Updates the bundled Composer executable if possible and runs it for Unplagged.
+   * 
+   * @return type
+   */
+  public function runComposer(){
+    $result = true;
+    $this->output('Updating composer..');
+    $composerPath = $this->baseDirectory . '/composer.phar';
+
+    if(is_readable($composerPath)){
+      //first self update
+      exec($composerPath . ' selfupdate', $composerSelfupdateOutput, $selfupdateStatus);
+      if($selfupdateStatus === 0){
+        $this->outputCollected($composerSelfupdateOutput);
+
+        //then download dependencies as in composer.json
+        exec($composerPath . ' update --working-dir ' . $this->baseDirectory, $composerUpdateOutput, $updateStatus);
+        $this->outputCollected($composerUpdateOutput);
+      }
+    }else{
+      $this->output('Sorry, Composer could not be found.', 'error');
+      $result = false;
+    }
+
+    return $result;
   }
 
   private function validateInputData(){
@@ -121,9 +137,9 @@ class Installer{
    * @param string $message
    * @param string $namespace
    */
-  private function output($message = '', $namespace = 'status'){
+  private function output($message = '', $namespace = 'status', $variables = array()){
     if($this->translator){
-      $message = $this->translator->translate($message);
+      $message = vsprintf($this->translator->translate($message), $variables);
     }
 
     if($this->flashMessenger){
@@ -132,59 +148,43 @@ class Installer{
       $wrappedMessage = '<p class="' . $namespace . '">' . $message . '</p>';
       $this->flashMessenger->addMessage($wrappedMessage);
     }else{
-      echo $message . '' . PHP_EOL;
+      fwrite($this->outputStream, $message . '' . PHP_EOL);
     }
   }
-
+  
   /**
-   * Executes all the steps required for installing unplagged.
-   * @return type
+   * Takes an array and simply ouputs everything inside it.
+   * 
+   * @param array $output
    */
-  public function install(array $input){
-    if(empty($input)){
-      $this->renderStartPage();
-    }else{
-      $data = $this->validateInputData();
-
-      $this->initDirectories();
-      $this->checkWritePermissions();
-      $this->checkConsoleCommands($data);
-      if($this->checkDatabaseParams($data)){
-        if($this->createConfig($data)){
-          $this->initDatabase();
-          $this->createAdmin($data);
-        }
-      }
-
-      $this->parseResponse();
+  private function outputCollected(array $output){
+    foreach($output as $outputLine){
+      $this->output($outputLine);
     }
   }
 
   /**
-   * Checks all the directories that need to be writeable.
+   * Checks all the given directories for write permissions.
    *
    * @return boolean Whether all permissions are as required or not.
    */
   public function checkWritePermissions($directories = array()){
-    $success = true;
-
+    $result = true;
     $this->output('Checking permissions on installation directories...', 'status');
 
-    foreach($this->writeableDirectories as $directory){
-      $directory = BASE_PATH . DIRECTORY_SEPARATOR . $directory;
+    foreach($directories as $directory){
+      $directory = $this->baseDirectory . '/' . $directory;
       $writeable = is_writeable($directory);
 
       if($writeable){
-        $this->output('The directory ' . $directory . ' is writeable', 'success');
+        $this->output('The directory %s is writeable', 'success', array($directory));
       }else{
-        $this->output('The directory ' . $directory . ' is not writeable', 'error');
-        $success = false;
+        $this->output('The directory %s is not writeable', 'error', array($directory));
+        $result = false;
       }
     }
 
-    if(!$success){
-      $this->output('Some directories are not writeable, please change the permissions on them and start again.', 'error');
-    }
+    return $result;
   }
 
   /**
@@ -246,7 +246,7 @@ class Installer{
       return true;
     }catch(\PDOException $e){
       $this->output('Database connection could not be established, please check your credentials.', 'error');
-      $this->output('Exception: ' . $e->getMessage());
+      $this->output('Exception: %s', 'error', array($e->getMessage()));
       return false;
     }
   }

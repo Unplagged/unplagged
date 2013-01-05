@@ -22,7 +22,7 @@ return array(
                     'options'=>array(
                         'route'=>'--update-db-schema',
                         'defaults'=>array(
-                            'controller'=>'unpinstaller',
+                            'controller'=>'unpconsoleinstaller',
                             'action'=>'updateDatabaseSchema',
                         ),
                     ),
@@ -31,7 +31,7 @@ return array(
                     'options'=>array(
                         'route'=>'--delete-db-schema',
                         'defaults'=>array(
-                            'controller'=>'unpinstaller',
+                            'controller'=>'unpconsoleinstaller',
                             'action'=>'deleteDatabaseSchema',
                         ),
                     ),
@@ -40,7 +40,7 @@ return array(
                     'options'=>array(
                         'route'=>'--check-db-connection',
                         'defaults'=>array(
-                            'controller'=>'unpinstaller',
+                            'controller'=>'unpconsoleinstaller',
                             'action'=>'checkDatabaseConnection',
                         ),
                     ),
@@ -67,6 +67,7 @@ return array(
     'controllers'=>array(
         'invokables'=>array(
             'unpinstaller'=>'UnpInstaller\Controller\InstallerController',
+            'unpconsoleinstaller'=>'UnpInstaller\Controller\ConsoleInstallerController',
         ),
     ),
     'view_manager'=>array(

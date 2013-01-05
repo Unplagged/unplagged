@@ -19,12 +19,17 @@
  */
 namespace UnpInstallerTest;
 
+use Exception;
+use PHPUnit_Framework_TestCase;
 use UnpInstaller\Module;
+use UnplaggedTest\Bootstrap;
+use Zend\Mvc\Application;
+use Zend\Mvc\MvcEvent;
 
 /**
  * 
  */
-class ModuleTest extends \PHPUnit_Framework_TestCase{
+class ModuleTest extends PHPUnit_Framework_TestCase{
   private $object;
 
   protected function setUp(){
@@ -32,8 +37,20 @@ class ModuleTest extends \PHPUnit_Framework_TestCase{
   }
 
   public function testOnBootstrap(){
-    
+    //simply test whether the method runs without bugging out
+    try{
+      $serviceManager = Bootstrap::getServiceManager();
+      $config = $serviceManager->get('Config');
+
+      $application = new Application($config, $serviceManager);
+      $event = new MvcEvent();
+      $event->setApplication($application);
+      $this->object->onBootstrap($event);
+    }catch(Exception $e){
+      $this->fail();
+    }
   }
+
   
   public function testGetAutoloaderConfigReturnsArray(){
     $this->assertInternalType('array', $this->object->getAutoloaderConfig());

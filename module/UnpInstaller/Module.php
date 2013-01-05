@@ -19,7 +19,7 @@
  */
 namespace UnpInstaller;
 
-use UnpInstaller\Controller\InstallerController;
+use UnpCommon\Controller\BaseController;
 use Zend\Console\Adapter\AdapterInterface;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
@@ -48,7 +48,8 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
       $serviceManager = $e->getApplication()->getServiceManager();
       $this->initDoctrine($serviceManager);
     }catch(ExceptionInterface $e){
-      //
+      //it's ok if we run into an exception, happens if Unplagged is not installed
+      //just the most convenient way to set the entitymanager if already possible
     }
   }
 
@@ -60,14 +61,19 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
   private function initDoctrine(ServiceManager $serviceManager){
     $entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');
     $controllerLoader = $serviceManager->get('ControllerLoader');
-    $controllerLoader->addInitializer(function ($controller) use ($entityManager){
-              if($controller instanceof InstallerController){
+    $config = $serviceManager->get('Config');
+    $configFilePath = $config['unp_settings']['installer_config_file'];
+    $controllerLoader->addInitializer(function ($controller) use ($entityManager, $configFilePath){
+              if($controller instanceof BaseController){
                 $controller->setEntityManager($entityManager);
+              }
+              if(method_exists($controller, 'setConfigFilePath')){
+                $controller->setConfigFilePath($configFilePath);
               }
             });
   }
 
- /**
+  /**
    * Provides information about all modules and libraries that need to be loaded for this module.
    * 
    * @return array The autoloader configuration.
@@ -76,7 +82,7 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
     return array(
         'Zend\Loader\StandardAutoloader'=>array(
             'namespaces'=>array(
-                __NAMESPACE__=>__DIR__ . '/src/' . __NAMESPACE__,
+                __NAMESPACE__=>__DIR__ . '/src',
             )
         )
     );
@@ -94,19 +100,20 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
   /**
    * Provides information on how to use the Unplagged console interface.
    * 
-   * @param \Zend\Console\Adapter\AdapterInterface $console
+   * @param AdapterInterface $console
    * @return array
    */
   public function getConsoleUsage(AdapterInterface $console){
     return array(
         // Describe available commands
-        '--install'=>'Installs the application',
-        '--update-database'=>'Updates the database schema from the model files.',
-        '--delete-databse'=>'Deletes the database completely and resets it to the initial state',
-        '--test-data'=>'Adds a basic set of test data to the database',
+        //'--install'=>'Installs the application',
+        '--update-db-schema'=>'Updates the database schema from the model files.',
+        '--delete-db-schema'=>'Deletes the database completely and resets it to the initial state',
+        //'--test-data'=>'Adds a basic set of test data to the database',
         '--uninstall'=>'(Re)Enables the webinstaller.',
-        // Describe expected parameters
-        //array('--verbose|-v', '(optional) turn on verbose mode'),
+        '--check-db-connection'=>'Queries all important parameters and tries to connect to the database'
+            // Describe expected parameters
+            //array('--verbose|-v', '(optional) turn on verbose mode'),
     );
   }
 
@@ -114,7 +121,7 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
    * The first strig that gets displayed when Unplagged is called via the command line. Simply
    * identifies the console interface for the user.
    * 
-   * @param \Zend\Console\Adapter\AdapterInterface $console
+   * @param AdapterInterface $console
    * @return string
    */
   public function getConsoleBanner(AdapterInterface $console){

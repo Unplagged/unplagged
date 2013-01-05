@@ -21,8 +21,8 @@ return array(
     'modules'=>array(
         'UnpCommon',
         'UnpInstaller',
-        'Application',
-         'DoctrineModule',
+        'UnpApplication',
+        'DoctrineModule',
         'DoctrineORMModule',
         'ZfcBase',
         'ZfcUser',

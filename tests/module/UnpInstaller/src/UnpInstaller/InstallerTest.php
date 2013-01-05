@@ -19,15 +19,40 @@
  */
 namespace UnpInstallerTest;
 
+use PHPUnit_Framework_TestCase;
 use UnpInstaller\Installer;
+use UnplaggedTest\Bootstrap;
 
 /**
  * 
  */
-class InstallerTest extends \PHPUnit_Framework_TestCase{
+class InstallerTest extends PHPUnit_Framework_TestCase{
+  
+  private $installer;
+  
+  public function setUp(){
+    $this->installer = new Installer(BASE_PATH, null, null, STDOUT);
+  }
   
   public function testIsInstalled(){
-    //$this->assertTrue(Installer::isInstalled());
-    //$installer = new Installer('asdf');
+    $serviceManager = Bootstrap::getServiceManager();
+    $config = $serviceManager->get('Config');
+    $this->assertTrue($this->installer->isInstalled($config));
+  }
+  
+  public function testWritePermissionsWithUnreadableDir(){
+    $directories = array(
+        'tests/resources/unreadable-dir'
+    );
+    $this->assertFalse($this->installer->checkWritePermissions($directories));
+  }
+  
+  public function testRunComposer(){
+    $this->assertTrue($this->installer->runComposer());
+  }
+  
+  public function testRunComposerWithWrongBasePath(){
+    $installer = new Installer('', null, null, STDOUT);
+    $this->assertFalse($installer->runComposer());
   }
 }

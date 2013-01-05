@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace ApplicationTest\Helper;
+namespace UnpApplicationTest\Helper;
 
-use Application\Helper\FlashMessages;
+use UnpApplication\Helper\FlashMessages;
 
 /**
  * 

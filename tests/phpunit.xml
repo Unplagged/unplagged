@@ -2,10 +2,11 @@
          colors="true"
          backupGlobals="false"
          backupStaticAttributes="false"
-         stopOnError="true"
+         stopOnError="false"
          stopOnFailure="true"
-         stopOnIncomplete="true"
-         stopOnSkipped="true">
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         verbose="true">
   <testsuite name="application">
     <directory>./module</directory>
   </testsuite>
@@ -13,19 +14,20 @@
     <whitelist processUncoveredFilesFromWhitelist="true">
       <directory suffix=".php">./../module/</directory>
       <exclude>
-        <directory suffix=".php">./../module/Application/src/Application/Model/</directory>
-      <directory suffix=".php">./../module/Application/config/</directory>
-      <directory suffix=".php">./../module/UnpInstaller/config/</directory>
+        <directory suffix=".php">./../module/UnpApplication/src/Application/Model/</directory>
+        <directory suffix=".php">./../module/UnpApplication/config/</directory>
+        <directory suffix=".php">./../module/UnpInstaller/config/</directory>
+        <directory suffix=".php">./../module/UnpInstaller/resources/</directory>
       </exclude>
     </whitelist>
   </filter>
   <logging>
     <log type="coverage-html"
-             target="../docs/coverage"
-             charset="UTF-8"
-             yui="true"
-             highlight="true"
-             lowUpperBound="50"
-             highLowerBound="70" />
+         target="../docs/coverage"
+         charset="UTF-8"
+         yui="true"
+         highlight="true"
+         lowUpperBound="50"
+         highLowerBound="70" />
   </logging>
 </phpunit>

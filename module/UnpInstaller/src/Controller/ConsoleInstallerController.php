@@ -26,54 +26,26 @@ use Zend\Console\Prompt\Line;
 use Zend\Console\Prompt\Select;
 
 /**
- * Controller to serve the index and other mostly static pages.
+ * Provides a console interface mostly for helping during the development of Unplagged.
  */
-class InstallerController extends BaseController{
+class ConsoleInstallerController extends BaseController{
 
-  private $configFilePath = '';
-
-  public function setConfigFilePath($configFilePath){
-    $this->configFilePath = $configFilePath;
+  private $outputStream = null;
+  
+  public function __construct(){
+    $this->outputStream = STDOUT;
   }
-
-  /**
-   * Allow the installer when we have no flag set or when we have a flag that explicitly allows the
-   * installer. This makes it possible to access the installer even if it already ran.
-   * 
-   * @param array $config
-   * @return boolean
-   */
-  private function installerEnabled($config){
-    if((isset($config['unp_settings']['installer_enabled']) &&
-            $config['unp_settings']['installer_enabled'] === true) ||
-            !isset($config['unp_settings']['installer_enabled'])){
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * 
-   */
-  public function indexAction(){
-    if($this->installerEnabled($this->getServiceLocator()->get('Config'))){
-      $this->install();
-    }else{
-      $this->redirect()->toUrl($this->getServiceLocator()->get('router')->getBaseUrl() . '/');
-    }
-  }
-
-  private function createInstaller($console = true){
-    $installer = null;
-    if($console){
-      $installer = new Installer(BASE_PATH, $this->getServiceLocator()->get('translator'));
-    }else{
-      $installer = new Installer(BASE_PATH, $this->getServiceLocator()->get('translator'), $this->flashMessenger());
-    }
+  
+  private function createInstaller(){
+    $installer = new Installer(BASE_PATH, $this->getServiceLocator()->get('translator'), null, $this->outputStream);
 
     return $installer;
   }
 
+  public function setOutputStream($stream){
+      $this->outputStream = $stream;
+  }
+  
   /**
    * Command line action, that deletes all tables from the database.
    */
@@ -85,11 +57,14 @@ class InstallerController extends BaseController{
   }
 
   /**
+   * Questions the user for all necessary information about the database connection and notifies if they would work.
+   * 
    * @todo add other db types
    */
   public function checkDatabaseConnectionAction(){
     $options = array(
-        '1'=>'MySQL'
+        '1'=>'MySQL',
+        //'2'=>'Sqlite',
     );
     $answer = Select::prompt('Please select your database type.', $options, false, false);
     $config = null;
@@ -102,6 +77,11 @@ class InstallerController extends BaseController{
     $installer->checkDatabaseConnection($config);
   }
 
+  /**
+   * Questions the user for all necessary parameters for the MySQL connection.
+   * 
+   * @return array
+   */
   private function questionMySqlParameters(){
     $config = array();
     $config['driverClass'] = 'Doctrine\DBAL\Driver\PDOMySql\Driver';
@@ -132,33 +112,16 @@ class InstallerController extends BaseController{
     return $config;
   }
 
-  private function install(){
-    $this->layout('layout/installer');
-    $post = $this->params()->fromPost();
-
-    if(!empty($post)){
-      /* $data = $this->validateInputData();
-
-        $this->initDirectories();
-        $this->checkWritePermissions();
-        $this->checkConsoleCommands($data);
-        if($this->checkDatabaseParams($data)){
-        if($this->createConfig($data)){
-        $this->initDatabase();
-        $this->createAdmin($data);
-        }
-        }
-
-        $this->parseResponse(); */
-    }
-  }
-
   /**
    * Command line action that updates the database schema from the model files.
    */
-  public function updateSchemaAction(){
+  public function updateDatabaseSchemaAction(){
     $installer = $this->createInstaller();
-    $installer->installDatabaseSchema($this->em);
+    $installer->updateDatabaseSchema($this->em);
   }
 
+  public function uninstallAction(){
+    
+  }
+  
 }

@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace ApplicationTest;
+namespace UnpApplicationTest;
 
 use Zend\EventManager\EventManager;
 use Zend\Http\PhpEnvironment;
 use Zend\ModuleManager\ModuleManager;
 use Zend\Mvc\Application;
 use Zend\ServiceManager\ServiceManager;
-use Application\Module;
+use UnpApplication\Module;
 
 /**
  * 
@@ -52,8 +52,6 @@ class ModuleTest extends \PHPUnit_Framework_TestCase{
   public function testOnBootstrap(){
     //simply test whether the method runs without bugging out
     try{
-
-
       $config = include __DIR__ . '/../../../../TestConfig.php.dist';
 
       $serviceManager = new ServiceManager();
@@ -68,7 +66,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase{
               ->method('getApplication')
               ->will($this->returnValue($application));
       $this->object->onBootstrap($event);
-    }catch(Exception $e){
+    }catch(\Exception $e){
       $this->fail();
     }
   }
