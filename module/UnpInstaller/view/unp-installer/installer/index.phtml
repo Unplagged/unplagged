@@ -1,15 +1,40 @@
+<div class="well">
+  <div class="welcome-message clearfix">
+    <p class="lead big">
+      <?php
+      echo sprintf($this->translate('Welcome plagiarism hunter! We are excited that you would like to install %sUnplagged%s on your server. This setup wizard will walk you through all necessary steps to make this happen.'), '<a href="http://unplagged.com">', '</a>');
+      ?>
+    </p>
+    <a href="#" class="btn btn-large btn-primary pull-right">Start Installation</a>
+  </div>
+  <ul class="console">
+    <li>[17:01]>>> Test</li>
+    <li>[17:01]>>> Test</li>
+    <li>[17:01]>>> Test</li>
+    <li>[17:01]>>> Test</li>
+    <li>[17:01]>>> Test</li>
+    <li>[17:01]>>> Test</li>
+    <li>[17:01]>>> Test</li>
+    <li>[17:01]>>> Test</li>
+    <li>[17:01]>>> Test</li>
+    <li>[17:01]>>> Test</li>
+    <li>[17:01]>>> Test</li>
+    <li>>>> <span class="blink-cursor">&nbsp;</span></li>
+  </div>
+  <div id="check-console">
+  </div>
+  <p class="loader hide"><img src="/images/throbber.gif" id="loader" /></p>
+</div>
 <div class="well main-well">
+  <button type="submit" class="btn btn-primary" data-step-id="5">Install Unplagged</button>
   <div class="alert fade in alert-error hide">
-    <a class="close" href="#">&times;</a>There was a problem with your input, please check it again.
+    <a class="close" href="#">&times;</a><?php echo $this->translate('There was a problem with your input, please check it again.'); ?>
   </div>
   <div class="tabbable">
 
     <div class="tab-content">
       <div class="tab-pane active">
         <form class="form-horizontal" novalidate>
-          <p class="lead">Welcome plagiarism hunter! We are excited that you would like to install <a href="http://unplagged.com">Unplagged</a> on
-            your server.
-            This setup wizard will walk you through all necessary steps to make this happen.</p>
           <legend>MySQL Connection</legend>
           <p>Unplagged stores it's data inside a MySQL database. You should probably create an empty database and a new user for this purpose.</p>
           <div class="control-group">
@@ -155,13 +180,5 @@
       </div>
 
     </div>
-  </div>
-</div>
-<div class="well main-well">
-  <div id="check-console">
-  </div>
-  <p class="loader"><img src="/images/throbber.gif" id="loader" /></p>
-  <div class="control-group pagination-right">
-    <button type="submit" class="btn btn-primary" data-step-id="5">Install Unplagged</button>
   </div>
 </div>

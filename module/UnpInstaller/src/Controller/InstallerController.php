@@ -56,21 +56,26 @@ class InstallerController extends BaseController{
   }
 
   /**
+   * Sends the webinstaller app to the user.
    * 
+   * The actual instalation is done via js and websockets from the install action.
    */
   public function indexAction(){
-    if($this->installerEnabled($this->getServiceLocator()->get('Config'))){
-      $this->install();
-    }else{
+    if(!$this->installerEnabled($this->getServiceLocator()->get('Config'))){
       $response = $this->redirect()->toUrl('/');
       $response->setStatusCode(403);
+    } else {
+      $this->layout('layout/installer');
     }
   }
 
-  private function install(){
-    $this->layout('layout/installer');
+  public function installAction(){
+    die('hier');
     $post = $this->params()->fromPost();
 
+    $installer = $this->createInstaller();
+    
+    
     if(!empty($post)){
       /* $data = $this->validateInputData();
 

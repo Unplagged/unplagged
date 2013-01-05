@@ -3,6 +3,16 @@
 return array(
     'router'=>array(
         'routes'=>array(
+            'websocket'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Literal',
+                'options'=>array(
+                    'route'=>'/installer/install',
+                    'defaults'=>array(
+                        'controller'=>'unpinstaller',
+                        'action'=>'install',
+                    ),
+                ),
+            ),
             'installer'=>array(
                 'type'=>'Zend\Mvc\Router\Http\Literal',
                 'options'=>array(

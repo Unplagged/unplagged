@@ -126,7 +126,54 @@ h1 {
     border-left-color: #007ACC;
 }
 
-.lead {
-    font-size: 14px;
-    line-height: 18px;
+.console {
+  background: #222;
+  list-style-type: none;
+  height: 200px;
+  overflow: scroll;
+  overflow-x: hidden;
+  margin: 20px 0 0 0;
+  font-family: Courier, monospace;
+  }
+ 
+  .console li{
+    color: #EEEEEE
+    }
+    
+ .blink-cursor {
+  display: inline-block;
+  background: #ddd;
+  margin-left: 1px;
+  width: 2px;
+  -webkit-animation: blink 0.8s ease-in-out 0s infinite;
+  -moz-animation: blink 1.5s ease-in-out 0s infinite;
+  -ms-animation: blink 1.5s ease-in-out 0s infinite;
+  -o-animation: blink 1.5s ease-in-out 0s infinite;
+  animation: blink 1.5s ease-in-out 0s infinite;
+}
+
+@-webkit-keyframes blink {
+  0%{background: #222;}
+  30%{background: #ddd;}
+  60%{background: #222;}
+  100%{background: #222;}
+}
+ 
+@-moz-keyframes blink {
+  from{background: #222;}
+  to{background: #ddd;}
+}
+ 
+@-ms-keyframes blink {
+  from{background: #222;}
+  to{background: #ddd;}
+}
+ 
+@-o-keyframes blink {
+  from{background: #222;}
+  to{background: #ddd;}
+}
+@-keyframes blink {
+  from{background: #222;}
+  to{background: #ddd;}
 }
