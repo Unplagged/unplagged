@@ -1,184 +1,291 @@
 <div class="well">
-  <div class="welcome-message clearfix">
+  <h1><img class="logo" src="<?php echo $this->basePath('images/logo-blue.png'); ?>" /><?php echo $this->translate('Setup Wizard'); ?></h1>
+  <div class="wizard-steps" data-current-step="<?php echo $this->stepStatus['currentStep']; ?>" id="navigation">
+    <?php $directoriesCreated = is_array($this->stepStatus['directories']) && $this->stepStatus['directories']['finished']; ?>
+    <a class="<?php if($directoriesCreated) echo 'finished disabled'; ?>" data-tab-id="1" href="#">
+      <span class="badge <?php if($directoriesCreated) echo 'badge-inverse'; ?>">1</span>
+      <span class="text"><?php echo $this->translate('Directories'); ?></span>
+    </a>
+    <?php $databaseAccess = is_array($this->stepStatus['database']) && $this->stepStatus['database']['finished']; ?>
+    <a class="<?php if($databaseAccess) echo 'finished disabled'; ?>" href="#">
+      <span class="badge <?php if($databaseAccess) echo 'badge-inverse'; ?>">2</span>
+      <span class="text"><?php echo $this->translate('Database'); ?></span>
+    </a>
+    <?php $contactData = is_array($this->stepStatus['contact']) && $this->stepStatus['contact']['finished']; ?>
+    <a class="<?php if($contactData) echo 'finished disabled'; ?>" href="#">
+      <span class="badge <?php if($contactData) echo 'badge-inverse'; ?>">3</span>
+      <span class="text"><?php echo $this->translate('Settings'); ?></span>
+    </a>
+    <a class="disabled" href="#">
+      <span class="badge">4</span><span class="text"><?php echo $this->translate('Admin'); ?></span>
+    </a>
+    <a class="disabled" href="#">
+      <span class="badge">5</span><span class="text"><?php echo $this->translate('Software'); ?></span>
+    </a>
+  </div>
+</div>
+<div class="well">
+  <?php if(!$this->stepStatus['download']['finished']): ?>
+    <div class="page-alert alert fade in alert-error">
+      <a class="close" href="#">&times;</a><?php echo $this->translate('To start the webinstaller, you need to run "composer update" from the command line and reload this page.'); ?>
+    </div>
+  <?php endif; ?>
+  <div class="page-alert wrong-input alert fade in alert-error hide">
+    <a class="close" href="#">&times;</a><?php echo $this->translate('There was a problem with your input, you can find the description in the console below.'); ?>
+  </div>
+  <div class="page-alert fix-console alert fade in alert-error hide">
+    <a class="close" href="#">&times;</a><?php echo $this->translate('The was a problem that needs to be resolved somewhere else. Please fix the problems described in the console below and then click restart.'); ?>
+  </div>
+  <div class="page-alert welcome-message clearfix">
     <p class="lead big">
       <?php
       echo sprintf($this->translate('Welcome plagiarism hunter! We are excited that you would like to install %sUnplagged%s on your server. This setup wizard will walk you through all necessary steps to make this happen.'), '<a href="http://unplagged.com">', '</a>');
       ?>
     </p>
-    <a href="#" class="btn btn-large btn-primary pull-right">Start Installation</a>
+
+    <button href="" 
+            id="start-button" 
+            class="btn btn-large btn-primary pull-right <?php if(!$this->stepStatus['download']['finished']) echo 'disabled'; ?>">
+      Start Installation
+    </button>
   </div>
-  <ul class="console">
-    <li>[17:01]>>> Test</li>
-    <li>[17:01]>>> Test</li>
-    <li>[17:01]>>> Test</li>
-    <li>[17:01]>>> Test</li>
-    <li>[17:01]>>> Test</li>
-    <li>[17:01]>>> Test</li>
-    <li>[17:01]>>> Test</li>
-    <li>[17:01]>>> Test</li>
-    <li>[17:01]>>> Test</li>
-    <li>[17:01]>>> Test</li>
-    <li>[17:01]>>> Test</li>
-    <li>>>> <span class="blink-cursor">&nbsp;</span></li>
-  </div>
-  <div id="check-console">
-  </div>
-  <p class="loader hide"><img src="/images/throbber.gif" id="loader" /></p>
+  <ul id="console" class="console">
+    <?php foreach($this->stepStatus as $step): ?>
+      <?php if(is_array($step)): ?>
+        <?php foreach($step['messages'] as $message): ?>
+          <li>&gt;&gt;&gt;
+            <span class="<?php echo 'text-' . $message['namespace']; ?>"><?php echo $message['message']; ?></span>
+          </li>
+        <?php endforeach; ?> 
+      <?php endif; ?>
+    <?php endforeach; ?>
+    <li>&gt;&gt;&gt;&nbsp;<span class="blink-cursor">&nbsp;</span></li>
+  </ul>
 </div>
-<div class="well main-well">
-  <button type="submit" class="btn btn-primary" data-step-id="5">Install Unplagged</button>
-  <div class="alert fade in alert-error hide">
-    <a class="close" href="#">&times;</a><?php echo $this->translate('There was a problem with your input, please check it again.'); ?>
-  </div>
-  <div class="tabbable">
 
-    <div class="tab-content">
-      <div class="tab-pane active">
-        <form class="form-horizontal" novalidate>
-          <legend>MySQL Connection</legend>
-          <p>Unplagged stores it's data inside a MySQL database. You should probably create an empty database and a new user for this purpose.</p>
-          <div class="control-group">
-            <label class="control-label" for="dbHost">Host<span class="text-error">*</span></label>
-            <div class="controls">
-              <input class="input-xlarge" name="dbHost" type="text" id="dbHost" placeholder="127.0.0.1" value="127.0.0.1" required />
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="dbPort">Port</label>
-            <div class="controls">
-              <input class="input-xlarge" name="dbPort" type="text" id="dbPort" placeholder="3306" value="3306" />
-              <span class="help-block">Only needed when the default MySQL port was changed.</span>
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="dbName">Databasename<span class="text-error">*</span></label>
-            <div class="controls">
-              <input class="input-xlarge" name="dbName" type="text" id="dbName" placeholder="unplagged" value="unplagged" required />
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="dbUser">MySQL User<span class="text-error">*</span></label>
-            <div class="controls">
-              <input class="input-xlarge" name="dbUser" type="text" id="dbUser" placeholder="unplagged" value="unplagged" required />
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="dbPassword">MySQL Password</label>
-            <div class="controls">
-              <input class="input-xlarge" name="dbPassword" type="password" id="dbPassword" />
-              <span class="help-block">When you run a production server, you should really consider using a password for the MySQL account.</span>
-            </div>
-          </div>
-
-          <legend>Admin user</legend>
-          <p>This data will be used to create the first user account of the system. It will have special administration privileges, so keep it safe.</p>
-          <div class="control-group">
-            <label class="control-label" for="adminEmail">E-Mail<span class="text-error">*</span></label>
-            <div class="controls">
-              <input class="input-xlarge" name="adminEmail" type="email" id="adminEmail" placeholder="admin@example.com" required />
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="adminUsername">Username<span class="text-error">*</span></label>
-            <div class="controls">
-              <input class="input-xlarge" name="adminUsername" type="text" id="adminUsername" placeholder="admin" required />
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="adminPassword">Password<span class="text-error">*</span></label>
-            <div class="controls">
-              <input class="input-xlarge" name="adminPassword" type="password" id="adminPassword" minlength="6" required />
-            </div>
-          </div>
-
-          <div class="control-group pagination-right">
-            <button type="submit" class="btn btn-primary" data-step-id="2">Proceed</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="tab-pane"><form class="form-horizontal" novalidate>
-          <legend>Page Information</legend>
-          <div class="control-group">
-            <label class="control-label" for="defaultName">Page name<span class="text-error">*</span></label>
-            <div class="controls">
-              <input class="input-xlarge" name="defaultName" type="text" id="defaultName" placeholder="Unplagged" required />
-              <span class="help-block">Will be displayed on top of every page and used within emails.</span>
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="defaultSender">E-Mail sender name<span class="text-error">*</span></label>
-            <div class="controls">
-              <input class="input-xlarge" name="defaultSender" type="text" id="defaultSender" placeholder="Unplagged Group" required />
-              <span class="help-block">Used for every email that is sent to your users.</span>
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="defaultEmail">E-Mail sender address<span class="text-error">*</span></label>
-            <div class="controls">
-              <input class="input-xlarge" name="defaultEmail" type="email" id="defaultEmail" placeholder="no-reply@example.com" required />
-              <span class="help-block"></span>
-            </div>
-          </div>
-
-          <legend>Imprint</legend>
-          <p>In some countries it is mandatory to provide information to reach the webmaster of a page. If you live in such a country, you should
-            provide the following information.</p>
-          <div class="control-group">
-            <label class="control-label" for="imprintAddress">Address</label>
-            <div class="controls">
-              <textarea class="input-xlarge" rows="4" name="imprintAddress" type="text" id="imprintAddress" placeholder="Berlin"></textarea>
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="imprintPhone">Telephone</label>
-            <div class="controls">
-              <input class="input-xlarge" name="imprintPhone" type="text" id="imprintPhone" placeholder="+49 30 1234 567 89" />
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="imprintEmail">E-Mail</label>
-            <div class="controls">
-              <input class="input-xlarge" name="imprintEmail" type="email" id="imprintEmail" placeholder="contact@example.com" />
-            </div>
-          </div>
-          <div class="control-group pagination-right">
-            <button type="submit" class="btn btn-primary" data-step-id="3">Proceed</button>
-          </div>
-        </form>
-
-      </div>
-
-      <div class="tab-pane">
-        <form class="form-horizontal" novalidate>
-          <legend>Script paths</legend>
-          <p><em>To use the whole feature set of Unplagged, it is recommended to install the command
-              line tools listed below on your server. If they are not registered with your PATH
-              enironment variable, please provide the full server path here.</em></p>
-          <div class="control-group">
-            <label class="control-label" for="inputTesseract">Tesseract</label>
-            <div class="controls">
-              <input class="input-xlarge" name="tesseractPath" type="text" id="inputTesseract" placeholder="tesseract" />
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="inputGhostscript">Ghostscript</label>
-            <div class="controls">
-              <input class="input-xlarge" name="ghostscriptPath" type="text" id="inputGhostscript" placeholder="gs" />
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="inputImagemagick">Imagemagick</label>
-            <div class="controls">
-              <input class="input-xlarge" name="imagemagickPath" type="text" id="inputImagemagick" placeholder="convert" />
-            </div>
-          </div>
-          <div class="control-group pagination-right">
-            <button type="submit" class="btn btn-primary" data-step-id="4">Proceed</button>
-          </div>
-        </form>
-      </div>
-
+<!-- Database modal -->
+<div id="database-modal" class="modal hide">
+  <form class="form-horizontal" method="POST" action="<?php echo $this->basePath('installer/installDatabase'); ?>" novalidate>
+    <div class="modal-header">
+      <h3><?php echo $this->translate('Database credentials'); ?></h3>
     </div>
+    <div class="modal-body">
+      <p>
+        <?php echo $this->translate('Please provide the credentials for the MySQL database.'); ?>
+      </p>
+      <div class="modal-alert alert fade in alert-error hide">
+        <a class="close" href="#">&times;</a><?php echo $this->translate('The was a problem that needs to be resolved somewhere else. Please fix the problems described in the console below and then click restart.'); ?>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="host"><?php echo $this->translate('Host'); ?><span class="text-error">*</span></label>
+        <div class="controls">
+          <input class="input-xlarge" name="host" type="text" id="host" placeholder="127.0.0.1" value="127.0.0.1" required />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="port"><?php echo $this->translate('Port'); ?></label>
+        <div class="controls">
+          <input class="input-xlarge" name="port" type="text" id="port" placeholder="3306" value="3306" />
+          <span class="help-block"><?php echo $this->translate('Only needed when the default MySQL port was changed.'); ?></span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="dbname"><?php echo $this->translate('Databasename'); ?><span class="text-error">*</span></label>
+        <div class="controls">
+          <input class="input-xlarge" name="dbname" type="text" id="name" placeholder="unplagged" value="unplagged" required />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="user"><?php echo $this->translate('MySQL User'); ?><span class="text-error">*</span></label>
+        <div class="controls">
+          <input class="input-xlarge" name="user" type="text" id="user" placeholder="unplagged" value="unplagged" required />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="password"><?php echo $this->translate('MySQL Password'); ?></label>
+        <div class="controls">
+          <input class="input-xlarge" name="password" type="password" id="password" />
+          <span class="help-block"><?php echo $this->translate('When you run a production server, you should really consider using a password for the database account.'); ?></span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="close-button btn"><?php echo $this->translate('Close'); ?></a>
+      <button type="submit" class="database-submit btn btn-primary" data-step-id="5"><?php echo $this->translate('Submit'); ?></button>
+    </div>
+  </form>
+</div>
+
+
+<!-- Admin modal -->
+<div id="admin-modal" class="modal hide">
+  <form class="form-horizontal" method="POST" action="<?php echo $this->basePath('installer/installAdmin'); ?>" novalidate>
+    <div class="modal-header">
+      <h3><?php echo $this->translate('Admin User'); ?></h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        <?php echo $this->translate('This data will be used to create the first user account of the system. It will have special administration privileges, so keep it safe.'); ?>
+      </p>
+      <div class="control-group">
+        <label class="control-label" for="adminEmail"><?php echo $this->translate('E-Mail'); ?><span class="text-error">*</span></label>
+        <div class="controls">
+          <input class="input-xlarge" name="adminEmail" type="email" id="adminEmail" placeholder="admin@example.com" required />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="adminUsername"><?php echo $this->translate('Username'); ?><span class="text-error">*</span></label>
+        <div class="controls">
+          <input class="input-xlarge" name="adminUsername" type="text" id="adminUsername" placeholder="admin" required />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="adminPassword"><?php echo $this->translate('Password'); ?><span class="text-error">*</span></label>
+        <div class="controls">
+          <input class="input-xlarge" name="adminPassword" type="password" id="adminPassword" minlength="6" required />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn close-button"><?php echo $this->translate('Close'); ?></a>
+      <button type="submit" class="btn btn-primary"><?php echo $this->translate('Submit'); ?></button>
+    </div>
+  </form>
+</div>
+
+
+<!-- Contact modal -->
+<div id="contact-modal" class="modal hide">
+  <form class="form-horizontal" method="POST" action="<?php echo $this->basePath('installer/installSettings'); ?>" novalidate>
+    <div class="modal-header">
+      <h3><?php echo $this->translate('Settings'); ?></h3>
+    </div>
+    <div class="modal-body">
+      <div class="control-group">
+        <label class="control-label" for="defaultName"><?php echo $this->translate('Page name'); ?><span class="text-error">*</span></label>
+        <div class="controls">
+          <input class="input-xlarge" name="defaultName" type="text" id="defaultName" placeholder="Unplagged" required />
+          <span class="help-block"><?php echo $this->translate('Will be displayed on top of every page and used within emails.'); ?></span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="defaultSender"><?php echo $this->translate('E-Mail sender name'); ?><span class="text-error">*</span></label>
+        <div class="controls">
+          <input class="input-xlarge" name="defaultSender" type="text" id="defaultSender" placeholder="Unplagged Group" required />
+          <span class="help-block"><?php echo $this->translate('Used for every email that is sent to your users.'); ?></span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="defaultEmail"><?php echo $this->translate('E-Mail sender address'); ?><span class="text-error">*</span></label>
+        <div class="controls">
+          <input class="input-xlarge" name="defaultEmail" type="email" id="defaultEmail" placeholder="no-reply@example.com" required />
+          <span class="help-block"></span>
+        </div>
+      </div>
+
+      <legend><?php echo $this->translate('Imprint'); ?></legend>
+      <p><?php echo $this->translate('In some countries it is mandatory to provide information to reach the webmaster of a page. If you live in such a country, you should
+        provide the following information.'); ?></p>
+      <div class="control-group">
+        <label class="control-label" for="enableImprint"><?php echo $this->translate('Enable Imprint'); ?></label>
+        <div class="controls">
+          <input class="input-xlarge" name="enableImprint" type="checkbox" id="enableImprint"></input>
+        </div>
+      </div>
+      <div class="imprint-data hide">
+        <div class="control-group">
+          <label class="control-label" for="contactPerson"><?php echo $this->translate('Contact Person'); ?></label>
+          <div class="controls">
+            <input class="input-xlarge" name="contactPerson" type="text" id="contactPerson" placeholder="<?php echo $this->translate('John Doe'); ?>"></input>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="street"><?php echo $this->translate('Street'); ?></label>
+          <div class="controls">
+            <input class="input-xlarge" name="street" type="text" id="street" placeholder="Street 23"></input>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="zip"><?php echo $this->translate('Zip'); ?></label>
+          <div class="controls">
+            <input class="input-xlarge" name="zip" type="text" id="zip" placeholder="12345"></input>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="city"><?php echo $this->translate('City'); ?></label>
+          <div class="controls">
+            <input class="input-xlarge" name="city" type="text" id="city" placeholder="Berlin"></input>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="imprintPhone"><?php echo $this->translate('Telephone'); ?></label>
+          <div class="controls">
+            <input class="input-xlarge" name="imprintPhone" type="text" id="imprintPhone" placeholder="+49 30 1234 567 89" />
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="imprintEmail"><?php echo $this->translate('E-Mail'); ?></label>
+          <div class="controls">
+            <input class="input-xlarge" name="imprintEmail" type="email" id="imprintEmail" placeholder="contact@example.com" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn close-button"><?php echo $this->translate('Close'); ?></a>
+      <button type="submit" class="btn btn-primary" data-step-id="5"><?php echo $this->translate('Submit'); ?></button>
+    </div>
+  </form>
+</div>
+
+
+<div id="finish-modal" class="modal hide">
+  <div class="modal-header">
+    <h3><?php echo $this->translate('Installation Finished'); ?></h3>
   </div>
+  <div class="modal-body">
+    <p class="lead big">
+      <?php echo $this->translate('Congratulation, you successfully finished the installation! Click the button below to get to the application.'); ?>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="close-button btn"><?php echo $this->translate('Close'); ?></a>
+    <a href="<?php echo $this->basePath(''); ?>" class="btn btn-primary"><?php echo $this->translate('Take me to Unplagged'); ?></a>
+  </div>
+</div>
+
+
+<div id="software-modal" class="modal hide">
+  <form class="form-horizontal" method="POST" action="<?php echo $this->basePath('installer/installSettings'); ?>" novalidate>
+    <div class="modal-header">
+      <h3><?php echo $this->translate('Software paths'); ?></h3>
+    </div>
+    <div class="modal-body">
+      <p><?php echo $this->translate('To use the whole feature set of Unplagged, it is recommended to install the command
+        line tools listed below on your server. If they are not registered with your PATH
+        enironment variable, please provide the full server path here.'); ?></p>
+      <div class="control-group">
+        <label class="control-label" for="inputTesseract">Tesseract</label>
+        <div class="controls">
+          <input class="input-xlarge" name="tesseractPath" type="text" id="inputTesseract" placeholder="tesseract" />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="inputGhostscript">Ghostscript</label>
+        <div class="controls">
+          <input class="input-xlarge" name="ghostscriptPath" type="text" id="inputGhostscript" placeholder="gs" />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="inputImagemagick">Imagemagick</label>
+        <div class="controls">
+          <input class="input-xlarge" name="imagemagickPath" type="text" id="inputImagemagick" placeholder="convert" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn close-button"><?php echo $this->translate('Close'); ?></a>
+      <button type="submit" class="btn btn-primary" data-step-id="5"><?php echo $this->translate('Submit'); ?></button>
+    </div>
+  </form>
 </div>

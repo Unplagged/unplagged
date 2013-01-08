@@ -12,21 +12,11 @@
     <script src="<?php echo $this->basePath('js/libs/modernizr-2.5.3.min.js'); ?>"></script>
   </head>
   <body>
-    <div class="well">
-      <h1><img class="logo" src="<?php echo $this->basePath('images/logo-blue.png'); ?>" /><?php echo $this->translate('Setup Wizard'); ?></h1>
-      <div class="wizard-steps" id="navigation">
-        <a class="current" data-tab-id="1" href="#"><span class="badge">1</span><span class="text">Connection</span></a>
-        <a data-tab-id="2" href="#"><span class="badge">2</span><span class="text">General</span></a>
-        <a class="disabled" data-tab-id="3" href="#"><span class="badge">3</span><span class="text">Dependencies</span></a>
-        <a class="disabled" data-tab-id="4" href="#"><span class="badge">4</span><span class="text">Check</span></a>
-      </div>
-    </div>
     <?php echo $this->content; ?>
-  </div>
-  <script src="<?php echo $this->basePath('js/libs/jquery-1.7.2.min.js'); ?>"></script>
-  <script src="<?php echo $this->basePath('js/libs/bootstrap.min.js'); ?>"></script>
-  <script src="<?php echo $this->basePath('js/libs/jqBootstrapValidation.js'); ?>"></script>
-  <script src="<?php echo $this->basePath('js/install.js'); ?>"></script>
-</body>
+    <script src="<?php echo $this->basePath('js/libs/jquery-1.7.2.min.js'); ?>"></script>
+    <script src="<?php echo $this->basePath('js/libs/bootstrap.min.js'); ?>"></script>
+    <script src="<?php echo $this->basePath('js/libs/jqBootstrapValidation.js'); ?>"></script>
+    <script src="<?php echo $this->basePath('js/install.js'); ?>"></script>
+  </body>
 </html>
 

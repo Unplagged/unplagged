@@ -31,6 +31,7 @@ use Zend\Mvc\Router\RouteMatch;
  * 
  */
 class ConsoleInstallerControllerTest extends PHPUnit_Framework_TestCase{
+
   protected $controller;
   protected $request;
   protected $response;
@@ -52,27 +53,35 @@ class ConsoleInstallerControllerTest extends PHPUnit_Framework_TestCase{
     $this->controller->setEvent($this->event);
     $this->controller->setServiceLocator($serviceManager);
   }
-  
+
   /**
    * Redirects output into a file.
    */
   public function testUpdateSchemaCanBeExecuted(){
+    //delete database before, because sqlite can't update tables
+    $serviceManager = Bootstrap::getServiceManager();
+    $config = $serviceManager->get('Config');
+    $databasePath = $config['doctrine']['connection']['orm_default']['params']['path'];
+    if(is_writable($databasePath)){
+      unlink($databasePath);
+    }
+
     $entityManager = Bootstrap::getServiceManager()->get('doctrine.entitymanager.orm_default');
     $this->controller->setEntityManager($entityManager);
     $filePath = __DIR__ . '/../../../../../resources/tmp/output-test.txt';
     $stream = fopen($filePath, 'w+t');
     $this->controller->setOutputStream($stream);
-    $this->controller->updateDatabaseSchemaAction(); 
+    $this->controller->updateDatabaseSchemaAction();
     fclose($stream);
     $this->assertTrue(file_exists($filePath));
-    //unlink(__DIR__ . '/../../../../../resources/output-test.txt');
+    unlink($filePath);
   }
-  
+
   /*
    * Seems untestable because it hangs and waits for input which can not be given. 
    */
   /*
-  public function testCheckDatabaseConnectionActionCanBeExecuted(){
+    public function testCheckDatabaseConnectionActionCanBeExecuted(){
     $entityManager = Bootstrap::getServiceManager()->get('doctrine.entitymanager.orm_default');
     $this->controller->setEntityManager($entityManager);
     $filePath = __DIR__ . '/../../../../../resources/tmp/output-test.txt';
@@ -82,6 +91,5 @@ class ConsoleInstallerControllerTest extends PHPUnit_Framework_TestCase{
     echo '1';
     fclose($stream);
     $this->assertTrue(file_exists($filePath));
-  }*/
-  
+    } */
 }

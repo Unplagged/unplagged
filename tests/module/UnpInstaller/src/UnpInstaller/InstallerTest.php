@@ -82,6 +82,10 @@ class InstallerTest extends PHPUnit_Framework_TestCase{
     $this->assertTrue($this->installer->checkDatabaseConnection($databaseConfig));
   }
   
+  public function testCheckDatabaseWithoutDriverClass(){
+    $this->assertFalse($this->installer->checkDatabaseConnection(array()));
+  }
+  
   public function testCheckDatabaseConnectionFailing(){
     $databaseConfig = array(
             'driverClass'=>'Doctrine\DBAL\Driver\PDOSqlite\Driver',
@@ -93,8 +97,18 @@ class InstallerTest extends PHPUnit_Framework_TestCase{
     $this->assertFalse($this->installer->checkDatabaseConnection($databaseConfig));
   }
   
-  public function testCreateConfigFile(){
-    $filePath = BASE_PATH . '/tests/resources/tmp/config-file-test.php';
+  public function testCreateConfigFileWithExistingConfig(){
+    $path = BASE_PATH . '/tests/resources/';
+    $fileName =  'simple.config.php';
+    $fullFilePath = $path . $fileName;
+    $installer = new Installer($path, null, null, STDOUT);
+    $installer->createConfigFile($fileName, array(), true);
+    $this->assertTrue(file_exists($fullFilePath));
+  }
+  
+  public function testDeleteDatabaseSchemaRuns(){
+    $entityManager = Bootstrap::getServiceManager()->get('doctrine.entitymanager.orm_default');
+    $this->installer->deleteDatabaseSchema($entityManager);
   }
   
   public function testInstallDirectories(){

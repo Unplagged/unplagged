@@ -53,13 +53,43 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase{
     $this->controller->setServiceLocator($serviceManager);
   }
 
-  public function testImprintActionGetsDispatched(){
+  public function testImprintActionGetsDispatchedWhenEnabled(){
+    $serviceManager = Bootstrap::getServiceManager();
+    $config = $serviceManager->get('Config');
+    $config['unp_settings']['imprint_enabled'] = true;
+    $config['contact'] = array(
+        'address'=>array(
+            'street'=>'Street 123',
+            'zip'=>'12345',
+            'city'=>'Berlin',
+            'telephone'=>'+49 30 123 45 67'
+        ),
+        'telephone'=>'',
+        'email'=>'info@example.com',
+        'lastname'=>'Doe',
+        'firstname'=>'John'
+    );
+    $serviceManager->setService('Config', $config);
+
+    $this->routeMatch->setParam('action', 'imprint');
+    $this->controller->dispatch($this->request);
+    $response = $this->controller->getResponse();
+
+    $this->assertEquals(200, $response->getStatusCode());
+  }
+
+  public function testImprintActionDelivers404WhenNotEnabled(){
+    $serviceManager = Bootstrap::getServiceManager();
+    $config = $serviceManager->get('Config');
+    $config['unp_settings']['imprint_enabled'] = false;
+    $serviceManager->setService('Config', $config);
+
     $this->routeMatch->setParam('action', 'imprint');
 
     $result = $this->controller->dispatch($this->request);
     $response = $this->controller->getResponse();
 
-    $this->assertEquals(200, $response->getStatusCode());
+    $this->assertEquals(404, $response->getStatusCode());
   }
 
   public function testIndexActionGetsDispatched(){
@@ -70,7 +100,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase{
 
     $this->assertEquals(200, $response->getStatusCode());
   }
-  
+
   public function testIndexActionReturnsBarcodes(){
     $this->routeMatch->setParam('action', 'index');
 
@@ -78,5 +108,5 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase{
 
     $this->assertTrue(array_key_exists('barcodes', $result));
   }
-  
+
 }

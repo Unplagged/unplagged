@@ -55,11 +55,15 @@ class IndexController extends BaseController{
    */
   public function imprintAction(){
     $config = $this->getServiceLocator()->get('Config');
-    $imprintConfig = $config['contact'];
-
-    $translator = $this->getServiceLocator()->get('translator'); 
-    $this->setTitle($translator->translate('Imprint'));
-    return $imprintConfig;
+    if($config['unp_settings']['imprint_enabled']){
+      $imprintConfig = $config['contact'];
+      $translator = $this->getServiceLocator()->get('translator'); 
+      $this->setTitle($translator->translate('Imprint'));
+      return $imprintConfig;
+    }else{
+      $this->getResponse()->setStatusCode(404);
+      return; 
+    }
   }
 
 }

@@ -21,36 +21,33 @@ namespace UnpInstaller;
 
 use Application_Model_User;
 use Application_Model_User_Role;
-use Doctrine\Common\ClassLoader;
-use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
+use PDOException;
 use Unplagged_Helper;
 use Zend\I18n\Translator\Translator;
-use Zend\Mvc\Controller\Plugin\FlashMessenger;
-use ZendTest\XmlRpc\Server\Exception;
 
 /**
  * Installs all necessary components of the Unplagged application.
  *
  * @todo check max file upload size, php version, check for apc cache, create doctrine proxies, checkbox for develompent mode
  */
-class Installer{
+class Installer implements Messenger{
 
   private $baseDirectory = '';
   private $outputStream = null;
-  private $flashMessenger = null;
+  private $messages = array();
   private $translator = null;
 
   /**
-   * @param string $baseDirectory
-   * @param FlashMessenger| $flashMessenger
-   * @param Translator $translator
+   * @param string $baseDirectory The directory which should be used as the relative starting point for all installing processes.
+   * @param Translator $translator A translator to translate the created messages.
+   * @param stream $outputStream If this is provided, messages that are created during the methods will be printed to this
+   * output.
    */
-  public function __construct($baseDirectory = '', Translator $translator = null, FlashMessenger $flashMessenger = null, $outputStream = null){
+  public function __construct($baseDirectory = '', Translator $translator = null, $outputStream = null){
     $this->outputStream = $outputStream;
     $this->baseDirectory = $baseDirectory;
-    $this->flashMessenger = $flashMessenger;
     $this->translator = $translator;
   }
 
@@ -78,7 +75,7 @@ class Installer{
    * 
    * @return boolean
    */
-  private function composerWasRun(){
+  public function composerWasRun(){
     if(is_file($this->baseDirectory . '/composer.lock')){
       return true;
     }
@@ -107,7 +104,7 @@ class Installer{
     $this->output('Updating composer..');
     $composerPath = $this->baseDirectory . '/composer.phar';
 
-    if(is_readable($composerPath)){
+    if(is_executable($composerPath)){
       //first self update
       exec($composerPath . ' selfupdate', $composerSelfupdateOutput, $selfupdateStatus);
       if($selfupdateStatus === 0){
@@ -118,7 +115,7 @@ class Installer{
         $this->outputCollected($composerUpdateOutput);
       }
     }else{
-      $this->output('Sorry, Composer could not be found.', 'error');
+      $this->output('Sorry, Composer could not be found or is not executable. Please check the permissions for %s.', 'error', array($composerPath));
       $result = false;
     }
 
@@ -126,25 +123,24 @@ class Installer{
   }
 
   /**
-   * Uses the flash messenger and translator if provided or simply echoes the given message.
+   * Uses the translator if provided and adds it the messages to the messages array.
    * 
-   * @param string $message
-   * @param string $namespace
+   * If an output stream is provided to the constructor, the message gets also printed there.
+   * 
+   * @param string $message A message in vsprintf() format.
+   * @param string $namespace A namespace for styling purposes, that for example could be used as a class name within the HTML.
+   * @param array $variables The variables that should be provided to vsprintf().
    */
-  private function output($message = '', $namespace = 'status', $variables = array()){
+  private function output($message = '', $namespace = 'status', array $variables = array()){
     if($this->translator){
       $message = $this->translator->translate($message);
     }
     $message = vsprintf($message, $variables);
 
-    if($this->flashMessenger){
-      //we need to wrap the message into html here, because the reults should be in order
-      //and styled, which is not possible when using flash messengers namespaces
-      $wrappedMessage = '<p class="' . $namespace . '">' . $message . '</p>';
-      $this->flashMessenger->addMessage($wrappedMessage);
-    }else{
+    if($this->outputStream){
       fwrite($this->outputStream, $message . '' . PHP_EOL);
     }
+    $this->messages[] = array('message'=>$message, 'namespace'=>$namespace);
   }
 
   /**
@@ -156,6 +152,20 @@ class Installer{
     foreach($output as $outputLine){
       $this->output($outputLine);
     }
+  }
+
+  /**
+   * Returns all currently stored messages.
+   */
+  public function getMessages(){
+    return $this->messages;
+  }
+
+  /**
+   * Deletes all currently stored messages.
+   */
+  public function resetMessages(){
+    $this->messages = array();
   }
 
   /**
@@ -232,8 +242,12 @@ class Installer{
    */
   public function checkDatabaseConnection(array $config){
     $this->output('Checking database connection...');
-    $driverName = $config['driverClass'];
-    $driver = new $driverName();
+    if(isset($config['driverClass'])){
+      $driverName = $config['driverClass'];
+      $driver = new $driverName();
+    }else{
+      return false;
+    }
 
     try{
       //some dbs don't need those parameters, but to simplify connect call, we set those empty then
@@ -247,7 +261,7 @@ class Installer{
       $driver->connect($config['params'], $config['params']['user'], $config['params']['password']);
       $this->output('Database connection established.', 'success');
       return true;
-    }catch(\PDOException $e){
+    }catch(PDOException $e){
       $this->output('Database connection could not be established, please check your credentials.', 'error');
       $this->output('Exception: %s', 'error', array($e->getMessage()));
       return false;
@@ -257,67 +271,26 @@ class Installer{
   /**
    * Takes the given data to write a config file to the
    * 
-   * @param type $data
-   * @return type
+   * @param string $configFilePath The config file path relative to the base path given to the constructor.
+   * @param array $configData
+   * @param bool $merge If the true the file is loaded and merged together with the new data.
+   * @return bool
    */
-  public function createConfigFile($data, $overwrite = false){
-    $this->output('Creating config file', 'status');
+  public function createConfigFile($configFilePath, array $configData = array(), $merge = false){
+    $fullConfigPath = $this->baseDirectory . '/' . $configFilePath;
     $success = false;
+    $config = $configData;
+    if(is_readable($fullConfigPath) && $merge){
+      $config = array_replace_recursive(include $fullConfigPath, $config);
+    }
 
-    if(!is_file($this->configFilePath) || $overwrite){
-      $defaultConfig = require __DIR__ . '/../../resources/example-settings.local.php';
-      $config = array(
-          'unp-settings'=>array(
-              'tesseract'=>array(
-                  'tesseract_call'=>$data['tesseractCall'],
-                  'available_languages'=>array('en')
-              ),
-              'ghostscript'=>array(
-                  'ghostscript_call'=>$data['ghostscriptCall']
-              ),
-              'imagemagick'=>array(
-                  'imagemagick_call'=>$data['imagemagickCall']
-              ),
-              'imprint_enabled'=>false,
-              'mailer'=>array(
-                  'sender_name'=>$data['senderName'],
-                  'sender_mail'=>$data['senderMail'],
-              ),
-          ),
-          'contact'=>array(
-              'address'=>array(
-                  'street'=>$data['imprintAddress'],
-                  'zip'=>$data['imprintZip'],
-                  'city'=>$data['imprintCity'],
-                  'telephone'=>$data['imprintPhone'],
-                  'email'=>$data['imprintEmail'],
-                  'lastname'=>$data['imprintLastname'],
-                  'firstname'=>$data['imprintFirstname']
-              ),
-          ),
-          'doctrine'=>array(
-              'connection'=>array(
-                  'orm_default'=>array(
-                      'params'=>array(
-                          'host'=>$data['dbHost'],
-                          'port'=>$data['dbPort'],
-                          'user'=>$data['dbUser'],
-                          'password'=>$data['dbPassword'],
-                          'dbname'=>$data['dbName'],
-                      ),
-                  ),
-              ),
-          ),
-      );
-      $mergedConfig = array_merge_recursive($defaultConfig, $config);
-      $output = file_get_contents(require __DIR__ . '/../../resources/config-header.txt') . var_export($mergedConfig);
-      $success = (bool) file_put_contents($this->configFilePath, $output);
+    if(!is_file($fullConfigPath) || is_writeable($fullConfigPath)){
+      $output = file_get_contents(__DIR__ . '/../resources/config-header.txt') . var_export($config, true) . ';';
+      $success = (bool) file_put_contents($fullConfigPath, $output);
     }
 
     if($success){
       $this->output('Config file created successfully.', 'success');
-    }else{
-      $this->output('An error occured during the creation of the config file.', 'error');
     }
     return $success;
   }
@@ -354,7 +327,7 @@ class Installer{
   private function createDirectory($directory){
     if(!is_dir($directory)){
       @mkdir($directory);
-      
+
       if(is_dir($directory)){
         @chmod($directory, 0755);
         return true;
@@ -370,9 +343,9 @@ class Installer{
   /**
    * Uses the model classes to update the database schema.
    * 
-   * @param \Doctrine\ORM\EntityManager $entityManager
+   * @param EntityManager $entityManager
    */
-  public function updateDatabaseSchema(\Doctrine\ORM\EntityManager $entityManager){
+  public function updateDatabaseSchema(EntityManager $entityManager){
     $this->output('Reading Model classes');
     $schemaTool = new SchemaTool($entityManager);
     $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
@@ -383,9 +356,9 @@ class Installer{
 
   /**
    * 
-   * @param \Doctrine\ORM\EntityManager $entityManager
+   * @param EntityManager $entityManager
    */
-  public function deleteDatabaseSchema(\Doctrine\ORM\EntityManager $entityManager){
+  public function deleteDatabaseSchema(EntityManager $entityManager){
     $schemaTool = new SchemaTool($entityManager);
     $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
     $schemaTool->dropSchema($metadata);
@@ -393,8 +366,10 @@ class Installer{
 
   /**
    * Updates the schema and creates all necessary default data.
+   * 
+   * @todo complete later on
    */
-  public function initDatabaseData(\Doctrine\ORM\EntityManager $entityManager){
+  public function initDatabaseData(EntityManager $entityManager){
     $this->updateDatabaseSchema($entityManager);
     require_once 'initdb.php';
     require_once 'initpermissions.php';
@@ -405,18 +380,16 @@ class Installer{
    *
    * @param type $formData
    * @return boolean
+   * 
+   * @todo dummy function for now
    */
-  public function createAdmin($formData){
-    $this->response['steps'][] = array('type'=>'status', 'message'=>'Creating admin user...');
+  public function createAdmin(EntityManager $entityManager, $data){
 
-    require BUILD_PATH . DIRECTORY_SEPARATOR . 'initbase.php';
-
-    $data = array();
-    $data['username'] = $formData['adminUsername'];
+    /*$data['username'] = $formData['adminUsername'];
     $data['password'] = Unplagged_Helper::hashString($formData['adminPassword']);
     $data['email'] = $formData['adminEmail'];
     $data['verificationHash'] = Unplagged_Helper::generateRandomHash();
-    $data['state'] = $em->getRepository('Application_Model_State')->findOneByName('activated');
+    $data['state'] = $entityManager->getRepository('Application_Model_State')->findOneByName('activated');
 
     $roleTemplate = $em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'admin', 'type'=>'global'));
     $role = new Application_Model_User_Role();
@@ -435,8 +408,19 @@ class Installer{
     $em->flush();
     $role->setRoleId($user->getId());
     $em->persist($role);
-    $em->flush();
+    $em->flush();*/
 
+    return true;
+  }
+  
+  /**
+   * 
+   * @return boolean
+   * 
+   * @todo dummy function for now
+   */
+  public function adminCreated(){
+    
     return true;
   }
 

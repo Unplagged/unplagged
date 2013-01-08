@@ -37,7 +37,7 @@ class ConsoleInstallerController extends BaseController{
   }
   
   private function createInstaller(){
-    $installer = new Installer(BASE_PATH, $this->getServiceLocator()->get('translator'), null, $this->outputStream);
+    $installer = new Installer(BASE_PATH, $this->getServiceLocator()->get('translator'), $this->outputStream);
 
     return $installer;
   }
@@ -64,13 +64,16 @@ class ConsoleInstallerController extends BaseController{
   public function checkDatabaseConnectionAction(){
     $options = array(
         '1'=>'MySQL',
-        //'2'=>'Sqlite',
+        '2'=>'Sqlite',
     );
     $answer = Select::prompt('Please select your database type.', $options, false, false);
     $config = null;
     switch($answer){
       case '1':
         $config = $this->questionMySqlParameters();
+        break;
+      case '2':
+        $config = $this->questionSqliteParamters();
         break;
     }
     $installer = $this->createInstaller();
@@ -86,21 +89,11 @@ class ConsoleInstallerController extends BaseController{
     $config = array();
     $config['driverClass'] = 'Doctrine\DBAL\Driver\PDOMySql\Driver';
 
-    $host = Line::prompt(
-                    'What is the hostname?(defaults to: localhost)', true, 100
-    );
-    $port = Line::prompt(
-                    'What is the port?(defaults to: 3306)', true, 100
-    );
-    $user = Line::prompt(
-                    'What is the username?(defaults to: unplagged)', true, 100
-    );
-    $password = Line::prompt(
-                    'What is the password?', true, 100
-    );
-    $dbname = Line::prompt(
-                    'What is the name of the database?(defaults to: unplagged)', true, 100
-    );
+    $host = $this->promptLine('What is the hostname?(defaults to: localhost)');
+    $port = $this->promptLine('What is the port?(defaults to: 3306)');
+    $user = $this->promptLine('What is the username?(defaults to: unplagged)');
+    $password = $this->promptLine('What is the password?');
+    $dbname = $this->promptLine('What is the name of the database?(defaults to: unplagged)');
 
     $config['params'] = array(
         'host'=>!empty($host) ? $host : 'localhost',
@@ -111,7 +104,23 @@ class ConsoleInstallerController extends BaseController{
     );
     return $config;
   }
+  
+  private function questionSqliteParamters(){
+    $config = array();
+    $config['driverClass'] = 'Doctrine\DBAL\Driver\PDOSqlite\Driver';
 
+    $path = $this->promptLine('What is the path of the database file?', false);
+
+    $config['params'] = array(
+        'path'=>$path,
+    );
+    return $config;
+  }
+
+  private function promptLine($questionText, $empty = true){
+     return Line::prompt($questionText, $empty, 100);
+  }
+  
   /**
    * Command line action that updates the database schema from the model files.
    */

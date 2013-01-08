@@ -19,6 +19,8 @@
  */
 namespace UnpCommon\Model;
 
+use Doctrine\ORM\Mapping AS ORM;
+
 /**
  * This class can be used to store simple settings with an ini style key and their value. Mostly this should be
  * corresponded to the ZF2 config for this application, so that a user can change those values over the interface, 
@@ -41,35 +43,35 @@ namespace UnpCommon\Model;
  *          )
  *        )   
  * 
- * @Entity
- * @Table(name="setting")
- * @UniqueEntity("settingKey")
+ * @ORM\Entity
+ * @ORM\Table(name="setting")
  */
 class Setting{
 
   /**
    * @var int
-   * @Id @GeneratedValue @Column(type="integer")
+   * @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer")
    */
   private $id;
 
   /**
    * @var string
-   * @Column(type="string", unique=true, length=255)
+   * 
+   * @ORM\Column(type="string", unique=true, length=255)
    */
   private $settingKey;
 
   /**
    * @var string 
    * 
-   * @Column(type="string", length=255)
+   * @ORM\Column(type="string", length=255)
    */
   private $value = '';
 
   /**
    * @var string A label for display purposes.
    * 
-   * @Column(type="string", length=255)
+   * @ORM\Column(type="string", length=255)
    */
   private $label = '';
   

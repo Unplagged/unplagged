@@ -1,7 +1,9 @@
 <?php
 
 /**
- * This file is an example configuration file for the Unplagged application. 
+ * This file is an example configuration file for the Unplagged application
+ * and is used by the Installer as the default configuration.
+ *  
  * If you don't want to use the provided Installer, you can simply copy this
  * file to your config/autoload/ directory and fill in all necessary values 
  * by hand.
@@ -28,20 +30,19 @@ return array(
         ),
         'imprint_enabled'=>false,
         'mailer'=>array(
-          'sender_name'=>'',
-          'sender_mail'=>'',
+            'sender_name'=>'',
+            'sender_mail'=>'',
         ),
     ),
     'contact'=>array(
-        'imprint'=>array(
-            'lastname'=>'',
-            'firstname'=>'',
+        'address'=>array(
             'street'=>'',
             'zip'=>'',
             'city'=>'',
             'telephone'=>'',
-            'email'=>'',
         ),
+        'email'=>'',
+        'name'=>'',
     ),
     'doctrine'=>array(
         'connection'=>array(

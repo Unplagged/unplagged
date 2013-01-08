@@ -24,6 +24,7 @@
  */
 return array(
     'unp_settings'=>array(
+        'imprint_enabled'=>false,
         'installer_config_file'=>__DIR__ . '/settings.local.php',
         'notifications_time_interval'=>86400,
         'installer_enabled'=>true,
@@ -34,11 +35,11 @@ return array(
                 'config/autoload',
             ),
             'create'=>array(
-                'resources/temp',
                 'resources/uploads',
                 'resources/uploads/avatars',
                 'resources/logs',
                 'resources/reports',
+                'resources/temp',
                 'resources/temp/cache',
                 'resources/temp/proxies',
                 'resources/temp/ocr',
@@ -60,17 +61,5 @@ return array(
                 )
             ),
         ),
-        'connection'=>array(
-            'orm_default'=>array(
-                'driverClass'=>'Doctrine\DBAL\Driver\PDOMySql\Driver',
-                'params'=>array(
-                    'host'=>'localhost',
-                    'port'=>'3306',
-                    'user'=>'root',
-                    'password'=>'',
-                    'dbname'=>'unplagged'
-                ),
-            )
-        )
     )
 );

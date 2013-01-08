@@ -46,7 +46,7 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
   public function onBootstrap(EventInterface $e){
     try{
       $serviceManager = $e->getApplication()->getServiceManager();
-      $this->initDoctrine($serviceManager);
+      $this->initControllerInitalizer($serviceManager);
     }catch(ExceptionInterface $e){
       //it's ok if we run into an exception, happens if Unplagged is not installed
       //just the most convenient way to set the entitymanager if already possible
@@ -58,11 +58,14 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
    * 
    * @param ServiceManager $serviceManager
    */
-  private function initDoctrine(ServiceManager $serviceManager){
+  private function initControllerInitalizer(ServiceManager $serviceManager){
     $entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');
     $controllerLoader = $serviceManager->get('ControllerLoader');
     $config = $serviceManager->get('Config');
+    
+    //something is badly broken if this is not set, so we don't need to check, just let the error do it's work
     $configFilePath = $config['unp_settings']['installer_config_file'];
+    
     $controllerLoader->addInitializer(function ($controller) use ($entityManager, $configFilePath){
               if($controller instanceof BaseController){
                 $controller->setEntityManager($entityManager);

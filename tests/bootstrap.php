@@ -21,10 +21,8 @@ namespace UnplaggedTest;
 
 require_once '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 
-use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\ArrayUtils;
 
 error_reporting(E_ALL | E_WARNING);
 chdir(__DIR__);
@@ -35,36 +33,15 @@ class Bootstrap{
   private static $config;
 
   public function init(){
-    $testConfig = include __DIR__ . '/TestConfig.php.dist';
-
-    $zf2ModulePaths = array();
-    $modulePaths = $testConfig['module_listener_options']['module_paths'];
-    foreach($modulePaths as $modulePath){
-      if(($path = $this->findParentPath($modulePath))){
-        $zf2ModulePaths[] = $path;
-      }
-    }
-
-    $zf2ModulePaths = implode(PATH_SEPARATOR, $zf2ModulePaths) . PATH_SEPARATOR;
-
-    $this->initAutoloader();
-
-    // use ModuleManager to load this module and it's dependencies
-    $baseConfig = array(
-        'module_listener_options'=>array(
-            'module_paths'=>explode(PATH_SEPARATOR, $zf2ModulePaths),
-        ),
-    );
-
-    $config = ArrayUtils::merge($baseConfig, $testConfig);
-
+    $testConfig = include __DIR__ . '/config/test.config.php';
+    
     $serviceManager = new ServiceManager(new ServiceManagerConfig());
-    $serviceManager->setService('ApplicationConfig', $config);
-    $serviceManager->get('ModuleManager')->loadModules();
     $serviceManager->setAllowOverride(true);
+    $serviceManager->setService('ApplicationConfig', $testConfig);
+    $serviceManager->get('ModuleManager')->loadModules();
 
     self::$serviceManager = $serviceManager;
-    self::$config = $config;
+    self::$config = $serviceManager->get('Config');
   }
 
   public static function getServiceManager(){
@@ -73,38 +50,6 @@ class Bootstrap{
 
   public static function getConfig(){
     return self::$config;
-  }
-
-  private function initAutoloader(){
-    $vendorPath = $this->findParentPath('vendor');
-    include $vendorPath . '/autoload.php';
-
-    AutoloaderFactory::factory(array(
-        'Zend\Loader\StandardAutoloader'=>array(
-            'autoregister_zf'=>true,
-            'namespaces'=>array(
-                __NAMESPACE__=>__DIR__ . '/' . __NAMESPACE__,
-            ),
-        ),
-    ));
-  }
-
-  /**
-   * Traverse the directories upwards and see if the given path exists there.
-   * 
-   * @param string $path
-   * @return boolean
-   */
-  private function findParentPath($path){
-    $dir = __DIR__;
-    $previousDir = '.';
-    while(!is_dir($dir . '/' . $path)){
-      $dir = dirname($dir);
-      if($previousDir === $dir)
-        return false;
-      $previousDir = $dir;
-    }
-    return $dir . '/' . $path;
   }
 
 }

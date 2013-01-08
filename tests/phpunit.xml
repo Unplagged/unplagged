@@ -3,7 +3,7 @@
          backupGlobals="false"
          backupStaticAttributes="false"
          stopOnError="false"
-         stopOnFailure="true"
+         stopOnFailure="false"
          stopOnIncomplete="false"
          stopOnSkipped="false"
          verbose="true">

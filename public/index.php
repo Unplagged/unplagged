@@ -34,9 +34,22 @@ $application = Zend\Mvc\Application::init(require $configFilePath);
 $config = $application->getConfig();
 $installer = new UnpInstaller\Installer(BASE_PATH);
 
-if($installer->isInstalled($config)){
+//find out if we are already installing, so no need to redirect
+
+
+if($installer->isInstalled($config) || isInstallingOrConsole()){
   $application->run();
 }else{
   //redirect to the installer
   header('Location: ' . $application->getRequest()->getBaseUrl() . 'installer');
+}
+
+/**
+ * @return boolean
+ */
+function isInstallingOrConsole(){
+  if(isset($_SERVER['REQUEST_URI'])){
+    return strpos($_SERVER["REQUEST_URI"], '/installer') === 0;
+  }
+  return true;
 }

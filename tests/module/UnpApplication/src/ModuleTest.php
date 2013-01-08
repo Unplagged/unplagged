@@ -52,8 +52,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase{
   public function testOnBootstrap(){
     //simply test whether the method runs without bugging out
     try{
-      $config = include __DIR__ . '/../../../../TestConfig.php.dist';
-
+      $config = include __DIR__ . '/../../../config/test.config.php';
       $serviceManager = new ServiceManager();
       $serviceManager->setService('EventManager', new EventManager());
       $serviceManager->setService('ModuleManager', new ModuleManager($config['modules']));

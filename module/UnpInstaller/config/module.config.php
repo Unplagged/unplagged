@@ -3,13 +3,43 @@
 return array(
     'router'=>array(
         'routes'=>array(
-            'websocket'=>array(
+            'admin'=>array(
                 'type'=>'Zend\Mvc\Router\Http\Literal',
                 'options'=>array(
-                    'route'=>'/installer/install',
+                    'route'=>'/installer/installAdmin',
                     'defaults'=>array(
                         'controller'=>'unpinstaller',
-                        'action'=>'install',
+                        'action'=>'installAdmin',
+                    ),
+                ),
+            ),
+            'settings'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Literal',
+                'options'=>array(
+                    'route'=>'/installer/installSettings',
+                    'defaults'=>array(
+                        'controller'=>'unpinstaller',
+                        'action'=>'installSettings',
+                    ),
+                ),
+            ),
+            'database'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Literal',
+                'options'=>array(
+                    'route'=>'/installer/installDatabase',
+                    'defaults'=>array(
+                        'controller'=>'unpinstaller',
+                        'action'=>'installDatabase',
+                    ),
+                ),
+            ),
+            'directories'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Literal',
+                'options'=>array(
+                    'route'=>'/installer/installDirectories',
+                    'defaults'=>array(
+                        'controller'=>'unpinstaller',
+                        'action'=>'installDirectories',
                     ),
                 ),
             ),

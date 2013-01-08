@@ -1,7 +1,7 @@
 # Config file for SASS see the following link for more explanation:
 # http://compass-style.org/help/tutorials/configuration-reference/
 
-sass_dir = "/data/sass/project"
+sass_dir = "/resources/sass/project"
 css_dir = "/public/style"
 images_dir = "/public/images"
 javascripts_dir = "/public/js"
