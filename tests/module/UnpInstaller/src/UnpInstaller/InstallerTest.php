@@ -121,4 +121,17 @@ class InstallerTest extends PHPUnit_Framework_TestCase{
     $this->assertTrue(is_dir(BASE_PATH . '/tests/resources/tmp/test-directory/'));
     rmdir(BASE_PATH . '/tests/resources/tmp/test-directory/');
   }
+  
+  /**
+   * 
+   */
+  public function testAdminCreated(){
+    $entityManager = Bootstrap::getServiceManager()->get('doctrine.entitymanager.orm_default');
+    $this->assertTrue($this->installer->adminCreated($entityManager));
+  }
+  
+  public function testCreateAdmin(){
+    $entityManager = Bootstrap::getServiceManager()->get('doctrine.entitymanager.orm_default');
+    $this->assertTrue($this->installer->createAdmin($entityManager, array()));
+  }
 }

@@ -89,4 +89,13 @@ class InstallerControllerTest extends PHPUnit_Framework_TestCase{
     $this->assertEquals(403, $response->getStatusCode());
   }
   
+  public function testInstallAdminActionGetsDispatched(){
+    $this->routeMatch->setParam('action', 'installAdmin');
+
+    $this->controller->dispatch($this->request);
+    $response = $this->controller->getResponse();
+
+    $this->assertEquals(200, $response->getStatusCode());
+  }
+  
 }
