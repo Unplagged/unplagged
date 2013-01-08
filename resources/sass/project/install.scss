@@ -1,0 +1,219 @@
+/*!
+ * If this file has the extension .css, then it was compiled via Compass and 
+ * shouldn't be changed. 
+ *
+ * To edit the project styles, you need to:
+ * 
+ * 1. Install Compass: http://compass-style.org/ .
+ * 2. Make changes to the appropriate .scss files in "/data/sass/project".
+ * 3. Compile the stylesheet with Compass by calling "compass compile" on the 
+ *    command line from within the root directory where the "config.rb" file is
+ *    located.
+ *
+ * It's also possible to use "compass watch" to enable automatic compliation on 
+ * saving of .scss files.
+ */
+
+/*
+ * The css in the following files shouldn't be changed, to maintain updatability.
+ * If necessary you should override the specific styles within the projects scss
+ * files.
+ */
+
+// during an update it's probably necessary to use search and replace on the 
+// used 'url("' functions to replace them with SASS' 'image-url("' 
+// call appropriately
+@import '../vendor/normalize.css.scss';
+@import '../vendor/bootstrap.min.css.scss';
+
+@import 'base';
+
+body {
+  min-height: 1000px;
+  height: 1000px;
+  
+  }
+
+h1 {
+  font-weight: 100;
+  color: $pictonBlue;
+  font-size: 30px;
+  margin-top: -10px;
+}
+
+.tabbable {
+  margin-bottom: 18px;
+}
+
+.tab-content {
+  padding-bottom: 9px; 
+  border-bottom: 1px solid $borderColor;
+}
+
+.well {
+  width: 80%; 
+  max-width: 800px; 
+  margin: 20px auto 10px auto;
+}
+
+.logo {
+  margin-top: 10px;  
+}
+
+.wizard-steps {
+    font-size: 15px;
+}
+.wizard-steps a {
+    min-width: 15%;
+    padding: 10px 12px 10px;
+    margin-right: 5px;
+    background: #ddd;
+    position: relative;
+    display: inline-block;
+}
+
+.wizard-steps a.finished {
+  background: #468847;
+  color: #222;
+  text-decoration:none;
+}
+
+
+.wizard-steps a:hover {
+    text-decoration: none;
+}
+
+.wizard-steps a.disabled{
+  cursor: default;  
+}
+
+.wizard-steps a.disabled:hover .text{
+  text-decoration: none;
+  cursor: arrow;
+}
+
+.wizard-steps a:hover .text {
+    text-decoration: underline;
+}
+.wizard-steps a:before {
+    width: 0;
+    height: 0;
+    border-top: 20px inset transparent;
+    border-bottom: 20px inset transparent;
+    border-left: 20px solid whiteSmoke;
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+}
+
+.wizard-steps .finished:after {
+  border-left: 20px solid #468847;
+}
+
+.wizard-steps a:after {
+    width: 0;
+    height: 0;
+    border-top: 20px inset transparent;
+    border-bottom: 20px inset transparent;
+    border-left: 20px solid #ddd;
+    position: absolute;
+    content: "";
+    top: 0;
+    right: -20px;
+    z-index: 2;
+}
+.wizard-steps a:first-child:before,
+.wizard-steps a:last-child:after {
+    border: none;
+}
+.wizard-steps a:first-child {
+    -webkit-border-radius: 4px 0 0 4px;
+       -moz-border-radius: 4px 0 0 4px;
+            border-radius: 4px 0 0 4px;
+}
+.wizard-steps a:last-child {
+    -webkit-border-radius: 0 4px 4px 0;
+       -moz-border-radius: 0 4px 4px 0;
+            border-radius: 0 4px 4px 0;
+    width: 18.5%;
+}
+.wizard-steps .badge {
+    margin: 0 5px 0 18px;
+    position: relative;
+    top: -1px;
+    font-size: 13px;
+}
+.wizard-steps a:first-child .badge {
+    margin-left: 0;
+}
+.wizard-steps .current {
+    background: #007ACC;
+    color: #fff;
+}
+.wizard-steps .current:after {
+    border-left-color: #007ACC;
+}
+
+.console {
+  background: #222;
+  list-style-type: none;
+  height: 288px;
+  overflow: scroll;
+  overflow-x: hidden;
+  margin: 20px 0 0 0;
+  font-family: Courier, monospace;
+  line-height: 12px;
+  padding: 2px 6px;
+  color: #EEEEEE
+  }
+  
+.blink-cursor {
+  display: inline-block;
+  background: #ddd;
+  margin-left: 1px;
+  width: 1px;
+  -webkit-animation: blink 0.7s ease-in-out 0s infinite;
+  -moz-animation: blink 0.7s ease-in-out 0s infinite;
+  -ms-animation: blink 0.7s ease-in-out 0s infinite;
+  -o-animation: blink 0.7s ease-in-out 0s infinite;
+  animation: blink 0.7s ease-in-out 0s infinite;
+}
+
+@-webkit-keyframes blink {
+  0%{background: #222;}
+  30%{background: #ddd;}
+  60%{background: #222;}
+  100%{background: #222;}
+}
+ 
+@-moz-keyframes blink {
+  0%{background: #222;}
+  30%{background: #ddd;}
+  60%{background: #222;}
+  100%{background: #222;}
+}
+ 
+@-ms-keyframes blink {
+  0%{background: #222;}
+  30%{background: #ddd;}
+  60%{background: #222;}
+  100%{background: #222;}
+}
+ 
+@-o-keyframes blink {
+  0%{background: #222;}
+  30%{background: #ddd;}
+  60%{background: #222;}
+  100%{background: #222;}
+}
+@-keyframes blink {
+  0%{background: #222;}
+  30%{background: #ddd;}
+  60%{background: #222;}
+  100%{background: #222;}
+}
+
+.modal form{
+  margin-bottom: 0;
+  }
