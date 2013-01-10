@@ -25,7 +25,8 @@
 return array(
     'unp_settings'=>array(
         'imprint_enabled'=>false,
-        'installer_config_file'=>__DIR__ . '/settings.local.php',
+        //relative to base directory
+        'installer_config_file'=> 'config/autoload/settings.local.php',
         'notifications_time_interval'=>86400,
         'installer_enabled'=>true,
         //directories here need to be relative to the base directory

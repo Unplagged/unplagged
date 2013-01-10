@@ -31,7 +31,13 @@ class InstallerTest extends PHPUnit_Framework_TestCase{
   private $installer;
   
   public function setUp(){
-    $this->installer = new Installer(BASE_PATH, null, null, STDOUT);
+    $serviceManager = Bootstrap::getServiceManager();
+    $translator = $serviceManager->get('Translator');
+    $this->installer = new Installer(BASE_PATH, $translator, STDOUT);
+  }
+  
+  public function testOuputStreamCanBeExecuted(){
+    $this->installer->setOutputStream(STDOUT);
   }
   
   public function testIsInstalled(){
@@ -46,6 +52,14 @@ class InstallerTest extends PHPUnit_Framework_TestCase{
         'tests/resources/unreadable-dir'
     );
     $this->assertFalse($this->installer->checkWritePermissions($directories));
+  }
+  
+  public function testGetMessagesReturnsArray(){
+    $this->assertInternalType('array', $this->installer->getMessages());
+  }
+  
+  public function testResetMessageCanBeExecuted(){
+    $this->installer->resetMessages();
   }
   
   public function testIsInstalledWithoutComposer(){
@@ -133,5 +147,19 @@ class InstallerTest extends PHPUnit_Framework_TestCase{
   public function testCreateAdmin(){
     $entityManager = Bootstrap::getServiceManager()->get('doctrine.entitymanager.orm_default');
     $this->assertTrue($this->installer->createAdmin($entityManager, array()));
+  }
+  
+  public function testCheckConsole(){
+    $this->assertTrue($this->installer->checkConsoleCommands(array()));
+  }
+  
+  public function testInitDatabaseData(){
+    $entityManager = Bootstrap::getServiceManager()->get('doctrine.entitymanager.orm_default');
+    $this->assertTrue($this->installer->initDatabaseData($entityManager));
+  }
+  
+  public function testUninstall(){
+    $entityManager = Bootstrap::getServiceManager()->get('doctrine.entitymanager.orm_default');
+    $this->assertTrue($this->installer->uninstall($entityManager));
   }
 }

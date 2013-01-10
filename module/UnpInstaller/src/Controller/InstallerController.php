@@ -21,16 +21,23 @@ namespace UnpInstaller\Controller;
 
 use UnpCommon\Controller\BaseController;
 use UnpInstaller\Installer;
+use UnpInstaller\InstallerAware;
+use Zend\Json\Json;
 
 /**
  * Controller to serve the webinstaller.
  */
-class InstallerController extends BaseController{
+class InstallerController extends BaseController implements InstallerAware{
 
   private $configFilePath = '';
+  private $installer = null;
 
   public function setConfigFilePath($configFilePath){
     $this->configFilePath = $configFilePath;
+  }
+  
+  public function setInstaller(Installer $installer){
+    $this->installer = $installer;
   }
 
   /**
@@ -49,12 +56,6 @@ class InstallerController extends BaseController{
     return false;
   }
 
-  private function createInstaller(){
-    $installer = new Installer(BASE_PATH, $this->getServiceLocator()->get('translator'));
-
-    return $installer;
-  }
-
   /**
    * Sends the webinstaller app to the user.
    * 
@@ -68,133 +69,7 @@ class InstallerController extends BaseController{
       $response->setStatusCode(403);
     }else{
       $this->layout('layout/installer');
-      $installer = $this->createInstaller();
-      $stepStatus = array(
-          'download'=>$this->findDownloadStatus($installer),
-          'directories'=>$this->checkDirectoryStatus($config),
-          'database'=>$this->findDatabaseStatus($installer, $config),
-          'contact'=>array('finished'=>false, 'messages'=>array()),
-          'admin'=>array('finished'=>$installer->adminCreated(), 'messages'=>array()),
-          'software'=>array('finished'=>false, 'messages'=>array()),
-      );
-      $stepStatus['currentStep'] = $this->findCurrentStep($stepStatus);
-
-      return array('stepStatus'=>$stepStatus);
     }
-  }
-
-  private function findCurrentStep(array $stepStatus){
-    $count = 0;
-    if($stepStatus['download']['finished']){
-      $count++;
-      if($stepStatus['directories']['finished']){
-        $count++;
-        if($stepStatus['database']['finished']){
-          $count++;
-          if($stepStatus['contact']['finished']){
-            $count++;
-            if($stepStatus['admin']['finished']){
-              $count++;
-            }
-          }
-        }
-      }
-    }
-    return $count;
-  }
-
-  private function checkDirectoryStatus($config){
-    $status = true;
-    foreach($config['unp_settings']['installation_directories']['create'] as $directory){
-      $status = $status && is_writeable($directory);
-    }
-    $result = array(
-        'finished'=>$status,
-        'messages'=>array(),
-    );
-    if($status){
-      $result['messages'][] = array('message'=>'All necessary directories exist.', 'namespace'=>'success');
-    }
-
-    return $result;
-  }
-
-  /**
-   * Checks the database status and returns an array with the status and messages.
-   * 
-   * @param \UnpInstaller\Installer $installer
-   * @param type $config
-   * @return array
-   */
-  private function findDatabaseStatus(\UnpInstaller\Installer $installer, $config){
-    $parameters = array();
-    if(isset($config['doctrine']['connection']['orm_default'])){
-      $parameters = $config['doctrine']['connection']['orm_default'];
-    }
-    $result = $this->findStepStatus($installer, 'checkDatabaseConnection', $parameters);
-    //we only want to show if the connection already works, because the installer will ask for credentials otherwise
-    $result['messages'] = array();
-    if($result['finished']){
-      $result['messages'][] = array('message'=>$this->getServiceLocator()->get('translator')->translate('The database connection is working.'), 'namespace'=>'success');
-    }
-    return $result;
-  }
-
-  private function findDownloadStatus(\UnpInstaller\Installer $installer){
-    $result = $this->findStepStatus($installer, 'composerWasRun');
-    if(!$result['finished']){
-      $result['messages'][] = array('message'=>$this->getServiceLocator()->get('translator')->translate('Dependency downloads are not finished. Please run "composer update" from the command line.'), 'namespace'=>'success');
-    }
-
-    return $result;
-  }
-
-  /**
-   * Creates an array with the status and messages for the requested callback.
-   * @param \UnpInstaller\Messenger $callbackObject
-   * @param string $callbackFunction
-   * @param array $params
-   * @return array
-   */
-  private function findStepStatus(\UnpInstaller\Messenger $callbackObject, $callbackFunction, $params = array()){
-    $finished = false;
-    if(method_exists($callbackObject, $callbackFunction)){
-      $finished = $callbackObject->$callbackFunction($params);
-    }
-    $result = array('finished'=>$finished, 'messages'=>$callbackObject->getMessages());
-    $callbackObject->resetMessages();
-
-    return $result;
-  }
-
-  /**
-   * Ajax action that checks the given parameters and returns the current installation status messages.
-   */
-  public function installAction(){
-    $request = $this->getRequest();
-
-    $installer = $this->createInstaller();
-
-    if(!$installer->composerWasRun()){
-      $installer->runComposer();
-    }
-    if($request->isPost()){
-      /* $data = $this->validateInputData();
-
-        $this->initDirectories();
-        $this->checkWritePermissions();
-        $this->checkConsoleCommands($data);
-        if($this->checkDatabaseParams($data)){
-        if($this->createConfig($data)){
-        $this->initDatabase();
-        $this->createAdmin($data);
-        }
-        }
-
-        $this->parseResponse(); */
-    }
-
-    //$response->s
   }
 
   /**
@@ -205,22 +80,21 @@ class InstallerController extends BaseController{
     $config = $this->getServiceLocator()->get('Config');
     $response = $this->getResponse();
     $responseData = array('success'=>false);
-
-    $installer = $this->createInstaller();
-    $writePermissions = $installer->checkWritePermissions($config['unp_settings']['installation_directories']['writeable']);
-    $responseData['messages'] = $installer->getMessages();
-    $installer->resetMessages();
+    
+    $writePermissions = $this->installer->checkWritePermissions($config['unp_settings']['installation_directories']['writeable']);
+    $responseData['messages'] = $this->installer->getMessages();
+    $this->installer->resetMessages();
     if(!$writePermissions){
       $responseData['messages'][] = array(
           'message'=>'Not all important directories are writeable. Please use chmod from the console to set the necessary write permissions.',
           'namespace'=>'error'
       );
-      $response->setContent(\Zend\Json\Json::encode($responseData));
+      $response->setContent(Json::encode($responseData));
       return $response;
     }
-    $responseData['success'] = $installer->installDirectories($config['unp_settings']['installation_directories']['create']);
-    $responseData['messages'] = array_merge($responseData['messages'], $installer->getMessages());
-    $response->setContent(\Zend\Json\Json::encode($responseData));
+    $responseData['success'] = $this->installer->installDirectories($config['unp_settings']['installation_directories']['create']);
+    $responseData['messages'] = array_merge($responseData['messages'], $this->installer->getMessages());
+    $response->setContent(Json::encode($responseData));
 
     return $response;
   }
@@ -242,19 +116,18 @@ class InstallerController extends BaseController{
             ));
     $responseData = array('success'=>false);
 
-    $installer = $this->createInstaller();
     $connectionData = array('params'=>$post, 'driverClass'=>'Doctrine\DBAL\Driver\PDOMySql\Driver');
-    $hasConnection = $installer->checkDatabaseConnection($connectionData);
-    $responseData['messages'] = $installer->getMessages();
+    $hasConnection = $this->installer->checkDatabaseConnection($connectionData);
+    $responseData['messages'] = $this->installer->getMessages();
     if($hasConnection){
       $defaultConfig = include __DIR__ . '/../../resources/example-settings.local.php';
       $newConfigData = array('doctrine'=>array('connection'=>array('orm_default'=>$connectionData)));
       $config = array_replace_recursive($defaultConfig, $newConfigData);
-      $installer->createConfigFile('config/autoload/settings.local.php', $config, true);
+      $this->installer->createConfigFile($this->configFilePath, $config, true);
     }
 
     $responseData['success'] = $hasConnection;
-    $response->setContent(\Zend\Json\Json::encode($responseData));
+    $response->setContent(Json::encode($responseData));
 
     return $response;
   }
@@ -277,7 +150,6 @@ class InstallerController extends BaseController{
           'imprintEmail'=>FILTER_SANITIZE_STRING,
               ));
 
-      $installer = $this->createInstaller();
       $config = array(
           'unp_settings'=>array(
               'application_name'=>$post['defaultName'],
@@ -298,23 +170,21 @@ class InstallerController extends BaseController{
               'name'=>$post['contactPerson'],
           )
       );
-      $responseData['success'] = $installer->createConfigFile('config/autoload/settings.local.php', $config, true);
-      $responseData['messages'] = $installer->getMessages();
+      $responseData['success'] = $this->installer->createConfigFile($this->configFilePath, $config, true);
+      $responseData['messages'] = $this->installer->getMessages();
     }else{
       $responseData['messages'] = array(array('message'=>'There was a problem connecting to the database.', 'namespace'=>'error'));
     }
 
-    $response->setContent(\Zend\Json\Json::encode($responseData));
+    $response->setContent(Json::encode($responseData));
     return $response;
   }
 
   public function installAdminAction(){
     $response = $this->getResponse();
     $responseData = array('success'=>false);
-
     if($this->em){
-      $installer = $this->createInstaller();
-      $installer->updateDatabaseSchema($this->em);
+      $this->installer->updateDatabaseSchema($this->em);
       
       $post = filter_var_array($this->params()->fromPost(), array(
           'adminPassword'=>FILTER_UNSAFE_RAW,
@@ -322,13 +192,13 @@ class InstallerController extends BaseController{
           'adminEmail'=>FILTER_UNSAFE_RAW,
               ));
 
-      $adminCreated = $installer->createAdmin($this->em, $post['adminUsername'], $post['adminEmail'], $post['adminPassword']);
-      $responseData['messages'] = $installer->getMessages();
+      $adminCreated = $this->installer->createAdmin($this->em, $post['adminUsername'], $post['adminEmail'], $post['adminPassword']);
+      $responseData['messages'] = $this->installer->getMessages();
       $responseData['success'] = $adminCreated;
     }else{
       $responseData['messages'] = array(array('message'=>'There was a problem connecting to the database.', 'namespace'=>'error'));
     }
-    $response->setContent(\Zend\Json\Json::encode($responseData));
+    $response->setContent(Json::encode($responseData));
 
     return $response;
   }

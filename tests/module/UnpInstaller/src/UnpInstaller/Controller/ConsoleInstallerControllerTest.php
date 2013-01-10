@@ -52,8 +52,14 @@ class ConsoleInstallerControllerTest extends PHPUnit_Framework_TestCase{
     $this->event->setRouteMatch($this->routeMatch);
     $this->controller->setEvent($this->event);
     $this->controller->setServiceLocator($serviceManager);
+    $this->controller->setInstaller($this->getMockInstaller());
   }
 
+  private function getMockInstaller(){
+    $installer = $this->getMock('\UnpInstaller\Installer');
+    return $installer;
+  }
+  
   /**
    * Redirects output into a file.
    */
@@ -76,7 +82,7 @@ class ConsoleInstallerControllerTest extends PHPUnit_Framework_TestCase{
     $this->assertTrue(file_exists($filePath));
     unlink($filePath);
   }
-
+  
   /*
    * Seems untestable because it hangs and waits for input which can not be given. 
    */

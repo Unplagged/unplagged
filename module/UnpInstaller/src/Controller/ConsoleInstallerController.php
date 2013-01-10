@@ -21,6 +21,7 @@ namespace UnpInstaller\Controller;
 
 use UnpCommon\Controller\BaseController;
 use UnpInstaller\Installer;
+use UnpInstaller\InstallerAware;
 use Zend\Console\Prompt\Confirm;
 use Zend\Console\Prompt\Line;
 use Zend\Console\Prompt\Select;
@@ -28,18 +29,18 @@ use Zend\Console\Prompt\Select;
 /**
  * Provides a console interface mostly for helping during the development of Unplagged.
  */
-class ConsoleInstallerController extends BaseController{
+class ConsoleInstallerController extends BaseController implements InstallerAware{
 
   private $outputStream = null;
+  private $installer = null;
   
   public function __construct(){
     $this->outputStream = STDOUT;
   }
   
-  private function createInstaller(){
-    $installer = new Installer(BASE_PATH, $this->getServiceLocator()->get('translator'), $this->outputStream);
-
-    return $installer;
+  public function setInstaller(Installer $installer){
+    $this->installer = $installer;
+    $this->installer->setOutputStream = STDOUT;
   }
 
   public function setOutputStream($stream){
@@ -48,6 +49,8 @@ class ConsoleInstallerController extends BaseController{
   
   /**
    * Command line action, that deletes all tables from the database.
+   * 
+   * @codeCoverageIgnore Seems untestable because of requested console input
    */
   public function deleteDatabaseSchemaAction(){
     if(Confirm::prompt('This will delete all saved data! Are you sure you want to continue? [y/n]', 'y', 'n')){
@@ -59,7 +62,7 @@ class ConsoleInstallerController extends BaseController{
   /**
    * Questions the user for all necessary information about the database connection and notifies if they would work.
    * 
-   * @todo add other db types
+   * @codeCoverageIgnore Seems untestable because of requested console input
    */
   public function checkDatabaseConnectionAction(){
     $options = array(
@@ -81,9 +84,11 @@ class ConsoleInstallerController extends BaseController{
   }
 
   /**
-   * Questions the user for all necessary parameters for the MySQL connection.
+   * Asks the user for all necessary parameters to establish a connection with a MySQL database.
    * 
    * @return array
+   * 
+   * @codeCoverageIgnore Seems untestable because of requested console input
    */
   private function questionMySqlParameters(){
     $config = array();
@@ -105,6 +110,13 @@ class ConsoleInstallerController extends BaseController{
     return $config;
   }
   
+  /**
+   * Asks the user for all necessary parameters to establish a connection with a Sqlite database.
+   * 
+   * @return array
+   * 
+   * @codeCoverageIgnore Seems untestable because of requested console input
+   */
   private function questionSqliteParamters(){
     $config = array();
     $config['driverClass'] = 'Doctrine\DBAL\Driver\PDOSqlite\Driver';
@@ -117,6 +129,13 @@ class ConsoleInstallerController extends BaseController{
     return $config;
   }
 
+  /**
+   * @param string $questionText
+   * @param bool $empty
+   * @return string
+   * 
+   * @codeCoverageIgnore Seems untestable because of requested console input
+   */
   private function promptLine($questionText, $empty = true){
      return Line::prompt($questionText, $empty, 100);
   }
@@ -125,12 +144,17 @@ class ConsoleInstallerController extends BaseController{
    * Command line action that updates the database schema from the model files.
    */
   public function updateDatabaseSchemaAction(){
-    $installer = $this->createInstaller();
-    $installer->updateDatabaseSchema($this->em);
+    $this->installer->updateDatabaseSchema($this->em);
   }
 
+  /**
+   * @codeCoverageIgnore Seems untestable because of requested console input
+   */
   public function uninstallAction(){
-    
+    if(Confirm::prompt('This will completely uninstall the application including all stored data! Are you sure you want to continue? [y/n]', 'y', 'n')){
+      $this->installer = $this->createInstaller();
+      $this->installer->uninstall($this->em);
+    }
   }
   
 }

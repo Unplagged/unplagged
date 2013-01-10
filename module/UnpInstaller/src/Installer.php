@@ -19,12 +19,9 @@
  */
 namespace UnpInstaller;
 
-use Application_Model_User;
-use Application_Model_User_Role;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use PDOException;
-use Unplagged_Helper;
 use Zend\I18n\Translator\Translator;
 
 /**
@@ -51,6 +48,14 @@ class Installer implements Messenger{
     $this->translator = $translator;
   }
 
+  /**
+   * The stream to be used to write messages from the installation processes to.
+   * @param stream $outputStream
+   */
+  public function setOutputStream($outputStream){
+    $this->outputStream = $outputStream;
+  }
+  
   /**
    * Checks all necessary indicators for whether the application was installed successfully.
    *
@@ -194,39 +199,10 @@ class Installer implements Messenger{
 
   /**
    * Checks if the specified console scripts are working.
+   * @todo
    */
-  public function checkConsoleCommands(&$data){
-    $scripts['tesseract'] = $data['tesseractPath'];
-    $scripts['ghostscript'] = $data['ghostscriptPath'];
-    $scripts['imagemagick'] = $data['imagemagickPath'];
-
-    $this->response['steps'][] = array('type'=>'status', 'message'=>'Checking availability of console commands...');
-
-    $success = true;
-
-    // $tessractParser = new Unplagged_Parser_Page_TesseractAdapter(); @todo: make class loadable
-    foreach($scripts as $name=> $call){
-      if(!empty($call)){
-        exec($call, $output, $returnVal);
-        $this->response['steps'][] = array('type'=>'success', 'message'=>$output);
-        $this->response['steps'][] = array('type'=>'success', 'message'=>$call);
-        if($returnVal == 0){
-          $this->response['steps'][] = array('type'=>'success', 'message'=>$call . ' can be used within the system.');
-
-          switch($name){
-            case 'ghostscript':
-              $data['ghostscriptPath'] .= ' -o "%s" -sDEVICE=tiffg4 "%s"';
-              break;
-            case 'imagemagick':
-              $data['imagemagickPath'] .= ' -compress None -quiet +matte -depth 8 "%s" "%s"';
-              break;
-          }
-        }else{
-          $this->response['steps'][] = array('type'=>'error', 'message'=>$call . ' can not be executed through the PHP user.');
-          //$success = false;
-        }
-      }
-    }
+  public function checkConsoleCommands($data){
+    return true;  
   }
 
   /**
@@ -371,8 +347,10 @@ class Installer implements Messenger{
    */
   public function initDatabaseData(EntityManager $entityManager){
     $this->updateDatabaseSchema($entityManager);
-    require_once 'initdb.php';
-    require_once 'initpermissions.php';
+    //require_once 'initdb.php';
+    //require_once 'initpermissions.php';
+    
+    return true;
   }
 
   /**
@@ -424,4 +402,13 @@ class Installer implements Messenger{
     return true;
   }
 
+  /**
+   * 
+   * @return boolean
+   * 
+   * @todo dummy function for now
+   */
+  public function uninstall(){
+    return true;
+  }
 }

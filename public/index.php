@@ -43,13 +43,3 @@ if($installer->isInstalled($config) || isInstallingOrConsole()){
   //redirect to the installer
   header('Location: ' . $application->getRequest()->getBaseUrl() . 'installer');
 }
-
-/**
- * @return boolean
- */
-function isInstallingOrConsole(){
-  if(isset($_SERVER['REQUEST_URI'])){
-    return strpos($_SERVER["REQUEST_URI"], '/installer') === 0;
-  }
-  return true;
-}

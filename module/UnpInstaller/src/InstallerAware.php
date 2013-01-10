@@ -16,22 +16,12 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
- * This file runs all the needed Unplagged jobs.
  */
-require_once '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
-bootstrapApplication();
+namespace UnpInstaller;
 
-$entityManager = Zend_Registry::getInstance()->entitymanager;
-
-runCronjob('Unplagged_Cron_Document_Parser', $entityManager);
-runCronjob('Unplagged_Cron_Document_Page_Reportcreator', $entityManager);
-runCronjob('Unplagged_Cron_Document_Page_Simtext', $entityManager);
-
-function runCronjob(Unplagged_Cron_Base $cronClass, $entityManager){
-  Zend_Registry::get('Log')->info('Starting cronjob: ' . $cronClass);
-  $cron = new $cronClass($entityManager);
-  $cron->start();
-  $cron->printBenchmark();
+/**
+ * Implementing classes are able to have an Installer injected.
+ */
+interface InstallerAware{
+  public function setInstaller(\UnpInstaller\Installer $installer);
 }

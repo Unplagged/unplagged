@@ -1,35 +1,27 @@
 <div class="well">
   <h1><img class="logo" src="<?php echo $this->basePath('images/logo-blue.png'); ?>" /><?php echo $this->translate('Setup Wizard'); ?></h1>
-  <div class="wizard-steps" data-current-step="<?php echo $this->stepStatus['currentStep']; ?>" id="navigation">
-    <?php $directoriesCreated = is_array($this->stepStatus['directories']) && $this->stepStatus['directories']['finished']; ?>
-    <a class="<?php if($directoriesCreated) echo 'finished disabled'; ?>" data-tab-id="1" href="#">
-      <span class="badge <?php if($directoriesCreated) echo 'badge-inverse'; ?>">1</span>
+  <div class="wizard-steps" data-current-step="1" id="navigation">
+    <a href="#">
+      <span class="badge">1</span>
       <span class="text"><?php echo $this->translate('Directories'); ?></span>
     </a>
-    <?php $databaseAccess = is_array($this->stepStatus['database']) && $this->stepStatus['database']['finished']; ?>
-    <a class="<?php if($databaseAccess) echo 'finished disabled'; ?>" href="#">
-      <span class="badge <?php if($databaseAccess) echo 'badge-inverse'; ?>">2</span>
+    <a href="#">
+      <span class="badge">2</span>
       <span class="text"><?php echo $this->translate('Database'); ?></span>
     </a>
-    <?php $contactData = is_array($this->stepStatus['contact']) && $this->stepStatus['contact']['finished']; ?>
-    <a class="<?php if($contactData) echo 'finished disabled'; ?>" href="#">
-      <span class="badge <?php if($contactData) echo 'badge-inverse'; ?>">3</span>
+    <a href="#">
+      <span class="badge">3</span>
       <span class="text"><?php echo $this->translate('Settings'); ?></span>
     </a>
-    <a class="disabled" href="#">
+    <a href="#">
       <span class="badge">4</span><span class="text"><?php echo $this->translate('Admin'); ?></span>
     </a>
-    <a class="disabled" href="#">
+    <a href="#">
       <span class="badge">5</span><span class="text"><?php echo $this->translate('Software'); ?></span>
     </a>
   </div>
 </div>
 <div class="well">
-  <?php if(!$this->stepStatus['download']['finished']): ?>
-    <div class="page-alert alert fade in alert-error">
-      <a class="close" href="#">&times;</a><?php echo $this->translate('To start the webinstaller, you need to run "composer update" from the command line and reload this page.'); ?>
-    </div>
-  <?php endif; ?>
   <div class="page-alert wrong-input alert fade in alert-error hide">
     <a class="close" href="#">&times;</a><?php echo $this->translate('There was a problem with your input, you can find the description in the console below.'); ?>
   </div>
@@ -43,22 +35,11 @@
       ?>
     </p>
 
-    <button href="" 
-            id="start-button" 
-            class="btn btn-large btn-primary pull-right <?php if(!$this->stepStatus['download']['finished']) echo 'disabled'; ?>">
-      Start Installation
+    <button href="" id="start-button" class="btn btn-large btn-primary pull-right">
+      <?php echo $this->translate('Start Installation'); ?>
     </button>
   </div>
   <ul id="console" class="console">
-    <?php foreach($this->stepStatus as $step): ?>
-      <?php if(is_array($step)): ?>
-        <?php foreach($step['messages'] as $message): ?>
-          <li>&gt;&gt;&gt;
-            <span class="<?php echo 'text-' . $message['namespace']; ?>"><?php echo $message['message']; ?></span>
-          </li>
-        <?php endforeach; ?> 
-      <?php endif; ?>
-    <?php endforeach; ?>
     <li>&gt;&gt;&gt;&nbsp;<span class="blink-cursor">&nbsp;</span></li>
   </ul>
 </div>
@@ -110,8 +91,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <a href="#" class="close-button btn"><?php echo $this->translate('Close'); ?></a>
-      <button type="submit" class="database-submit btn btn-primary" data-step-id="5"><?php echo $this->translate('Submit'); ?></button>
+      <a href="#" class="close-button btn"><?php echo $this->translate('Cancel'); ?></a>
+      <button type="submit" class="database-submit btn btn-primary"><?php echo $this->translate('Submit'); ?></button>
     </div>
   </form>
 </div>
@@ -147,7 +128,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <a href="#" class="btn close-button"><?php echo $this->translate('Close'); ?></a>
+      <a href="#" class="btn close-button"><?php echo $this->translate('Cancel'); ?></a>
       <button type="submit" class="btn btn-primary"><?php echo $this->translate('Submit'); ?></button>
     </div>
   </form>
@@ -232,8 +213,9 @@
       </div>
     </div>
     <div class="modal-footer">
-      <a href="#" class="btn close-button"><?php echo $this->translate('Close'); ?></a>
-      <button type="submit" class="btn btn-primary" data-step-id="5"><?php echo $this->translate('Submit'); ?></button>
+      <a href="#" class="btn close-button"><?php echo $this->translate('Cancel'); ?></a>
+      <button type="submit" class="btn btn-primary"><?php echo $this->translate('Submit'); ?></button>
+      <button class="btn btn-primary"><?php echo $this->translate('Skip'); ?></button>
     </div>
   </form>
 </div>
@@ -284,8 +266,9 @@
       </div>
     </div>
     <div class="modal-footer">
-      <a href="#" class="btn close-button"><?php echo $this->translate('Close'); ?></a>
-      <button type="submit" class="btn btn-primary" data-step-id="5"><?php echo $this->translate('Submit'); ?></button>
+      <a href="#" class="btn close-button"><?php echo $this->translate('Cancel'); ?></a>
+      <button class="btn btn-primary"><?php echo $this->translate('Skip'); ?></button>
+      <button type="submit" class="btn btn-primary"><?php echo $this->translate('Submit'); ?></button>
     </div>
   </form>
 </div>

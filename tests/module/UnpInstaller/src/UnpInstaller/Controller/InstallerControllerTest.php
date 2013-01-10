@@ -31,6 +31,7 @@ use Zend\Mvc\Router\RouteMatch;
  * 
  */
 class InstallerControllerTest extends PHPUnit_Framework_TestCase{
+
   protected $controller;
   protected $request;
   protected $response;
@@ -51,6 +52,7 @@ class InstallerControllerTest extends PHPUnit_Framework_TestCase{
     $this->event->setRouteMatch($this->routeMatch);
     $this->controller->setEvent($this->event);
     $this->controller->setServiceLocator($serviceManager);
+    $this->controller->setInstaller($this->getMockInstaller());
   }
 
   public function testIndexActionGetsDispatched(){
@@ -61,7 +63,7 @@ class InstallerControllerTest extends PHPUnit_Framework_TestCase{
 
     $this->assertEquals(200, $response->getStatusCode());
   }
-  
+
   public function testIndexActionWithoutEnabledInstaller(){
     $serviceManager = Bootstrap::getServiceManager();
     $this->controller = new InstallerController();
@@ -78,7 +80,7 @@ class InstallerControllerTest extends PHPUnit_Framework_TestCase{
     $this->event->setRouteMatch($this->routeMatch);
     $this->controller->setEvent($this->event);
     $this->controller->setServiceLocator($serviceManager);
-    
+    $this->controller->setInstaller($this->getMockInstaller());
     $this->routeMatch->setParam('action', 'index');
 
     $result = $this->controller->dispatch($this->request);
@@ -88,14 +90,95 @@ class InstallerControllerTest extends PHPUnit_Framework_TestCase{
     $serviceManager->setService('Config', $config);
     $this->assertEquals(403, $response->getStatusCode());
   }
-  
-  public function testInstallAdminActionGetsDispatched(){
-    $this->routeMatch->setParam('action', 'installAdmin');
 
+  private function getMockInstaller(){
+    $installer = $this->getMock('\UnpInstaller\Installer');
+    return $installer;
+  }
+
+  public function testinstallAdminWithoutEntityManager(){
+    $this->routeMatch->setParam('action', 'installAdmin');
     $this->controller->dispatch($this->request);
     $response = $this->controller->getResponse();
 
-    $this->assertEquals(200, $response->getStatusCode());
+    $this->assertValidJson($response->getContent());
   }
-  
+
+  public function testInstallAdminActionGetsDispatched(){
+    $this->routeMatch->setParam('action', 'installAdmin');
+    $this->controller->setConfigFilePath('tests/resources/tmp/settings.local.php');
+    $entityManager = Bootstrap::getServiceManager()->get('doctrine.entitymanager.orm_default');
+    $this->controller->setEntityManager($entityManager);
+    $this->controller->dispatch($this->request);
+    $response = $this->controller->getResponse();
+
+    $this->assertValidJson($response->getContent());
+  }
+
+  public function testInstallSettingsActionGetsDispatched(){
+    $this->routeMatch->setParam('action', 'installSettings');
+    $entityManager = Bootstrap::getServiceManager()->get('doctrine.entitymanager.orm_default');
+    $this->controller->setEntityManager($entityManager);
+    $this->controller->dispatch($this->request);
+    $response = $this->controller->getResponse();
+
+    $this->assertValidJson($response->getContent());
+  }
+
+  public function testInstallSettingsWithoutEntityManager(){
+    $this->routeMatch->setParam('action', 'installSettings');
+
+    $result = $this->controller->dispatch($this->request);
+    $response = $this->controller->getResponse();
+
+    $this->assertValidJson($response->getContent());
+  }
+
+  private function assertValidJson($strJson){
+    json_decode($strJson);
+    return $this->assertTrue(json_last_error() === JSON_ERROR_NONE);
+  }
+
+  public function testInstallDatabaseAction(){
+    $installerMock = $this->getMockInstaller();
+    $installerMock->expects($this->once())
+            ->method('checkDatabaseConnection')
+            ->will($this->returnValue(true));
+    $this->controller->setInstaller($installerMock);
+    $this->routeMatch->setParam('action', 'installDatabase');
+    $entityManager = Bootstrap::getServiceManager()->get('doctrine.entitymanager.orm_default');
+    $this->controller->setEntityManager($entityManager);
+    $this->controller->dispatch($this->request);
+    $response = $this->controller->getResponse();
+
+    $this->assertValidJson($response->getContent());
+  }
+
+  public function testInstallDirectoriesAction(){
+    $this->routeMatch->setParam('action', 'installDirectories');
+
+    $result = $this->controller->dispatch($this->request);
+    $response = $this->controller->getResponse();
+
+    $this->assertValidJson($response->getContent());
+  }
+
+  public function testInstallDirectoriesWithWritePermissions(){
+    $installerMock = $this->getMockInstaller();
+    $installerMock->expects($this->once())
+            ->method('checkWritePermissions')
+            ->will($this->returnValue(true));
+    $installerMock->expects($this->any())
+            ->method('getMessages')
+            ->will($this->returnValue(array()));
+    $this->controller->setInstaller($installerMock);
+
+    $this->routeMatch->setParam('action', 'installDirectories');
+
+    $result = $this->controller->dispatch($this->request);
+    $response = $this->controller->getResponse();
+
+    $this->assertValidJson($response->getContent());
+  }
+
 }

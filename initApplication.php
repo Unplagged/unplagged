@@ -38,4 +38,20 @@ defined('WEBROOT_PATH')
 // Composer autoloading
 if (is_readable(__DIR__ . '/vendor/autoload.php')) {
   include __DIR__ . '/vendor/autoload.php';
+}else{
+  die('It seems like the necessary libraries are not installed, did you forget to run Composer?');
+}
+
+/**
+ * Finds out if we have a request uri set, which indicates that it is no call from the console
+ * and checks whether it contains the /installer path, which indicates that we are currently 
+ * installing.
+ * 
+ * @return boolean
+ */
+function isInstallingOrConsole(){
+  if(isset($_SERVER['REQUEST_URI'])){
+    return strpos($_SERVER["REQUEST_URI"], '/installer') === 0;
+  }
+  return true;
 }

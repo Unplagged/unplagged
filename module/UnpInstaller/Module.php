@@ -62,17 +62,23 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
     $entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');
     $controllerLoader = $serviceManager->get('ControllerLoader');
     $config = $serviceManager->get('Config');
-    
+    $translator = $serviceManager->get('Translator');
+
     //something is badly broken if this is not set, so we don't need to check, just let the error do it's work
     $configFilePath = $config['unp_settings']['installer_config_file'];
-    
-    $controllerLoader->addInitializer(function ($controller) use ($entityManager, $configFilePath){
+
+    $controllerLoader->addInitializer(function ($controller) use ($entityManager, $configFilePath, $translator){
+              // @codeCoverageIgnoreStart
               if($controller instanceof BaseController){
                 $controller->setEntityManager($entityManager);
+              }
+              if($controller instanceof InstallerAware){
+                $controller->setInstaller(new Installer(BASE_PATH, $translator));
               }
               if(method_exists($controller, 'setConfigFilePath')){
                 $controller->setConfigFilePath($configFilePath);
               }
+              // @codeCoverageIgnoreEnd
             });
   }
 

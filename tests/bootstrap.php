@@ -19,6 +19,9 @@
  */
 namespace UnplaggedTest;
 
+define('TEST_PATH', __DIR__);
+
+
 require_once '..' . DIRECTORY_SEPARATOR . 'initApplication.php';
 
 use Zend\Mvc\Service\ServiceManagerConfig;
