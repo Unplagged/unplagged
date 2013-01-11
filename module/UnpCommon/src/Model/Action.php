@@ -22,7 +22,8 @@ namespace UnpCommon\Model;
 use Doctrine\ORM\Mapping AS ORM;
 
 /**
- * The class represents a notification action.
+ * This class represents some kind of user action that already happened, so 
+ * that it can be used as entry for the timeline.
  * 
  * @ORM\Entity 
  * @ORM\Table(name="action")
@@ -57,18 +58,10 @@ class Action{
    */
   private $description;
 
-  public function __construct($data = array()){
-    if(isset($data["name"])){
-      $this->name = $data["name"];
-    }
-
-    if(isset($data["title"])){
-      $this->title = $data["title"];
-    }
-
-    if(isset($data["description"])){
-      $this->description = $data["description"];
-    }
+  public function __construct($name, $title, $description){
+    $this->name = $name;
+    $this->title = $title;
+    $this->description = $description;
   }
 
   public function getId(){
@@ -86,16 +79,5 @@ class Action{
   public function getTitle(){
     return $this->title;
   }
-  
-  public function setName($name){
-    $this->name = $name;
-  }
 
-  public function setTitle($title){
-    $this->title = $title;
-  }
-
-  public function setDescription($description){
-    $this->description = $description;
-  }
 }

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+	<meta name="robots" content="noindex" />
+
+	<title>File Parser/Page/TextParser.php | Unplagged Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?3087857291"></script>
+	<script type="text/javascript" src="elementlist.js?3509241809"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-AdminController.html">AdminController</a></li>
+				<li><a href="class-Application_Form_Auth_Login.html">Application_Form_Auth_Login</a></li>
+				<li><a href="class-Application_Form_Case_Modify.html">Application_Form_Case_Modify</a></li>
+				<li><a href="class-Application_Form_Document_Fragment_Modify.html">Application_Form_Document_Fragment_Modify</a></li>
+				<li><a href="class-Application_Form_Document_Modify.html">Application_Form_Document_Modify</a></li>
+				<li><a href="class-Application_Form_Document_Page_Dehyphen.html">Application_Form_Document_Page_Dehyphen</a></li>
+				<li><a href="class-Application_Form_Document_Page_Modify.html">Application_Form_Document_Page_Modify</a></li>
+				<li><a href="class-Application_Form_File_Upload.html">Application_Form_File_Upload</a></li>
+				<li><a href="class-Application_Form_Permission_EditRole.html">Application_Form_Permission_EditRole</a></li>
+				<li><a href="class-Application_Form_Permission_Modify.html">Application_Form_Permission_Modify</a></li>
+				<li><a href="class-Application_Form_Rating_Modify.html">Application_Form_Rating_Modify</a></li>
+				<li><a href="class-Application_Form_Report_Modify.html">Application_Form_Report_Modify</a></li>
+				<li><a href="class-Application_Form_Setting_Action_Modify.html">Application_Form_Setting_Action_Modify</a></li>
+				<li><a href="class-Application_Form_Setting_State_Modify.html">Application_Form_Setting_State_Modify</a></li>
+				<li><a href="class-Application_Form_Simtext_Modify.html">Application_Form_Simtext_Modify</a></li>
+				<li><a href="class-Application_Form_User_Password_Recover.html">Application_Form_User_Password_Recover</a></li>
+				<li><a href="class-Application_Form_User_Password_Reset.html">Application_Form_User_Password_Reset</a></li>
+				<li><a href="class-Application_Form_User_Profile.html">Application_Form_User_Profile</a></li>
+				<li><a href="class-Application_Form_User_Register.html">Application_Form_User_Register</a></li>
+				<li><a href="class-Application_Form_User_Remove.html">Application_Form_User_Remove</a></li>
+				<li><a href="class-Application_Form_Versionable_Diff.html">Application_Form_Versionable_Diff</a></li>
+				<li><a href="class-Application_Model_Action.html">Application_Model_Action</a></li>
+				<li><a href="class-Application_Model_Base.html">Application_Model_Base</a></li>
+				<li><a href="class-Application_Model_BibTex.html">Application_Model_BibTex</a></li>
+				<li><a href="class-Application_Model_Case.html">Application_Model_Case</a></li>
+				<li><a href="class-Application_Model_Comment.html">Application_Model_Comment</a></li>
+				<li><a href="class-Application_Model_Document.html">Application_Model_Document</a></li>
+				<li><a href="class-Application_Model_Document_Fragment.html">Application_Model_Document_Fragment</a></li>
+				<li><a href="class-Application_Model_Document_Fragment_Partial.html">Application_Model_Document_Fragment_Partial</a></li>
+				<li><a href="class-Application_Model_Document_Fragment_Type.html">Application_Model_Document_Fragment_Type</a></li>
+				<li><a href="class-Application_Model_Document_Page.html">Application_Model_Document_Page</a></li>
+				<li><a href="class-Application_Model_Document_Page_DetectionReport.html">Application_Model_Document_Page_DetectionReport</a></li>
+				<li><a href="class-Application_Model_Document_Page_Line.html">Application_Model_Document_Page_Line</a></li>
+				<li><a href="class-Application_Model_File.html">Application_Model_File</a></li>
+				<li><a href="class-Application_Model_ModelPermission.html">Application_Model_ModelPermission</a></li>
+				<li><a href="class-Application_Model_Notification.html">Application_Model_Notification</a></li>
+				<li><a href="class-Application_Model_PagePermission.html">Application_Model_PagePermission</a></li>
+				<li><a href="class-Application_Model_Permission.html">Application_Model_Permission</a></li>
+				<li><a href="class-Application_Model_Rating.html">Application_Model_Rating</a></li>
+				<li><a href="class-Application_Model_Report.html">Application_Model_Report</a></li>
+				<li><a href="class-Application_Model_Setting.html">Application_Model_Setting</a></li>
+				<li><a href="class-Application_Model_Simtext_Report.html">Application_Model_Simtext_Report</a></li>
+				<li><a href="class-Application_Model_State.html">Application_Model_State</a></li>
+				<li><a href="class-Application_Model_Tag.html">Application_Model_Tag</a></li>
+				<li><a href="class-Application_Model_Task.html">Application_Model_Task</a></li>
+				<li><a href="class-Application_Model_User.html">Application_Model_User</a></li>
+				<li><a href="class-Application_Model_User_GuestRole.html">Application_Model_User_GuestRole</a></li>
+				<li><a href="class-Application_Model_User_InheritableRole.html">Application_Model_User_InheritableRole</a></li>
+				<li><a href="class-Application_Model_User_Role.html">Application_Model_User_Role</a></li>
+				<li><a href="class-Application_Model_Versionable.html">Application_Model_Versionable</a></li>
+				<li><a href="class-Application_Model_Versionable_Version.html">Application_Model_Versionable_Version</a></li>
+				<li><a href="class-AuthController.html">AuthController</a></li>
+				<li><a href="class-BibtexController.html">BibtexController</a></li>
+				<li><a href="class-Bootstrap.html">Bootstrap</a></li>
+				<li><a href="class-CaseController.html">CaseController</a></li>
+				<li><a href="class-CommentController.html">CommentController</a></li>
+				<li><a href="class-Document_FragmentController.html">Document_FragmentController</a></li>
+				<li><a href="class-Document_PageController.html">Document_PageController</a></li>
+				<li><a href="class-DocumentController.html">DocumentController</a></li>
+				<li><a href="class-ErrorController.html">ErrorController</a></li>
+				<li><a href="class-FileController.html">FileController</a></li>
+				<li><a href="class-ImageController.html">ImageController</a></li>
+				<li><a href="class-IndexController.html">IndexController</a></li>
+				<li><a href="class-NotificationController.html">NotificationController</a></li>
+				<li><a href="class-PermissionController.html">PermissionController</a></li>
+				<li><a href="class-RatingController.html">RatingController</a></li>
+				<li><a href="class-ReportController.html">ReportController</a></li>
+				<li><a href="class-SettingController.html">SettingController</a></li>
+				<li><a href="class-SimtextController.html">SimtextController</a></li>
+				<li><a href="class-TagController.html">TagController</a></li>
+				<li><a href="class-Unplagged_AccessControl.html">Unplagged_AccessControl</a></li>
+				<li><a href="class-Unplagged_Acl.html">Unplagged_Acl</a></li>
+				<li><a href="class-Unplagged_Auth_Adapter_Doctrine.html">Unplagged_Auth_Adapter_Doctrine</a></li>
+				<li><a href="class-Unplagged_Barcode.html">Unplagged_Barcode</a></li>
+				<li><a href="class-Unplagged_CompareText.html">Unplagged_CompareText</a></li>
+				<li><a href="class-Unplagged_Controller_Action.html">Unplagged_Controller_Action</a></li>
+				<li><a href="class-Unplagged_Controller_Versionable.html">Unplagged_Controller_Versionable</a></li>
+				<li><a href="class-Unplagged_Cron_Base.html">Unplagged_Cron_Base</a></li>
+				<li><a href="class-Unplagged_Cron_Document_Page_Reportcreator.html">Unplagged_Cron_Document_Page_Reportcreator</a></li>
+				<li><a href="class-Unplagged_Cron_Document_Page_Simtext.html">Unplagged_Cron_Document_Page_Simtext</a></li>
+				<li><a href="class-Unplagged_Cron_Document_Parser.html">Unplagged_Cron_Document_Parser</a></li>
+				<li><a href="class-Unplagged_Detector.html">Unplagged_Detector</a></li>
+				<li><a href="class-Unplagged_Detector_PlagAware.html">Unplagged_Detector_PlagAware</a></li>
+				<li><a href="class-Unplagged_Helper.html">Unplagged_Helper</a></li>
+				<li><a href="class-Unplagged_HtmlLayout.html">Unplagged_HtmlLayout</a></li>
+				<li><a href="class-Unplagged_Mailer.html">Unplagged_Mailer</a></li>
+				<li><a href="class-Unplagged_Paginator_Adapter_DoctrineQuery.html">Unplagged_Paginator_Adapter_DoctrineQuery</a></li>
+				<li><a href="class-Unplagged_Parser.html">Unplagged_Parser</a></li>
+				<li><a href="class-Unplagged_Parser_Document_ImagemagickAdapter.html">Unplagged_Parser_Document_ImagemagickAdapter</a></li>
+				<li><a href="class-Unplagged_Parser_Document_ImageParser.html">Unplagged_Parser_Document_ImageParser</a></li>
+				<li><a href="class-Unplagged_Parser_Document_TesseractParser.html">Unplagged_Parser_Document_TesseractParser</a></li>
+				<li><a href="class-Unplagged_Parser_Document_TextParser.html">Unplagged_Parser_Document_TextParser</a></li>
+				<li><a href="class-Unplagged_Parser_Page_TesseractAdapter.html">Unplagged_Parser_Page_TesseractAdapter</a></li>
+				<li><a href="class-Unplagged_Parser_Page_TesseractParser.html">Unplagged_Parser_Page_TesseractParser</a></li>
+				<li class="active"><a href="class-Unplagged_Parser_Page_TextParser.html">Unplagged_Parser_Page_TextParser</a></li>
+				<li><a href="class-Unplagged_Uploader.html">Unplagged_Uploader</a></li>
+				<li><a href="class-Unplagged_UrlHistory.html">Unplagged_UrlHistory</a></li>
+				<li><a href="class-Unplagged_Validate_NoRecordExists.html">Unplagged_Validate_NoRecordExists</a></li>
+				<li><a href="class-Unplagged_Validate_RecordExists.html">Unplagged_Validate_RecordExists</a></li>
+				<li><a href="class-UserController.html">UserController</a></li>
+				<li><a href="class-Zend_Validate_Member.html">Zend_Validate_Member</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Unplagged_Parser_Document_Parser.html">Unplagged_Parser_Document_Parser</a></li>
+				<li><a href="class-Unplagged_Parser_Page_Parser.html">Unplagged_Parser_Page_Parser</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-None.html" title="Summary of None"><span>Namespace</span></a>
+			</li>
+			<li>
+				<a href="class-Unplagged_Parser_Page_TextParser.html" title="Summary of Unplagged_Parser_Page_TextParser"><span>Class</span></a>
+			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<pre><code><span id="1" class="l"><a class="l" href="#1"> 1: </a><span class="xlang">&lt;?php</span>
+</span><span id="2" class="l"><a class="l" href="#2"> 2: </a>
+</span><span id="3" class="l"><a class="l" href="#3"> 3: </a><span class="php-comment">/**
+</span></span><span id="4" class="l"><a class="l" href="#4"> 4: </a><span class="php-comment"> * File for class {@link Unplagged_Parser_TextParser}.
+</span></span><span id="5" class="l"><a class="l" href="#5"> 5: </a><span class="php-comment"> */</span>
+</span><span id="6" class="l"><a class="l" href="#6"> 6: </a>
+</span><span id="7" class="l"><a class="l" href="#7"> 7: </a><span class="php-comment">/**
+</span></span><span id="8" class="l"><a class="l" href="#8"> 8: </a><span class="php-comment"> *
+</span></span><span id="9" class="l"><a class="l" href="#9"> 9: </a><span class="php-comment"> * @author Benjamin Oertel
+</span></span><span id="10" class="l"><a class="l" href="#10">10: </a><span class="php-comment"> */</span>
+</span><span id="11" class="l"><a class="l" href="#11">11: </a><span class="php-keyword1">class</span> <a id="Unplagged_Parser_Page_TextParser" href="#Unplagged_Parser_Page_TextParser">Unplagged_Parser_Page_TextParser</a> <span class="php-keyword1">implements</span> Unplagged_Parser_Page_Parser{
+</span><span id="12" class="l"><a class="l" href="#12">12: </a>
+</span><span id="13" class="l"><a class="l" href="#13">13: </a>  <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="___construct" href="#___construct">__construct</a>(){
+</span><span id="14" class="l"><a class="l" href="#14">14: </a>    <span class="php-var">$this</span>-&gt;_em = Zend_Registry::getInstance()-&gt;entitymanager;
+</span><span id="15" class="l"><a class="l" href="#15">15: </a>  }
+</span><span id="16" class="l"><a class="l" href="#16">16: </a>
+</span><span id="17" class="l"><a class="l" href="#17">17: </a>  <span class="php-comment">/**
+</span></span><span id="18" class="l"><a class="l" href="#18">18: </a><span class="php-comment">   * This function returns true if it could confirm, that tesseract is working.
+</span></span><span id="19" class="l"><a class="l" href="#19">19: </a><span class="php-comment">   * @param $file The previous uploaded file.
+</span></span><span id="20" class="l"><a class="l" href="#20">20: </a><span class="php-comment">   * @param $language The language of the uploaded file.
+</span></span><span id="21" class="l"><a class="l" href="#21">21: </a><span class="php-comment">   * 
+</span></span><span id="22" class="l"><a class="l" href="#22">22: </a><span class="php-comment">   * @return Application_Model_Document
+</span></span><span id="23" class="l"><a class="l" href="#23">23: </a><span class="php-comment">   */</span>
+</span><span id="24" class="l"><a class="l" href="#24">24: </a>  <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_parseToPage" href="#_parseToPage">parseToPage</a>(Application_Model_File <span class="php-var">$file</span>, <span class="php-var">$language</span>){
+</span><span id="25" class="l"><a class="l" href="#25">25: </a>    <span class="php-keyword1">try</span>{
+</span><span id="26" class="l"><a class="l" href="#26">26: </a>      <span class="php-var">$hash</span> = Unplagged_Helper::generateRandomHash();
+</span><span id="27" class="l"><a class="l" href="#27">27: </a>
+</span><span id="28" class="l"><a class="l" href="#28">28: </a>      <span class="php-var">$inputFileLocation</span> = <span class="php-var">$file</span>-&gt;getFullPath();
+</span><span id="29" class="l"><a class="l" href="#29">29: </a>
+</span><span id="30" class="l"><a class="l" href="#30">30: </a>      <span class="php-var">$page</span> = <span class="php-keyword1">new</span> Application_Model_Document_Page();
+</span><span id="31" class="l"><a class="l" href="#31">31: </a>      <span class="php-var">$page</span>-&gt;setContent(<span class="php-keyword2">file_get_contents</span>(<span class="php-var">$inputFileLocation</span>), <span class="php-quote">&quot;text&quot;</span>);
+</span><span id="32" class="l"><a class="l" href="#32">32: </a>
+</span><span id="33" class="l"><a class="l" href="#33">33: </a>      <span class="php-keyword1">return</span> <span class="php-var">$page</span>;
+</span><span id="34" class="l"><a class="l" href="#34">34: </a>    }<span class="php-keyword1">catch</span>(InvalidArgumentException <span class="php-var">$e</span>){
+</span><span id="35" class="l"><a class="l" href="#35">35: </a>      <span class="php-comment">//parsing wasn't successful</span>
+</span><span id="36" class="l"><a class="l" href="#36">36: </a>      <span class="php-keyword1">return</span> <span class="php-keyword1">null</span>;
+</span><span id="37" class="l"><a class="l" href="#37">37: </a>    }
+</span><span id="38" class="l"><a class="l" href="#38">38: </a>  }
+</span><span id="39" class="l"><a class="l" href="#39">39: </a>
+</span><span id="40" class="l"><a class="l" href="#40">40: </a>}
+</span><span id="41" class="l"><a class="l" href="#41">41: </a><span class="xlang">?&gt;</span>
+</span><span id="42" class="l"><a class="l" href="#42">42: </a></span></code></pre>
+
+	<div id="footer">
+		Unplagged Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

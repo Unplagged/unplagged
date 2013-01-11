@@ -38,8 +38,9 @@ return array(
             'create'=>array(
                 'resources/uploads',
                 'resources/uploads/avatars',
+                'resources/downloads',
+                'resources/downloads/reports',
                 'resources/logs',
-                'resources/reports',
                 'resources/temp',
                 'resources/temp/cache',
                 'resources/temp/proxies',

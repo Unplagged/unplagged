@@ -52,7 +52,7 @@ use Doctrine\ORM\Mapping AS ORM;
  * ,"bibtex" = "\UnpCommon\Model\BibTex"
  * })
  */
-abstract class Base implements Linkable{
+abstract class Base{
 
   const ICON_CLASS = '';
   const PERMISSION_TYPE = 'base';
@@ -222,7 +222,7 @@ abstract class Base implements Linkable{
 
     return strtolower(str_replace('_', '-', substr($childClass, strlen('\UnpCommon\Model\'))));
   }
-
+*/
   public function getComments() {
     return $this->comments;
   }
@@ -230,7 +230,7 @@ abstract class Base implements Linkable{
   public function getRatings() {
     return $this->ratings;
   }
-
+/*
   public function addRating(\Application\Model\Rating $rating) {
     $this->ratings->add($rating);
   }

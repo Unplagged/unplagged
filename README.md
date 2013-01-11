@@ -8,7 +8,7 @@ It is based on the workflows that were employed and developed by the german webs
 
 You currently have two options to use the application, by either:
 
-* [downloading the latest release|(https://github.com/unplagged/unplagged/zipball/master) and installing it on your own server
+* [downloading the latest release](https://github.com/unplagged/unplagged/zipball/master) and installing it on your own server
 * or creating an account on [unplagged.com](http://unplagged.com)(currently without any warranty on your stored data)
 
 ### Installing
@@ -25,7 +25,11 @@ The best way to get started is by forking this repository and than using the sam
 
 We provided a simple command line interface for common development tasks, which you can access by running:
 
-    $ php public/index.php
+    $ ./unp.sh
+
+or
+
+    $ unp.bat
 
 From the main directory of unplagged.
 
