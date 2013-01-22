@@ -31,10 +31,6 @@ class UserController extends Unplagged_Controller_Action{
     Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository('Application_Model_Case')->findAll();
   }
 
-  public function indexAction(){
-    
-  }
-
   /**
    * Handles the registration data or displays a form for registering a user.
    */

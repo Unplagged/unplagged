@@ -10,7 +10,7 @@ $(document).ready(function(){
   $('textarea.line-numbers').numberfy();
   // enable the twitter bootstrap tooltip and dropdowns for certain classnames
   $('.tooltip-toggle').tooltip();
-  $('.dropdown-toggle').dropdown();
+  $('.dropdown-toggle').not('#login-button').dropdown();
 
   $('.alert:not(.unclosable)').prepend('<a class="close" data-dismiss="alert" href="#">&times;</a>');
   $().alert()
@@ -648,4 +648,21 @@ $(document).ready(function(){
   });
   
   $('a[rel=tooltip]').tooltip();
+  
+  //login dropdown
+  $('#login-button').click(function(){
+    var loginDropdown = $(this).parents('.login-group').find('.login-dropdown');
+    if(loginDropdown.is(':hidden')){
+      $(this).parents('.login-group').find('.login-dropdown').show();
+    }else{
+      $(this).parents('.login-group').find('.login-dropdown').hide();
+    }
+    
+    return false;
+  });
+  
+  $('.login-group .close').click(function(){
+    $(this).parents('.login-group').find('.login-dropdown').hide();
+  });
+  
 });

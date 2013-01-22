@@ -1,0 +1,37 @@
+<?php
+$form = $this->loginForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('zfcuser/login'));
+$form->setAttribute('method', 'post');
+$form->setAttribute('class', 'form-horizontal clearfix');
+?>
+<div class="login">
+  <?php echo $this->form()->openTag($form) ?>
+  <fieldset>
+    <?php if(!$this->widget): ?>
+    <?php echo $this->formElementErrors($form->get('identity')) ?>
+    <?php endif; ?>
+    <div class="control-group">
+      <label>
+        <?php echo $this->translate('Username or Email'); ?>
+      </label>
+      <?php echo $this->formInput($form->get('identity')) ?>
+    </div>
+    <div class="control-group">
+      <label for="credential"><?php echo $this->translate('Password'); ?>
+        <a href="<?php echo $this->basePath('user/reset-password'); ?>"><span class="icon-question-sign"></span></a></label>
+      <?php echo $this->formInput($form->get('credential')) ?>
+    </div>
+    <?php if($this->redirect): ?>
+      <input type="hidden" name="redirect" value="<?php echo $this->redirect ?>" />
+    <?php endif ?>
+    <button type="submit" class="btn"><?php echo $this->translate('Login'); ?></button>
+  </fieldset>
+  <?php echo $this->form()->closeTag() ?>
+  <hr />
+  <span class="close">&times;</span>
+  <p class="register-message">
+    <?php echo sprintf($this->translate('You are new here? %sRegister now!%s'), '<a href="' . $this->url('zfcuser/register') . ($this->redirect ? '?redirect=' . $this->redirect : '') . '">', '</a>'); ?>
+  </p>
+
+</div>

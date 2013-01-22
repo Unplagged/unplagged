@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
     <!-- Design based on http://www.premiumpixels.com/ -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <?php echo $this->headTitle(); ?>
     <?php echo $this->headLink()->appendStylesheet($this->basePath('style/styles.css')); ?>
@@ -16,78 +16,87 @@
   <body>
     <?php echo $this->partial('layout/noscript'); ?>
     <?php echo $this->partial('layout/chrome-frame'); ?>
-    <header class="navbar navbar-inverse"role="toolbar">
+    <header class="navbar navbar-inverse" role="toolbar">
       <div class="navbar-inner">
         <div class="container content">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <!-- <a class="brand" href="#">unplagged</a> -->
-          <div class="nav-collapse collapse navbar-responsive-collapse">
+          <div class="">
             <ul class="nav">
-              <!--<li class="active"><a href="#">Home</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>-->
-              <?php //if(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest'): ?>
-                <li class="dropdown">
-                  <a href="<?php echo $this->basePath('user/edit'); ?>" class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-user icon-white"></i><?php //echo $this->me->getUsername(); ?> <span class="caret"></span>
-                  </a>
-                  <ul class="dropdown-menu user-dropdown">
-                    <li><a href="<?php echo $this->basePath('user/edit'); ?>"><?php echo $this->translate("Edit Profile"); ?></a></li>
-                    <li><a href="<?php echo $this->basePath('user/files'); ?>"><?php echo $this->translate("My Files"); ?></a></li>
-                    <li><a href="<?php //echo $this->baseUrl('user/settings');         ?>"><?php echo $this->translate("My Settings"); ?></a></li>
-                    <li><a href="<?php echo $this->basePath('auth/logout'); ?>"><?php echo $this->translate("Logout"); ?></a></li>
-                    <li class="avatar-wrap"><img class="avatar" src="<?php //echo Unplagged_Helper::getAvatarPath($this->me); ?>" /></li>
-                  </ul>
-                </li>
-              <?php //endif; ?>
+              <li>
+                <a title="Home" class="home" href="<?php echo $this->basePath(''); ?>"><b class="icon-home icon-white"></b></a>
+              </li>
+              <li>
+                <a title="Administration" href="<?php echo $this->basePath('admin'); ?>"><?php echo $this->translate('Administration'); ?></a>
+              </li>
             </ul>
-            <div class="case-settings-box clearfix pull-left">
-              <?php
-              /*$currentLabel = '';
-              $currentValue = null;
-              if($this->me->getCurrentCase() instanceof Application_Model_Case){
-                $currentLabel = $this->me->getCurrentCase()->getPublishableName();
-                $currentValue = $this->me->getCurrentCase()->getId();
-              }*/
-              ?>
-              <?php //if(count($this->cases) > 0): ?>
-                <form class="current-case form-inline" method="POST" action="<?php echo $this->basePath('user/set-current-case'); ?>">           <label for="case"><?php echo $this->translate('Cases'); ?>:</label>
-                  <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
-                    <option></option>
-                    <?php //foreach($this->cases as $case): ?>
-                      <option <?php //if($case['value'] == $currentValue) echo 'selected'; ?> 
-                        value="<?php echo $case['value']; ?>">
-                          <?php echo $case['label']; ?>
-                      </option>
-                    <?php //endforeach; ?>
-                  </select>
-                  <button class="button">Ok</button>  
-                </form>
-              <?php //endif; ?>
-            </div>
-<!--
-            <?php //if(!(Zend_Auth::getInstance()->hasIdentity() && $this->me && $this->me->getUsername() !== 'guest')): ?>
-              <div class="login-register-box pull-left">
-                <?php echo sprintf($this->translate('%sRegister now%s or %slogin%s.'),  '<a href="' . $this->basePath('register') . '">', '</a>', '<span>', '</span>', '<a href="' . $this->basePath('login') . '">', '</a>'); ?>
+            <?php if($this->zfcUserIdentity()): ?>
+              <li class="dropdown">
+                <a href="<?php echo $this->basePath('user/edit'); ?>" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="icon-user icon-white"></i> <?php echo $this->zfcUserIdentity()->getUsername(); ?> <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu user-dropdown">
+                  <li>
+                    <a href="<?php echo $this->basePath('user/edit'); ?>"><?php echo $this->translate('Edit Profile'); ?></a>
+                  </li>
+                  <li>
+                    <a href="<?php echo $this->basePath('user/files'); ?>"><?php echo $this->translate('My Files'); ?></a>
+                  </li>
+                  <li>
+                    <a href="<?php echo $this->basePath('auth/logout'); ?>"><?php echo $this->translate('Logout'); ?></a>
+                  </li>
+                  <li class="avatar-wrap">
+                    <?php echo $this->gravatar($this->zfcUserIdentity()->getEmail(), array(), array('class'=>'avatar')); ?>
+                  </li>
+                </ul>
+              </li>
+            <?php else: ?>
+              <div class="dropdown login-group btn-group pull-left">
+                <a id="login-button" class="btn dropdown-toggle" 
+                   title="<?php echo $this->translate('Login'); ?>" 
+                   href="<?php echo $this->basePath('user/login'); ?>"><?php echo $this->translate('Login'); ?>
+                  <span class="caret"></span>
+                </a>
+                <div class="dropdown-menu login-dropdown">
+                  <?php echo $this->zfcUserLoginWidget(); ?>
+                </div>
               </div>
-            <?php //endif; ?>
--->
-            <!--<form class="form-search pull-right">
-              <div class="input-append">
-                <input type="text" class="span2 search-query" placeholder="<?php echo $this->translate('Search'); ?>" type="text">
-                <button type="submit" class="btn">Go <i class="icon-search"></i></button>
-            </form>-->
+            <?php endif; ?>
           </div>
+          <form class="form-search pull-right">
+            <div class="input-append">
+              <input type="text" 
+                     class="span3 search-query" 
+                     placeholder="<?php echo $this->translate('Search'); ?>" type="search" />
+              <button type="submit" class="btn"><i class="icon-search"></i></button>
+          </form>
         </div>
       </div>
     </header>
     <div class="pagewrap">
       <header role="banner" class="clearfix">
-        <a href="https://github.com/Unplagged/unplagged"><img class="fork-me-ribbon" style="position: absolute; top: -2px; right: -1px; border: 0; width: 129px" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
-        <h1 class="ir"><?php $this->translate('Unplagged - The Plagiarism Detection Cockpit'); ?></h1>
-        <nav><?php echo $this->navigation('navigation')->menu(); ?></nav>
+        <h1 class="ir"><?php $this->translate('Unplagged - The Plagiarism Detection Workbench'); ?></h1>
+        <nav><?php echo $this->navigation()->menu('navigation'); ?></nav>
+        <div class="case-settings-box clearfix">
+          <?php
+          /* $currentLabel = '';
+            $currentValue = null;
+            if($this->me->getCurrentCase() instanceof Application_Model_Case){
+            $currentLabel = $this->me->getCurrentCase()->getPublishableName();
+            $currentValue = $this->me->getCurrentCase()->getId();
+            } */
+          ?>
+          <form class="current-case form-inline" method="POST" action="<?php echo $this->basePath('user/set-current-case'); ?>">
+            <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
+              <option></option>
+              <?php if(count($this->cases) > 0): ?>
+                <?php foreach($this->cases as $case): ?>
+                  <option <?php //if($case['value'] == $currentValue) echo 'selected';     ?> 
+                    value="<?php echo $case['value']; ?>">
+                      <?php echo $case['label']; ?>
+                  </option>
+                <?php endforeach; ?>
+              <?php endif; ?>
+            </select>
+            <button class="button"><?php echo $this->translate('Ok'); ?></button>  
+          </form>
+        </div>
       </header>

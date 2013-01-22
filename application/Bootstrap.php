@@ -56,82 +56,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
   }
 
   /**
-   * Loads the config and sets it in the registry.
-   * 
-   * @return \Zend_Config 
-   */
-  protected function _initConfig(){
-    $config = new Zend_Config($this->getOptions(), true);
-    Zend_Registry::set('config', $config);
-    return $config;
-  }
-
-  /**
-   * Initializes the Doctrine EntityManager.
-   * 
-   * Based on Jan Oliver Oelerich (http://www.oelerich.org/?p=193).
-   * 
-   * @todo enable Caching
-   * @return EntityManager
-   */
-  public function _initDoctrine(){
-    $classLoaderDoctrine = new ClassLoader('Doctrine', BASE_PATH . DIRECTORY_SEPARATOR . 'library');
-    $classLoaderDoctrine->register();
-
-    $config = new \Doctrine\ORM\Configuration();
-    $driverImpl = $config->newDefaultAnnotationDriver(APPLICATION_PATH . DIRECTORY_SEPARATOR . 'models');
-    $config->setMetadataDriverImpl($driverImpl);
-
-    $cache = $this->initCache();
-    $config->setMetadataCacheImpl($cache);
-    $config->setQueryCacheImpl($cache);
-
-    $config->setProxyDir(TEMP_PATH);
-    $config->setProxyNamespace('Proxies');
-
-    $connectionOptions = $this->loadDatabaseConnectionCredentials();
-    $em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
-
-    try {
-      @$em->getConnection()->connect();
-    }catch(Exception $e) {
-      die('Sorry, there seems to be a problem with our database server.');
-    }
-
-    $registry = Zend_Registry::getInstance();
-    $registry->entitymanager = $em;
-    return $em;
-  }
-
-  private function initCache(){
-    $cache = null;
-    
-    if(APPLICATION_ENV === 'production' && extension_loaded('apc') && ini_get('apc.enabled')){
-      $cache = new \Doctrine\Common\Cache\ApcCache;
-    }else{
-      $cache = new \Doctrine\Common\Cache\ArrayCache;
-    }
-    
-    return $cache;
-  }
-  
-  /**
-   * Loads the database connection credentials from the config file.
-   */
-  private function loadDatabaseConnectionCredentials(){
-    $doctrineConfig = $this->getOption('doctrine');
-    $connectionOptions = array(
-        'driver'=>$doctrineConfig['conn']['driv'],
-        'user'=>$doctrineConfig['conn']['user'],
-        'password'=>$doctrineConfig['conn']['pass'],
-        'dbname'=>$doctrineConfig['conn']['dbname'],
-        'host'=>$doctrineConfig['conn']['host']
-    );
-
-    return $connectionOptions;
-  }
-
-  /**
    * Stores the current user in the registry.
    * 
    * If no user is logged in, the guest user is set as a default.
@@ -161,14 +85,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
       session_unset();
       header('Location: ');
     }
-  }
-
-  /**
-   * Registers the plugin that stores the last visited url. 
-   */
-  protected function _initHistory(){
-    $frontController = $this->getResource('FrontController');
-    $frontController->registerPlugin(new Unplagged_UrlHistory());
   }
 
   /**
@@ -217,74 +133,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap{
     $view->navigation($container)->setAcl($registry->acl)->setRole($registry->user->getRole());
 
     Zend_Registry::set('Zend_Navigation', $container);
-  }
-
-  /**
-   * Generate registry and initalize language support.
-   * 
-   * The translation files are assumed to be in the /data/languages directory and named with the ISO language code and
-   * an ending of '.csv', i. e. 'de.csv' for german.
-   * 
-   * @return Zend_Registry
-   */
-  protected function _initTranslate(){
-    $registry = Zend_Registry::getInstance();
-    //takes the browser language as default
-    $locale = new Zend_Locale();
-    $registry->set('Zend_Locale', $locale);
-
-    $languageString = $locale->getLanguage();
-    $translationFilePath = BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $languageString . '.csv';
-
-    //try to load the language file
-    if(is_readable($translationFilePath)){
-      $translate = new Zend_Translate('csv', $translationFilePath, $languageString);
-      $registry->set('Zend_Translate', $translate);
-    }else{
-      //init an empty Zend_Translate to always have an object
-      $registry->set('Zend_Translate', new Zend_Translate('csv'));
-    }
-
-    //translate standard zend framework messages and supress errors which occur when language was not found
-    //should default to english
-    $translator = @new Zend_Translate(
-                    array(
-                        'adapter'=>'array',
-                        'content'=>BASE_PATH . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'languages',
-                        'locale'=>$locale,
-                        'scan'=>Zend_Translate::LOCALE_FILENAME
-                    )
-    );
-    Zend_Validate_Abstract::setDefaultTranslator($translator);
-
-    //log untranslated strings
-    $untranslatedWriter = new Zend_Log_Writer_Stream(BASE_PATH . '/data/logs/untranslated.log');
-    $untranslatedLog = new Zend_Log($untranslatedWriter);
-
-    $translator->setOptions(array(
-        'log'=>$untranslatedLog,
-        'logUntranslated'=>true)
-    );
-
-    if(!empty($translate)){
-      $translate->setOptions(array(
-          'log'=>$untranslatedLog,
-          'logUntranslated'=>true)
-      );
-    }
-    return $registry;
-  }
-
-  /**
-   * Initalizes the view.
-   *
-   * As the default resource plugin is overkill, simply overwrite it here with a smaller method.
-   */
-  protected function _initView(){
-    $view = new Zend_View();
-    $defaultConfig = $this->getOption('default');
-    $view->headTitle()->setSeparator(' - ')->append($defaultConfig['applicationName']);
-    return $view;
   }
 
 }

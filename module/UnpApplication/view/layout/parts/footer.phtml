@@ -1,5 +1,9 @@
 <footer role="contentinfo">
-  <a href="<?php echo $this->basePath('imprint'); ?>"><?php echo $this->translate('Imprint'); ?></a>
+  <?php
+  $partial = array('partial/footerMenu.phtml', 'unp-application');
+  $this->navigation()->menu()->setPartial($partial);
+  echo $this->navigation()->menu('footer_navigation')->setMaxDepth(0);
+  ?>
 </footer>
 </div>    
 

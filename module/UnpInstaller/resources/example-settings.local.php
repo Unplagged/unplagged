@@ -28,6 +28,7 @@ return array(
         'notifications'=>array(
             'notifications_time_interval'=>86400
         ),
+        'required_fragment_ratings'=>2,
         'imprint_enabled'=>false,
         'mailer'=>array(
             'sender_name'=>'',

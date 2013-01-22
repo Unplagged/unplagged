@@ -375,5 +375,3 @@ function recursiveDirectories($path, &$classesArr){
     }
   }
 }
-
-?>

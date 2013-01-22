@@ -44,6 +44,15 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
   public function onBootstrap(EventInterface $e){
     try{
       $serviceManager = $e->getApplication()->getServiceManager();
+
+      $zfcServiceEvents = $serviceManager->get('zfcuser_user_service')->getEventManager();
+      $zfcServiceEvents->attach('register', function($e){
+        //a user registered here, so we can set the state and send an email        
+                $user = $e->getParam('user');  // User account object
+                $form = $e->getParam('form');  // Form object
+                // Perform your custom action here
+              });
+
       $this->initDoctrine($serviceManager);
     }catch(ExceptionInterface $e){
       echo "Sorry, there seems to be a problem with our database server, which couldn't be resolved.";

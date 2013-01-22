@@ -1,29 +1,21 @@
 <?php
 //$menu = $this->layout()->menu;
-
 //$defaultNamespace = new Zend_Session_Namespace('Default');
 //$me = Zend_Registry::getInstance()->user;
-
 //$em = Zend_Registry::getInstance()->entitymanager;
-
 //$query = $em->createQuery("SELECT c.id AS value, c.alias AS label FROM Application_Model_Case c WHERE :userId MEMBER OF c.collaborators");
 //$query->setParameter('userId', $me->getId());
 //$cases = $query->getArrayResult();
 ?>
-<?php echo $this->partial('layout/header');//, array('defaultNamespace'=>$defaultNamespace, 'me'=>$me, 'cases'=>$cases)); ?>
+<?php echo $this->partial('layout/header'); ?>
 <div role="main" class="clearfix">
-  <?php echo $this->flashMessages();  ?>
-  <!--<div class="breadcrumbs">
-  <?php //echo $this->navigation()->breadcrumbs(); ?>
-  </div>-->
-  <?php if(!empty($this->title)): ?>
-  <h2><?php echo $this->escape($this->title); ?></h2>
+<?php echo $this->flashMessages(); ?>
+<?php if(!empty($this->title)): ?>
+    <h2><?php echo $this->escape($this->title); ?></h2>
   <?php endif; ?>
   <div class="main">
     <div id="main-wrapper">
-      <div>
-        <?php echo $this->content; ?>
-      </div>
+  <?php echo $this->content; ?>
     </div>
   </div>
 </div>

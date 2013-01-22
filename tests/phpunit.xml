@@ -14,10 +14,10 @@
     <whitelist processUncoveredFilesFromWhitelist="true">
       <directory suffix=".php">./../module/</directory>
       <exclude>
-        <directory suffix=".php">./../module/UnpApplication/src/Application/Model/</directory>
         <directory suffix=".php">./../module/UnpApplication/config/</directory>
         <directory suffix=".php">./../module/UnpInstaller/config/</directory>
         <directory suffix=".php">./../module/UnpInstaller/resources/</directory>
+        <directory suffix=".php">./../module/UnpCommon/config/</directory>
       </exclude>
     </whitelist>
   </filter>

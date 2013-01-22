@@ -23,9 +23,6 @@
  */
 class FileController extends Unplagged_Controller_Action{
 
-  public function indexAction(){
-    $this->_helper->redirector('list', 'file');
-  }
 
   public function uploadAction(){
     if($this->_request->isPost()){
@@ -178,42 +175,7 @@ class FileController extends Unplagged_Controller_Action{
     $this->view->uploadLink = '/file/upload?area=public';
   }
 
-  /**
-   * Send the requested file to the user.
-   */
-  public function downloadAction(){
-    $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
-
-    if(!empty($input->id)){
-      $file = $this->_em->getRepository('Application_Model_File')->findOneById($input->id);
-      if($file){
-        $permission = $this->_em->getRepository('Application_Model_ModelPermission')->findOneBy(array('type'=>'file', 'action'=>'read', 'base'=>$file));
-        if(!Zend_Registry::getInstance()->user->getRole()->hasPermission($permission)){
-          $this->redirectToLastPage(true);
-        }
-
-        // disable view
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-        $downloadPath = $file->getFullPath();
-        // set headers
-        header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-        header("Content-Description: File Transfer");
-        header("Content-Disposition: attachment; filename=\"" . $file->getFilename() . "\"");
-        header("Content-type: " . $file->getMimeType());
-        header("Content-Transfer-Encoding: binary");
-
-        readfile($downloadPath);
-      }else{
-        $this->_helper->FlashMessenger('No file found.');
-        $this->_helper->redirector('list', 'file');
-      }
-    }else{
-      $this->_helper->FlashMessenger("No file found.");
-      $this->_helper->redirector('list', 'file');
-    }
-  }
+  
 
   /**
    * Parses a single file into a document using OCR. 
@@ -294,8 +256,6 @@ class FileController extends Unplagged_Controller_Action{
    * Deletes the file specified by the id parameter. 
    */
   public function deleteAction(){
-    $this->view->layout()->disableLayout();
-    $this->_helper->viewRenderer->setNoRender(true);
 
     $input = new Zend_Filter_Input(array('id'=>'Digits'), null, $this->_getAllParams());
 

@@ -1,9 +1,8 @@
 # Source file or directory to parse
 source: 
-  - './../'
-  - './../../library/Unplagged/'
+  - './../module'
 # Directory where to save the generated documentation
-destination: './../../docs/api-docs'
+destination: './../resources/docs/api-docs'
 # List of allowed file extensions
 extensions: [php]
 # Mask to exclude file or directory from processing

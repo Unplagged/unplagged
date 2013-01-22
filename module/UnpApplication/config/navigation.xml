@@ -2,45 +2,33 @@
 <config>
   <navigation>
     <default>
-      <home>
-        <type>mvc</type>
-        <label>Home</label>
-        <class>home</class>
-        <title>Home</title>
-        <module>Application</module>
-        <route>home</route>
-        <order>-100</order>
-        <pages>
-          <login>
-            <label>Login</label>
-            <title>Login</title>
-            <controller>auth</controller>
-            <action>login</action>
-            <route>default</route>
-            <resource>auth_login</resource>
-            <visible>1</visible>
-          </login>
-          <imprint>
-            <label>Imprint</label>
-            <title>Imprint</title>
-            <module>default</module>
-            <controller>index</controller>
-            <action>imprint</action>
-            <route>default</route>
-            <resource>index_imprint</resource>
-            <visible>0</visible>
-          </imprint>
-        </pages>
-      </home>
-      <activity>
-        <label>Activity</label>
-        <title>Activity</title>
+      <overview>
+        <label>Overview</label>
+        <title>Overview</title>
         <module>default</module>
-        <controller>notification</controller>
-        <action>recent-activity</action>
+        <controller>overview</controller>
+        <action>list</action>
         <route>default</route>
-        <resource>notification_recent-activity</resource>
-      </activity>
+        <resource>overview</resource>
+      </overview>
+      <documents>
+        <label>Documents</label>
+        <title>Documents</title>
+        <module>default</module>
+        <controller>document</controller>
+        <action>list</action>
+        <route>default</route>
+        <resource>document_list</resource>
+      </documents>
+      <biblio>
+        <label>Bibliography</label>
+        <title>Bibliography</title>
+        <module>default</module>
+        <controller>bibtex</controller>
+        <action>list</action>
+        <route>default</route>
+        <resource>bibtex_list</resource>
+      </biblio>
       <files>
         <label>Files</label>
         <title>Files</title>
@@ -89,15 +77,6 @@
           </upload>
         </pages>
       </files>
-      <documents>
-        <label>Documents</label>
-        <title>Documents</title>
-        <module>default</module>
-        <controller>document</controller>
-        <action>list</action>
-        <route>default</route>
-        <resource>document_list</resource>
-      </documents>
       <fragments>
         <label>Fragments</label>
         <title>Fragments</title>
@@ -116,15 +95,46 @@
         <route>default</route>
         <resource>report_list</resource>
       </reports>
-      <biblio>
-        <label>Bibliography</label>
-        <title>Bibliography</title>
-        <module>default</module>
-        <controller>bibtex</controller>
-        <action>list</action>
+    </default>
+    <main>
+      <home>
+        <type>mvc</type>
+        <label>Home</label>
+        <class>home</class>
+        <title>Home</title>
+        <route>home</route>
+        <order>-100</order>
+        <pages>
+          <imprint>
+            <label>Imprint</label>
+            <title>Imprint</title>
+            <module>default</module>
+            <controller>index</controller>
+            <action>imprint</action>
+            <route>default</route>
+            <resource>index_imprint</resource>
+            <visible>0</visible>
+          </imprint>
+        </pages>
+      </home>
+      <login>
+        <label>Login</label>
+        <title>Login</title>
+        <controller>auth</controller>
+        <action>login</action>
         <route>default</route>
-        <resource>bibtex_list</resource>
-      </biblio>
+        <resource>auth_login</resource>
+        <visible>1</visible>
+      </login>
+      <register>
+        <label>Register</label>
+        <title>Register</title>
+        <controller>auth</controller>
+        <action>register</action>
+        <route>default</route>
+        <resource>auth_login</resource>
+        <visible>1</visible>
+      </register>
       <admin>
         <label>Administration</label>
         <title>Administration</title>
@@ -173,6 +183,26 @@
           </roles>
         </pages>
       </admin>
-    </default>
+    </main>
+    <footer>
+      <about>
+        <type>mvc</type>
+        <label>About</label>
+        <class>about</class>
+        <title>About</title>
+        <route>about</route>
+      </about>
+      <github>
+        <label>Fork us on Github</label>
+        <uri>http://github.com/unplagged/unplagged</uri>
+      </github>
+      <imprint>
+        <type>mvc</type>
+        <label>Imprint</label>
+        <class>imprint</class>
+        <title>Imprint</title>
+        <route>imprint</route>
+      </imprint>
+    </footer>
   </navigation>
 </config>

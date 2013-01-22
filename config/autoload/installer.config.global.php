@@ -43,7 +43,6 @@ return array(
                 'resources/logs',
                 'resources/temp',
                 'resources/temp/cache',
-                'resources/temp/proxies',
                 'resources/temp/ocr',
                 'resources/temp/imagemagick',
             ),

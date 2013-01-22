@@ -22,12 +22,12 @@ use \Doctrine\Common\Collections\ArrayCollection;
 /**
  *
  * @Entity
- * @Table(name="permissions")
+ * @Table(name="permission")
  * @InheritanceType("SINGLE_TABLE")
  * @DiscriminatorColumn(name="discr", type="string")
  * @DiscriminatorMap({"page_permission" = "Application_Model_PagePermission", "model_permission" = "Application_Model_ModelPermission"})
  */
-abstract class Application_Model_Permission implements Zend_Acl_Resource_Interface{
+abstract class Permission implements Zend_Acl_Resource_Interface{
   
   /**
    * @Id
@@ -138,4 +138,3 @@ abstract class Application_Model_Permission implements Zend_Acl_Resource_Interfa
     $this->roles->clear();
   }
 }
-?>

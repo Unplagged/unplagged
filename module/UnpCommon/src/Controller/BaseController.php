@@ -27,20 +27,16 @@ use Zend\Mvc\Controller\AbstractActionController;
 abstract class BaseController extends AbstractActionController{
 
   protected $em;
-
-  /**
-   * This constructor is just for testing purposes in order to easily inject the
-   * dependencies. Normally this should be done by Module.php.
-   * 
-   * @param \Doctrine\ORM\EntityManager $entityManager
-   */
-  /*public function __construct(\Doctrine\ORM\EntityManager $entityManager = null){
-    //parent::__construct();
-    if($entityManager){
-      $this->setEntityManager($entityManager);
+  protected $translator;
+  
+  public function getTranslator(){
+    if(!$this->translator){
+      $this->translator = $this->getServiceLocator()->get('translator');
     }
-  }*/
-
+    
+    return $this->translator;
+  }
+  
   public function setEntityManager(\Doctrine\ORM\EntityManager $entityManager){
     $this->em = $entityManager;
   }
@@ -51,7 +47,7 @@ abstract class BaseController extends AbstractActionController{
    * @param string $title 
    */
   protected function setTitle($title, $values = array()){
-    /*  $title = Zend_Registry::get('Zend_Translate')->translate($title);
+    /* 
       $title = vsprintf($title, $values);
       $this->view->title = $title;
       $this->view->headTitle()->prepend($title); */
@@ -64,20 +60,18 @@ abstract class BaseController extends AbstractActionController{
    */
   protected function redirectToLastPage($permissionDenied = false){
 
-    /* if($permissionDenied) {
-      $this->_helper->FlashMessenger(array('error'=>'Permission denied.'));
-      }
-      $historySessionNamespace = new Zend_Session_Namespace('history');
+    if($permissionDenied){
+      $this->flashMessenger()->setNamespace('error')->addMessage('Permission denied.');
+    }
+    $historySessionNamespace = new \Zend\Session\Container('history');
 
-      //check if the last url is the same as the current to avoid infinite loop
-      if($historySessionNamespace->last !== $this->getRequest()->getRequestUri()){
-      $this->_helper->viewRenderer->setNoRender(true);
-      $this->_redirect($historySessionNamespace->last);
-      }else{
-      //if we don't know where the user wants to go, the default is the
-      //activity stream
-      $this->_helper->redirector('recent-activity', 'notification');
-      } */
+    //check if the last url is the same as the current to avoid infinite loop
+    if($historySessionNamespace->last !== $this->getRequest()->getUriString()){
+      $this->redirect()->toUrl($historySessionNamespace->last);
+    }else{
+      //if we don't know where the user wants to go, here is the default:
+      $this->redirect()->toRoute('home');
+    }
   }
 
 }

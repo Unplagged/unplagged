@@ -40,7 +40,7 @@ class ConsoleInstallerController extends BaseController implements InstallerAwar
   
   public function setInstaller(Installer $installer){
     $this->installer = $installer;
-    $this->installer->setOutputStream = STDOUT;
+    $this->installer->setOutputStream(STDOUT);
   }
 
   public function setOutputStream($stream){
@@ -54,8 +54,7 @@ class ConsoleInstallerController extends BaseController implements InstallerAwar
    */
   public function deleteDatabaseSchemaAction(){
     if(Confirm::prompt('This will delete all saved data! Are you sure you want to continue? [y/n]', 'y', 'n')){
-      $installer = $this->createInstaller();
-      $installer->deleteDatabaseSchema($this->em);
+      $this->installer->deleteDatabaseSchema($this->em);
     }
   }
 
@@ -79,8 +78,7 @@ class ConsoleInstallerController extends BaseController implements InstallerAwar
         $config = $this->questionSqliteParamters();
         break;
     }
-    $installer = $this->createInstaller();
-    $installer->checkDatabaseConnection($config);
+    $this->installer->checkDatabaseConnection($config);
   }
 
   /**

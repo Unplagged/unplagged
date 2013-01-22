@@ -55,10 +55,6 @@ h2 {
   height: 35px;
 }
 
-.form-search {
-  margin: 4px 0 0 0;  
-}
-
 /*
  * A simple button element from html like this:
  * 
@@ -211,31 +207,59 @@ h2 {
   display: block;
 }
 
+.login-dropdown .login {
+  padding: 10px;
+  position: relative;
+}
 
-.target {
-  cursor: crosshair;
+.register-message {
+  padding-right: 40px; 
+  font-size: 12px;
+}
+
+.login form {
+  margin-bottom: 0px;
+  }
+
+.login .close {
+  position: absolute;
+  top: 0;
+  right: 9px;
+}
+
+.form-search {
+  margin: 4px 0 0 0;  
+}
+
+.login-dropdown hr{
+    margin: 10px 0;
+}
+
+.register-message {
+  margin-bottom: 0;  
+}
+
+.login .icon-question-sign{
+  margin-left: 3px;  
+}
+
+.login a {
+  display: inline;
+  color: $pictonBlue; 
+  padding: 0;
 }
 
 .contextmenu {
-  display:none;
-  position:absolute;
-  z-index:10000;
+  display: none;
+  position: absolute;
+  z-index: 10000;
   list-style-type: none;
 }
 .contextmenu li > a:hover i, .contextmenu .active > a i, .contextmenu .active > a:hover i {
-  background-image:image-url("glyphicons-halflings-white.png");
+  background-image: image-url("glyphicons-halflings-white.png");
 }
 .contextmenu .google-search-for {
   display: none;
-}
-
-.drop-area {
-  height: 120px;
-  border: 5px dashed #40C0E9;
-  text-align: center;
-  padding-top: 70px;
-  font-size: 16px;
-  color: gray;
 }
 
 .action-list {
@@ -270,8 +294,7 @@ h2 {
 
 /* ==|== toolbar styles ======================================================= */
 header[role=toolbar]{
-  margin-bottom: 100px;
-  position: relative; /* for the js close button */  
+  margin-bottom: 100px;  
 }
 
 header[role=toolbar] .navbar-inner{
@@ -283,7 +306,6 @@ header[role=toolbar] .navbar-inner{
   background: -ms-linear-gradient(top, #4c4f54 0%,#000000 100%);
   background: linear-gradient(top, #4c4f54 0%,#000000 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4f54', endColorstr='#000000',GradientType=0 );
-  border-radius: 0;
   padding-left: 0;
   padding-right: 0;
 }
@@ -319,41 +341,22 @@ header[role=toolbar] .content {
   position: relative;
 }
 
-header[role=toolbar] a {
+header[role=toolbar] > a {
   color: #8b8f91;
 }
 
-header[role=toolbar] a:hover{
+header[role=toolbar] > a:hover{
   text-decoration: none;
 }
 
 .case-settings-box {
-  height: 24px;
-  line-height: 40px;
+  position: absolute;
+  bottom: 6px;
+  right: 10px;
 }
 
 .case-settings-box form {
-  float: left;
-}
-
-.no-js .case-settings-box form {
-  width: 220px;
-}
-
-.no-js .case-settings-box .button {
-  float: right;
-}
-
-.case-settings-box select {
-  height: 26px;
-  border-radius: 3px;
-  width: 180px;
-  float: left;
-}
-
-.case-settings-box > a {
-  float: left;
-  padding-right: 5px;
+  margin-bottom: 0;  
 }
 
 /* if js is active it handles the submit on change, so no button is needed */
@@ -385,16 +388,6 @@ header[role=banner] h1 a {
   display: block;
 }
 
-.beta-patch {
-  background: image-url('beta_patch.png') no-repeat left top;
-  display: inline-block;
-  width: 102px;
-  height: 103px;
-  position: absolute;
-  right: -1px;
-  top: -3px;
-}
-
 .pagewrap {
   width: 90%;
   margin: 0 auto 30px;;
@@ -420,8 +413,6 @@ footer[role=contentinfo]{
   font-size: 11px;
   text-align: right;
 }
-
-
 
 .navigation {
   list-style-type: none;
@@ -534,30 +525,30 @@ footer[role=contentinfo]{
 }
 
 /* right sub menu */
-nav#right-nav {
+#right-nav {
   float: right;
   width: 36.5625%; /* 351px/960px */
   max-width: 450px;
 }
 
-nav#right-nav .barcode {
+#right-nav .barcode {
   display: block;
   margin-top: 10px;
 }
-nav#right-nav .barcode svg {
+#right-nav .barcode svg {
   max-width: 95%;
 }
-nav#right-nav h4 {
+#right-nav h4 {
   margin: 0 0 5px 0;
   padding: 0;
   color: #40C0E9;
   font-size: 14pt;
   font-weight: normal;
 }
-nav#right-nav ul {
+#right-nav ul {
   margin-bottom: 20px;
 }
-nav#right-nav ul li a {
+#right-nav ul li a {
   display: block;
   color: #888c95;
   border-bottom: 1px #efefef solid;
@@ -567,20 +558,20 @@ nav#right-nav ul li a {
   background-position: 10px 10px;
 }
 
-nav#right-nav img {
+#right-nav img {
   margin-right: 5px;
 }
 
-nav#right-nav ul li a .badge {
+#right-nav ul li a .badge {
   float: right;
   margin-right: 15px;
 }
 
-nav#right-nav ul li a .badge-light{
+#right-nav ul li a .badge-light{
   background-color: #888C95;
 }
 
-nav#actions-menu {
+#actions-menu {
   position: fixed;
   padding: 0 0 0 25px;
   right: 0;
@@ -596,7 +587,7 @@ nav#actions-menu {
 
 
 }
-nav#actions-menu h5 {
+#actions-menu h5 {
   position: absolute;
   margin-left: -21px;
   top: 130px;
@@ -613,24 +604,24 @@ nav#actions-menu h5 {
   -o-transform-origin:0 0; /* Opera */
   font-size: 13px;
 }
-nav#actions-menu .arrow {
+#actions-menu .arrow {
   position: absolute;
   margin-left: -21px;
   top: 3px;
   padding-left: 5px;
   font-size: 20px;
 }
-nav#actions-menu ul {
+#actions-menu ul {
   background: white;
   margin: 0;
   clear: left;
 }
-nav#actions-menu ul li a {
+#actions-menu ul li a {
   display: block;
   border-bottom: 1px #efefef solid;
   padding: 4px 6px;
 }
-nav#actions-menu img {
+#actions-menu img {
   margin-right: 5px;
 }
 
@@ -961,10 +952,10 @@ dl.zend_form dd dt {
   white-space: nowrap;
 }
 
-
 .ui-menu .ui-menu-item a.over {
   line-height: 49px;
 }
+
 .articlePicker
 {
   width: 450px;
@@ -1366,15 +1357,12 @@ dl.zend_form dd dt {
   height: 200px;
   text-align: left;
   padding: 15px;
-
-
 }
-
 
 .document-page-overview {
   padding: 5px;
-
 }
+
 .document-page-overview .page {
   display: inline-block;
   margin: 2px;
@@ -1441,7 +1429,6 @@ ins {
 .diff .src-wrapper {
   width: 50%;
   float: left;
-
 }
 
 .src-wrapper p {

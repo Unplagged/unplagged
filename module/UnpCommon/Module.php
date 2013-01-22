@@ -27,6 +27,21 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
  */
 class Module implements AutoloaderProviderInterface, ConfigProviderInterface{
 
+  public function onBootstrap(\Zend\Mvc\MvcEvent $e){
+    $eventManager = $e->getApplication()->getEventManager();
+    $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH, array($this, 'onDispatch'));
+  }
+
+  public function onDispatch(\Zend\Mvc\MvcEvent $e){
+    $request = $e->getRequest();
+
+    //make sure to not store AJAX requests, because they tend to make no sense when using the back button
+    if($request instanceof \Zend\Http\Request && !$request->isXmlHttpRequest()){
+      $historySessionNamespace = new \Zend\Session\Container('history');
+      $historySessionNamespace->last = $request->getRequestUri();
+    }
+  }
+
   /**
    * Provides information about all modules and libraries that need to be loaded for this module.
    * 

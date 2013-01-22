@@ -50,6 +50,10 @@ class IndexController extends BaseController{
     return array('barcodes'=>$barcodes);
   }
 
+  public function aboutAction(){
+    
+  }
+  
   /**
    * Page that shows contact information required at least by german law. 
    */

@@ -36,10 +36,10 @@ class EntityFactory{
    * @return \UnpCommon\Factory\type
    * @throws InvalidArgumentException
    */
-  public static function createBaseEntity(\Doctrine\ORM\EntityManager $em, $type = '', array $params = array()){
+  public static function createDataEntity(\Doctrine\ORM\EntityManager $em, $type = '', array $params = array()){
     $entity = null;
     
-    if(class_exists($type) && $type instanceof \UnpCommon\Model\Base){
+    if(class_exists($type) && $type instanceof \UnpCommon\Model\DataEntity){
       $entity = new $type();
       
       //use the state set by the method user or take the default one from the database

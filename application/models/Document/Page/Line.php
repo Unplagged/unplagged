@@ -24,10 +24,10 @@
  * @todo Is having the line number here really necessary, couldn't we ask the page to calculate this?
  * 
  * @Entity 
- * @Table(name="document_page_lines")
+ * @Table(name="document_page_line")
  */
-final class Application_Model_Document_Page_Line extends Application_Model_Base{
-    
+final class Line extends Base{
+
   /**
    * @var int The line number relative to the page.
    * @Column(type="integer")
@@ -35,8 +35,8 @@ final class Application_Model_Document_Page_Line extends Application_Model_Base{
   private $lineNumber;
 
   /**
-   * @var Application_Model_Document_Page The page this line comes from.
-   * @ManyToOne(targetEntity="Application_Model_Document_Page", inversedBy="lines", cascade={"persist"})
+   * @var \UnpCommon\Model\Document\Page The page this line comes from.
+   * @ManyToOne(targetEntity="\UnpCommon\Model\Document\Page", inversedBy="lines", cascade={"persist"})
    * @JoinColumn(name="page_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $page;
@@ -45,44 +45,25 @@ final class Application_Model_Document_Page_Line extends Application_Model_Base{
    * @var string The content of the line.
    * @Column(type="text", nullable=true)
    */
-  private $content;
+  private $content = '';
 
-  public function __construct($data = array()){
-    parent::__construct($data);
+  public function __construct(\UnpCommon\Model\Document\Page $page){
+    parent::__construct();
 
-    if(isset($data['lineNumber'])){
-      $this->lineNumber = $data['lineNumber'];
-    }
-    if(isset($data['page'])){
-      $this->page = $data['page'];
-    }
-    if(isset($data['content'])){
-      $this->content = $data['content'];
-    }
+    $this->page = $page;
   }
 
   /**
    * @return array
    */
   public function toArray(){
-    $data = array();
-    $data['id'] = $this->id;
-    $data['lineNumber'] = $this->lineNumber;
-    $data['content'] = $this->content;
-    
+    $data = array(
+        'id'=>$this->id,
+        'lineNumber'=>$this->lineNumber,
+        'content'=>$this->content,
+    );
+
     return $data;
-  }
-
-  public function getDirectName(){
-    return null;
-  }
-
-  public function getDirectLink(){
-    return null;
-  }
-
-  public function getIconClass(){
-    return null;
   }
 
   /**
@@ -111,21 +92,15 @@ final class Application_Model_Document_Page_Line extends Application_Model_Base{
   /**
    * @param string $content
    */
-  public function setContent($content){
+  public function setContent($content = ''){
     $this->content = $content;
   }
 
   /**
-   * @param Application_Model_Document_Page $page The page this line is on.
-   */
-  public function setPage(Application_Model_Document_Page $page){
-    $this->page = $page;
-  }
-  
-  /**
-   * @return Application_Model_Document_Page The page this line is on.
+   * @return \UnpCommon\Model\Document\Page
    */
   public function getPage(){
     return $this->page;
   }
+
 }

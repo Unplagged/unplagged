@@ -1,0 +1,10 @@
+<?php
+
+$first = true;
+foreach($this->container as $page){
+  if(!$first){
+    echo '<span> | </span>';
+  }
+  echo $this->navigation()->menu()->htmlify($page), PHP_EOL;
+  $first = false;
+}
