@@ -19,7 +19,8 @@
  */
 namespace UnpCommon\Model;
 
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
+use UnpCommon\Model\Feature\DataEntity;
 
 /**
  * This class represents some kind of user action that already happened, so 
@@ -28,54 +29,62 @@ use Doctrine\ORM\Mapping AS ORM;
  * @ORM\Entity 
  * @ORM\Table(name="action")
  */
-class Action{
+class Action implements DataEntity{
 
   /**
    * @var int The notification action id.
-   * 
    * @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer")
    */
   private $id;
 
   /**
-   * @var string The unique name of the notification action.
-   * 
+   * @var string The unique name of the notification action. 
    * @ORM\Column(type="string", unique=true, length=255)
    */
   private $name;
 
   /**
    * @var string The unique name of the notification action.
-   * 
    * @ORM\Column(type="string", length=255)
    */
   private $title;
 
   /**
    * @var string The description for the notification action
-   * 
    * @ORM\Column(type="string", length=255)
    */
   private $description;
 
-  public function __construct($name, $title, $description){
-    $this->name = $name;
-    $this->title = $title;
-    $this->description = $description;
+  public function __construct(array $data = array()){
+    $this->name = $data['name'];
+    $this->title = $data['title'];
+    $this->description = $data['description'];
   }
 
+  /**
+   * @return int
+   */
   public function getId(){
     return $this->id;
   }
 
+  /**
+   * @return string
+   */
   public function getName(){
     return $this->name;
   }
 
+  /**
+   * @return string
+   */
   public function getDescription(){
     return $this->description;
   }
 
+  /**
+   * @return string
+   */
   public function getTitle(){
     return $this->title;
   }

@@ -17,7 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once LIBRARY_PATH . '/html2pdf/html2pdf.class.php';
+namespace UnpApplication\Cron;
+
+use HTML2PDF;
+use UnpCommon\Cron;
+use Unplagged_Helper;
+use Unplagged_HtmlLayout;
+
+//require_once LIBRARY_PATH . '/html2pdf/html2pdf.class.php';
 define("SPAN_OPEN", "<span");
 define("SPAN_CLOSE", "</span");
 define("ST", "<");
@@ -28,7 +35,7 @@ define("GT", ">");
  *
  * @author elsa
  */
-class Unplagged_Cron_Document_Page_Reportcreator extends Unplagged_Cron_Base{
+class ReportcreatorCron extends Cron{
 
   private $pagenumber;
   private $nbSources;

@@ -19,7 +19,8 @@
  */
 namespace UnpCommon\Model;
 
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
+use UnpCommon\Model\Feature\DataEntity;
 
 /**
  * This class models the state of an operation. It also provides additional data
@@ -30,7 +31,7 @@ use Doctrine\ORM\Mapping AS ORM;
  * @ORM\Entity 
  * @ORM\Table(name="state")
  */
-class State {
+class State implements DataEntity{
 
   /**
    * @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer")
@@ -57,7 +58,7 @@ class State {
    */
   private $description = '';
 
-  public function __construct($data = array()){
+  public function __construct(array $data = array()){
     if(isset($data['name'])){
       $this->name = $data['name'];
     }

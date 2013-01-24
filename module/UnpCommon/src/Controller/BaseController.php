@@ -28,31 +28,23 @@ abstract class BaseController extends AbstractActionController{
 
   protected $em;
   protected $translator;
-  
+
   public function getTranslator(){
     if(!$this->translator){
       $this->translator = $this->getServiceLocator()->get('translator');
     }
-    
+
     return $this->translator;
   }
-  
+
   public function setEntityManager(\Doctrine\ORM\EntityManager $entityManager){
     $this->em = $entityManager;
   }
 
-  /**
-   * Sets the page title to the given value and prepends it to the head title.
-   * 
-   * @param string $title 
-   */
-  protected function setTitle($title, $values = array()){
-    /* 
-      $title = vsprintf($title, $values);
-      $this->view->title = $title;
-      $this->view->headTitle()->prepend($title); */
+  public function setTitle(){
+    
   }
-
+  
   /**
    * Looks up the session data and redirects the user to the page that was visited before. 
    * 

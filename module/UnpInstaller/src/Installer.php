@@ -55,7 +55,7 @@ class Installer implements Messenger{
   public function setOutputStream($outputStream){
     $this->outputStream = $outputStream;
   }
-  
+
   /**
    * Checks all necessary indicators for whether the application was installed successfully.
    *
@@ -202,7 +202,7 @@ class Installer implements Messenger{
    * @todo
    */
   public function checkConsoleCommands($data){
-    return true;  
+    return true;
   }
 
   /**
@@ -343,14 +343,28 @@ class Installer implements Messenger{
   /**
    * Updates the schema and creates all necessary default data.
    * 
-   * @todo complete later on
+   * @todo uncomment fragment types line when model is there, 
+   * add permissions later on
    */
   public function initDatabaseData(EntityManager $entityManager){
     $this->updateDatabaseSchema($entityManager);
-    //require_once 'initdb.php';
-    //require_once 'initpermissions.php';
     
+    $this->setupSimpleTable(require __DIR__ . '/../resources/data/actions.php', $entityManager, '\UnpCommon\Model\Action');
+    $this->setupSimpleTable(require __DIR__ . '/../resources/data/states.php', $entityManager, '\UnpCommon\Model\State');
+    //$this->setupSimpleTable(require __DIR__ . '/../resources/data/fragment-types.php', $entityManager, '\UnpCommon\Model\Document\Fragment\Type');
+    //require_once 'initpermissions.php';
+
     return true;
+  }
+
+  public function setupSimpleTable(array $rows, $em, $type){
+    foreach($rows as $row){
+      if(!($em->getRepository($type)->findOneByName($row['name']))){
+        $typeObject = new $type($row);
+        $em->persist($typeObject);
+      }
+    }
+    $em->flush();
   }
 
   /**
@@ -363,34 +377,34 @@ class Installer implements Messenger{
    */
   public function createAdmin(EntityManager $entityManager, $data){
 
-    /*$data['username'] = $formData['adminUsername'];
-    $data['password'] = Unplagged_Helper::hashString($formData['adminPassword']);
-    $data['email'] = $formData['adminEmail'];
-    $data['verificationHash'] = Unplagged_Helper::generateRandomHash();
-    $data['state'] = $entityManager->getRepository('Application_Model_State')->findOneByName('activated');
+    /* $data['username'] = $formData['adminUsername'];
+      $data['password'] = Unplagged_Helper::hashString($formData['adminPassword']);
+      $data['email'] = $formData['adminEmail'];
+      $data['verificationHash'] = Unplagged_Helper::generateRandomHash();
+      $data['state'] = $entityManager->getRepository('Application_Model_State')->findOneByName('activated');
 
-    $roleTemplate = $em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'admin', 'type'=>'global'));
-    $role = new Application_Model_User_Role();
-    $role->setType('user');
-    foreach($roleTemplate->getPermissions() as $permission){
+      $roleTemplate = $em->getRepository('Application_Model_User_Role')->findOneBy(array('roleId'=>'admin', 'type'=>'global'));
+      $role = new Application_Model_User_Role();
+      $role->setType('user');
+      foreach($roleTemplate->getPermissions() as $permission){
       $role->addPermission($permission);
-    }
+      }
 
-    $em->persist($role);
-    $data['role'] = $role;
-    $user = new Application_Model_User($data);
+      $em->persist($role);
+      $data['role'] = $role;
+      $user = new Application_Model_User($data);
 
-    // write back to persistence manager and flush it
-    $em->persist($user);
+      // write back to persistence manager and flush it
+      $em->persist($user);
 
-    $em->flush();
-    $role->setRoleId($user->getId());
-    $em->persist($role);
-    $em->flush();*/
+      $em->flush();
+      $role->setRoleId($user->getId());
+      $em->persist($role);
+      $em->flush(); */
 
     return true;
   }
-  
+
   /**
    * 
    * @return boolean
@@ -398,7 +412,7 @@ class Installer implements Messenger{
    * @todo dummy function for now
    */
   public function adminCreated(){
-    
+
     return true;
   }
 
@@ -411,4 +425,5 @@ class Installer implements Messenger{
   public function uninstall(){
     return true;
   }
+
 }

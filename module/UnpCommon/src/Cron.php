@@ -17,13 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace UnpCommon;
+
 
 /**
  * This class can be used to build scheduled asynchronous services(i. e. cronjobs), that retrieve necessary data from 
  * the database. It exposes a common interface and gives functionalities to benchmark the runtime and memory usage
  * of the service.
  */
-abstract class Unplagged_Cron_Base{
+abstract class Cron{
 
   private $startTime = 0;
   private $stopTime = 0;
@@ -48,19 +50,19 @@ abstract class Unplagged_Cron_Base{
   }
 
   /**
+   * @return int The used memory in kB.
+   */
+  final public function getUsedMemory(){
+    return ($this->stopMemory - $this->startMemory) / 1024;
+  }
+
+  /**
    * Creates and prints a string that includes all gathered benchmark data.
    * 
    * It will only return useful data after {@see start()} has been called.
    */
   final public function printBenchmark(){
     echo 'Time [' . $this->getRunTime() . '] Memory [' . ($this->getUsedMemory() / 1024) . 'MB]' . PHP_EOL;
-  }
-
-  /**
-   * @return int The used memory in kB.
-   */
-  final public function getUsedMemory(){
-    return ($this->stopMemory - $this->startMemory) / 1024;
   }
 
   /**
@@ -79,10 +81,12 @@ abstract class Unplagged_Cron_Base{
    * @param string $state
    * @param int $maxResults
    * @return array
+   * 
+   * @todo move to repository layer
    */
   final protected function findTasks($action, $state = 'scheduled', $maxResults = 1){
     $query = $this->em->createQuery('SELECT t, a, s 
-      FROM Application_Model_Task t 
+      FROM \UnpCommon\Model\Task t 
       JOIN t.action a 
       JOIN t.state s 
       WHERE a.name = :action 
@@ -101,8 +105,8 @@ abstract class Unplagged_Cron_Base{
    * @param string $stateName The name of the state that should be set for the task.
    * @param int $percentage The progress percentage of the task.
    */
-  final protected function updateTaskProgress(Application_Model_Task $task, $flush = false, $stateName = 'completed', $percentage = 100){
-    $task->setState($this->em->getRepository('Application_Model_State')->findOneByName($stateName));
+  final protected function updateTaskProgress(\UnpCommon\Model\Task $task, $flush = false, $stateName = 'completed', $percentage = 100){
+    $task->setState($this->em->getRepository('\UnpCommon\Model\State')->findOneByName($stateName));
     $task->setProgressPercentage($percentage);
     $this->em->persist($task);
 

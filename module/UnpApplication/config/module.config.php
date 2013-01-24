@@ -4,12 +4,16 @@ return array(
     'router'=>array(
         'routes'=>array(
             'home'=>array(
-                'type'=>'Zend\Mvc\Router\Http\Literal',
+                'type'=>'Zend\Mvc\Router\Http\Segment',
                 'options'=>array(
-                    'route'=>'/',
+                    'route'=>'/[page/:page]',
+                    'constraints'=>array(
+                        'id'=>'[0-9]*'
+                    ),
                     'defaults'=>array(
-                        'controller'=>'UnpApplication\Controller\Index',
-                        'action'=>'index',
+                        'controller'=>'UnpApplication\Controller\Activity',
+                        'action'=>'recent-activity',
+                        'page'=>'0'
                     ),
                 ),
             ),
@@ -102,6 +106,7 @@ return array(
         'invokables'=>array(
             'UnpApplication\Controller\Index'=>'UnpApplication\Controller\IndexController',
             'UnpApplication\Controller\File'=>'UnpApplication\Controller\FileController',
+            'UnpApplication\Controller\Activity'=>'UnpApplication\Controller\ActivityStreamController',
         )
     ),
     'view_manager'=>array(
@@ -119,6 +124,7 @@ return array(
             'layout/sidebar_menu'=>__DIR__ . '/../view/layout/parts/sidebar_menu.phtml',
             'layout/chrome-frame'=>__DIR__ . '/../view/layout/parts/chrome-frame.phtml',
             'unp-application/index/imprint'=>__DIR__ . '/../view/application/index/imprint.phtml',
+            'unp-application/activity-stream/recent-activity'=>__DIR__ . '/../view/application/activity-stream/recent-activity.phtml',
             'unp-application/index/about'=>__DIR__ . '/../view/application/index/about.phtml',
             'unp-application/index/index'=>__DIR__ . '/../view/application/index/index.phtml',
             'error/404'=>__DIR__ . '/../view/error/404.phtml',

@@ -58,30 +58,39 @@ return array(
     'console'=>array(
         'router'=>array(
             'routes'=>array(
-                'update-db-schema'=>array(
+                'update-schema'=>array(
                     'options'=>array(
-                        'route'=>'--update-db-schema',
+                        'route'=>'--update-schema',
                         'defaults'=>array(
                             'controller'=>'unpconsoleinstaller',
                             'action'=>'updateDatabaseSchema',
                         ),
                     ),
                 ),
-                'delete-db-schema'=>array(
+                'delete-schema'=>array(
                     'options'=>array(
-                        'route'=>'--delete-db-schema',
+                        'route'=>'--delete-schema',
                         'defaults'=>array(
                             'controller'=>'unpconsoleinstaller',
                             'action'=>'deleteDatabaseSchema',
                         ),
                     ),
                 ),
-                'check-db-connection'=>array(
+                'check-connection'=>array(
                     'options'=>array(
-                        'route'=>'--check-db-connection',
+                        'route'=>'--check-connection',
                         'defaults'=>array(
                             'controller'=>'unpconsoleinstaller',
                             'action'=>'checkDatabaseConnection',
+                        ),
+                    ),
+                ),
+                'init-data'=>array(
+                    'options'=>array(
+                        'route'=>'--init-data',
+                        'defaults'=>array(
+                            'controller'=>'unpconsoleinstaller',
+                            'action'=>'initDatabaseData',
                         ),
                     ),
                 ),

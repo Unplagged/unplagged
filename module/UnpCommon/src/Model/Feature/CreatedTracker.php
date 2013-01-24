@@ -20,23 +20,25 @@
 namespace UnpCommon\Model\Feature;
 
 /**
- * An implementing class is able to keep track of the time of it's last update.
+ * An implementing class is able to keep track of the time of it's creation.
  * 
  * If this is used with Doctrine, you need to declare @ORM\HasLifecycleCallbacks
  * in the class doc comment and @ORM\PrePersist like you can see below in the 
  * created method.
  */
-interface UpdateTracker{
-  
+interface CreatedTracker{
+
   /**
-   * Changes the time of the last update to the current time.
+   * Sets the creation time to the current time, if it is not set.
+   * 
+   * This will be auto called the first time the object is persisted by Doctrine.
    * 
    * @ORM\PrePersist
    */
-  public function updated();
-  
+  public function created();
+
   /**
-   * @return DateTime The time when the last update was performed.
+   * @return \DateTime The time when the entity was created.
    */
-  public function getUpdated();
+  public function getCreated();
 }

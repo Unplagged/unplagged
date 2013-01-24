@@ -37,7 +37,7 @@ class ActionTest extends PHPUnit_Framework_TestCase {
    * This method is called before a test is executed.
    */
   protected function setUp() {
-    $this->object = new Action('a-name', 'a-title', 'a-description');
+    $this->object = new Action(array('name'=>'a-name', 'title'=>'a-title', 'description'=>'a-description'));
   }
 
   public function testCheckDefaultIdIsNull() {

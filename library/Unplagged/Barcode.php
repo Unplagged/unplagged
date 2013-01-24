@@ -20,7 +20,6 @@
 
 /**
  * This class can be used to paint a barcode.
- *
  */
 class Unplagged_Barcode{
 

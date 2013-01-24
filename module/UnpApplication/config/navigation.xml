@@ -99,7 +99,7 @@
     <main>
       <home>
         <type>mvc</type>
-        <label>Home</label>
+        <label><![CDATA[<b class="icon-home icon-white"></b>]]></label>
         <class>home</class>
         <title>Home</title>
         <route>home</route>
@@ -115,28 +115,38 @@
             <resource>index_imprint</resource>
             <visible>0</visible>
           </imprint>
+          <about>
+            <label>About</label>
+            <title>About</title>
+            <module>default</module>
+            <controller>index</controller>
+            <action>about</action>
+            <route>default</route>
+            <resource>index_imprint</resource>
+            <visible>0</visible>
+          </about>
+          <login>
+            <label>Login</label>
+            <title>Login</title>
+            <controller>auth</controller>
+            <action>login</action>
+            <route>default</route>
+            <resource>index_imprint</resource>
+            <visible>0</visible>
+          </login>
+          <register>
+            <label>Register</label>
+            <title>Register</title>
+            <controller>auth</controller>
+            <action>register</action>
+            <route>default</route>
+            <resource>index_imprint</resource>
+            <visible>0</visible>
+          </register>
         </pages>
       </home>
-      <login>
-        <label>Login</label>
-        <title>Login</title>
-        <controller>auth</controller>
-        <action>login</action>
-        <route>default</route>
-        <resource>auth_login</resource>
-        <visible>1</visible>
-      </login>
-      <register>
-        <label>Register</label>
-        <title>Register</title>
-        <controller>auth</controller>
-        <action>register</action>
-        <route>default</route>
-        <resource>auth_login</resource>
-        <visible>1</visible>
-      </register>
       <admin>
-        <label>Administration</label>
+        <label><![CDATA[<b class="icon-wrench icon-white"></b>]]></label>
         <title>Administration</title>
         <uri>#</uri>
         <resource>admin_index</resource>

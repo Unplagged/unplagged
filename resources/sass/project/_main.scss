@@ -329,11 +329,6 @@ header[role=toolbar] .navbar-inner{
   border: none;  
 }
 
-header[role=toolbar] .login-register-box {
-  color: white;
-  float: left;
-}
-
 header[role=toolbar] .content {
   margin: auto;
   width: 90%;
@@ -379,9 +374,7 @@ header[role=banner] h1 {
   background: image-url('logo.png') no-repeat center center transparent;
   width: 182px;
   height: 53px;
-  position: relative;
-  top: 15px;
-  left: 20px;
+  margin: 10px 0 0 10px;
 }
 
 header[role=banner] h1 a {
@@ -416,7 +409,7 @@ footer[role=contentinfo]{
 
 .navigation {
   list-style-type: none;
-  margin: 35px 0 0 10px;
+  margin: 15px 0 0 10px;
   padding: 0;
 }
 

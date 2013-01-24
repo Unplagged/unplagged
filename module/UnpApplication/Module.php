@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -46,8 +45,9 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
       $serviceManager = $e->getApplication()->getServiceManager();
 
       $zfcServiceEvents = $serviceManager->get('zfcuser_user_service')->getEventManager();
-      $zfcServiceEvents->attach('register', function($e){
-        //a user registered here, so we can set the state and send an email        
+      $zfcServiceEvents->attach('register',
+              function($e){
+                //a user registered here, so we can set the state and send an email        
                 $user = $e->getParam('user');  // User account object
                 $form = $e->getParam('form');  // Form object
                 // Perform your custom action here
@@ -123,6 +123,20 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
                 __NAMESPACE__=>__DIR__ . '/src',
             )
         )
+    );
+  }
+
+  public function getControllerPluginConfig(){
+    return array(
+        'factories'=>array(
+            'activityStream'=>function ($sm){
+              $serviceLocator = $sm->getServiceLocator();
+              $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
+              $controllerPlugin = new \UnpCommon\Controller\Plugin\ActivityStream();
+              $controllerPlugin->setEntityManager($entityManager);
+              return $controllerPlugin;
+            },
+        ),
     );
   }
 

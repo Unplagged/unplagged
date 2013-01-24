@@ -20,23 +20,10 @@
 namespace UnpCommon\Model\Feature;
 
 /**
- * An implementing class is able to keep track of the time of it's last update.
- * 
- * If this is used with Doctrine, you need to declare @ORM\HasLifecycleCallbacks
- * in the class doc comment and @ORM\PrePersist like you can see below in the 
- * created method.
+ * Implementing entities can be commented.
  */
-interface UpdateTracker{
+interface Commentable{
+  public function getComments();
   
-  /**
-   * Changes the time of the last update to the current time.
-   * 
-   * @ORM\PrePersist
-   */
-  public function updated();
-  
-  /**
-   * @return DateTime The time when the last update was performed.
-   */
-  public function getUpdated();
+  //public function addComment();
 }

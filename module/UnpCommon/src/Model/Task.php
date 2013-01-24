@@ -17,101 +17,115 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace UnpCommon\Model;
+
+use DateTime;
+use Doctrine\ORM\Mapping as ORM;
+use UnpCommon\Model\Action;
+use UnpCommon\Model\Base;
+use UnpCommon\Model\User;
 
 /**
  * This class represents a task that needs processeing later on. Most likely this will be retrieved from within a 
  * scheduled cronjob or a similar asynchronous service, that needs access to it's data.
  * 
- * @Entity 
- * @Table(name="cron_tasks")
+ * @ORM\Entity 
+ * @ORM\Table(name="cron_task")
+ * 
+ * @todo Check whether extending Base is really necessary
  */
-class Application_Model_Task extends Application_Model_Base{
+class Task extends Base{
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_User")
-   * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+   * @ORM\ManyToOne(targetEntity="\UnpCommon\Model\User")
+   * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $initiator;
 
   /**
    * @var string The date when the task finished.
-   * @Column(type="datetime", nullable=true)
+   * @ORM\Column(type="datetime", nullable=true)
    */
   private $endDate;
 
   /**
    * @var The action that has to be executed by this task.
-   * @ManyToOne(targetEntity="Application_Model_Action")
-   * @JoinColumn(name="action_id", referencedColumnName="id", onDelete="CASCADE")
+   * @ORM\ManyToOne(targetEntity="\UnpCommon\Model\Action")
+   * @ORM\JoinColumn(name="action_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $action;
 
   /**
-   * @ManyToOne(targetEntity="Application_Model_Base", cascade={"persist"})
-   * @JoinColumn(name="resource_id", referencedColumnName="id", onDelete="CASCADE")
+   * @ORM\ManyToOne(targetEntity="\UnpCommon\Model\Base", cascade={"persist"})
+   * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $resource;
 
   /**
    * @var string The log message returned by the cron execution.
-   * @Column(type="text", nullable=true)
+   * @ORM\Column(type="text", nullable=true)
    */
   private $log;
 
   /**
    * @var string The current progress of the task in percent.
-   * @Column(type="integer")
+   * @ORM\Column(type="integer")
    */
   private $progressPercentage = 0;
 
-  public function __construct($data = array()){
-    parent::__construct($data);
-
-    if(isset($data['initiator'])){
-      $this->initiator = $data['initiator'];
-    }
-
-    if(isset($data['action'])){
-      $this->action = $data['action'];
-    }
-
-    if(isset($data['resource'])){
-      $this->resource = $data['resource'];
-    }
-  }
-
-  public function getDirectLink(){
+  public function __construct(User $initiator = null, Action $action = null, Base $resource = null){
+    parent::__construct();
     
+    $this->initiator = $initiator;
+    $this->action = $action;
+    $this->resource = $resource;
   }
 
-  public function getDirectName(){
-    
-  }
-
+  /**
+   * @return User
+   */
   public function getInitiator(){
     return $this->initiator;
   }
 
-  public function getEndDate(){
-    return $this->endDate;
-  }
-
+  /**
+   * @return Action
+   */
   public function getAction(){
     return $this->action;
   }
 
+  /**
+   * @return Base
+   */
   public function getResource(){
     return $this->resource;
   }
 
+  /**
+   * @return DateTime
+   */
+  public function getEndDate(){
+    return $this->endDate;
+  }
+
+  /**
+   * @param DateTime $endDate
+   */
+  public function setEndDate(DateTime $endDate){
+    $this->endDate = $endDate;
+  }
+
+  /**
+   * @return string
+   */
   public function getLog(){
     return $this->log;
   }
 
-  public function setEndDate($endDate){
-    $this->endDate = $endDate;
-  }
-
+  /**
+   * @param string $log
+   */
   public function setLog($log){
     $this->log = $log;
   }

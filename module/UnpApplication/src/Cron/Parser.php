@@ -17,6 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace UnpApplication\Cron;
+
+use UnpCommon\Cron;
+use UnpCommon\Model\Document;
+use Unplagged_Helper;
+use Unplagged_Parser;
 
 /**
  * Gets the scheduled OCR tasks and runs them.
@@ -24,7 +30,7 @@
  * @todo should we run all that we find or just one? All sounds better, but we need to check somewhere, 
  * that the crons don't get in each others way..
  */
-class Unplagged_Cron_Document_Parser extends Unplagged_Cron_Base{
+class ParserCron extends Cron{
 
   protected function run(){
     $tasks = $this->findTasks('file_parse');
@@ -38,10 +44,10 @@ class Unplagged_Cron_Document_Parser extends Unplagged_Cron_Base{
       $parser = Unplagged_Parser::factory($file->getMimeType());
       $document = $parser->parseToDocument($file, $document->getLanguage(), $document->getId(), $task->getId());
 
-      if($document instanceof Application_Model_Document){
+      if($document instanceof Document){
         $this->setDocumentState($document, 'parsed');
         // add notification to activity stream
-        Unplagged_Helper::notify("document_created", $document, $task->getInitiator());
+        Unplagged_Helper::notify('document_created', $document, $task->getInitiator());
       }else{
         $document = $task->getResource();
         $this->setDocumentState($document, 'error');
@@ -53,8 +59,8 @@ class Unplagged_Cron_Document_Parser extends Unplagged_Cron_Base{
     }
   }
 
-  protected function setDocumentState(Application_Model_Document $document, $stateName){
-    $document->setState($this->em->getRepository('Application_Model_State')->findOneByName($stateName));
+  protected function setDocumentState(Document $document, $stateName){
+    $document->setState($this->em->getRepository('\UnpCommon\Model\State')->findOneByName($stateName));
   }
 
 }

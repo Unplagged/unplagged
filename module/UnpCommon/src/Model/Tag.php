@@ -35,7 +35,6 @@ class Tag extends Base implements Linkable, DataEntity{
 
   /**
    * @var string The title.
-   * 
    * @ORM\Column(type="string", length=255)
    */
   private $title;

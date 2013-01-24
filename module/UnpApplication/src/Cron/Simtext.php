@@ -17,11 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace UnpApplication\Cron;
+
+use UnpCommon\Cron;
+use Unplagged_CompareText;
+use Unplagged_Helper;
 
 /**
  * This class retrieves all scheduled cronjobs for simtext reports and runs them.
  */
-class Unplagged_Cron_Document_Page_Simtext extends Unplagged_Cron_Base{
+class SimtextCron extends Cron{
 
   public function run(){
     $tasks = $this->findTasks('page_simtext');
@@ -42,14 +47,14 @@ class Unplagged_Cron_Document_Page_Simtext extends Unplagged_Cron_Base{
       $documents = $report->getDocuments();
       $pagesCount = 0;
       foreach($documents as $documentId){
-        $document = $this->em->getRepository('Application_Model_Document')->findOneById($documentId);
+        $document = $this->em->getRepository('\UnpCommon\Model\Document')->findOneById($documentId);
         $pagesCount += $document->getPages()->count();
       }
       $prevPerc = 0; // the percentage of the previous iteration
 
       $i = 0;
       foreach($documents as $documentId){
-        $document = $this->em->getRepository('Application_Model_Document')->findOneById($documentId);
+        $document = $this->em->getRepository('\UnpCommon\Model\Document')->findOneById($documentId);
         $pages = $document->getPages();
 
         foreach($pages as $page){
@@ -91,7 +96,7 @@ class Unplagged_Cron_Document_Page_Simtext extends Unplagged_Cron_Base{
 
       // update report
       $report->setContent($content);
-      $report->setState($this->em->getRepository('Application_Model_State')->findOneByName("generated"));
+      $report->setState($this->em->getRepository('\UnpCommon\Model\State')->findOneByName("generated"));
       $this->em->persist($report);
 
       $this->updateTaskProgress($task);

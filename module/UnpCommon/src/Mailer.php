@@ -20,6 +20,9 @@
 
 /**
  * Can be used to send mails.
+ * 
+ * @todo http://www.michaelgallego.fr/blog/2012/07/19/how-to-use-zendmail/
+ * maybe skip and wait for https://github.com/ZF-Commons/RFC/issues/2
  */
 class Unplagged_Mailer{
 

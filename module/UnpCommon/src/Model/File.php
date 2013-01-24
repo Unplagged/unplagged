@@ -22,6 +22,7 @@ namespace UnpCommon\Model;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use UnpCommon\Model\Base;
+use UnpCommon\Model\Feature\ArrayCreator;
 use UnpCommon\Model\Feature\DataEntity;
 use UnpCommon\Model\Feature\Linkable;
 use UnpCommon\Model\Feature\UpdateTracker;
@@ -40,7 +41,7 @@ use UnpCommon\Model\User;
  * @ORM\Table(name="file")
  * @ORM\HasLifeCycleCallbacks
  */
-class File extends Base implements Linkable, DataEntity, UpdateTracker{
+class File extends Base implements Linkable, DataEntity, UpdateTracker, ArrayCreator{
 
   /**
    * @var string The original name of the file.
@@ -120,20 +121,6 @@ class File extends Base implements Linkable, DataEntity, UpdateTracker{
   }
 
   /**
-   * @ORM\PrePersist
-   */
-  public function updated(){
-    $this->updated = new DateTime('now');
-  }
-
-  /**
-   * @return DateTime
-   */
-  public function getUpdated(){
-    return $this->updated;
-  }
-
-  /**
    * @return string
    */
   public function getOriginalFilename(){
@@ -204,8 +191,12 @@ class File extends Base implements Linkable, DataEntity, UpdateTracker{
   }
 
   /**
-   * @return array
+   * @return bool
    */
+  public function isImage(){
+    return in_array($this->extension, array('jpg', 'jpeg', 'png', 'gif'));
+  }
+
   public function toArray(){
     $result = array();
 
@@ -220,10 +211,14 @@ class File extends Base implements Linkable, DataEntity, UpdateTracker{
   }
 
   /**
-   * @return bool
+   * @ORM\PrePersist
    */
-  public function isImage(){
-    return in_array($this->extension, array('jpg', 'jpeg', 'png', 'gif'));
+  public function updated(){
+    $this->updated = new DateTime('now');
+  }
+
+  public function getUpdated(){
+    return $this->updated;
   }
 
   public function getDirectName(){

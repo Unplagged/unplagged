@@ -1,0 +1,28 @@
+<?php //var_dump($this->activities); ?>
+<div id="activity-stream">
+  <?php foreach($this->activities as $activity): ?>
+    <div class="activity-item">
+      <div class="activity">
+        <div class="image">
+          <?php echo $this->gravatar($activity->getActor()->getEmail(), array(), array('class'=>'avatar')); ?>
+        </div>
+        <div class="details">
+          <div class="title-wrapper">
+            <h4>
+              <span class="title">
+                <i class="<?php //echo $activity->getTarget()->getIconClass(); ?> icon-fam"></i>
+                <?php echo $activity->getMessage();?></span> <span class="user"><?php echo $activity->getActor()->getUsername(); ?>, <?php //echo Unplagged_Helper::humanTiming($notification->getCreated()); ?> </span>
+            </h4>
+            <div class="links"  style="text-align: right">
+              <a class="btn toggle-conversation" href="#" for="conversation-wrapper-<?php echo $activity->getId(); ?>" class="toggle-comments"><i class="icon-comments icon-fam"></i><?php echo $this->translate('Show conversation'); ?></a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <?php //echo $this->partial('partials/conversation.phtml', array('sourceId'=>$activity->getComments(), 'hidden'=>true)); ?>
+    </div>
+  <?php endforeach; ?>
+</div>
+
+<?php //echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>

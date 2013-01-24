@@ -17,12 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+namespace UnpCommon;
 
 /**
  * Uses ISO 639-1 to map languages.
  */
-class Unplagged_Language{
-  private $languageCodes = array(
+class Language{
+  private $languages = array(
     'aa'=>'Afar',
     'ab'=>'Abkhaz',
     'ae'=>'Avestan',
@@ -210,24 +211,26 @@ class Unplagged_Language{
   );
   
   /**
+   * Gets the name of a language from it's ISO code.
    * 
    * @param string $languageCode
    */
-  public function getLanguageFromCode($languageCode){    
-    if(array_key_exists($languageCode, $this->languageCodes)){
-      return $this->languageCodes[$languageCode];
+  public function getLanguageName($languageCode){    
+    if(array_key_exists($languageCode, $this->languages)){
+      return $this->languages[$languageCode];
     }
     
     return '';
   }
   
   /**
+   * Checks whether the given language code exists.
    * 
    * @param string $languageCode
    * @return boolean
    */
-  public function isValidLanguageCode($languageCode){
-    if(array_key_exists($languageCode, $this->languageCodes)){
+  public function isValidLanguageCode($languageCode = ''){
+    if(array_key_exists($languageCode, $this->languages)){
       return true;
     }
     
@@ -235,9 +238,12 @@ class Unplagged_Language{
   }
   
   /**
+   * Returns an array with the ISO code as keys and the name of the language
+   * as the values.
+   * 
    * @return array
    */
-  public function getAllLanguages(){
-    return $this->languageCodes;
+  public function getLanguages(){
+    return $this->languages;
   }
 }

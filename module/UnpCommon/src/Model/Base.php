@@ -19,8 +19,13 @@
  */
 namespace UnpCommon\Model;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
+use UnpCommon\Model\Feature\Commentable;
+use UnpCommon\Model\Feature\CreatedTracker;
+use UnpCommon\Model\State;
+use UnpCommon\Model\Tag;
 
 /**
  * The class represents a base class for any type of item that can receive 
@@ -32,27 +37,27 @@ use Doctrine\ORM\Mapping AS ORM;
  * @ORM\InheritanceType("JOINED") 
  * @ORM\DiscriminatorColumn(name="type", type="string") 
  * @ORM\DiscriminatorMap({ 
+ *   "bibliographic_information" = "\UnpCommon\Model\BibliographicInformation",
  *   "case" = "\UnpCommon\Model\PlagiarismCase",
  *   "document" = "\UnpCommon\Model\Document",
  *   "file" = "\UnpCommon\Model\File",
- *   "bibliographic_information" = "\UnpCommon\Model\BibliographicInformation",
+ *   "activity" = "\UnpCommon\Model\Activity",
  *   "report" = "\UnpCommon\Model\Report",
  *   "tag" = "\UnpCommon\Model\Tag",
+ *   "task" = "\UnpCommon\Model\Task",
  *   "user" = "\UnpCommon\Model\User",
  * })
  * ,"comment" = "\UnpCommon\Model\Comment"
- * ,"cron_task" = "\UnpCommon\Model\Task"
  * ,"detection_report" = "\UnpCommon\Model\Document_Page_DetectionReport"
  * ,"document_fragment" = "\UnpCommon\Model\Document_Fragment"
  * ,"document_fragment_partial" = "\UnpCommon\Model\Document_Fragment_Partial"
  * ,"document_page" = "\UnpCommon\Model\Document_Page"
- * ,"notification" = "\UnpCommon\Model\Notification"
  * ,"simtext_report" = "\UnpCommon\Model\Simtext_Report"
  * ,"versionable_version" = "\UnpCommon\Model\Versionable_Version"
  * ,"document_page_line" = "\UnpCommon\Model\Document_Page_Line"
  * ,"rating" = "\UnpCommon\Model\Rating"
  */
-abstract class Base{
+abstract class Base implements CreatedTracker, Commentable{
 
   const PERMISSION_TYPE = 'base';
 
@@ -88,7 +93,6 @@ abstract class Base{
 
   /**
    * @var string The date and time when the object was created initially.
-   * 
    * @ORM\Column(type="datetime")
    */
   protected $created;
@@ -136,7 +140,6 @@ abstract class Base{
    * @todo private without getter and setter? Could be a doctrine thing
    */
   protected $notifications;
-  
   protected $conversationTypes = array('comment');
 
   /**
@@ -145,214 +148,212 @@ abstract class Base{
    */
   protected $state;
 
-  public function __construct() {
+  public function __construct(){
     $this->comments = new ArrayCollection();
     $this->ratings = new ArrayCollection();
     $this->tags = new ArrayCollection();
     $this->permissions = new ArrayCollection();
   }
-  
+
   /**
    * @return int
    */
-  public function getId() {
+  public function getId(){
     return $this->id;
   }
 
-  /**
-   * Sets the creation time to the current time, if it is not set.
-   * 
-   * This will be auto called the first time the object is persisted by Doctrine.
-   * 
-   * @ORM\PrePersist
-   */
-  public function created() {
-    if ($this->created == null) {
-      $this->created = new \DateTime('now');
-    }
-  }
-
-  /**
-   * @return \DateTime
-   */
-  public function getCreated() {
-    return $this->created;
-  }
 
   /**
    * Creates the permission objects. so that users can gain access to this particular object.
    * 
    * @ORM\PrePersist 
    */
-  public function storePermissions() {
-    /*$em = $this->entityManager;
+  public function storePermissions(){
+    /* $em = $this->entityManager;
 
-    $user = null;
-    if ($this->getPermissionType() === 'user') {
+      $user = null;
+      if ($this->getPermissionType() === 'user') {
       $user = $this;
-    } else {
+      } else {
       $user = Zend_Registry::getInstance()->user;
-    }
-
-    foreach (self::$permissionTypes as $permissionType) {
-      if (!in_array($this->getPermissionType(), self::$blacklist)) {
-        $permission = new \UnpCommon\Model\ModelPermission($this->getPermissionType(), $permissionType, $this);
-
-        $this->addPermission($permission);
-        $user->getRole()->addPermission($permission);
-        $em->persist($permission);
       }
-    }*/
+
+      foreach (self::$permissionTypes as $permissionType) {
+      if (!in_array($this->getPermissionType(), self::$blacklist)) {
+      $permission = new \UnpCommon\Model\ModelPermission($this->getPermissionType(), $permissionType, $this);
+
+      $this->addPermission($permission);
+      $user->getRole()->addPermission($permission);
+      $em->persist($permission);
+      }
+      } */
   }
 
-
-/*
-  public function getPermissionType() {
+  /*
+    public function getPermissionType() {
     $childClass = get_called_class();
 
     return strtolower(str_replace('_', '-', substr($childClass, strlen('\UnpCommon\Model\'))));
-  }
-*/
-  public function getComments() {
-    return $this->comments;
+    }
+   */
+
+  public function getComments(){
+    return $this->comments->toArray();
   }
 
-  public function getRatings() {
+  public function getRatings(){
     return $this->ratings;
   }
-/*
-  public function addRating(\Application\Model\Rating $rating) {
-    $this->ratings->add($rating);
-  }
 
-  public function countRatingsByRating($ratingRating) {
+  /*
+    public function addRating(\Application\Model\Rating $rating) {
+    $this->ratings->add($rating);
+    }
+
+    public function countRatingsByRating($ratingRating) {
     $count = 0;
     $this->ratings->filter(function($rating) use (&$count, &$ratingRating) {
-              if ($rating->getRating() == $ratingRating) {
-                $count++;
-                return true;
-              }
-              return false;
-            });
-
-    return $count;
-  }
-*/
-/*
-  public function getConversationTypes() {
-    return $this->conversationTypes;
-  }
-
-  public function isRatedByUser($user) {
-    foreach ($this->ratings as $rating) {
-      if ($rating->getUser()->getId() == $user->getId()) {
-        return true;
-      }
+    if ($rating->getRating() == $ratingRating) {
+    $count++;
+    return true;
     }
     return false;
-  }
+    });
 
-*/
-  public function getTagIds() {
+    return $count;
+    }
+   */
+  /*
+    public function getConversationTypes() {
+    return $this->conversationTypes;
+    }
+
+    public function isRatedByUser($user) {
+    foreach ($this->ratings as $rating) {
+    if ($rating->getUser()->getId() == $user->getId()) {
+    return true;
+    }
+    }
+    return false;
+    }
+
+   */
+
+  public function getTagIds(){
     $tagIds = array();
-    foreach ($this->tags as $tag) {
+    foreach($this->tags as $tag){
       $tagIds[] = $tag->getId();
     }
     return $tagIds;
   }
-  
+
   /**
-   * @return Doctrine\Common\Collections\ArrayCollection
+   * @return ArrayCollection
    */
-  public function getTags() {
+  public function getTags(){
     return $this->tags;
   }
-  
+
   /**
-   * @param \UnpCommon\Model\Tag $tag
+   * @param Tag $tag
    */
-  public function addTag(\UnpCommon\Model\Tag $tag) {
+  public function addTag(Tag $tag){
     $this->tags->add($tag);
   }
 
   /**
-   * @param \UnpCommon\Model\Tag $tag
+   * @param Tag $tag
    */
-  public function removeTag(\UnpCommon\Model\Tag $tag) {
+  public function removeTag(Tag $tag){
     $this->tags->removeElement($tag);
   }
-/*
-  public function setTags($tagIds = array()) {
+
+  /*
+    public function setTags($tagIds = array()) {
     $removedTags = array();
 
     // 1) search all tags that already exist by their id
     if (!empty($this->tags)) {
-      $this->tags->filter(function($tag) use (&$tagIds, &$removedTags) {
-                if (in_array($tag->getId(), $tagIds)) {
-                  $tagIds = array_diff($tagIds, array($tag->getId()));
-                  return true;
-                }
-                $removedTags[] = $tag;
-                return false;
-              });
+    $this->tags->filter(function($tag) use (&$tagIds, &$removedTags) {
+    if (in_array($tag->getId(), $tagIds)) {
+    $tagIds = array_diff($tagIds, array($tag->getId()));
+    return true;
+    }
+    $removedTags[] = $tag;
+    return false;
+    });
     }
 
     // 2) create new tags for those that don't exist yet
     foreach ($tagIds as $tagId) {
-      if (is_numeric($tagId)) {
-        $tag = $this->entityManager->getRepository('Application\Model\Tag')->findOneById($tagId);
-      } else {
-        $data['title'] = $tagId;
-        $tag = new \UnpCommon\Model\Tag($data);
-      }
+    if (is_numeric($tagId)) {
+    $tag = $this->entityManager->getRepository('Application\Model\Tag')->findOneById($tagId);
+    } else {
+    $data['title'] = $tagId;
+    $tag = new \UnpCommon\Model\Tag($data);
+    }
 
-      $this->addTag($tag);
+    $this->addTag($tag);
     }
 
     // 3) remove tags that belonged to the element before, but not anymore
     foreach ($removedTags as $tag) {
-      $this->removeTag($tag);
+    $this->removeTag($tag);
     }
-  }
+    }
 
-  public function getPermissions($instanceType = null) {
+    public function getPermissions($instanceType = null) {
     if (empty($instanceType)) {
-      return $this->permissions;
+    return $this->permissions;
     } else {
-      $permissions = array();
-      $this->permissions->filter(function($permission) use (&$permissions, &$instanceType) {
-                if ($permission instanceof $instanceType) {
-                  $permissions[] = $permission;
-                  return true;
-                }
-                return false;
-              });
-      return $permissions;
+    $permissions = array();
+    $this->permissions->filter(function($permission) use (&$permissions, &$instanceType) {
+    if ($permission instanceof $instanceType) {
+    $permissions[] = $permission;
+    return true;
     }
-  }
+    return false;
+    });
+    return $permissions;
+    }
+    }
 
-  public function remove() {
+    public function remove() {
     $this->state = $this->entityManager->getRepository('\UnpCommon\Model\State')->findOneByname('deleted');
-  }
-*/
-  private function addPermission($permission) {
-    if ($this->permissions && !$this->permissions->contains($permission)) {
+    }
+   */
+
+  private function addPermission($permission){
+    if($this->permissions && !$this->permissions->contains($permission)){
       $this->permissions->add($permission);
     }
   }
 
   /**
-   * @return \UnpCommon\Model\State
+   * @return State
    */
-  public function getState() {
+  public function getState(){
     return $this->state;
   }
 
   /**
-   * @param \UnpCommon\Model\State $state
+   * @param State $state
    */
-  public function setState(\UnpCommon\Model\State $state) {
+  public function setState(State $state){
     $this->state = $state;
+  }
+  
+  /**
+   * @ORM\PrePersist
+   */
+  public function created(){
+    if($this->created == null){
+      $this->created = new DateTime('now');
+    }
+  }
+
+  public function getCreated(){
+    return $this->created;
   }
 
 }

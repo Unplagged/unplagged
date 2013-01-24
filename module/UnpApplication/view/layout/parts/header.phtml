@@ -19,48 +19,43 @@
     <header class="navbar navbar-inverse" role="toolbar">
       <div class="navbar-inner">
         <div class="container content">
-          <div class="">
-            <ul class="nav">
-              <li>
-                <a title="Home" class="home" href="<?php echo $this->basePath(''); ?>"><b class="icon-home icon-white"></b></a>
-              </li>
-              <li>
-                <a title="Administration" href="<?php echo $this->basePath('admin'); ?>"><?php echo $this->translate('Administration'); ?></a>
-              </li>
-            </ul>
-            <?php if($this->zfcUserIdentity()): ?>
-              <li class="dropdown">
-                <a href="<?php echo $this->basePath('user/edit'); ?>" class="dropdown-toggle" data-toggle="dropdown">
-                  <i class="icon-user icon-white"></i> <?php echo $this->zfcUserIdentity()->getUsername(); ?> <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu user-dropdown">
-                  <li>
-                    <a href="<?php echo $this->basePath('user/edit'); ?>"><?php echo $this->translate('Edit Profile'); ?></a>
-                  </li>
-                  <li>
-                    <a href="<?php echo $this->basePath('user/files'); ?>"><?php echo $this->translate('My Files'); ?></a>
-                  </li>
-                  <li>
-                    <a href="<?php echo $this->basePath('auth/logout'); ?>"><?php echo $this->translate('Logout'); ?></a>
-                  </li>
-                  <li class="avatar-wrap">
-                    <?php echo $this->gravatar($this->zfcUserIdentity()->getEmail(), array(), array('class'=>'avatar')); ?>
-                  </li>
-                </ul>
-              </li>
-            <?php else: ?>
-              <div class="dropdown login-group btn-group pull-left">
-                <a id="login-button" class="btn dropdown-toggle" 
-                   title="<?php echo $this->translate('Login'); ?>" 
-                   href="<?php echo $this->basePath('user/login'); ?>"><?php echo $this->translate('Login'); ?>
-                  <span class="caret"></span>
-                </a>
-                <div class="dropdown-menu login-dropdown">
-                  <?php echo $this->zfcUserLoginWidget(); ?>
-                </div>
+          <?php
+          $this->navigation()->menu()->setUlClass('nav');
+          $this->navigation()->menu()->escapeLabels(false);
+          echo $this->navigation()->menu('main_navigation')->setMaxDepth(0);
+          ?>
+          <?php if($this->zfcUserIdentity()): ?>
+            <li class="dropdown">
+              <a href="<?php echo $this->basePath('user/edit'); ?>" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-user icon-white"></i> <?php echo $this->zfcUserIdentity()->getUsername(); ?> <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu user-dropdown">
+                <li>
+                  <a href="<?php echo $this->basePath('user/edit'); ?>"><?php echo $this->translate('Edit Profile'); ?></a>
+                </li>
+                <li>
+                  <a href="<?php echo $this->basePath('user/files'); ?>"><?php echo $this->translate('My Files'); ?></a>
+                </li>
+                <li>
+                  <a href="<?php echo $this->basePath('auth/logout'); ?>"><?php echo $this->translate('Logout'); ?></a>
+                </li>
+                <li class="avatar-wrap">
+                  <?php echo $this->gravatar($this->zfcUserIdentity()->getEmail(), array(), array('class'=>'avatar')); ?>
+                </li>
+              </ul>
+            </li>
+          <?php else: ?>
+            <div class="dropdown login-group btn-group pull-left">
+              <a id="login-button" class="btn dropdown-toggle" 
+                 title="<?php echo $this->translate('Login'); ?>" 
+                 href="<?php echo $this->basePath('user/login'); ?>"><?php echo $this->translate('Login'); ?>
+                <span class="caret"></span>
+              </a>
+              <div class="dropdown-menu login-dropdown">
+                <?php echo $this->zfcUserLoginWidget(); ?>
               </div>
-            <?php endif; ?>
-          </div>
+            </div>
+          <?php endif; ?>
           <form class="form-search pull-right">
             <div class="input-append">
               <input type="text" 
@@ -74,6 +69,8 @@
     <div class="pagewrap">
       <header role="banner" class="clearfix">
         <h1 class="ir"><?php $this->translate('Unplagged - The Plagiarism Detection Workbench'); ?></h1>
+        <?php $this->navigation()->menu()->setPartial(null); ?>
+        <?php $this->navigation()->menu()->setULClass('navigation'); ?>
         <nav><?php echo $this->navigation()->menu('navigation'); ?></nav>
         <div class="case-settings-box clearfix">
           <?php
@@ -89,7 +86,7 @@
               <option></option>
               <?php if(count($this->cases) > 0): ?>
                 <?php foreach($this->cases as $case): ?>
-                  <option <?php //if($case['value'] == $currentValue) echo 'selected';     ?> 
+                  <option <?php //if($case['value'] == $currentValue) echo 'selected';       ?> 
                     value="<?php echo $case['value']; ?>">
                       <?php echo $case['label']; ?>
                   </option>

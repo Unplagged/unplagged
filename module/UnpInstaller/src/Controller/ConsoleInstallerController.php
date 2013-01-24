@@ -140,11 +140,22 @@ class ConsoleInstallerController extends BaseController implements InstallerAwar
   
   /**
    * Command line action that updates the database schema from the model files.
+   * 
+   * @codeCoverageIgnore
    */
   public function updateDatabaseSchemaAction(){
     $this->installer->updateDatabaseSchema($this->em);
   }
 
+  /**
+   * Command line action that create the initial database data.
+   * 
+   * @codeCoverageIgnore
+   */
+  public function initDatabaseDataAction(){
+    $this->installer->initDatabaseData($this->em);
+  }
+  
   /**
    * @codeCoverageIgnore Seems untestable because of requested console input
    */

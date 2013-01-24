@@ -116,11 +116,12 @@ ConsoleUsageProviderInterface, ConsoleBannerProviderInterface, AutoloaderProvide
     return array(
         // Describe available commands
         //'--install'=>'Installs the application',
-        '--update-db-schema'=>'Updates the database schema from the model files.',
-        '--delete-db-schema'=>'Deletes the database completely and resets it to the initial state',
+        '--update-schema'=>'Updates the database schema from the model files.',
+        '--delete-schema'=>'Deletes the database completely and resets it to the initial state',
         //'--test-data'=>'Adds a basic set of test data to the database',
         '--uninstall'=>'(Re)Enables the webinstaller.',
-        '--check-db-connection'=>'Queries all important parameters and tries to connect to the database'
+        '--check-connection'=>'Queries all important parameters and tries to connect to the database',
+        '--init-data'=>'Adds the initial data to the database'
             // Describe expected parameters
             //array('--verbose|-v', '(optional) turn on verbose mode'),
     );
