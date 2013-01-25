@@ -1,5 +1,4 @@
 <?php
-
 return array(
     'router'=>array(
         'routes'=>array(
@@ -91,6 +90,11 @@ return array(
             'footer_navigation'=>'UnpApplication\Factory\FooterNavigationFactory',
         )
     ),
+    'view_helpers'=>array(
+        'invokables'=>array(
+            'dateFormat'=>'UnpApplication\Helper\DateFormat',
+        )
+    ),
     'translator'=>array(
         'locale'=>'en_EN',
         'fallbackLocale'=>'en_US',
@@ -123,6 +127,7 @@ return array(
             'layout/login'=>__DIR__ . '/../view/layout/parts/login.phtml',
             'layout/sidebar_menu'=>__DIR__ . '/../view/layout/parts/sidebar_menu.phtml',
             'layout/chrome-frame'=>__DIR__ . '/../view/layout/parts/chrome-frame.phtml',
+            'partials/comments'=>__DIR__ . '/../view/partial/comments.phtml',
             'unp-application/index/imprint'=>__DIR__ . '/../view/application/index/imprint.phtml',
             'unp-application/activity-stream/recent-activity'=>__DIR__ . '/../view/application/activity-stream/recent-activity.phtml',
             'unp-application/index/about'=>__DIR__ . '/../view/application/index/about.phtml',

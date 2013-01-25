@@ -5,7 +5,7 @@
  * To edit the project styles, you need to:
  * 
  * 1. Install Compass: http://compass-style.org/ .
- * 2. Make changes to the appropriate .scss files in "/data/sass/project".
+ * 2. Make changes to the appropriate .scss files in "/resources/sass/project".
  * 3. Compile the stylesheet with Compass by calling "compass compile" on the 
  *    command line from within the root directory where the "config.rb" file is
  *    located.
@@ -13,7 +13,8 @@
  * It's also possible to use "compass watch" to enable automatic compliation on 
  * saving of .scss files.
  */
- 
+@import 'compass/css3';
+
 /*
  * The css in the following files shouldn't be changed, to maintain updatability.
  * If necessary you should override the specific styles within the projects scss

@@ -6,6 +6,7 @@
  * the global namespace.
  */
 $(document).ready(function(){  
+  
   // enable line numbers on textareas with a certain class name
   $('textarea.line-numbers').numberfy();
   // enable the twitter bootstrap tooltip and dropdowns for certain classnames
@@ -358,47 +359,17 @@ $(document).ready(function(){
   });
   
   // conversation
-  $(".toggle-conversation").live('click', function() {
-    var targetId = $(this).attr("for");
-    var target = $("#" + targetId);
-    var conversation = target.children(".conversation");
-    var loading = target.children(".conversation-loading");
-    var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
+  $('.comment-toggle').live('click', function() {
+    var activityId = $(this).attr("data-activity-id");
+    var $activity = $(this).parents('.activity');
+    var $comments = $activity.find('.comments-box');
+    //var loading = .children(".conversation-loading");
+    //var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
 
-    if(target.is(':visible')) {
-      $(this).html("<i class=\"icon-conversation icon-fam\"></i>" + $.t('conversation.show'));
-      $(this).removeClass("expanded");
-      
-      target.slideUp(800, function() {
-        conversation.html("");
-      });
+    if($comments.is(':visible')) {
+      $comments.slideUp('slow');
     } else {
-      $(this).html("<i class=\"icon-conversation icon-fam\"></i>" + $.t('conversation.hide'));
-      $(this).addClass("expanded");
-      target.show();
-      conversation.hide();
-      loading.slideDown(800, function() {
-        // get the whole conversation
-        $.post('/notification/conversation', {
-          'source': sourceId
-        }, function(data) {
-          if(!data.errorcode) {
-            conversation.html("");
-            $.each(data, function(index, value) {
-              conversation.append(renderConversation(value));
-            });
-            loading.slideUp(800, function() {
-              conversation.slideDown(300);
-            });
-          } else {
-            conversation.html('<div class="comment">' + data.message + '</div>');
-            loading.slideUp(800, function() {
-              conversation.slideDown(300);
-            });
-          }
-        }, "json");
-      });
-
+      $comments.slideDown('slow');
     }
     return false;
   });
@@ -438,14 +409,7 @@ $(document).ready(function(){
     }
   }
   
-  // sends comment when return key is pressed in input field
-  $('.comment-field').live('keyup', function(e) {
-    if(e.keyCode == 13) {
-      $(this).parent().children('.write-comment').click();
-    }
-  });
-  
-  $(".write-comment").live('click', function(){
+  $('.comment-submit').live('click', function(){
     var source = $(this).closest(".write-comment-box").children("input[name='sourceId']");
     var text = $(this).closest(".write-comment-box").children("input[name='text']");
 

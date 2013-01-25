@@ -59,8 +59,13 @@ return array(
             'orm_default'=>array(
                 'drivers'=>array(
                     'UnpCommon\Model'=>'unp_orm'
-                )
+                ),
             ),
         ),
-    )
+        'configuration'=>array(
+            'orm_default'=>array(
+                'proxy_dir' => 'resources/Doctrine/Proxies',
+            ),
+        ),
+    ),
 );

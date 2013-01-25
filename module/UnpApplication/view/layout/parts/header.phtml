@@ -25,9 +25,11 @@
           echo $this->navigation()->menu('main_navigation')->setMaxDepth(0);
           ?>
           <?php if($this->zfcUserIdentity()): ?>
-            <li class="dropdown">
-              <a href="<?php echo $this->basePath('user/edit'); ?>" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-user icon-white"></i> <?php echo $this->zfcUserIdentity()->getUsername(); ?> <span class="caret"></span>
+            <div class="dropdown login-group btn-group pull-left">
+              <a href="<?php echo $this->basePath('user/edit'); ?>" class="btn dropdown-toggle">
+                <i class="icon-user"></i>
+                <?php echo $this->zfcUserIdentity()->getUsername(); ?> 
+                <span class="caret"></span>
               </a>
               <ul class="dropdown-menu user-dropdown">
                 <li>
@@ -37,13 +39,15 @@
                   <a href="<?php echo $this->basePath('user/files'); ?>"><?php echo $this->translate('My Files'); ?></a>
                 </li>
                 <li>
-                  <a href="<?php echo $this->basePath('auth/logout'); ?>"><?php echo $this->translate('Logout'); ?></a>
+                  <a href="<?php echo $this->basePath('user/logout'); ?>"><?php echo $this->translate('Logout'); ?></a>
                 </li>
                 <li class="avatar-wrap">
-                  <?php echo $this->gravatar($this->zfcUserIdentity()->getEmail(), array(), array('class'=>'avatar')); ?>
+                  <?php
+                  echo $this->gravatar($this->zfcUserIdentity()->getEmail(), array(), array('class'=>'avatar'));
+                  ?>
                 </li>
               </ul>
-            </li>
+            </div>
           <?php else: ?>
             <div class="dropdown login-group btn-group pull-left">
               <a id="login-button" class="btn dropdown-toggle" 
@@ -68,7 +72,10 @@
     </header>
     <div class="pagewrap">
       <header role="banner" class="clearfix">
-        <h1 class="ir"><?php $this->translate('Unplagged - The Plagiarism Detection Workbench'); ?></h1>
+        <hgroup class="brand">
+          <h1 class="ir">Unplagged</h1>
+          <h2 class="ir hide"><?php echo $this->translate('The Plagiarism Detection Workbench'); ?></h2>
+        </hgroup>
         <?php $this->navigation()->menu()->setPartial(null); ?>
         <?php $this->navigation()->menu()->setULClass('navigation'); ?>
         <nav><?php echo $this->navigation()->menu('navigation'); ?></nav>
@@ -85,8 +92,10 @@
             <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
               <option></option>
               <?php if(count($this->cases) > 0): ?>
-                <?php foreach($this->cases as $case): ?>
-                  <option <?php //if($case['value'] == $currentValue) echo 'selected';       ?> 
+                <?php
+                foreach($this->cases as $case):
+                  ?>
+                  <option <?php //if($case['value'] == $currentValue) echo 'selected';         ?> 
                     value="<?php echo $case['value']; ?>">
                       <?php echo $case['label']; ?>
                   </option>

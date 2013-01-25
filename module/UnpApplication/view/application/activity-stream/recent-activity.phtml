@@ -1,28 +1,51 @@
-<?php //var_dump($this->activities); ?>
-<div id="activity-stream">
+<?php
+//var_dump($this->activities); 
+$strText = 'a{b?}c{d.asd}e';
+$arrResult = array();
+preg_match_all('#\{[a-z.]+?\}#', $strText, $arrResult);
+//var_dump($arrResult);
+?>
+<ul class="activity-stream span7">
   <?php foreach($this->activities as $activity): ?>
-    <div class="activity-item">
-      <div class="activity">
-        <div class="image">
-          <?php echo $this->gravatar($activity->getActor()->getEmail(), array(), array('class'=>'avatar')); ?>
-        </div>
-        <div class="details">
-          <div class="title-wrapper">
-            <h4>
-              <span class="title">
-                <i class="<?php //echo $activity->getTarget()->getIconClass(); ?> icon-fam"></i>
-                <?php echo $activity->getMessage();?></span> <span class="user"><?php echo $activity->getActor()->getUsername(); ?>, <?php //echo Unplagged_Helper::humanTiming($notification->getCreated()); ?> </span>
-            </h4>
-            <div class="links"  style="text-align: right">
-              <a class="btn toggle-conversation" href="#" for="conversation-wrapper-<?php echo $activity->getId(); ?>" class="toggle-comments"><i class="icon-comments icon-fam"></i><?php echo $this->translate('Show conversation'); ?></a>
-            </div>
-          </div>
-
-        </div>
+    <li class="activity media clearfix row-fluid">
+      <div class="avatar-wrap span1">
+          <?php
+          $userEmail = $activity->getActor()->getEmail();
+          $gravatarOptions = array('img_size'=>40);
+          $tagAttributes = array('class'=>'avatar media-object', 'width'=>'40', 'height'=>'40');
+          echo $this->gravatar($userEmail, $gravatarOptions, $tagAttributes);
+          ?>
       </div>
-      <?php //echo $this->partial('partials/conversation.phtml', array('sourceId'=>$activity->getComments(), 'hidden'=>true)); ?>
-    </div>
-  <?php endforeach; ?>
-</div>
-
-<?php //echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml'); ?>
+      <div class="span10">
+        <p>
+          <i class="<?php //echo $activity->getTarget()->getIconClass(); ?> icon-fam"></i>
+          <?php echo $activity->getMessage(); ?>
+        </p>
+        <div class="meta">
+          <a class="comment-toggle" href="" 
+             data-activity-id="<?php echo $activity->getId(); ?>">
+            <i class="icon-comments icon-fam"></i>
+            <?php $commentCount = count($activity->getComments()); ?>
+            <?php if($commentCount < 1): ?>
+              <?php echo $this->translate('Comment'); ?>
+            <?php elseif($commentCount === 1): ?>
+              <?php
+              echo sprintf($this->translate('%s Comment'), $commentCount);
+              ?>
+            <?php else: ?>
+              <?php
+              echo sprintf($this->translate('%s Comments'), $commentCount);
+              ?>
+            <?php endif; ?>
+          </a>
+          <time title="<?php echo $activity->getCreated()->format('r'); ?>" datetime="<?php echo $activity->getCreated()->format('Y-m-d H:i'); ?>" class="livetime pull-right">
+            <?php echo $this->dateFormat()->expiredTime($activity->getCreated()); ?></time>
+        </div>
+        <?php echo $this->partial('partials/comments',
+                array('comments'=>$activity->getComments(), 'hidden'=>true, 'entityId'=>$activity->getId())); ?>
+      </div>
+    </li>
+<?php endforeach; ?>
+</ul>
+`
+<?php //echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml');       ?>

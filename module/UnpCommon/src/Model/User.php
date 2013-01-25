@@ -40,7 +40,7 @@ use ZfcUser\Entity\UserInterface as ZfcUser;
  * @ORM\Entity(repositoryClass="\UnpCommon\Repository\UserRepository")
  * @ORM\Table(name="user")
  */
-class User extends Base implements Linkable, DataEntity, ZfcUser, UpdateTracker, ArrayCreator{
+class User extends Base implements Linkable, ZfcUser, UpdateTracker, ArrayCreator{
 
   /**
    * @ORM\Column(type="string", length=255, unique=true)

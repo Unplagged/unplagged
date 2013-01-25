@@ -98,10 +98,9 @@ abstract class Base implements CreatedTracker, Commentable{
   protected $created;
 
   /**
-   * @var string The base element comments.
-   * 
-   * ORM\OneToMany(targetEntity="\UnpCommon\Model\Comment", mappedBy="source")
-   * ORM\JoinColumn(name="comment_id", referencedColumnName="id")
+   * @var string This entities comments.
+   * @ORM\OneToMany(targetEntity="\UnpCommon\Model\Comment", mappedBy="source")
+   * @ORM\JoinColumn(name="comment_id", referencedColumnName="id")
    */
   private $comments;
 
