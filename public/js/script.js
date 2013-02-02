@@ -360,11 +360,8 @@ $(document).ready(function(){
   
   // conversation
   $('.comment-toggle').live('click', function() {
-    var activityId = $(this).attr("data-activity-id");
     var $activity = $(this).parents('.activity');
     var $comments = $activity.find('.comments-box');
-    //var loading = .children(".conversation-loading");
-    //var sourceId = target.children(".write-comment-box").children("input[name='sourceId']").val();
 
     if($comments.is(':visible')) {
       $comments.slideUp('slow');
@@ -379,14 +376,14 @@ $(document).ready(function(){
     
     switch(data.type) {
       case 'comment':
-        tpl = '<div class="comment">' +
+        tpl = '<li class="comment">' +
         '<div class="image"><img class="avatar-small" src="' + data.author.avatar + '" /></div>' +
         '<div class="details">' +
         '<div class="title"><b>' + data.author.username + '</b> ' + data.text + 
         ' <span class="date">' + data.created.humanTiming + '</span>' +
         '</div>' +
         '</div>' +
-        '</div>';
+        '</li>';
         break;
       case 'rating':
         var icon = data.rating ? 'icon-thumbs-up' : 'icon-thumbs-down';
@@ -410,19 +407,13 @@ $(document).ready(function(){
   }
   
   $('.comment-submit').live('click', function(){
-    var source = $(this).closest(".write-comment-box").children("input[name='sourceId']");
-    var text = $(this).closest(".write-comment-box").children("input[name='text']");
+    var $commentForm = $(this).closest('.comment-form');
+    console.log($commentForm.find('.comment-text'));
+    $.post($commentForm.attr('action'), $commentForm.serialize(), function(data) {
 
-    var target = $(this).closest('.conversation-wrapper').children(".conversation");
-    if(text.val()) {
-      $.post('/comment/create', {
-        'source': source.val(),
-        'text': text.val()
-      }, function(data) {
-        text.val("");
-        renderConversation(data, target)
-      }, "json");
-    }
+      //text.val('');
+      //renderConversation(data, target)
+    }, 'json');
     return false;
   });
   

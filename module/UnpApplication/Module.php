@@ -18,16 +18,19 @@
  */
 namespace UnpApplication;
 
-use UnpApplication\Helper\FlashMessages;
-use Zend\Config\Config;
-use Zend\Config\Factory;
-use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
-use Zend\ModuleManager\Feature\BootstrapListenerInterface;
-use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
-use Zend\ServiceManager\Exception\ExceptionInterface;
-use Zend\ServiceManager\ServiceManager;
+use \UnpApplication\Helper\CaseSelection;
+use \UnpApplication\Helper\FlashMessages;
+use \UnpCommon\Controller\BaseController;
+use \UnpCommon\Controller\Plugin\ActivityStream;
+use \Zend\Config\Config;
+use \Zend\Config\Factory;
+use \Zend\EventManager\EventInterface;
+use \Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use \Zend\ModuleManager\Feature\BootstrapListenerInterface;
+use \Zend\ModuleManager\Feature\ConfigProviderInterface;
+use \Zend\ModuleManager\Feature\ViewHelperProviderInterface;
+use \Zend\ServiceManager\Exception\ExceptionInterface;
+use \Zend\ServiceManager\ServiceManager;
 
 /**
  * This class is the starting point for the Unplagged application and initalizes 
@@ -45,12 +48,16 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
       $serviceManager = $e->getApplication()->getServiceManager();
 
       $zfcServiceEvents = $serviceManager->get('zfcuser_user_service')->getEventManager();
-      $zfcServiceEvents->attach('register',
-              function($e){
+      $activityStream = $serviceManager->get('controllerpluginmanager')->get('activityStream');
+
+      $zfcServiceEvents->attach('register.post',
+              function($e) use($activityStream){
+                // @codeCoverageIgnoreStart
+                $activityStream->publishActivity('{actor.name} registered', $e->getParam('user'), 'You registered', '',
+                        $e->getParam('user'));
                 //a user registered here, so we can set the state and send an email        
-                $user = $e->getParam('user');  // User account object
-                $form = $e->getParam('form');  // Form object
-                // Perform your custom action here
+                //$form = $e->getParam('form');  // Form object
+                // @codeCoverageIgnoreEnd
               });
 
       $this->initDoctrine($serviceManager);
@@ -68,7 +75,7 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
     $entityManager = $serviceManager->get('doctrine.entitymanager.orm_default');
     $controllerLoader = $serviceManager->get('ControllerLoader');
     $controllerLoader->addInitializer(function ($controller) use ($entityManager){
-              if($controller instanceof Controller\BaseController){
+              if($controller instanceof BaseController){
                 $controller->setEntityManager($entityManager);
               }
             });
@@ -84,6 +91,7 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
         'factories'=>array(
             //sets the flashMessages service during the creation of views
             'flashMessages'=>function($sm){
+              // @codeCoverageIgnoreStart
               $flashmessenger = $sm->getServiceLocator()
                       ->get('ControllerPluginManager')
                       ->get('flashmessenger');
@@ -92,6 +100,16 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
               $message->setFlashMessenger($flashmessenger);
 
               return $message;
+              // @codeCoverageIgnoreEnd
+            },
+            'caseSelection'=>function($sm){
+              // @codeCoverageIgnoreStart
+              $entityManager = $sm->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+              $caseSelection = new CaseSelection();
+              $caseSelection->setEntityManager($entityManager);
+              
+              return $caseSelection;
+              // @codeCoverageIgnoreEnd
             }
         ),
     );
@@ -130,11 +148,13 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
     return array(
         'factories'=>array(
             'activityStream'=>function ($sm){
+              // @codeCoverageIgnoreStart
               $serviceLocator = $sm->getServiceLocator();
               $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-              $controllerPlugin = new \UnpCommon\Controller\Plugin\ActivityStream();
+              $controllerPlugin = new ActivityStream();
               $controllerPlugin->setEntityManager($entityManager);
               return $controllerPlugin;
+              // @codeCoverageIgnoreEnd
             },
         ),
     );

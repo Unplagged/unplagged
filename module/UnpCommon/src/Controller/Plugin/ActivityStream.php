@@ -26,11 +26,11 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 class ActivityStream extends AbstractPlugin{
 
   private $entityManager = null;
-  
+
   public function setEntityManager(\Doctrine\ORM\EntityManager $entityManager){
     $this->entityManager = $entityManager;
   }
-  
+
   /**
    * Publishes a new activity in the activity stream.
    * 

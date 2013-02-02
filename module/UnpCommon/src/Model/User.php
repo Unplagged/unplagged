@@ -24,7 +24,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UnpCommon\Model\Feature\ArrayCreator;
 use UnpCommon\Model\Base;
-use UnpCommon\Model\Feature\DataEntity;
 use UnpCommon\Model\Feature\Linkable;
 use UnpCommon\Model\Feature\UpdateTracker;
 use UnpCommon\Model\File;
@@ -302,7 +301,7 @@ class User extends Base implements Linkable, ZfcUser, UpdateTracker, ArrayCreato
   }
 
   public function getIconClass(){
-    return 'icon-user';
+    return 'fam-icon-user';
   }
 
 }

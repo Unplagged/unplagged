@@ -22,39 +22,51 @@ use Zend\View\Helper\AbstractHelper;
 
 /**
  * View helper that can be used to format dates.
- * 
- * @todo make multilingual
  */
 class DateFormat extends AbstractHelper{
 
-  public function expiredTime(\DateTime $date){
-    $now = new \DateTime('now');
-    $dateInterval = $date->diff($now, true);
+  /**
+   * Creates an easily readable version of the relation between two dates.
+   * 
+   * The second parameter is mostly for testing purposes to avoid problems 
+   * with the undeterminism of dates.
+   * 
+   * @param \DateTime $date A date in the past.
+   * @param \DateTime $compareTo A more current date from which the difference should
+   * be calculated
+   * @return string
+   */
+  public function expiredTime(\DateTime $date, \DateTime $compareTo = null){
+    if(!$compareTo){
+      $compareTo = new \DateTime('now');
+    }
+    $dateInterval = $date->diff($compareTo, true);
 
     if($dateInterval->y > 0){
-      return sprintf('%s years ago', $dateInterval->y);
+      return sprintf($this->view->translatePlural('a year ago', '%s years ago', $dateInterval->y), $dateInterval->y);
     }
     if($dateInterval->m > 0){
-      return sprintf('%s months ago', $dateInterval->m);
+      return sprintf($this->view->translatePlural('a month ago', '%s months ago', $dateInterval->m), $dateInterval->m);
     }
     if($dateInterval->d > 0){
       $weeks = floor($dateInterval->d / 7);
       if($weeks > 0){
-        return sprintf('%s weeks ago', $weeks);
+        return sprintf($this->view->translatePlural('a week ago', '%s weeks ago', $weeks), $weeks);
       }
-      if($dateInterval->d === 1){
-        return sprintf('yesterday at %s', $date->format('H:i'));
-      }
-      return sprintf('%s days ago at %s', $dateInterval->d, $date->format('H:i'));
+      return sprintf($this->view->translatePlural('yesterday at %2$s', '%1$s days ago at %2$s', $dateInterval->d),
+                      $dateInterval->d, $date->format('H:i'));
     }
     if($dateInterval->h > 0){
-      return sprintf('%s hours ago', $dateInterval->h);
+      return sprintf($this->view->translatePlural('an hour ago', '%s hours ago', $dateInterval->h), $dateInterval->h);
     }
-    if($dateInterval->m > 0){
-      return sprintf('%s minutes ago', $dateInterval->m);
+    if($dateInterval->i > 0){
+      return sprintf($this->view->translatePlural('a minute ago', '%s minutes ago', $dateInterval->i), $dateInterval->i);
+    }
+    if($dateInterval->s > 0){
+      return $this->view->translate('a few seconds ago');
     }
 
-    return sprintf('just now');
+    return $this->view->translate('Now');
   }
 
 }

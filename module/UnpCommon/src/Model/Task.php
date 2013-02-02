@@ -110,10 +110,10 @@ class Task extends Base{
   }
 
   /**
-   * @param DateTime $endDate
+   * Sets the end date to current time.
    */
-  public function setEndDate(DateTime $endDate){
-    $this->endDate = $endDate;
+  public function ended(){
+    $this->endDate = new \DateTime('now');
   }
 
   /**

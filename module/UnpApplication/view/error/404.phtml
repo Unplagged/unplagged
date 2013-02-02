@@ -1,9 +1,9 @@
-<h1><?php echo $this->translate('A 404 error occurred &em; Page not found') ?></h1>
-<p><?php echo $this->message ?></p>
+<h1><?php echo sprintf($this->translate('404 %s Page not found'), '—') ?></h1>
+<p><?php echo sprintf($this->translate("%sWe are sorry, but we couldn't find the page you requested.%s This is probably our fault, but just to make sure, please check if you spelled the URL correctly."), '<strong>', '</strong>');?></p>
 
 <?php if (isset($this->reason) && $this->reason): ?>
-
-<?php
+<h2><?php echo $this->translate('Error reason'); ?></h2>
+  <?php
 $reasonMessage= '';
 switch ($this->reason) {
     case 'error-controller-cannot-dispatch':

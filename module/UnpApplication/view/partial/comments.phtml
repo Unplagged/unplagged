@@ -3,9 +3,8 @@
   <div class="conversation-loading"><img src="/images/ajax-loader.gif" alt="" /></div>
   <ul class="comments">
     <?php foreach($this->comments as $comment): ?>
-      <li>
-      <li class="comment">
-        <div class="image">
+      <li class="comment row-fluid pull-left">
+        <div class="span2">
           <?php
           $userEmail = $comment->getAuthor()->getEmail();
           $gravatarOptions = array('img_size'=>30);
@@ -13,22 +12,19 @@
           echo $this->gravatar($userEmail, $gravatarOptions, $tagAttributes);
           ?>
         </div>
-        <div class="details">
-          <div class="title"><b><?php echo $comment->getAuthor()->getUsername(); ?></b> <?php echo $comment->getText(); ?> 
-            <time title="<?php echo $comment->getCreated()->format('r'); ?>" datetime="<?php echo $comment->getCreated()->format('Y-m-d H:i'); ?>" class="livetime pull-right"><?php echo $this->dateFormat()->expiredTime($comment->getCreated()); ?></time>
-          </div>
+        <div class="details span10 pull-right">
+          <p><b><?php echo $comment->getAuthor()->getUsername(); ?></b> <?php echo $comment->getText(); ?></p> 
+          <time title="<?php echo $comment->getCreated()->format('r'); ?>" datetime="<?php echo $comment->getCreated()->format('Y-m-d H:i'); ?>" class="livetime pull-right"><?php echo $this->dateFormat()->expiredTime($comment->getCreated()); ?></time>
         </div>
-      </li>
       </li>
     <?php endforeach; ?>
   </ul>
   <form class="comment-form row-fluid" method="POST" action="<?php echo $this->basePath('comment/add/' . $this->entityId); ?>">
     <div class="span10 offset1">
-      <textarea rows="2" name="text" 
+      <textarea rows="2" name="comment-text" id="comment-text"
                 placeholder="<?php echo $this->translate('Write comment...'); ?>" 
                 class="comment-area"></textarea>
-      <input type="hidden" name="entityId" value="<?php echo $this->entityId; ?>" />
-      <button class="btn btn-small comment-submit" type="submit"><i class="icon-comment icon-fam"></i><?php echo $this->translate('Send'); ?></button>
+      <button class="btn btn-small comment-submit" type="submit"><i class="fam-icon-comment icon-fam"></i><?php echo $this->translate('Send'); ?></button>
     </div>
   </form>
 </div>

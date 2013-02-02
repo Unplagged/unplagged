@@ -19,13 +19,15 @@
  */
 return array(
     'modules'=>array(
-        'UnpCommon',
-        'UnpInstaller',
-        'UnpApplication',
         'DoctrineModule',
         'DoctrineORMModule',
         'ZfcBase',
         'ZfcUser',
+        'ZfcUserDoctrineORM',
+        'DluTwBootstrap',
+        'UnpCommon',
+        'UnpInstaller',
+        'UnpApplication',
     ),
     'module_listener_options'=>array(
         'config_glob_paths'=>array(

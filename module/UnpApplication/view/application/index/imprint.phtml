@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 ?>
-<h2><?php echo $this->translate('Imprint'); ?>:</h2>
+<div class="span7">
+<h1><?php echo $this->translate('Imprint'); ?></h1>
 <address>
   <strong><?php echo $this->firstname . ' ' . $this->lastname; ?></strong><br>
   <?php echo $this->address['street']; ?><br>
@@ -28,3 +29,4 @@
   <strong><?php echo $this->translate('Email') . ':'; ?></strong><br>
   <a href="mailto:<?php echo $this->email; ?>"><?php echo $this->email; ?></a>
 </address>
+</div>

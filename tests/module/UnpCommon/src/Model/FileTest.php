@@ -101,7 +101,7 @@ class FileTest extends PHPUnit_Framework_TestCase {
   }
   
   public function testGetIconClass(){
-    $this->assertEquals('icon-file', $this->object->getIconClass());
+    $this->assertEquals('fam-icon-disk', $this->object->getIconClass());
   }
 
   public function testGetFullPath(){

@@ -33,9 +33,9 @@ class ActivityStreamController extends BaseController{
   public function recentActivityAction(){
     $this->setTitle($this->getTranslator()->translate('Recent activity'));
     $pageNumber = $this->params('page');
-    //$this->activityStream()->publishActivity('My message {actor.name}', $this->zfcUserAuthentication()->getIdentity());
+    //$this->activityStream()->publishActivity('My message {actor.name}', $this->zfcUserAuthentication()->getIdentity(), '', '', $this->zfcUserAuthentication()->getIdentity());
     
-    $activities = $this->em->getRepository('\UnpCommon\Model\Activity')->findAll();//findByPage($pageNumber);
+    $activities = $this->em->getRepository('\UnpCommon\Model\Activity')->findAllOrderedByCreated();//findByPage($pageNumber);
 
     return array('activities'=>$activities);
     

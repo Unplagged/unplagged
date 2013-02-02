@@ -127,7 +127,7 @@ class Application_Model_UserTest extends PHPUnit_Framework_TestCase{
   }
   
   public function testCorrectIconClass(){
-    $this->assertEquals('icon-user', $this->user->getIconClass());
+    $this->assertEquals('fam-icon-user', $this->user->getIconClass());
   }
   
   public function testUsernameCanBeChanged(){

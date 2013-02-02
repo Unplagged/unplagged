@@ -5,36 +5,36 @@ $arrResult = array();
 preg_match_all('#\{[a-z.]+?\}#', $strText, $arrResult);
 //var_dump($arrResult);
 ?>
-<ul class="activity-stream span7">
+<div class="span7">
+<h1><?php echo $this->translate('Recent Activity'); ?></h1>
+<ul class="activity-stream">
   <?php foreach($this->activities as $activity): ?>
     <li class="activity media clearfix row-fluid">
       <div class="avatar-wrap span1">
-          <?php
-          $userEmail = $activity->getActor()->getEmail();
-          $gravatarOptions = array('img_size'=>40);
-          $tagAttributes = array('class'=>'avatar media-object', 'width'=>'40', 'height'=>'40');
-          echo $this->gravatar($userEmail, $gravatarOptions, $tagAttributes);
-          ?>
+        <?php
+        $userEmail = $activity->getActor()->getEmail();
+        $gravatarOptions = array('img_size'=>40);
+        $tagAttributes = array('class'=>'avatar media-object', 'width'=>'40', 'height'=>'40');
+        echo $this->gravatar($userEmail, $gravatarOptions, $tagAttributes);
+        ?>
       </div>
       <div class="span10">
         <p>
-          <i class="<?php //echo $activity->getTarget()->getIconClass(); ?> icon-fam"></i>
+          <?php if($activity->getTarget()): ?>
+          <i class="<?php echo $activity->getTarget()->getIconClass();  ?> icon-fam"></i>
+          <?php endif; ?>
           <?php echo $activity->getMessage(); ?>
         </p>
         <div class="meta">
           <a class="comment-toggle" href="" 
              data-activity-id="<?php echo $activity->getId(); ?>">
-            <i class="icon-comments icon-fam"></i>
+            <i class="fam-icon-comments icon-fam"></i>
             <?php $commentCount = count($activity->getComments()); ?>
             <?php if($commentCount < 1): ?>
               <?php echo $this->translate('Comment'); ?>
-            <?php elseif($commentCount === 1): ?>
-              <?php
-              echo sprintf($this->translate('%s Comment'), $commentCount);
-              ?>
             <?php else: ?>
               <?php
-              echo sprintf($this->translate('%s Comments'), $commentCount);
+              echo sprintf($this->translatePlural('%s Comment', '%s Comments', $commentCount), $commentCount);
               ?>
             <?php endif; ?>
           </a>
@@ -42,10 +42,11 @@ preg_match_all('#\{[a-z.]+?\}#', $strText, $arrResult);
             <?php echo $this->dateFormat()->expiredTime($activity->getCreated()); ?></time>
         </div>
         <?php echo $this->partial('partials/comments',
-                array('comments'=>$activity->getComments(), 'hidden'=>true, 'entityId'=>$activity->getId())); ?>
+                array('comments'=>$activity->getComments(), 'hidden'=>true, 'entityId'=>$activity->getId()));
+        ?>
       </div>
     </li>
 <?php endforeach; ?>
 </ul>
-`
 <?php //echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml');       ?>
+</div>

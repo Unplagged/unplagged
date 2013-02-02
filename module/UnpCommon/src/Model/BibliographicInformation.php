@@ -19,10 +19,11 @@
  */
 namespace UnpCommon\Model;
 
-use Doctrine\ORM\Mapping as ORM;
-use UnpCommon\Model\Base;
-use UnpCommon\Model\Document;
-use UnpCommon\Model\Feature\Linkable;
+use \Doctrine\ORM\Mapping as ORM;
+use \UnpCommon\Model\Base;
+use \UnpCommon\Model\Document;
+use \UnpCommon\Model\Feature\ArrayCreator;
+use \UnpCommon\Model\Feature\Linkable;
 
 /**
  * This class can be used to store metadata of a document.
@@ -30,7 +31,7 @@ use UnpCommon\Model\Feature\Linkable;
  * @ORM\Entity 
  * @ORM\Table(name="bibliographic_information")
  */
-class BibliographicInformation extends Base implements Linkable{
+class BibliographicInformation extends Base implements Linkable, ArrayCreator{
 
   /**
    * ORM\OneToOne(targetEntity="\UnpCommon\Model\Document", mappedBy="reference")
@@ -219,6 +220,10 @@ class BibliographicInformation extends Base implements Linkable{
 
   public function getIconClass(){
     return 'icon-bibtex';
+  }
+
+  public function toArray(){
+    return get_class_vars('\UnpCommon\Model\BibliographicInformation');
   }
 
 }

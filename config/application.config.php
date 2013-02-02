@@ -7,6 +7,7 @@ return array(
         'ZfcBase',
         'ZfcUser',
         'ZfcUserDoctrineORM',
+        'DluTwBootstrap',
         'UnpCommon',
         'UnpInstaller',
         'UnpApplication',

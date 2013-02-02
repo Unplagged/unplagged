@@ -18,11 +18,11 @@
     <?php echo $this->partial('layout/chrome-frame'); ?>
     <header class="navbar navbar-inverse" role="toolbar">
       <div class="navbar-inner">
-        <div class="container content">
+        <div class="container">
           <?php
           $this->navigation()->menu()->setUlClass('nav');
           $this->navigation()->menu()->escapeLabels(false);
-          echo $this->navigation()->menu('main_navigation')->setMaxDepth(0);
+          echo $this->navigation()->menu('navigation')->setMaxDepth(0);
           ?>
           <?php if($this->zfcUserIdentity()): ?>
             <div class="dropdown login-group btn-group pull-left">
@@ -43,7 +43,9 @@
                 </li>
                 <li class="avatar-wrap">
                   <?php
-                  echo $this->gravatar($this->zfcUserIdentity()->getEmail(), array(), array('class'=>'avatar'));
+                  $gravatarOptions = array('img_size'=>40);
+                  $tagAttributes = array('class'=>'avatar', 'width'=>'40', 'height'=>'40');
+                  echo $this->gravatar($this->zfcUserIdentity()->getEmail(), $gravatarOptions, $tagAttributes);
                   ?>
                 </li>
               </ul>
@@ -60,49 +62,24 @@
               </div>
             </div>
           <?php endif; ?>
-          <form class="form-search pull-right">
-            <div class="input-append">
-              <input type="text" 
-                     class="span3 search-query" 
-                     placeholder="<?php echo $this->translate('Search'); ?>" type="search" />
-              <button type="submit" class="btn"><i class="icon-search"></i></button>
-          </form>
+          <!--<form class="form-search pull-right navbar-search">
+            <input type="text" 
+                   class="span3 search-query" 
+                   placeholder="<?php echo $this->translate('Search'); ?>" type="search" />
+          </form>-->
         </div>
       </div>
     </header>
     <div class="pagewrap">
       <header role="banner" class="clearfix">
-        <hgroup class="brand">
-          <h1 class="ir">Unplagged</h1>
-          <h2 class="ir hide"><?php echo $this->translate('The Plagiarism Detection Workbench'); ?></h2>
-        </hgroup>
+        <img class="logo" src="<?php echo $this->basePath('/images/logo.png'); ?>" title="Unplagged <?php echo $this->translate('The Plagiarism Detection Workbench'); ?>" />
         <?php $this->navigation()->menu()->setPartial(null); ?>
         <?php $this->navigation()->menu()->setULClass('navigation'); ?>
-        <nav><?php echo $this->navigation()->menu('navigation'); ?></nav>
+        <nav><?php echo $this->navigation()->menu('main_navigation'); ?></nav>
         <div class="case-settings-box clearfix">
-          <?php
-          /* $currentLabel = '';
-            $currentValue = null;
-            if($this->me->getCurrentCase() instanceof Application_Model_Case){
-            $currentLabel = $this->me->getCurrentCase()->getPublishableName();
-            $currentValue = $this->me->getCurrentCase()->getId();
-            } */
-          ?>
-          <form class="current-case form-inline" method="POST" action="<?php echo $this->basePath('user/set-current-case'); ?>">
-            <select data-placeholder="<?php echo $this->translate('Select a Case'); ?>" name="case">
-              <option></option>
-              <?php if(count($this->cases) > 0): ?>
-                <?php
-                foreach($this->cases as $case):
-                  ?>
-                  <option <?php //if($case['value'] == $currentValue) echo 'selected';         ?> 
-                    value="<?php echo $case['value']; ?>">
-                      <?php echo $case['label']; ?>
-                  </option>
-                <?php endforeach; ?>
-              <?php endif; ?>
-            </select>
-            <button class="button"><?php echo $this->translate('Ok'); ?></button>  
-          </form>
+          <?php if($this->zfcUserIdentity()): ?>
+          <?php echo $this->caseSelection($this->zfcUserIdentity()->getCurrentCase()); ?>
+          <?php endif; ?>
+          <a href="<?php echo $this->basePath('/case/create'); ?>" class="icon-fam fam-icon-add ir pul-right" title="<?php echo $this->translate('Add Case'); ?>"><?php echo $this->translate('Add Case'); ?></a>
         </div>
       </header>

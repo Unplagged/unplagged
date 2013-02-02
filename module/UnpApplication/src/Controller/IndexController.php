@@ -25,37 +25,26 @@ use UnpCommon\Controller\BaseController;
  * Controller to serve the index and other mostly static pages.
  */
 class IndexController extends BaseController{
-  
-  public function indexAction(){
-    $barcodes = array();
-    //$cases = $this->em->getRepository('\Application\Model\PlagCase')->findAll();
-    //var_dump($cases);
-    /*
 
-
-    foreach($cases as $case){
-      //$case = $user->getCurrentCase();
-      if($case->getState() && $case->getState()->getName() === 'published'){
-        $barcode = $case->getBarcode(100, 150, 100, true, '%');
-        if($barcode){
-          $barcodes[] = array(
-              'graphic'=>$barcode->render(),
-              'title'=>$registry->Zend_Translate->translate('Barcode for') . ' "' . $case->getPublishableName() . '"'
-          );
-        }
-      }
-    }*/
-    //$translator = $this->getServiceLocator()->get('translator'); 
-    //$this->flashMessenger()->setNamespace('success')->addMessage($translator->translate('The case was created successfully.'));
-    return array('barcodes'=>$barcodes);
-  }
-
+  /**
+   * Action for the static about page.
+   */
   public function aboutAction(){
     
   }
   
   /**
-   * Page that shows contact information required at least by german law. 
+   * Action for the static credits page.
+   */
+  public function creditsAction(){
+    
+  }
+  
+  /**
+   * Page that shows contact information required in some countries.
+   * 
+   * You can enable or disable this with the config setting 
+   * unp_settings.imprint_enabled.
    */
   public function imprintAction(){
     $config = $this->getServiceLocator()->get('Config');

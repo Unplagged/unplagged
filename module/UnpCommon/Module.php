@@ -33,7 +33,6 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface{
 
   public function onDispatch(\Zend\Mvc\MvcEvent $e){
     $request = $e->getRequest();
-
     //make sure to not store AJAX requests, because they tend to make no sense when using the back button
     if($request instanceof \Zend\Http\Request && !$request->isXmlHttpRequest()){
       $historySessionNamespace = new \Zend\Session\Container('history');

@@ -32,22 +32,28 @@ class PlagiarismCaseTest extends PHPUnit_Framework_TestCase {
   public function setUp() {
     parent::setUp();
 
-    $this->case = new PlagiarismCase(array('name' => 'SomeName', 'alias' => 'alias', 'requiredFragmentRatings' => array()));
+    $this->case = new PlagiarismCase('SomeName', 'alias');
   }
 
   public function testCaseCanHaveName() {
-    $case = new PlagiarismCase(array('name' => 'AName', 'label' => 'SomeLabel', 'alias' => 'alias'));
+    $case = new PlagiarismCase('AName', 'alias');
 
     $this->assertEquals('AName', $case->getName());
   }
 
+  public function testDescriptionCanBeSet(){
+    $this->case->setDescription('the-description');
+    
+    $this->assertEquals('the-description', $this->case->getDescription());
+  }
+  
   public function testCaseNameCanHaveWhitespace() {
-    $case = new PlagiarismCase(array('name' => 'Another Name', 'label' => 'SomeLabel'));
+    $case = new PlagiarismCase('Another Name', 'SomeAlias');
     $this->assertEquals('Another Name', $case->getName());
   }
 
   public function testCaseCanHaveAlias() {
-    $case = new PlagiarismCase(array('name' => 'SomeName', 'alias' => 'alias'));
+    $case = new PlagiarismCase('SomeName', 'alias');
     $this->assertEquals('alias', $case->getAlias());
   }
 
@@ -68,7 +74,7 @@ class PlagiarismCaseTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testGetDirectLink() {
-    $this->assertEquals('/case/list', $this->case->getDirectLink());
+    $this->assertEquals('/case/overview/', $this->case->getDirectLink());
   }
 
   public function testTargetCanBeAdded() {
@@ -161,7 +167,7 @@ class PlagiarismCaseTest extends PHPUnit_Framework_TestCase {
   }
   
   public function testGetIconClass(){
-    $this->assertEquals('icon-case', $this->case->getIconClass());
+    $this->assertEquals('fam-icon-package', $this->case->getIconClass());
   }
   
   public function testGetTargetDocuments(){

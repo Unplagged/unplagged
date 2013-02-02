@@ -1,20 +1,3 @@
-<div class="welcome-message well">
-  <p>
-    <?php
-    echo sprintf($this->translate('Welcome Plagiarism-Hunters. Unplagged is a collaborative open source tool to help you discover, collect and reliably document plagiarism in theses, papers, books and other scientific or school-based writing. It is based on the workflows that were employed and developed by the german websites %sVroniPlag-Wiki%s and %sGuttenPlag-Wiki%s.'), '<a href="http://de.vroniplag.wikia.com/wiki/Home">', '</a>', '<a href="http://de.guttenplag.wikia.com/wiki/GuttenPlag_Wiki">', '</a>');
-    ?>
-  </p>
-  <p>
-    <?php
-    echo sprintf($this->translate('For more information and documentation for this system, please %svisit Unplagged at Github.%s This system is still in an early Beta stage, but if you would like to participate or test here, feel free to %sregister%s and %sreport any issues%s you find to us or %sfork the source code over at Github%s, to make changes yourself.'), '<a href="http://github.com/Unplagged/unplagged">', '</a>', '<a href="/user/register">', '</a>', '<a href="https://github.com/Unplagged/unplagged/issues/new">', '</a>', '<a href="https://github.com/Unplagged/unplagged/fork_select">', '</a>');
-    ?>
-  </p>
-  <p class="text-warning">
-    <?php
-    echo sprintf($this->translate('Attention: Please be aware that input data could be deleted, when we feel that changes to the database structure are necessary. If you need a stable version, you can download the software from Github and install it on your on server.'));
-    ?>
-  </p>
-</div>
 <?php //var_dump($this->barcodes); ?>
 <?php if($this->barcodes && count($this->barcodes) > 0): ?>
   <div class="barcodes-big"> 

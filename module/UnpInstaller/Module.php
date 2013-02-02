@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged

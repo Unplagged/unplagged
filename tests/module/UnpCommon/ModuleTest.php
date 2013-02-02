@@ -19,8 +19,15 @@
  */
 namespace UnpCommonTest;
 
-use PHPUnit_Framework_TestCase;
-use UnpCommon\Module;
+use \Exception;
+use \PHPUnit_Framework_TestCase;
+use \UnpCommon\Module;
+use \Zend\EventManager\EventManager;
+use \Zend\Http\PhpEnvironment\Request;
+use \Zend\Http\PhpEnvironment\Response;
+use \Zend\ModuleManager\ModuleManager;
+use \Zend\Mvc\Application;
+use \Zend\ServiceManager\ServiceManager;
 
 /**
  * 
@@ -38,5 +45,44 @@ class ModuleTest extends PHPUnit_Framework_TestCase{
 
   public function testGetConfig(){
     $this->assertInternalType('array', $this->object->getConfig());
+  }
+  
+  public function testOnBootstrap(){
+        //simply test whether the method runs without bugging out
+    try{
+      $config = include __DIR__ . '/../../config/test.config.php';
+      $serviceManager = new ServiceManager();
+      $serviceManager->setService('EventManager', new EventManager());
+      $serviceManager->setService('ModuleManager', new ModuleManager($config['modules']));
+      $serviceManager->setService('Request', new Request());
+      $serviceManager->setService('Response', new Response());
+
+      $application = new Application($config, $serviceManager);
+      $event = $this->getMock('\Zend\Mvc\MvcEvent', array('getApplication')); 
+      $event->expects($this->any())
+              ->method('getApplication')
+              ->will($this->returnValue($application));
+      $this->object->onBootstrap($event);
+    }catch(Exception $e){
+      var_dump($e->getMessage());
+      $this->fail();
+    }
+  }
+  
+  public function testOnDispatch(){
+        //simply test whether the method runs without bugging out
+    try{
+      $request = new Request();
+      $request->getHeaders()->addHeaderLine('X_REQUESTED_WITH', 'something');
+
+      $event = $this->getMock('\Zend\Mvc\MvcEvent', array('getRequest')); 
+      $event->expects($this->any())
+              ->method('getRequest')
+              ->will($this->returnValue($request));
+      $this->object->onDispatch($event);
+    }catch(Exception $e){
+      var_dump($e->getMessage());
+      $this->fail();
+    }
   }
 }

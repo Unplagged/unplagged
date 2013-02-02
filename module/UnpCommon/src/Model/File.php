@@ -226,11 +226,11 @@ class File extends Base implements Linkable, DataEntity, UpdateTracker, ArrayCre
   }
 
   public function getDirectLink(){
-    return "/file/show/id/" . $this->id;
+    return '/file/show/id/' . $this->id;
   }
 
   public function getIconClass(){
-    return 'icon-file';
+    return 'fam-icon-disk';
   }
 
 }

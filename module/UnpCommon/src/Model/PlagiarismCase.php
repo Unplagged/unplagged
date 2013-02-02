@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -26,7 +25,6 @@ use UnpCommon\Model\Report;
 use UnpCommon\Model\Base;
 use UnpCommon\Model\Document;
 use UnpCommon\Model\Feature\ArrayCreator;
-use UnpCommon\Model\Feature\DataEntity;
 use UnpCommon\Model\Feature\Linkable;
 use UnpCommon\Model\Feature\UpdateTracker;
 use UnpCommon\Model\File;
@@ -37,10 +35,10 @@ use UnpCommon\Model\File;
  * The naming to "PlagiarismCase" is due to the fact that "case" is a reserved word in PHP.
  * 
  * @ORM\Entity
- * @ORM\Table(name="case")
+ * @ORM\Table(name="plagiarism_case")
  * @ORM\HasLifeCycleCallbacks
  */
-class PlagiarismCase extends Base implements Linkable, DataEntity, UpdateTracker, ArrayCreator{
+class PlagiarismCase extends Base implements Linkable, UpdateTracker, ArrayCreator{
 
   /**
    * @var string The "real" name of the case, under which it will get published later on.
@@ -55,20 +53,26 @@ class PlagiarismCase extends Base implements Linkable, DataEntity, UpdateTracker
   private $alias = '';
 
   /**
+   * @ORM\Column(type="text") 
+   */
+  private $description = '';
+
+  /**
    * @var string The date when the case was updated the last time.
    * @ORM\Column(type="datetime", nullable=true)
    */
   private $updated;
 
   /**
+   * 
    * @ORM\ManyToMany(targetEntity="\UnpCommon\Model\Document")
-   * @ORM\JoinTable(name="case_has_document",
+   * @ORM\JoinTable(name="case_has_source",
    *      joinColumns={@ORM\JoinColumn(name="case_id", referencedColumnName="id")},
    *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id")}
    *      )
-   * @ORM\OrderBy({"name" = "DESC"})
+   * @ORM\OrderBy({"title" = "DESC"})
    */
-  private $documents;
+  private $sources;
 
   /**
    * ORM\OneToMany(targetEntity="\UnpCommon\Model\Report", mappedBy="case")
@@ -122,8 +126,11 @@ class PlagiarismCase extends Base implements Linkable, DataEntity, UpdateTracker
    */
   private $barcodeData;
 
-  public function __construct(array $data = array()){
+  public function __construct($name = '', $alias = ''){
     parent::__construct();
+
+    $this->name = $name;
+    $this->alias = $alias;
 
     $this->documents = new ArrayCollection();
     $this->collaborators = new ArrayCollection();
@@ -131,27 +138,6 @@ class PlagiarismCase extends Base implements Linkable, DataEntity, UpdateTracker
     $this->reports = new ArrayCollection();
     $this->files = new ArrayCollection();
     $this->targetDocuments = new ArrayCollection();
-
-    if(array_key_exists('name', $data)){
-      $this->name = $data['name'];
-    }
-    if(array_key_exists('alias', $data)){
-      $this->alias = $data['alias'];
-    }
-  }
-
-  /**
-   * @ORM\PreUpdate
-   */
-  public function updated(){
-    $this->updated = new DateTime('now');
-  }
-
-  /**
-   * @return DateTime
-   */
-  public function getUpdated(){
-    return $this->updated;
   }
 
   /**
@@ -166,6 +152,20 @@ class PlagiarismCase extends Base implements Linkable, DataEntity, UpdateTracker
    */
   public function getAlias(){
     return $this->alias;
+  }
+
+  /**
+   * @return string
+   */
+  public function getDescription(){
+    return $this->description;
+  }
+
+  /**
+   * @param string $description
+   */
+  public function setDescription($description = ''){
+    $this->description = $description;
   }
 
   /**
@@ -213,16 +213,6 @@ class PlagiarismCase extends Base implements Linkable, DataEntity, UpdateTracker
    */
   public function containsFile(File $file){
     return $this->files->contains($file);
-  }
-
-  /**
-   * @return array
-   */
-  public function toArray(){
-    return array(
-        'name'=>$this->name,
-        'alias'=>$this->alias,
-    );
   }
 
   /*
@@ -283,6 +273,12 @@ class PlagiarismCase extends Base implements Linkable, DataEntity, UpdateTracker
       $this->targetDocuments->add($target);
     }
   }
+  
+  public function removeTargetDocument(Document $target){
+    if($this->containsTargetDocument($target)){
+      $this->targetDocuments->removeElement($target);
+    }
+  }
 
   /**
    * @param Document $target
@@ -320,28 +316,37 @@ class PlagiarismCase extends Base implements Linkable, DataEntity, UpdateTracker
    */
 
   /**
-   * @return Document
+   * @return \UnpCommon\Model\Document
    */
-  public function getDocuments(){
-    return $this->documents->toArray();
+  public function getSources(){
+    return $this->sources->toArray();
   }
 
   /**
-   * @param Document $document
+   * @param \UnpCommon\Model\Document $source
    */
-  public function addDocument(Document $document){
-    $document->setCase($this);
-    if(!$this->containsDocument($document)){
-      $this->documents->add($document);
+  public function addSource(Document $source){
+    if(!$this->containsSource($source)){
+      $source->setCase($this);
+      $this->sources->add($source);
     }
   }
 
   /**
-   * @param Document $document
+   * @param \UnpCommon\Model\Document $source
+   */
+  public function removeSource(Document $source){
+    if($this->containsSource($source)){
+      $this->sources->removeElement($source);
+    }
+  }
+  
+  /**
+   * @param \UnpCommon\Model\Document $source
    * @return bool
    */
-  public function containsDocument(Document $document){
-    return $this->documents->contains($document);
+  public function containsSource(Document $source){
+    return $this->sources->contains($source);
   }
 
   /**
@@ -416,17 +421,38 @@ class PlagiarismCase extends Base implements Linkable, DataEntity, UpdateTracker
 
    */
 
+  /**
+   * @ORM\PreUpdate
+   */
+  public function updated(){
+    $this->updated = new DateTime('now');
+  }
+
+  /**
+   * @return \DateTime
+   */
+  public function getUpdated(){
+    return $this->updated;
+  }
+
+  public function toArray(){
+    return array(
+        'name'=>$this->name,
+        'alias'=>$this->alias,
+        'description'=>$this->description,
+    );
+  }
+
   public function getDirectName(){
     return $this->getPublishableName();
   }
 
   public function getDirectLink(){
-    //return "/case/show/id/" . $this->id;
-    return "/case/list";
+    return '/case/overview/' . $this->id;
   }
 
   public function getIconClass(){
-    return 'icon-case';
+    return 'fam-icon-package';
   }
 
 }

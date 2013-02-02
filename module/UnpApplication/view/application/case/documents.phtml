@@ -1,0 +1,60 @@
+<?php
+$case = $this->case;
+$documents = $this->documents;
+$type = $this->$type;
+$title = $this->title;
+?>
+<hgroup class="row-fluid clearfix">
+  <h1 class="span7">
+    <?php echo sprintf($this->translate('Documents of %s'), $this->case->getPublishableName());?>
+  </h1>
+</hgroup>
+<div class="table-wrap">
+  <a class="btn btn-small" href="/document/create" title="<?php echo $this->translate('Add document'); ?>"><span class="icon-plus"></span> Add</a>
+  <table class="table table-hover table-striped"> 
+    <caption class="hide"><?php echo $this->translate('A list of all the documents of the selected case.'); ?></caption>
+    <thead>
+      <tr>
+        <th title="<?php echo $this->translate('Case ID'); ?>">#</th>
+        <th><?php echo $this->translate('Title'); ?></th>
+        <th><?php echo $this->translate('Pages'); ?></th>
+        <th class="fit-content"><?php echo $this->translate('Actions'); ?></th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php if(count($documents) > 0): ?>
+        <?php foreach($documents as $document): ?>
+          <tr>
+          <td><?php echo $this->getId(); ?></td>
+            <?php if($document->getState()->getName() == 'parsed'): ?>
+              <td data-label="<?php echo $this->translate('Title'); ?>">
+                <?php echo $document->isTarget ? '<img class="icon" src="/images/target.png" /> ' : ""; ?><a href="/document_page/list/id/<?php echo $document->getId(); ?>"><?php echo $document->getTitle(); ?></a></td>
+            <?php else: ?>
+              <td data-label="<?php echo $this->translate('Title'); ?>">
+                <?php echo $document->getTitle(); ?>
+              </td>
+            <?php endif; ?>
+            <td data-label="<?php echo $this->translate('Pages'); ?>">
+              <?php echo count($document->getPages()); ?>
+            </td>
+            <td data-label="<?php echo $this->translate('State'); ?>"><?php echo $document->outputState; ?></td>
+            <td data-label="<?php echo $this->translate('Actions'); ?>" class="fit-content">
+              <?php
+              if(in_array($document->getState()->getName(), array('parsed', 'error'))):
+                ?>
+                <?php
+                echo $this->partial('partials/action-dropdown.phtml', array('actions'=>$document->actions));
+                ?>
+              <?php endif; ?>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <tr>
+          <td colspan="4" class="text-info no-label"><?php echo $this->translate('No documents found.'); ?></td>
+        </tr>
+      <?php endif; ?>
+    </tbody>
+  </table>
+</div>
+<?php //echo $this->paginationControl($this->paginator, 'Sliding', 'pagination-control.phtml');   ?>

@@ -36,10 +36,20 @@ return array(
                     ),
                 ),
             ),
+            'credits'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Literal',
+                'options'=>array(
+                    'route'=>'/credits',
+                    'defaults'=>array(
+                        'controller'=>'UnpApplication\Controller\Index',
+                        'action'=>'credits',
+                    ),
+                ),
+            ),
             'images'=>array(
                 'type'=>'Zend\Mvc\Router\Http\Segment',
                 'options'=>array(
-                    'route'=>'/uploads[/:id]',
+                    'route'=>'/download/image[/:id]',
                     'constraints'=>array(
                         'id'=>'[0-9]*'
                     ),
@@ -47,6 +57,80 @@ return array(
                         'controller'=>'UnpApplication\Controller\File',
                         'action'=>'view',
                         'id'=>''
+                    ),
+                ),
+            ),
+            'create-case'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Literal',
+                'options'=>array(
+                    'route'=>'/case/create',
+                    'defaults'=>array(
+                        'controller'=>'UnpApplication\Controller\Case',
+                        'action'=>'create',
+                    ),
+                ),
+            ),
+            'list-cases'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Literal',
+                'options'=>array(
+                    'route'=>'/case/list',
+                    'defaults'=>array(
+                        'controller'=>'UnpApplication\Controller\Case',
+                        'action'=>'list',
+                    ),
+                ),
+            ),
+            'view-case'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Segment',
+                'options'=>array(
+                    'route'=>'/case/overview[/:id]',
+                    'constraints'=>array(
+                        'id'=>'[0-9]*',
+                    ),
+                    'defaults'=>array(
+                        'controller'=>'UnpApplication\Controller\Case',
+                        'action'=>'overview',
+                        'id'=>'',
+                    ),
+                ),
+            ),
+            'current-case'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Literal',
+                'options'=>array(
+                    'route'=>'/user/current-case',
+                    'defaults'=>array(
+                        'controller'=>'UnpApplication\Controller\User',
+                        'action'=>'currentCase',
+                    ),
+                ),
+            ),
+            'add-comment'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Segment',
+                'options'=>array(
+                    'route'=>'/comment/add[/:id]',
+                    'constraints'=>array(
+                        'id'=>'[0-9]*'
+                    ),
+                    'defaults'=>array(
+                        'controller'=>'UnpApplication\Controller\Comment',
+                        'action'=>'add',
+                        'id'=>''
+                    ),
+                ),
+            ),
+            'case-documents'=>array(
+                'type'=>'Zend\Mvc\Router\Http\Segment',
+                'options'=>array(
+                    'route'=>'/case/:case_id/:document_type',
+                    'constraints'=>array(
+                        'case_id'=>'[0-9]*',
+                        'document_type'=>'[A-Za-z]*'
+                    ),
+                    'defaults'=>array(
+                        'controller'=>'UnpApplication\Controller\Case',
+                        'action'=>'documents',
+                        'case_id'=>'0',
+                        'document_type'=>'targets',
                     ),
                 ),
             ),
@@ -111,6 +195,9 @@ return array(
             'UnpApplication\Controller\Index'=>'UnpApplication\Controller\IndexController',
             'UnpApplication\Controller\File'=>'UnpApplication\Controller\FileController',
             'UnpApplication\Controller\Activity'=>'UnpApplication\Controller\ActivityStreamController',
+            'UnpApplication\Controller\Case'=>'UnpApplication\Controller\CaseController',
+            'UnpApplication\Controller\Comment'=>'UnpApplication\Controller\CommentController',
+            'UnpApplication\Controller\User'=>'UnpApplication\Controller\UserController',
         )
     ),
     'view_manager'=>array(
@@ -127,13 +214,22 @@ return array(
             'layout/login'=>__DIR__ . '/../view/layout/parts/login.phtml',
             'layout/sidebar_menu'=>__DIR__ . '/../view/layout/parts/sidebar_menu.phtml',
             'layout/chrome-frame'=>__DIR__ . '/../view/layout/parts/chrome-frame.phtml',
-            'partials/comments'=>__DIR__ . '/../view/partial/comments.phtml',
-            'unp-application/index/imprint'=>__DIR__ . '/../view/application/index/imprint.phtml',
-            'unp-application/activity-stream/recent-activity'=>__DIR__ . '/../view/application/activity-stream/recent-activity.phtml',
-            'unp-application/index/about'=>__DIR__ . '/../view/application/index/about.phtml',
-            'unp-application/index/index'=>__DIR__ . '/../view/application/index/index.phtml',
+            
             'error/404'=>__DIR__ . '/../view/error/404.phtml',
             'error/index'=>__DIR__ . '/../view/error/index.phtml',
+            
+            'partials/comments'=>__DIR__ . '/../view/partial/comments.phtml',
+            
+            'unp-application/case/documents'=>__DIR__ . '/../view/application/case/documents.phtml',
+            'unp-application/case/create'=>__DIR__ . '/../view/application/case/create.phtml',
+            'unp-application/case/overview'=>__DIR__ . '/../view/application/case/overview.phtml',
+            'unp-application/index/index'=>__DIR__ . '/../view/application/index/index.phtml',
+            'unp-application/index/credits'=>__DIR__ . '/../view/application/index/credits.phtml',
+            'unp-application/index/about'=>__DIR__ . '/../view/application/index/about.phtml',
+            'unp-application/index/imprint'=>__DIR__ . '/../view/application/index/imprint.phtml',
+            'unp-application/activity-stream/recent-activity'=>__DIR__ . '/../view/application/activity-stream/recent-activity.phtml',
+            'unp-application/case/list'=>__DIR__ . '/../view/application/case/list.phtml',
+            'unp-application/case/dashboard'=>__DIR__ . '/../view/application/case/dashboard.phtml',
         ),
         'template_path_stack'=>array(
             __DIR__ . '/../view',

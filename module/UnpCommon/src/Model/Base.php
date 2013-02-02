@@ -40,6 +40,10 @@ use UnpCommon\Model\Tag;
  *   "bibliographic_information" = "\UnpCommon\Model\BibliographicInformation",
  *   "case" = "\UnpCommon\Model\PlagiarismCase",
  *   "document" = "\UnpCommon\Model\Document",
+ *   "document_fragment" = "\UnpCommon\Model\Document\Fragment",
+ *   "document_line" = "\UnpCommon\Model\Document\Line",
+ *   "document_mark" = "\UnpCommon\Model\Document\Mark",
+ *   "document_page" = "\UnpCommon\Model\Document\Page",
  *   "file" = "\UnpCommon\Model\File",
  *   "activity" = "\UnpCommon\Model\Activity",
  *   "report" = "\UnpCommon\Model\Report",
@@ -47,17 +51,11 @@ use UnpCommon\Model\Tag;
  *   "task" = "\UnpCommon\Model\Task",
  *   "user" = "\UnpCommon\Model\User",
  * })
- * ,"comment" = "\UnpCommon\Model\Comment"
- * ,"detection_report" = "\UnpCommon\Model\Document_Page_DetectionReport"
- * ,"document_fragment" = "\UnpCommon\Model\Document_Fragment"
- * ,"document_fragment_partial" = "\UnpCommon\Model\Document_Fragment_Partial"
- * ,"document_page" = "\UnpCommon\Model\Document_Page"
- * ,"simtext_report" = "\UnpCommon\Model\Simtext_Report"
- * ,"versionable_version" = "\UnpCommon\Model\Versionable_Version"
- * ,"document_page_line" = "\UnpCommon\Model\Document_Page_Line"
- * ,"rating" = "\UnpCommon\Model\Rating"
+ * "detection_report" = "\UnpCommon\Model\Document_Page_DetectionReport"
+ * "simtext_report" = "\UnpCommon\Model\Simtext_Report"
+ * "versionable_version" = "\UnpCommon\Model\Versionable_Version"
  */
-abstract class Base implements CreatedTracker, Commentable{
+abstract class Base extends SimpleEntity implements CreatedTracker, Commentable{
 
   const PERMISSION_TYPE = 'base';
 
@@ -87,20 +85,10 @@ abstract class Base implements CreatedTracker, Commentable{
   );
 
   /**
-   * @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer") 
-   */
-  protected $id;
-
-  /**
-   * @var string The date and time when the object was created initially.
-   * @ORM\Column(type="datetime")
-   */
-  protected $created;
-
-  /**
    * @var string This entities comments.
-   * @ORM\OneToMany(targetEntity="\UnpCommon\Model\Comment", mappedBy="source")
+   * @ORM\OneToMany(targetEntity="\UnpCommon\Model\Comment", mappedBy="commentTarget")
    * @ORM\JoinColumn(name="comment_id", referencedColumnName="id")
+   * @ORM\OrderBy({"created" = "ASC"})
    */
   private $comments;
 
@@ -118,7 +106,7 @@ abstract class Base implements CreatedTracker, Commentable{
   /**
    * @var string The base element ratings.
    * 
-   * ORM\OneToMany(targetEntity="\UnpCommon\Model\Rating", mappedBy="source")
+   * ORM\OneToMany(targetEntity="\UnpCommon\Model\Rating", mappedBy="commentTarget")
    * ORM\JoinColumn(name="rating_id", referencedColumnName="id")
    */
   private $ratings;
@@ -153,14 +141,6 @@ abstract class Base implements CreatedTracker, Commentable{
     $this->tags = new ArrayCollection();
     $this->permissions = new ArrayCollection();
   }
-
-  /**
-   * @return int
-   */
-  public function getId(){
-    return $this->id;
-  }
-
 
   /**
    * Creates the permission objects. so that users can gain access to this particular object.
@@ -340,19 +320,6 @@ abstract class Base implements CreatedTracker, Commentable{
    */
   public function setState(State $state){
     $this->state = $state;
-  }
-  
-  /**
-   * @ORM\PrePersist
-   */
-  public function created(){
-    if($this->created == null){
-      $this->created = new DateTime('now');
-    }
-  }
-
-  public function getCreated(){
-    return $this->created;
   }
 
 }

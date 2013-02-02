@@ -1,0 +1,25 @@
+<?php
+$form = $this->form;
+$formType = $this->formType;
+$displayOptions = $this->displayOptions;
+$actions = $this->actions;
+?>
+<div class="span8">
+  <h1><?php echo $this->translate('Create Case'); ?></h1>
+  <?php echo $this->formTwb()->openTag($form,
+          $formType); ?>
+<?php if($form->getMessages()): ?>
+    <div class="alert alert-error">
+      <strong><?php echo $this->translate('Invalid input.'); ?></strong>
+    <?php echo $this->translate('There was an error with the data you provided.'); ?>
+    </div>
+  <?php endif; ?>
+  <p class="lead"><?php echo $this->translate('A case is the starting point for every plagiarism investigation within Unplagged. You should create a new one for every set of strongly related documents.'); ?></p>
+  <?php
+  echo $this->formRowTwb($form->get('case-name'), $formType, $displayOptions['elements']['case-name']);
+  echo $this->formRowTwb($form->get('case-alias'), $formType, $displayOptions['elements']['case-alias']);
+  echo $this->formRowTwb($form->get('case-description'), $formType, $displayOptions['elements']['case-description']);
+  echo $this->formActionsTwb($actions, $formType, $displayOptions['elements']);
+  echo $this->formTwb()->closeTag();
+  ?>
+</div>

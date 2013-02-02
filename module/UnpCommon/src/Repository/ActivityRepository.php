@@ -25,6 +25,7 @@ use \UnpCommon\Repository\BaseRepository;
  * 
  */
 class ActivityRepository extends BaseRepository{
+  
   public function findByPage($pageNumber = 0){
     $query = 'SELECT n FROM \UnpCommon\Model\Activity n JOIN n.permissionSource b';
     $count = 'SELECT COUNT(n.id) FROM Application_Model_Notification n JOIN n.permissionSource b';
@@ -32,4 +33,12 @@ class ActivityRepository extends BaseRepository{
         //$paginator->setItemCountPerPage(Zend_Registry::get('config')->paginator->itemsPerPage);
     //$paginator->setCurrentPageNumber($input->page);
   }
+  
+  public function findAllOrderedByCreated(){
+    return $this->getEntityManager()
+            ->createQuery('SELECT a FROM \UnpCommon\Model\Activity a ORDER BY a.created DESC')
+            ->getResult();
+  }
+  
+  
 }

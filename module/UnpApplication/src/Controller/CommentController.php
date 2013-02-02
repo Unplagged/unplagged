@@ -18,42 +18,52 @@
  */
 namespace UnpApplication\Controller;
 
+use \UnpCommon\Controller\BaseController;
+use \Unplagged_Helper;
+
 /**
  * This controller class handles all actions related to commenting.
  */
-class CommentController extends Unplagged_Controller_Action{
+class CommentController extends BaseController{
 
   /**
-   * Handles the creation of a new comment. 
+   * Handles the creation of a new comment.
+   * 
+   * Expects three http parameters: target-element-id, comment-text and comment-title.
    */
-  public function createAction(){
-    $input = new Zend_Filter_Input(array('source'=>'Digits', 'title'=>'Alpha', 'text'=>'StripTags'), null, $this->_getAllParams());
+  public function addAction(){
+    $response = $this->getResponse();
 
-    $source = $this->_em->getRepository('Application_Model_Base')->findOneById($input->source);
-    $user = Zend_Registry::getInstance()->user;
+    $targetElementId = $this->params('id');
+    $entity = $this->em->getRepository('\UnpCommon\Model\Base')->findOneById(intval($targetElementId));
+ 
+    $commentText = $this->params()->fromPost('comment-text');
+    $commentTitle = $this->params()->fromPost('comment-title');
 
-    if($source && $input->text){
-      $data = array();
-      $data["author"] = $user;
-      $data["source"] = $source;
-      $data["title"] = $input->title;
-      $data["text"] = $input->text;
+    $user = $this->zfcUserAuthentication()->getIdentity();
+    if($entity){
+      $comment = new \UnpCommon\Model\Comment($user, $entity, $commentTitle, $commentText);
 
-      $comment = new Application_Model_Comment($data);
-      $this->_em->persist($comment);
-      $this->_em->flush();
+      $this->em->persist($comment);
+      $this->em->flush();
 
-      // show a notification in the activity stream on comments, but on a notification
-      if(!($source instanceof Application_Model_Notification)){
-        Unplagged_Helper::notify('comment_created', $comment, $user, $comment->getSource());
+      //show a notification in the activity stream, but only 
+      //if it wasn't a comment on an activity already
+      if(!($entity instanceof \UnpCommon\Model\Activity)){
+        $this->activityStream->publishActivity(
+                '{actor.username} wrote a @{result.directLink}{comment} on {target.directName}', $user,
+                'You wrote a @{result.directLink}{comment} on {target.directName}', '', $entity, $comment);
       }
 
-      $result = $comment->toArray();
+      $response->setStatusCode(201);
+      $response->getHeaders()->addHeaderLine('Location', $comment->getDirectLink());
+      $response->setContent('');
     }else{
-      $result["errorcode"] = 500;
-      $result["message"] = "Comment could not be inserted.";
+      $response->setContent('');
+      $response->setStatusCode(500);
     }
-    $this->_helper->json($result);
+
+    return $response;
   }
 
   /**

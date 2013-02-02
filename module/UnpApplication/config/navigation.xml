@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config>
   <navigation>
-    <default>
+    <main>
       <overview>
         <label>Overview</label>
         <title>Overview</title>
@@ -12,23 +12,25 @@
         <resource>overview</resource>
       </overview>
       <documents>
-        <label>Documents</label>
-        <title>Documents</title>
-        <module>default</module>
-        <controller>document</controller>
-        <action>list</action>
-        <route>default</route>
-        <resource>document_list</resource>
+        <type>mvc</type>
+        <label>Investigate</label>
+        <title>Investigate Documents</title>
+        <route>case-documents</route>
+        <params>
+          <case_id />
+          <document_type>targets</document_type>
+        </params>
       </documents>
-      <biblio>
-        <label>Bibliography</label>
-        <title>Bibliography</title>
-        <module>default</module>
-        <controller>bibtex</controller>
-        <action>list</action>
-        <route>default</route>
-        <resource>bibtex_list</resource>
-      </biblio>
+      <sources>
+        <type>mvc</type>
+        <label>Sources</label>
+        <title>Source Documents</title>
+        <route>case-documents</route>
+        <params>
+          <case_id />
+          <document_type>sources</document_type>
+        </params>
+      </sources>
       <files>
         <label>Files</label>
         <title>Files</title>
@@ -95,11 +97,12 @@
         <route>default</route>
         <resource>report_list</resource>
       </reports>
-    </default>
-    <main>
+    </main>
+    <default>
       <home>
         <type>mvc</type>
-        <label><![CDATA[<b class="icon-home icon-white"></b>]]></label>
+        <label><![CDATA[<b class="icon-home icon-white"></b>]]>
+        </label>
         <class>home</class>
         <title>Home</title>
         <route>home</route>
@@ -146,7 +149,8 @@
         </pages>
       </home>
       <admin>
-        <label><![CDATA[<b class="icon-wrench icon-white"></b>]]></label>
+        <label><![CDATA[<b class="icon-wrench icon-white"></b>]]>
+        </label>
         <title>Administration</title>
         <uri>#</uri>
         <resource>admin_index</resource>
@@ -193,7 +197,7 @@
           </roles>
         </pages>
       </admin>
-    </main>
+    </default>
     <footer>
       <about>
         <type>mvc</type>
@@ -203,7 +207,7 @@
         <route>about</route>
       </about>
       <github>
-        <label>Fork us on Github</label>
+        <label>Unplagged on Github</label>
         <uri>http://github.com/unplagged/unplagged</uri>
       </github>
       <imprint>
@@ -213,6 +217,13 @@
         <title>Imprint</title>
         <route>imprint</route>
       </imprint>
+      <credits>
+        <type>mvc</type>
+        <label>Credits</label>
+        <class>credits</class>
+        <title>Credits</title>
+        <route>credits</route>
+      </credits>
     </footer>
   </navigation>
 </config>

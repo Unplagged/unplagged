@@ -86,28 +86,46 @@ class Activity extends Base implements Linkable, ArrayCreator{
     $this->result = $result;
   }
 
+  /**
+   * @return \UnpCommon\Model\User
+   */
   public function getActor(){
     return $this->actor;
   }
 
+  /**
+   * @return \UnpCommon\Model\Base
+   */
   public function getTarget(){
     return $this->target;
   }
 
+  /**
+   * @return \UnpCommon\Model\Base
+   */
   public function getResult(){
     return $this->result;
   }
 
+  /**
+   * @return string
+   */
   public function getMessage(){
     return $this->message;
   }
 
+  /**
+   * @return string
+   */
   public function getTargetMessage(){
-    return $this->message;
+    return $this->targetMessage;
   }
 
+  /**
+   * @return string
+   */
   public function getActorMessage(){
-    return $this->message;
+    return $this->actorMessage;
   }
 
   public function toArray(){
@@ -127,7 +145,7 @@ class Activity extends Base implements Linkable, ArrayCreator{
   }
 
   public function getIconClass(){
-    return 'icon-notification';
+    return 'fam-icon-clock';
   }
 
 }

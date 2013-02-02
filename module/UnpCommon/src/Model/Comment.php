@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -19,33 +18,23 @@
  */
 namespace UnpCommon\Model;
 
-use Doctrine\ORM\Mapping as ORM;
-use UnpCommon\Model\Base;
-use UnpCommon\Model\Feature\ArrayCreator;
-use UnpCommon\Model\Feature\CreatedTracker;
-use UnpCommon\Model\Feature\Linkable;
-use UnpCommon\Model\User;
+use \Doctrine\ORM\Mapping as ORM;
+use \UnpCommon\Model\Base;
+use \UnpCommon\Model\Feature\ArrayCreator;
+use \UnpCommon\Model\Feature\Linkable;
+use \UnpCommon\Model\SimpleEntity;
+use \UnpCommon\Model\User;
 
 /**
  * The class represents a single comment.
  * 
  * @ORM\Entity
- * @ORM\HasLifeCycleCallbacks
  * @ORM\Table(name="comment")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discriminator", type="string")
+ * @ORM\DiscriminatorMap({"rating" = "Rating", "comment" = "Comment"})
  */
-class Comment implements Linkable, ArrayCreator, CreatedTracker{
-
-  /**
-   * @var int The notification action id.
-   * @ORM\Id @ORM\GeneratedValue @ORM\Column(type="integer")
-   */
-  private $id;
-
-  /**
-   * @var string The date and time when the object was created initially.
-   * @ORM\Column(type="datetime")
-   */
-  protected $created;
+class Comment extends SimpleEntity implements Linkable, ArrayCreator{
 
   /**
    * @ORM\ManyToOne(targetEntity="\UnpCommon\Model\User")
@@ -61,31 +50,24 @@ class Comment implements Linkable, ArrayCreator, CreatedTracker{
 
   /**
    * @var string The text of the comment.
-   * @ORM\Column(type="string", length=255)
+   * @ORM\Column(type="text")
    */
   private $text = '';
 
   /**
    * @ORM\ManyToOne(targetEntity="\UnpCommon\Model\Base")
-   * @ORM\JoinColumn(name="source_id", referencedColumnName="id", onDelete="CASCADE")
+   * @ORM\JoinColumn(name="comment_target_id", referencedColumnName="id", onDelete="CASCADE")
    */
-  private $source;
+  private $commentTarget;
 
   /**
    * Constructor.
    */
-  public function __construct(User $author = null, Base $source = null, $title = '', $text = ''){
+  public function __construct(User $author = null, Base $commentTarget = null, $title = '', $text = ''){
     $this->author = $author;
-    $this->source = $source;
+    $this->commentTarget = $commentTarget;
     $this->title = $title;
     $this->text = $text;
-  }
-
-  /**
-   * @return int
-   */
-  public function getId(){
-    return $this->id;
   }
 
   /**
@@ -103,17 +85,17 @@ class Comment implements Linkable, ArrayCreator, CreatedTracker{
   }
 
   /**
-   * @return \UnpCommon\Model\User
+   * @return User
    */
   public function getAuthor(){
     return $this->author;
   }
 
   /**
-   * @return \UnpCommon\Model\Base
+   * @return Base
    */
-  public function getSource(){
-    return $this->source;
+  public function getCommentTarget(){
+    return $this->commentTarget;
   }
 
   public function toArray(){
@@ -122,36 +104,31 @@ class Comment implements Linkable, ArrayCreator, CreatedTracker{
         'text'=>$this->text,
         'title'=>$this->title,
         'author'=>$this->author instanceof ArrayCreator ? $this->author->toArray() : array(),
-        'source'=>$this->source instanceof ArrayCreator ? $this->source->toArray() : array(),
+        'comment_target'=>$this->commentTarget instanceof ArrayCreator ? $this->commentTarget->toArray() : array(),
         'created'=>$this->created,
         'type'=>'comment',
     );
     return $result;
   }
 
-  /**
-   * @ORM\PrePersist
-   */
-  public function created(){
-    if($this->created == null){
-      $this->created = new DateTime('now');
-    }
-  }
-
-  public function getCreated(){
-    return $this->created;
-  }
-
   public function getDirectName(){
-    return $this->source->getDirectName();
+    $directName = '';
+    if($this->commentTarget instanceof Linkable){
+      $directName = $this->commentTarget->getDirectName();
+    }
+    return $directName;
   }
 
   public function getDirectLink(){
-    return $this->source->getDirectLink();
+    $directLink = '';
+    if($this->commentTarget instanceof Linkable){
+      $directLink = $this->commentTarget->getDirectLink();
+    }
+    return $directLink;
   }
 
   public function getIconClass(){
-    return 'icon-comment';
+    return 'fam-icon-comment';
   }
 
 }

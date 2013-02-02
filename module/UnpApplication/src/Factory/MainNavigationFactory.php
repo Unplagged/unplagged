@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -19,15 +18,48 @@
  */
 namespace UnpApplication\Factory;
 
-use Zend\Navigation\Service\DefaultNavigationFactory;
+use \RecursiveIteratorIterator;
+use \Zend\Navigation\Service\DefaultNavigationFactory;
+use \Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * This factory enablees 'main' as a valid key for the navigation helper.
  */
 class MainNavigationFactory extends DefaultNavigationFactory{
 
-  protected function getName(){
+  public function getName(){
     return 'main';
+  }
+
+  /**
+   * Sets all necessary variable parameters for the url creation. This could for
+   * example be the id of the currently selected case.
+   * 
+   * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+   * @return \Zend\Navigation\Navigation
+   */
+  public function createService(ServiceLocatorInterface $serviceLocator){
+    $navigation = parent::createService($serviceLocator);
+
+    $currentCase = $serviceLocator->get('zfcuserauthservice')->getIdentity()->getCurrentCase();
+    
+    //set actual values for the placeholder params, for example the id of the current case
+    $iterator = new RecursiveIteratorIterator($navigation, RecursiveIteratorIterator::SELF_FIRST);
+    foreach($iterator as $page){
+      $params = $page->get('params');
+      if($params){
+        foreach($params as $key=>$param){
+          switch($key){
+            case 'case_id':
+              $params[$key]= $currentCase->getId();
+              break;
+          }
+        }
+         $page->setParams($params);
+      }
+    }
+
+    return $navigation;
   }
 
 }

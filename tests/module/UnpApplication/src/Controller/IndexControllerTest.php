@@ -92,8 +92,8 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase{
     $this->assertEquals(404, $response->getStatusCode());
   }
 
-  public function testIndexActionGetsDispatched(){
-    $this->routeMatch->setParam('action', 'index');
+  public function testCreditsActionGetsDispatched(){
+    $this->routeMatch->setParam('action', 'credits');
 
     $result = $this->controller->dispatch($this->request);
     $response = $this->controller->getResponse();
@@ -101,12 +101,14 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase{
     $this->assertEquals(200, $response->getStatusCode());
   }
 
-  public function testIndexActionReturnsBarcodes(){
-    $this->routeMatch->setParam('action', 'index');
+  public function testAboutActionGetsDispatched(){
+    $this->routeMatch->setParam('action', 'about');
 
     $result = $this->controller->dispatch($this->request);
 
-    $this->assertTrue(array_key_exists('barcodes', $result));
+    $response = $this->controller->getResponse();
+
+    $this->assertEquals(200, $response->getStatusCode());
   }
 
 }

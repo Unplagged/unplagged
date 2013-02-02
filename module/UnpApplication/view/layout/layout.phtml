@@ -5,9 +5,11 @@
 //$cases = $query->getArrayResult();
 ?>
 <?php echo $this->partial('layout/header'); ?>
-<div role="main" class="clearfix row-fluid">
+<div role="main" class="clearfix">
   <?php echo $this->flashMessages(); ?>
-  <?php echo $this->content; ?>
+  <div class="content row-fluid">
+    <?php echo $this->content; ?>
+  </div>
 </div>
 <?php if(!empty($menu)): ?>
   <aside>

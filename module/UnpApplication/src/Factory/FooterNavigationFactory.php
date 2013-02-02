@@ -26,7 +26,7 @@ use Zend\Navigation\Service\DefaultNavigationFactory;
  */
 class FooterNavigationFactory extends DefaultNavigationFactory{
 
-  protected function getName(){
+  public function getName(){
     return 'footer';
   }
 

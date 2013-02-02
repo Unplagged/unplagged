@@ -31,23 +31,6 @@ class UserController extends Unplagged_Controller_Action{
     Zend_Layout::getMvcInstance()->cases = $this->_em->getRepository('Application_Model_Case')->findAll();
   }
 
-  /**
-   * Handles the registration data or displays a form for registering a user.
-   */
-  public function registerAction(){
-    // create the form
-    $registerForm = new Application_Form_User_Register();
-
-    // form has been submitted through post request
-    if($this->_request->isPost()){
-      $this->handleRegistration($registerForm);
-    }
-
-    // send form to view
-    $this->setTitle('Registration');
-    $this->view->registerForm = $registerForm;
-  }
-
   private function handleRegistration(Application_Form_User_Register $registerForm){
     $formData = $this->_request->getPost();
 
@@ -437,19 +420,4 @@ class UserController extends Unplagged_Controller_Action{
     $this->view->roleForm = new Application_Form_User_Role();
   }
 
-  /**
-   * @todo: need to remove this, since it is just for testing 
-   */
-  public function activateUserAction(){
-    $input = new Zend_Filter_Input(array('username'=>'StringTrim'), null, $this->_getAllParams());
-
-    $user = $this->_em->getRepository('Application_Model_User')->findOneByUsername($input->username);
-    if($user){
-      $params = array('hash'=>$user->getVerificationHash());
-      $this->_helper->redirector('verify', 'user', '', $params);
-    }else{
-      $this->_helper->FlashMessenger('Verification failed, no user found by that username.');
-      $this->_helper->redirector('index', 'index');
-    }
-  }
 }

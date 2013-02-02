@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Unplagged - The plagiarism detection cockpit.
  * Copyright (C) 2012 Unplagged
@@ -19,11 +18,17 @@
  */
 namespace UnpCommon\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use UnpCommon\Model\BibliographicInformation;
-use UnpCommon\Model\Feature\DataEntity;
-use UnpCommon\Model\Feature\Linkable;
-use Doctrine\ORM\Mapping AS ORM;
+use \Doctrine\ORM\Mapping as ORM;
+use \Doctrine\Common\Collections\ArrayCollection;
+use \UnpCommon\Model\Base;
+use \UnpCommon\Model\BibliographicInformation;
+use \UnpCommon\Model\Document\Fragment;
+use \UnpCommon\Model\Document\Page;
+use \UnpCommon\Model\Feature\ArrayCreator;
+use \UnpCommon\Model\Feature\Linkable;
+use \UnpCommon\Model\File;
+use \UnpCommon\Model\PlagiarismCase;
+use \UnpCommon\Model\State;
 
 /**
  * The class represents a single document.
@@ -32,82 +37,80 @@ use Doctrine\ORM\Mapping AS ORM;
  * @ORM\Table(name="document")
  * @ORM\HasLifeCycleCallbacks
  */
-class Document extends Base implements Linkable, DataEntity{
+class Document extends Base implements Linkable, ArrayCreator{
 
   /**
    * @var string The title of the document.
-   * 
    * @ORM\Column(type="string", length=255)
    */
-  private $title;
+  private $title = '';
 
   /**
    * @var ArrayCollection The pages in the document.
-   * 
-   * ORM\OneToMany(targetEntity="Application_Model_Document_Page", mappedBy="document", fetch="EXTRA_LAZY")
-   * ORM\OrderBy({"pageNumber" = "ASC"})
+   * @ORM\OneToMany(targetEntity="\UnpCommon\Model\Document\Page", mappedBy="document", fetch="EXTRA_LAZY")
+   * @ORM\OrderBy({"pageNumber" = "ASC"})
    */
   private $pages;
 
   /**
    * @var ArrayCollection The fragments in the document.
    * 
-   * ORM\OneToMany(targetEntity="Application_Model_Document_Fragment", mappedBy="document")
+   * @ORM\OneToMany(targetEntity="\UnpCommon\Model\Document\Fragment", mappedBy="document")
    */
   private $fragments;
 
   /**
-   * @var BibliographicInformation Contains the bibliographic meta information of the document.
-   * 
-   * @ORM\OneToOne(targetEntity="BibliographicInformation", cascade={"persist"})
+   * @var BibliographicInformation Contains the bibliographic meta information 
+   * of the document
+   * @ORM\OneToOne(targetEntity="\UnpCommon\Model\BibliographicInformation", cascade={"persist"})
    * @ORM\JoinColumn(name="bibliographicInformation_id", referencedColumnName="id", onDelete="SET NULL")
    */
   private $bibliographicInformation;
 
   /**
-   * ORM\ManyToOne(targetEntity="Application_Model_Case", inversedBy="documents")
-   * ORM\JoinColumn(name="case_id", referencedColumnName="id", onDelete="CASCADE")
+   * @ORM\ManyToOne(targetEntity="\UnpCommon\Model\PlagiarismCase", inversedBy="documents")
+   * @ORM\JoinColumn(name="case_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $case;
 
   /**
-   * The file the document was initially created from.
-   * 
-   * ORM\ManyToOne(targetEntity="Application_Model_File")
-   * ORM\JoinColumn(name="initial_file_id", referencedColumnName="id", onDelete="SET NULL")
+   * @var The file the document was initially created from.
+   * @ORM\ManyToOne(targetEntity="\UnpCommon\Model\File")
+   * @ORM\JoinColumn(name="source_file_id", referencedColumnName="id", onDelete="SET NULL")
    */
-  private $initialFile;
+  private $sourceFile;
 
   /**
-   * An ISO code for the main language of this document.
-   * 
+   * @var An ISO code for the main language of this document.
    * @ORM\Column(type="string", length=5)
    */
   private $language = 'en';
 
-  public function __construct(array $data = array()){
+  public function __construct($title = '', File $sourceFile = null, $language = 'en', State $state = null){
     parent::__construct();
 
-    if(isset($data["title"])){
-      $this->title = $data["title"];
-    }
+    $this->title = $title;
+    $this->state = $state;
+    $this->sourceFile = $sourceFile;
+    $this->language = $language;
 
-    if(isset($data["state"])){
-      $this->state = $data["state"];
-    }
-    if(isset($data["initialFile"])){
-      $this->initialFile = $data["initialFile"];
-    }
-    if(isset($data["language"])){
-      $this->language = $data["language"];
-    }
-    $this->metadata = new BibliographicInformation();
+    $this->bibliographicInformation = new BibliographicInformation();
     $this->pages = new ArrayCollection();
     $this->fragments = new ArrayCollection();
   }
 
+  /**
+   * @return string
+   */
   public function getTitle(){
     return $this->title;
+  }
+
+  /**
+   * @param string  $title
+   */
+  public function setTitle($title = ''){
+    $this->title = $title;
   }
 
   /**
@@ -117,97 +120,104 @@ class Document extends Base implements Linkable, DataEntity{
     return $this->bibliographicInformation;
   }
 
-  public function getPages(){
-    return $this->pages;
-  }
-
-  /*public function addPage(Page $page){
-    $page->setDocument($this);
-    $this->pages->add($page);
-  }
-*/
-  public function getFragments(){
-    return $this->fragments;
-  }
-/*
-  public function addFragment(Fragment $fragment){
-    $fragment->setDocument($this);
-    $this->fragments->add($fragment);
-  }
-*/
-  public function getDirectName(){
-    return $this->title;
-  }
-
-  public function getDirectLink(){
-    return "/document_page/list/id/" . $this->id;
-  }
-
-  public function getIconClass(){
-    return 'icon-document';
-  }
-  
-  public function setTitle($title){
-    $this->title = $title;
-  }
-
   /**
-   * @param BibliographicInformation
+   * @return array
    */
-  public function setBibliographicInformation(BibliographicInformation $bibliographicInformation){
-    $this->bibliographicInformation = $bibliographicInformation;
+  public function getPages(){
+    return $this->pages->toArray();
   }
 
   /**
-   * @return string
+   * @param Page $page
+   */
+  public function addPage(Page $page){
+    if(!$this->pages->contains($page)){
+      $this->pages->add($page);
+    }
+  }
+
+  /**
+   * Finds the page number of the given page in this document.
+   * 
+   * @param Page $page
+   * @return boolean
+   */
+  public function getPageNumber(Page $page){
+    return $this->pages->indexOf($page) + 1;
+  }
+
+  /**
+   * @return array
+   */
+  public function getFragments(){
+    return $this->fragments->toArray();
+  }
+
+  /**
+   * @param Fragment $fragment
+   */
+  public function addFragment(Fragment $fragment){
+    if(!$this->fragments->contains($fragment)){
+      $fragment->setDocument($this);
+      $this->fragments->add($fragment);
+    }
+  }
+
+  /**
+   * @return string ISO 639-1 language code
    */
   public function getLanguage(){
     return $this->language;
   }
- 
+
   /**
-   * 
-   * @param type $language
+   * @param string $language ISO 639-1 language code
    */
   public function setLanguage($language){
     $this->language = $language;
   }
 
-  public function toArray(){
-    $data["id"] = $this->id;
-    //$data["bibTex"] = $this->bibTex;
-    $data["pages"] = array();
-
-    foreach($this->pages as $page){
-      $data["pages"][] = $page->toArray();
-    }
-
-    return $data;
-  }
-
-  public function getPlagiarismPercentage(){
+  /**
+   * @return int
+   * @todo create a service layer that calculates this
+   */
+  /* public function getPlagiarismPercentage(){
     $pagesCount = $this->pages->count();
     $percentageSum = 0;
 
     foreach($this->pages as $page){
-      $percentageSum += $page->getPlagiarismPercentage();
+    $percentageSum += $page->getPlagiarismPercentage();
     }
 
     return ($pagesCount != 0) ? round($percentageSum * 1. / $pagesCount / 10) * 10 : 0;
+    } */
+
+  /**
+   * @return File
+   */
+  public function getSourceFile(){
+    return $this->sourceFile;
   }
 
-  public function setCase($case){
-    $this->case = $case;
-  }
-
-  public function getInitialFile(){
-    return $this->initialFile;
-  }
-
+  /**
+   * @return PlagiarismCase
+   */
   public function getCase(){
     return $this->case;
   }
 
+  /**
+   * @param PlagiarismCase $case
+   */
+  public function setCase(PlagiarismCase $case){
+    $this->case = $case;
+  }
+
+  /**
+   * @return array
+   * 
+   * @todo move to config file somehow?
+   */
   public function getSidebarActions(){
     $actions = array();
 
@@ -240,6 +250,32 @@ class Document extends Base implements Linkable, DataEntity{
     $actions[] = $action;
 
     return $actions;
+  }
+
+  public function toArray(){
+    $data = array(
+        'id'=>$this->id,
+        'bibliographic_information'=>$this->bibliographicInformation->toArray(),
+        'pages'=>array(),
+    );
+
+    foreach($this->pages as $page){
+      $data['pages'][] = $page->toArray();
+    }
+
+    return $data;
+  }
+
+  public function getDirectName(){
+    return $this->title;
+  }
+
+  public function getDirectLink(){
+    return '/document_page/list/id/' . $this->id;
+  }
+
+  public function getIconClass(){
+    return 'fam-icon-book';
   }
 
 }

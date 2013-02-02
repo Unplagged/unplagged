@@ -48,7 +48,7 @@ class FlashMessages extends AbstractHelper{
       $uniqueMessages = array_unique($messages);
       
       foreach($uniqueMessages as $message){
-        $messageString .= '<div class="alert span12 fade in alert-' . $class . '">' . $message . '</div>';
+        $messageString .= '<div class="alert fade in alert-' . $class . '">' . $message . '</div>';
       }
     }
 

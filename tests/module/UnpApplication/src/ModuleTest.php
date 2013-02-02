@@ -19,17 +19,20 @@
  */
 namespace UnpApplicationTest;
 
-use Zend\EventManager\EventManager;
-use Zend\Http\PhpEnvironment;
-use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\Application;
-use Zend\ServiceManager\ServiceManager;
-use UnpApplication\Module;
+use \Exception;
+use \PHPUnit_Framework_TestCase;
+use \UnpApplication\Module;
+use \Zend\EventManager\EventManager;
+use \Zend\Http\Request;
+use \Zend\Http\Response;
+use \Zend\ModuleManager\ModuleManager;
+use \Zend\Mvc\Application;
+use \Zend\ServiceManager\ServiceManager;
 
 /**
  * 
  */
-class ModuleTest extends \PHPUnit_Framework_TestCase{
+class ModuleTest extends PHPUnit_Framework_TestCase{
 
   private $object;
 
@@ -56,18 +59,22 @@ class ModuleTest extends \PHPUnit_Framework_TestCase{
       $serviceManager = new ServiceManager();
       $serviceManager->setService('EventManager', new EventManager());
       $serviceManager->setService('ModuleManager', new ModuleManager($config['modules']));
-      $serviceManager->setService('Request', new PhpEnvironment\Request());
-      $serviceManager->setService('Response', new PhpEnvironment\Response());
+      $serviceManager->setService('Request', new Request());
+      $serviceManager->setService('Response', new Response());
 
       $application = new Application($config, $serviceManager);
-      $event = $this->getMock('Zend\EventManager\Event', array('getApplication')); 
+      $event = $this->getMock('\Zend\EventManager\Event', array('getApplication')); 
       $event->expects($this->any())
               ->method('getApplication')
               ->will($this->returnValue($application));
       $this->object->onBootstrap($event);
-    }catch(\Exception $e){
+    }catch(Exception $e){
       $this->fail();
     }
+  }
+  
+  public function testGetControllerPluginConfig(){
+    $this->assertInternalType('array', $this->object->getControllerPluginConfig());
   }
 
 }

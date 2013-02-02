@@ -19,6 +19,11 @@
  */
 namespace UnpCommon\Factory;
 
+use \Doctrine\ORM\EntityManager;
+use \InvalidArgumentException as InvalidArgumentException2;
+use \UnpCommon\Model\PlagiarismCase;
+use \ZfcUser\Validator\Exception\InvalidArgumentException;
+
 /**
  * Bundles common tasks when instantiating models for Doctrine
  */
@@ -30,13 +35,13 @@ class EntityFactory{
    * This methods is useful, because it bundles common initalization tasks and removes the entitymanager dependency from
    * the model classes.
    * 
-   * @param \Doctrine\ORM\EntityManager $em
+   * @param EntityManager $em
    * @param string $type
    * @param array $params
    * @return \UnpCommon\Factory\type
    * @throws InvalidArgumentException
    */
-  public static function createDataEntity(\Doctrine\ORM\EntityManager $em, $type = '', array $params = array()){
+  public static function createDataEntity(EntityManager $em, $type = '', array $params = array()){
     $entity = null;
     
     if(class_exists($type) && $type instanceof \UnpCommon\Model\DataEntity){
@@ -48,9 +53,16 @@ class EntityFactory{
       }
       $entity->setState($params['state']);
     } else {
-      throw new \InvalidArgumentException('Class not found');
+      throw new InvalidArgumentException2('Class not found');
     }
     
     return $entity;
+  }
+  
+  public static function createCase(EntityManager $em, $name, $alias, $description){
+    $case = new PlagiarismCase($name, $alias, $description);
+    $em->persist($case);
+    $em->flush();
+    return $case;
   }
 }
